@@ -1,0 +1,48 @@
+<html>
+
+
+    <body>
+        <div class="row">
+            <div class="col-12">
+                <h3>АВС анализ</h3>
+
+                <br>
+                <form zippy="filter" class="form-inline ">
+
+                    <label for="type" >Тип </label>
+
+                    <select class="form-control mr-sm-2" zippy="type">
+                    </select>
+
+
+                    <label for="from">з</label>
+                    <input class="form-control mr-sm-2" style="width: 130px" type="text" zippy="from">
+
+                    <label for="to">по</label>
+                    <input class="form-control mr-sm-2" style="width: 130px" type="text" zippy="to">
+
+
+                    <input class="btn btn-light  " type="submit" value="ОК">
+
+                </form>
+
+                <br>
+                <div zippy="detail">
+                    <div>
+                        <a zippy="print" target="_blank" title="Друк"><img class="icon20"
+                                                                           src="/assets/images/print_32.png"></a>
+                        <a zippy="html" target="_blank" title="Експорт в HTML"><img class="icon20"
+                                                                                    src="/assets/images/html.png"></a>
+                        <a zippy="excel" target="_blank" title="Експорт в Excel"><img class="icon20"
+                                                                                      src="/assets/images/excel_32.png"></a>
+                    </div>
+
+                    <iframe style="border:0px;" zippy="preview" src="/templates/wait.html" width="700px"
+                            height="800px"></iframe>
+
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

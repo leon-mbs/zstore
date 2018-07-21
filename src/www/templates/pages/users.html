@@ -1,0 +1,119 @@
+<html>
+
+    <body>
+        <div class="row">
+
+
+
+            <div  zippy="listpan" class="col-12 col-md-8">
+                <h3>Пользователи системы</h3>
+                <a zippy="addnew" class="btn btn-outline-success  ">Добавить</a>
+                <table class="table table-bordered table-striped table-sm">
+
+                    <thead align="center">
+                        <tr>
+                            <th>Логин</th>
+                            <th  >Дата рег.</th>
+
+                            <th  >Email</th>
+                            <th width="24">&nbsp;</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr zippy="userrow">
+                            <td><a zippy="userlogin"></a></td>
+                            <td zippy="created" align="center" style="white-space:nowrap"></td>
+
+                            <td zippy="email"  ></td>
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
+                            <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+
+            <div zippy="editpan" class="col-12 col-sm-10  col-md-8  col-lg-6">
+                <h4> Редактирование</h4>   
+                <form zippy="editform" role="form">
+                    <div class="form-group">
+                        <label for="editlogin">Логин</label>
+                        <input  style="width:200px" class="form-control" zippy="editlogin" required="required">
+                    </div>  
+                    <div class="form-group">
+                        <label for="editpass">Пароль</label>
+                        <input  style="width:200px" class="form-control" zippy="editpass"  >
+                        <span style="font-size:12px">Если не  меняется  пароль существующего  пользолвателя, оставте пустым</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="editemail">Email</label>
+                        <input  style="width:200px" class="form-control" zippy="editemail"  >
+                    </div>
+                    <div class="form-group">
+                        <label  >Виджеты на главной странице</label>
+
+                        <div class="form-check   ">
+
+                            <input class="form-check-input"  type="checkbox" zippy="editwnoliq">
+                            <label class="form-check-label mr-sm-2" for="editwnoliq">Неликвидные  товары</label>
+                        </div>                  
+                        <div class="form-check   ">
+
+                            <input class="form-check-input"  type="checkbox" zippy="editwhlitems">
+                            <label class="form-check-label mr-sm-2" for="editwhlitems">Состояние складов</label>
+                        </div>                  
+                        <div class="form-check   ">
+
+                            <input class="form-check-input"  type="checkbox" zippy="editwplanned">
+                            <label class="form-check-label mr-sm-2" for="editwplanned"> Запланированные документы</label>
+                        </div>                  
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="acl">Права доступа к  страницам</label>
+                        <select  style="width:200px"  class="form-control" zippy="editacl">
+                            <option value="0">Не выбран </option>
+                            <option value="1">Полный доступ </option>
+                            <option value="2">Раздельный  доступ</option>
+
+                        </select>
+                    </div> 
+                    <div class="form-group" zippy="metaaccess"> 
+                        <h5>Настройка доступа к страницам</h5>
+                        &nbsp;&nbsp;<span style="cursor:pointer" onclick=" $('.acl').prop('checked', true);"><i class="far fa-check-square"></i> Выставить все</span> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <span  style="cursor:pointer" onclick=" $('.acl').prop('checked', false);"><i class="far fa-square"></i> Снять все</span>  
+                        <table class="table table-sm table-striped">
+                            <tr><th>Тип</th><th>Группа</th><th>Страница</th><th style="width:30px" title="Перегляд"><i class="fa fa-search"></i> </th><th style="width:30px" title="Редагування"><i class="fa fa-edit"></i> </th></tr>
+                            <tr zippy="metarow"><td zippy="meta_name"> </td><td zippy="menugroup"> </td><td zippy="description"> </td><td><input class="acl" zippy="viewacc" type="checkbox"></td><td><input zippy="editacc" class="acl" type="checkbox"></td></tr>
+                        </table>
+
+
+                    </div> 
+                    <div class="form-check   ">
+
+                        <input class="form-check-input"  type="checkbox" zippy="editonlymy">
+                        <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ только  к  собственным докуменитам</label>
+                    </div>         
+                    <div class="form-group">
+
+                        <button type="submit" class="btn btn-primary   ">Сохранить</button>
+                        &nbsp; <a zippy="cancel" class="btn btn-light    ">Отменить</a>
+                    </div>
+                </form> 
+            </div>
+
+
+        </div>
+        <script>
+            function check_remove() {
+
+                return confirm("Удалить  пользователя?")
+
+            }
+
+        </script>
+    </body>
+</html>

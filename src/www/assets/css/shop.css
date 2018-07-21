@@ -1,0 +1,17 @@
+ 
+ .filtertiem{
+    color:black; 
+ }
+ 
+ .rating-symbol-foreground {
+    color: red;
+ }
+ 
+ .ctable td {
+    padding: 2px;;
+}
+
+.ctable th {
+    padding: 2px;
+    text-align: center;
+}

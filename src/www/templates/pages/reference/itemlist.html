@@ -1,0 +1,110 @@
+<html>
+    <head>
+    </head>
+
+    <body>
+        <div class="row">
+
+            <div class="col-12 col-md-8 col-xl-6" zippy="itemtable">
+                <h3>Справочник товаров </h3>
+                <form zippy="filter" class="form-inline">
+
+                    <label for="searchkey">Поиск</label>
+                    <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                    <label for="searchcat">категория</label>
+
+                    <select   class="form-control mr-sm-2" zippy="searchcat">
+                        <option value="0">Не задана</option>
+                    </select>         
+
+
+                    <input class="btn btn-outline-success  " type="submit" value="ОК">
+
+                </form>
+                <a zippy="addnew" class="btn btn-primary  ">Добавить</a>
+                <table class="table table-bordered  table-sm  ">
+                    <tr>
+                        <th>Назва</th>
+
+                        <th>Артикул</th>
+                        <th>Категория</th>
+                        <th  style="text-align: right;">Отпускная цена</th>
+
+
+                        <th style="width:56px"></th>
+                    </tr>
+                    <tr zippy="itemlist">
+                        <td zippy="itemname"></td>
+
+                        <td zippy="code"></td>
+                        <td zippy="cat_name"></td>
+                        <td zippy="price" style="text-align: right;"></td>
+
+
+                        <td aling="center"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
+                                zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+                <div zippy="pag"></div>
+            </div>
+
+
+
+            <div class="col-12 col-md-6 col-xl-4"  >
+                <form   zippy="itemdetail"  >
+                    <h4>Редактирование товара </h4>
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editname">Наименование</label>
+                        <div class="col-6"> 
+                            <input required="required" class="form-control" zippy="editname"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editcat">Категория</label>
+                        <div class="col-6"> 
+                            <select   class="form-control" zippy="editcat">
+                                <option value="0">Не задана</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editprice">Отпускная цена(наценка%)</label>
+                        <div class="col-6"> 
+                            <input style="width: 100px" pattern="[0-9\.\%]+" class="form-control" zippy="editprice"/>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editcode">Код товара (артикул)</label>
+                        <div class="col-6"> 
+                            <input class="form-control" zippy="editcode"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editbarcode">Штрих-код</label>
+                        <div class="col-6"> 
+                            <input class="form-control" zippy="editbarcode"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-6 col-form-label" for="editdescription">Описание</label>
+                        <div class="col-6"> 
+                            <textarea class="form-control" zippy="editdescription"></textarea> 
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                        <input zippy="cancel" type="button" value="Отменить" class="btn btn-light  "></td>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+
+    </body>
+</html>

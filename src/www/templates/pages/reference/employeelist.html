@@ -1,0 +1,73 @@
+<html>
+    <head>
+    </head>
+
+    <body>
+        <div class="row">
+
+
+            <div zippy="employeetable" class="col-12 col-md-10 col-lg-8">
+                <h3>Справочник сотрудников </h3>
+                <a zippy="addnew" class="btn btn-light btn-sm">Добавить</a>
+                <table class="table table-bordered   table-sm" class="col-10">
+                    <tr>
+                        <th>ФИО</th>
+
+                        <th>Логин</th>
+
+                        <th></th>
+                    </tr>
+                    <tr zippy="employeelist">
+                        <td zippy="emp_name"></td>
+
+                        <td zippy="login"></td>
+
+
+                        <td style="width:52px"><a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a> <a
+                                zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+
+
+            </div>
+
+
+            <div class="col-12 col-md-4">
+                <form   zippy="employeedetail"  >
+
+                    <div class="form-group">
+                        <label for="editemp_name">Фамилия, имя</label>
+                        <input     zippy="editemp_name" class="form-control">
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="editlogin">Логин</label>
+                        <input style="width:110px;" pattern="[a-zA-Z0-9]+" zippy="editlogin" class="form-control">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editemail">E-mail</label>
+                        <input  type="email" class="form-control" zippy="editemail"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editcomment">Описание</label>
+                        <textarea    class="form-control" zippy="editcomment" ></textarea>
+                    </div>
+                    `
+
+
+                    <div class="form-group"> 
+                        <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                        <input zippy="cancel" type="button" value="Отменить" class="btn btn-light  ">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+
+    </body>
+</html>

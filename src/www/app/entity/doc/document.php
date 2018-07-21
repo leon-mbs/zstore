@@ -1,0 +1,537 @@
+<?php
+
+namespace App\Entity\Doc;
+
+use App\System;
+use App\Helper;
+
+/**
+ * Класс-сущность документ
+ *
+ */
+class Document extends \ZCL\DB\Entity
+{
+
+    // состояния  документа
+    const STATE_NEW = 1;     //Новый
+    const STATE_EDITED = 2;  //Отредактирован
+    const STATE_CANCELED = 3;      //Отменен
+    const STATE_EXECUTED = 5;      // Проведен
+    const STATE_APPROVED = 4;      //  Утвержден
+    const STATE_DELETED = 6;       //  Удален
+    const STATE_INPROCESS = 7; // в  работе
+    const STATE_WA = 8; // ждет подтверждения
+    const STATE_CLOSED = 9; // Закрыт , доставлен, выполнен
+    const STATE_WP = 10; // Ждет оплату
+    const STATE_INSHIPMENT = 11; // Отгружен
+    const STATE_PAYED = 12; // оплачен
+    const STATE_PART_PAYED = 13; // частично оплачен
+    const STATE_DELIVERED = 14; // доставлен
+    const STATE_REFUSED = 15; // отклонен
+    const STATE_SHIFTED = 16; // отложен
+    // типы  экспорта
+    const EX_WORD = 1; //  Word
+    const EX_EXCEL = 2;    //  Excel
+
+    //const EX_PDF = 3;    //  PDF
+    // const EX_XML_GNAU = 4;
+
+    /**
+     * Ассоциативный массив   с атрибутами заголовка  документа
+     *
+     * @var mixed
+     */
+    public $headerdata = array();
+
+    /**
+     * Массив  ассоциативных массивов (строк) содержащих  строки  детальной части (таблицы) документа
+     *
+     * @var mixed
+     */
+    public $detaildata = array();
+
+    protected function init() {
+        $this->document_id = 0;
+        $this->state = 0;
+        $this->datatag = 0;
+        $this->document_number = '';
+        $this->notes = '';
+
+        $this->document_date = time();
+        $this->user_id = \App\System::getUser()->user_id;
+
+        $this->basedoc = '';
+        $this->headerdata = array();
+        $this->headerdata['incredit'] = false; //оплата в  долг
+        $this->headerdata['inshipment'] = false; //товары в  пути
+    }
+
+    protected static function getMetadata() {
+        return array('table' => 'documents', 'view' => 'documents_view', 'keyfield' => 'document_id');
+    }
+
+    protected function afterLoad() {
+        $this->document_date = strtotime($this->document_date);
+        $this->unpackData();
+    }
+
+    protected function beforeSave() {
+        $this->document_number = trim($this->document_number);
+        $this->packData();
+
+        //todo  отслеживание  изменений
+    }
+
+    /**
+     * Упаковка  данных  в  XML
+     *
+     */
+    private function packData() {
+
+
+        $this->content = "<doc><header>";
+
+        foreach ($this->headerdata as $key => $value) {
+            if ($key > 0)
+                continue;
+             if (is_numeric($value) || strlen($value)==0 ) {
+                 $value = $value;
+             } else {
+               $value = "<![CDATA[" . $value . "]]>";  
+             }  
+             $this->content .= "<{$key}>{$value}</{$key}>";
+        }
+        $this->content .= "</header><detail>";
+        foreach ($this->detaildata as $row) {
+            $this->content .= "<row>";
+            foreach ($row as $key => $value) {
+                if ($key > 0)
+                    continue;
+             if (is_numeric($value) || strlen($value)==0 ) {
+                 $value = $value;
+             } else {
+               $value = "<![CDATA[" . $value . "]]>";  
+             }                
+ 
+             $this->content .= "<{$key}>{$value}</{$key}>";
+            }
+
+            $this->content .= "</row>";
+        }
+        $this->content .= "</detail></doc>";
+    }
+
+    /**
+     * распаковка из  XML
+     *
+     */
+    private function unpackData() {
+
+        $this->headerdata = array();
+        if ($this->content == null || strlen($this->content) == 0) {
+            return;
+        }
+        $xml = new \SimpleXMLElement($this->content);
+        foreach ($xml->header->children() as $child) {
+            $this->headerdata[(string) $child->getName()] = (string) $child;
+            
+        }
+        $this->detaildata = array();
+        foreach ($xml->detail->children() as $row) {
+            $_row = array();
+            foreach ($row->children() as $item) {
+                $_row[(string) $item->getName()] = (string) $item;
+ 
+            }
+            $this->detaildata[] = $_row;
+        }
+    }
+
+    /**
+     * Генерация HTML  для  печатной формы
+     *
+     */
+    public function generateReport() {
+        return "";
+    }
+
+    /**
+     * Выполнение документа - обновление склада, бухгалтерские проводки и  т.д.
+     *
+     */
+    public function Execute() {
+
+        if (trim(get_class($this), "\\") == 'App\Entity\Doc\Document') {
+            //если  екземпляр  базового типа Document приводим  к  дочернему  типу
+            $this->cast()->Execute();
+        }
+    }
+
+    /**
+     * Отмена  документа
+     *
+     */
+    protected function Cancel() {
+        $conn = \ZDB\DB::getConnect();
+        $conn->StartTrans();
+        // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
+        $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+
+        $conn->CompleteTrans();
+
+
+
+        return true;
+    }
+
+    /**
+     * создает  экземпляр  класса  документа   в   соответсии  с  именем  типа
+     *
+     * @param mixed $classname
+     */
+    public static function create($classname) {
+        $arr = explode("\\", $classname);
+        $classname = $arr[count($arr) - 1];
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select meta_id from  metadata where meta_type=1 and meta_name='{$classname}'";
+        $meta = $conn->GetRow($sql);
+        $classname = '\App\Entity\Doc\\' . $classname;
+        $doc = new $classname();
+        $doc->meta_id = $meta['meta_id'];
+        return $doc;
+    }
+
+    /**
+     * Приведение  типа и клонирование  документа
+     */
+    public function cast() {
+
+        if (strlen($this->meta_name) == 0) {
+            $metarow = Helper::getMetaType($this->meta_id);
+            $this->meta_name = $metarow['meta_name'];
+        }
+        $class = "\\App\\Entity\\Doc\\" . $this->meta_name;
+        $doc = new $class($this->getData());
+        $doc->unpackData();
+        return $doc;
+    }
+
+    protected function beforeDelete() {
+
+        if (false == $this->canDeleted()) {
+            return false;
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from document_log  where document_id =" . $this->document_id);
+
+
+        return true;
+    }
+
+    protected function afterSave($update) {
+
+        //  if ($update == false) {   //новый  документ
+        //    $this->updateStatus(self::STATE_NEW);
+        // }
+        // else {
+        //    if ($this->state == self::STATE_NEW)
+        //    $this->updateStatus(self::STATE_EDITED);
+        //  }
+    }
+
+    /**
+     * добавление связанного  документа
+     *
+     * @param mixed $id
+     */
+    public function AddConnectedDoc($id) {
+        if ($id > 0) {
+            $conn = \ZDB\DB::getConnect();
+            $conn->Execute("delete from docrel  where (doc1={$this->document_id} and doc2={$id} )  or (doc2={$this->document_id} and doc1={$id})");
+            $conn->Execute("insert  into docrel (doc1,doc2) values({$id},{$this->document_id})");
+        }
+    }
+
+    /**
+     * удаление  связанного  документа
+     *
+     * @param mixed $id
+     */
+    public function RemoveConnectedDoc($id) {
+        if ($id > 0) {
+            $conn = \ZDB\DB::getConnect();
+            $conn->Execute("delete from  docrel  where (doc1={$this->document_id} and doc2={$id} )  or (doc2={$this->document_id} and doc1={$id})");
+        }
+    }
+
+    /**
+     * список  связанных  документов
+     *
+     */
+    public function ConnectedDocList() {
+
+        $where = "document_id in (select doc1 from  docrel where doc2={$this->document_id}) or document_id in (select doc2 from  docrel where doc1={$this->document_id})";
+        return Document::find($where);
+    }
+
+    /**
+     * список записей   в  логе   состояний
+     *
+     */
+    public function getLogList() {
+
+
+        $conn = \ZDB\DB::getConnect();
+        $rs = $conn->Execute("select l.*,u.username from  document_log l left join  users_view u on l.user_id = u.user_id where document_id={$this->document_id} order by  log_id");
+        $list = array();
+        foreach ($rs as $row) {
+            $item = new \App\DataItem();
+            $item->hostname = $row['hostname'];
+            $item->updatedon = date('Y-m-d H:i', strtotime($row['updatedon']));
+            $item->user = $row['username'];
+
+            $item->state = self::getStateName($row['document_state']);
+            $list[] = $item;
+        }
+
+        return $list;
+    }
+
+    /**
+     * Обновляет состояние  документа
+     *
+     * @param mixed $state
+     */
+    public function updateStatus($state) {
+
+
+        if ($this->document_id == 0)
+            return false;
+
+        if ($state == self::STATE_CANCELED) {
+            $this->Cancel();
+        }
+        if ($state == self::STATE_EXECUTED) {
+            $this->Execute();
+        }
+
+        $this->state = $state;
+        $this->save();
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "update documents set  state={$this->state}  where document_id = {$this->document_id}";
+        $conn->Execute($sql);
+
+        $this->insertLog($state);
+
+        return true;
+    }
+
+    /**
+     *
+     *  запись состояния в  лог документа
+     * @param mixed $state
+     */
+    public function insertLog($state) {
+        $conn = \ZDB\DB::getConnect();
+        $host = $conn->qstr($_SERVER["REMOTE_ADDR"]);
+        $user = \App\System::getUser()->getUserID();
+        $sql = "insert into document_log (document_id,user_id,document_state,updatedon,hostname) values ({$this->document_id},{$user},{$state},now(),{$host})";
+        $conn->Execute($sql);
+    }
+
+    /**
+     *  проверка  был ли документ в  таких состояния
+     * 
+     * @param mixed $states
+     */
+    public function checkStates($states) {
+        $stlist = "0";
+        foreach ($states as $state) {
+            $stlist = $stlist . "," . $state;
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select count(*) from document_log where document_id={$this->document_id} and document_state in({$stlist}) ";
+        return $conn->GetOne($sql) > 0;
+    }
+
+    /**
+     * Возвращает название  статуса  документа
+     *
+     * @param mixed $state
+     * @return mixed
+     */
+    public static function getStateName($state) {
+
+        switch ($state) {
+            case Document::STATE_NEW:
+                return "Новый";
+            case Document::STATE_EDITED:
+                return "Отредактирован";
+            case Document::STATE_CANCELED:
+                return "Отменен";
+            case Document::STATE_EXECUTED:
+                return "Проведен";
+            case Document::STATE_CLOSED:
+                return "Закрыт";
+            case Document::STATE_APPROVED:
+                return "Утвержден";
+            case Document::STATE_DELETED:
+                return "Удален";
+            case Document::STATE_WP:
+                return "Ожидает оплату";
+            case Document::STATE_WA:
+                return "Ожидает утверждения";
+            case Document::STATE_INSHIPMENT:
+                return "В доставке";
+            case Document::STATE_PAYED:
+                return "Оплачен";
+            case Document::STATE_PART_PAYED:
+                return "Частично оплачен";
+            case Document::STATE_DELIVERED:
+                return "Доставлен";
+            case Document::STATE_REFUSED:
+                return "Отклонен";
+           case Document::STATE_SHIFTED:
+                return "Отложен";
+          case Document::STATE_INPROCESS:
+                return "Выполняется";
+            default:
+                return "Неизвестный статус";
+        }
+    }
+
+    /**
+     * Возвращает  следующий  номер  при  автонумерации
+     *
+     */
+    public function nextNumber() {
+
+
+        $class = explode("\\", get_called_class());
+        $metaname = $class[count($class) - 1];
+        $doc = Document::getFirst("meta_name='" . $metaname . "'", "document_id desc");
+        if ($doc == null)
+            return '';
+        $prevnumber = $doc->document_number;
+        if (strlen($prevnumber) == 0)
+            return '';  
+        $number = preg_replace('/[^0-9]/', '', $prevnumber);
+        if (strlen($number) == 0)
+            $number = 0;
+            
+        $letter = preg_replace('/[0-9]/', '', $prevnumber);
+
+        return $letter . sprintf("%05d", ++$number);
+    }
+
+    /**
+     *  Возвращает  списки  документов которые  могут быть  созданы  на  основании
+     *
+     */
+    public function getRelationBased() {
+        $list = array();
+
+        return $list;
+    }
+
+    /**
+     * Список  доступных сстояний в зависимости  от текузего
+     * может  переружатся  для  уточнения  в  зависимости  от типа  документа
+     */
+    public function getStatesList() {
+        $list = array();
+        if ($this->state == self::STATE_CANCELED || $this->state == self::STATE_EDITED || $this->state == self::STATE_NEW) {
+            
+        }
+
+        return $list;
+    }
+
+    /**
+     * Возвращает  список  типов экспорта
+     * Перегружается  дочерними  для  добавление  специфических  типов
+     *
+     */
+    public function supportedExport() {
+        return array(self::EX_EXCEL);
+    }
+
+    /**
+     * Поиск  документа
+     *
+     * @param mixed $type имя или id типа
+     * @param mixed $from начало  периода  или  null
+     * @param mixed $to конец  периода  или  null
+     * @param mixed $header значения заголовка
+     */
+    public static function search($type, $from, $to, $header = array()) {
+        $conn = $conn = \ZDB\DB::getConnect();
+        ;
+        $where = "state= " . Document::STATE_EXECUTED;
+
+        if (strlen($type) > 0) {
+            if ($type > 0) {
+                $where = $where . " and  mata_id ={$type}";
+            } else {
+                $where = $where . " and  meta_name='{$type}'";
+            }
+        }
+
+        if ($from > 0)
+            $where = $where . " and  document_date >= " . $conn->DBDate($from);
+        if ($to > 0)
+            $where = $where . " and  document_date <= " . $conn->DBDate($to);
+        foreach ($header as $key => $value) {
+            $where = $where . " and  content like '%<{$key}>{$value}</{$key}>%'";
+        }
+
+        return Document::find($where);
+    }
+
+    /**
+     * может быть удален
+     * 
+     */
+    public function canDeleted() {
+        $conn = \ZDB\DB::getConnect();
+
+        $cnt = $conn->GetOne("select  count(*) from entrylist where  document_id = {$this->document_id}  ");
+        if ($cnt > 0) {
+            System::setErrorMsg("У докуинта  есть записи в аалитике");
+            return false;
+        }
+
+
+        $cnt = $conn->GetOne("select  count(*) from docrel where  doc1 = {$this->document_id}  or  doc2 = {$this->document_id}");
+        if ($cnt > 0) {
+            System::setErrorMsg("Есть связаные документы");
+            return false;
+        }
+
+
+        $f = $this->checkStates(array(Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        if ($f) {
+            System::setErrorMsg("У документа были оплаты или доставки");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * может быть отменен
+     * 
+     */
+    public function canCanceled() {
+        $f = $this->checkStates(array(Document::STATE_CLOSED,Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        if ($f) {
+            System::setWarnMsg("У документа были оплаты или доставки");
+            return true;
+        }
+        return true;
+    }
+
+}

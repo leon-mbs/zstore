@@ -1,0 +1,67 @@
+<html>
+    <head>
+    </head>
+
+    <body>
+        <div class="row">
+
+            <div class="col-12 col-md-10 col-xl-6" zippy="itemtable">
+                <h3>Товари на  складе </h3>
+                <form zippy="filter" class="form-inline">
+
+                    <label for="searchkey">Поиск</label>
+                    <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                    <label for="searchstore">склад</label>
+
+                    <select   class="form-control mr-sm-2" zippy="searchstore">
+
+                    </select>         
+                    <label for="searchcat">категория</label>
+
+                    <select   class="form-control mr-sm-2" zippy="searchcat">
+                        <option value="0">Не задана</option>
+                    </select>         
+
+
+                    <input class="btn btn-outline-success  " type="submit" value="ОК">
+
+                </form>
+
+                <table class="table table-bordered  table-sm  ">
+                    <tr>
+                        <th>Название</th>
+
+                        <th>Артикул</th>
+                        <th>Категория</th>
+                        <th  style="text-align: right;">Зак. цена</th>
+                        <th  style="text-align: right;">Кол.</th>
+                        <th  style="text-align: right;">На сумму</th>
+                        <th  style="text-align: right;">Прод. цена</th>
+
+
+                        <th style="width:56px"></th>
+                    </tr>
+                    <tr zippy="itemlist">
+                        <td zippy="itemname"></td>
+
+                        <td zippy="code"></td>
+                        <td zippy="cat_name"></td>
+                        <td zippy="partion" style="text-align: right;"></td>
+                        <td zippy="qty" style="text-align: right;"></td>
+                        <td zippy="amount" style="text-align: right;"></td>
+                        <td zippy="price" style="text-align: right;"></td>
+
+
+                    </tr>
+                </table>
+                <div zippy="pag"></div>
+            </div>
+
+
+
+
+        </div>
+
+
+    </body>
+</html>
