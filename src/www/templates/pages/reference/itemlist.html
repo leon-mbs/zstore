@@ -5,7 +5,7 @@
     <body>
         <div class="row">
 
-            <div class="col-12 col-md-8 col-xl-6" zippy="itemtable">
+            <div class="col-12 col-md-10 col-xl-8" zippy="itemtable">
                 <h3>Справочник товаров </h3>
                 <form zippy="filter" class="form-inline">
 
@@ -28,7 +28,7 @@
 
                         <th>Артикул</th>
                         <th>Категория</th>
-                        <th  style="text-align: right;">Отпускная цена</th>
+                        <th  style="text-align: right;">Отп. цена</th>
 
 
                         <th style="width:56px"></th>
@@ -54,14 +54,14 @@
                 <form   zippy="itemdetail"  >
                     <h4>Редактирование товара </h4>
                     <div class="form-group row">
-                        <label class="col-6 col-form-label" for="editname">Наименование</label>
-                        <div class="col-6"> 
+                        <label class="col-5 col-form-label" for="editname">Наименование</label>
+                        <div class="col-7"> 
                             <input required="required" class="form-control" zippy="editname"/>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-6 col-form-label" for="editcat">Категория</label>
-                        <div class="col-6"> 
+                        <label class="col-5 col-form-label" for="editcat">Категория</label>
+                        <div class="col-7"> 
                             <select   class="form-control" zippy="editcat">
                                 <option value="0">Не задана</option>
                             </select>
@@ -69,29 +69,29 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-6 col-form-label" for="editprice">Отпускная цена(наценка%)</label>
-                        <div class="col-6"> 
+                        <label class="col-5 col-form-label" for="editprice">Отпускная цена(наценка%)</label>
+                        <div class="col-7"> 
                             <input style="width: 100px" pattern="[0-9\.\%]+" class="form-control" zippy="editprice"/>
                         </div>
                     </div>
 
 
                     <div class="form-group row">
-                        <label class="col-6 col-form-label" for="editcode">Код товара (артикул)</label>
-                        <div class="col-6"> 
+                        <label class="col-5 col-form-label" for="editcode">Код товара (артикул)</label>
+                        <div class="col-7"> 
                             <input class="form-control" zippy="editcode"/>
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-6 col-form-label" for="editbarcode">Штрих-код</label>
-                        <div class="col-6"> 
+                        <label class="col-5 col-form-label" for="editbarcode">Штрих-код</label>
+                        <div class="col-7"> 
                             <input class="form-control" zippy="editbarcode"/>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-6 col-form-label" for="editdescription">Описание</label>
-                        <div class="col-6"> 
+                        <label class="col-5 col-form-label" for="editdescription">Описание</label>
+                        <div class="col-7"> 
                             <textarea class="form-control" zippy="editdescription"></textarea> 
                         </div>
                     </div>
