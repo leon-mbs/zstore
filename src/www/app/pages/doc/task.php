@@ -392,13 +392,13 @@ class Task extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] != true && $old->headerdata['incredit'] == true) {
+                if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_PAYED);
 
                     
                 }
                 //установлен флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] == true) {
+                if ($this->_doc->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                     $this->_doc->datatag = 0;
                     

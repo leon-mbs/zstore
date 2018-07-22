@@ -92,9 +92,9 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('amount', ($doc->amount > 0) ? $doc->amount : ""));
 
         $row->add(new Label('state', Document::getStateName($doc->state) ));
-        $row->add(new Label('sship'))->setVisible($doc->headerdata['inshipment']==true);
-        $row->add(new Label('spay'))->setVisible($doc->headerdata['incredit']==true);;
-        $row->add(new Label('splan'))->setVisible($doc->headerdata['planned']==true);;
+        $row->add(new Label('sship'))->setVisible($doc->headerdata['inshipment']==1);
+        $row->add(new Label('spay'))->setVisible($doc->headerdata['incredit']==1);;
+        $row->add(new Label('splan'))->setVisible($doc->headerdata['planned']==1);;
 
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -194,7 +194,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         $filter = Filter::getFilter("doclist");
         $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
 
-        if (strlen($filter->doctype) > 1) {
+        if ($filter->doctype > 0) {
             $where .= " and meta_id  ={$filter->doctype} ";
         }
         if (strlen($filter->searchnumber) > 1) {

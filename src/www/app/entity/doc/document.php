@@ -62,8 +62,9 @@ class Document extends \ZCL\DB\Entity
 
         $this->basedoc = '';
         $this->headerdata = array();
-        $this->headerdata['incredit'] = false; //оплата в  долг
-        $this->headerdata['inshipment'] = false; //товары в  пути
+        $this->headerdata['incredit'] = 0; //оплата в  долг
+        $this->headerdata['inshipment'] = 0; //товары в  пути
+        $this->headerdata['planned'] = 0; //запланированный
     }
 
     protected static function getMetadata() {

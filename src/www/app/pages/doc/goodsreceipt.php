@@ -258,9 +258,9 @@ class GoodsReceipt extends \App\Pages\Base
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
             'store' => $this->docform->store->getValue(),
-            'planned' => $this->docform->planned->isChecked(),
-            'incredit' => $this->docform->incredit->isChecked(),
-            'inshipment' => $this->docform->inshipment->isChecked(),
+            'planned' => $this->docform->planned->isChecked()?1:0,
+            'incredit' => $this->docform->incredit->isChecked()?1:0,
+            'inshipment' => $this->docform->inshipment->isChecked()?1:0,
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -285,19 +285,19 @@ class GoodsReceipt extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] != true && $old->headerdata['incredit'] == true) {
+                if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_PAYED);
                     $this->_doc->datatag = $this->_doc->amount;
                     $this->_doc->save();
                 }
-                //установлен флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] == true) {
+                //установлен флаг  в  true
+                if ($this->_doc->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                     $this->_doc->datatag = 0;
                     $this->_doc->save();
                 }
                 //снят флаг  в  доставке
-                if ($this->_doc->headerdata['inshipment'] != true && $old->headerdata['inshipment'] == true) {
+                if ($this->_doc->headerdata['inshipment'] != 1 && $old->headerdata['inshipment'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_DELIVERED);
                 }
                 //установлен флаг  в  доставке

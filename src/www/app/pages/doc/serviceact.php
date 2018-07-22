@@ -195,8 +195,8 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata = array(
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
-            'planned' => $this->docform->planned->isChecked(),
-            'incredit' => $this->docform->incredit->isChecked(),
+            'planned' => $this->docform->planned->isChecked()?1:0,
+            'incredit' => $this->docform->incredit->isChecked()?1:0,
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -221,13 +221,13 @@ class ServiceAct extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] != true && $old->headerdata['incredit'] == true) {
+                if ($this->_doc->headerdata['incredit'] !=1 && $old->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_PAYED);
 
                     $this->_doc->save();
                 }
                 //установлен флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] == true) {
+                if ($this->_doc->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                     $this->_doc->datatag = 0;
                     $this->_doc->save();
