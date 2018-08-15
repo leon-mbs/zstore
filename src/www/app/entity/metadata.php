@@ -26,6 +26,7 @@ class MetaData extends \ZCL\DB\Entity
         $list[2] = "Отчет";
         $list[3] = "Журнал";
         $list[4] = "Справочник";
+        $list[5] = "Онлайн каталог";
 
 
         return $list;

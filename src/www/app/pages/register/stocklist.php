@@ -17,6 +17,7 @@ use \App\Entity\Item;
 use \App\Entity\Stock;
 use \App\Entity\Category;
 use \App\Entity\Store;
+use \App\Helper as H;
 
 class StockList extends \App\Pages\Base
 {
@@ -27,7 +28,8 @@ class StockList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
-        $this->filter->add(new DropDownChoice('searchstore', Store::getList()));
+        $this->filter->add(new DropDownChoice('searchstore', Store::getList(), H::getDefStore()));
+        $this->filter->add(new CheckBox('allpart'));
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
@@ -51,9 +53,22 @@ class StockList extends \App\Pages\Base
         $item = Item::load($stock->item_id);
         $row->add(new Label('cat_name', $item->cat_name));
         $row->add(new Label('price', $item->getPrice($stock->partion)));
+
+        $row->add(new ClickLink('delete', $this, 'deleteOnClick'))->setVisible($stock->qty == 0);
     }
 
     public function OnFilter($sender) {
+        $this->itemtable->itemlist->Reload();
+    }
+
+    public function deleteOnClick($sender) {
+
+        $this->resetURL();
+        $stock = $sender->owner->getDataItem();
+
+        $stock->deleted = 1;
+        $stock->save();
+
         $this->itemtable->itemlist->Reload();
     }
 
@@ -72,6 +87,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         $form = $this->page->filter;
         $where = "qty <> 0 ";
+        if ($form->allpart->isChecked()) {
+            $where = "1=1 ";
+        }
         $text = trim($form->searchkey->getText());
         $store = $form->searchstore->getValue();
         if ($store > 0) {

@@ -44,7 +44,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
         $this->docform->add(new CheckBox('incredit'));
-         $this->docform->add(new Label('discount'))->setVisible(false);
+        $this->docform->add(new Label('discount'))->setVisible(false);
 
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -195,8 +195,8 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata = array(
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
-            'planned' => $this->docform->planned->isChecked()?1:0,
-            'incredit' => $this->docform->incredit->isChecked()?1:0,
+            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
+            'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -221,7 +221,7 @@ class ServiceAct extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] !=1 && $old->headerdata['incredit'] == 1) {
+                if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_PAYED);
 
                     $this->_doc->save();
@@ -299,12 +299,12 @@ class ServiceAct extends \App\Pages\Base
             $this->_discount = $customer->discount;
         }
         $this->calcTotal();
-        if($this->_discount>0){
-           $this->docform->discount->setVisible(true);
-           $this->docform->discount->setText('Скидка '.$this->_discount.'%');
-        }else {
-           $this->docform->discount->setVisible(false);
-        }        
+        if ($this->_discount > 0) {
+            $this->docform->discount->setVisible(true);
+            $this->docform->discount->setText('Скидка ' . $this->_discount . '%');
+        } else {
+            $this->docform->discount->setVisible(false);
+        }
     }
 
     public function OnAutoServive($sender) {

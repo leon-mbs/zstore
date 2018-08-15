@@ -25,9 +25,9 @@ class ItemActivity extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('store', Store::getList()));
+        $this->filter->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
-        $this->filter->store->selectFirst();
+
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
 
         $this->add(new Panel('detail'))->setVisible(false);

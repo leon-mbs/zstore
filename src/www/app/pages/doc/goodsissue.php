@@ -43,8 +43,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
 
 
-        $this->docform->add(new DropDownChoice('store', Store::getList()))->onChange($this, 'OnChangeStore');
-        $this->docform->store->selectFirst();
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
@@ -54,7 +54,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new CheckBox('incredit'));
         $this->docform->add(new CheckBox('inshipment'));
         $this->docform->add(new Label('discount'))->setVisible(false);
-        
+
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -64,7 +64,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-        
+
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -129,6 +129,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('partion', $item->partion));
+        $row->add(new Label('code', $item->item_code));
 
         $row->add(new Label('quantity', $item->quantity));
         $row->add(new Label('price', $item->price));
@@ -228,9 +229,9 @@ class GoodsIssue extends \App\Pages\Base
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
             'store' => $this->docform->store->getValue(),
-            'planned' => $this->docform->planned->isChecked()?1:0,
-            'incredit' => $this->docform->incredit->isChecked()?1:0,
-            'inshipment' => $this->docform->inshipment->isChecked()?1:0,
+            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
+            'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
+            'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -362,13 +363,12 @@ class GoodsIssue extends \App\Pages\Base
             $this->_discount = $customer->discount;
         }
         $this->calcTotal();
-        if($this->_discount>0){
-           $this->docform->discount->setVisible(true);
-           $this->docform->discount->setText('Скидка '.$this->_discount.'%');
-        }else {
-           $this->docform->discount->setVisible(false);
+        if ($this->_discount > 0) {
+            $this->docform->discount->setVisible(true);
+            $this->docform->discount->setText('Скидка ' . $this->_discount . '%');
+        } else {
+            $this->docform->discount->setVisible(false);
         }
-        
     }
 
     public function OnAutoItem($sender) {
@@ -402,7 +402,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->discount->setVisible(false);
-        $this->_discount=0;
+        $this->_discount = 0;
     }
 
     public function cancelcustOnClick($sender) {

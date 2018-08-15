@@ -44,7 +44,7 @@ class ServiceAct extends Document
 
         foreach ($this->detaildata as $row) {
 
-            $sc = new Entry($this->document_id, 0-$row['amount'], 0-$row['quantity']);
+            $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setService($row['service_id']);
 
             if ($this->headerdata["customer"] > 0)

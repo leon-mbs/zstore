@@ -5,8 +5,8 @@
 
                 <h3>Журнал документов </h3>
 
-                
-                 <div class="navbar nav">
+
+                <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
                         <label   for="from">С  </label>
@@ -17,14 +17,14 @@
                         <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
 
 
-                         
+
                         <select class="form-control mr-sm-2  " zippy="doctype">
-                            <option value="0">Все</option>
+                            <option value="0">Тип документа</option>
                         </select>
 
-                        <label for="searchnumber"> Номер </label>
+                        <label for="searchnumber"> № </label>
 
-                        <input class="form-control mr-sm-2" type="text" zippy="searchnumber" style="width:100px">
+                        <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
                         <div class="form-check   ">
 
@@ -43,58 +43,58 @@
 
 
                     </form>
-                     </div>
-                    <table class="table   table-sm table-responsive  table-responsive-sm ">
-                        <tr>
-                            <th>Документ</th>
-                            <th>Номер</th>
-                            <th>Дата</th>
-                            <th style="text-align: right;">Сумма</th>
-                            <th>Статус</th>
-                            <th> </th>
-                            <th>Примечание</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                </div>
+                <table class="table   table-sm table-responsive  table-responsive-sm ">
+                    <tr>
+                        <th>Документ</th>
+                        <th>Номер</th>
+                        <th>Дата</th>
+                        <th style="text-align: right;">Сумма</th>
+                        <th>Статус</th>
+                        <th> </th>
+                        <th>Примечание</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
 
-                        </tr>   <tbody>
-                            <tr zippy="doclist">
-                                <td zippy="name"></td>
-                                <td zippy="number"></td>
-                                <td style="white-space:   nowrap" zippy="date"></td>
-                                <td zippy="amount" style="text-align: right;"></td>
-                                <td style="white-space:   nowrap" zippy="state"> </td>
-                                <td style="white-space:   nowrap"  ><i title="К оплате" zippy="spay"  class="far fa-credit-card"></i> <i title="В доставке" zippy="sship"  class="fas fa-truck"></i> <i title="Запланированный" zippy="splan" class="far fa-calendar-alt"></i>  </td>
-                                <td zippy="notes"></td>
+                    </tr>   <tbody>
+                        <tr zippy="doclist">
+                            <td zippy="name"></td>
+                            <td zippy="number"></td>
+                            <td style="white-space:   nowrap" zippy="date"></td>
+                            <td zippy="amount" style="text-align: right;"></td>
+                            <td style="white-space:   nowrap" zippy="state"> </td>
+                            <td style="white-space:   nowrap"  ><i title="К оплате" zippy="spay"  class="far fa-credit-card"></i> <i title="В доставке" zippy="sship"  class="fas fa-truck"></i> <i title="Запланированный" zippy="splan" class="far fa-calendar-alt"></i>  </td>
+                            <td zippy="notes"></td>
 
-                                <td style="white-space:   nowrap">
-                                    <a zippy="show" title="Просмотр"><i class="fa fa-search-plus"></i></a>
-                                    <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></a>
-                                    <a zippy="cancel" title="Отменить проведение"><i class="fa fa-undo"></i> </a>
+                            <td style="white-space:   nowrap">
+                                <a zippy="show" title="Просмотр"><i class="fa fa-search-plus"></i></a>
+                                <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></a>
+                                <a zippy="cancel" title="Отменить проведение"><i class="fa fa-undo"></i> </a>
 
-                                </td>
-                                <td>
-                                    <a zippy="delete" title="Удаление"><i class="fa fa-trash"></i></a>
-                                </td>
-                                <td>
-                                    <div class="btn-group" zippy="basedon">
-                                        <button title="Создать на  основании" type="button"
-                                                class="btn btn-light btn-xs  dropdown-toggle" data-toggle="dropdown">
-                                            Создать <span class="caret"></span>
-                                        </button>
-                                        <div  class="dropdown-menu" role="menu" zippy="basedlist">
+                            </td>
+                            <td>
+                                <a zippy="delete" title="Удаление"><i class="fa fa-trash"></i></a>
+                            </td>
+                            <td>
+                                <div class="btn-group" zippy="basedon">
+                                    <button title="Создать на  основании" type="button"
+                                            class="btn btn-light btn-xs  dropdown-toggle" data-toggle="dropdown">
+                                        Создать <span class="caret"></span>
+                                    </button>
+                                    <div  class="dropdown-menu" role="menu" zippy="basedlist">
 
-                                        </div >
-                                    </div>
-                                </td>
-                            </tr>   </tbody>
-                    </table>
+                                    </div >
+                                </div>
+                            </td>
+                        </tr>   </tbody>
+                </table>
 
-                    <div zippy="pag"></div> 
+                <div zippy="pag"></div> 
 
 
 
-                
+
             </div>
 
         </div>
@@ -108,7 +108,7 @@
 
                 <script>
                     function check_delete() {
-                        return confirm("Видалити  документ?")
+                        return confirm("Удалить  документ?")
                     }
                 </script>
                 </body>

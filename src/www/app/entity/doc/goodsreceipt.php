@@ -14,7 +14,6 @@ class GoodsReceipt extends Document
 
     public function generateReport() {
 
-        // $customer = \App\Entity\Customer::load($this->headerdata["customer"]);
 
         $i = 1;
 
@@ -22,6 +21,7 @@ class GoodsReceipt extends Document
         foreach ($this->detaildata as $value) {
             $detail[] = array("no" => $i++,
                 "itemname" => $value['itemname'],
+                "itemcode" => $value['item_code'],
                 "quantity" => $value['quantity'],
                 "price" => $value['price'],
                 "amount" => $value['amount']
@@ -29,7 +29,6 @@ class GoodsReceipt extends Document
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"]
         );
@@ -58,16 +57,15 @@ class GoodsReceipt extends Document
 
             $sc->save();
 
-                
-                if($common['useval']==true){
-                   // if($row['old']==true)continue;  //не  меняем для  предыдущих строк
-                    //запоминаем курс  последней покупки
-                    $it = \App\Entity\Item::load($row['item_id']);
-                    $it->curname = $row['curname'];
-                    $it->currate = $row['currate'];
-                    $it->save();
-                }
-            
+
+            if ($common['useval'] == true) {
+                // if($row['old']==true)continue;  //не  меняем для  предыдущих строк
+                //запоминаем курс  последней покупки
+                $it = \App\Entity\Item::load($row['item_id']);
+                $it->curname = $row['curname'];
+                $it->currate = $row['currate'];
+                $it->save();
+            }
         }
 
         //$total = $this->headerdata['total'];
@@ -77,8 +75,6 @@ class GoodsReceipt extends Document
 
     public function getRelationBased() {
         $list = array();
-
-        // $list['ReturnGoodsReceipt'] = 'Повернення постачальнику';
 
         return $list;
     }

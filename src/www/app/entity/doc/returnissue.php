@@ -57,9 +57,9 @@ class ReturnIssue extends Document
 
         foreach ($this->detaildata as $row) {
 
-            $sc = new Entry($this->document_id,   $row['amount'],   $row['quantity']);
+            $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($row['stock_id']);
-        
+
             if ($this->headerdata["customer"] > 0)
                 $sc->setCustomer($this->headerdata["customer"]);
             $sc->save();
@@ -71,7 +71,7 @@ class ReturnIssue extends Document
 
     public function getRelationBased() {
         $list = array();
-  
+
         return $list;
     }
 

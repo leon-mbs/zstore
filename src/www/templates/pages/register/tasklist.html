@@ -1,137 +1,137 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="/vendor/leon-mbs/zippy/zcl/gantt/jquery.ganttView.css"/>
-  
+
         <link href="/assets/css/ekko-lightbox.css" rel="stylesheet" type="text/css">
         <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
-        
-
-<link rel="stylesheet" type="text/css" href="/assets/css/fullcalendar.css" />
 
 
-<script language="javascript" src="/assets/js/moment.min.js"></script>        
-<script language="javascript" src="/assets/js/fullcalendar.js"></script>        
-<script language="javascript" src="/assets/js/ru.js"></script>        
-        
+        <link rel="stylesheet" type="text/css" href="/assets/css/fullcalendar.css" />
+
+
+        <script language="javascript" src="/assets/js/moment.min.js"></script>        
+        <script language="javascript" src="/assets/js/fullcalendar.js"></script>        
+        <script language="javascript" src="/assets/js/ru.js"></script>        
+
         <script>
- 
+
         </script>   
     </head>
     <body>
-            <div class="row">
-               <div class="col-12 col-md-10 col-xl-8"  >
+        <div class="row">
+            <div class="col-12 col-md-10 col-xl-8"  >
                 <h3>Журнал нарядов</h3>
-             <div class="navbar nav">
-             <form zippy="filterform" class="form-inline">
-                    
-                   
+                <div class="navbar nav">
+                    <form zippy="filterform" class="form-inline">
+
+
                         <label for="filterclient"  >Клиент</label>
 
                         <input class="form-control mr-sm-2 " zippy="filterclient"  placeholder="Почніть вводити  ">
 
-                    
-                  
+
+
                         <label for="filterassignedto"  >Исполнитель</label>
 
                         <select class="form-control  mr-sm-2" zippy="filterassignedto">
                             <option value="0">Все</option>
                         </select>
 
-                    
-                     
-                           <div class="form-check   ">
+
+
+                        <div class="form-check   ">
 
                             <input class="form-check-input"  type="checkbox" zippy="filterfinished">
                             <label class="form-check-label mr-sm-3" for="filterfinished">Все</label>
                         </div>                
-                    
+
                         <button type="submit" class="btn btn-primary  ">ОК</button>
                         &nbsp;<a title="Очистить фильтр" zippy="eraser"><i class="fa fa-eraser"></i></a>
-                   
-                </form> 
-            </div>       
+
+                    </form> 
+                </div>       
             </div>
-            </div>    
-            <div class="row">
+        </div>    
+        <div class="row">
 
 
             <div class="col-12 col-md-10 col-xl-8  table-responsive"  >
 
-           <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link  active" href="#tasktab" data-toggle="tab">Список</li>
-            <li class="nav-item"><a class="nav-link" href="#caltab" data-toggle="tab">Календарь</li>
-           </ul>
-               
-         <div class="tab-content">
-            <div id="tasktab" class="tab-pane  active">
-   
-                
-         
-                
-                <table class="table   table-sm ">
-                    <tr>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link  active" href="#tasktab" data-toggle="tab">Список</li>
+                    <li class="nav-item"><a class="nav-link" href="#caltab" data-toggle="tab">Календарь</li>
+                </ul>
 
-                        <th>Номер</th>
-                        <th>Коментарий</th>
-                    
-                        <th>Начало</th>
-
-                        <th style="text-align: right;">Час.</th>
-
-                        <th>Статус</th>
-                        <th>Клиент</th>
-                       
-                        
-                     
-                        <th>Исполнители</th>
-
-                        <th style="width:100px;"> </th>
-
-                    </tr>
-                    <tr zippy="tasklist">
-
-                        <td zippy="tasknumber"></td>
-                        <td zippy="taskdesc"></td>
-                        
-                        <td zippy="taskstartdate" style="white-space:   nowrap" ></td>
-                        <td zippy="taskhours"  style="text-align: right;"></td>
-
-                        <td zippy="taskstatus"></td>
-                        <td zippy="taskclient"></td>
-                         
-                        
-                        <td zippy="taskemps"></td>
-
-                        <td>
-                           <a zippy="taskshow" title="Просмотр"><i class="fa fa-search-plus"></i></a>
-              
-                            &nbsp;&nbsp;<a zippy="taskedit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                               &nbsp;&nbsp;<a zippy="taskdelete" title="Отменить"><i class="fa fa-undo"></i></a>
-                        </td>
-
-                    </tr>
-                </table>
-                <div zippy="pag"></div>
-                <br>
-             
-             
-               <div zippy="docview"></div>
-               </div>
-               <div id="caltab" class="tab-pane   ">
-           
-               <div zippy='calendar'></div>
-         
-
-            </div>  
-            </div>  
-                  
+                <div class="tab-content">
+                    <div id="tasktab" class="tab-pane  active">
 
 
 
-             
-           
-        </div>
-         
+
+                        <table class="table   table-sm ">
+                            <tr>
+
+                                <th>Номер</th>
+                                <th>Коментарий</th>
+
+                                <th>Начало</th>
+
+                                <th style="text-align: right;">Час.</th>
+
+                                <th>Статус</th>
+                                <th>Клиент</th>
+
+
+
+                                <th>Исполнители</th>
+
+                                <th style="width:100px;"> </th>
+
+                            </tr>
+                            <tr zippy="tasklist">
+
+                                <td zippy="tasknumber"></td>
+                                <td zippy="taskdesc"></td>
+
+                                <td zippy="taskstartdate" style="white-space:   nowrap" ></td>
+                                <td zippy="taskhours"  style="text-align: right;"></td>
+
+                                <td zippy="taskstatus"></td>
+                                <td zippy="taskclient"></td>
+
+
+                                <td zippy="taskemps"></td>
+
+                                <td>
+                                    <a zippy="taskshow" title="Просмотр"><i class="fa fa-search-plus"></i></a>
+
+                                    &nbsp;&nbsp;<a zippy="taskedit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                                    &nbsp;&nbsp;<a zippy="taskdelete" title="Отменить"><i class="fa fa-undo"></i></a>
+                                </td>
+
+                            </tr>
+                        </table>
+                        <div zippy="pag"></div>
+                        <br>
+
+
+                        <div zippy="docview"></div>
+                    </div>
+                    <div id="caltab" class="tab-pane   ">
+
+                        <div zippy='calendar'></div>
+
+
+                    </div>  
+                </div>  
+
+
+
+
+
+
+            </div>
+
 
     </body>
 </html>

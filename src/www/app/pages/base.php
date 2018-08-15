@@ -15,6 +15,7 @@ class Base extends \Zippy\Html\WebPage
 {
 
     public function __construct($params = null) {
+        global $_config;
 
         \Zippy\Html\WebPage::__construct();
 
@@ -40,6 +41,7 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new Label("repmenu", Helper::generateMenu(2), true));
         $this->add(new Label("regmenu", Helper::generateMenu(3), true));
         $this->add(new Label("refmenu", Helper::generateMenu(4), true));
+        $this->add(new Label("shopmenu", Helper::generateMenu(5), true));
 
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
@@ -50,6 +52,7 @@ class Base extends \Zippy\Html\WebPage
         }
 
         $this->_tvars["picontent"] = $pi;
+        $this->_tvars["shop"] = $_config['common']['shop'] == 1;
     }
 
     public function LogoutClick($sender) {
@@ -117,10 +120,9 @@ class Base extends \Zippy\Html\WebPage
     }
 
     //Перезагрузить страницу  с  клиента
-    //например бля  сброса  адресной строки  после  команды удаления
+    //например для  сброса  адресной строки  после  команды удаления
     protected final function resetURL() {
         \App\Application::$app->setReloadPage();
     }
 
-     
 }

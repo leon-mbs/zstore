@@ -33,10 +33,7 @@ class Task extends \App\Pages\Base
     public $_itemlist = array();
     public $_emplist = array();
     private $_doc;
-    
- 
     private $_discount;
-    
 
     public function __construct($docid = 0) {
         parent::__construct();
@@ -50,13 +47,11 @@ class Task extends \App\Pages\Base
 
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('hours',"0"));
+        $this->docform->add(new TextInput('hours', "0"));
         $this->docform->add(new CheckBox('incredit'));
-        $this->docform->add(new DropDownChoice('taskstate',array(7=>'Выполняется',9=>'Закрыт',16=>'Отложен'),7));
+        $this->docform->add(new DropDownChoice('taskstate', array(7 => 'Выполняется', 9 => 'Закрыт', 16 => 'Отложен'), 7));
         $this->docform->add(new Label('discount'))->setVisible(false);
-        $this->docform->add(new DropDownChoice('store', Store::getList())) ;
-        $this->docform->store->selectFirst();
-
+        $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
 
         $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
         $this->docform->add(new SubmitLink('additem'))->onClick($this, 'additemOnClick');
@@ -68,7 +63,7 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new Label('total'));
         $this->docform->add(new Label('totaldisc'));
-        
+
         //service
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('editservice'))->onText($this, 'OnAutoServive');
@@ -77,7 +72,7 @@ class Task extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
-    
+
         //item
         $this->add(new Form('editdetail2'))->setVisible(false);
         $this->editdetail2->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
@@ -91,7 +86,7 @@ class Task extends \App\Pages\Base
 
         //employer
         $this->add(new Form('editdetail3'))->setVisible(false);
-        $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name","","emp_name")));
+        $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name")));
         $this->editdetail3->add(new Button('cancelrow3'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail3->add(new SubmitButton('saverow3'))->onClick($this, 'saverow3OnClick');
 
@@ -117,28 +112,27 @@ class Task extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->headerdata['end_date']);
             $this->docform->customer->setKey($this->_doc->headerdata['customer']);
             $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
-            $this->OnChangeCustomer($this->docform->customer)  ;
+            $this->OnChangeCustomer($this->docform->customer);
 
             foreach ($this->_doc->detaildata as $item) {
-                if($item["service_id"]>0) {
-                  $service = new Service($item);
-                  $this->_servicelist[$service->service_id] = $service;
+                if ($item["service_id"] > 0) {
+                    $service = new Service($item);
+                    $this->_servicelist[$service->service_id] = $service;
                 }
-                if($item["item_id"]>0) {
-                  $stock = new Stock($item);
-                  $this->_itemlist[$stock->stock_id] = $stock;
+                if ($item["item_id"] > 0) {
+                    $stock = new Stock($item);
+                    $this->_itemlist[$stock->stock_id] = $stock;
                 }
-                if($item["employee_id"]>0) {
-                  $emp = new Employee($item);
-                  $this->_emplist[$emp->employee_id] = $emp;
+                if ($item["employee_id"] > 0) {
+                    $emp = new Employee($item);
+                    $this->_emplist[$emp->employee_id] = $emp;
                 }
             }
-             
         } else {
             $this->_doc = Document::create('Task');
             $this->_doc->document_number = $this->_doc->nextNumber();
-            $this->docform->document_number->setText($this->_doc->document_number);;
- 
+            $this->docform->document_number->setText($this->_doc->document_number);
+            ;
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
@@ -154,7 +148,7 @@ class Task extends \App\Pages\Base
 
         $row->add(new Label('quantity', $service->quantity));
         $row->add(new Label('price', $service->price));
-      
+
         $row->add(new Label('amount', $service->quantity * $service->price));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -163,14 +157,13 @@ class Task extends \App\Pages\Base
     public function addserviceOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        
+
         $this->editdetail->editservice->setText('');
         $this->editdetail->editservice->setKey(0);
         $this->editdetail->editquantity->setText(1);
         $this->editdetail->editprice->setText(0);
     }
-    
-    
+
     public function editOnClick($sender) {
         $service = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
@@ -178,10 +171,9 @@ class Task extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText(($service->quantity));
         $this->editdetail->editprice->setText($service->price);
-         
+
         $this->editdetail->editservice->setKey($service->service_id);
         $this->editdetail->editservice->setText($service->service_name);
-        
     }
 
     public function deleteOnClick($sender) {
@@ -193,8 +185,6 @@ class Task extends \App\Pages\Base
         $this->calcTotal();
     }
 
-    
-
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getKey();
         if ($id == 0) {
@@ -204,7 +194,7 @@ class Task extends \App\Pages\Base
         $service = Service::load($id);
         $service->quantity = $this->editdetail->editquantity->getText();
         $service->price = $this->editdetail->editprice->getText();
-     
+
 
         $this->_servicelist[$service->service_id] = $service;
         $this->editdetail->setVisible(false);
@@ -232,16 +222,16 @@ class Task extends \App\Pages\Base
         $row->add(new ClickLink('edit2'))->onClick($this, 'edit2OnClick');
         $row->add(new ClickLink('delete2'))->onClick($this, 'delete2OnClick');
     }
- 
+
     public function additemOnClick($sender) {
         $this->editdetail2->setVisible(true);
         $this->docform->setVisible(false);
-          $this->editdetail2->edititem->setText('');
-        $this->editdetail2->edititem->setKey(0);      
+        $this->editdetail2->edititem->setText('');
+        $this->editdetail2->edititem->setKey(0);
         $this->editdetail2->editquantity2->setText(1);
         $this->editdetail2->editprice2->setText(0);
-    } 
-   
+    }
+
     public function edit2OnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
         $this->editdetail2->setVisible(true);
@@ -253,9 +243,8 @@ class Task extends \App\Pages\Base
 
         $this->editdetail2->edititem->setKey($item->item_id);
         $this->editdetail2->edititem->setText($item->itemname);
-        
     }
-  
+
     public function saverow2OnClick($sender) {
         $id = $this->editdetail2->edititem->getKey();
         if ($id == 0) {
@@ -286,23 +275,21 @@ class Task extends \App\Pages\Base
         $this->editdetail2->setVisible(false);
         $this->docform->setVisible(true);
     }
-  
+
     public function delete2OnClick($sender) {
         $item = $sender->owner->getDataItem();
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->stock_id => $this->_itemlist[$item->stock_id]));
         $this->docform->detail2->Reload();
         $this->calcTotal();
     }
-  
-  
+
     //employee
     public function addempOnClick($sender) {
         $this->editdetail3->setVisible(true);
         $this->docform->setVisible(false);
- 
-        $this->editdetail3->editemp->setValue(0);      
- 
-    } 
+
+        $this->editdetail3->editemp->setValue(0);
+    }
 
     public function saverow3OnClick($sender) {
         $id = $this->editdetail3->editemp->getValue();
@@ -311,28 +298,26 @@ class Task extends \App\Pages\Base
             return;
         }
         $emp = Employee::load($id);
- 
+
         $this->_emplist[$emp->employee_id] = $emp;
         $this->editdetail3->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail3->Reload();
- 
     }
- 
- 
+
     public function detail3OnRow($row) {
         $emp = $row->getDataItem();
 
         $row->add(new Label('empname', $emp->emp_name));
         $row->add(new ClickLink('delete3'))->onClick($this, 'delete3OnClick');
     }
-   public function delete3OnClick($sender) {
+
+    public function delete3OnClick($sender) {
         $emp = $sender->owner->getDataItem();
         $this->_emplist = array_diff_key($this->_emplist, array($emp->employee_id => $this->_emplist[$emp->employee_id]));
         $this->docform->detail3->Reload();
-        
-    } 
-  
+    }
+
     public function savedocOnClick($sender) {
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -346,7 +331,7 @@ class Task extends \App\Pages\Base
         $this->calcTotal();
 
         $old = $this->_doc->cast();
-        $taskstate = $this->docform->taskstate->getValue()  ;
+        $taskstate = $this->docform->taskstate->getValue();
         $this->_doc->headerdata = array(
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
@@ -365,18 +350,18 @@ class Task extends \App\Pages\Base
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();
         }
-        
-        $total= $this->docform->total->getText();
+
+        $total = $this->docform->total->getText();
         $cnt = count($this->_emplist);
-        
+
         foreach ($this->_emplist as $item) {
-            $item->pay= round($total/$cnt); //сумма поровну
+            $item->pay = round($total / $cnt); //сумма поровну
             $this->_doc->detaildata[] = $item->getData();
         }
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
-  
+
 
         $this->_doc->datatag = $this->_doc->amount;
 
@@ -394,20 +379,16 @@ class Task extends \App\Pages\Base
                 //снят флаг  в  долг
                 if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_PAYED);
-
-                    
                 }
                 //установлен флаг  в  долг
                 if ($this->_doc->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                     $this->_doc->datatag = 0;
-                    
                 }
-        
-                $this->_doc->updateStatus($taskstate);  
-        
-                $this->_doc->save();              
-                
+
+                $this->_doc->updateStatus($taskstate);
+
+                $this->_doc->save();
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -437,17 +418,17 @@ class Task extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         foreach ($this->_itemlist as $item) {
-            
+
             $item->amount = $item->price * $item->quantity;
-            if($item->custpay==1)$total = $total + $item->amount;
+            if ($item->custpay == 1)
+                $total = $total + $item->amount;
         }
-        
-        $totaldisc = round( $total / 100 * $this->_discount);
+
+        $totaldisc = round($total / 100 * $this->_discount);
         $total = $total - $totaldisc;
         $this->docform->total->setText($total);
         $this->docform->totaldisc->setText($totaldisc);
-        $this->docform->totaldisc->setVisible($totaldisc>0);
-        
+        $this->docform->totaldisc->setVisible($totaldisc > 0);
     }
 
     /**
@@ -489,12 +470,12 @@ class Task extends \App\Pages\Base
             $this->_discount = $customer->discount;
         }
         $this->calcTotal();
-        if($this->_discount>0){
-           $this->docform->discount->setVisible(true);
-           $this->docform->discount->setText('Скидка '.$this->_discount.'%');
-        }else {
-           $this->docform->discount->setVisible(false);
-        }        
+        if ($this->_discount > 0) {
+            $this->docform->discount->setVisible(true);
+            $this->docform->discount->setText('Скидка ' . $this->_discount . '%');
+        } else {
+            $this->docform->discount->setVisible(false);
+        }
     }
 
     public function OnAutoServive($sender) {
@@ -517,13 +498,13 @@ class Task extends \App\Pages\Base
 
         $this->updateAjax(array('editprice'));
     }
- 
+
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = Item::qstr('%' . $this->editdetail2->edititem->getText() . '%');
         return Stock::findArrayEx("store_id={$store_id}   and (itemname like {$text} or item_code like {$text}) ");
     }
-    
+
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
@@ -537,7 +518,8 @@ class Task extends \App\Pages\Base
         $this->editdetail2->editprice2->setText($price);
 
         $this->updateAjax(array('qty', 'editprice2'));
-    }    
+    }
+
     //добавление нового контрагента
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);

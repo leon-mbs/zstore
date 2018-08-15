@@ -54,7 +54,7 @@ catch (Throwable $e) {
         echo $e->getFile().'<br>';
     }
 }
-catch (Excption $e) {    //для обратной совместимости
+catch (Exception $e) {    //для обратной совместимости
     if($e  instanceof ADODB_Exception){
 
        \ZDB\DB::getConnect()->CompleteTrans(false); // откат транзакции
