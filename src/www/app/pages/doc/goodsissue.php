@@ -325,7 +325,7 @@ class GoodsIssue extends \App\Pages\Base
           if ($this->docform->store->getValue() == 0) {
             $this->setError("Не выбран  склад");
         }
-        if ($this->docform->customer->getKey() == trim($this->docform->customer->getText())=='') {
+        if ($this->docform->customer->getKey() ==0  && trim($this->docform->customer->getText() ) == '') {
             $this->setError("Неверно введен  покупатель");
         }
         return !$this->isError();
