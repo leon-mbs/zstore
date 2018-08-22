@@ -172,7 +172,7 @@ class Outcome extends \App\Pages\Base
                    group by s.`service_name`
                order  by s.`service_name`      ";
         }
-        \App\Helper::log($sql);
+        
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {
