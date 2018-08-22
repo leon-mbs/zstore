@@ -40,7 +40,7 @@
         {{#_type2}}
            <tr style="font-size:larger; font-weight: bolder;">
                 <td align="center" colspan="4">
-                    Продажи  по поставщикам  <br> <br>
+                    Продажи  по покупателям  <br> <br>
                 </td>
             </tr> 
             <tr style="font-weight: bolder;">

@@ -18,12 +18,22 @@ class Task extends Document
 
         $detail = array();
         foreach ($this->detaildata as $value) {
+            if($value['eq_id']>0)continue;
             $detail[] = array("no" => $i++,
                 "servicename" => $value['service_id'] > 0 ? $value['service_name'] : $value['itemname'],
                 "quantity" => $value['quantity'],
                 "price" => $value['price'],
                 "amount" => $value['quantity'] * $value['price']
             );
+        }
+       $detail2 = array();
+        foreach ($this->detaildata as $value) {
+            if($value['eq_id']>0){
+                $detail2[] = array( 
+                    "eq_name" => $value['eq_name'],
+                    "code" => $value['code'] 
+                );
+            }
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
@@ -35,7 +45,7 @@ class Task extends Document
         );
         $report = new \App\Report('task.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header, $detail,$detail2);
 
         return $html;
     }

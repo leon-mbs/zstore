@@ -59,16 +59,15 @@ class Application extends \Zippy\WebApplication
         if ($api[0] == 'api' && count($api) > 2) {
 
             $class = $api[1];
-            $params = array_slice($api, 3);
-
+  
             if ($class == 'echo') {  //для  теста  /api/echo/параметр
                 $response = "<echo>" . $api[2] . "</echo>";
             } else {
 
                 try {
 
-
-                    require_once(_ROOT . DIRECTORY_SEPARATOR . strtolower("api" . DIRECTORY_SEPARATOR . $class . ".php"));
+                $file = _ROOT . "app/api/".  strtolower( $class ). ".php"  ;
+                require_once($file);
 
                     $class = "\\App\\API\\" . $class;
 
@@ -76,11 +75,11 @@ class Application extends \Zippy\WebApplication
 
                     //если RESTFul
                     if ($page instanceof \App\RestFul) {
-                        $page->Execute($params[0], $params[1], $params[2], $params[3]);
+                    $page->Execute($api[2],$api[3] );
                         die;
                     }
 
-
+                $params = array_slice($api, 2);
                     $response = call_user_func_array(array($page, $api[2]), $params);
                 } catch (Throwable $e) {
 

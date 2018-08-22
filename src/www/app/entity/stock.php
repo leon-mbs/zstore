@@ -12,6 +12,11 @@ namespace App\Entity;
 class Stock extends \ZCL\DB\Entity
 {
 
+    protected function init() {
+        $this->stock_id = 0;
+        $this->deleted = 0;
+    }
+    
     /**
      * Метод  для   получения  имени  ТМЦ  с  ценой
      *

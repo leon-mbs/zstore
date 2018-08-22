@@ -192,12 +192,13 @@ class MoveItem extends \App\Pages\Base
             }
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch (\ZippyERP\System\Exception $ee) {
-            $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
         } catch (\Exception $ee) {
+            global $logger;
             $conn->RollbackTrans();
-            throw new \Exception($ee->getMessage());
+            $this->setError("Ошибка записи документа. Детализация в логе  ");
+    
+            $logger->error($ee);
+            return;
         }
     }
 

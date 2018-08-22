@@ -36,8 +36,10 @@ class GoodsIssue extends Document
 
         $firm = \App\System::getOptions("common");
 
+        //  $customer = \App\Entity\Customer::load($this->headerdata["customer"]);
         $header = array('date' => date('d.m.Y', $this->document_date),
             "firmname" => $firm['firmname'],
+            "customername" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"],
             "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))
@@ -70,6 +72,8 @@ class GoodsIssue extends Document
 
     public function getRelationBased() {
         $list = array();
+        $list['Warranty'] = 'Гарантійний талон';
+        $list['ReturnIssue'] = 'Возвратная накладная';
 
         return $list;
     }

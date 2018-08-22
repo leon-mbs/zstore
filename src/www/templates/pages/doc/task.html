@@ -49,6 +49,13 @@
                         <label for="hours" >Кол. часов</label>
                         <input   style="width:100px;" pattern[0-9]+ class="form-control" type="text" zippy="hours" >
                     </div>   
+                    <div class="form-group  ">
+                        <label for="parea" >Производственный участок</label>
+                        <select class="form-control" zippy="parea">
+                        <option value="0">Не выбран</option>
+                        </select>
+                    </div>             
+                    
                     <div class="form-group">
                         <label for="taskstate" >Состояние задачи</label>
                         <select class="form-control"   zippy="taskstate" >
@@ -64,7 +71,7 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 col-xl-6">
-                    <a class="btn btn-outline-primary" zippy="addservice">Добавить работу</a> 
+                    <a class="btn btn-outline-primary btn-sm" zippy="addservice">Добавить работу</a> 
 
                     <h5>Работы</h5>
                     <table class="table  table-sm">
@@ -98,7 +105,7 @@
 
 
                     </table>
-                    <a class="btn btn-outline-primary" zippy="additem">Добавить материал</a>                     
+                    <a class="btn btn-outline-primary btn-sm" zippy="additem">Добавить материал</a>                     
                     <h5>Материалы и комплектующие</h5>
                     <table class="table  table-sm">
                         <tr>
@@ -144,7 +151,7 @@
                     </table>
 
 
-                    <a class="btn btn-outline-primary" zippy="addemp">Добавить исполнителя</a>                     
+                    <a class="btn btn-outline-primary btn-sm" zippy="addemp">Добавить исполнителя</a>                     
                     <h5>Исполнители</h5>
                     <table class="table  table-sm">
                         <tr>
@@ -160,7 +167,24 @@
                             </td>
                         </tr>                                        
                     </table>                               
+                    <a class="btn btn-outline-primary btn-sm" zippy="addeq">Добавить оборудование</a>                     
+                    <h5>Оборудование</h5>
+                    <table class="table  table-sm">
+                        <tr>
 
+                            <th>Наименование</th>
+                            <th  >Инв. номер</th>
+                             <th width="50"></th>
+                        </tr>
+                   <tr zippy="detail4">
+
+                            <td zippy="eq_name"></td>
+                            <td zippy="eq_code"></td>
+                            <td>
+                                <a zippy="delete4"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>                      
+                       </table>   
                 </div>
             </div>
             <div class="row">
@@ -255,6 +279,25 @@
                                                                                                              zippy="cancelrow3"
                                                                                                              value="Отменить"
                                                                                                              class="btn btn-light ">
+                    </div>
+                </div>
+            </div>
+        </form> 
+         <form zippy="editdetail4">
+            <h3>Добавить оборудование </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editeq">Наименование </label>
+                        <select zippy="editeq"  class="form-control select2"  >
+                            <option>Не выбрано</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input zippy="saverow4" type="submit" value="Добавить" class="btn btn-light"> 
+                        <input type="button"   zippy="cancelrow4" value="Отменить"    class="btn btn-light ">
                     </div>
                 </div>
             </div>

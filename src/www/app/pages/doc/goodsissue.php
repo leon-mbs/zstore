@@ -286,11 +286,12 @@ class GoodsIssue extends \App\Pages\Base
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
+            global $logger;
             $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
-        } catch (\Exception $ee) {
-            $conn->RollbackTrans();
-            throw new \Exception($ee->getMessage());
+            $this->setError("Ошибка записи документа. Детализация в логе  ");
+    
+            $logger->error($ee);
+            return;
         }
     }
 
@@ -321,7 +322,12 @@ class GoodsIssue extends \App\Pages\Base
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
-
+          if ($this->docform->store->getValue() == 0) {
+            $this->setError("Не выбран  склад");
+        }
+        if ($this->docform->customer->getKey() == trim($this->docform->customer->getText())=='') {
+            $this->setError("Неверно введен  покупатель");
+        }
         return !$this->isError();
     }
 
@@ -374,7 +380,7 @@ class GoodsIssue extends \App\Pages\Base
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = Item::qstr('%' . $sender->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id}   and (itemname like {$text} or item_code like {$text}) ");
+        return Stock::findArrayEx("store_id={$store_id} and qty>0    and (itemname like {$text} or item_code like {$text}) ");
     }
 
     //добавление нового контрагента

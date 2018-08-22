@@ -8,35 +8,35 @@ namespace App;
 abstract class RestFul
 {
 
-    public function Execute($id) {
+    public function Execute($id,$key=null ) {
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->get($id);
+            $this->get($id,$key );
         };
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->post($_POST["data"]);
+            $this->post($id,$key);
         };
         if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-            $this->delete($id);
+            $this->delete($id,$key);
         };
         if ($_SERVER["REQUEST_METHOD"] == "PUT") {
-            $this->put($id, $_REQUEST["data"]);
+            $this->put($id,$key);
         };
     }
 
-    public function get($id = 0) {
+    public function get($id,$key=null) {
         $this->FailAnswer();
     }
 
-    public function post($data) {
+    public function post($id,$key=null) {
         $this->FailAnswer();
     }
 
-    public function put($id, $data) {
+    public function put($id,$key=null) {
         $this->FailAnswer();
     }
 
-    public function delete($id) {
+    public function delete($id,$key=null) {
         $this->FailAnswer();
     }
 

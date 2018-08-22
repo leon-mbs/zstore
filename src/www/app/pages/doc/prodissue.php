@@ -225,11 +225,12 @@ class ProdIssue extends \App\Pages\Base
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
+            global $logger;
             $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
-        } catch (\Exception $ee) {
-            $conn->RollbackTrans();
-            throw new \Exception($ee->getMessage());
+            $this->setError("Ошибка записи документа. Детализация в логе  ");
+    
+            $logger->error($ee);
+            return;
         }
     }
 

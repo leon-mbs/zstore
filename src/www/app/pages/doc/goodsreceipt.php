@@ -321,8 +321,11 @@ class GoodsReceipt extends \App\Pages\Base
 
             $conn->CommitTrans();
         } catch (\Exception $ee) {
+            global $logger;
             $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
+            $this->setError("Ошибка записи документа. Детализация в логе  ");
+    
+            $logger->error($ee);
             return;
         }
         App::RedirectBack();

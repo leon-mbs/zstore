@@ -19,8 +19,10 @@ use App\Entity\Doc\Document;
 use App\Entity\Service;
 use App\Entity\Store;
 use App\Entity\Stock;
+use App\Entity\Prodarea;
 use App\Entity\Item;
 use App\Entity\Employee;
+use App\Entity\Equipment;
 use App\Application as App;
 
 /**
@@ -32,6 +34,7 @@ class Task extends \App\Pages\Base
     public $_servicelist = array();
     public $_itemlist = array();
     public $_emplist = array();
+    public $_eqlist = array();
     private $_doc;
     private $_discount;
 
@@ -52,11 +55,12 @@ class Task extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('taskstate', array(7 => 'Выполняется', 9 => 'Закрыт', 16 => 'Отложен'), 7));
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
+        $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", "" ), 0));
 
         $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
         $this->docform->add(new SubmitLink('additem'))->onClick($this, 'additemOnClick');
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
-        $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
+        $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -89,6 +93,12 @@ class Task extends \App\Pages\Base
         $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name")));
         $this->editdetail3->add(new Button('cancelrow3'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail3->add(new SubmitButton('saverow3'))->onClick($this, 'saverow3OnClick');
+    
+        //equipment
+        $this->add(new Form('editdetail4'))->setVisible(false);
+        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::findArray("eq_name", "", "eq_name")));
+        $this->editdetail4->add(new Button('cancelrow4'))->onClick($this, 'cancelrowOnClick');
+        $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
 
         //добавление нового контрагента
@@ -110,6 +120,7 @@ class Task extends \App\Pages\Base
             $this->docform->incredit->setChecked($this->_doc->headerdata['incredit']);
 
             $this->docform->document_date->setDate($this->_doc->headerdata['end_date']);
+            $this->docform->parea->setValue($this->_doc->headerdata['parea']);
             $this->docform->customer->setKey($this->_doc->headerdata['customer']);
             $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
             $this->OnChangeCustomer($this->docform->customer);
@@ -127,6 +138,10 @@ class Task extends \App\Pages\Base
                     $emp = new Employee($item);
                     $this->_emplist[$emp->employee_id] = $emp;
                 }
+                if ($item["eq_id"] > 0) {
+                    $eq = new Equipment($item);
+                    $this->_eqlist[$eq->eq_id] = $eq;
+                }
             }
         } else {
             $this->_doc = Document::create('Task');
@@ -138,6 +153,7 @@ class Task extends \App\Pages\Base
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->docform->add(new DataView('detail2', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detail2OnRow'))->Reload();
         $this->docform->add(new DataView('detail3', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emplist')), $this, 'detail3OnRow'))->Reload();
+        $this->docform->add(new DataView('detail4', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_eqlist')), $this, 'detail4OnRow'))->Reload();
         $this->calcTotal();
     }
 
@@ -318,6 +334,45 @@ class Task extends \App\Pages\Base
         $this->docform->detail3->Reload();
     }
 
+    
+    //equipment
+    public function addeqOnClick($sender) {
+        $this->editdetail4->setVisible(true);
+        $this->docform->setVisible(false);
+
+        $this->editdetail4->editeq->setValue(0);
+    }
+
+    public function saverow4OnClick($sender) {
+        $id = $this->editdetail4->editeq->getValue();
+        if ($id == 0) {
+            $this->setError("Не выбрано оборудование ");
+            return;
+        }
+        $eq = Equipment::load($id);
+
+        $this->_eqlist[$eq->eq_id] = $eq;
+        $this->editdetail4->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->docform->detail4->Reload();
+    }
+
+    public function detail4OnRow($row) {
+        $eq = $row->getDataItem();
+
+        $row->add(new Label('eq_name', $eq->eq_name));
+        $row->add(new ClickLink('delete4'))->onClick($this, 'delete4OnClick');
+    }
+
+    public function delete4OnClick($sender) {
+        $eq = $sender->owner->getDataItem();
+        $this->_emplist = array_diff_key($this->_eqlist, array($eq->eq_id => $this->_eqlist[$eq->eq_id]));
+        $this->docform->detail4->Reload();
+    }
+    
+    
+    
+    
     public function savedocOnClick($sender) {
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -333,6 +388,7 @@ class Task extends \App\Pages\Base
         $old = $this->_doc->cast();
         $taskstate = $this->docform->taskstate->getValue();
         $this->_doc->headerdata = array(
+            'parea' => $this->docform->parea->getValue(),
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
             'hours' => $this->docform->hours->getText(),
@@ -348,6 +404,9 @@ class Task extends \App\Pages\Base
             $this->_doc->detaildata[] = $item->getData();
         }
         foreach ($this->_itemlist as $item) {
+            $this->_doc->detaildata[] = $item->getData();
+        }
+        foreach ($this->_eqlist as $item) {
             $this->_doc->detaildata[] = $item->getData();
         }
 
@@ -395,12 +454,13 @@ class Task extends \App\Pages\Base
 
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch (\ZippyERP\System\Exception $ee) {
-            $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
         } catch (\Exception $ee) {
+            global $logger;
             $conn->RollbackTrans();
-            throw new \Exception($ee->getMessage());
+            $this->setError("Ошибка записи документа. Детализация в логе  ");
+    
+            $logger->error($ee);
+            return;
         }
     }
 

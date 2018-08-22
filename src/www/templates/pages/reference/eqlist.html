@@ -4,106 +4,107 @@
 
     <body>
         <div class="row">
-            <div class="col-12 col-md-10 col-lg-8  ">
-                <div zippy="customertable">
-                    <h3>Справочник контрагентов </h3>
-                    <form zippy="filter" class="form-inline ">
 
-                        <label for="searchkey">Поиск</label>
-                        <input class="form-control mr-sm-2" type="text" zippy="searchkey">
-              <label for="searchtype">Тип</label>
-                     <select zippy="searchtype" class="form-control mr-sm-2">
-                       <option value="0">Все</option>
-                    </select>
+            <div class="col-12 col-md-10 col-xl-8" zippy="itemtable">
+                <h3>Справочник оборудования </h3>
+                <form zippy="filter" class="form-inline">
 
-                        <input class="btn btn-outline-success   " type="submit" value="ОК">
+                    <label for="searchkey">Поиск</label>
+                    <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                    <label for="searchemp">мат. ответственный</label>
 
-                    </form>
-                    <br>
-                    <a zippy="addnew" class="btn btn-primary"   >Добавить контрагента</a>  
-                    <br>
-                    <table class="table table-bordered   table-sm"  >
-
-                        <tr zippy="customerlist">
-                            <td zippy="customername"></td>
-                            <td zippy="customerphone"></td>
-                            <td zippy="customeremail"></td>
-
-                            <td style="width:90px">
-                                <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
-                                <a zippy="contentlist" ><i class="fa fa-search-plus"></i></a>
-                                <a zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    </table>
-                    <div zippy="pag"></div>
-                </div>
+                    <select   class="form-control mr-sm-2  " zippy="searchemp">
+                        <option value="0">Не выбран</option>
+                    </select>         
 
 
+                    <input class="btn btn-outline-success  " type="submit" value="ОК">
+
+                </form>
+                <a zippy="addnew" class="btn btn-primary  ">Добавить</a>
+                <table class="table table-bordered  table-sm  ">
+                    <tr>
+                        <th>Наименование</th>
+
+                        <th>Инв. код</th>
+                        <th>Сер. номер</th>
+                        
+
+
+                        <th style="width:100px"></th>
+                    </tr>
+                    <tr zippy="eqlist">
+                        <td zippy="eq_name"></td>
+
+                        <td zippy="code"></td>
+                        <td zippy="serial"></td>
+                         
+
+
+                        <td aling="center"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
+                         <a zippy="contentlist" ><i class="fa fa-search-plus"></i></a>
+
+                        <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+                <div zippy="pag"></div>
             </div>
-        </div>
 
 
 
-        <form class="row" zippy="customerdetail" method="post">
-            <h4>&nbsp; Редактировать контрагента</h4>
-            <div class="w-100"></div>
-            <div class="col-12 col-md-4 ">
+            <div class="col-12 col-md-6 col-xl-4"  >
+                <form   zippy="itemdetail"  >
+                    <h4>Редактирование   </h4>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editname">Наименование</label>
+                        <div class="col-7"> 
+                            <input required="required" class="form-control" zippy="editname"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editemp">Мат. ответственный</label>
+                        <div class="col-7"> 
+                            <select   class="form-control select2" zippy="editemp">
+                                <option value="0">Не задан </option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label for="editcustomername">Контрагент</label>
-                    <input class="form-control" zippy="editcustomername"/>
-                </div>
-
-                <div class="form-group">
-                    <label data-label="editemail" for="editemail">E-Mail</label>
-                    <input class="form-control" zippy="editemail"/>
-                </div>
-                <div class="form-group">
-                    <label data-label="editphone" for="editphone">Телефон</label>
-                    <input class="form-control" zippy="editphone"/>
-                </div>
-
-                <div class="form-group">
-                    <label data-label="editaddress" for="editfaddress">Адрес</label>
-                    <input class="form-control" zippy="editaddress"></input>
-                </div>
-               
-                <div class="form-group">
-                    <label for="editcomment">Примечание</label>
-                    <textarea class="form-control" zippy="editcomment"></textarea>
-                </div>
-
-
-             </div>
-             <div class="col-12 col-md-4 ">
-                 <div class="form-group">
-                    <label for="discount">Постоянная скидка,%</label>
-                    <input value="0" class="form-control"  pattern="[0-9\.]+"  zippy="discount">
-                </div>
-                 <div class="form-group">
-                    <label for="edittype">Тип</label>
-                    <select zippy="edittype" class="form-control">
-                       <option value="0">Не  указан</option>
-                    </select>
-                </div>
-               <div class="form-check">
-                        <input zippy="editjurid" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="editjurid">Юр. лицо</label>
-                 </div>   
                 
-             </div>
-            <div class="w-100"></div>
-            <div class="col-12 col-md-4 ">
-             <div class="form-group">
-               <button zippy="save" type="submit"   class="btn btn-primary ">Сохранить</button> &nbsp;&nbsp;
-               <button zippy="cancel" type="button"   class="btn btn-light"  >Отменить</button> 
-       
-            </div>
-            </div>
-        </form>
 
 
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editcode">Инвентарный номер</label>
+                        <div class="col-7"> 
+                            <input class="form-control" zippy="editcode"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editserial">Серийный номер</label>
+                        <div class="col-7"> 
+                            <input class="form-control" zippy="editserial"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editdescription">Описание</label>
+                        <div class="col-7"> 
+                            <textarea class="form-control" zippy="editdescription"></textarea> 
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                        <input zippy="cancel" type="button" value="Отменить" class="btn btn-light  "></td>
+                    </div>
+                </form>
+
+            </div>
+            
+            
+               <div class="col-12 col-xl-10  " zippy="itemtable">
+     
+          
         <a name="contentviewlink"></a>
         <div class="row" zippy="contentview">
             <div class="col-auto">
@@ -191,6 +192,9 @@
                 </form>
             </div>
 
+        </div>
+            
+          </div>    
         </div>
 
 

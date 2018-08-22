@@ -16,6 +16,22 @@ require_once _ROOT . 'vendor/autoload.php';
 include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 
 
+
+// логгер
+$logger = new \Monolog\Logger("main");
+$dateFormat = "Y n j, g:i a";
+//$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
+$output = "%datetime%  %level_name% : %message% \n";
+$formatter = new \Monolog\Formatter\LineFormatter($output, $dateFormat);
+$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 10, $_config['common']['loglevel']);
+$h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 10, 400);
+$h1->setFormatter($formatter);
+$h2->setFormatter($formatter);
+$logger->pushHandler($h1);
+$logger->pushHandler($h2);
+$logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
+
+
 //чтение  конфигурации
 $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 
@@ -28,11 +44,10 @@ $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 try{
    $conn =   \ZDB\DB::getConnect();
 }catch(Throwable $e){
-        echo $e->getMessage().'<br>';
-        echo $e->getLine().'<br>';
-        echo $e->getFile().'<br>'; 
-    
-    return;
+        echo  'Ошибка  соединения с  БД. Подробности  в логе.';
+         
+        $logger->error($e);
+        die;
 }
 
 // автолоад классов  приложения
@@ -60,19 +75,6 @@ session_start();
 
 
  
-// логгер
-$logger = new \Monolog\Logger("main");
-$dateFormat = "Y n j, g:i a";
-//$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
-$output = "%datetime%  %level_name% : %message% \n";
-$formatter = new \Monolog\Formatter\LineFormatter($output, $dateFormat);
-$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 10, $_config['common']['loglevel']);
-$h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 10, 400);
-$h1->setFormatter($formatter);
-$h2->setFormatter($formatter);
-$logger->pushHandler($h1);
-$logger->pushHandler($h2);
-$logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
 
 @mkdir(_ROOT . "logs");
 

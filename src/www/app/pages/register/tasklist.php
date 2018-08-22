@@ -24,6 +24,7 @@ use \App\Entity\Stock;
 use \App\Entity\Item;
 use \App\Entity\Service;
 use \App\Entity\Employee;
+use \App\Entity\ProdArea;
 use \App\Entity\Doc\Document;
 use \App\Helper as H;
 use \App\System;
@@ -54,6 +55,7 @@ class TaskList extends \App\Pages\Base
         $this->add(new Form('filterform'))->onSubmit($this, 'OnFilter');
 
         $this->filterform->add(new DropDownChoice('filterassignedto', Employee::findArray('emp_name', '', 'emp_name'), 0));
+        $this->filterform->add(new DropDownChoice('filterpa', ProdArea::findArray('pa_name', '', 'pa_name'), 0));
         $this->filterform->add(new AutocompleteTextInput('filterclient'))->onText($this, 'OnAutoCustomer');
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
@@ -151,6 +153,9 @@ class TaskList extends \App\Pages\Base
         }
         if ($this->filterform->filterassignedto->getValue() > 0) {
             $sql = $sql . " and  content  like '%<employee_id>" . $this->filterform->filterassignedto->getValue() . "</employee_id>%' ";
+        }
+        if ($this->filterform->filterpa->getValue() > 0) {
+            $sql = $sql . " and  content  like '%<parea>" . $this->filterform->filterpa->getValue() . "</parea>%' ";
         }
 
 
