@@ -19,6 +19,7 @@ use App\Entity\Item;
 use App\Entity\Stock;
 use App\Entity\Store;
 use App\Application as App;
+use App\Helper as H;
 
 /**
  * Страница  ввода перемещения товаров

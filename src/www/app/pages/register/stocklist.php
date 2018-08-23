@@ -52,8 +52,8 @@ class StockList extends \App\Pages\Base
 
         $item = Item::load($stock->item_id);
         $row->add(new Label('cat_name', $item->cat_name));
-$row->add(new Label('storename', $stock->storename));        
-$row->add(new Label('price', $item->getPrice($stock->partion)));
+        //$row->add(new Label('storename', $stock->storename));        
+        $row->add(new Label('price', $item->getPrice($stock->partion)));
 
         $row->add(new ClickLink('delete', $this, 'deleteOnClick'))->setVisible($stock->qty == 0);
     }
