@@ -234,8 +234,8 @@ class Warranty extends \App\Pages\Base
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setError("Ошибка записи документа. Детализация в логе  ");
-    
+               $this->setError($ee->getMessage());
+  
             $logger->error($ee);
             return;
         }

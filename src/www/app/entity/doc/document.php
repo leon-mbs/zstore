@@ -79,7 +79,14 @@ class Document extends \ZCL\DB\Entity
     protected function beforeSave() {
         $this->document_number = trim($this->document_number);
         $this->packData();
-
+           $doc = Document::getFirst("        document_number like '%{$this->document_number}%' ");    
+         if($doc instanceof Document)  {
+             if($this->document_id != $doc->document_id) {
+                  
+                 throw new \ZippyERP\System\Exception('Не  унікальний номер документу');
+                 return false;
+             }
+         }
         //todo  отслеживание  изменений
     }
 
