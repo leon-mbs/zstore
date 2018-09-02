@@ -79,14 +79,7 @@ class Document extends \ZCL\DB\Entity
     protected function beforeSave() {
         $this->document_number = trim($this->document_number);
         $this->packData();
-           $doc = Document::getFirst("        document_number like '%{$this->document_number}%' ");    
-         if($doc instanceof Document)  {
-             if($this->document_id != $doc->document_id) {
-                  
-                 throw new \ZippyERP\System\Exception('Не  унікальний номер документу');
-                 return false;
-             }
-         }
+
         //todo  отслеживание  изменений
     }
 
@@ -102,19 +95,12 @@ class Document extends \ZCL\DB\Entity
         foreach ($this->headerdata as $key => $value) {
             if ($key > 0)
                 continue;
-
-            if (strpos($value, '[CDATA[') !== false) {
-                \App\System::getWarnMsg('CDATA в  поле  обьекта');
-                \App\Helper::log(' CDATA в  поле  обьекта');
-                continue;
-            }
-
-            if (is_numeric($value) || strlen($value) == 0) {
-                $value = $value;
-            } else {
-                $value = "<![CDATA[" . $value . "]]>";
-            }
-            $this->content .= "<{$key}>{$value}</{$key}>";
+             if (is_numeric($value) || strlen($value)==0 ) {
+                 $value = $value;
+             } else {
+               $value = "<![CDATA[" . $value . "]]>";  
+             }  
+             $this->content .= "<{$key}>{$value}</{$key}>";
         }
         $this->content .= "</header><detail>";
         foreach ($this->detaildata as $row) {
@@ -122,21 +108,13 @@ class Document extends \ZCL\DB\Entity
             foreach ($row as $key => $value) {
                 if ($key > 0)
                     continue;
-
-                if (strpos($value, '[CDATA[') !== false) {
-                    \App\System::getWarnMsg('CDATA в  поле  обьекта');
-                    \App\Helper::log(' CDATA в  поле  обьекта');
-                    continue;
-                }
-
-
-                if (is_numeric($value) || strlen($value) == 0) {
-                    $value = $value;
-                } else {
-                    $value = "<![CDATA[" . $value . "]]>";
-                }
-
-                $this->content .= "<{$key}>{$value}</{$key}>";
+             if (is_numeric($value) || strlen($value)==0 ) {
+                 $value = $value;
+             } else {
+               $value = "<![CDATA[" . $value . "]]>";  
+             }                
+ 
+             $this->content .= "<{$key}>{$value}</{$key}>";
             }
 
             $this->content .= "</row>";
@@ -151,18 +129,20 @@ class Document extends \ZCL\DB\Entity
     private function unpackData() {
 
         $this->headerdata = array();
-        if (strlen($this->content) == 0) {
+        if ($this->content == null || strlen($this->content) == 0) {
             return;
         }
         $xml = new \SimpleXMLElement($this->content);
         foreach ($xml->header->children() as $child) {
             $this->headerdata[(string) $child->getName()] = (string) $child;
+            
         }
         $this->detaildata = array();
         foreach ($xml->detail->children() as $row) {
             $_row = array();
             foreach ($row->children() as $item) {
                 $_row[(string) $item->getName()] = (string) $item;
+ 
             }
             $this->detaildata[] = $_row;
         }
@@ -216,9 +196,8 @@ class Document extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "select meta_id from  metadata where meta_type=1 and meta_name='{$classname}'";
         $meta = $conn->GetRow($sql);
-        $fullclassname = '\App\Entity\Doc\\' . $classname;
-
-        $doc = new $fullclassname();
+        $classname = '\App\Entity\Doc\\' . $classname;
+        $doc = new $classname();
         $doc->meta_id = $meta['meta_id'];
         return $doc;
     }
@@ -368,7 +347,7 @@ class Document extends \ZCL\DB\Entity
      * 
      * @param mixed $states
      */
-    public function checkStates(array $states) {
+    public function checkStates($states) {
         $stlist = "0";
         foreach ($states as $state) {
             $stlist = $stlist . "," . $state;
@@ -416,9 +395,9 @@ class Document extends \ZCL\DB\Entity
                 return "Доставлен";
             case Document::STATE_REFUSED:
                 return "Отклонен";
-            case Document::STATE_SHIFTED:
+           case Document::STATE_SHIFTED:
                 return "Отложен";
-            case Document::STATE_INPROCESS:
+          case Document::STATE_INPROCESS:
                 return "Выполняется";
             default:
                 return "Неизвестный статус";
@@ -439,11 +418,11 @@ class Document extends \ZCL\DB\Entity
             return '';
         $prevnumber = $doc->document_number;
         if (strlen($prevnumber) == 0)
-            return '';
+            return '';  
         $number = preg_replace('/[^0-9]/', '', $prevnumber);
         if (strlen($number) == 0)
             $number = 0;
-
+            
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
 
         return $letter . sprintf("%05d", ++$number);
@@ -548,7 +527,7 @@ class Document extends \ZCL\DB\Entity
      * 
      */
     public function canCanceled() {
-        $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        $f = $this->checkStates(array(Document::STATE_CLOSED,Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
             System::setWarnMsg("У документа были оплаты или доставки");
             return true;

@@ -14,7 +14,7 @@
             <tr>
                 <td></td>
                 <td>Поставщик</td>
-                <td colspan="6">{{customer_name}}</td>
+                <td colspan="5">{{customer_name}}</td>
             </tr>
 
             <tr>
@@ -25,8 +25,7 @@
 
             <tr style="font-weight: bolder;">
                 <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-                <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
-                <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
+                <th colspan="2" width="230" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
                 
                 <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кол.</th>
                 <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
@@ -36,7 +35,6 @@
             <tr>
                 <td align="right">{{no}}</td>
                 <td colspan="2">{{itemname}}</td>
-                <td colspan="2">{{itemcode}}</td>
              
                 <td align="right">{{quantity}}</td>
                 <td align="right">{{price}}</td>
@@ -44,7 +42,7 @@
             </tr>
             {{/_detail}}
             <tr style="font-weight: bolder;">
-                <td style="border-top:1px #000 solid;" colspan="7" align="right">Итого:</td>
+                <td style="border-top:1px #000 solid;" colspan="5" align="right">Итого:</td>
                 <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
             </tr>
           

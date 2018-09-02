@@ -12,14 +12,12 @@
                         <tr>
                             <th>Название</th>
                             <th style="text-align: right;">Стоимость</th>
-                            <th style="text-align: right;">Нормо-часы</th>
 
                             <th></th>
                         </tr>
                         <tr zippy="servicelist">
                             <td zippy="service_name"></td>
                             <td style="text-align: right;" zippy="price"></td>
-                            <td style="text-align: right;" zippy="hours"></td>
 
 
                             <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
@@ -30,32 +28,26 @@
 
                 </div>
 
-
+                
             </div>
-        </div>    
+          </div>    
         <div class="row">     
             <form class="col-6 col-md-4" zippy="servicedetail"  >
-                <div class="form-group">
-                    <label for="editservice_name">Название</label>
-                    <input  required="required" class="form-control" zippy="editservice_name"/>
-                </div>
-                <div class="form-group  ">
-                    <label   for="editprice">Стоимость</label>
-                    <div class="form-group" > 
-                        <input zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control" />
+                    <div class="form-group">
+                        <label for="editservice_name">Название</label>
+                        <input  required="required" class="form-control" zippy="editservice_name"/>
                     </div>
-                </div>
-                <div class="form-group  ">
-                    <label   for="edithours">Нормо-часы</label>
-                    <div class="form-group" > 
-                        <input zippy="edithours" style="width: 100px" pattern="[0-9\.\%]+" class="form-control" />
+                    <div class="form-group  ">
+                        <label   for="editprice">Стоимость</label>
+                        <div class="form-group" > 
+                            <input zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control" />
+                        </div>
                     </div>
-                </div>
 
-                <input zippy="save" type="submit" value="Сохранить" class="btn btn-default  ">&nbsp;&nbsp;
-                <input zippy="cancel" type="button" value="Отменить" class="btn btn-default  "> 
+                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-default  ">&nbsp;&nbsp;
+                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-default  "> 
 
-            </form>
+                </form>
         </div>
 
     </body>

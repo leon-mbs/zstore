@@ -20,7 +20,6 @@ class Service extends \ZCL\DB\Entity
 
         $xml = @simplexml_load_string($this->detail);
 
-        $this->hours = (string) ($xml->hours[0]);
         $this->price = (string) ($xml->price[0]);
 
 
@@ -33,7 +32,6 @@ class Service extends \ZCL\DB\Entity
         $this->detail = "<detail>";
         //упаковываем  данные в detail
         $this->detail .= "<price>{$this->price}</price>";
-        $this->detail .= "<hours>{$this->hours}</hours>";
 
         $this->detail .= "</detail>";
 

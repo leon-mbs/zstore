@@ -38,10 +38,10 @@
     <body  >
         <div class="container-fluid"> 
             <div class="row"> 
-                <div class="col-12"> 
+                <div class="col-11"> 
 
 
-                    <nav class="navbar navbar-expand-md navbar-light bg-light mr-2">
+                    <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="navbar-header">
 
                             <a class="navbar-brand  " href="/">Zippy Склад</a>
@@ -77,13 +77,7 @@
                                     <ul class="dropdown-menu  " zippy="refmenu"> </ul>
 
                                 </li> 
-                                {{#shop}}
-                                <li  class="nav-item dropdown">
-                                    <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Онлайн каталог    </a>
-                                    <ul class="dropdown-menu  " zippy="shopmenu"> </ul>
 
-                                </li> 
-                                 {{/shop}}
 
 
 
@@ -100,7 +94,7 @@
                                     </a>
 
                                 </li>
-                                <li class="nav-item  " >
+                                <li class="nav-item dropdown" >
                                     <a    class="nav-link  "  href="/?p=App/Pages/NotifyList">
                                         <i class="fa fa-bell "></i>
                                         <span style="font-size: smaller;" zippy="newnotcnt" class="badge badge-danger badge-pill  navbar-badge"></span>
@@ -123,7 +117,7 @@
                                         <li  >
                                             <a  class="dropdown-item  " href="/?p=App/Pages/Options">Настройки</a>            
                                         </li> 
-                                       
+
                                         {{/isadmin}}                   
 
 
@@ -133,16 +127,6 @@
                                             <a class="dropdown-item  " href="/?p=App/Pages/UserProfile">Мой профиль</a>            
                                         </li>                
                                         <li class="dropdown-divider"></li> 
-                                        {{#shop}}
-                                        <li  >
-                                            <a  class="dropdown-item  " href="/store">На склад</a>            
-                                        </li> 
-                                       <li  >
-                                            <a  class="dropdown-item  " href="/shop">В магазин</a>            
-                                        </li> 
-                                        <li class="dropdown-divider"></li> 
-                                          {{/shop}}                                        
-                                        
                                         <li>
                                             <a class="dropdown-item  " zippy="logout">  Выйти</a>  
                                         </li>            

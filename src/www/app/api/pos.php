@@ -7,15 +7,15 @@ namespace App\API;
  */
 class Pos extends \App\RestFul
 {
-
-    //Демо
+     //Демо
     public function post($xml) {
         $error = "";
 
 
         //$doc = new \App\Entity\Doc\RegisterReceipt();
+
         // todo
-        // $doc->save();
+       // $doc->save();
 
         $this->OKAnswer();
     }

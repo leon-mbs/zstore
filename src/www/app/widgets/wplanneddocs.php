@@ -16,24 +16,25 @@ use \Carbon\Carbon;
  */
 class WPlannedDocs extends \Zippy\Html\PageFragment
 {
-
-    public function __construct($id) {
+  
+    
+    public function __construct($id ) {
         parent::__construct($id);
 
-
-
+  
+        
         $visible = (strpos(System::getUser()->widgets, 'wplanned') !== false || System::getUser()->userlogin == 'admin');
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
 
         // список  запланированных документов
-        $where = "state not in( " . Document::STATE_CANCELED . "," . Document::STATE_EDITED . "," . Document::STATE_NEW . ") ";
-        $where = $where . " and  document_date >= " . $conn->DBDate(strtotime('-5 days'));
+        $where = "state not in( " . Document::STATE_CANCELED."," . Document::STATE_EDITED."," . Document::STATE_NEW.") ";
+         $where = $where . " and  document_date >= " . $conn->DBDate(strtotime('-5 days'));
         $where = $where . " and  meta_name in ('ServiceAct','GoodsIssue','GoodsReceipt') ";
-        $where = $where . " and  content like '%<planned>1</planned>%'";
+         $where = $where . " and  content like '%<planned>1</planned>%'";
         if ($visible) {
-            $data = Document::find($where, "document_date desc");
+            $data = Document::find($where,"document_date desc");
         }
 
         $doclist = $this->add(new DataView('pdoclist', new ArrayDataSource($data), $this, 'doclistOnRow'));
@@ -59,10 +60,10 @@ class WPlannedDocs extends \Zippy\Html\PageFragment
 
         if (time() < $start) {
             $row->number->setAttribute('class', 'badge  ');
-        } else
+        } else  
         if (time() > $end) {
             $row->number->setAttribute('class', 'badge badge-danger');
-        } else {
+        } else {  
             $row->number->setAttribute('class', 'badge badge-warning');
         }
     }

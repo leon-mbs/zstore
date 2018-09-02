@@ -32,29 +32,31 @@ class GoodsReceipt extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
+     
+     
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
-
+        
         $common = System::getOptions("common");
-
-
+        
+        
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
+        $this->docform->add(new DropDownChoice('store', Store::getList()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
         $this->docform->add(new CheckBox('incredit'));
         $this->docform->add(new CheckBox('inshipment'));
 
-        $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
-        $this->docform->add(new Label('course', 'Курс 1'));
-        $this->docform->val->setVisible($common['useval'] == true);
-        $this->docform->course->setVisible($common['useval'] == true);
+        $this->docform->add(new DropDownChoice('val',array(1=>'Гривна',2=>'Доллар',3=>'Евро',4=>'Рубль')))->onChange($this,"onVal",true);
+        $this->docform->add(new Label('course','Курс 1')) ;
+        $this->docform->val->setVisible($common['useval']==true);
+        $this->docform->course->setVisible($common['useval']==true);
 
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -98,7 +100,7 @@ class GoodsReceipt extends \App\Pages\Base
 
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
-                $item->old = true;
+                $item->old=true;
                 $this->_itemlist[$item->item_id] = $item;
             }
         } else {
@@ -117,27 +119,22 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onVal($sender) {
-        $val = $sender->getValue();
-        $common = System::getOptions("common");
-
-        if ($val == 1)
-            $this->docform->course->setText('Курс 1');
-        if ($val == 2)
-            $this->docform->course->setText('Курс  ' . $common['cdoll']);
-        if ($val == 3)
-            $this->docform->course->setText('Курс  ' . $common['ceuro']);
-        if ($val == 4)
-            $this->docform->course->setText('Курс  ' . $common['crub']);
-
-        $this->updateAjax(array('course'));
+       $val = $sender->getValue();
+       $common = System::getOptions("common");
+       
+       if($val==1) $this->docform->course->setText('Курс 1');
+       if($val==2) $this->docform->course->setText('Курс  '.$common['cdoll']);
+       if($val==3) $this->docform->course->setText('Курс  '.$common['ceuro']);
+       if($val==4) $this->docform->course->setText('Курс  '.$common['crub']);
+        
+       $this->updateAjax(array('course')); 
     }
-
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
 
         $row->add(new Label('item', $item->itemname));
-        $row->add(new Label('code', $item->item_code));
+
         $row->add(new Label('quantity', $item->quantity));
         $row->add(new Label('price', $item->price));
 
@@ -233,38 +230,37 @@ class GoodsReceipt extends \App\Pages\Base
         $old = $this->_doc->cast();
         $this->calcTotal();
 
-        $common = System::getOptions("common");
-        foreach ($this->_itemlist as $item) {
-            if ($item->old == true)
-                continue;
-            if ($common['useval'] != true)
-                continue;
-
-            if ($this->docform->val->getValue() == 2) {
-                $item->price = round($item->price * $common['cdoll']);
-                $item->curname = 'cdoll';
-                $item->currate = $common['cdoll'];
-            }
-            if ($this->docform->val->getValue() == 3) {
-                $item->price = round($item->price * $common['ceuro']);
-                $item->curname = 'ceuro';
-                $item->currate = $common['ceuro'];
-            }
-            if ($this->docform->val->getValue() == 4) {
-                $item->price = round($item->price * $common['crub']);
-                $item->curname = 'crub';
-                $item->currate = $common['crub'];
-            }
-        }
-
-
+            $common =  System::getOptions("common");
+            foreach ($this->_itemlist as $item) {
+                if($item->old ==true) continue;
+                if($common['useval'] !=true) continue;
+                
+                if($this->docform->val->getValue()==2){
+                   $item->price = round($item->price * $common['cdoll'] );    
+                   $item->curname = 'cdoll' ;    
+                   $item->currate = $common['cdoll'];    
+                }
+                if($this->docform->val->getValue()==3){
+                   $item->price = round($item->price * $common['ceuro'] );    
+                   $item->curname = 'ceuro' ;    
+                   $item->currate = $common['ceuro'];    
+                }
+                if($this->docform->val->getValue()==4){
+                   $item->price = round($item->price * $common['crub'] );    
+                   $item->curname = 'crub' ;    
+                   $item->currate = $common['crub'];    
+                }
+            
+            }        
+        
+        
         $this->_doc->headerdata = array(
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
             'store' => $this->docform->store->getValue(),
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
-            'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,
+            'planned' => $this->docform->planned->isChecked()?1:0,
+            'incredit' => $this->docform->incredit->isChecked()?1:0,
+            'inshipment' => $this->docform->inshipment->isChecked()?1:0,
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -321,11 +317,8 @@ class GoodsReceipt extends \App\Pages\Base
 
             $conn->CommitTrans();
         } catch (\Exception $ee) {
-            global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
-    
-            $logger->error($ee);
             return;
         }
         App::RedirectBack();

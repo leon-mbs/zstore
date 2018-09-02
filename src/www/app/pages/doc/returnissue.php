@@ -43,13 +43,14 @@ class ReturnIssue extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
 
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-       
+        $this->docform->add(new DropDownChoice('store', Store::getList()))->onChange($this, 'OnChangeStore');
+        $this->docform->store->selectFirst();
+
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextInput('notes'));
-
+ 
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -76,7 +77,7 @@ class ReturnIssue extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
-
+  
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
@@ -98,8 +99,8 @@ class ReturnIssue extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-
-                    if ($basedoc->meta_name == 'GoodsIssue') {
+                    
+                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->headerdata['customer']);
                         $this->docform->customer->setText($basedoc->headerdata['customer_name']);
@@ -109,7 +110,8 @@ class ReturnIssue extends \App\Pages\Base
                             $item = new Item($item);
                             $this->_tovarlist[$item->item_id] = $item;
                         }
-                    }
+                    }                   
+                    
                 }
             }
         }
@@ -221,7 +223,7 @@ class ReturnIssue extends \App\Pages\Base
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
             'store' => $this->docform->store->getValue(),
-            'total' => $this->docform->total->getText()
+              'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
@@ -240,6 +242,8 @@ class ReturnIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+
+           
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -253,12 +257,11 @@ class ReturnIssue extends \App\Pages\Base
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
-            global $logger;
             $conn->RollbackTrans();
-              $this->setError($ee->getMessage());
-   
-            $logger->error($ee);
-            return;
+            $this->setError($ee->getMessage());
+        } catch (\Exception $ee) {
+            $conn->RollbackTrans();
+            throw new \Exception($ee->getMessage());
         }
     }
 
@@ -338,5 +341,7 @@ class ReturnIssue extends \App\Pages\Base
         $text = Item::qstr('%' . $sender->getText() . '%');
         return Stock::findArrayEx("store_id={$store_id}   and (itemname like {$text} or item_code like {$text}) ");
     }
+
+ 
 
 }

@@ -11,7 +11,8 @@ namespace App\Entity;
 class Employee extends \ZCL\DB\Entity
 {
 
-  
+    const TAX_ACCOUNTABLE = 1; // подотчет
+
     protected function init() {
         $this->employee_id = 0;
     }

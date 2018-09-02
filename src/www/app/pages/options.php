@@ -29,26 +29,19 @@ class Options extends \App\Pages\Base
 
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new TextInput('firmname'));
-        $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList())) ;
-
-        $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
+        $this->common->add(new CheckBox('useval'))->onChange($this,"onVal");
         $this->common->add(new TextInput('cdoll'));
         $this->common->add(new TextInput('ceuro'));
         $this->common->add(new TextInput('crub'));
         //  $this->common->add(new Date('closeddate'));
 
-        $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        $this->shop->add(new DropDownChoice('defshowstore', \App\Entity\Store::getList())) ;
-        $this->shop->add(new DropDownChoice('defсuststore', \App\Entity\Customer::getList())) ;
-
-
+        
 
         $common = System::getOptions("common");
         if (!is_array($common))
             $common = array();
 
         $this->common->firmname->setText($common['firmname']);
-        $this->common->defstore->setValue($common['defstore']);
         $this->common->cdoll->setText($common['cdoll']);
         $this->common->ceuro->setText($common['ceuro']);
         $this->common->crub->setText($common['crub']);
@@ -57,15 +50,8 @@ class Options extends \App\Pages\Base
 
 
         $this->onVal($this->common->useval);
-
-
-        $shop = System::getOptions("shop");
-        if (!is_array($shop))
-            $shop = array();
-        $this->shop->defshowstore->setValue($shop['defshowstore']);
-        $this->shop->defсuststore->setValue($shop['defсuststore']);
-
-
+        
+        
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
         $this->add(new Panel('listpan'));
@@ -74,7 +60,6 @@ class Options extends \App\Pages\Base
         $this->listpan->filter->add(new CheckBox('fdic'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('frep'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('freg'))->setChecked(true);
-        $this->listpan->filter->add(new CheckBox('fshop'))->setChecked(true);
         $this->listpan->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
         $this->listpan->add(new DataView('metarow', $this->metadatads, $this, 'metarowOnRow'))->Reload();
 
@@ -92,21 +77,20 @@ class Options extends \App\Pages\Base
     }
 
     public function onVal($sender) {
-        if ($sender->isChecked()) {
+        if($sender->isChecked()){
             $this->common->cdoll->setVisible(true);
             $this->common->ceuro->setVisible(true);
             $this->common->crub->setVisible(true);
-        } else {
+        }else {
             $this->common->cdoll->setVisible(false);
             $this->common->ceuro->setVisible(false);
             $this->common->crub->setVisible(false);
+            
         }
     }
-
     public function saveCommonOnClick($sender) {
         $common = array();
         $common['firmname'] = $this->common->firmname->getText();
-        $common['defstore'] = $this->common->defstore->getValue();
         $common['cdoll'] = $this->common->cdoll->getText();
         $common['ceuro'] = $this->common->ceuro->getText();
         $common['crub'] = $this->common->crub->getText();
@@ -114,24 +98,13 @@ class Options extends \App\Pages\Base
         // $common['closeddate'] = $this->common->closeddate->getDate();
 
         System::setOptions("common", $common);
-
-        System::setOptions("shop", $shop);
         $this->setSuccess('Сохранено');
     }
 
-    public function saveShopOnClick($sender) {
-        $shop = array();
-
-        //todo контрагент магазина, кому  нотификацию
-
-        $shop['defshowstore'] = $this->shop->defshowstore->getValue();
-        $shop['defсuststore'] = $this->shop->defсuststore->getValue();
-
-
-        System::setOptions("shop", $shop);
-        $this->setSuccess('Сохранено');
-    }
-
+    
+    
+    
+    
     public function filterOnSubmit($sender) {
 
         $where = "1<>1 ";
@@ -146,9 +119,6 @@ class Options extends \App\Pages\Base
         }
         if ($this->listpan->filter->freg->isChecked()) {
             $where .= " or meta_type = 3";
-        }
-        if ($this->listpan->filter->fshop->isChecked()) {
-            $where .= " or meta_type = 5";
         }
 
 
@@ -177,16 +147,13 @@ class Options extends \App\Pages\Base
                 $title = "Документ";
                 break;
             case 2:
-                $title = "Отчет";
+                $title = "Звіт";
                 break;
             case 3:
                 $title = "Журнал";
                 break;
             case 4:
-                $title = "Справочник";
-                break;
-            case 5:
-                $title = "Каталог";
+                $title = "Довідник";
                 break;
         }
 

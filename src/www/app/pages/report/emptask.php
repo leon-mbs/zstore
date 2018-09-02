@@ -11,6 +11,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use App\Entity\Employee;
 use App\Entity\Doc\Document;
+
 use App\Helper as H;
 
 /**
@@ -25,7 +26,7 @@ class EmpTask extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-
+  
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('print', "movereport"));
         $this->detail->add(new RedirectLink('html', "movereport"));
@@ -34,8 +35,10 @@ class EmpTask extends \App\Pages\Base
         $this->detail->add(new Label('preview'));
     }
 
-    public function OnSubmit($sender) {
+  
 
+    public function OnSubmit($sender) {
+       
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
@@ -43,7 +46,7 @@ class EmpTask extends \App\Pages\Base
 
         // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $reportpage = "App/Pages/ShowReport";
-        $reportname = "emptask";
+        $reportname = "уьзефыл";
 
         $this->detail->preview->setAttribute('src', "/?p={$reportpage}&arg=preview/{$reportname}");
 
@@ -61,16 +64,17 @@ class EmpTask extends \App\Pages\Base
 
     private function generateReport() {
 
-        $from = $this->filter->from->getDate();
+            $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
         $header = array('datefrom' => date('d.m.Y', $from),
-            'dateto' => date('d.m.Y', $to)
+            'dateto' => date('d.m.Y', $to) 
+             
         );
 
-        $elist = Employee::find("", "emp_name");
+        $elist =  Employee::find("","emp_name") ;
 
-
+        
         $detail = array();
         $conn = \ZDB\DB::getConnect();
 
@@ -80,46 +84,52 @@ class EmpTask extends \App\Pages\Base
                 
         ";
 
-        $docs = Document::find($where);
+        $docs = Document::find($where)  ;
 
         foreach ($docs as $doc) {
+           
+            
+         foreach ($doc->detaildata as $item) {
+                if(  $item["employee_id"]>0) {
+                  
+                    
+                    
+                  if($elist[$item["employee_id"]]->amount > 0)
+                     $elist[$item["employee_id"]]->amount = $elist[$item["employee_id"]]->amount + $item['pay'] ;
+                  else 
+                     $elist[$item["employee_id"]]->amount = $item['pay'] ;
 
-
-            foreach ($doc->detaildata as $item) {
-                if ($item["employee_id"] > 0) {
-
-
-
-                    if ($elist[$item["employee_id"]]->amount > 0)
-                        $elist[$item["employee_id"]]->amount = $elist[$item["employee_id"]]->amount + $item['pay'];
-                    else
-                        $elist[$item["employee_id"]]->amount = $item['pay'];
-
-                    if ($elist[$item["employee_id"]]->cnt > 0)
-                        $elist[$item["employee_id"]]->cnt = $elist[$item["employee_id"]]->cnt + 1;
-                    else
-                        $elist[$item["employee_id"]]->cnt = 1;
-
-                    if ($doc->headerdata['hours'] > 0) {
-                        if ($elist[$item["employee_id"]]->hours > 0)
-                            $elist[$item["employee_id"]]->hours = $elist[$item["employee_id"]]->hours + $doc->headerdata['hours'];
-                        else
-                            $elist[$item["employee_id"]]->hours = $doc->headerdata['hours'];
-                    }
-                }
-            }
-        };
-
-        foreach ($elist as $emp_id => $emp) {
-            if ($emp->cnt > 0) {
+                  if($elist[$item["employee_id"]]->cnt>0)
+                     $elist[$item["employee_id"]]->cnt = $elist[$item["employee_id"]]->cnt + 1 ;
+                  else 
+                     $elist[$item["employee_id"]]->cnt = 1 ;
+               
+                   if($doc->headerdata['hours']>0){
+                      if($elist[$item["employee_id"]]->hours>0)
+                         $elist[$item["employee_id"]]->hours = $elist[$item["employee_id"]]->hours + $doc->headerdata['hours'] ;
+                      else 
+                         $elist[$item["employee_id"]]->hours = $doc->headerdata['hours'] ;
+                   }
+                  
+                   
+                }  
+            }          
+        };  
+        
+        foreach ($elist as $emp_id=>$emp) {
+            if($emp->cnt>0){
                 $detail[] = array(
+                  
                     "name" => $emp->emp_name,
                     "cnt" => $emp->cnt,
                     "hours" => $emp->hours,
-                    "amountpay" => $emp->amount, //todo расчет 
-                    "amount" => $emp->amount
-                );
+                     
+                    "amountpay" => $emp->amount,//todo расчет 
+                    "amount" => $emp->amount 
+                );    
             }
+            
+            
         }
 
 

@@ -39,7 +39,7 @@ class NotifyList extends \App\Pages\Base
 
         $row->add(new Label("msg"))->setText($notify->message, true);
         $row->add(new Label("ndate", date("Y-m-d H:i", $notify->dateshow)));
-        $row->add(new Label("newn" ))->setVisible($notify->checked == 0);
+        $row->add(new Label("newn", "New"))->setVisible($notify->checked == 0);
     }
 
 }

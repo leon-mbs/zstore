@@ -19,7 +19,6 @@ use App\Entity\Item;
 use App\Entity\Stock;
 use App\Entity\Store;
 use App\Application as App;
-use App\Helper as H;
 
 /**
  * Страница  ввода перемещения товаров
@@ -38,8 +37,8 @@ class MoveItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('storeto', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('storefrom', Store::getList()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('storeto', Store::getList()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new TextInput('notes'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -193,13 +192,12 @@ class MoveItem extends \App\Pages\Base
             }
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch (\Exception $ee) {
-            global $logger;
+        } catch (\ZippyERP\System\Exception $ee) {
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
-    
-            $logger->error($ee);
-            return;
+        } catch (\Exception $ee) {
+            $conn->RollbackTrans();
+            throw new \Exception($ee->getMessage());
         }
     }
 

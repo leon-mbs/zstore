@@ -50,87 +50,59 @@ class Application extends \Zippy\WebApplication
 
         if (preg_match('/^[-#a-zA-Z0-9\/_]+$/', $uri) == 0) {
 
-            self::Redirect404();
+            Application::Redirect404();
         }
+        
+        
+    $api = explode('/', $uri);
+
+    if ($api[0] == 'api' && count($api) > 2) {
+
+        $class = $api[1];
+        $params = array_slice($api, 3);
+
+        if ($class == 'echo') {  //для  теста  /api/echo/параметр
+            $response = "<echo>" . $api[2] . "</echo>";
+        } else {
+
+            try {
 
 
-        $api = explode('/', $uri);
+                require_once(_ROOT . DIRECTORY_SEPARATOR . strtolower("api" . DIRECTORY_SEPARATOR . $class . ".php"));
 
-        if ($api[0] == 'api' && count($api) > 2) {
+                $class = "\\App\\API\\" . $class;
 
-            $class = $api[1];
-  
-            if ($class == 'echo') {  //для  теста  /api/echo/параметр
-                $response = "<echo>" . $api[2] . "</echo>";
-            } else {
+                $page = new $class;
 
-                try {
-
-                $file = _ROOT . "app/api/".  strtolower( $class ). ".php"  ;
-                require_once($file);
-
-                    $class = "\\App\\API\\" . $class;
-
-                    $page = new $class;
-
-                    //если RESTFul
-                    if ($page instanceof \App\RestFul) {
-                    $page->Execute($api[2],$api[3] );
-                        die;
-                    }
-
-                $params = array_slice($api, 2);
-                    $response = call_user_func_array(array($page, $api[2]), $params);
-                } catch (Throwable $e) {
-
-
-                    $response = "<error>" . $e->getMessage() . "</error>";
+                //если RESTFul
+                if ($page instanceof \App\RestFul) {
+                    $page->Execute($params[0],$params[1],$params[2],$params[3]);
+                    die;
                 }
-            }
-            $xml = '<?xml version="1.0" encoding="utf-8"?>' . $response;
-
-            header(`Content-Type: text/xml; charset=utf-8`);
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Pragma: public');
-
-            echo $xml;
-
-            die;
-        }
-
-        $arr = explode('/', $uri);
 
 
+                $response = call_user_func_array(array($page, $api[2]), $params);
+                
+            } catch (Throwable $e) {
 
 
-
-        $pages = array(
-            "shop" => "\\App\\Shop\\Pages\\Main",
-            "store" => "\\App\\Pages\\Main",
-            "sp" => "\\App\\Shop\\Pages\\ProductView",
-            "aboutus" => "\\App\\Shop\\Pages\\AboutUs",
-            "delivery" => "\\App\\Shop\\Pages\\Delivery",
-            "contact" => "\\App\\Shop\\Pages\\Contact",
-            "simage" => "\\App\\Pages\\LoadImage",
-            "scat" => "\\App\\Shop\\Pages\\Main",
-            "pcat" => "\\App\\Shop\\Pages\\Catalog"
-        );
-
-        if (strlen($pages[$arr[0]]) > 0) {
-            if (strlen($arr[2]) > 0) {
-                self::$app->LoadPage($pages[$arr[0]], $arr[1], $arr[2]);
-            } else
-            if (strlen($arr[1]) > 0) {
-                self::$app->LoadPage($pages[$arr[0]], $arr[1]);
-            } else
-            if (strlen($arr[0]) > 0) {
-                self::$app->LoadPage($pages[$arr[0]]);
+                $response = "<error>" . $e->getMessage() . "</error>";
             }
         }
-        if (strlen($pages[$uri]) > 0) {
-            self::$app->LoadPage($pages[$uri]);
-        }
+        $xml = '<?xml version="1.0" encoding="utf-8"?>' . $response;
+
+        header(`Content-Type: text/xml; charset=utf-8`);
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+
+        echo $xml;
+
+        die;
+    }
+        
+        
+        
     }
 
     /**
@@ -139,16 +111,6 @@ class Application extends \Zippy\WebApplication
      */
     public static function RedirectError($message) {
         self::$app->getResponse()->Redirect("\\App\\Pages\\Error", $message);
-    }
-
-    /**
-     * редирект по URL
-     * 
-     * @param mixed $message
-     * @param mixed $uri
-     */
-    public static function RedirectURI($uri) {
-        self::$app->getResponse()->toPage($uri);
     }
 
 }

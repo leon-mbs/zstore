@@ -40,8 +40,9 @@ class Warranty extends \App\Pages\Base
         $this->docform->add(new TextInput('customer'));
 
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-       
+        $this->docform->add(new DropDownChoice('store', Store::getList()))->onChange($this, 'OnChangeStore');
+        $this->docform->store->selectFirst();
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -231,13 +232,12 @@ class Warranty extends \App\Pages\Base
 
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch (\Exception $ee) {
-            global $logger;
+        } catch (\ZippyERP\System\Exception $ee) {
             $conn->RollbackTrans();
-               $this->setError($ee->getMessage());
-  
-            $logger->error($ee);
-            return;
+            $this->setError($ee->getMessage());
+        } catch (\Exception $ee) {
+            $conn->RollbackTrans();
+            throw new \Exception($ee->getMessage());
         }
     }
 

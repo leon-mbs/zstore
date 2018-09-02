@@ -29,7 +29,6 @@ class ServiceList extends \App\Pages\Base
         $this->add(new Form('servicedetail'))->setVisible(false);
         $this->servicedetail->add(new TextInput('editservice_name'));
         $this->servicedetail->add(new TextInput('editprice'));
-        $this->servicedetail->add(new TextInput('edithours'));
         $this->servicedetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->servicedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -39,7 +38,6 @@ class ServiceList extends \App\Pages\Base
 
         $row->add(new Label('service_name', $item->service_name));
         $row->add(new Label('price', $item->price));
-        $row->add(new Label('hours', $item->hours));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -61,7 +59,6 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->setVisible(true);
         $this->servicedetail->editservice_name->setText($this->_service->service_name);
         $this->servicedetail->editprice->setText($this->_service->price);
-        $this->servicedetail->edithours->setText($this->_service->hours);
     }
 
     public function addOnClick($sender) {
@@ -76,7 +73,6 @@ class ServiceList extends \App\Pages\Base
     public function saveOnClick($sender) {
         $this->_service->service_name = $this->servicedetail->editservice_name->getText();
         $this->_service->price = $this->servicedetail->editprice->getText();
-        $this->_service->hours = $this->servicedetail->edithours->getText();
         if ($this->_service->service_name == '') {
             $this->setError("Введите наименование");
             return;

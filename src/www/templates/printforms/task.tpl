@@ -54,22 +54,6 @@
             </tr>
             {{/totaldisc}}         
 
-              <tr style="font-weight: bolder;">
-              
-              <th colspan="5" align="left">Оборудование </th>
-                
-            </tr>          
-           {{#_detail2}}
-            <tr>
-                 <td> </td>
-                <td>{{eq_name}}</td>
-            
-                <td colspan="3" >{{code}} </td>
-                
-            </tr>
-            {{/_detail2}}
-            
-            
         </table>
 
         <br>

@@ -26,7 +26,6 @@ class GoodsIssue extends Document
             } else {
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $value['itemname'],
-                    "tovar_code" => $value['item_code'],
                     "quantity" => $value['quantity'],
                     "price" => $value['price'],
                     "amount" => ($value['quantity'] ) * $value['price']

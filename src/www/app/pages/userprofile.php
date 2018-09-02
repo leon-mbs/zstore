@@ -24,15 +24,8 @@ class UserProfile extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Userlogin");
         }
 
-        $form = new Form('profileform');
-        $form->onSubmit($this, 'onsubmit');
-        $form->add(new Label('userlogin', $this->user->userlogin));
-        $form->add(new TextInput('email', $this->user->email));
-        $this->add($form);
-
 
         //форма   пароля
-
         $form = new Form('passwordform');
         $form->add(new TextInput('userpassword'));
         $form->add(new TextInput('confirmpassword'));
@@ -40,20 +33,9 @@ class UserProfile extends \App\Pages\Base
         $this->add($form);
     }
 
-    public function onsubmit($sender) {
-
-        $this->user->email = $sender->email->getText();
-
-        if (!$this->isError()) {
-            $this->user->save();
-            $this->setSuccess('Изменения сохранены');
-            System::setUser($this->user);
-        }
-    }
-
     //записать  пароль
     public function onsubmitpass($sender) {
-
+        $this->setError('');
         $pass = $sender->userpassword->getText();
         $confirm = $sender->confirmpassword->getText();
 
