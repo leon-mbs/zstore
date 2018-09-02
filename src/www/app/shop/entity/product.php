@@ -93,7 +93,7 @@ class Product extends \ZCL\DB\Entity
     public function checkDelete() {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "  select count(*)  from   documents_view where  meta_name='ShopOrder' and content like '%<product_id>{$this->product_id}</product_id>%' ";
+        $sql = "  select count(*)  from   documents_view where  meta_name='Order' and content like '%<product_id>{$this->product_id}</product_id>%' ";
         $cnt = $conn->GetOne($sql);
         return ($cnt > 0) ? false : true;
     }

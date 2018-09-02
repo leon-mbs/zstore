@@ -120,7 +120,7 @@ class Outcome extends \App\Pages\Base
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <0
-               and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','ShopOrder')
+               and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order')
  
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -136,7 +136,7 @@ class Outcome extends \App\Pages\Base
          join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
            where e.`customer_id` >0  and e.`quantity` <0
-             and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','ShopOrder')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+             and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
   group by  c.`customer_name`,c.`customer_id`
   order  by c.`customer_name`
@@ -150,7 +150,7 @@ class Outcome extends \App\Pages\Base
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <0
-              and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','ShopOrder')           
+              and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order')           
                AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.`document_date`
@@ -166,7 +166,7 @@ class Outcome extends \App\Pages\Base
               join `services` s on e.`service_id` = s.`service_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`service_id` >0  and e.`quantity` <0
-              and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','ShopOrder')
+              and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order')
                 AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.`service_name`

@@ -13,6 +13,7 @@ use \App\Shop\Basket;
 use \App\Application as App;
 use \App\Shop\Entity\Product;
 use \App\Entity\Doc\Document;
+use \App\System;
 
 //страница формирования заказа  пользователя
 class Order extends Base
@@ -103,21 +104,22 @@ class Order extends Base
             return;
         }
 
+       
         try {
 
-            $order = Document::create('ShopOrder');
+            $order = Document::create('Order');
             $order->document_number = $order->nextNumber();
             if (strlen($order->document_number) == 0)
                 $order->document_number = 'З0001';
             $amount = 0;
 
             foreach ($this->basketlist as $product) {
-                $amount = $amount + $product->price * $product->quantity;
-                $product->detail = ''; //избежать вложеных CDATA
                 $stock = \App\Entity\Stock::load($product->stock_id);
-                $product->itemname = $stock->itemname;
-                $product->partion = $stock->partion;
-                $order->detaildata[] = $product->getData();
+                $stock->price = $product->price;
+                $stock->quantity = $product->quantity;
+                $stock->product_id = $product->product_id;
+                $amount += ($product->price * $product->quantity);
+                $order->detaildata[] = $stock->getData();
             }
 
             $order->headerdata = array(
@@ -133,6 +135,13 @@ class Order extends Base
                 'total' => $amount
             );
 
+            $op = System::getOptions("shop");
+            $cust = \App\Entity\Customer::load($op["defсuststore"]);       
+            if($cust instanceof \App\Entity\Customer) {
+               $order->headerdata['customer'] = $cust->customer_id;
+               $order->headerdata['customer_name'] = $cust->customer_name;
+            }
+            
             $order->notes = trim($this->orderform->contact->getText());
             $order->amount = $amount;
             $order->save();

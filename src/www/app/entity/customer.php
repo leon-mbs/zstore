@@ -51,5 +51,11 @@ class Customer extends \ZCL\DB\Entity
         return ($cnt == 0) ? true : false;
         ;
     }
-
+     /**
+     * список   для комбо
+     * 
+     */
+    public static function getList() {
+        return Customer::findArray("customer_name", "" );
+    }
 }

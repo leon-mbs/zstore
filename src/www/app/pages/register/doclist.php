@@ -43,7 +43,7 @@ class DocList extends \App\Pages\Base
         $this->filter->add(new Date('to', $filter->to));
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
         $this->filter->add(new DropDownChoice('rowscnt', array(20 => 20, 50 => 50, 100 => 100)));
-        $this->filter->add(new CheckBox('onlymy'))->setChecked($filter->onlymy);
+       // $this->filter->add(new CheckBox('onlymy'))->setChecked($filter->onlymy);
         $this->filter->add(new TextInput('searchnumber'));
 
         if (strlen($filter->docgroup) > 0)
@@ -74,7 +74,7 @@ class DocList extends \App\Pages\Base
         $filter->to = $this->filter->to->getDate(true);
         $filter->doctype = $this->filter->doctype->getValue();
 
-        $filter->onlymy = $this->filter->onlymy->isChecked();
+       // $filter->onlymy = $this->filter->onlymy->isChecked();
         $filter->searchnumber = $this->filter->searchnumber->getText();
 
         $this->doclist->setCurrentPage(1);
@@ -203,9 +203,9 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             $sn = $conn->qstr('%' . $filter->searchnumber . '%');
             $where .= " and (document_number like  {$sn} ";
         }
-        if ($filter->onlymy == true) {
-            $where .= " and user_id  = " . System::getUser()->user_id;
-        }
+       // if ($filter->onlymy == true) {
+       //     $where .= " and user_id  = " . System::getUser()->user_id;
+      //  }
         return $where;
     }
 

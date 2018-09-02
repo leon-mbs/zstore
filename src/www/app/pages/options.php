@@ -29,7 +29,7 @@ class Options extends \App\Pages\Base
 
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new TextInput('firmname'));
-        $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList()))->onChange($this, 'OnChangeStore');
+        $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList())) ;
 
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
@@ -38,7 +38,8 @@ class Options extends \App\Pages\Base
         //  $this->common->add(new Date('closeddate'));
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        $this->shop->add(new DropDownChoice('defshowstore', \App\Entity\Store::getList()))->onChange($this, 'OnChangeStore');
+        $this->shop->add(new DropDownChoice('defshowstore', \App\Entity\Store::getList())) ;
+        $this->shop->add(new DropDownChoice('defсuststore', \App\Entity\Customer::getList())) ;
 
 
 
@@ -62,6 +63,7 @@ class Options extends \App\Pages\Base
         if (!is_array($shop))
             $shop = array();
         $this->shop->defshowstore->setValue($shop['defshowstore']);
+        $this->shop->defсuststore->setValue($shop['defсuststore']);
 
 
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
@@ -123,6 +125,7 @@ class Options extends \App\Pages\Base
         //todo контрагент магазина, кому  нотификацию
 
         $shop['defshowstore'] = $this->shop->defshowstore->getValue();
+        $shop['defсuststore'] = $this->shop->defсuststore->getValue();
 
 
         System::setOptions("shop", $shop);

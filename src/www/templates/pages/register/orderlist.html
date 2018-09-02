@@ -3,11 +3,13 @@
         <div class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Журнал документов </h3>
+                <h3>Журнал заказов </h3>
 
 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
+
+
 
                         <label   for="from">С  </label>
                         <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
@@ -17,24 +19,17 @@
                         <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
 
 
-                        <label for="searchnumber"> Тип </label>
-                        <select class="form-control mr-sm-2  " zippy="doctype">
-                            <option value="0">Не выбран</option>
-                        </select>
 
                         <label for="searchnumber"> № </label>
 
                         <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
-                         <!--
-                        <div class="form-check   ">
 
-                            <input class="form-check-input"  type="checkbox" zippy="onlymy">
-                            <label class="form-check-label mr-sm-3" for="onlymy">Только мои</label>
-                        </div>  -->
-                        <label for="docgroup"> Строк  </label>
-                        <select class="form-control mr-sm-2  " zippy="rowscnt">
 
+
+                        <select class="form-control mr-2" zippy="status">
                         </select>
+
+                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту"] >
 
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -52,10 +47,10 @@
                         <th style="text-align: right;">Сумма</th>
                         <th>Статус</th>
                         <th> </th>
-                        <th>Примечание</th>
+                        <th>Доставка</th>
+
                         <th></th>
-                        <th></th>
-                        <th></th>
+
 
                     </tr>   <tbody>
                         <tr zippy="doclist">
@@ -65,28 +60,14 @@
                             <td zippy="amount" style="text-align: right;"></td>
                             <td style="white-space:   nowrap" zippy="state"> </td>
                             <td style="white-space:   nowrap"  ><i title="К оплате" zippy="spay"  class="far fa-credit-card"></i> <i title="В доставке" zippy="sship"  class="fas fa-truck"></i> <i title="Запланированный" zippy="splan" class="far fa-calendar-alt"></i>  </td>
-                            <td zippy="notes"></td>
+                            <td zippy="delivery"></td>
 
                             <td style="white-space:   nowrap">
                                 <a zippy="show" title="Просмотр"><i class="fa fa-search-plus"></i></a>
-                                <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></a>
-                                <a zippy="cancel" title="Отменить проведение"><i class="fa fa-undo"></i> </a>
 
                             </td>
-                            <td>
-                                <a zippy="delete" title="Удаление"><i class="fa fa-trash"></i></a>
-                            </td>
-                            <td>
-                                <div class="btn-group" zippy="basedon">
-                                    <button title="Создать на  основании" type="button"
-                                            class="btn btn-light btn-xs  dropdown-toggle" data-toggle="dropdown">
-                                        Создать <span class="caret"></span>
-                                    </button>
-                                    <div  class="dropdown-menu" role="menu" zippy="basedlist">
 
-                                    </div >
-                                </div>
-                            </td>
+
                         </tr>   </tbody>
                 </table>
 
@@ -100,16 +81,26 @@
         </div>
         <div class="row">
             <div class="col-12">
+                <h5>Сменить статус заказа</h5>
+                <div class="navbar nav">
+                    <form zippy="statusform" class="form-inline ">
+                        <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 " ><i class="fas fa-wrench"></i> В обработку</button>
+                        <button zippy="bpayed" type="submit" class="  btn btn-info  mr-2 " ><i class="far fa-credit-card"></i> Оплачен</button>
+                        <button zippy="binshipment" type="submit" class="  btn btn-info  mr-2 " ><i class="fas fa-truck"></i> Отправлен</button>
+                        <button zippy="bdelivered" type="submit" class="  btn btn-info  mr-2 " ><i class="fas fa-truck"></i> Доставлен</button>
+                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 " > <i class="fa fa-gavel"></i> Выполнен</button>
+                        <button zippy="bcancel" type="submit" class="  btn btn-danger  mr-2 " > <i class="fa fa-trash"></i> Отменить</button>
+
+                    </form>
+                </div>         
+
+
                 <div zippy="docview"></div>
                 <div>
                     <div>
                     </div>
                 </div>
 
-                <script>
-                    function check_delete() {
-                        return confirm("Удалить  документ?")
-                    }
-                </script>
+
                 </body>
                 </html>
