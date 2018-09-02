@@ -61,6 +61,7 @@ class Task extends \App\Pages\Base
         $this->docform->add(new SubmitLink('additem'))->onClick($this, 'additemOnClick');
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
+        $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -93,6 +94,7 @@ class Task extends \App\Pages\Base
         $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name")));
         $this->editdetail3->add(new Button('cancelrow3'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail3->add(new SubmitButton('saverow3'))->onClick($this, 'saverow3OnClick');
+    
     
         //equipment
         $this->add(new Form('editdetail4'))->setVisible(false);
@@ -289,6 +291,8 @@ class Task extends \App\Pages\Base
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->editdetail2->setVisible(false);
+        $this->editdetail3->setVisible(false);
+        $this->editdetail4->setVisible(false);
         $this->docform->setVisible(true);
     }
 

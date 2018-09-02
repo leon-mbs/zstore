@@ -19,6 +19,7 @@ class Task extends Document
         $detail = array();
         foreach ($this->detaildata as $value) {
             if($value['eq_id']>0)continue;
+            if($value['employee_id']>0)continue;
             $detail[] = array("no" => $i++,
                 "servicename" => $value['service_id'] > 0 ? $value['service_name'] : $value['itemname'],
                 "quantity" => $value['quantity'],
