@@ -6,6 +6,7 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
@@ -36,6 +37,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
+        $this->filter->add(new DropDownChoice('searchtype',array(1=>'Покупатели',2=>'Поставщики'),0));
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
@@ -51,7 +53,8 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('editcustomername'));
         $this->customerdetail->add(new TextInput('editphone'));
         $this->customerdetail->add(new TextInput('editemail'));
-
+        $this->customerdetail->add(new CheckBox('editjurid'));
+        $this->customerdetail->add(new DropDownChoice('edittype',array(1=>'Покупатель',2=>'Поставщик'),0));
         $this->customerdetail->add(new TextInput('discount'));
         $this->customerdetail->add(new TextArea('editcomment'));
 
@@ -72,19 +75,25 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->addeventform->add(new \ZCL\BT\DateTimePicker('addeventdate', time()));
         $this->contentview->addeventform->add(new TextInput('addeventtitle'));
         $this->contentview->addeventform->add(new TextArea('addeventdesc'));
-        $this->contentview->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 годину", 2 => "2 години", 4 => "4 години", 8 => "8 годин", 16 => "16 годин", 24 => "24 години"), 0));
+        
+        $this->contentview->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
         $this->contentview->dw_eventlist->setPageSize(10);
         $this->contentview->add(new \Zippy\Html\DataList\Paginator('eventpag', $this->contentview->dw_eventlist));
     }
 
     public function OnSearch($sender) {
+        $type = $this->filter->searchtype->getValue();
         $search = trim($this->filter->searchkey->getText());
         $where = "1=1";
 
         if (strlen($search) > 0) {
             $search = Customer::qstr('%' . $search . '%');
-            $where = " and (customer_name like  {$search} or phone like {$search}    )";
+            $where .= " and (customer_name like  {$search} or phone like {$search}    )";
+        }
+       if ($type > 0) {
+            
+            $where .= " and detail like '%<type>{$type}</type>%'    ";
         }
 
 
@@ -118,6 +127,8 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->discount->setText($this->_customer->discount);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
+        $this->customerdetail->edittype->setValue($this->_customer->type);
+        $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
     }
 
     public function deleteOnClick($sender) {
@@ -154,6 +165,8 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->discount = $this->customerdetail->discount->getText();
         $this->_customer->comment = $this->customerdetail->editcomment->getText();
+        $this->_customer->type = $this->customerdetail->edittype->getValue();
+        $this->_customer->jurid = $this->customerdetail->editjurid->isChecked()?1:0;
 
         $this->_customer->Save();
         $this->customerdetail->setVisible(false);
@@ -171,8 +184,6 @@ class CustomerList extends \App\Pages\Base
         $this->_customer = $sender->owner->getDataItem();
         $this->customerdetail->setVisible(false);
         $this->contentview->setVisible(true);
-        $this->customertable->customerlist->setSelectedRow($sender->owner);
-        $this->customertable->customerlist->Reload();
         $this->updateFiles();
         $this->updateMessages();
         $this->updateEvents();

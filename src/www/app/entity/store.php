@@ -29,7 +29,7 @@ class Store extends \ZCL\DB\Entity
      * 
      */
     public static function getList() {
-        return Store::findArray("storename", "", store_id);
+        return Store::findArray("storename", "" );
     }
 
 }
