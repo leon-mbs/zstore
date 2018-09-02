@@ -98,12 +98,17 @@ class Order extends \App\Pages\Base
             $this->docform->inshipment->setChecked($this->_doc->headerdata['inshipment']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
-
+       
+            $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->headerdata['customer']);
             $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
 
             $this->docform->notes->setText($this->_doc->notes);
+            $this->docform->email->setText($this->_doc->headerdata['email']);
+            $this->docform->phone->setText($this->_doc->headerdata['phone']);
+            $this->docform->address->setText($this->_doc->headerdata['address']);
+             
 
             foreach ($this->_doc->detaildata as $item) {
                 $stock = new Stock($item);

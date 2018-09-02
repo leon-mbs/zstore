@@ -43,7 +43,7 @@ class OrderList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Неоплаченые', 3 => 'Все'), 0));
 
 
-        $doclist = $this->add(new DataView('doclist', new DocDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
@@ -172,6 +172,8 @@ class OrderList extends \App\Pages\Base
 
 
         //доставка
+            $this->statusform->binshipment->setVisible(false);
+            $this->statusform->bdelivered->setVisible(false);        
         if ($delivery == '1' || $delivery == '2') {
             if (false == $insh) {   // не отправлялся
                 $this->statusform->binshipment->setVisible(true);
@@ -219,7 +221,7 @@ class OrderList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class DocDataSource implements \Zippy\Interfaces\DataSource
+class OrderDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;
