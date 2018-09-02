@@ -1,0 +1,130 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="vendor/leon-mbs/zippy/assets/css/allzcl.min.css">
+        <script src="vendor/leon-mbs/zippy/assets/js/allzcl.min.js" type="text/javascript"></script>
+
+    </head>
+    <body>
+        <div class="row"  >
+            <div class="col-12">
+                <h3>Категории товаров</h3>
+            </div>
+            <div class="col-12 col-md-4  ">
+                <div zippy="tree"></div>
+            </div>
+
+            <div class="col-12  col-md-8  ">
+
+                <form    zippy="newgroupform" >
+
+                    <div class="form-group row">
+                        <div class="col-8 col-md-6">
+                            <input class="form-control" type="text" zippy="newgroupname" required="required">
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <a zippy="newgroup" class="btn   btn-outline-success">Добавить дочернюю</a>
+                        </div>
+                    </div>  
+                </form>
+
+                <form    zippy="groupform" method="post" enctype="multipart/form-data">
+
+                    <div class="form-group row">
+                        <div class="col-8 col-md-6">
+                            <input class="form-control" type="text" zippy="groupname" required="required">
+                        </div>
+                        <div class="col-4  col-md-3">
+                            <a zippy="renamegroup" class="btn   btn-outline-success">Переименовать</a>
+                        </div>
+                    </div>                   
+                    <div class="form-group row">
+                        <div class="col-8 ">
+                            <img zippy="group_image" width="100px;"> 
+                        </div>
+
+                    </div>                   
+                    <div class="form-group row">
+                        <div class="col-8 col-md-6">
+                            <input type="file" zippy="photo"   />
+                        </div>
+                        <div class="col-4  col-md-3">
+                            <a  zippy="savegroup"  class="btn btn-outline-success">Загрузить фото</a> <br>
+
+                        </div>
+                    </div>                   
+                    <div class="form-group row">
+                        <div class="col-8 col-md-6">
+                            <a  zippy="delgroup"  class="btn btn-sm  btn-danger">Удалить категорию</a>
+                        </div>
+                    </div>                 
+                </form>
+
+                <div zippy="attrpanel" class="row">
+                    <div class="col-12   col-lg-10 ">
+                        <h4>Список  атрибутов</h4>
+                        <a  zippy="addattr"  class="btn btn-sm  btn-primary" >Новый  атрибут</a><br>
+                        <table class="   table    table-sm "  >
+                            <tr>
+                                <th>Наименование</th>
+                                <th >Тип</th>
+                                <th  >Значение</th>
+                                <th style="width:16px;">&nbsp;</th>
+                                <th style="width:16px;">&nbsp;</th>
+                                <th style="width:75px;">&nbsp;</th>
+                            </tr>
+                            <tr zippy="attritem">
+                                <td zippy="itemname"></td>
+                                <td zippy="itemtype"></td>
+                                <td  zippy="itemvalues"></td>
+                                <td><a zippy="orderup"><i class="fa fa-arrow-up"></i></a></td>
+                                <td><a zippy="orderdown"><i class="fa fa-arrow-down"></i></a></td>
+                                <td><a zippy="itemedit"><i class="fa fa-edit"></i></a> <a zippy="itemdel"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <form zippy="attreditform" class="col-12 col-md-6 col-xl-4 ">
+                        <hr>
+                        <div class="form-group">
+                            <label for="attrtype">Тип: &nbsp;<i zippy="tt" class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title=""></i></label>
+                            <select zippy="attrtype" class="form-control" ></select>
+                            <span  zippy="attrtypename"  class="form-control"></span>                                
+                        </div> 
+                        <div class="form-group">
+                            <label for="attrname">Наименование:</label>
+                            <input type="text" zippy="attrname" class="form-control" required="required"/>
+                        </div> 
+                        <div class="form-group" zippy="attrvaluespanel"> 
+                            <label for="attrvalues">Значение:</label>
+                            <textarea rows="5" cols="30"  class="form-control" zippy="attrvalues"></textarea>
+                        </div> 
+                        <div class="form-group" zippy="meashurepanel">
+                            <label for="meashure">Ед. изм:</label>
+                            <input type="text" zippy="meashure" class="form-control"  style="width:50px;"/>
+                        </div> 
+
+
+                        <div class="form-check   ">
+
+                            <input class="form-check-input"  type="checkbox" zippy="showinlist">
+                            <label class="form-check-label mr-sm-2" for="showinlist">Показать в фильтре  отбора</label>
+                        </div>                       
+                        <div class="form-group">
+
+                            <input type="submit"  class="btn btn-sm  btn-success" value="Сохранить" ></input> 
+                        </div> 
+                        <input type="hidden" zippy="attrid" value="0">
+                    </form>
+                </div>
+
+
+
+            </div>
+        </div>
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+        </script>
+    </body>
+</html>

@@ -3,13 +3,13 @@
         <table class="ctable" width="600" border="0" class="ctable" cellpadding="2" cellspacing="0">
 
             <tr style="font-size:larger; font-weight: bolder;">
-                <td align="center" colspan="8">
+                <td align="center" colspan="5">
                     Оплата  по  нарядам 
                 </td>
             </tr>            
             <tr>
 
-                <td align="center" colspan="8">
+                <td align="center" colspan="5">
                     Период с {{datefrom}} по {{dateto}}
                 </td>
             </tr>

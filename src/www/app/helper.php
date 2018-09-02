@@ -3,6 +3,7 @@
 namespace App;
 
 use \App\Entity\User;
+use \App\System;
 use \ZCL\DB\DB as DB;
 
 /**
@@ -84,6 +85,9 @@ class Helper
                 break;
             case 4 :
                 $dir = "Pages/Reference";
+                break;
+            case 5 :
+                $dir = "Shop/Pages";
                 break;
         }
         $textmenu = "";
@@ -276,6 +280,18 @@ class Helper
     public static function log($msg) {
         global $logger;
         $logger->debug($msg);
+    }
+
+    /**
+     * Возвращает склад  по  умолчанию
+     * 
+     */
+    public static function getDefStore() {
+        $common = System::getOptions("common");
+        if ($common['defstore'] > 0) {
+            return $common['defstore'];
+        }
+        \App\Application::RedirectError('Не задан склад  по  умолчанию');
     }
 
 }

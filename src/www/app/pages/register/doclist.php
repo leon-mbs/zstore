@@ -33,16 +33,17 @@ class DocList extends \App\Pages\Base
         parent::__construct();
         $filter = Filter::getFilter("doclist");
         if ($filter->to == null) {
-            $filter->to = time()+ (3 * 24 * 3600);
+            $filter->to = time() + (3 * 24 * 3600);
             $filter->from = time() - (7 * 24 * 3600);
             $filter->page = 1;
+            $filter->doctype = 0;
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
         $this->filter->add(new Date('to', $filter->to));
-        $this->filter->add(new DropDownChoice('doctype', H::getDocTypes()));
+        $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
         $this->filter->add(new DropDownChoice('rowscnt', array(20 => 20, 50 => 50, 100 => 100)));
-        $this->filter->add(new CheckBox('onlymy'))->setChecked($filter->onlymy == true);
+        $this->filter->add(new CheckBox('onlymy'))->setChecked($filter->onlymy);
         $this->filter->add(new TextInput('searchnumber'));
 
         if (strlen($filter->docgroup) > 0)
@@ -91,10 +92,12 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('amount', ($doc->amount > 0) ? $doc->amount : ""));
 
-        $row->add(new Label('state', Document::getStateName($doc->state) ));
-        $row->add(new Label('sship'))->setVisible($doc->headerdata['inshipment']==1);
-        $row->add(new Label('spay'))->setVisible($doc->headerdata['incredit']==1);;
-        $row->add(new Label('splan'))->setVisible($doc->headerdata['planned']==1);;
+        $row->add(new Label('state', Document::getStateName($doc->state)));
+        $row->add(new Label('sship'))->setVisible($doc->headerdata['inshipment'] == 1);
+        $row->add(new Label('spay'))->setVisible($doc->headerdata['incredit'] == 1);
+        ;
+        $row->add(new Label('splan'))->setVisible($doc->headerdata['planned'] == 1);
+        ;
 
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -115,10 +118,9 @@ class DocList extends \App\Pages\Base
             $row->edit->setVisible(false);
             $row->delete->setVisible(false);
             $row->cancel->setVisible(true);
- 
         }
-  
-          //спписок документов   которые   могут  быть созданы  на  основании  текущего
+
+        //спписок документов   которые   могут  быть созданы  на  основании  текущего
         $basedon = $row->add(new Label('basedon'));
         $basedonlist = $doc->getRelationBased();
         if (count($basedonlist) == 0) {
@@ -165,7 +167,6 @@ class DocList extends \App\Pages\Base
         }
         Document::delete($doc->document_id);
         $this->doclist->Reload();
-        
     }
 
     public function cancelOnClick($sender) {
@@ -198,7 +199,9 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and meta_id  ={$filter->doctype} ";
         }
         if (strlen($filter->searchnumber) > 1) {
-            $where .= " and document_number like '%{$filter->searchnumber}%' ";
+
+            $sn = $conn->qstr('%' . $filter->searchnumber . '%');
+            $where .= " and (document_number like  {$sn} ";
         }
         if ($filter->onlymy == true) {
             $where .= " and user_id  = " . System::getUser()->user_id;

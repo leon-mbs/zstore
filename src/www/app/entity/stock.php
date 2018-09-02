@@ -12,6 +12,11 @@ namespace App\Entity;
 class Stock extends \ZCL\DB\Entity
 {
 
+    protected function init() {
+        $this->stock_id = 0;
+        $this->deleted = 0;
+    }
+    
     /**
      * Метод  для   получения  имени  ТМЦ  с  ценой
      *
@@ -47,7 +52,14 @@ class Stock extends \ZCL\DB\Entity
      */
     public static function getStock($store_id, $item_id, $price, $create = false) {
 
-        $stock = self::findOne("store_id = {$store_id} and item_id = {$item_id} and partion = {$price} ");
+        $where = "store_id = {$store_id} and item_id = {$item_id} and partion = {$price} ";
+
+        $conn = \ZDB\DB::getConnect();
+
+        //на  случай если удален
+        $conn->Execute("update store_stock set deleted=0 where " . $where);
+
+        $stock = self::findOne($where);
         if ($stock == null && $create == true) {
             $stock = new Stock();
             $stock->store_id = $store_id;

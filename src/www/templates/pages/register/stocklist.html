@@ -9,19 +9,23 @@
                 <h3>Товары на  складе </h3>
                 <form zippy="filter" class="form-inline">
 
-                    <label for="searchkey">Поиск</label>
-                    <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+
+                    <input placeholder="Поиск..." class="form-control mr-sm-2" type="text" zippy="searchkey">
                     <label for="searchstore">склад</label>
 
                     <select   class="form-control mr-sm-2" zippy="searchstore">
-
+                     <option value="0">Все склады </option>
                     </select>         
                     <label for="searchcat">категория</label>
 
                     <select   class="form-control mr-sm-2" zippy="searchcat">
                         <option value="0">Не задана</option>
                     </select>         
+                    <div class="form-check   ">
 
+                        <input class="form-check-input"  type="checkbox" zippy="allpart">
+                        <label class="form-check-label mr-sm-3" for="allpart">Все партии </label>
+                    </div>
 
                     <input class="btn btn-outline-success  " type="submit" value="ОК">
 
@@ -50,7 +54,7 @@
                         <td zippy="qty" style="text-align: right;"></td>
                         <td zippy="amount" style="text-align: right;"></td>
                         <td zippy="price" style="text-align: right;"></td>
-
+                        <td  ><a title="Удалить неиспользуемую партию" zippy="delete"> <i class="fa fa-trash"></i></a></td>
 
                     </tr>
                 </table>
@@ -61,7 +65,11 @@
 
 
         </div>
-
+        <script>
+            function check_delete() {
+                return confirm("Удалить  партию?")
+            }
+        </script>
 
     </body>
 </html>

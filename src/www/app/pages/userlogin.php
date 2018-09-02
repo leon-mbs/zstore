@@ -28,6 +28,8 @@ class UserLogin extends \Zippy\Html\WebPage
     }
 
     public function onsubmit($sender) {
+        global $logger,$_config;
+        
         $this->setError('');
         $login = $sender->userlogin->getText();
         $password = $sender->userpassword->getText();
@@ -50,9 +52,10 @@ class UserLogin extends \Zippy\Html\WebPage
                 $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
                 //App::$app->getResponse()->toBack();
                 if ($this->loginform->remember->isChecked()) {
-                    $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+                    
                     setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
                 }
+                $logger->info('Logined '. $user->userlogin. ', '.$_SERVER["REMOTE_ADDR"]);
                 if (\App\Session::getSession()->topage == null) {
                     App::RedirectHome();
                 } else {
