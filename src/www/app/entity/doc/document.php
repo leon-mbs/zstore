@@ -83,7 +83,7 @@ class Document extends \ZCL\DB\Entity
          if($doc instanceof Document)  {
              if($this->document_id != $doc->document_id) {
                   
-                 throw new \ZippyERP\System\Exception('Не  унікальний номер документу');
+                 throw new  \Exception('Не уникальный номер документа');
                  return false;
              }
          }

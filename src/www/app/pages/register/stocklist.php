@@ -24,6 +24,7 @@ class StockList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
+        if(false ==\App\ACL::checkShowReg('StockList'))return;       
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));

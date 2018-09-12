@@ -45,8 +45,10 @@ class TaskList extends \App\Pages\Base
 
 
         parent::__construct();
-        $this->_taskds = new EDS('\App\Entity\Doc\Document', "", "document_date desc");
 
+        if(false ==\App\ACL::checkShowReg('TaskList'))return;       
+
+        $this->_taskds = new EDS('\App\Entity\Doc\Document', "", "document_date desc");
 
         $this->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
         $this->tasklist->setPageSize(15);
@@ -119,12 +121,15 @@ class TaskList extends \App\Pages\Base
 
     public function taskshowOnClick($sender) {
         $task = $sender->getOwner()->getDataItem();
+        if(false ==\App\ACL::checkShowDoc($task,true))return;       
+       
         $this->docview->setVisible(true);
         $this->docview->setDoc($task);
     }
 
     public function taskeditOnClick($sender) {
         $task = $sender->getOwner()->getDataItem();
+         if(false ==\App\ACL::checkEditDoc($task,true))return;     
 
         $type = H::getMetaType($task->meta_id);
         $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
@@ -135,11 +140,15 @@ class TaskList extends \App\Pages\Base
 
     public function taskdeleteOnClick($sender) {
         $task = $sender->getOwner()->getDataItem();
+         if(false ==\App\ACL::checkEditDoc($task,true))return;     
+ 
         $task->updateStatus(Document::STATE_CANCELED);
         $this->updateTasks();
     }
 
     public function updateTasks() {
+        $user = System::getUser();
+
         $client = $this->filterform->filterclient->getKey();
 
         $sql = "meta_name='Task' ";
@@ -157,6 +166,15 @@ class TaskList extends \App\Pages\Base
         if ($this->filterform->filterpa->getValue() > 0) {
             $sql = $sql . " and  content  like '%<parea>" . $this->filterform->filterpa->getValue() . "</parea>%' ";
         }
+        if($user->acltype == 2){
+          if($user->onlymy ==1   ){
+ 
+            $sql .= " and user_id  = " . $user->user_id;
+          } 
+          
+          $sql .= " and meta_id in({$user->aclview}) ";
+                   
+        }        
 
 
         $this->_taskds->setWhere($sql);

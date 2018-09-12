@@ -49,11 +49,10 @@ class User extends Entity
 
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->acl);
-        $this->acl = (int) ($xml->acl[0]);
+        $this->acltype = (int) ($xml->acltype[0]);
         $this->onlymy = (int) ($xml->onlymy[0]);
         $this->aclview = (string) ($xml->aclview[0]);
         $this->acledit = (string) ($xml->acledit[0]);
-        $this->menu = (string) ($xml->menu[0]);
         $this->widgets = (string) ($xml->widgets[0]);
 
         parent::afterLoad();
@@ -66,11 +65,10 @@ class User extends Entity
     protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные в detail
-        $this->acl = "<detail><acl>{$this->acl}</acl>";
+        $this->acl = "<detail><acltype>{$this->acltype}</acltype>";
         $this->acl .= "<onlymy>{$this->onlymy}</onlymy>";
         $this->acl .= "<aclview>{$this->aclview}</aclview>";
         $this->acl .= "<acledit>{$this->acledit}</acledit>";
-        $this->acl .= "<menu>{$this->menu}</menu>";
         $this->acl .= "<widgets>{$this->widgets}</widgets>";
         $this->acl .= "</detail>";
 

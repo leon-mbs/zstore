@@ -19,6 +19,7 @@ class CategoryList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
+        if(false ==\App\ACL::checkShowRef('CategoryList'))return;       
 
         $this->add(new Panel('categorytable'))->setVisible(true);
         $this->categorytable->add(new DataView('categorylist', new \ZCL\DB\EntityDataSource('\App\Entity\Category'), $this, 'categorylistOnRow'))->Reload();
@@ -38,6 +39,9 @@ class CategoryList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+        if(false ==\App\ACL::checkEditRef('CategoryList'))return;       
+      
+      
         $cat_id = $sender->owner->getDataItem()->cat_id;
         $cnt = \App\Entity\Item::findCnt("cat_id=" . $cat_id);
         if ($cnt > 0) {
@@ -65,6 +69,8 @@ class CategoryList extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
+        if(false ==\App\ACL::checkEditRef('CategoryList'))return;       
+       
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
         if ($this->_category->cat_name == '') {
             $this->setError("Введите наименование");

@@ -34,6 +34,7 @@ class CustomerList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
+        if(false ==\App\ACL::checkShowRef('CustomerList'))return;       
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
@@ -132,7 +133,8 @@ class CustomerList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-
+       if(false ==\App\ACL::checkEditRef('CustomerList'))return;       
+ 
 
         if (false == Customer::delete($sender->owner->getDataItem()->customer_id)) {
             $this->setError("Нельзя удалить контрагента");
@@ -154,7 +156,8 @@ class CustomerList extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
-
+        if(false ==\App\ACL::checkEditRef('CustomerList'))return;       
+ 
         $this->_customer->customer_name = $this->customerdetail->editcustomername->getText();
         if ($this->_customer->customer_name == '') {
             $this->setError("Введите наименование");

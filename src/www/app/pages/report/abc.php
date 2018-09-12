@@ -20,6 +20,8 @@ class ABC extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
+        if(false ==\App\ACL::checkShowReport('ABC'))return;       
+          
         $this->typelist[1] = "Товары,  прибыль";
         $this->typelist[2] = "Поставщики, объєм поставок";
         $this->typelist[3] = "Покупатель, объєм продаж";

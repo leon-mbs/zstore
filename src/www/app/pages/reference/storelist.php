@@ -23,6 +23,7 @@ class StoreList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
+        if(false ==\App\ACL::checkShowRef('StoreList'))return;       
 
         $storepanel = $this->add(new Panel('storetable'));
         $storepanel->add(new DataView('storelist', new \ZCL\DB\EntityDataSource('\App\Entity\Store'), $this, 'storelistOnRow'));
@@ -53,6 +54,7 @@ class StoreList extends \App\Pages\Base
     }
 
     public function storedeleteOnClick($sender) {
+          if(false ==\App\ACL::checkEditRef('StoreList'))return;       
 
         if (false == Store::delete($sender->owner->getDataItem()->store_id)) {
             $this->setError("Нельзя удалить цей  склад");
@@ -71,6 +73,7 @@ class StoreList extends \App\Pages\Base
     }
 
     public function storesaveOnClick($sender) {
+        if(false ==\App\ACL::checkEditRef('StoreList'))return;       
 
         $this->_store->storename = $this->storeform->storeeditname->getText();
         $this->_store->description = $this->storeform->storeeditdesc->getText();

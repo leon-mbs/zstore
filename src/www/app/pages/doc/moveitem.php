@@ -76,6 +76,8 @@ class MoveItem extends \App\Pages\Base
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         $this->OnChangeStore($this->docform->storeto);
+        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
+   
     }
 
     public function detailOnRow($row) {
@@ -91,6 +93,7 @@ class MoveItem extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $item = $sender->owner->getDataItem();
         // unset($this->_itemlist[$item->item_id]);
 
@@ -126,6 +129,7 @@ class MoveItem extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
             $this->setError("Не выбран товар");

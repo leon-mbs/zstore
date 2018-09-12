@@ -4,10 +4,10 @@
 
     <body>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 col-md-6 col-xl-4">
                 <div zippy="categorytable">
                     <h3>Категории товаров </h3>
-                    <a zippy="addnew" class="btn btn-default  ">Добавить</a>
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
                     <table class="table table-bordered   table-sm" style="width:400px">
                         <tr>
                             <th>Название</th>
@@ -26,7 +26,13 @@
 
                 </div>
 
-                <form class="col-6 col-md-4" zippy="categorydetail"  >
+                
+            </div> 
+            </div> 
+        <div class="row">
+            <div class="col-6 col-md-4">        
+            
+            <form  zippy="categorydetail"  >
                     <div class="form-group">
                         <label for="editcat_name">Название</label>
                         <input  required="required" class="form-control" zippy="editcat_name"/>
@@ -37,8 +43,10 @@
                     <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  "> 
 
                 </form>
-            </div>
+        </div>
         </div>
 
+    
+    
     </body>
 </html>

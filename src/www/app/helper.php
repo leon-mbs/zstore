@@ -53,12 +53,12 @@ class Helper
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
         $groups = array();
-        $smartmenu = "";
+        $textmenu = "";
         $aclview = explode(',', System::getUser()->aclview);
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
 
-            if (!in_array($meta_id, $aclview) && System::getUser()->erpacl == 2)
+            if (!in_array($meta_id, $aclview) && System::getUser()->acltype == 2)
                 continue;
 
             if (strlen($meta_object['menugroup']) == 0) {
@@ -110,6 +110,44 @@ class Helper
         return $textmenu;
     }
 
+    public static function generateSmartMenu() {
+        $conn = \ZDB\DB::getConnect();
+         
+        $rows = $conn->Execute("select *  from  metadata where smartmenu =1 ");
+        $textmenu = "";
+        $aclview = explode(',', System::getUser()->aclview);
+    
+        foreach ($rows as $item) {
+            
+           if (!in_array($item['meta_id'], $aclview) && System::getUser()->acltype == 2)
+                continue;
+            
+            
+            switch ((int) $item['meta_type']) {
+                case 1 :
+                    $dir = "Pages/Doc";
+                    break;
+                case 2 :
+                    $dir = "Pages/Report";
+                    break;
+                case 3 :
+                    $dir = "Pages/Register";
+                    break;
+                case 4 :
+                    $dir = "Pages/Reference";
+                    break;
+                case 5 :
+                    $dir = "Shop/Pages";
+                    break;
+            }
+
+            $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
+        }
+
+        return $textmenu;
+    }
+    
+    
     public static function loadEmail($template, $keys = array()) {
         global $logger;
 
@@ -291,7 +329,10 @@ class Helper
         if ($common['defstore'] > 0) {
             return $common['defstore'];
         }
-        \App\Application::RedirectError('Не задан склад  по  умолчанию');
+        
+        System::setErrorMsg('Не задан склад  по  умолчанию') ;
+        App::RedirectHome();
+        
     }
 
 }

@@ -62,7 +62,7 @@ function app_autoload($className)
         if (file_exists($file)) {
             require_once($file);
         } else {
-            \App\Application::Redirect('\\App\\Pages\\Error', 'Неверный класс ' . $className);
+            die('Неверный класс ' . $className);
         }
     }
 }

@@ -33,6 +33,7 @@ class OrderList extends \App\Pages\Base
      */
     public function __construct($docid = 0) {
         parent::__construct();
+        if(false ==\App\ACL::checkShowReg('OrderList'))return;       
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -208,6 +209,8 @@ class OrderList extends \App\Pages\Base
     //просмотр
     public function showOnClick($sender) {
         $this->_doc = $sender->owner->getDataItem();
+        if(false ==\App\ACL::checkShowDoc($this->_doc,true))return;       
+        
         $this->statusform->setVisible(true);
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
@@ -231,6 +234,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
     }
 
     private function getWhere() {
+       $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
 
@@ -263,6 +267,16 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         if ($status == 3) {
             
         }
+        
+        if($user->acltype == 2){
+          if($user->onlymy ==1   ){
+ 
+            $where .= " and user_id  = " . $user->user_id;
+          } 
+          
+          $where .= " and meta_id in({$user->aclview}) ";
+                   
+        }        
         return $where;
     }
 

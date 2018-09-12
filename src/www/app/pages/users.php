@@ -25,9 +25,14 @@ class Users extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin !== 'admin') {
-            App::Redirect('\App\Pages\Error', 'Вы не админ');
+                   System::setErrorMsg('Пользователями может  управлять только  admin') ;
+            App::RedirectHome();  
+            return;
         }
 
+         
+        
+        
         $this->add(new Panel("listpan"));
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource(), $this, 'OnAddUserRow'))->Reload();
@@ -51,7 +56,7 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->editpan->editform->add(new Panel('metaaccess'))->setVisible(false);
-        $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "meta_type,menugroup,description"), $this, 'metarowOnRow'));
+        $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "meta_type"), $this, 'metarowOnRow'));
     }
 
     public function onAdd($sender) {
@@ -71,10 +76,10 @@ class Users extends \App\Pages\Base
         $this->user = $sender->getOwner()->getDataItem();
         $this->editpan->editform->editemail->setText($this->user->email);
         $this->editpan->editform->editlogin->setText($this->user->userlogin);
-        $this->editpan->editform->editacl->setValue($this->user->acl);
+        $this->editpan->editform->editacl->setValue($this->user->acltype);
         $this->editpan->editform->editonlymy->setChecked($this->user->onlymy);
 
-        $this->editpan->editform->metaaccess->setVisible($this->user->acl == 2);
+        $this->editpan->editform->metaaccess->setVisible($this->user->acltype == 2);
         $this->editpan->editform->metaaccess->metarow->Reload();
 
 
@@ -108,12 +113,9 @@ class Users extends \App\Pages\Base
                 }
             }
         }
-        $this->user->acl = $this->editpan->editform->editacl->getValue();
-        $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked();
-
-
-
-
+        $this->user->acltype = $this->editpan->editform->editacl->getValue();
+        $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1:0;
+         
         $pass = $this->editpan->editform->editpass->getText();
         if (strlen($pass) > 0) {
             $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
@@ -163,6 +165,7 @@ class Users extends \App\Pages\Base
     public function onAcl($sender) {
 
         $this->editpan->editform->metaaccess->setVisible($sender->getValue() == 2);
+        $this->editpan->editform->metaaccess->metarow->Reload();
     }
 
     //удаление  юзера
@@ -190,16 +193,16 @@ class Users extends \App\Pages\Base
                 $title = "Документ";
                 break;
             case 2:
-                $title = "Звіт";
+                $title = "Отчет";
                 break;
             case 3:
                 $title = "Журнал";
                 break;
             case 4:
-                $title = "Довідник";
+                $title = "Справочник";
                 break;
             case 5:
-                $title = "Сторінка";
+                $title = "Каталог";
                 break;
         }
         $earr = @explode(',', $this->user->acledit);
@@ -213,7 +216,7 @@ class Users extends \App\Pages\Base
 
         $row->add(new Label('description', $item->description));
         $row->add(new Label('meta_name', $title));
-        $row->add(new Label('menugroup', $item->menugroup));
+  
         $row->add(new CheckBox('viewacc', new Bind($item, 'viewacc')));
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
     }

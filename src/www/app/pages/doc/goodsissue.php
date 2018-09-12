@@ -36,7 +36,7 @@ class GoodsIssue extends \App\Pages\Base
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
-
+ 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -122,6 +122,9 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
+
+        
     }
 
     public function detailOnRow($row) {
@@ -140,6 +143,8 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+     
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -174,6 +179,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
+      
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("Не выбран товар");
@@ -215,7 +221,8 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function savedocOnClick($sender) {
-        $this->_doc->document_number = $this->docform->document_number->getText();
+       if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         if ($this->checkForm() == false) {

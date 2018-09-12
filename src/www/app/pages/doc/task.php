@@ -157,6 +157,9 @@ class Task extends \App\Pages\Base
         $this->docform->add(new DataView('detail3', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emplist')), $this, 'detail3OnRow'))->Reload();
         $this->docform->add(new DataView('detail4', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_eqlist')), $this, 'detail4OnRow'))->Reload();
         $this->calcTotal();
+
+        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
+    
     }
 
     public function detailOnRow($row) {
@@ -195,6 +198,7 @@ class Task extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $service = $sender->owner->getDataItem();
 
 
@@ -378,7 +382,8 @@ class Task extends \App\Pages\Base
     
     
     public function savedocOnClick($sender) {
-        $this->_doc->document_number = $this->docform->document_number->getText();
+         if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+       $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
 

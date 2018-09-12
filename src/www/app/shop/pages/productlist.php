@@ -40,6 +40,7 @@ class ProductList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
+      if(false ==\App\ACL::checkShowCat('ProductList'))return;       
 
         $op = System::getOptions("shop");
         $this->store = $op["defshowstore"];

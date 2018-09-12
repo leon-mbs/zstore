@@ -29,6 +29,7 @@ class PayList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
+       if(false ==\App\ACL::checkShowReg('PayList'))return;       
 
         $this->add(new Panel('custpanel'));
         $this->custpanel->add(new DataView('sdoclist', new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_slist')), $this, 'slistOnRow'));

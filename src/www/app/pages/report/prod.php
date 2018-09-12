@@ -21,6 +21,7 @@ class Prod extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
+       if(false ==\App\ACL::checkShowReport('Prod'))return;       
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));

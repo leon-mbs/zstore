@@ -80,9 +80,7 @@ class System
         self::$_options[$group] = $options;
     }
 
-    public static function RedirectError($message) {
-        self::$app->getResponse()->Redirect("\\App\\Error", $message);
-    }
+    
 
     public static function setSuccesMsg($msg) {
         Session::getSession()->smsg = $msg;

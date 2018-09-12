@@ -40,7 +40,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->setError('Введите пароль');
         }
 
-        if (strlen($login) > 0 && strlen($password)) {
+        if (strlen($login) > 0 && strlen($password)>0) {
 
             $user = Helper::login($login, $password);
 

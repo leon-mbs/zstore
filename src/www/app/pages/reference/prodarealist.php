@@ -12,6 +12,7 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use App\Entity\ProdArea;
 
+//роизводственные  участвки
 class ProdAreaList extends \App\Pages\Base
 {
 
@@ -19,6 +20,7 @@ class ProdAreaList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
+         if(false ==\App\ACL::checkShowRef('ProdAreaList'))return;       
 
         $this->add(new Panel('patable'))->setVisible(true);
         $this->patable->add(new DataView('palist', new \ZCL\DB\EntityDataSource('\App\Entity\ProdArea'), $this, 'palistOnRow'))->Reload();
@@ -38,6 +40,9 @@ class ProdAreaList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+       if(false ==\App\ACL::checkEditRef('ProdAreaList'))return;       
+       
+       
         $pa_id = $sender->owner->getDataItem()->pa_id;
        // $cnt = \App\Entity\Item::findCnt("cat_id=" . $pa_id);
         if ($cnt > 0) {
@@ -65,6 +70,9 @@ class ProdAreaList extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
+       if(false ==\App\ACL::checkEditRef('ProdAreaList'))return;       
+     
+     
         $this->_pa->pa_name = $this->padetail->editpa_name->getText();
         if ($this->_pa->pa_name == '') {
             $this->setError("Введите наименование");

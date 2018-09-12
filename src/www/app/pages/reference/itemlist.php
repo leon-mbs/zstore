@@ -23,6 +23,7 @@ class ItemList extends \App\Pages\Base
 
     public function __construct($add = false) {
         parent::__construct();
+         if(false ==\App\ACL::checkShowRef('ItemList'))return;       
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
@@ -61,11 +62,14 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('cat_name', $item->cat_name));
         $row->add(new Label('price', $item->price));
+        $row->add(new Label('qty', $item->qty));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
     public function deleteOnClick($sender) {
+       if(false ==\App\ACL::checkEditRef('ItemList'))return;       
+     
         $item = $sender->owner->getDataItem();
         //проверка на партии
         if ($item->checkDelete()) {
@@ -112,6 +116,8 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
+       if(false ==\App\ACL::checkEditRef('ItemList'))return;       
+     
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
 

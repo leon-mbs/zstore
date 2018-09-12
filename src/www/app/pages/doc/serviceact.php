@@ -104,6 +104,8 @@ class ServiceAct extends \App\Pages\Base
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
+        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
+    
     }
 
     public function detailOnRow($row) {
@@ -133,6 +135,7 @@ class ServiceAct extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $service = $sender->owner->getDataItem();
 
 
@@ -179,6 +182,7 @@ class ServiceAct extends \App\Pages\Base
     }
 
     public function savedocOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();

@@ -21,6 +21,7 @@ use \App\Helper;
 use \App\System;
 use \Zippy\Html\Link\BookmarkableLink;
 
+//справочник  оборудования
 class EqList extends \App\Pages\Base
 {
 
@@ -31,6 +32,7 @@ class EqList extends \App\Pages\Base
     
     public function __construct() {
         parent::__construct();
+        if(false ==\App\ACL::checkShowRef('EqList'))return;       
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
@@ -93,6 +95,8 @@ class EqList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+       if(false ==\App\ACL::checkEditRef('EqList'))return;       
+      
         $item = $sender->owner->getDataItem();
         //проверка на партии
         if ($item->checkDelete()) {
@@ -142,6 +146,8 @@ class EqList extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
+       if(false ==\App\ACL::checkEditRef('EqList'))return;       
+        
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
 

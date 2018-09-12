@@ -5,6 +5,7 @@ namespace App\Pages;
 use Zippy\Binding\PropertyBinding as Bind;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use App\System;
@@ -14,6 +15,8 @@ class UserProfile extends \App\Pages\Base
 {
 
     public $user;
+ 
+     
 
     public function __construct() {
         parent::__construct();
@@ -22,6 +25,7 @@ class UserProfile extends \App\Pages\Base
 
         if ($this->user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
+             
         }
 
         $form = new Form('profileform');
@@ -38,6 +42,8 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('confirmpassword'));
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
+        
+       
     }
 
     public function onsubmit($sender) {
@@ -78,4 +84,6 @@ class UserProfile extends \App\Pages\Base
         $sender->confirmpassword->setText('');
     }
 
+
+    
 }

@@ -114,6 +114,8 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
+        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
+        
     }
 
     public function onVal($sender) {
@@ -165,6 +167,7 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $item = $sender->owner->getDataItem();
         // unset($this->_itemlist[$item->item_id]);
 
@@ -224,6 +227,7 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function savedocOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();

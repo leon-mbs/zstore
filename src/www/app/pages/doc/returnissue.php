@@ -115,6 +115,8 @@ class ReturnIssue extends \App\Pages\Base
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
+        
     }
 
     public function detailOnRow($row) {
@@ -132,6 +134,7 @@ class ReturnIssue extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -166,6 +169,7 @@ class ReturnIssue extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("Не выбран товар");

@@ -67,15 +67,16 @@
                                     <ul class="dropdown-menu  " zippy="repmenu"> </ul>
 
                                 </li> 
+                                 <li  class="nav-item dropdown">
+                                    <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Справочники    </a>
+                                    <ul class="dropdown-menu  " zippy="refmenu"> </ul>
+
                                 <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Журналы    </a>
                                     <ul class="dropdown-menu  " zippy="regmenu"> </ul>
 
                                 </li> 
-                                <li  class="nav-item dropdown">
-                                    <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Справочники    </a>
-                                    <ul class="dropdown-menu  " zippy="refmenu"> </ul>
-
+                               
                                 </li> 
                                 {{#shop}}
                                 <li  class="nav-item dropdown">
@@ -155,7 +156,11 @@
 
                         </div>
                     </nav>
-
+                    {{#smart}}
+                    <div class="navbar nav justify-content-start">
+                      {{{smart}}}
+                    </div>
+                    {{/smart}}
                 </div>
             </div>
         </div>

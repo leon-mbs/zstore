@@ -133,13 +133,7 @@ class Application extends \Zippy\WebApplication
         }
     }
 
-    /**
-     * Редирект на  страницу с  ошибкой
-     *
-     */
-    public static function RedirectError($message) {
-        self::$app->getResponse()->Redirect("\\App\\Pages\\Error", $message);
-    }
+    
 
     /**
      * редирект по URL

@@ -31,6 +31,9 @@ class DocList extends \App\Pages\Base
      */
     public function __construct($docid = 0) {
         parent::__construct();
+        if(false ==\App\ACL::checkShowReg('DocList'))return;       
+        
+        
         $filter = Filter::getFilter("doclist");
         if ($filter->to == null) {
             $filter->to = time() + (3 * 24 * 3600);
@@ -137,6 +140,7 @@ class DocList extends \App\Pages\Base
     //просмотр
     public function showOnClick($sender) {
         $item = $sender->owner->getDataItem();
+        if(false ==\App\ACL::checkShowDoc($item,true))return;       
         $this->docview->setVisible(true);
         $this->docview->setDoc($item);
         $this->doclist->setSelectedRow($sender->getOwner());
@@ -146,6 +150,7 @@ class DocList extends \App\Pages\Base
     //редактирование
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
+        if(false ==\App\ACL::checkEditDoc($item,true))return;     
         $type = H::getMetaType($item->meta_id);
         $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
         //   $item = $class::load($item->document_id);
@@ -160,19 +165,23 @@ class DocList extends \App\Pages\Base
         $this->docview->setVisible(false);
         $this->resetURL();
         $doc = $sender->owner->getDataItem();
-
+        if(false ==\App\ACL::checkEditDoc($doc,true))return;     
+ 
         if ($doc->canDeleted() == false) {
 
             return;
         }
         Document::delete($doc->document_id);
         $this->doclist->Reload();
+        \Zippy\WebApplication::$app->setReloadPage();
     }
 
     public function cancelOnClick($sender) {
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
+        if(false ==\App\ACL::checkEditDoc($doc,true))return;     
+        
         if (false == $doc->canCanceled()) {
             return;
         }
@@ -190,7 +199,8 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private function getWhere() {
-
+        $user = System::getUser();
+        
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");
         $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
@@ -203,9 +213,17 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             $sn = $conn->qstr('%' . $filter->searchnumber . '%');
             $where .= " and (document_number like  {$sn} ";
         }
-       // if ($filter->onlymy == true) {
-       //     $where .= " and user_id  = " . System::getUser()->user_id;
-      //  }
+        if($user->acltype == 2){
+          if($user->onlymy ==1   ){
+ 
+            $where .= " and user_id  = " . $user->user_id;
+          } 
+          
+          $where .= " and meta_id in({$user->aclview}) ";
+                   
+        }
+      
+        
         return $where;
     }
 

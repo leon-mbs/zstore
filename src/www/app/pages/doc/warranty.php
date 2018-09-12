@@ -65,8 +65,6 @@ class Warranty extends \App\Pages\Base
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid);
-            if ($this->_doc == null)
-                App::RedirectError('Докумен не найден');
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
@@ -100,6 +98,8 @@ class Warranty extends \App\Pages\Base
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
+        
     }
 
     public function detailOnRow($row) {
@@ -116,6 +116,7 @@ class Warranty extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -195,6 +196,7 @@ class Warranty extends \App\Pages\Base
     }
 
     public function savedocOnClick($sender) {
+        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
         if ($this->checkForm() == false) {
             return;
         }
