@@ -11,7 +11,7 @@ class Main extends Base
     public function __construct() {
         parent::__construct();
 
- 
+
        
         $this->add(new \App\Widgets\WNoliq("wnoliq"));
         $this->add(new \App\Widgets\WPlannedDocs("wplanned"));

@@ -83,7 +83,7 @@ class Document extends \ZCL\DB\Entity
          if($doc instanceof Document)  {
              if($this->document_id != $doc->document_id) {
                   
-                 throw new  \Exception('Не уникальный номер документа');
+                 throw new  \Exception('Не уникальный номер документа ');
                  return false;
              }
          }

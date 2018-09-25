@@ -468,7 +468,7 @@ class Task extends \App\Pages\Base
             $conn->RollbackTrans();
              $this->setError($ee->getMessage());
      
-            $logger->error($ee);
+            $logger->error($ee->getMessage() . " Документ ". $this->_doc->meta_desc);
             return;
         }
     }
