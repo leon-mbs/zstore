@@ -24,7 +24,7 @@ use \App\Helper as H;
 use \App\Application as App;
 
 /**
- * Страница  ввода  расходной  накладной
+ * Страница  ввода  заказа
  */
 class Order extends \App\Pages\Base
 {

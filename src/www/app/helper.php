@@ -330,8 +330,8 @@ class Helper
             return $common['defstore'];
         }
         
-        System::setErrorMsg('Не задан склад  по  умолчанию') ;
-        App::RedirectHome();
+        \App\System::setErrorMsg('Не настроен склад  по  умолчанию') ;
+        \App\Application::RedirectHome();
         
     }
 
