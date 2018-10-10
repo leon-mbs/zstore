@@ -85,7 +85,7 @@ class ProductList extends \App\Pages\Base
         $editform->add(new \Zippy\Html\Image('prephoto'));
         $editform->add(new File('photo'));
 
-        $editform->add(new DataView('attrlist', new ArrayDataSource(new PB($this, attrlist)), $this, 'attrlistOnRow'));
+        $editform->add(new DataView('attrlist', new ArrayDataSource(new PB($this, 'attrlist')), $this, 'attrlistOnRow'));
         $editform->add(new CheckBox('edisabled'));
         $editform->add(new ClickLink('bcancel'))->onClick($this, 'bcancelOnClick');
         $editform->add(new ClickLink('bdelete'))->onClick($this, 'bdeleteOnClick');
