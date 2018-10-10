@@ -84,7 +84,7 @@ class OrderList extends \App\Pages\Base
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
         $doc = $doc->cast();
-        $row->add(new Label('name', $doc->meta_desc));
+         
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('delivery', $doc->headerdata['delivery_name']));
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
@@ -242,18 +242,9 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $where .= " and meta_name  = 'Order' ";
 
-        $sn = trim($this->page->filter->searchnumber->getText());
-        if (strlen($sn) > 1) {
-            $sn = $conn->qstr('%' . $this->page->filter->searchnumber . '%');
-            $where .= " and (document_number like  {$sn} ";
-        }
 
-        $st = trim($this->page->filter->searchtext->getText());
-        if (strlen($st) > 2) {
-            $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and (content like {$st} ";
-        }
+
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
             $where .= " and  state <> 9 ";
@@ -267,12 +258,20 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         if ($status == 3) {
             
         }
-        
+    
+        $st = trim($this->page->filter->searchtext->getText());
+        if (strlen($st) > 2) {
+            $st = $conn->qstr('%' . $st . '%');
+
+            $where  .= " and meta_name  = 'Order' and  content like {$st} ";
+        }    
+        $sn = trim($this->page->filter->searchnumber->getText());
+        if (strlen($sn) > 1) { // игнорируем другие поля
+            $sn = $conn->qstr('%' . $sn . '%');
+            $where   = " meta_name  = 'Order' and document_number like  {$sn} ";
+        }       
         if($user->acltype == 2){
-          if($user->onlymy ==1   ){
- 
-            $where .= " and user_id  = " . $user->user_id;
-          } 
+  
           
           $where .= " and meta_id in({$user->aclview}) ";
                    

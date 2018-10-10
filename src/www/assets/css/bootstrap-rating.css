@@ -6,10 +6,10 @@
   height: 30px;
 }
 
-.symbol-empty {
-  background-color: #ccc;
+.rating-symbol-background {
+   color: #aaa;
 }
 
-.symbol-filled {
-  background-color: red;
+.rating-symbol-foreground{
+   color: #ffc107;
 }

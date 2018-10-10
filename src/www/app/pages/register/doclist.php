@@ -40,14 +40,15 @@ class DocList extends \App\Pages\Base
             $filter->from = time() - (7 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
+            $filter->searchnumber = '';
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
         $this->filter->add(new Date('to', $filter->to));
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
-        $this->filter->add(new DropDownChoice('rowscnt', array(20 => 20, 50 => 50, 100 => 100)));
-       // $this->filter->add(new CheckBox('onlymy'))->setChecked($filter->onlymy);
-        $this->filter->add(new TextInput('searchnumber'));
+        //$this->filter->add(new DropDownChoice('rowscnt', array(20 => 20, 50 => 50, 100 => 100)));
+       
+        $this->filter->add(new TextInput('searchnumber',$filter->searchnumber));
 
         if (strlen($filter->docgroup) > 0)
             $this->filter->docgroup->setValue($filter->docgroup);
@@ -56,7 +57,7 @@ class DocList extends \App\Pages\Base
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(20);
+        $doclist->setPageSize(25);
         $filter->page = $this->doclist->setCurrentPage($filter->page);
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -77,11 +78,11 @@ class DocList extends \App\Pages\Base
         $filter->to = $this->filter->to->getDate(true);
         $filter->doctype = $this->filter->doctype->getValue();
 
-       // $filter->onlymy = $this->filter->onlymy->isChecked();
-        $filter->searchnumber = $this->filter->searchnumber->getText();
+       
+        $filter->searchnumber = trim($this->filter->searchnumber->getText());
 
         $this->doclist->setCurrentPage(1);
-        $this->doclist->setPageSize($this->filter->rowscnt->getValue());
+        //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
         $this->doclist->Reload();
     }
@@ -145,6 +146,7 @@ class DocList extends \App\Pages\Base
         $this->docview->setDoc($item);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload();
+        $this->goAnkor('dankor');
     }
 
     //редактирование
@@ -209,15 +211,12 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and meta_id  ={$filter->doctype} ";
         }
         if (strlen($filter->searchnumber) > 1) {
-
-            $sn = $conn->qstr('%' . $filter->searchnumber . '%');
-            $where .= " and (document_number like  {$sn} ";
+            // игнорируем другие поля
+            $sn = $conn->qstr('%' . $sn . '%');
+            $where  = "    document_number like  {$sn} ";
         }
         if($user->acltype == 2){
-          if($user->onlymy ==1   ){
  
-            $where .= " and user_id  = " . $user->user_id;
-          } 
           
           $where .= " and meta_id in({$user->aclview}) ";
                    

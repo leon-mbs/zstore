@@ -79,7 +79,7 @@ class Document extends \ZCL\DB\Entity
     protected function beforeSave() {
         $this->document_number = trim($this->document_number);
         $this->packData();
-           $doc = Document::getFirst("        document_number like '%{$this->document_number}%' ");    
+         $doc = Document::getFirst("   document_number = '{$this->document_number}' ");    
          if($doc instanceof Document)  {
              if($this->document_id != $doc->document_id) {
                   
@@ -312,6 +312,7 @@ class Document extends \ZCL\DB\Entity
             $item->hostname = $row['hostname'];
             $item->updatedon = date('Y-m-d H:i', strtotime($row['updatedon']));
             $item->user = $row['username'];
+             
 
             $item->state = self::getStateName($row['document_state']);
             $list[] = $item;
@@ -355,14 +356,14 @@ class Document extends \ZCL\DB\Entity
      *  запись состояния в  лог документа
      * @param mixed $state
      */
-    public function insertLog($state) {
+     public function insertLog($state ) {
         $conn = \ZDB\DB::getConnect();
+     
         $host = $conn->qstr($_SERVER["REMOTE_ADDR"]);
         $user = \App\System::getUser()->getUserID();
-        $sql = "insert into document_log (document_id,user_id,document_state,updatedon,hostname) values ({$this->document_id},{$user},{$state},now(),{$host})";
+        $sql = "insert into document_log (document_id,user_id,document_state,updatedon,hostname ) values ({$this->document_id},{$user},{$state},now(),{$host} )";
         $conn->Execute($sql);
     }
-
     /**
      *  проверка  был ли документ в  таких состояния
      * 

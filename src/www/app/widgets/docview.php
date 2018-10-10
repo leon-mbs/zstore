@@ -126,6 +126,8 @@ class DocView extends \Zippy\Html\PageFragment
         $row->add(new Label('statedate', $item->updatedon));
         $row->add(new Label('stateuser', $item->user));
         $row->add(new Label('statename', $item->state));
+       
+        
     }
 
     /**

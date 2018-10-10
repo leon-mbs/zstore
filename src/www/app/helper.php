@@ -288,7 +288,7 @@ class Helper
         $conn = \ZDB\DB::getConnect();
         $groups = array();
 
-        $rs = $conn->Execute('SELECT description,meta_id FROM   metadata where meta_type =' . 1);
+        $rs = $conn->Execute('SELECT description,meta_id FROM   metadata where meta_type = 1 order by description');
         foreach ($rs as $row) {
             $groups[$row['meta_id']] = $row['description'];
         }

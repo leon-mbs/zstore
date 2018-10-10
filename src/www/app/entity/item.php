@@ -80,7 +80,13 @@ class Item extends \ZCL\DB\Entity
             } else {
                 $price = $this->price;
             }
-        }
+        }else {
+           if (strpos($this->price, '%') > 0) {
+                //\App\System::getWarnMsg('Наценка не  может  быть начислено пока  товар не  оприходован по учетной цене');
+                return 0;
+            } else {
+                $price = $this->price;
+            } 
 
         $common = \App\System::getOptions("common");
         if ($common['useval'] == true) {

@@ -110,6 +110,8 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('customername', $item->customer_name));
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
+        $row->add(new Label('customercomment', $item->comment));
+        
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');

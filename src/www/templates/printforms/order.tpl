@@ -63,7 +63,7 @@
             <tr>
                 <td  >  </td>
                 <td  > Доставка</td>
-                <td colspan="6">
+                <td colspan="4">
                    <p>{{delivery}}</p>
                 </td>
           </tr>
@@ -71,7 +71,7 @@
             <tr>
                 <td  >  </td>
                 <td  > Коментарий</td>
-                <td colspan="6">
+                <td colspan="4">
                    <p>{{notes}}</p>
                 </td>
           </tr>

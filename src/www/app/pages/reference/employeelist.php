@@ -81,8 +81,8 @@ class EmployeeList extends \App\Pages\Base
         $login = trim($this->employeedetail->editlogin->getText());
         if (strlen($login) > 0) {
             if ($login == "admin") {
-                $this->setError('Недопустимый логин');
-                return;
+               // $this->setError('Недопустимый логин');
+               // return;
             }
             $_emp = Employee::getFirst("login = '{$login}'");
             if ($_emp != null && $_emp->employee_id != $this->_employee->employee_id) {

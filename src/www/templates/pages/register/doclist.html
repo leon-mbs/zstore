@@ -1,7 +1,7 @@
 <html>
     <body>
         <div class="row">
-            <div class="col-12 col-xl-10">
+            <div class="col-12 col-lg-10">
 
                 <h3>Журнал документов </h3>
 
@@ -30,12 +30,12 @@
 
                             <input class="form-check-input"  type="checkbox" zippy="onlymy">
                             <label class="form-check-label mr-sm-3" for="onlymy">Только мои</label>
-                        </div>  -->
-                        <label for="docgroup"> Строк  </label>
+                        </div> 
+                        <label for="rowscnt"> Строк  </label>
                         <select class="form-control mr-sm-2  " zippy="rowscnt">
 
                         </select>
-
+                        -->
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
@@ -44,7 +44,7 @@
 
                     </form>
                 </div>
-                <table class="table   table-sm table-responsive  table-responsive-sm ">
+                <table class="table   table-sm    ">
                     <tr>
                         <th>Документ</th>
                         <th>Номер</th>
@@ -98,13 +98,10 @@
             </div>
 
         </div>
-        <div class="row">
-            <div class="col-12">
+        <div class="row" id="dankor" >
+            <div class="col-12" >
                 <div zippy="docview"></div>
-                <div>
-                    <div>
-                    </div>
-                </div>
+                 
 
                 <script>
                     function check_delete() {

@@ -120,5 +120,13 @@ class User extends Entity
     public function getUserID() {
         return $this->user_id;
     }
-
+    // Подставляется   сотрудник  если  назначен  логин
+    public function getUserName(){
+         $e = Employee::getByLogin($this->userlogin);
+         if($e  instanceof Employee)  {
+           return $e->emp_name; 
+         }   else {
+             return $this->userlogin; 
+         }
+    }
 }

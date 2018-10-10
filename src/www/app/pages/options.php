@@ -163,6 +163,11 @@ class Options extends \App\Pages\Base
         $this->editpan->setVisible(true);
         //   $this->editpan->editform->eipan->setVisible(false);
         $this->editpan->editform->meta_id->setText(0);
+        $this->editpan->editform->edit_description->setText('');
+        $this->editpan->editform->edit_menugroup->setText('');
+        $this->editpan->editform->edit_notes->setText('');
+        $this->editpan->editform->edit_disabled->setChecked(0);
+        $this->editpan->editform->edit_smart->setChecked(0);
     }
 
     public function mcancelOnClick($sender) {

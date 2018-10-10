@@ -86,7 +86,7 @@ class Order extends \App\Pages\Base
         //добавление нового кантрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
-        $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new TextInput('editcustphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -253,7 +253,7 @@ class Order extends \App\Pages\Base
         }
 
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->datatag = $this->_doc->amount;
+        //$this->_doc->datatag = $this->_doc->amount;
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -399,7 +399,7 @@ class Order extends \App\Pages\Base
         $this->docform->setVisible(false);
 
         $this->editcust->editcustname->setText('');
-        $this->editcust->editphone->setText('');
+        $this->editcust->editcustphone->setText('');
     }
 
     public function savecustOnClick($sender) {
@@ -410,7 +410,7 @@ class Order extends \App\Pages\Base
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->phone = $this->editcust->editcustname->getText();
+        $cust->phone = $this->editcust->editcustphone->getText();
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);
