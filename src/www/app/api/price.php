@@ -9,8 +9,13 @@ class Price extends \App\RestFul
 {
 
     //Демо
-    public function get($id = 0) {
-
+    public function post($params) {
+        $_POST;
+    }
+    public function get($params) {
+         
+        $xml = "<price>";
+        /*
         $conn = \ZDB\DB::getConnect();
         $groups = array();
 
@@ -20,7 +25,7 @@ class Price extends \App\RestFul
         }
 
 
-        $xml = "<price>";
+        
         foreach ($groups as $id => $name) {
             $xml .= "<group>";
             $xml .= "<name><![CDATA[{$name}]]></name>";
@@ -37,6 +42,7 @@ class Price extends \App\RestFul
 
             $xml .= "</group>";
         }
+        */
         $this->XMLAnswer($xml . "</price>");
     }
 

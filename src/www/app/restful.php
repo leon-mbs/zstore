@@ -7,36 +7,40 @@ namespace App;
  */
 abstract class RestFul
 {
-
-    public function Execute($id,$key=null ) {
+    /**
+    * 
+    * 
+    * @param array $params
+    */
+    public function Execute($params) {
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $this->get($id,$key );
+            $this->get($params);
         };
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->post($id,$key);
+            $this->post($params);
         };
         if ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-            $this->delete($id,$key);
+            $this->delete($params);
         };
         if ($_SERVER["REQUEST_METHOD"] == "PUT") {
-            $this->put($id,$key);
+            $this->put($params);
         };
     }
 
-    public function get($id,$key=null) {
+    public function get() {
         $this->FailAnswer();
     }
 
-    public function post($id,$key=null) {
+    public function post() {
         $this->FailAnswer();
     }
 
-    public function put($id,$key=null) {
+    public function put() {
         $this->FailAnswer();
     }
 
-    public function delete($id,$key=null) {
+    public function delete() {
         $this->FailAnswer();
     }
 

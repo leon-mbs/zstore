@@ -26,7 +26,11 @@ class Item extends \ZCL\DB\Entity
 
         $xml = @simplexml_load_string($this->detail);
 
-        $this->price = (string) ($xml->price[0]);
+        $this->price1 = (string) ($xml->price1[0]);
+        $this->price2 = (string) ($xml->price2[0]);
+        $this->price3 = (string) ($xml->price3[0]);
+        $this->price4 = (string) ($xml->price4[0]);
+        $this->price5 = (string) ($xml->price5[0]);
         $this->curname = (string) ($xml->curname[0]);
         $this->currate = doubleval($xml->currate[0]);
 
@@ -39,7 +43,11 @@ class Item extends \ZCL\DB\Entity
         parent::beforeSave();
         $this->detail = "<detail>";
         //упаковываем  данные в detail
-        $this->detail .= "<price>{$this->price}</price>";
+        $this->detail .= "<price1>{$this->price1}</price1>";
+        $this->detail .= "<price2>{$this->price2}</price2>";
+        $this->detail .= "<price3>{$this->price3}</price3>";
+        $this->detail .= "<price4>{$this->price4}</price4>";
+        $this->detail .= "<price5>{$this->price5}</price5>";
         $this->detail .= "<curname>{$this->curname}</curname>";
         $this->detail .= "<currate>{$this->currate}</currate>";
 
@@ -61,34 +69,49 @@ class Item extends \ZCL\DB\Entity
         return ($cnt > 0) ? false : true;
     }
 
-    //Возвращает розничную цену
+    //Вычисляет  отпускную цену
+    //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$partionprice - учетная цена
-    public function getPrice($partionprice = 0) {
+    public function getPrice($_price,$partionprice = 0) {
+        
+        $common = \App\System::getOptions("common");
+        if($_price>0){
+            
+        }   else {
+           if($_price ==$common['price1']) $_price=$this->price1;
+           else if($_price ==$common['price2']) $_price=$this->price2;
+           else if($_price ==$common['price3']) $_price=$this->price3;
+           else if($_price ==$common['price4']) $_price=$this->price4;
+           else if($_price ==$common['price5']) $_price=$this->price5;
+        }
+        if(strlen($_price)==0) return 0;
+        
         $price = 0;
         if ($partionprice > 0) {
-            if (strpos($this->price, '%') > 0) {
-                $ret = doubleval(str_replace('%', '', $this->price));
+            if (strpos($_price, '%') > 0) {
+                $ret = doubleval(str_replace('%', '', $_price));
                 $price = $partionprice + (int) $partionprice / 100 * $ret;
             } else {
-                $price = $this->price;
+                $price = $_price;
             }
         } else
         if ($this->lastpart > 0) {
-            if (strpos($this->price, '%') > 0) {
-                $ret = doubleval(str_replace('%', '', $this->price));
+            if (strpos($_price, '%') > 0) {
+                $ret = doubleval(str_replace('%', '', $_price));
                 $price = $this->lastpart + (int) $this->lastpart / 100 * $ret;
             } else {
-                $price = $this->price;
+                $price = $_price;
             }
-        }else {
-           if (strpos($this->price, '%') > 0) {
-                //\App\System::getWarnMsg('Наценка не  может  быть начислено пока  товар не  оприходован по учетной цене');
+        } else {
+            if (strpos($_price, '%') > 0) {
+                
                 return 0;
             } else {
-                $price = $this->price;
-            } 
+                $price = $_price;
+            }
+        }
 
-        $common = \App\System::getOptions("common");
+        
         if ($common['useval'] == true) {
             $k = 1;
             if ($common['cdoll'] > 0 && $this->currate > 0 && $this->curname == 'cdoll') {
@@ -107,4 +130,16 @@ class Item extends \ZCL\DB\Entity
         return round($price);
     }
 
+    public static  function getPriceTypeList() {
+        
+        $common = \App\System::getOptions("common");
+        $list =array();
+        if(strlen($common['price1']) > 0)$list[$common['price1']] = $common['price1'];
+        if(strlen($common['price2']) > 0)$list[$common['price2']] = $common['price2'];
+        if(strlen($common['price3']) > 0)$list[$common['price3']] = $common['price3'];
+        if(strlen($common['price4']) > 0)$list[$common['price4']] = $common['price4'];
+        if(strlen($common['price5']) > 0)$list[$common['price5']] = $common['price5'];
+        
+        return $list;
+    }
 }

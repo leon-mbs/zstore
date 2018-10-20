@@ -1,6 +1,6 @@
 body {
     font-family:"Roboto","Helvetica Neue"  ;
-      background-color: #F0F0F0;
+      background-color: #FaFaFa;
 }
 .brand-logo {
     width: 115px;
@@ -60,4 +60,22 @@ font-style:italic  ;
     font-size: .5rem;
     font-weight: 300;
     padding: 2px 4px;
+}
+
+   #upbutton {
+
+                height: 60px;
+                width: 60px;
+                bottom: 30px;
+                right: 30px;
+                cursor: pointer;
+                display: none;
+                position: fixed;
+                z-index: 999;
+            }
+            
+ 
+    
+#tmenu a             {
+    color:#000;
 }

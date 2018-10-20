@@ -56,9 +56,10 @@ class ReturnIssue extends Document
         $conn->StartTrans();
 
         foreach ($this->detaildata as $row) {
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'], true);
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
-            $sc->setStock($row['stock_id']);
+            $sc->setStock($stock->stock_id);
 
             if ($this->headerdata["customer"] > 0)
                 $sc->setCustomer($this->headerdata["customer"]);

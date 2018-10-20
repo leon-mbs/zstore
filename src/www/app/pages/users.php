@@ -177,7 +177,7 @@ class Users extends \App\Pages\Base
 
     public function OnAddUserRow($datarow) {
         $item = $datarow->getDataItem();
-        $datarow->add(new \Zippy\Html\Link\RedirectLink("userlogin", '\\App\\Pages\\UserInfo', $item->user_id))->setValue($item->userlogin);
+        $datarow->add(new \Zippy\Html\Label("userlogin", $item->userlogin));
 
         $datarow->add(new \Zippy\Html\Label("created", date('d.m.Y', $item->createdon)));
         $datarow->add(new \Zippy\Html\Label("email", $item->email));

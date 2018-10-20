@@ -5,19 +5,21 @@ namespace App\API;
 /**
  * Класс  для  работы  с  кассовыми  апаратами
  */
-class Pos extends \App\RestFul
+class Pos  
 {
 
     //Демо
-    public function post($xml) {
+    public function post($p) {
         $error = "";
-
+        $xml = $_POST['data'];
+        $user = $_POST['user'];
+        $pass = $_REQUEST['pass'];
 
         //$doc = new \App\Entity\Doc\RegisterReceipt();
         // todo
         // $doc->save();
 
-        $this->OKAnswer();
+        return "";
     }
 
 }

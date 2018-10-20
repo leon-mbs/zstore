@@ -359,7 +359,7 @@ class ProductList extends \App\Pages\Base
     public function onPartion($sender) {
         $stock = Stock::load($sender->getValue());
         $item = Item::load($stock->item_id);
-        $this->editpanel->editform->eprice->setText($item->getPrice($stock->partion));
+        $this->editpanel->editform->eprice->setText($item->getPrice('',$stock->partion));
         $this->updateAjax(array('eprice'));
     }
 

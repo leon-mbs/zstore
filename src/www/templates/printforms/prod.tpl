@@ -1,6 +1,5 @@
-<html>
-    <body>
-        <table class="ctable" width="600" border="0" class="ctable" cellpadding="2" cellspacing="0">
+ 
+        <table class="ctable"   border="0" class="ctable" cellpadding="2" cellspacing="0">
 
             <tr style="font-size:larger; font-weight: bolder;">
                 <td align="center" colspan="4">
@@ -94,7 +93,4 @@
             </tr>                   
         </table>
          
-
-        <br> <br>
-    </body>
-</html>
+  

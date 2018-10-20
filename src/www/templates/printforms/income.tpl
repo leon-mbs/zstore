@@ -1,5 +1,4 @@
-<html>
-    <body>
+ 
         <table class="ctable" width="600" border="0" class="ctable" cellpadding="2" cellspacing="0">
 
                       
@@ -96,6 +95,4 @@
         </table>
      {{/_type3}}
 
-        <br> <br>
-    </body>
-</html>
+ 

@@ -1,6 +1,4 @@
-<html>
-
-    <body>
+ 
 
 
         <table class="ctable" cellspacing="0" cellpadding="1">
@@ -29,6 +27,4 @@
 
     </table>
 
-    <br>
-</body>
-</html>
+ 

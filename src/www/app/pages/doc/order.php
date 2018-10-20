@@ -53,6 +53,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new CheckBox('incredit'));
         $this->docform->add(new CheckBox('inshipment'));
         $this->docform->add(new Label('discount'))->setVisible(false);
+         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
         $this->docform->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта')))->onChange($this, 'OnDelivery');
         $this->docform->add(new TextInput('email'));
@@ -98,6 +99,7 @@ class Order extends \App\Pages\Base
             $this->docform->inshipment->setChecked($this->_doc->headerdata['inshipment']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
        
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -153,6 +155,7 @@ class Order extends \App\Pages\Base
 
         $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
         $this->docform->detail->Reload();
+        $this->calcTotal();        
     }
 
     public function addrowOnClick($sender) {
@@ -201,7 +204,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-
+        $this->calcTotal();
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
@@ -241,6 +244,7 @@ class Order extends \App\Pages\Base
             'customer_name' => $this->docform->customer->getText(),
             'address' => $this->docform->address->getText(),
             'email' => $this->docform->email->getText(),
+            'pricetype' => $this->docform->pricetype->getValue(),
             'phone' => $this->docform->phone->getText(),
             'store' => $this->docform->store->getValue(),
             'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
@@ -434,4 +438,17 @@ class Order extends \App\Pages\Base
             $this->docform->address->setVisible(false);
         }
     }
+    public function OnChangePriceType($sender) {
+            foreach ($this->_tovarlist as $stock) {
+              $item = Item::load($stock->item_id);
+              $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
+              $stock->price = $price - $price / 100 * $this->_discount;
+
+            }    
+            $this->calcTotal();
+            $this->docform->detail->Reload();
+            $this->calcTotal();
+    }
+    
+    
 }

@@ -61,8 +61,7 @@ class Income extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "income";
 
-        $this->detail->preview->setAttribute('src', "/?p={$reportpage}&arg=preview/{$reportname}");
-
+     
         $this->detail->print->pagename = $reportpage;
         $this->detail->print->params = array('print', $reportname);
         $this->detail->html->pagename = $reportpage;

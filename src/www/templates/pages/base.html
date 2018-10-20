@@ -35,18 +35,22 @@
     </head>
 
 
-    <body  >
-        <div class="container-fluid"> 
+    <body  > 
+    <div id="upbutton"><a href="#top"  class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
+    <a  id="top"></a>         
+
+        <div style="background-color: #F0F0F0;" class="container-fluid"> 
             <div class="row"> 
                 <div class="col-12"> 
 
 
-                    <nav class="navbar navbar-expand-md navbar-light bg-light mr-2">
+                    <nav class="navbar navbar-expand-md   mr-2">
                         <div class="navbar-header">
 
                             <a class="navbar-brand  d-none d-md-block" href="/">Zippy Склад</a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
+                              <span class=" "><i class="fa fa-bars"></i></span>
+             
                             </button>   
 
 
@@ -54,7 +58,7 @@
                         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 
 
-                            <ul class="navbar-nav  ">
+                            <ul id="tmenu" class="navbar-nav  ">
 
                                 <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Документы    </a>
@@ -136,10 +140,10 @@
                                         <li class="dropdown-divider"></li> 
                                         {{#shop}}
                                         <li  >
-                                            <a  class="dropdown-item  " href="/?p=App/Pages/Main">На склад</a>            
+                                            <a  class="dropdown-item  " href="/store">На склад</a>            
                                         </li> 
                                        <li  >
-                                            <a  class="dropdown-item  " href="/?p=App/Shop/Pages/Main">В магазин</a>            
+                                            <a  class="dropdown-item  " href="/shop">В магазин</a>            
                                         </li> 
                                         <li class="dropdown-divider"></li> 
                                           {{/shop}}                                        
@@ -202,6 +206,16 @@ $(function () {
 
 
 $('.select2').select2();
+
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 600) {
+                    if ($('#upbutton').is(':hidden')) {
+                        $('#upbutton').css({opacity: 1}).fadeIn('slow');
+                    }
+                } else {
+                    $('#upbutton').stop(true, false).fadeOut('fast');
+                }
+            }); 
 
         </script>   
     </body>

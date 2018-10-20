@@ -21,7 +21,8 @@ class ItemActivity extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-           if(false ==\App\ACL::checkShowReport('ItemActivity'))return;       
+        if (false == \App\ACL::checkShowReport('ItemActivity'))
+            return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -63,8 +64,7 @@ class ItemActivity extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "movereport";
 
-        $this->detail->preview->setAttribute('src', "/?p={$reportpage}&arg=preview/{$reportname}");
-
+  
         $this->detail->print->pagename = $reportpage;
         $this->detail->print->params = array('print', $reportname);
         $this->detail->html->pagename = $reportpage;
@@ -100,14 +100,14 @@ class ItemActivity extends \App\Pages\Base
          SELECT               t.*,         
           (SELECT                   COALESCE(SUM(u.`quantity`), 0)              
             FROM entrylist_view u 
-              WHERE u.`document_date` < t.dt   AND u.item_id = t.item_id) AS begin_quantity  
+              WHERE u.`document_date` < t.dt   AND u.stock_id = t.stock_id) AS begin_quantity  
                 
                 
                 FROM (             SELECT
           st.item_id,
           st.itemname,
           st.item_code,
-         
+            st.stock_id,
           date(sc.document_date) AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
@@ -126,7 +126,7 @@ class ItemActivity extends \App\Pages\Base
                        DATE(sc.document_date)) t
             ORDER BY dt  
         ";
-
+        \App\Helper::log($sql);
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {

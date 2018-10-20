@@ -24,7 +24,8 @@ class StockList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if(false ==\App\ACL::checkShowReg('StockList'))return;       
+        if (false == \App\ACL::checkShowReg('StockList'))
+            return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
@@ -54,7 +55,14 @@ class StockList extends \App\Pages\Base
         $item = Item::load($stock->item_id);
         $row->add(new Label('cat_name', $item->cat_name));
         //$row->add(new Label('storename', $stock->storename));        
-        $row->add(new Label('price', $item->getPrice($stock->partion)));
+        $plist = array();
+        if($item->price1>0)$plist[]=$item->getPrice($item->price1,$stock->partion);
+        if($item->price2>0)$plist[]=$item->getPrice($item->price2,$stock->partion);
+        if($item->price3>0)$plist[]=$item->getPrice($item->price3,$stock->partion);
+        if($item->price4>0)$plist[]=$item->getPrice($item->price4,$stock->partion);
+        if($item->price5>0)$plist[]=$item->getPrice($item->price5,$stock->partion);
+        
+        $row->add(new Label('price', implode(',',$plist)));
 
         $row->add(new ClickLink('delete', $this, 'deleteOnClick'))->setVisible($stock->qty == 0);
     }

@@ -56,6 +56,7 @@ class Task extends \App\Pages\Base
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", "" ), 0));
+        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
 
         $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
         $this->docform->add(new SubmitLink('additem'))->onClick($this, 'additemOnClick');
@@ -120,6 +121,8 @@ class Task extends \App\Pages\Base
             $this->docform->taskstate->setValue($this->_doc->headerdata['taskstate']);
             $this->docform->start_date->setDate($this->_doc->headerdata['start_date']);
             $this->docform->incredit->setChecked($this->_doc->headerdata['incredit']);
+            $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
 
             $this->docform->document_date->setDate($this->_doc->headerdata['end_date']);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
@@ -398,6 +401,8 @@ class Task extends \App\Pages\Base
         $taskstate = $this->docform->taskstate->getValue();
         $this->_doc->headerdata = array(
             'parea' => $this->docform->parea->getValue(),
+            'pricetype' => $this->docform->pricetype->getValue(),
+            'store' => $this->docform->store->getValue(),
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
             'hours' => $this->docform->hours->getText(),
@@ -580,7 +585,7 @@ class Task extends \App\Pages\Base
         $this->editdetail2->qty->setText(Stock::getQuantity($id, $this->docform->document_date->getDate()));
 
         $item = Item::load($stock->item_id);
-        $price = $item->getPrice($stock->partion > 0 ? $stock->partion : 0);
+        $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
         //$price = $price - $price / 100 * $this->_discount;
 
 

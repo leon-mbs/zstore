@@ -62,6 +62,10 @@ class DocView extends \Zippy\Html\PageFragment
         $this->_doc = $doc;
         $doc = $this->_doc->cast();
 
+               
+        
+        $html = $doc->generateReport();
+        $this->preview->setText($html, true); 
         // проверяем  поддержку  экспорта
         $exportlist = $doc->supportedExport();
         $this->word->setVisible(in_array(Document::EX_WORD, $exportlist));
@@ -69,8 +73,7 @@ class DocView extends \Zippy\Html\PageFragment
 
         $reportpage = "App/Pages/ShowDoc";
 
-        $this->preview->setAttribute('src', "/?p={$reportpage}&arg=preview/" . $doc->document_id);
-
+    
         $this->print->pagename = $reportpage;
         $this->print->params = array('print', $doc->document_id);
         $this->html->pagename = $reportpage;
@@ -126,8 +129,6 @@ class DocView extends \Zippy\Html\PageFragment
         $row->add(new Label('statedate', $item->updatedon));
         $row->add(new Label('stateuser', $item->user));
         $row->add(new Label('statename', $item->state));
-       
-        
     }
 
     /**

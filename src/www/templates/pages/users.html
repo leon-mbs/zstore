@@ -22,7 +22,7 @@
 
                     <tbody>
                         <tr zippy="userrow">
-                            <td><a zippy="userlogin"></a></td>
+                             <td zippy="userlogin"></td>
                             <td zippy="created" align="center" style="white-space:nowrap"></td>
 
                             <td zippy="email"  ></td>
@@ -41,7 +41,8 @@
                 <form zippy="editform" role="form">
                     <div class="form-group">
                         <label for="editlogin">Логин</label>
-                        <input  style="width:200px" class="form-control" zippy="editlogin" required="required">
+                        <input pattern="[_a-zA-Z0-9]+"  style="width:200px" class="form-control" zippy="editlogin" required="required">
+                        <small >Допускаются латинцие буквы, цифры и подчеркивание</small>
                     </div>  
                     <div class="form-group">
                         <label for="editpass">Пароль</label>

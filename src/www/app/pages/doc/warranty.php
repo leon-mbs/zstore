@@ -38,6 +38,7 @@ class Warranty extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new TextInput('customer'));
+        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
@@ -70,6 +71,8 @@ class Warranty extends \App\Pages\Base
             $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->notes->setText($this->_doc->notes);
+            $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
 
 
             foreach ($this->_doc->detaildata as $item) {
@@ -86,6 +89,8 @@ class Warranty extends \App\Pages\Base
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->docform->customer->setText($basedoc->headerdata['customer_name']);
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
 
 
                         foreach ($basedoc->detaildata as $item) {
@@ -122,6 +127,7 @@ class Warranty extends \App\Pages\Base
 
         $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
         $this->docform->detail->Reload();
+               
     }
 
     public function editOnClick($sender) {
@@ -179,6 +185,7 @@ class Warranty extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsn->setText("");
         $this->editdetail->editwarranty->setText("");
+                
     }
 
     public function cancelrowOnClick($sender) {
@@ -204,7 +211,8 @@ class Warranty extends \App\Pages\Base
 
 
         $this->_doc->headerdata = array(
-            'customer_name' => $this->docform->customer->getText()
+            'customer_name' => $this->docform->customer->getText(),
+           'pricetype' => $this->docform->pricetype->getValue(),            
         );
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
@@ -264,6 +272,7 @@ class Warranty extends \App\Pages\Base
         $this->_tovarlist = array();
         $this->docform->detail->Reload();
         $store_id = $this->docform->store->getValue();
+               
     }
 
     public function OnAutoItem($sender) {
@@ -284,12 +293,23 @@ class Warranty extends \App\Pages\Base
 
 
         $item = Item::load($stock->item_id);
-        $this->editdetail->editprice->setText($item->getPrice($stock->price));
+        $this->editdetail->editprice->setText($item->getPrice($this->docform->pricetype->getValue(),$stock->price));
         $this->editdetail->qtystock->setText($stock->qty);
 
 
 
         $this->updateAjax(array('editprice', 'qtystock'));
+    }
+     public function OnChangePriceType($sender) {
+            foreach ($this->_tovarlist as $stock) {
+              $item = Item::load($stock->item_id);
+              $stock->price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
+              
+
+            }    
+ 
+            $this->docform->detail->Reload();
+             
     }
 
 }

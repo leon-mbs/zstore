@@ -40,13 +40,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-10">
+                <div class="col-12 col-md-8">
 
                     <a zippy="addrow">Добавить товар</a>
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
-                            <th  >Партия</th>
+                     
 
                             <th   style="text-align: right;">Кол.</th>
                             <th    style="text-align: right;" >Цена</th>
@@ -56,7 +56,7 @@
                         </tr>
                         <tr zippy="detail">
                             <td zippy="tovar"></td>
-                            <td zippy="partion"></td>
+                          
 
                             <td zippy="quantity"  style="text-align: right;"></td>
                             <td zippy="price"  style="text-align: right;"></td>
@@ -66,7 +66,7 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="6"  style="text-align: right;">Всего:</td>
+                            <td colspan="3"  style="text-align: right;">Всего:</td>
                             <td zippy="total"  style="text-align: right;"></td>
                             <td></td>
                         </tr>
@@ -94,8 +94,7 @@
                         <label for="edittovar" >Название</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="edittovar" />
 
-                        Наличие : <span zippy="qtystock"></span>
-
+    
                     </div>
                     <div class="form-group">
                         <label for="editquantity" >Количество</label>

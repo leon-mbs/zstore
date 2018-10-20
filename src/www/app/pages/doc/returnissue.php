@@ -32,7 +32,7 @@ class ReturnIssue extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-    private $_discount;
+   
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -46,8 +46,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
        
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->docform->customer->onChange($this, 'OnChangeCustomer');
-
+   
         $this->docform->add(new TextInput('notes'));
 
 
@@ -64,12 +63,9 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editprice'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
+  
 
-
-
-        $this->editdetail->add(new Label('qtystock'));
-
+   
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
@@ -87,8 +83,8 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
 
             foreach ($this->_doc->detaildata as $item) {
-                $stock = new Stock($item);
-                $this->_tovarlist[$stock->stock_id] = $stock;
+                $it = new Item($item);
+                $this->_tovarlist[$it->item_id] = $it;
             }
         } else {
             $this->_doc = Document::create('ReturnIssue');
@@ -109,6 +105,7 @@ class ReturnIssue extends \App\Pages\Base
                             $item = new Item($item);
                             $this->_tovarlist[$item->item_id] = $item;
                         }
+                         $this->calcTotal();
                     }
                 }
             }
@@ -123,7 +120,7 @@ class ReturnIssue extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('tovar', $item->itemname));
-        $row->add(new Label('partion', $item->partion));
+        
 
         $row->add(new Label('quantity', $item->quantity));
         $row->add(new Label('price', $item->price));
@@ -138,8 +135,9 @@ class ReturnIssue extends \App\Pages\Base
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
         $this->docform->detail->Reload();
+        $this->calcTotal();
     }
 
     public function addrowOnClick($sender) {
@@ -159,13 +157,13 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText($stock->price);
 
 
-        $this->editdetail->edittovar->setKey($stock->stock_id);
+        $this->editdetail->edittovar->setKey($stock->item_id);
         $this->editdetail->edittovar->setText($stock->itemname);
 
 
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id, $this->docform->document_date->getDate()));
+        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->item_id, $this->docform->document_date->getDate()));
 
-        $this->_rowid = $stock->stock_id;
+        $this->_rowid = $stock->item_id;
     }
 
     public function saverowOnClick($sender) {
@@ -176,15 +174,15 @@ class ReturnIssue extends \App\Pages\Base
             return;
         }
 
-        $stock = Stock::load($id);
-        $stock->quantity = $this->editdetail->editquantity->getText();
+        $item = Item::load($id);
+        $item->quantity = $this->editdetail->editquantity->getText();
 
 
-        $stock->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getText();
 
 
         unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$stock->stock_id] = $stock;
+        $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -196,6 +194,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->calcTotal();
     }
 
     public function cancelrowOnClick($sender) {
@@ -305,42 +304,21 @@ class ReturnIssue extends \App\Pages\Base
         //очистка  списка  товаров
         $this->_tovarlist = array();
         $this->docform->detail->Reload();
+        $this->calcTotal();
     }
 
-    public function OnChangeItem($sender) {
-        $id = $sender->getKey();
-        $stock = Stock::load($id);
-        $this->editdetail->qtystock->setText(Stock::getQuantity($id, $this->docform->document_date->getDate()));
-
-        $item = Item::load($stock->item_id);
-        $price = $item->getPrice($stock->partion > 0 ? $stock->partion : 0);
-        $price = $price - $price / 100 * $this->_discount;
-
-
-        $this->editdetail->editprice->setText($price);
-
-        $this->updateAjax(array('qtystock', 'editprice'));
-    }
-
+    
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "Customer_name like " . $text);
     }
 
-    public function OnChangeCustomer($sender) {
-        $this->_discount = 0;
-        $customer_id = $this->docform->customer->getKey();
-        if ($customer_id > 0) {
-            $customer = Customer::load($customer_id);
-            $this->_discount = $customer->discount;
-        }
-        $this->calcTotal();
-    }
+ 
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = Item::qstr('%' . $sender->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id}   and (itemname like {$text} or item_code like {$text}) ");
+        return Item::findArray("itemname"," (itemname like {$text} or item_code like {$text}) ");
     }
 
 }

@@ -1,5 +1,4 @@
-<html>
-    <body>
+ 
         <table class="ctable" border="0" cellspacing="0" cellpadding="2">
             <tr>
                 <th width="30">&nbsp;</th>
@@ -76,6 +75,4 @@
                 </td>
           </tr>
         </table>
-        <br> <br>
-    </body>
-</html>
+ 

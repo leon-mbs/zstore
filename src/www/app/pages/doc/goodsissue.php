@@ -48,13 +48,14 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
+         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
         $this->docform->add(new CheckBox('incredit'));
         $this->docform->add(new CheckBox('inshipment'));
         $this->docform->add(new Label('discount'))->setVisible(false);
-
+ 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -80,22 +81,20 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
-        //добавление нового кантрагента
+        //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
-
-
-
+ 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
             $this->docform->incredit->setChecked($this->_doc->headerdata['incredit']);
             $this->docform->inshipment->setChecked($this->_doc->headerdata['inshipment']);
-
+            $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
@@ -123,7 +122,6 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
-
         
     }
 
@@ -150,6 +148,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
         $this->docform->detail->Reload();
+        $this->calcTotal();
     }
 
     public function addrowOnClick($sender) {
@@ -206,6 +205,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->calcTotal();
     }
 
     public function cancelrowOnClick($sender) {
@@ -238,6 +238,7 @@ class GoodsIssue extends \App\Pages\Base
             'store' => $this->docform->store->getValue(),
             'planned' => $this->docform->planned->isChecked() ? 1 : 0,
             'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
+            'pricetype' => $this->docform->pricetype->getValue(),
             'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,
             'total' => $this->docform->total->getText()
         );
@@ -354,7 +355,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->qtystock->setText(Stock::getQuantity($id, $this->docform->document_date->getDate()));
 
         $item = Item::load($stock->item_id);
-        $price = $item->getPrice($stock->partion > 0 ? $stock->partion : 0);
+        $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
         $price = $price - $price / 100 * $this->_discount;
 
 
@@ -421,6 +422,17 @@ class GoodsIssue extends \App\Pages\Base
     public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
+    }
+     public function OnChangePriceType($sender) {
+            foreach ($this->_tovarlist as $stock) {
+              $item = Item::load($stock->item_id);
+              $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
+              $stock->price = $price - $price / 100 * $this->_discount;
+
+            }    
+            $this->calcTotal();
+            $this->docform->detail->Reload();
+            $this->calcTotal();
     }
 
 }

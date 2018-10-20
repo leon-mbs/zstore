@@ -15,6 +15,7 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Item;
 use \App\Entity\Category;
+use \App\System;
 
 class ItemList extends \App\Pages\Base
 {
@@ -23,7 +24,8 @@ class ItemList extends \App\Pages\Base
 
     public function __construct($add = false) {
         parent::__construct();
-         if(false ==\App\ACL::checkShowRef('ItemList'))return;       
+        if (false == \App\ACL::checkShowRef('ItemList'))
+            return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
@@ -38,8 +40,42 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
-        $this->itemdetail->add(new TextInput('editprice'));
-
+        $this->itemdetail->add(new TextInput('editprice1'));
+        $this->itemdetail->add(new TextInput('editprice2'));
+        $this->itemdetail->add(new TextInput('editprice3'));
+        $this->itemdetail->add(new TextInput('editprice4'));
+        $this->itemdetail->add(new TextInput('editprice5'));
+        $common = System::getOptions('common') ;
+        if(strlen($common['price1'])>0){
+          $this->itemdetail->editprice1->setVisible(true);    
+          $this->itemdetail->editprice1->setAttribute('placeholder',$common['price1']);    
+        }  else {
+          $this->itemdetail->editprice1->setVisible(false);  
+        }
+        if(strlen($common['price2'])>0){
+          $this->itemdetail->editprice2->setVisible(true);    
+          $this->itemdetail->editprice2->setAttribute('placeholder',$common['price2']);    
+        }  else {
+          $this->itemdetail->editprice2->setVisible(false);  
+        }
+        if(strlen($common['price3'])>0){
+          $this->itemdetail->editprice3->setVisible(true);    
+          $this->itemdetail->editprice3->setAttribute('placeholder',$common['price3']);    
+        }  else {
+          $this->itemdetail->editprice3->setVisible(false);  
+        }
+        if(strlen($common['price4'])>0){
+          $this->itemdetail->editprice4->setVisible(true);    
+          $this->itemdetail->editprice4->setAttribute('placeholder',$common['price4']);    
+        }  else {
+          $this->itemdetail->editprice4->setVisible(false);  
+        }
+        if(strlen($common['price5'])>0){
+          $this->itemdetail->editprice5->setVisible(true);    
+          $this->itemdetail->editprice5->setAttribute('placeholder',$common['price5']);    
+        }  else {
+          $this->itemdetail->editprice5->setVisible(false);  
+        }
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
@@ -61,15 +97,22 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('cat_name', $item->cat_name));
-        $row->add(new Label('price', $item->price));
+        $plist = array();
+        if($item->price1>0)$plist[]=$item->price1;
+        if($item->price2>0)$plist[]=$item->price2;
+        if($item->price3>0)$plist[]=$item->price3;
+        if($item->price4>0)$plist[]=$item->price4;
+        if($item->price5>0)$plist[]=$item->price5;
+        $row->add(new Label('price', implode(',',$plist)));
         $row->add(new Label('qty', $item->qty));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
     public function deleteOnClick($sender) {
-       if(false ==\App\ACL::checkEditRef('ItemList'))return;       
-     
+        if (false == \App\ACL::checkEditRef('ItemList'))
+            return;
+
         $item = $sender->owner->getDataItem();
         //проверка на партии
         if ($item->checkDelete()) {
@@ -90,7 +133,11 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->setVisible(true);
 
         $this->itemdetail->editname->setText($this->_item->itemname);
-        $this->itemdetail->editprice->setText($this->_item->price);
+        $this->itemdetail->editprice1->setText($this->_item->price1);
+        $this->itemdetail->editprice2->setText($this->_item->price2);
+        $this->itemdetail->editprice3->setText($this->_item->price3);
+        $this->itemdetail->editprice4->setText($this->_item->price4);
+        $this->itemdetail->editprice5->setText($this->_item->price5);
         $this->itemdetail->editcat->setValue($this->_item->cat_id);
 
         $this->itemdetail->editdescription->setText($this->_item->description);
@@ -116,14 +163,19 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
-       if(false ==\App\ACL::checkEditRef('ItemList'))return;       
-     
+        if (false == \App\ACL::checkEditRef('ItemList'))
+            return;
+
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
 
         $this->_item->itemname = $this->itemdetail->editname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
-        $this->_item->price = $this->itemdetail->editprice->getText();
+        $this->_item->price1 = $this->itemdetail->editprice1->getText();
+        $this->_item->price2 = $this->itemdetail->editprice2->getText();
+        $this->_item->price3 = $this->itemdetail->editprice3->getText();
+        $this->_item->price4 = $this->itemdetail->editprice4->getText();
+        $this->_item->price5 = $this->itemdetail->editprice5->getText();
 
         $this->_item->item_code = $this->itemdetail->editcode->getText();
 

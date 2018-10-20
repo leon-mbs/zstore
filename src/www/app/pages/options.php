@@ -4,6 +4,7 @@ namespace App\Pages;
 
 use \Zippy\Binding\PropertyBinding as Bind;
 use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\DataList\ArrayDataSource;
 use \Zippy\Html\Form\CheckBox;
 use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Form\Form;
@@ -19,7 +20,8 @@ class Options extends \App\Pages\Base
 {
 
     private $metadatads;
-
+      public $pricelist = array();
+      
     public function __construct() {
         parent::__construct();
         if (System::getUser()->acltype == 2) {
@@ -29,17 +31,25 @@ class Options extends \App\Pages\Base
 
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new TextInput('firmname'));
-        $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList())) ;
+        $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList()));
 
+        
+         
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
         $this->common->add(new TextInput('ceuro'));
         $this->common->add(new TextInput('crub'));
+        $this->common->add(new TextInput('price1'));
+        $this->common->add(new TextInput('price2'));
+        $this->common->add(new TextInput('price3'));
+        $this->common->add(new TextInput('price4'));
+        $this->common->add(new TextInput('price5'));
         //  $this->common->add(new Date('closeddate'));
+    
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        $this->shop->add(new DropDownChoice('defshowstore', \App\Entity\Store::getList())) ;
-        $this->shop->add(new DropDownChoice('defсuststore', \App\Entity\Customer::getList())) ;
+        $this->shop->add(new DropDownChoice('defshowstore', \App\Entity\Store::getList()));
+        $this->shop->add(new DropDownChoice('defсuststore', \App\Entity\Customer::getList()));
 
 
 
@@ -52,12 +62,19 @@ class Options extends \App\Pages\Base
         $this->common->cdoll->setText($common['cdoll']);
         $this->common->ceuro->setText($common['ceuro']);
         $this->common->crub->setText($common['crub']);
+        $this->common->price1->setText($common['price1']);
+        $this->common->price2->setText($common['price2']);
+        $this->common->price3->setText($common['price3']);
+        $this->common->price4->setText($common['price4']);
+        $this->common->price5->setText($common['price5']);
         $this->common->useval->setChecked($common['useval']);
         // $this->common->closeddate->setDate($common['closeddate']);
-
+        
+   
+        
 
         $this->onVal($this->common->useval);
-
+    
 
         $shop = System::getOptions("shop");
         if (!is_array($shop))
@@ -111,7 +128,13 @@ class Options extends \App\Pages\Base
         $common['cdoll'] = $this->common->cdoll->getText();
         $common['ceuro'] = $this->common->ceuro->getText();
         $common['crub'] = $this->common->crub->getText();
+        $common['price1'] = $this->common->price1->getText();
+        $common['price2'] = $this->common->price2->getText();
+        $common['price3'] = $this->common->price3->getText();
+        $common['price4'] = $this->common->price4->getText();
+        $common['price5'] = $this->common->price5->getText();
         $common['useval'] = $this->common->useval->isChecked();
+
         // $common['closeddate'] = $this->common->closeddate->getDate();
 
         System::setOptions("common", $common);
@@ -245,7 +268,8 @@ class Options extends \App\Pages\Base
         $item->notes = $this->editpan->editform->edit_notes->getText();
         $item->disabled = $this->editpan->editform->edit_disabled->isChecked() ? 1 : 0;
         $item->smartmenu = $this->editpan->editform->edit_smart->isChecked() ? 1 : 0;
-        if($item->disabled==1)$item->smartmenu=0;
+        if ($item->disabled == 1)
+            $item->smartmenu = 0;
 
         $item->save();
 
