@@ -100,7 +100,7 @@ class ItemActivity extends \App\Pages\Base
          SELECT               t.*,         
           (SELECT                   COALESCE(SUM(u.`quantity`), 0)              
             FROM entrylist_view u 
-              WHERE u.`document_date` < t.dt   AND u.stock_id = t.stock_id) AS begin_quantity  
+              WHERE u.`document_date` < t.dt   AND u.item_id = t.item_id) AS begin_quantity  
                 
                 
                 FROM (             SELECT
@@ -126,7 +126,7 @@ class ItemActivity extends \App\Pages\Base
                        DATE(sc.document_date)) t
             ORDER BY dt  
         ";
-        \App\Helper::log($sql);
+        
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {

@@ -53,7 +53,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new CheckBox('incredit'));
         $this->docform->add(new CheckBox('inshipment'));
         $this->docform->add(new Label('discount'))->setVisible(false);
-         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
+        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
         $this->docform->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта')))->onChange($this, 'OnDelivery');
         $this->docform->add(new TextInput('email'));

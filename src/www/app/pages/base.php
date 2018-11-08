@@ -15,8 +15,8 @@ class Base extends \Zippy\Html\WebPage
 {
 
     public function __construct($params = null) {
-        global $_config, $logger;
-        $logger->debug('Page '.get_class($this)); ; 
+        global $_config;
+        
         
         \Zippy\Html\WebPage::__construct();
 

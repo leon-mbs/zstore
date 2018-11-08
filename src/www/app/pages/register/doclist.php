@@ -145,7 +145,7 @@ class DocList extends \App\Pages\Base
         $this->docview->setVisible(true);
         $this->docview->setDoc($item);
         $this->doclist->setSelectedRow($sender->getOwner());
-        $this->doclist->Reload();
+        $this->doclist->Reload(false);
         $this->goAnkor('dankor');
     }
 

@@ -107,7 +107,7 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT itemname as name, SUM( ABS( extcode ) ) AS value
+                    SELECT itemname as name, SUM( ABS( extcode*quantity ) ) AS value
                     FROM  `entrylist_view` 
                        join items on entrylist_view.item_id = items.item_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 

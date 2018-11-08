@@ -18,7 +18,7 @@ class Item extends \ZCL\DB\Entity
         $this->curname = '';
         $this->currate = 0;
         $this->price = 0;
-        $this->lastpart = 0; //последняя партия
+        
     }
 
     protected function afterLoad() {
@@ -94,14 +94,14 @@ class Item extends \ZCL\DB\Entity
             } else {
                 $price = $_price;
             }
-        } else
+       /* } else
         if ($this->lastpart > 0) {
             if (strpos($_price, '%') > 0) {
                 $ret = doubleval(str_replace('%', '', $_price));
                 $price = $this->lastpart + (int) $this->lastpart / 100 * $ret;
             } else {
                 $price = $_price;
-            }
+            }  */
         } else {
             if (strpos($_price, '%') > 0) {
                 
