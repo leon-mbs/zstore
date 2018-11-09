@@ -245,7 +245,7 @@ class Order extends \App\Pages\Base
             'address' => $this->docform->address->getText(),
             'email' => $this->docform->email->getText(),
             'pricetype' => $this->docform->pricetype->getValue(),
-            'phone' => $this->docform->phone->getText(),
+            'pricetypename' => $this->docform->pricetype->getValueName(),
             'store' => $this->docform->store->getValue(),
             'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
             'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,

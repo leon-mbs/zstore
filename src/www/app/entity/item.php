@@ -72,17 +72,17 @@ class Item extends \ZCL\DB\Entity
     //Вычисляет  отпускную цену
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$partionprice - учетная цена
-    public function getPrice($_price,$partionprice = 0) {
-        
+    public function getPrice($_price_,$partionprice = 0) {
+        $_price=0;
         $common = \App\System::getOptions("common");
-        if($_price>0){
+        if($_price_>0){
             
         }   else {
-           if($_price ==$common['price1']) $_price=$this->price1;
-           else if($_price ==$common['price2']) $_price=$this->price2;
-           else if($_price ==$common['price3']) $_price=$this->price3;
-           else if($_price ==$common['price4']) $_price=$this->price4;
-           else if($_price ==$common['price5']) $_price=$this->price5;
+           if($_price_ =='price1') $_price=$this->price1;
+           else if($_price_ =='price2') $_price=$this->price2;
+           else if($_price_ =='price3') $_price=$this->price3;
+           else if($_price_ =='price4') $_price=$this->price4;
+           else if($_price_ =='price5') $_price=$this->price5;
         }
         if(strlen($_price)==0) return 0;
         
@@ -134,11 +134,11 @@ class Item extends \ZCL\DB\Entity
         
         $common = \App\System::getOptions("common");
         $list =array();
-        if(strlen($common['price1']) > 0)$list[$common['price1']] = $common['price1'];
-        if(strlen($common['price2']) > 0)$list[$common['price2']] = $common['price2'];
-        if(strlen($common['price3']) > 0)$list[$common['price3']] = $common['price3'];
-        if(strlen($common['price4']) > 0)$list[$common['price4']] = $common['price4'];
-        if(strlen($common['price5']) > 0)$list[$common['price5']] = $common['price5'];
+        if(strlen($common['price1']) > 0)$list['price1'] = $common['price1'];
+        if(strlen($common['price2']) > 0)$list['price2'] = $common['price2'];
+        if(strlen($common['price3']) > 0)$list['price3'] = $common['price3'];
+        if(strlen($common['price4']) > 0)$list['price4'] = $common['price4'];
+        if(strlen($common['price5']) > 0)$list['price5'] = $common['price5'];
         
         return $list;
     }

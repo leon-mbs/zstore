@@ -212,6 +212,7 @@ class Warranty extends \App\Pages\Base
 
         $this->_doc->headerdata = array(
             'customer_name' => $this->docform->customer->getText(),
+            'pricetypename' => $this->docform->pricetype->getValueName(),
            'pricetype' => $this->docform->pricetype->getValue(),            
         );
         $this->_doc->detaildata = array();

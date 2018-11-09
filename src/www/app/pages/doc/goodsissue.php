@@ -239,6 +239,7 @@ class GoodsIssue extends \App\Pages\Base
             'planned' => $this->docform->planned->isChecked() ? 1 : 0,
             'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
             'pricetype' => $this->docform->pricetype->getValue(),
+            'pricetypename' => $this->docform->pricetype->getValueName(),
             'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,
             'total' => $this->docform->total->getText()
         );

@@ -402,7 +402,8 @@ class Task extends \App\Pages\Base
         $this->_doc->headerdata = array(
             'parea' => $this->docform->parea->getValue(),
             'pricetype' => $this->docform->pricetype->getValue(),
-            'store' => $this->docform->store->getValue(),
+             'pricetypename' => $this->docform->pricetype->getValueName(),
+           'store' => $this->docform->store->getValue(),
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
             'hours' => $this->docform->hours->getText(),
