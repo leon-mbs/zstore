@@ -36,15 +36,19 @@ class ProductList extends \App\Pages\Base
 
     private $rootgroup, $product;
     private $store = "";
+    private $op  ;
     public $group = null, $attrlist = array();
 
     public function __construct() {
         parent::__construct();
-      if(false ==\App\ACL::checkShowCat('ProductList'))return;       
+        if(false ==\App\ACL::checkShowCat('ProductList'))return;       
 
-        $op = System::getOptions("shop");
-        $this->store = $op["defshowstore"];
-
+        $this->op = System::getOptions("shop");
+        if(strlen($this->op['defcust'])==0  || strlen($this->op['defstore'])==0 ||  strlen($this->op['defpricetype'])==0  ){
+            $this->setWarn('Не заданы все настройки магазина. Перейдите на страницу  настроек.');
+        }
+      
+      
         $tree = $this->add(new Tree("tree"));
         $tree->onSelectNode($this, "onTree");
 
@@ -64,22 +68,18 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->plist->setPageSize(25);
 
         $this->add(new Panel('editpanel'))->setVisible(false);
-
-        $editform = $this->editpanel->add(new Form('editform2'));
-
-        $editform->add(new AutocompleteTextInput('eitem'))->onText($this, 'OnAutoItem');
-
-        $editform->add(new ClickLink('bcancel2'))->onClick($this, 'bcancelOnClick');
-        $editform->onSubmit($this, 'onSubmitForm2');
-
+  
+ 
         $editform = $this->editpanel->add(new Form('editform'));
+        $editform->add(new AutocompleteTextInput('eitem'))->onText($this, 'OnAutoItem');
+        $editform->eitem->onChange($this,'onChangeItem');
         $editform->add(new TextInput('ename'));
         $editform->add(new TextInput('ecode'));
         $editform->add(new TextInput('eprice', 0));
         $editform->add(new TextInput('eoldprice'));
         $editform->add(new TextArea('edescshort'));
         $editform->add(new TextArea('edescdet'));
-        $editform->add(new DropDownChoice('epartion'))->onChange($this, 'onPartion', true);
+
         $editform->add(new DropDownChoice('emanuf', \App\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
         $editform->add(new DropDownChoice('egroup', \App\Shop\Entity\ProductGroup::findArray('groupname', 'group_id not in (select parent_id from shop_productgroups)', 'groupname')));
         $editform->add(new \Zippy\Html\Image('prephoto'));
@@ -89,7 +89,7 @@ class ProductList extends \App\Pages\Base
         $editform->add(new CheckBox('edisabled'));
         $editform->add(new ClickLink('bcancel'))->onClick($this, 'bcancelOnClick');
         $editform->add(new ClickLink('bdelete'))->onClick($this, 'bdeleteOnClick');
-        $editform->add(new ClickLink('bback'))->onClick($this, 'bbackOnClick');
+        
         $editform->onSubmit($this, 'onSubmitForm');
 
         $this->listpanel->addnew->setVisible(false);
@@ -163,58 +163,39 @@ class ProductList extends \App\Pages\Base
 
 //новый
     public function addnewOnClick($sender) {
-        if ($this->store == "") {
-            $this->setError("Не задан склад  в настройках");
-            return;
-        }
-
+ 
+        $this->product = new Product();
+        $this->product->createdon = time();
+        $this->product->group_id = $this->group->group_id;
         $this->editpanel->setVisible(true);
-        $this->editpanel->editform2->setVisible(true);
-        $this->editpanel->editform2->eitem->setKey(0);
-        $this->editpanel->editform2->eitem->setText('');
-        $this->editpanel->editform->setVisible(false);
+        $this->editpanel->editform->eitem->setKey(0);
+        $this->editpanel->editform->eitem->setText('');
+        $this->editpanel->editform->eitem->setAttribute('readonly',null);        
         $this->listpanel->setVisible(false);
-        $this->editpanel->editform2->clean();
+        $this->attrlist = $this->product->getAttrList();
+        $this->editpanel->editform->attrlist->Reload();        
         $this->editpanel->editform->clean();
         $this->editpanel->editform->bdelete->setVisible(false);
+        $this->editpanel->editform->egroup->setValue($this->group->group_id);
+         
     }
 
-//выбран товар со склада
-    public function onSubmitForm2($sender) {
-        $this->product = new Product();
-        $this->product->item_id = $sender->eitem->getKey();
-
-        $this->product->group_id = $this->group->group_id;
-        $this->product->createdon = time();
-        $item = Item::load($this->product->item_id);
+    //выбран товар 
+    public function onChangeItem($sender) {
+         
+        $item = Item::load($sender->getKey());
         $this->product->productname = $item->itemname;
         $this->product->item_code = $item->item_code;
-
-        if ($this->product->item_id == 0) {
-            $this->setError('Не выбран   товар');
-            return;
-        }
-
-        $this->editpanel->editform->bdelete->setVisible(false);
-        $this->editpanel->editform->bback->setVisible(true);
-
         $this->editpanel->editform->ename->setText($this->product->productname);
         $this->editpanel->editform->ecode->setText($this->product->item_code);
-        $this->editpanel->editform->eprice->setText('0');
-        $this->editpanel->editform->epartion->setOptionList(\App\Entity\Stock::findArray("partion", "store_id=" . $this->store . " and item_id=" . $this->product->item_id));
-        $this->editpanel->editform->epartion->selectFirst();
-        $this->onPartion($this->editpanel->editform->epartion);
-        $this->attrlist = $this->product->getAttrList();
-        $this->editpanel->editform->attrlist->Reload();
-        $this->editpanel->editform2->setVisible(false);
-        $this->editpanel->editform->setVisible(true);
-        $this->editpanel->editform->egroup->setValue($this->group->group_id);
+        $this->editpanel->editform->eprice->setText($item->getPrice($this->op['defpricetype'],$this->op['defstore']));
+        
     }
 
     public function OnAutoItem($sender) {
 
         $text = Item::qstr('%' . trim($sender->getText()) . '%');
-        $list = Item::findArray("itemname", "  (itemname like {$text} or item_code like {$text}) and item_id in (select item_id from store_stock   )");
+        $list = Item::findArray("itemname", "  (itemname like {$text} or item_code like {$text}) ");
 
         return $list;
     }
@@ -234,63 +215,53 @@ class ProductList extends \App\Pages\Base
 
 //редактирование
     public function lnameOnClick($sender) {
-        if ($this->store == "") {
-            $this->setError("Не задан склад  в настройках");
-            return;
-        }
+ 
 
 
         $this->editpanel->setVisible(true);
         $this->listpanel->setVisible(false);
-        $this->editpanel->editform2->setVisible(false);
-        $this->editpanel->editform->setVisible(true);
         $this->product = $sender->getOwner()->getDataItem();
+        $this->editpanel->editform->eitem->setAttribute('readonly','readonly');
+        
         $this->editpanel->editform->prephoto->setUrl('/loadimage.php?id=' . $this->product->image_id);
         $this->editpanel->editform->ename->setText($this->product->productname);
+        
+        $item = Item::load($this->product->item_id);
+        $this->editpanel->editform->eitem->setText($item->itemname);
+        $this->editpanel->editform->eitem->setKey($this->product->item_id);
+        
         $this->editpanel->editform->ecode->setText($this->product->item_code);
         $this->editpanel->editform->edescshort->setText($this->product->description);
         $this->editpanel->editform->edescdet->setText($this->product->fulldescription);
         $this->editpanel->editform->emanuf->setValue($this->product->manufacturer_id);
 
         $this->editpanel->editform->bdelete->setVisible(true);
-        $this->editpanel->editform->bback->setVisible(false);
+        
 
         $this->editpanel->editform->edisabled->setChecked($this->product->deleted > 0);
-        $this->editpanel->editform->epartion->setOptionList(\App\Entity\Stock::findArray("partion", "store_id=" . $this->store . " and item_id=" . $this->product->item_id));
-        $this->editpanel->editform->epartion->setValue($this->product->stock_id);
-
+ 
         $this->attrlist = $this->product->getAttrList();
         $this->editpanel->editform->attrlist->Reload();
         $this->editpanel->editform->egroup->setValue($this->group->group_id);
     }
 
-//строка  атрибута
-    public function attrlistOnRow($row) {
-        $attr = $row->getDataItem();
-
-        //$row->add(new CheckBox("nodata", new \Zippy\Binding\PropertyBinding($attr, "nodata")));
-        $row->add(new AttributeComponent('attrdata', $attr));
-    }
-
-    public function bcancelOnClick($sender) {
-        $this->editpanel->setVisible(false);
-        $this->listpanel->setVisible(true);
-    }
-
-    public function onSubmitForm($sender) {
+   public function onSubmitForm($sender) {
         $this->product->manufacturer_id = $sender->emanuf->getValue();
 
 
         $this->product->productname = $sender->ename->getText();
+        $this->product->item_id = $sender->eitem->getKey();
         $this->product->item_code = $sender->ecode->getText();
         $this->product->group_id = $sender->egroup->getValue();
         $this->product->description = $sender->edescshort->getText();
         $this->product->fulldescription = $sender->edescdet->getText();
-        $this->product->stock_id = $sender->epartion->getValue();
         $this->product->price = $sender->eprice->getText();
         $this->product->oldprice = $sender->eoldprice->getText();
         $this->product->deleted = $sender->edisabled->isChecked();
-
+        if(strlen($this->product->productname)==0){
+            $this->setError('Не указано имя');
+            return;
+        }
 
         $file = $sender->photo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
@@ -344,7 +315,22 @@ class ProductList extends \App\Pages\Base
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
     }
+    
+    
+//строка  атрибута
+    public function attrlistOnRow($row) {
+        $attr = $row->getDataItem();
 
+        //$row->add(new CheckBox("nodata", new \Zippy\Binding\PropertyBinding($attr, "nodata")));
+        $row->add(new AttributeComponent('attrdata', $attr));
+    }
+
+    public function bcancelOnClick($sender) {
+        $this->editpanel->setVisible(false);
+        $this->listpanel->setVisible(true);
+    }
+
+ 
     public function bdeleteOnClick($sender) {
         if ($this->product->checkDelete() == false) {
             $this->setError('Продукт уже  используется');
@@ -356,17 +342,7 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->setVisible(true);
     }
 
-    public function onPartion($sender) {
-        $stock = Stock::load($sender->getValue());
-        $item = Item::load($stock->item_id);
-        $this->editpanel->editform->eprice->setText($item->getPrice('',$stock->partion));
-        $this->updateAjax(array('eprice'));
-    }
-
-    public function bbackOnClick($sender) {
-        $this->editpanel->editform2->setVisible(true);
-        $this->editpanel->editform->setVisible(false);
-    }
+ 
 
 }
 

@@ -175,7 +175,7 @@ class DocList extends \App\Pages\Base
         }
         Document::delete($doc->document_id);
         $this->doclist->Reload();
-        \Zippy\WebApplication::$app->setReloadPage();
+         
     }
 
     public function cancelOnClick($sender) {

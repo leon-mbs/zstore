@@ -78,7 +78,7 @@ class ProductView extends Base
             $this->buy->setVisible(false);
         } else {
 
-            if ($product->qty > 0) {
+            if (\App\Entity\Item::getQuantity($product->item_id) > 0) {
                 $this->onstore->setText("В наличии");
                 $this->buy->setValue("Купить");
             } else {

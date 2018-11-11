@@ -142,4 +142,22 @@ class Item extends \ZCL\DB\Entity
         
         return $list;
     }
+    
+    /**
+    * возвращает количество на складах
+    * 
+    * @param mixed $item_id
+    * @param mixed $store_id
+    */
+    public static function getQuantity($item_id,$store_id=0) {
+        if($item_id>0){
+            $conn = \ZDB\DB::getConnect();
+            $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock where   item_id = {$item_id} ";
+            if($store_id>0) $sql .= " and store_id = ".$store_id;
+            $cnt = $conn->GetOne($sql);
+            return $cnt;
+        }
+        return 0;
+    }    
+    
 }

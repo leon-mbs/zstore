@@ -58,27 +58,14 @@ class Order extends \App\Entity\Doc\Document
     }
 
     public function Execute() {
-        $conn = \ZDB\DB::getConnect();
-        $conn->StartTrans();
-
-        foreach ($this->detaildata as $row) {
-
-            $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
-            $sc->setStock($row['stock_id']);
-            $sc->setExtCode($row['price'] - $row['partion']); //Для АВС 
-            if ($this->headerdata["customer"] > 0)
-                $sc->setCustomer($this->headerdata["customer"]);
-            $sc->save();
-        }
-
-        $conn->CompleteTrans();
+         
         return true;
     }
 
     public function getRelationBased() {
         $list = array();
-        // $list['Warranty'] = 'Гарантийный талон';
-        //  $list['ReturnIssue'] = 'Возвратная накладная';
+         $list['GoodsIssue'] = 'Расходная накладная';
+        
 
         return $list;
     }

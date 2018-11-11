@@ -48,8 +48,9 @@ class Options extends \App\Pages\Base
     
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        $this->shop->add(new DropDownChoice('defshowstore', \App\Entity\Store::getList()));
-        $this->shop->add(new DropDownChoice('defсuststore', \App\Entity\Customer::getList()));
+        $this->shop->add(new DropDownChoice('shopdefstore', \App\Entity\Store::getList()));
+        $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
+        $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
 
 
 
@@ -79,8 +80,9 @@ class Options extends \App\Pages\Base
         $shop = System::getOptions("shop");
         if (!is_array($shop))
             $shop = array();
-        $this->shop->defshowstore->setValue($shop['defshowstore']);
-        $this->shop->defсuststore->setValue($shop['defсuststore']);
+        $this->shop->shopdefstore->setValue($shop['defstore']);
+        $this->shop->shopdefcust->setValue($shop['defcust']);
+        $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
 
 
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
@@ -148,8 +150,9 @@ class Options extends \App\Pages\Base
 
         //todo контрагент магазина, кому  нотификацию
 
-        $shop['defshowstore'] = $this->shop->defshowstore->getValue();
-        $shop['defсuststore'] = $this->shop->defсuststore->getValue();
+        $shop['defcust'] = $this->shop->shopdefcust->getValue();
+        $shop['defstore'] = $this->shop->shopdefstore->getValue();
+        $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
 
 
         System::setOptions("shop", $shop);

@@ -4,12 +4,13 @@ namespace App\API;
 
 /**
  * Класс  для  работы  с  кассовыми  апаратами
+ * пример  вызова /api/Pos/Add/1
  */
 class Pos  
 {
 
     //Демо
-    public function post($p) {
+    public function Add($p) {
         $error = "";
         $xml = $_POST['data'];
         $user = $_POST['user'];

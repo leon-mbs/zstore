@@ -56,11 +56,11 @@ class StockList extends \App\Pages\Base
         $row->add(new Label('cat_name', $item->cat_name));
         //$row->add(new Label('storename', $stock->storename));        
         $plist = array();
-        if($item->price1>0)$plist[]=$item->getPrice($item->price1,$stock->partion);
-        if($item->price2>0)$plist[]=$item->getPrice($item->price2,$stock->partion);
-        if($item->price3>0)$plist[]=$item->getPrice($item->price3,$stock->partion);
-        if($item->price4>0)$plist[]=$item->getPrice($item->price4,$stock->partion);
-        if($item->price5>0)$plist[]=$item->getPrice($item->price5,$stock->partion);
+        if($item->price1>0)$plist[]=$item->getPrice('price1',$stock->partion);
+        if($item->price2>0)$plist[]=$item->getPrice('price2',$stock->partion);
+        if($item->price3>0)$plist[]=$item->getPrice('price3',$stock->partion);
+        if($item->price4>0)$plist[]=$item->getPrice('price4',$stock->partion);
+        if($item->price5>0)$plist[]=$item->getPrice('price5',$stock->partion);
         
         $row->add(new Label('price', implode(',',$plist)));
 

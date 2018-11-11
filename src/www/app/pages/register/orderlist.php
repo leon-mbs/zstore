@@ -60,6 +60,7 @@ class OrderList extends \App\Pages\Base
         $this->statusform->add(new SubmitButton('bdelivered'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
+        $this->statusform->add(new \Zippy\Html\Link\RedirectLink('bttn'));
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
@@ -144,14 +145,15 @@ class OrderList extends \App\Pages\Base
             $this->_doc->save();
             $this->_doc->updateStatus(Document::STATE_DELIVERED);
         }
+     
 
 
         //todo  отослать писмо 
         $this->doclist->Reload();
-        $this->updateStatussButtons();
+        $this->updateStatusButtons();
     }
 
-    public function updateStatussButtons() {
+    public function updateStatusButtons() {
 
         $this->statusform->bclose->setVisible(true);
 
@@ -203,6 +205,18 @@ class OrderList extends \App\Pages\Base
             $this->statusform->bdelivered->setVisible(false);
             $this->statusform->bclose->setVisible(false);
             $this->statusform->bcancel->setVisible(false);
+            $this->statusform->setVisible(false);
+        }
+        
+        $this->statusform->bttn->setLink("\\App\\Pages\\Doc\\GoodsIssue",array(0,$this->_doc->document_id));
+        
+        //проверяем  что  уже создана накладная
+        $list = $this->_doc->ConnectedDocList();
+        foreach($list as $d){
+            if($d->meta_name=='GoodsIssue'){
+                $this->statusform->bttn->setVisible(false);
+                break;
+            }
         }
     }
 
@@ -216,7 +230,7 @@ class OrderList extends \App\Pages\Base
         $this->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload();
-        $this->updateStatussButtons();
+        $this->updateStatusButtons();
     }
 
 }

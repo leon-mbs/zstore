@@ -57,9 +57,9 @@ class UserLogin extends \Zippy\Html\WebPage
                 }
                 $logger->info('Logined '. $user->userlogin. ', '.$_SERVER["REMOTE_ADDR"]);
                 if (\App\Session::getSession()->topage == null) {
-                    App::RedirectHome();
+                    App::RedirectURI('/store');
                 } else {
-                    App::toPage(\App\Session::getSession()->topage);
+                    App::RedirectURI(\App\Session::getSession()->topage);
                 }
             } else {
                 $this->setError('Неверный логин');

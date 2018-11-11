@@ -30,7 +30,7 @@
 
             <tr>
                 <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-                     <br> Заказ № {{document_number}} от {{date}} <br><br> 
+                       Заказ № {{document_number}} от {{date}}   
                 </td>
             </tr>
 
@@ -61,7 +61,7 @@
          
             <tr>
                 <td  >  </td>
-                <td  > Доставка</td>
+                <td valign="top" > Доставка</td>
                 <td colspan="4">
                    <p>{{delivery}}</p>
                 </td>
@@ -69,7 +69,7 @@
    
             <tr>
                 <td  >  </td>
-                <td  > Коментарий</td>
+                <td valign="top" > Коментарий</td>
                 <td colspan="4">
                    <p>{{notes}}</p>
                 </td>

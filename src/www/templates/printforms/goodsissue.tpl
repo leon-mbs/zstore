@@ -12,19 +12,25 @@
 
             <tr>
                 <td></td>
-                <td>Продавец</td>
+                <td><b>Продавец</b></td>
                 <td colspan="6">{{firmname}}</td>
             </tr>
           
             <tr>
                 <td></td>
-                <td>Покупатель</td>
+                <td><b>Покупатель</b></td>
                 <td colspan="6">{{customername}}</td>
             </tr>
-
+            {{#order}}
+            <tr>
+                <td></td>
+                <td><b>Заказ</b></td>
+                <td colspan="6">{{order}}</td>
+            </tr>
+            {{/order}}
             <tr>
                 <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-                    <br><br> Накладная № {{document_number}} от {{date}} <br><br><br>
+                       Накладная № {{document_number}} от {{date}} <br> 
                 </td>
             </tr>
 

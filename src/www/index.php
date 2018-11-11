@@ -1,9 +1,13 @@
 <?php
 
 
-
 require_once 'init.php';
 
+global $_config;
+ 
+if(strpos($_SERVER['REQUEST_URI'],'index.php') >1  ){
+   die('Сайт размещен не в  корневой папке');  
+};
 try {
 
        if ($_COOKIE['remember'] && \App\System::getUser()->user_id == 0) {
@@ -23,11 +27,17 @@ try {
             }   
 
         }
-
-    $app = new \App\Application('\App\Pages\Main');
+   
+     
+    if($_config['common']['shop'] == 1){
+       $app = new \App\Application('\App\Shop\Pages\Main');    
+    } else {
+       $app = new \App\Application('\App\Pages\Main');      
+    }
+    
     
     $app->Run();
-
+    
 
 
     /* } catch (\ZippyERP\System\Exception $e) {

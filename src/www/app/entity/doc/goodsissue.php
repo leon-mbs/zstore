@@ -40,6 +40,7 @@ class GoodsIssue extends Document
         $header = array('date' => date('d.m.Y', $this->document_date),
             "firmname" => $firm['firmname'],
             "customername" => $this->headerdata["customer_name"],
+            "order" => strlen($this->headerdata["order"])>0 ? $this->headerdata["order"] : false,
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"],
             "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))

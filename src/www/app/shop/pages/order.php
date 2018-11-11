@@ -114,12 +114,12 @@ class Order extends Base
             $amount = 0;
 
             foreach ($this->basketlist as $product) {
-                $stock = \App\Entity\Stock::load($product->stock_id);
-                $stock->price = $product->price;
-                $stock->quantity = $product->quantity;
-                $stock->product_id = $product->product_id;
+                $item = \App\Entity\Item::load($product->item_id);
+                $item->price = $product->price;
+                $item->quantity = $product->quantity;
+                $item->product_id = $product->product_id;
                 $amount += ($product->price * $product->quantity);
-                $order->detaildata[] = $stock->getData();
+                $order->detaildata[] = $item->getData();
             }
 
             $order->headerdata = array(
@@ -136,11 +136,13 @@ class Order extends Base
             );
 
             $op = System::getOptions("shop");
-            $cust = \App\Entity\Customer::load($op["defсuststore"]);       
+            $cust = \App\Entity\Customer::load($op["defcust"]);       
             if($cust instanceof \App\Entity\Customer) {
                $order->headerdata['customer'] = $cust->customer_id;
                $order->headerdata['customer_name'] = $cust->customer_name;
             }
+            $order->headerdata['store'] = $op["defstore"];
+            $order->headerdata['pricetype'] = $op["defpricetype"];
             
             $order->notes = trim($this->orderform->contact->getText());
             $order->amount = $amount;

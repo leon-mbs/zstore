@@ -105,4 +105,28 @@ class Stock extends \ZCL\DB\Entity
         return $conn->GetRow($sql);
     }
 
+   // Поиск партий
+    public static function pickup($store_id, $item_id, $qty) {
+        $res=array();
+        $where = "store_id = {$store_id} and item_id = {$item_id} and qty >0   ";
+        $stlist = self::find($where, 'stock_id');
+        foreach($stlist as $st){
+            if($st->qty >= $qty) {
+               $st->quantity= $qty; 
+               $res[]=$st;
+               $qty=0;
+               break;    //сразу нашлась партия
+            }  else {
+               $st->quantity= $st->qty; 
+               $res[]=$st; 
+               $qty = $qty - $st->qty; //остаток
+            }
+        }
+        if($qty>0){  // если не  достаточно
+           return array();
+        }
+        return $res;
+    }
+    
+    
 }

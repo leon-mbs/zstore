@@ -66,7 +66,7 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
+        
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
@@ -102,6 +102,7 @@ class Order extends \App\Pages\Base
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
        
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
+            $this->OnDelivery($this->docform->delivery);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->headerdata['customer']);
             $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
@@ -245,7 +246,6 @@ class Order extends \App\Pages\Base
             'address' => $this->docform->address->getText(),
             'email' => $this->docform->email->getText(),
             'pricetype' => $this->docform->pricetype->getValue(),
-            'pricetypename' => $this->docform->pricetype->getValueName(),
             'store' => $this->docform->store->getValue(),
             'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
             'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,
@@ -264,12 +264,9 @@ class Order extends \App\Pages\Base
         $conn->BeginTrans();
         try {
             $this->_doc->save();
-            if ($sender->id == 'execdoc') {
-                if (!$isEdited)
-                    $this->_doc->updateStatus(Document::STATE_NEW);
-
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-
+            $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+            
+ 
                 //снят флаг  в  долг
                 if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_PAYED);
@@ -290,9 +287,7 @@ class Order extends \App\Pages\Base
                 if ($this->_doc->headerdata['inshipment'] == 1) {
                     $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
                 }
-            } else {
-                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-            }
+          
 
 
 
@@ -359,7 +354,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->qtystock->setText(Stock::getQuantity($id, $this->docform->document_date->getDate()));
 
         $item = Item::load($stock->item_id);
-        $price = $item->getPrice($stock->partion > 0 ? $stock->partion : 0);
+        $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
         $price = round($price - $price / 100 * $this->_discount);
 
 

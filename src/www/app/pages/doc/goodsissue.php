@@ -33,6 +33,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_basedocid = 0;
     private $_rowid = 0;
     private $_discount;
+    private $_orderid;
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -50,10 +51,10 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
          $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
+        $this->docform->add(new TextInput('order'));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
-        $this->docform->add(new CheckBox('incredit'));
-        $this->docform->add(new CheckBox('inshipment'));
+ 
         $this->docform->add(new Label('discount'))->setVisible(false);
  
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
@@ -92,8 +93,6 @@ class GoodsIssue extends \App\Pages\Base
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
-            $this->docform->incredit->setChecked($this->_doc->headerdata['incredit']);
-            $this->docform->inshipment->setChecked($this->_doc->headerdata['inshipment']);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -103,7 +102,9 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
 
             $this->docform->notes->setText($this->_doc->notes);
-
+            $this->docform->order->setText($this->_doc->headerdata['order']);
+            $this->_orderid = $this->_doc->headerdata['orderid'];
+             
             foreach ($this->_doc->detaildata as $item) {
                 $stock = new Stock($item);
                 $this->_tovarlist[$stock->stock_id] = $stock;
@@ -116,6 +117,37 @@ class GoodsIssue extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'Order') {
+                        $this->docform->customer->setText($basedoc->headerdata['customer_name']);
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->_orderid = $basedocid;
+                        $this->docform->order->setText($basedoc->document_number);
+                        
+                        $notfound = array();
+                        $order = $basedoc->cast();
+                        if($order->state == Document::STATE_CLOSED)  {
+                            $this->setWarn('Заказ уже закрыт');
+                        }
+       
+                        foreach ($order->detaildata as $item) {
+                                $stlist = Stock::pickup($order->headerdata['store'], $item['item_id'], $item['quantity']);
+                                if (count($stlist)==0) {
+                                    $notfound[] = $item['itemname']."({$item['quantity']}шт) ";;
+                                } else {
+                                    foreach($stlist as $st){
+                                      $st->price = $item['price'];
+                                      $this->_tovarlist[$st->stock_id] = $st;
+                                    }
+                                }
+                             
+                        }
+                        //если  не  все  партии найдены
+                        if (count($notfound) > 0) {
+                            $this->setWarn('Не найдено достаточное количество для  ' . implode(',', $notfound));
+                             
+                        }
+                    }                    
                 }
             }
         }
@@ -225,6 +257,7 @@ class GoodsIssue extends \App\Pages\Base
          $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
+        $this->_doc->order = $this->docform->order->getText();
         if ($this->checkForm() == false) {
             return;
         }
@@ -235,12 +268,13 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata = array(
             'customer' => $this->docform->customer->getKey(),
             'customer_name' => $this->docform->customer->getText(),
+            'order' => $this->docform->order->getText(),
+            'orderid' => $this->_orderid,
             'store' => $this->docform->store->getValue(),
             'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
             'pricetype' => $this->docform->pricetype->getValue(),
             'pricetypename' => $this->docform->pricetype->getValueName(),
-            'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,
+
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -252,6 +286,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->datatag = $this->_doc->amount;
         $isEdited = $this->_doc->document_id > 0;
 
+
+        
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -262,26 +298,18 @@ class GoodsIssue extends \App\Pages\Base
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
-                //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_PAYED);
-                    $this->_doc->datatag = $this->_doc->amount;
-                    $this->_doc->save();
-                }
-                //установлен флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
-                    $this->_doc->datatag = 0;
-                    $this->_doc->save();
-                }
-                //снят флаг  в  доставке
-                if ($this->_doc->headerdata['inshipment'] != 1 && $old->headerdata['inshipment'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_DELIVERED);
-                }
-                //установлен флаг  в  доставке
-                if ($this->_doc->headerdata['inshipment'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-                }
+        $order = Document::load($this->_orderid);
+        if($order instanceof Document){
+            //закрываем  если  оплачен
+            if($order->checkStates(array(Document::STATE_PAYED))==true){
+               if($order->state != Document::STATE_CLOSED) {
+                   $order->updateStatus(Document::STATE_CLOSED);
+               }
+            }
+        }                
+                
+                
+ 
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
