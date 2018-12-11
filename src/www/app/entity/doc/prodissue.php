@@ -29,6 +29,7 @@ class ProdIssue extends Document
                     "tovar_code" => $value['item_code'],
                     "quantity" => $value['quantity'],
                     "price" => $value['price'],
+                     "msr" => $value['msr'],
                     "amount" => ($value['quantity'] ) * $value['price']
                 );
             }

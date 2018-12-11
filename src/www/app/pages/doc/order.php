@@ -43,15 +43,14 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
 
-        $this->docform->add(new CheckBox('incredit'));
-        $this->docform->add(new CheckBox('inshipment'));
+      
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
@@ -66,6 +65,7 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -95,27 +95,21 @@ class Order extends \App\Pages\Base
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
 
-            $this->docform->incredit->setChecked($this->_doc->headerdata['incredit']);
-            $this->docform->inshipment->setChecked($this->_doc->headerdata['inshipment']);
-
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
        
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->OnDelivery($this->docform->delivery);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->customer->setKey($this->_doc->headerdata['customer']);
-            $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
             $this->docform->address->setText($this->_doc->headerdata['address']);
-             
 
-            foreach ($this->_doc->detaildata as $item) {
-                $stock = new Stock($item);
-                $this->_tovarlist[$stock->stock_id] = $stock;
+            foreach ($this->_doc->detaildata as $_item) {
+                $item = new Item($_item);
+                $this->_tovarlist[$item->item_id] = $item;
             }
         } else {
             $this->_doc = Document::create('Order');
@@ -138,8 +132,9 @@ class Order extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('tovar', $item->itemname));
-        $row->add(new Label('partion', $item->partion));
+        
         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity', $item->quantity));
         $row->add(new Label('price', $item->price));
@@ -154,7 +149,7 @@ class Order extends \App\Pages\Base
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();        
     }
@@ -168,21 +163,18 @@ class Order extends \App\Pages\Base
     }
 
     public function editOnClick($sender) {
-        $stock = $sender->getOwner()->getDataItem();
+        $item = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-        $this->editdetail->editquantity->setText($stock->quantity);
-        $this->editdetail->editprice->setText($stock->price);
+        $this->editdetail->editquantity->setText($item->quantity);
+        $this->editdetail->editprice->setText($item->price);
 
 
-        $this->editdetail->edittovar->setKey($stock->stock_id);
-        $this->editdetail->edittovar->setText($stock->itemname);
+        $this->editdetail->edittovar->setKey($item->item_id);
+        $this->editdetail->edittovar->setText($item->itemname);
 
-
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id, $this->docform->document_date->getDate()));
-
-        $this->_rowid = $stock->stock_id;
+        $this->_rowid = $item->item_id;
     }
 
     public function saverowOnClick($sender) {
@@ -193,15 +185,15 @@ class Order extends \App\Pages\Base
             return;
         }
 
-        $stock = Stock::load($id);
-        $stock->quantity = $this->editdetail->editquantity->getText();
+        $item = Item::load($id);
+        $item->quantity = $this->editdetail->editquantity->getText();
 
 
-        $stock->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getText();
 
 
         unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$stock->stock_id] = $stock;
+        $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -231,25 +223,23 @@ class Order extends \App\Pages\Base
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
+        $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->checkForm() == false) {
             return;
         }
 
         $this->calcTotal();
         $old = $this->_doc->cast();
-
+        $ttn= $this->_doc->headerdata['ttn']; //запоминаем ТТН если  была
         $this->_doc->headerdata = array(
+            'ttn' => $ttn,
             'delivery' => $this->docform->delivery->getValue(),
             'delivery_name' => $this->docform->delivery->getValueName(),
-            'customer' => $this->docform->customer->getKey(),
-            'customer_name' => $this->docform->customer->getText(),
-            'address' => $this->docform->address->getText(),
+             'address' => $this->docform->address->getText(),
             'email' => $this->docform->email->getText(),
             'pricetype' => $this->docform->pricetype->getValue(),
             'store' => $this->docform->store->getValue(),
-            'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
-            'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,
-            'total' => $this->docform->total->getText()
+           'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
@@ -263,33 +253,22 @@ class Order extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-            $this->_doc->save();
-            $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             
+            if ($sender->id == 'execdoc') {
+                if (!$isEdited) {
+                    $this->_doc->updateStatus(Document::STATE_NEW);
+                }
+                    
+                 //  $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                    $this->_doc->updateStatus(Document::STATE_INPROCESS);
  
-                //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_PAYED);
-                    $this->_doc->datatag = $this->_doc->amount;
-                    $this->_doc->save();
-                }
-                //установлен флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
-                    $this->_doc->datatag = 0;
-                    $this->_doc->save();
-                }
-                //снят флаг  в  доставке
-                if ($this->_doc->headerdata['inshipment'] != 1 && $old->headerdata['inshipment'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_DELIVERED);
-                }
-                //установлен флаг  в  доставке
-                if ($this->_doc->headerdata['inshipment'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+
+                $this->_doc->save();           
+                }   else {
+                   $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
                 }
           
-
-
+  
 
             if ($this->_basedocid > 0) {
                 $this->_doc->AddConnectedDoc($this->_basedocid);
@@ -305,6 +284,12 @@ class Order extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ ". $this->_doc->meta_desc);
             return;
         }
+         if ($isEdited) 
+              App::RedirectBack();
+          else 
+              App::Redirect("\\App\\Pages\\Register\\OrderList");                
+        
+        
     }
 
     /**
@@ -342,22 +327,16 @@ class Order extends \App\Pages\Base
         App::RedirectBack();
     }
 
-    public function OnChangeStore($sender) {
-        //очистка  списка  товаров
-        $this->_tovarlist = array();
-        $this->docform->detail->Reload();
-    }
+
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
-        $stock = Stock::load($id);
-        $this->editdetail->qtystock->setText(Stock::getQuantity($id, $this->docform->document_date->getDate()));
-
-        $item = Item::load($stock->item_id);
-        $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
+        $item = Item::load($id);
+        $price = $item->getPrice($this->docform->pricetype->getValue());
         $price = round($price - $price / 100 * $this->_discount);
 
 
+        $this->editdetail->qtystock->setText(Item::getQuantity($id,$this->docform->store->getValue()));
         $this->editdetail->editprice->setText($price);
 
         $this->updateAjax(array('qtystock', 'editprice'));
@@ -387,9 +366,8 @@ class Order extends \App\Pages\Base
     }
 
     public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
         $text = Item::qstr('%' . $sender->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id}   and (itemname like {$text} or item_code like {$text}) ");
+        return Item::findArray("itemname","  (itemname like {$text} or item_code like {$text}) ");
     }
 
     //добавление нового контрагента
@@ -434,10 +412,10 @@ class Order extends \App\Pages\Base
         }
     }
     public function OnChangePriceType($sender) {
-            foreach ($this->_tovarlist as $stock) {
-              $item = Item::load($stock->item_id);
-              $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
-              $stock->price = $price - $price / 100 * $this->_discount;
+            foreach ($this->_tovarlist as $item) {
+              //$item = Item::load($item->item_id);
+              $price = $item->getPrice($this->docform->pricetype->getValue() );
+              $item->price = $price - $price / 100 * $this->_discount;
 
             }    
             $this->calcTotal();

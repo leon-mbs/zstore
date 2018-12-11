@@ -38,7 +38,7 @@ class Task extends Document
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "customer" => $this->headerdata["customer_name"],
+            "customer" => $this->customer_name ,
             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
             "document_number" => $this->document_number,
             "totaldisc" => $this->headerdata["totaldisc"],
@@ -61,13 +61,13 @@ class Task extends Document
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             if ($row['stock_id'] > 0) {
                 $sc->setStock($row['stock_id']);
-                if ($row['custpay'] == 1 && $this->headerdata["customer"] > 0)
-                    $sc->setCustomer($this->headerdata["customer"]);
+                if ($row['custpay'] == 1 )
+                    $sc->setCustomer($this->customer_id);
             }
             if ($row['service_id'] > 0) {
                 $sc->setService($row['service_id']);
-                if ($this->headerdata["customer"] > 0)
-                    $sc->setCustomer($this->headerdata["customer"]);
+                 
+                    $sc->setCustomer($this->customer_id);
             }
 
             if ($row['employee_id'] > 0) {

@@ -7,9 +7,9 @@
     "nesbot/Carbon": "1.29.2",
     "timetoogo/pinq": "3.4.1",
      "jbzoo/image"  :  "3.0.4" ,
+     "dompdf/dompdf"  :  "v0.8.2" ,
 
        "roave/security-advisories":"dev-master",
-
 
     "leon-mbs/zippy": "dev-master"
 

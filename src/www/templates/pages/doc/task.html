@@ -37,12 +37,7 @@
                         </select>
                     </div>   
 
-                    <div class="form-group  ">
-                        <label for="notes" >Коментарий</label>
-
-                        <input class="form-control" type="text" zippy="notes"  >
-
-                    </div>
+                    
                 </div>
                 <div class="col-6 col-md-4 col-lg-3">
                     <div class="form-group">
@@ -59,18 +54,15 @@
                         <option value="0">Не выбран</option>
                         </select>
                     </div>             
-                    
-                    <div class="form-group">
-                        <label for="taskstate" >Состояние задачи</label>
-                        <select class="form-control"   zippy="taskstate" >
+ <div class="form-group  ">
+                        <label for="notes" >Описание</label>
 
-                        </select>
-                    </div>   
+                        <input class="form-control" type="text" zippy="notes"  >
 
-                    <div class="  form-check">
-                        <input zippy="incredit" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="incredit">Не оплачен</label>
-                    </div>                            
+                    </div>                   
+                     
+
+                                               
                 </div>
             </div>
             <div class="row">
@@ -93,10 +85,10 @@
                         <tr zippy="detail">
                             <td   zippy="service"></td>
 
-                            <td zippy="quantity"  style="text-align: right;"></td>
-                            <td zippy="price"  style="text-align: right;"></td>
+                            <td zippy="quantity"  class="text-right"></td>
+                            <td zippy="price"  class="text-right"></td>
 
-                            <td zippy="amount"  style="text-align: right;"></td>
+                            <td zippy="amount"  class="text-right"></td>
 
                             <td width="75">
                                 <a zippy="edit"><i class="fa fa-edit"></i></a>
@@ -116,6 +108,7 @@
 
                             <th>Название</th>
                             <th>Код</th>
+                            <th>Ед.</th>
                             <th width="40" style="text-align: right;width:50px;">Кол.</th>
                             <th width="100" style="text-align: right;width:50px;">Цена</th>
 
@@ -127,10 +120,11 @@
 
                             <td zippy="item"></td>
                             <td zippy="item_code"></td>
-                            <td zippy="quantity2"  style="text-align: right;"></td>
-                            <td zippy="price2"  style="text-align: right;"></td>
+                            <td zippy="msr"></td>
+                            <td zippy="quantity2"  class="text-right"></td>
+                            <td zippy="price2"  class="text-right"></td>
 
-                            <td zippy="amount2"  style="text-align: right;"></td>
+                            <td zippy="amount2"  class="text-right"></td>
 
                             <td width="75">
 
@@ -144,12 +138,12 @@
 
                     <table class="table  table-sm">  
                         <tr style="font-weight: bolder;">
-                            <td     style="text-align: right;"> <span data-label="totaldisc" >Скидка:</span></td>
+                            <td     class="text-right"> <span data-label="totaldisc" >Скидка:</span></td>
                             <td   zippy="totaldisc"  style="text-align: right;width:50px;"></td>
                             <td width="75px"> </td> 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td    style="text-align: right;">Всего работ и материалов к оплате:</td>
+                            <td    class="text-right">Всего работ и материалов к оплате:</td>
                             <td   zippy="total"  style="text-align: right; width:50px; "></td>
                             <td   width="75px">  </td> 
                         </tr>
@@ -196,7 +190,7 @@
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="На  выполнение" class="btn btn-outline-primary  ">
 
                 </div>
             </div>

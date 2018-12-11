@@ -42,6 +42,7 @@ class ABC extends \App\Pages\Base
         $this->detail->add(new RedirectLink('print', "abc"));
         $this->detail->add(new RedirectLink('html', "abc"));
         $this->detail->add(new RedirectLink('excel', "abc"));
+        $this->detail->add(new RedirectLink('pdf', "abc"));
         $this->detail->add(new Label('preview'));
     }
 
@@ -61,6 +62,8 @@ class ABC extends \App\Pages\Base
         $this->detail->html->params = array('html', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
+        $this->detail->pdf->pagename = $reportpage;
+        $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
     }
@@ -72,9 +75,16 @@ class ABC extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
+//$image = 'z:/home/local.zstore/www/assets/images/noimage.jpg';
+//$imageData = base64_encode(file_get_contents($image));
+//$fi=getimagesize($image);
+ 
+//$src = 'data:'.$fi['mime'].';base64,'.$imageData;
 
+     
         $header = array('from' => date('d.m.Y', $from),
             'to' => date('d.m.Y', $to),
+           // 'img'=>  '<img src="'.$src.'">' ,
             "type" => $this->typelist[$type]
         );
 

@@ -43,7 +43,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
-        $this->docform->add(new CheckBox('incredit'));
+        
         $this->docform->add(new Label('discount'))->setVisible(false);
 
 
@@ -81,11 +81,10 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->headerdata['notes']);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
-            $this->docform->incredit->setChecked($this->_doc->headerdata['incredit']);
-
+  
             $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->customer->setKey($this->_doc->headerdata['customer']);
-            $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
+                        $this->docform->customer->setKey($this->_doc->customer_id);
+                        $this->docform->customer->setText($this->_doc->customer_name);
 
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Service($item);
@@ -186,6 +185,7 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
+        $this->_doc->customer_id = $this->docform->customer->getKey();
 
 
         if ($this->checkForm() == false) {
@@ -197,11 +197,8 @@ class ServiceAct extends \App\Pages\Base
         $old = $this->_doc->cast();
 
         $this->_doc->headerdata = array(
-            'customer' => $this->docform->customer->getKey(),
-            'customer_name' => $this->docform->customer->getText(),
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
-            'total' => $this->docform->total->getText()
+             'planned' => $this->docform->planned->isChecked() ? 1 : 0,
+             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
         foreach ($this->_servicelist as $item) {
@@ -224,18 +221,7 @@ class ServiceAct extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
-                //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_PAYED);
-
-                    $this->_doc->save();
-                }
-                //установлен флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
-                    $this->_doc->datatag = 0;
-                    $this->_doc->save();
-                }
+            
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }

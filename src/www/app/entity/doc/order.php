@@ -29,6 +29,7 @@ class Order extends \App\Entity\Doc\Document
                     "tovar_code" => $value['item_code'],
                     "quantity" => $value['quantity'],
                     "price" => $value['price'],
+                    "msr" => $value['msr'], 
                     "amount" => ($value['quantity'] ) * $value['price']
                 );
             }
@@ -36,10 +37,10 @@ class Order extends \App\Entity\Doc\Document
 
         //$firm = \App\System::getOptions("common");
 
-        //  $customer = \App\Entity\Customer::load($this->headerdata["customer"]);
+        
         $header = array('date' => date('d.m.Y', $this->document_date),
         
-            "customername" => $this->headerdata["customer_name"],
+            "customername" => $this->customer_name,
             "phone" => $this->headerdata["phone"],
             "email" => $this->headerdata["email"],
             "delivery" => $this->headerdata["delivery_name"],
@@ -64,7 +65,7 @@ class Order extends \App\Entity\Doc\Document
 
     public function getRelationBased() {
         $list = array();
-         $list['GoodsIssue'] = 'Расходная накладная';
+         $list['TTN'] = 'TTN';
         
 
         return $list;

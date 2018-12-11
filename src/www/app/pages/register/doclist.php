@@ -13,6 +13,8 @@ use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use App\Entity\Doc\Document;
+use App\Entity\Customer;
+use \Zippy\Html\Form\AutocompleteTextInput;
 use App\Filter;
 use App\Helper as H;
 use App\Application as App;
@@ -40,14 +42,20 @@ class DocList extends \App\Pages\Base
             $filter->from = time() - (7 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
-            $filter->searchnumber = '';
+            $filter->customer = 0;
+            $filter->customer_name = '';
+        
+            $filter->searchnumber = '';  
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
         $this->filter->add(new Date('to', $filter->to));
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
-        //$this->filter->add(new DropDownChoice('rowscnt', array(20 => 20, 50 => 50, 100 => 100)));
-       
+        
+        $this->filter->add(new ClickLink('erase',$this,"onErase"));
+        $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
+        $this->filter->searchcust->setKey($filter->customer);
+        $this->filter->searchcust->setText($filter->customer_name);
         $this->filter->add(new TextInput('searchnumber',$filter->searchnumber));
 
         if (strlen($filter->docgroup) > 0)
@@ -69,6 +77,23 @@ class DocList extends \App\Pages\Base
         }
     }
 
+    public function onErase($sender) {
+        $filter = Filter::getFilter("doclist");
+        $filter->to = time()  ;
+        $filter->from = time() - (7 * 24 * 3600);
+        $filter->page = 1;
+        $filter->doctype = 0;
+        $filter->customer = 0;
+        $filter->customer_name = '';
+    
+        $filter->searchnumber = ''; 
+        
+        $this->filter->clean()        ;
+        $this->filter->to->setDate(time()  )       ;;
+        $this->filter->from->setDate(time() - (7 * 24 * 3600))       ;;
+        $this->filterOnSubmit($this->filter)       ;;
+            
+    }
     public function filterOnSubmit($sender) {
 
         $this->docview->setVisible(false);
@@ -77,6 +102,8 @@ class DocList extends \App\Pages\Base
         $filter->from = $this->filter->from->getDate();
         $filter->to = $this->filter->to->getDate(true);
         $filter->doctype = $this->filter->doctype->getValue();
+        $filter->customer = $this->filter->searchcust->getKey();
+        $filter->customer_name = $this->filter->searchcust->getText();
 
        
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
@@ -93,31 +120,22 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('notes', $doc->notes));
+        $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('amount', ($doc->amount > 0) ? $doc->amount : ""));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('sship'))->setVisible($doc->headerdata['inshipment'] == 1);
-        $row->add(new Label('spay'))->setVisible($doc->headerdata['incredit'] == 1);
-        ;
-        $row->add(new Label('splan'))->setVisible($doc->headerdata['planned'] == 1);
-        ;
-
-
+ 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        // $user = System::getUser();
-        //$row->delete->setVisible($user->userlogin == 'admin' || $user->user_id = $item->user_id);
-
+ 
         if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW) {
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
-            $row->sship->setVisible(false);
-            $row->spay->setVisible(false);
-            $row->splan->setVisible(false);
+ 
         } else {
             $row->edit->setVisible(false);
             $row->delete->setVisible(false);
@@ -165,17 +183,18 @@ class DocList extends \App\Pages\Base
 
     public function deleteOnClick($sender) {
         $this->docview->setVisible(false);
-        $this->resetURL();
+        
         $doc = $sender->owner->getDataItem();
         if(false ==\App\ACL::checkEditDoc($doc,true))return;     
- 
+        
+        $doc = $doc->cast();
         if ($doc->canDeleted() == false) {
 
             return;
         }
         Document::delete($doc->document_id);
-        $this->doclist->Reload();
-         
+        $this->doclist->Reload(true);
+        $this->resetURL(); 
     }
 
     public function cancelOnClick($sender) {
@@ -190,6 +209,11 @@ class DocList extends \App\Pages\Base
         $doc->updateStatus(Document::STATE_CANCELED);
         $this->doclist->Reload();
         $this->resetURL();
+    }
+    
+      public function OnAutoCustomer($sender) {
+        $text = Customer::qstr('%' . $sender->getText() . '%');
+        return Customer::findArray("customer_name", "Customer_name like " . $text);
     }
 
 }
@@ -210,6 +234,12 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if ($filter->doctype > 0) {
             $where .= " and meta_id  ={$filter->doctype} ";
         }
+        if ($filter->customer > 0) {
+            $where .= " and customer_id  ={$filter->customer} ";
+        }
+        
+        
+        
         if (strlen($filter->searchnumber) > 1) {
             // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');

@@ -12,7 +12,7 @@ use \App\Entity\Doc\Document;
 use \Carbon\Carbon;
 
 /**
- * Виджет для  просмотра
+ * Виджет для  просмотра запланированых документов
  */
 class WPlannedDocs extends \Zippy\Html\PageFragment
 {

@@ -39,6 +39,24 @@ class ShowReport extends \Zippy\Html\WebPage
             header("Content-Transfer-Encoding: binary");
             $html = \App\Session::getSession()->printxml;
         }
+        if ($type == "pdf") {
+            header("Content-type: application/pdf");
+            header("Content-Disposition: attachment;Filename={$filename}.pdf");
+            header("Content-Transfer-Encoding: binary");
+   
+ 
+                $dompdf = new \Dompdf\Dompdf();
+                $dompdf->loadHtml($html);
+
+                // (Optional) Setup the paper size and orientation
+                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->set_option('defaultFont', 'DejaVu Sans');
+                // Render the HTML as PDF
+                $dompdf->render();
+
+                // Output the generated PDF to Browser
+                $html = $dompdf->output();
+             }
 
         echo $html;
 

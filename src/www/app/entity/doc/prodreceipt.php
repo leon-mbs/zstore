@@ -24,6 +24,7 @@ class ProdReceipt extends Document
                 "itemcode" => $value['item_code'],
                 "quantity" => $value['quantity'],
                 "price" => $value['price'],
+                "msr" => $value['msr'], 
                 "amount" => $value['amount']
             );
         }

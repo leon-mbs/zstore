@@ -123,23 +123,20 @@ class Order extends Base
             }
 
             $order->headerdata = array(
-                'customer' => 0,
-                'customer_name' => 'Покупатель  магазина',
                 'delivery' => $delivery,
                 'delivery_name' => $this->orderform->delivery->getValueName(),
                 'email' => $email,
                 'phone' => $phone,
                 'address' => $address,
-                'incredit' => 1,
-                'inshipment' => 0,
+ 
                 'total' => $amount
             );
 
             $op = System::getOptions("shop");
             $cust = \App\Entity\Customer::load($op["defcust"]);       
             if($cust instanceof \App\Entity\Customer) {
-               $order->headerdata['customer'] = $cust->customer_id;
-               $order->headerdata['customer_name'] = $cust->customer_name;
+               $order->customer_id = $cust->customer_id;
+               
             }
             $order->headerdata['store'] = $op["defstore"];
             $order->headerdata['pricetype'] = $op["defpricetype"];

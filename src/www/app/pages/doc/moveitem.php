@@ -84,6 +84,7 @@ class MoveItem extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('item', $item->itemname));
+        $row->add(new Label('msr', $item->msr));
 
 
         $row->add(new Label('quantity', $item->quantity));

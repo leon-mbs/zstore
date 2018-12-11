@@ -48,6 +48,7 @@ class StockList extends \App\Pages\Base
         $stock = $row->getDataItem();
         $row->add(new Label('itemname', $stock->itemname));
         $row->add(new Label('code', $stock->item_code));
+        $row->add(new Label('msr', $stock->msr));
         $row->add(new Label('partion', $stock->partion));
         $row->add(new Label('qty', $stock->qty));
         $row->add(new Label('amount', $stock->qty * $stock->partion));

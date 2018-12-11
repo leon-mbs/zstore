@@ -77,8 +77,8 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->customer->setKey($this->_doc->headerdata['customer']);
-            $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
+                        $this->docform->customer->setKey($this->_doc->customer_id);
+                        $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -97,8 +97,8 @@ class ReturnIssue extends \App\Pages\Base
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                        $this->docform->customer->setKey($basedoc->headerdata['customer']);
-                        $this->docform->customer->setText($basedoc->headerdata['customer_name']);
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
 
 
                         foreach ($basedoc->detaildata as $item) {
@@ -120,6 +120,7 @@ class ReturnIssue extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('tovar', $item->itemname));
+        $row->add(new Label('msr', $item->msr));
         
 
         $row->add(new Label('quantity', $item->quantity));
@@ -213,6 +214,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
+        $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->checkForm() == false) {
             return;
         }
@@ -221,8 +223,6 @@ class ReturnIssue extends \App\Pages\Base
         $old = $this->_doc->cast();
 
         $this->_doc->headerdata = array(
-            'customer' => $this->docform->customer->getKey(),
-            'customer_name' => $this->docform->customer->getText(),
             'store' => $this->docform->store->getValue(),
             'total' => $this->docform->total->getText()
         );

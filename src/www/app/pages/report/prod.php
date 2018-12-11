@@ -32,6 +32,7 @@ class Prod extends \App\Pages\Base
         $this->detail->add(new RedirectLink('html', "movereport"));
         $this->detail->add(new RedirectLink('word', "movereport"));
         $this->detail->add(new RedirectLink('excel', "movereport"));
+        $this->detail->add(new RedirectLink('pdf', "abc"));
         $this->detail->add(new Label('preview'));
     }
 
@@ -55,6 +56,8 @@ class Prod extends \App\Pages\Base
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
+         $this->detail->pdf->pagename = $reportpage;
+        $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
     }

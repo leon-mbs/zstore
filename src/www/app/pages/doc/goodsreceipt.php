@@ -48,9 +48,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
-        $this->docform->add(new CheckBox('incredit'));
-        $this->docform->add(new CheckBox('inshipment'));
-
+   
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
         $this->docform->add(new Label('course', 'Курс 1'));
         $this->docform->val->setVisible($common['useval'] == true);
@@ -86,13 +84,11 @@ class GoodsReceipt extends \App\Pages\Base
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
-            $this->docform->incredit->setChecked($this->_doc->headerdata['incredit']);
-            $this->docform->inshipment->setChecked($this->_doc->headerdata['inshipment']);
-
+       
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->customer->setKey($this->_doc->headerdata['customer']);
-            $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
+                        $this->docform->customer->setKey($this->_doc->customer_id);
+                        $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
@@ -142,6 +138,7 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('quantity', $item->quantity));
         $row->add(new Label('price', $item->price));
+        $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('amount', $item->quantity * $item->price));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -231,6 +228,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
+        $this->_doc->customer_id = $this->docform->customer->getKey();        
         if ($this->checkForm() == false) {
             return;
         }
@@ -263,12 +261,8 @@ class GoodsReceipt extends \App\Pages\Base
 
 
         $this->_doc->headerdata = array(
-            'customer' => $this->docform->customer->getKey(),
-            'customer_name' => $this->docform->customer->getText(),
             'store' => $this->docform->store->getValue(),
             'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'incredit' => $this->docform->incredit->isChecked() ? 1 : 0,
-            'inshipment' => $this->docform->inshipment->isChecked() ? 1 : 0,
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -292,26 +286,7 @@ class GoodsReceipt extends \App\Pages\Base
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
-                //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_PAYED);
-                    $this->_doc->datatag = $this->_doc->amount;
-                    $this->_doc->save();
-                }
-                //установлен флаг  в  true
-                if ($this->_doc->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
-                    $this->_doc->datatag = 0;
-                    $this->_doc->save();
-                }
-                //снят флаг  в  доставке
-                if ($this->_doc->headerdata['inshipment'] != 1 && $old->headerdata['inshipment'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_DELIVERED);
-                }
-                //установлен флаг  в  доставке
-                if ($this->_doc->headerdata['inshipment'] == true) {
-                    $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-                }
+                 
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }

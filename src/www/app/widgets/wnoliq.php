@@ -14,7 +14,7 @@ use \App\Entity\Item;
 use \App\DataItem;
 
 /**
- * Виджет для  просмотра
+ * Виджет для  просмотра  неликвидных товаров
  */
 class WNoliq extends \Zippy\Html\PageFragment
 {

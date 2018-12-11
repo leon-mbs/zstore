@@ -28,6 +28,7 @@ class ReturnIssue extends Document
                     "tovar_name" => $value['itemname'],
                     "quantity" => $value['quantity'],
                     "price" => $value['price'],
+                    "msr" => $value['msr'], 
                     "amount" => ($value['quantity'] ) * $value['price']
                 );
             }
@@ -35,10 +36,10 @@ class ReturnIssue extends Document
 
         $firm = \App\System::getOptions("common");
 
-        //  $customer = \App\Entity\Customer::load($this->headerdata["customer"]);
+        
         $header = array('date' => date('d.m.Y', $this->document_date),
             "firmname" => $firm['firmname'],
-            "customername" => $this->headerdata["customer_name"],
+            "customername" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"],
             "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))
@@ -61,8 +62,8 @@ class ReturnIssue extends Document
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
 
-            if ($this->headerdata["customer"] > 0)
-                $sc->setCustomer($this->headerdata["customer"]);
+            
+            $sc->setCustomer($this->customer_id);
             $sc->save();
         }
 

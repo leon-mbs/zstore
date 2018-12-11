@@ -14,8 +14,7 @@ class GoodsReceipt extends Document
 
     public function generateReport() {
 
-        // $customer = \App\Entity\Customer::load($this->headerdata["customer"]);
-
+         
         $i = 1;
 
         $detail = array();
@@ -25,12 +24,13 @@ class GoodsReceipt extends Document
                 "itemcode" => $value['item_code'],
                 "quantity" => $value['quantity'],
                 "price" => $value['price'],
+                 "msr" => $value['msr'],
                 "amount" => $value['amount']
             );
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "customer_name" => $this->headerdata["customer_name"],
+            "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"]
         );
@@ -54,8 +54,8 @@ class GoodsReceipt extends Document
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
-            if ($this->headerdata["customer"] > 0)
-                $sc->setCustomer($this->headerdata["customer"]);
+   
+            $sc->setCustomer($this->customer_id);
 
             $sc->save();
 

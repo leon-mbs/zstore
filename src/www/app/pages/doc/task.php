@@ -51,8 +51,7 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('hours', "0"));
-        $this->docform->add(new CheckBox('incredit'));
-        $this->docform->add(new DropDownChoice('taskstate', array(7 => 'Выполняется', 9 => 'Закрыт', 16 => 'Отложен'), 7));
+        
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", "" ), 0));
@@ -118,16 +117,15 @@ class Task extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->hours->setText($this->_doc->headerdata['hours']);
-            $this->docform->taskstate->setValue($this->_doc->headerdata['taskstate']);
+
             $this->docform->start_date->setDate($this->_doc->headerdata['start_date']);
-            $this->docform->incredit->setChecked($this->_doc->headerdata['incredit']);
-            $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
+              $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
             $this->docform->document_date->setDate($this->_doc->headerdata['end_date']);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
-            $this->docform->customer->setKey($this->_doc->headerdata['customer']);
-            $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
+                        $this->docform->customer->setKey($this->_doc->customer_id);
+                        $this->docform->customer->setText($this->_doc->customer_name);
             $this->OnChangeCustomer($this->docform->customer);
 
             foreach ($this->_doc->detaildata as $item) {
@@ -239,6 +237,7 @@ class Task extends \App\Pages\Base
 
         $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('item', $item->itemname));
+        $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity2', $item->quantity));
         $row->add(new Label('price2', $item->price));
@@ -389,6 +388,7 @@ class Task extends \App\Pages\Base
        $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
+          $this->_doc->customer_id = $this->docform->customer->getKey();
 
 
         if ($this->checkForm() == false) {
@@ -398,20 +398,17 @@ class Task extends \App\Pages\Base
         $this->calcTotal();
 
         $old = $this->_doc->cast();
-        $taskstate = $this->docform->taskstate->getValue();
+        
         $this->_doc->headerdata = array(
             'parea' => $this->docform->parea->getValue(),
             'pricetype' => $this->docform->pricetype->getValue(),
              'pricetypename' => $this->docform->pricetype->getValueName(),
            'store' => $this->docform->store->getValue(),
-            'customer' => $this->docform->customer->getKey(),
-            'customer_name' => $this->docform->customer->getText(),
-            'hours' => $this->docform->hours->getText(),
-            'taskstate' => $this->docform->taskstate->getValue(),
+             'hours' => $this->docform->hours->getText(),
+            
             'start_date' => $this->docform->start_date->getDate(),
             'end_date' => $this->docform->document_date->getDate(),
-            'incredit' => $this->docform->incredit->isChecked(),
-            'totaldisc' => $this->docform->totaldisc->getText(),
+             'totaldisc' => $this->docform->totaldisc->getText(),
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -437,7 +434,7 @@ class Task extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
 
 
-        $this->_doc->datatag = $this->_doc->amount;
+        
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -446,21 +443,13 @@ class Task extends \App\Pages\Base
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-
-                //снят флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] != 1 && $old->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_PAYED);
                 }
-                //установлен флаг  в  долг
-                if ($this->_doc->headerdata['incredit'] == 1) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
-                    $this->_doc->datatag = 0;
-                }
-
-                $this->_doc->updateStatus($taskstate);
+                    
+                 //  $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                    $this->_doc->updateStatus(Document::STATE_INPROCESS);
+ 
 
                 $this->_doc->save();
             } else {
@@ -468,7 +457,11 @@ class Task extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-            App::RedirectBack();
+          if ($isEdited) 
+              App::RedirectBack();
+          else 
+              App::Redirect("\\App\\Pages\\Register\\TaskList");                
+              
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();

@@ -98,6 +98,7 @@ class ProdReceipt extends \App\Pages\Base
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('msr', $item->msr));
         $row->add(new Label('quantity', $item->quantity));
         $row->add(new Label('price', $item->price));
 

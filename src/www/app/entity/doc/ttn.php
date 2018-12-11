@@ -10,7 +10,7 @@ use App\Util;
  * Класс-сущность  документ расходная  накладая
  *
  */
-class GoodsIssue extends Document
+class TTN extends Document
 {
 
     public function generateReport() {
@@ -28,25 +28,35 @@ class GoodsIssue extends Document
                     "tovar_name" => $value['itemname'],
                     "tovar_code" => $value['item_code'],
                     "quantity" => $value['quantity'],
+                     "msr" => $value['msr'],
                     "price" => $value['price'],
-                    "msr" => $value['msr'],
                     "amount" => ($value['quantity'] ) * $value['price']
                 );
             }
         }
 
-        $firm = \App\System::getOptions("common");
+         //$firm = \App\System::getOptions("common");
 
          $header = array('date' => date('d.m.Y', $this->document_date),
             "firmname" => $firm['firmname'],
             "customername" => $this->customer_name,
-            
+            "ship_address" => $this->headerdata["ship_address"],
+            "ship_number" => $this->headerdata["ship_number"],
+            "order" => $this->headerdata["order"],
+            "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
-            "total" => $this->headerdata["total"],
-            "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))
+            "total" => $this->headerdata["total"]
+            
         );
-
-        $report = new \App\Report('goodsissue.tpl');
+        if($this->headerdata["sent_date"]>0){
+            $header['sent_date'] =date('d.m.Y',$this->headerdata["sent_date"]);
+        }
+        if($this->headerdata["delivery_date"]>0){
+            $header['delivery_date'] =date('d.m.Y',$this->headerdata["delivery_date"]);
+        }
+        
+        
+        $report = new \App\Report('ttn.tpl');
 
         $html = $report->generate($header, $detail);
 

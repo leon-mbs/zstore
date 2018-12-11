@@ -77,6 +77,7 @@ class ItemList extends \App\Pages\Base
           $this->itemdetail->editprice5->setVisible(false);  
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
+        $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
@@ -96,6 +97,7 @@ class ItemList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('msr', $item->msr));
         $row->add(new Label('cat_name', $item->cat_name));
         $plist = array();
         if($item->price1>0)$plist[]=$item->price1;
@@ -143,6 +145,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
+        $this->itemdetail->editmsr->setText($this->_item->msr);
     }
 
     public function addOnClick($sender) {
@@ -150,6 +153,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
         $this->itemdetail->clean();
+        $this->itemdetail->editmsr->setText('шт');
         $this->_item = new Item();
     }
 
@@ -180,6 +184,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->item_code = $this->itemdetail->editcode->getText();
 
         $this->_item->bar_code = $this->itemdetail->editbarcode->getText();
+        $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
 
         $this->_item->Save();

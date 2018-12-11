@@ -68,7 +68,8 @@ class Warranty extends \App\Pages\Base
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
 
-            $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
+                        $this->docform->customer->setKey($this->_doc->customer_id);
+                        $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
@@ -112,6 +113,7 @@ class Warranty extends \App\Pages\Base
 
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('sn', $item->sn));
+        $row->add(new Label('msr', $item->msr));
         $row->add(new Label('warranty', $item->warranty));
         $row->add(new Label('quantity', $item->quantity));
         $row->add(new Label('price', $item->price));
@@ -208,10 +210,10 @@ class Warranty extends \App\Pages\Base
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
+         $this->_doc->customer_id = $this->docform->customer->getKey();
 
 
         $this->_doc->headerdata = array(
-            'customer_name' => $this->docform->customer->getText(),
             'pricetypename' => $this->docform->pricetype->getValueName(),
            'pricetype' => $this->docform->pricetype->getValue(),            
         );

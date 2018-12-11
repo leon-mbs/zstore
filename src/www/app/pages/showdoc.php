@@ -64,16 +64,25 @@ class ShowDoc extends \Zippy\Html\WebPage
 
                 echo $xml['content'];
             }
-            /*  if ($type == "pdf") {
+            if ($type == "pdf") {
+              header("Content-type: application/pdf");
+            header("Content-Disposition: attachment;Filename={$filename}.pdf");
+            header("Content-Transfer-Encoding: binary");
+   
+ 
+                $dompdf = new \Dompdf\Dompdf();
+                $dompdf->loadHtml($html);
 
-              $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-              $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-              $pdf->SetFont('freesans', '', 12);
-              $pdf->setPrintHeader(false);
-              $pdf->AddPage();
-              $pdf->writeHTML($html, true, false, true, false, 'J');
-              $pdf->Output("{$filename}.pdf", 'D');
-              } */
+                // (Optional) Setup the paper size and orientation
+                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->set_option('defaultFont', 'DejaVu Sans');
+                // Render the HTML as PDF
+                $dompdf->render();
+
+                // Output the generated PDF to Browser
+                $html = $dompdf->output();
+                echo $html;
+            }   
         } else {
             //$html = "<h4>Печатная форма  не  задана</h4>";
         }

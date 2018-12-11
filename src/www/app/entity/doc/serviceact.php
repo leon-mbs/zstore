@@ -27,7 +27,7 @@ class ServiceAct extends Document
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "customer" => $this->headerdata["customer_name"],
+            "customer" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => $this->amount
         );
@@ -47,8 +47,8 @@ class ServiceAct extends Document
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setService($row['service_id']);
 
-            if ($this->headerdata["customer"] > 0)
-                $sc->setCustomer($this->headerdata["customer"]);
+             
+                $sc->setCustomer($this->customer_id);
             $sc->save();
         }
         $conn->CompleteTrans();

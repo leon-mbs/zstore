@@ -23,17 +23,17 @@ use \App\Helper as H;
 use \App\Application as App;
 
 /**
- * Страница  ввода  расходной  накладной
+ * Страница  ввода  товарно транспортной  накладной
  */
-class GoodsIssue extends \App\Pages\Base
+class TTN extends \App\Pages\Base
 {
 
     public $_tovarlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-    private $_discount;
-     
+    
+    private $_order_id = 0;
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -42,6 +42,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
+        $this->docform->add(new Date('sent_date'));
+        $this->docform->add(new Date('delivery_date'));
 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
@@ -49,15 +51,15 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
-         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
+        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
-        
+        $this->docform->add(new TextInput('order'));
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new CheckBox('planned'));
+        $this->docform->add(new TextInput('ship_number'));
+        $this->docform->add(new TextInput('ship_address'));   
  
-        $this->docform->add(new Label('discount'))->setVisible(false);
- 
-        $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -92,31 +94,82 @@ class GoodsIssue extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
-            $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
+            
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->sent_date->setDate($this->_doc->headerdata['sent_date']);
+            $this->docform->delivery_date->setDate($this->_doc->headerdata['delivery_date']);
+            $this->docform->ship_number->setText($this->_doc->headerdata['ship_number']);
+            $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
+                $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->notes->setText($this->_doc->notes);
-            
-              
+            $this->docform->order->setText($this->_doc->headerdata['order']);
+            $this->_order_id = $this->_doc->headerdata['order_id'];
+
+             
             foreach ($this->_doc->detaildata as $item) {
                 $stock = new Stock($item);
                 $this->_tovarlist[$stock->stock_id] = $stock;
             }
         } else {
-            $this->_doc = Document::create('GoodsIssue');
+            $this->_doc = Document::create('TTN');
             $this->docform->document_number->setText($this->_doc->nextNumber());
 
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-             
+                    if ($basedoc->meta_name == 'Order') {
+                        $this->_order_id = $basedocid;
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+                        $this->OnChangeCustomer($this->docform->customer);
+                        
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->_orderid = $basedocid;
+                        $this->docform->order->setText($basedoc->document_number);
+                        
+                        $notfound = array();
+                        $order = $basedoc->cast();
+                        
+                        $ttn = false;
+                        //проверяем  что есть ТТН
+                        $list = $order->ConnectedDocList();
+                        foreach($list as $d){
+                            if($d->meta_name=='TTN'){
+                                 $ttn = true;
+                            }
+                        }                          
+                        
+                        if($ttn)  {
+                            $this->setWarn('У заказа  уже  есть ТТН');
+                        }
+       
+                        foreach ($order->detaildata as $item) {
+                                $stlist = Stock::pickup($order->headerdata['store'], $item['item_id'], $item['quantity']);
+                                if (count($stlist)==0) {
+                                    $notfound[] = $item['itemname']."({$item['quantity']}шт) ";;
+                                } else {
+                                    foreach($stlist as $st){
+                                      $st->price = $item['price'];
+                                      $this->_tovarlist[$st->stock_id] = $st;
+                                    }
+                                }
+                             
+                        }
+                        //если  не  все  партии найдены
+                        if (count($notfound) > 0) {
+                            $this->setWarn('Не найдено достаточное количество для  ' . implode(',', $notfound));
+                             
+                        }
+                    }                    
                 }
             }
         }
@@ -132,10 +185,10 @@ class GoodsIssue extends \App\Pages\Base
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('partion', $item->partion));
         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity', $item->quantity));
         $row->add(new Label('price', $item->price));
-        $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('amount', $item->price * $item->quantity));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -225,24 +278,32 @@ class GoodsIssue extends \App\Pages\Base
     public function savedocOnClick($sender) {
        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
          $this->_doc->document_number = $this->docform->document_number->getText();
-        $this->_doc->document_date = strtotime($this->docform->document_date->getText());
+        $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
-        
+        $this->_doc->order = $this->docform->order->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->checkForm() == false) {
             return;
         }
+        $order = Document::load($this->_order_id);
 
         $this->calcTotal();
         $old = $this->_doc->cast();
 
         $this->_doc->headerdata = array(
+             'order' => $this->docform->order->getText(),
+             'ship_address' => $this->docform->ship_address->getText(),
+             'ship_number' => $this->docform->ship_number->getText(),
+          
             'store' => $this->docform->store->getValue(),
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
+            'emp_id' => $this->docform->emp->getValue(),
+            'emp_name' => $this->docform->emp->getValueName(),
+            
             'pricetype' => $this->docform->pricetype->getValue(),
             'pricetypename' => $this->docform->pricetype->getValueName(),
-
-            'total' => $this->docform->total->getText()
+            'delivery_date' => $this->docform->delivery_date->getDate(),
+            'sent_date' => $this->docform->sent_date->getDate(),
+            'order_id' => $this->_order_id 
         );
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
@@ -264,23 +325,26 @@ class GoodsIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-
-                    
-                
-                
+                $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+                $order = Document::load($this->_doc->headerdata['order_id']);
+                if($order instanceof Document){
+                   $order->updateStatus(Document::STATE_INSHIPMENT);                    
+                }
  
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
-
-
+ 
             if ($this->_basedocid > 0) {
                 $this->_doc->AddConnectedDoc($this->_basedocid);
                 $this->_basedocid = 0;
             }
             $conn->CommitTrans();
-            App::RedirectBack();
+         if ($isEdited) 
+              App::RedirectBack();
+          else 
+              App::Redirect("\\App\\Pages\\Register\\TTNList");                
+
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -344,7 +408,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
-        $price = $price - $price / 100 * $this->_discount;
+        
 
 
         $this->editdetail->editprice->setText($price);
@@ -358,19 +422,14 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function OnChangeCustomer($sender) {
-        $this->_discount = 0;
+        
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-            $this->_discount = $customer->discount;
+            
+            $this->docform->ship_address->setText($customer->address);
         }
-        $this->calcTotal();
-        if ($this->_discount > 0) {
-            $this->docform->discount->setVisible(true);
-            $this->docform->discount->setText('Скидка ' . $this->_discount . '%');
-        } else {
-            $this->docform->discount->setVisible(false);
-        }
+         
     }
 
     public function OnAutoItem($sender) {
@@ -379,44 +438,11 @@ class GoodsIssue extends \App\Pages\Base
         return Stock::findArrayEx("store_id={$store_id} and qty>0    and (itemname like {$text} or item_code like {$text}) ");
     }
 
-    //добавление нового контрагента
-    public function addcustOnClick($sender) {
-        $this->editcust->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->editcust->editcustname->setText('');
-        $this->editcust->editphone->setText('');
-    }
-
-    public function savecustOnClick($sender) {
-        $custname = trim($this->editcust->editcustname->getText());
-        if (strlen($custname) == 0) {
-            $this->setError("Не введено имя");
-            return;
-        }
-        $cust = new Customer();
-        $cust->customer_name = $custname;
-        $cust->phone = $this->editcust->editcustname->getText();
-        $cust->save();
-        $this->docform->customer->setText($cust->customer_name);
-        $this->docform->customer->setKey($cust->customer_id);
-
-        $this->editcust->setVisible(false);
-        $this->docform->setVisible(true);
-        $this->docform->discount->setVisible(false);
-        $this->_discount = 0;
-    }
-
-    public function cancelcustOnClick($sender) {
-        $this->editcust->setVisible(false);
-        $this->docform->setVisible(true);
-    }
-     public function OnChangePriceType($sender) {
+   
+    public function OnChangePriceType($sender) {
             foreach ($this->_tovarlist as $stock) {
               $item = Item::load($stock->item_id);
               $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
-              $stock->price = $price - $price / 100 * $this->_discount;
-
             }    
             $this->calcTotal();
             $this->docform->detail->Reload();

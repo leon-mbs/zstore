@@ -27,10 +27,7 @@
                         <input zippy="planned" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="planned">Запланированный</label>
                     </div>                     
-                    <div class="  form-check">
-                        <input zippy="incredit" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="incredit">Не оплачен</label>
-                    </div>                     
+                                       
                     <div class="form-group  ">
                         <label for="notes" >Примечание</label>
 
@@ -47,27 +44,27 @@
                         <tr>
                             <th>Название</th>
 
-                            <th width="40" style="text-align: right;">Кол.</th>
-                            <th width="100" style="text-align: right;">Цена</th>
+                            <th width="40" class="text-right">Кол.</th>
+                            <th width="100" class="text-right">Цена</th>
 
-                            <th width="67" style="text-align: right;">Сумма</th>
+                            <th width="67" class="text-right">Сумма</th>
 
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
 
-                            <td zippy="quantity"  style="text-align: right;"></td>
-                            <td zippy="price"  style="text-align: right;"></td>
+                            <td zippy="quantity"  class="text-right"></td>
+                            <td zippy="price"  class="text-right"></td>
 
-                            <td zippy="amount"  style="text-align: right;"></td>
+                            <td zippy="amount"  class="text-right"></td>
 
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="3"  style="text-align: right;">Всего:</td>
-                            <td zippy="total"  style="text-align: right;"></td>
+                            <td colspan="3"  class="text-right">Всего:</td>
+                            <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
 
@@ -81,7 +78,7 @@
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="Выполнен" class="btn btn-outline-primary  ">
 
                 </div>
             </div>

@@ -11,7 +11,7 @@ class Price extends \App\RestFul
 
     //Демо
     public function post($params) {
-         
+        $this->OKAnswer(); 
     }
     public function get($params) {
          

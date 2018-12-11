@@ -16,7 +16,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_NEW = 1;     //Новый
     const STATE_EDITED = 2;  //Отредактирован
     const STATE_CANCELED = 3;      //Отменен
-    const STATE_EXECUTED = 5;      // Проведен
+    const STATE_EXECUTED = 5;      // Проведен, выполнен
     const STATE_APPROVED = 4;      //  Утвержден
     const STATE_DELETED = 6;       //  Удален
     const STATE_INPROCESS = 7; // в  работе
@@ -25,7 +25,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_WP = 10; // Ждет оплату
     const STATE_INSHIPMENT = 11; // Отгружен
     const STATE_PAYED = 12; // оплачен
-    const STATE_PART_PAYED = 13; // частично оплачен
+     const STATE_PART_PAYED = 13; // частично оплачен
     const STATE_DELIVERED = 14; // доставлен
     const STATE_REFUSED = 15; // отклонен
     const STATE_SHIFTED = 16; // отложен
@@ -33,7 +33,7 @@ class Document extends \ZCL\DB\Entity
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
 
-    //const EX_PDF = 3;    //  PDF
+    const EX_PDF = 3;    //  PDF
     // const EX_XML_GNAU = 4;
 
     /**
@@ -49,10 +49,18 @@ class Document extends \ZCL\DB\Entity
      * @var mixed
      */
     public $detaildata = array();
+    
+    /**
+    * массив статусов
+    * 
+    * @var mixed
+    */
+    private $logdata = array();
 
     protected function init() {
         $this->document_id = 0;
         $this->state = 0;
+        $this->customer_id = 0;
         $this->datatag = 0;
         $this->document_number = '';
         $this->notes = '';
@@ -141,7 +149,19 @@ class Document extends \ZCL\DB\Entity
 
             $this->content .= "</row>";
         }
-        $this->content .= "</detail></doc>";
+        $this->content .= "</detail> ";
+        $this->content .= "<states> ";
+          foreach ($this->logdata as $state) {
+            $this->content .= "<staterow>";
+            $this->content .= "<stateno>{$state->state}</stateno>";
+            $this->content .= "<stateuser>{$state->user}</stateuser>";
+            $this->content .= "<stateusername><![CDATA[{$state->username}]]></stateusername>";
+            $this->content .= "<statehost>{$state->hostname}</statehost>";
+            $this->content .= "<statedt>{$state->updatedon}</statedt>";
+            
+            $this->content .= "</staterow>";
+          }
+        $this->content .= "</states></doc>";
     }
 
     /**
@@ -166,6 +186,23 @@ class Document extends \ZCL\DB\Entity
             }
             $this->detaildata[] = $_row;
         }
+        $this->logdata = array();
+          $result = $xml->xpath('//states');
+        
+          if((bool) (count($result)))
+          {
+             foreach ($xml->states->children()  as $row) {
+                $state = new \App\DataItem();
+                $state->state = (int)$row->stateno;
+                $state->hostname = (string)$row->statehost;
+                $state->user = (int)$row->stateuser;
+                $state->username = (string)$row->stateusername;
+                $state->updatedon = (int)$row->statedt ;            
+                $this->logdata[] = $state;
+             }              
+          }
+     
+        
     }
 
     /**
@@ -240,9 +277,7 @@ class Document extends \ZCL\DB\Entity
 
     protected function beforeDelete() {
 
-        if (false == $this->canDeleted()) {
-            return false;
-        }
+ 
 
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from document_log  where document_id =" . $this->document_id);
@@ -297,30 +332,7 @@ class Document extends \ZCL\DB\Entity
         return Document::find($where);
     }
 
-    /**
-     * список записей   в  логе   состояний
-     *
-     */
-    public function getLogList() {
-
-
-        $conn = \ZDB\DB::getConnect();
-        $rs = $conn->Execute("select l.*,u.username from  document_log l left join  users_view u on l.user_id = u.user_id where document_id={$this->document_id} order by  log_id");
-        $list = array();
-        foreach ($rs as $row) {
-            $item = new \App\DataItem();
-            $item->hostname = $row['hostname'];
-            $item->updatedon = date('Y-m-d H:i', strtotime($row['updatedon']));
-            $item->user = $row['username'];
-             
-
-            $item->state = self::getStateName($row['document_state']);
-            $list[] = $item;
-        }
-
-        return $list;
-    }
-
+  
     /**
      * Обновляет состояние  документа
      *
@@ -340,46 +352,19 @@ class Document extends \ZCL\DB\Entity
         }
 
         $this->state = $state;
+        $this->insertLog($state);
         $this->save();
 
-        $conn = \ZDB\DB::getConnect();
-        $sql = "update documents set  state={$this->state}  where document_id = {$this->document_id}";
-        $conn->Execute($sql);
+      //  $conn = \ZDB\DB::getConnect();
+     //   $sql = "update documents set  state={$this->state}  where document_id = {$this->document_id}";
+     //   $conn->Execute($sql);
 
-        $this->insertLog($state);
+        
 
         return true;
     }
 
-    /**
-     *
-     *  запись состояния в  лог документа
-     * @param mixed $state
-     */
-     public function insertLog($state ) {
-        $conn = \ZDB\DB::getConnect();
-     
-        $host = $conn->qstr($_SERVER["REMOTE_ADDR"]);
-        $user = \App\System::getUser()->getUserID();
-        $sql = "insert into document_log (document_id,user_id,document_state,updatedon,hostname ) values ({$this->document_id},{$user},{$state},now(),{$host} )";
-        $conn->Execute($sql);
-    }
-    /**
-     *  проверка  был ли документ в  таких состояния
-     * 
-     * @param mixed $states
-     */
-    public function checkStates(array $states) {
-        $stlist = "0";
-        foreach ($states as $state) {
-            $stlist = $stlist . "," . $state;
-        }
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "select count(*) from document_log where document_id={$this->document_id} and document_state in({$stlist}) ";
-        return $conn->GetOne($sql) > 0;
-    }
-
+ 
     /**
      * Возвращает название  статуса  документа
      *
@@ -464,14 +449,14 @@ class Document extends \ZCL\DB\Entity
      * Список  доступных сстояний в зависимости  от текузего
      * может  переружатся  для  уточнения  в  зависимости  от типа  документа
      */
-    public function getStatesList() {
+   /* public function getStatesList() {
         $list = array();
         if ($this->state == self::STATE_CANCELED || $this->state == self::STATE_EDITED || $this->state == self::STATE_NEW) {
             
         }
 
         return $list;
-    }
+    } */
 
     /**
      * Возвращает  список  типов экспорта
@@ -479,7 +464,7 @@ class Document extends \ZCL\DB\Entity
      *
      */
     public function supportedExport() {
-        return array(self::EX_EXCEL);
+        return array(self::EX_EXCEL,self::EX_PDF);
     }
 
     /**
@@ -523,7 +508,7 @@ class Document extends \ZCL\DB\Entity
 
         $cnt = $conn->GetOne("select  count(*) from entrylist where  document_id = {$this->document_id}  ");
         if ($cnt > 0) {
-            System::setErrorMsg("У докуинта  есть записи в аалитике");
+            System::setErrorMsg("У докуинта  есть записи в аналитике");
             return false;
         }
 
@@ -549,12 +534,85 @@ class Document extends \ZCL\DB\Entity
      * 
      */
     public function canCanceled() {
-        $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_PART_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
             System::setWarnMsg("У документа были оплаты или доставки");
             return true;
         }
         return true;
+    }
+    //добавляет оплату
+     public function addPayment($user, $amount, $comment = '') {
+        $list = $this->getPayments();
+        $item = new \App\DataItem();
+        $item->user = $user;
+        $item->amount = $amount;
+        $item->comment = $comment;
+        $item->date = time();
+        $list[] = $item;
+
+        $this->headerdata['pays'] = base64_encode(serialize($list));
+    }
+
+    //возвращает список оплат
+    public function getPayments() {
+        if (strlen($this->headerdata['pays']) > 0) {
+            return @unserialize(base64_decode($this->headerdata['pays']));
+        }
+
+        return array();
+    }
+   
+   
+    /**
+     *
+     *  запись состояния в  лог документа
+     * @param mixed $state
+     */
+     public function insertLog($state ) {
+       
+        $host = Document::qstr($_SERVER["REMOTE_ADDR"]);
+        $user = \App\System::getUser() ;
+         
+        $item = new \App\DataItem();
+        $item->state = $state;
+        $item->hostname = $host;
+        $item->user = $user->user_id;
+        $item->username = $user->username;
+        $item->updatedon = time();
+        $this->logdata[] = $item;
+
+        
+         
+        
+    }
+   /**
+     * список записей   в  логе   состояний
+     *
+     */
+    public function getLogList() {
+
+ 
+
+        return $this->logdata;
+    }
+    /**
+     *  проверка  был ли документ в  таких состояниях
+     * 
+     * @param mixed $states
+     */
+    public function checkStates(array $states) {
+     
+        
+         
+        foreach ($this->logdata as $srow) {
+            foreach ($states as $state) {
+                if($srow->state == $state) return true; 
+            }
+        }   
+        
+        return false;
+        
     }
 
 }

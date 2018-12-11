@@ -10,7 +10,7 @@
                 <form zippy="filter" class="form-inline">
 
 
-                    <input placeholder="Поиск..." class="form-control mr-sm-2" type="text" zippy="searchkey">
+                    <input autocomplete="off" placeholder="Имя  или  код..." class="form-control mr-sm-2" type="text" zippy="searchkey">
                     <label for="searchstore">склад</label>
 
                     <select   class="form-control mr-sm-2" zippy="searchstore">
@@ -37,6 +37,7 @@
 
                         <th>Артикул</th>
                         <th>Категория</th>
+                        <th>Ед.</th>
                         <th  style="text-align: right;">Зак. цена</th>
                         <th  style="text-align: right;">Кол.</th>
                         <th  style="text-align: right;">На сумму</th>
@@ -50,6 +51,7 @@
 
                         <td zippy="code"></td>
                         <td zippy="cat_name"></td>
+                        <td zippy="msr"></td>
                         <td zippy="partion" style="text-align: right;"></td>
                         <td zippy="qty" style="text-align: right;"></td>
                         <td zippy="amount" style="text-align: right;"></td>

@@ -22,6 +22,7 @@ class Warranty extends Document
                 "price" => $value['price'],
                 "amount" => $value['quantity'] * $value['price'],
                 "sn" => $value['sn'],
+                 "msr" => $value['msr'],
                 "warranty" => $value['warranty']
             );
             $total += $value['quantity'] * $value['price'];
@@ -32,7 +33,7 @@ class Warranty extends Document
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "firmname" => $firm['name'],
-            "customer" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : '',
+            "customer" =>  $this->customer_name ,
             "document_number" => $this->document_number
         );
 

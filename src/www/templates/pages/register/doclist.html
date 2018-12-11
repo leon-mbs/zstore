@@ -1,7 +1,7 @@
 <html>
     <body>
         <div class="row">
-            <div class="col-12 col-lg-10">
+            <div class="col-12 col-чд-10">
 
                 <h3>Журнал документов </h3>
 
@@ -17,28 +17,22 @@
                         <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
 
 
-                        <label for="searchnumber"> Тип </label>
+                        <label for="doctype"> Тип </label>
                         <select class="form-control mr-sm-2  " zippy="doctype">
                             <option value="0">Не выбран</option>
                         </select>
-
+                           <label for="searchcust"> Контрагент  </label>
+                        <input placeholder="Начните вводить..." class="form-control mr-2" type="text" zippy="searchcust"  >
+   
+                       
                         <label for="searchnumber"> № </label>
 
                         <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
-                         <!--
-                        <div class="form-check   ">
+                        
+ 
 
-                            <input class="form-check-input"  type="checkbox" zippy="onlymy">
-                            <label class="form-check-label mr-sm-3" for="onlymy">Только мои</label>
-                        </div> 
-                        <label for="rowscnt"> Строк  </label>
-                        <select class="form-control mr-sm-2  " zippy="rowscnt">
-
-                        </select>
-                        -->
-
-                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
-
+                        <input type="submit" class="mr-2  btn btn-outline-success  " value="ОК">
+                        <a zippy="erase" title="Сбросить фильтр"><i class="fa fa-eraser"></i></a>
 
 
 
@@ -49,9 +43,10 @@
                         <th>Документ</th>
                         <th>Номер</th>
                         <th>Дата</th>
+                        <th>Контрагент</th>
                         <th style="text-align: right;">Сумма</th>
                         <th>Статус</th>
-                        <th> </th>
+                        
                         <th>Примечание</th>
                         <th></th>
                         <th></th>
@@ -62,15 +57,16 @@
                             <td zippy="name"></td>
                             <td zippy="number"></td>
                             <td style="white-space:   nowrap" zippy="date"></td>
+                            <td zippy="cust"  ></td>
                             <td zippy="amount" style="text-align: right;"></td>
+                            
                             <td style="white-space:   nowrap" zippy="state"> </td>
-                            <td style="white-space:   nowrap"  ><i title="К оплате" zippy="spay"  class="far fa-credit-card"></i> <i title="В доставке" zippy="sship"  class="fas fa-truck"></i> <i title="Запланированный" zippy="splan" class="far fa-calendar-alt"></i>  </td>
-                            <td zippy="notes"></td>
+                             <td zippy="notes"></td>
 
                             <td style="white-space:   nowrap">
                                 <a zippy="show" title="Просмотр"><i class="fa fa-search-plus"></i></a>
                                 <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></a>
-                                <a zippy="cancel" title="Отменить проведение"><i class="fa fa-undo"></i> </a>
+                                <a zippy="cancel" title="Отменить выполнение"><i class="fa fa-undo"></i> </a>
 
                             </td>
                             <td>
@@ -79,7 +75,7 @@
                             <td>
                                 <div class="btn-group" zippy="basedon">
                                     <button title="Создать на  основании" type="button"
-                                            class="btn btn-light btn-xs  dropdown-toggle" data-toggle="dropdown">
+                                            class="btn btn-light btn-sm  dropdown-toggle" data-toggle="dropdown">
                                         Создать <span class="caret"></span>
                                     </button>
                                     <div  class="dropdown-menu" role="menu" zippy="basedlist">

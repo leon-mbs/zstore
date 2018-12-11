@@ -14,10 +14,11 @@
         <div class="tab-content">
             <div id="printtab" class="tab-pane  active">
                 &nbsp;<span style=" font-weight: bolder;">Экспорт:</span>
-                <a zippy="print" target="_blank" title="Друк"><i class="fa fa-print"></i></a>
-                <a zippy="html" target="_blank" title="HTML"><i class="fa fa-code"></i></a>
-                <a zippy="word" target="_blank" title="Word"><i style="position: relative;top: -2px;" class="fa fa-file-word"></i></a>
-                <a zippy="excel" target="_blank" title="Excel"><i style="position: relative;top: -2px;" class="fa fa-file-excel"></a>
+                <a zippy="print" target="_blank" title="Печать"><i   class="fa fa-print"></i></a>
+                <a zippy="html" target="_blank" title="HTML"><i   class="fa fa-code"></i></a>
+                <a zippy="word" target="_blank" title="Word"><i   class="fa fa-file-word"></i></a>
+                <a zippy="excel" target="_blank" title="Excel"><i   class="fa fa-file-excel"></a>
+                <a zippy="pdf" target="_blank" title="PDF"><i   class="fa fa-file-pdf"></a>
 
                 <br>
          <div zippy="preview" class="table-responsive-sm" >
@@ -110,7 +111,7 @@
 
 
                     <div   class="col-12 col-md-6 col-xl-4 " >
-
+                        <h5>История изменений статусов</h5>
                         <table class="table table-sm">
                             <tr>
                                 <th>Статус</th>
@@ -128,7 +129,25 @@
                             </tr>
                         </table>
                     </div>
-
+                <div   class="col-12 col-md-6 col-xl-4 " >
+                        <h5>История оплат</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Дата</th>
+                                <th class="text-right">Сумма</th>
+                                <th>Автор</th>
+                                <th>Коментарий</th>
+                                
+                            </tr>
+                            <tr zippy="dw_paylist" style="font-size: smaller ">
+                                <td zippy="paydate"></td>
+                                <td  class="text-right " zippy="payamount"></td>
+                                <td zippy="payuser"></td>
+                                <td zippy="paycomment"></td>
+                                 
+                            </tr>
+                        </table>
+                    </div>
                 </div>
 
 

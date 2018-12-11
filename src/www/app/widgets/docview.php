@@ -28,6 +28,7 @@ class DocView extends \Zippy\Html\PageFragment
     public $_statelist = array();
     public $_fileslist = array();
     public $_msglist = array();
+    public $_paylist = array();
 
     public function __construct($id) {
         parent::__construct($id);
@@ -36,12 +37,15 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new RedirectLink('html', ""))->setVisible(false);
         $this->add(new RedirectLink('word', ""));
         $this->add(new RedirectLink('excel', ""));
+        $this->add(new RedirectLink('pdf', ""));
 
         $this->add(new Label('preview'));
 
         $this->add(new DataView('reldocs', new ArrayDataSource(new Prop($this, '_reldocs')), $this, 'relDoclistOnRow'));
 
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
+     
+        $this->add(new DataView('dw_paylist', new ArrayDataSource(new Prop($this, '_paylist')), $this, 'payListOnRow'));
 
         $this->add(new Form('addrelform'))->onSubmit($this, 'OnReldocSubmit');
         $this->addrelform->add(new AutocompleteTextInput('addrel'))->onText($this, 'OnAddDoc');
@@ -70,6 +74,8 @@ class DocView extends \Zippy\Html\PageFragment
         $exportlist = $doc->supportedExport();
         $this->word->setVisible(in_array(Document::EX_WORD, $exportlist));
         $this->excel->setVisible(in_array(Document::EX_EXCEL, $exportlist));
+        $this->pdf->setVisible(in_array(Document::EX_EXCEL, $exportlist));
+        $this->pdf->setVisible(in_array(Document::EX_PDF, $exportlist));
 
         $reportpage = "App/Pages/ShowDoc";
 
@@ -82,13 +88,19 @@ class DocView extends \Zippy\Html\PageFragment
         $this->word->params = array('doc', $doc->document_id);
         $this->excel->pagename = $reportpage;
         $this->excel->params = array('xls', $doc->document_id);
+        $this->pdf->pagename = $reportpage;
+        $this->pdf->params = array('pdf', $doc->document_id);
 
         //список связаных  документов
         $this->updateDocs();
 
-
+        //статусы
         $this->_statelist = $this->_doc->getLogList();
         $this->dw_statelist->Reload();
+  
+        //оплаты
+        $this->_paylist = $this->_doc->getPayments();
+        $this->dw_paylist->Reload();
 
         //список приатаченных  файлов
         $this->updateFiles();
@@ -118,17 +130,27 @@ class DocView extends \Zippy\Html\PageFragment
 
     //открыть связанный документ
     public function detailDocOnClick($sender) {
-        $id = $sender->owner->getDataItem()->document_id;
-        App::Redirect('\App\Pages\Register\DocList', $id);
+        //$id = $sender->owner->getDataItem()->document_id;
+        //App::Redirect('\App\Pages\Register\DocList', $id);
+        $this->setDoc($sender->owner->getDataItem());
     }
 
     //вывод строки  лога состояний
     public function stateListOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('statehost', $item->hostname));
-        $row->add(new Label('statedate', $item->updatedon));
-        $row->add(new Label('stateuser', $item->user));
-        $row->add(new Label('statename', $item->state));
+        $row->add(new Label('statedate', date('Y.m.d H:i',$item->updatedon)));
+        $row->add(new Label('stateuser', $item->username));
+        $row->add(new Label('statename', Document::getStateName($item->state)));
+    }
+   
+   //вывод строки  оплат
+    public function payListOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('paydate',date('Y-m-d',$item->date) ));
+        $row->add(new Label('payamount', $item->amount));
+        $row->add(new Label('payuser', $item->user));
+        $row->add(new Label('paycomment', $item->comment));
     }
 
     /**

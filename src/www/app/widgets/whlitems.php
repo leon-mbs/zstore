@@ -14,7 +14,7 @@ use \App\Entity\Item;
 use \Carbon\Carbon;
 
 /**
- * Виджет для  просмотра
+ * Виджет для  просмотра состояния склада
  */
 class WHLItems extends \Zippy\Html\PageFragment
 {

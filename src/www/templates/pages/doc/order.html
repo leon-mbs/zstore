@@ -4,7 +4,7 @@
 
 
         <form zippy="docform">
-            <h3>Заказ с онлайн каталога </h3>
+            <h3>Заказ  </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -67,14 +67,7 @@
                             <input zippy="address"    class="form-control" >
                           
                     </div>           
-                    <div class="form-check">
-                        <input zippy="incredit" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="incredit">Не оплачен</label>
-                    </div>                     
-                    <div class="form-check">
-                        <input zippy="inshipment" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="inshipment">В  доставке</label>
-                    </div>   
+                       
                 </div>
             </div>
             <div class="row">
@@ -85,29 +78,31 @@
                         <tr>
                             <th>Название</th>
                             <th  >Код</th>
-                            <th  >Партия</th>
+                            <th  >Ед.</th>
+                         
 
-                            <th   style="text-align: right;">Кол.</th>
-                            <th    style="text-align: right;" >Цена</th>
+                            <th   class="text-right">Кол.</th>
+                            <th    class="text-right" >Цена</th>
 
-                            <th style="text-align: right;">Сумма</th>
+                            <th class="text-right">Сумма</th>
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail">
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
-                            <td zippy="partion"></td>
+                            <td zippy="msr"></td>
+                            
 
-                            <td zippy="quantity"  style="text-align: right;"></td>
-                            <td zippy="price"  style="text-align: right;"></td>
+                            <td zippy="quantity"  class="text-right"></td>
+                            <td zippy="price"  class="text-right"></td>
 
-                            <td zippy="amount"  style="text-align: right;"></td>
+                            <td zippy="amount"  class="text-right"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i> <a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="5"  style="text-align: right;">Всего:</td>
-                            <td zippy="total"  style="text-align: right;"></td>
+                            <td colspan="4"  class="text-right">Всего:</td>
+                            <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
 
@@ -118,8 +113,9 @@
             <div class="row">
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
-                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    
+                   &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+                   &nbsp;<input zippy="execdoc" type="submit" value="На  выполнение" class="btn btn-outline-primary  ">
+                   
 
 
                 </div>
@@ -139,12 +135,12 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity" >Количество</label>
-                        <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9]+"  style="width: 70px;">
+                        <input autocomplete="off" class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9]+"  style="width: 70px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice" >Цена  </label>
-                        <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9]+"
+                        <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9]+"
                                style="width: 70px;">
 
                     </div>

@@ -42,21 +42,6 @@ CREATE TABLE `docrel` (
   KEY `doc2` (`doc2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Связь между  документами';
 /*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `document_log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `document_log` (
-  `log_id` int(11) NOT NULL AUTO_INCREMENT,
-  `hostname` varchar(128) DEFAULT NULL,
-  `document_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `document_state` tinyint(4) NOT NULL,
-  `updatedon` datetime NOT NULL,
-  PRIMARY KEY (`log_id`),
-  KEY `document_id` (`document_id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -71,9 +56,12 @@ CREATE TABLE `documents` (
   `state` tinyint(4) NOT NULL,
   `datatag` int(11) DEFAULT NULL,
   `notes` varchar(255) NOT NULL,
+  `customer_id` int(11) DEFAULT '0',
   PRIMARY KEY (`document_id`),
-  KEY `document_date` (`document_date`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+  KEY `document_date` (`document_date`),
+  KEY `customer_id` (`customer_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -88,6 +76,8 @@ SET character_set_client = utf8;
  1 AS `amount`,
  1 AS `meta_id`,
  1 AS `username`,
+ 1 AS `customer_id`,
+ 1 AS `customer_name`,
  1 AS `state`,
  1 AS `notes`,
  1 AS `datatag`,
@@ -121,7 +111,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -132,7 +122,7 @@ CREATE TABLE `entrylist` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
+/*!50003 CREATE  TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -157,7 +147,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
+/*!50003 CREATE  TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -282,6 +272,7 @@ CREATE TABLE `items` (
   `item_code` varchar(64) DEFAULT NULL,
   `bar_code` varchar(64) DEFAULT NULL,
   `cat_id` int(11) NOT NULL,
+  `msr` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`item_id`),
   KEY `item_code` (`item_code`),
   KEY `itemname` (`itemname`),
@@ -299,6 +290,7 @@ SET character_set_client = utf8;
  1 AS `detail`,
  1 AS `item_code`,
  1 AS `bar_code`,
+ 1 AS `msr`,
  1 AS `cat_id`,
  1 AS `cat_name`,
  1 AS `qty`*/;
@@ -342,7 +334,7 @@ CREATE TABLE `metadata` (
   `disabled` tinyint(4) NOT NULL,
   `smartmenu` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`meta_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `notifies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -553,6 +545,7 @@ SET character_set_client = utf8;
  1 AS `itemname`,
  1 AS `item_code`,
  1 AS `cat_id`,
+ 1 AS `msr`,
  1 AS `bar_code`,
  1 AS `storename`,
  1 AS `qty`*/;
@@ -619,7 +612,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`datatag` AS `datatag`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc` from ((`documents` `d` join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) */;
+/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`datatag` AS `datatag`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc` from (((`documents` `d` join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -653,12 +646,12 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `items_view` AS select `items`.`item_id` AS `item_id`,`items`.`itemname` AS `itemname`,`items`.`description` AS `description`,`items`.`detail` AS `detail`,`items`.`item_code` AS `item_code`,`items`.`bar_code` AS `bar_code`,`items`.`cat_id` AS `cat_id`,`item_cat`.`cat_name` AS `cat_name`,(select sum(`store_stock`.`qty`) from `store_stock` where (`store_stock`.`item_id` = `items`.`item_id`)) AS `qty` from (`items` left join `item_cat` on((`items`.`cat_id` = `item_cat`.`cat_id`))) */;
+/*!50001 VIEW `items_view` AS select `items`.`item_id` AS `item_id`,`items`.`itemname` AS `itemname`,`items`.`description` AS `description`,`items`.`detail` AS `detail`,`items`.`item_code` AS `item_code`,`items`.`bar_code` AS `bar_code`,`items`.`msr` AS `msr`,`items`.`cat_id` AS `cat_id`,`item_cat`.`cat_name` AS `cat_name`,(select sum(`store_stock`.`qty`) from `store_stock` where (`store_stock`.`item_id` = `items`.`item_id`)) AS `qty` from (`items` left join `item_cat` on((`items`.`cat_id` = `item_cat`.`cat_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -718,12 +711,12 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `store_stock_view` AS select `st`.`stock_id` AS `stock_id`,`st`.`item_id` AS `item_id`,`st`.`partion` AS `partion`,`st`.`store_id` AS `store_id`,`i`.`itemname` AS `itemname`,`i`.`item_code` AS `item_code`,`i`.`cat_id` AS `cat_id`,`i`.`bar_code` AS `bar_code`,`stores`.`storename` AS `storename`,`st`.`qty` AS `qty` from ((`store_stock` `st` join `items` `i` on((`i`.`item_id` = `st`.`item_id`))) join `stores` on((`stores`.`store_id` = `st`.`store_id`))) where (`st`.`deleted` <> 1) */;
+/*!50001 VIEW `store_stock_view` AS select `st`.`stock_id` AS `stock_id`,`st`.`item_id` AS `item_id`,`st`.`partion` AS `partion`,`st`.`store_id` AS `store_id`,`i`.`itemname` AS `itemname`,`i`.`item_code` AS `item_code`,`i`.`cat_id` AS `cat_id`,`i`.`msr` AS `msr`,`i`.`bar_code` AS `bar_code`,`stores`.`storename` AS `storename`,`st`.`qty` AS `qty` from ((`store_stock` `st` join `items` `i` on((`i`.`item_id` = `st`.`item_id`))) join `stores` on((`stores`.`store_id` = `st`.`store_id`))) where (`st`.`deleted` <> 1) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
