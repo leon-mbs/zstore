@@ -58,7 +58,7 @@ class WHLItems extends \Zippy\Html\PageFragment
                         group  by  ss.item_id,  ss.store_id,ss.itemname,ss.storename
                         order  by  ss.itemname ";
 
-             
+
             $rs = $conn->Execute($sql);
             foreach ($rs as $row) {
                 if (isset($data['noliq'][$row['item_id'] . '_' . $row['store_id']])) {

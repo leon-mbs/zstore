@@ -16,7 +16,7 @@ class Product extends \ZCL\DB\Entity
     protected function init() {
         $this->product_id = 0;
         $this->item_id = 0;
-  
+
         $this->image_id = 0;
         $this->group_id = 0;
         $this->price = 0;

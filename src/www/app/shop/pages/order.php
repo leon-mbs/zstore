@@ -104,7 +104,7 @@ class Order extends Base
             return;
         }
 
-       
+
         try {
 
             $order = Document::create('Order');
@@ -128,19 +128,17 @@ class Order extends Base
                 'email' => $email,
                 'phone' => $phone,
                 'address' => $address,
- 
                 'total' => $amount
             );
 
             $op = System::getOptions("shop");
-            $cust = \App\Entity\Customer::load($op["defcust"]);       
-            if($cust instanceof \App\Entity\Customer) {
-               $order->customer_id = $cust->customer_id;
-               
+            $cust = \App\Entity\Customer::load($op["defcust"]);
+            if ($cust instanceof \App\Entity\Customer) {
+                $order->customer_id = $cust->customer_id;
             }
             $order->headerdata['store'] = $op["defstore"];
             $order->headerdata['pricetype'] = $op["defpricetype"];
-            
+
             $order->notes = trim($this->orderform->contact->getText());
             $order->amount = $amount;
             $order->save();

@@ -25,14 +25,14 @@ class Users extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin !== 'admin') {
-                   System::setErrorMsg('Пользователями может  управлять только  admin') ;
-            App::RedirectHome();  
+            System::setErrorMsg('Пользователями может  управлять только  admin');
+            App::RedirectHome();
             return;
         }
 
-         
-        
-        
+
+
+
         $this->add(new Panel("listpan"));
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource(), $this, 'OnAddUserRow'))->Reload();
@@ -117,8 +117,8 @@ class Users extends \App\Pages\Base
             }
         }
         $this->user->acltype = $this->editpan->editform->editacl->getValue();
-        $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1:0;
-         
+        $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1 : 0;
+
         $pass = $this->editpan->editform->editpass->getText();
         if (strlen($pass) > 0) {
             $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
@@ -221,7 +221,7 @@ class Users extends \App\Pages\Base
 
         $row->add(new Label('description', $item->description));
         $row->add(new Label('meta_name', $title));
-  
+
         $row->add(new CheckBox('viewacc', new Bind($item, 'viewacc')));
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
     }

@@ -22,26 +22,26 @@ class WDebitors extends \Zippy\Html\PageFragment
 
         $visible = (strpos(System::getUser()->widgets, 'wdebitors') !== false || System::getUser()->userlogin == 'admin');
 
-        
+
         $data = array();
 
-        
+
         $conn = $conn = \ZDB\DB::getConnect();
         $sql = "select * from (
             select meta_desc,document_number, customer_name,   (   datatag-amount)  as am
             from `documents_view` where meta_name in ('Order','Task') and amount > datatag
               
             ) t  order by am   ";
-        
+
         if ($visible) {
-            
+
             $rs = $conn->Execute($sql);
-            foreach($rs as $row){
-                $data[]= new \App\DataItem($row);
+            foreach ($rs as $row) {
+                $data[] = new \App\DataItem($row);
             }
         }
-    
-                   
+
+
         $list = $this->add(new DataView('pdoclist', new ArrayDataSource($data), $this, 'OnRow'));
         $list->Reload();
 
@@ -52,13 +52,11 @@ class WDebitors extends \Zippy\Html\PageFragment
 
     public function OnRow($row) {
         $item = $row->getDataItem();
- 
+
         $row->add(new Label('cust', $item->customer_name));
-        $row->add(new Label('amount', 0-($item->am)));
-        $row->add(new Label('type',  $item->meta_desc));
-        $row->add(new Label('number',  $item->document_number));
-        
-       
+        $row->add(new Label('amount', 0 - ($item->am)));
+        $row->add(new Label('type', $item->meta_desc));
+        $row->add(new Label('number', $item->document_number));
     }
 
 }

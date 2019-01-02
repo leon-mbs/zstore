@@ -27,19 +27,18 @@ class Order extends \App\Entity\Doc\Document
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $value['itemname'],
                     "tovar_code" => $value['item_code'],
-                    "quantity" => $value['quantity'],
+                    "quantity" => H::fqty($value['quantity']),
                     "price" => $value['price'],
-                    "msr" => $value['msr'], 
-                    "amount" => ($value['quantity'] ) * $value['price']
+                    "msr" => $value['msr'],
+                    "amount" => round($value['quantity'] * $value['price'])
                 );
             }
         }
 
         //$firm = \App\System::getOptions("common");
 
-        
+
         $header = array('date' => date('d.m.Y', $this->document_date),
-        
             "customername" => $this->customer_name,
             "phone" => $this->headerdata["phone"],
             "email" => $this->headerdata["email"],
@@ -51,6 +50,15 @@ class Order extends \App\Entity\Doc\Document
         if ($this->headerdata["delivery"] == 2 || $this->headerdata["delivery"] == 3) {
             $header['delivery'] = $header['delivery'] . '. по адресу: ' . $this->headerdata["address"];
         }
+
+        $list = $this->ConnectedDocList();
+        foreach ($list as $d) {
+            if ($d->meta_name == 'GoodsIssue') {
+                $header['ttn'] = $d->document_number;
+            }
+        }
+
+
         $report = new \App\Report('order.tpl');
 
         $html = $report->generate($header, $detail);
@@ -59,14 +67,14 @@ class Order extends \App\Entity\Doc\Document
     }
 
     public function Execute() {
-         
+
         return true;
     }
 
     public function getRelationBased() {
         $list = array();
-         $list['TTN'] = 'TTN';
-        
+        $list['GoodsIssue'] = 'GoodsIssue';
+
 
         return $list;
     }

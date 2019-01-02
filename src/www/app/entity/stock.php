@@ -16,7 +16,7 @@ class Stock extends \ZCL\DB\Entity
         $this->stock_id = 0;
         $this->deleted = 0;
     }
-    
+
     /**
      * Метод  для   получения  имени  ТМЦ  с  ценой
      *
@@ -57,7 +57,7 @@ class Stock extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
 
         //на  случай если удален
-        $conn->Execute("update store_stock set deleted=0 where " . $where);
+        //$conn->Execute("update store_stock set deleted=0 where " . $where);
 
         $stock = self::findOne($where);
         if ($stock == null && $create == true) {
@@ -105,28 +105,27 @@ class Stock extends \ZCL\DB\Entity
         return $conn->GetRow($sql);
     }
 
-   // Поиск партий
+    // Поиск партий
     public static function pickup($store_id, $item_id, $qty) {
-        $res=array();
+        $res = array();
         $where = "store_id = {$store_id} and item_id = {$item_id} and qty >0   ";
         $stlist = self::find($where, 'stock_id');
-        foreach($stlist as $st){
-            if($st->qty >= $qty) {
-               $st->quantity= $qty; 
-               $res[]=$st;
-               $qty=0;
-               break;    //сразу нашлась партия
-            }  else {
-               $st->quantity= $st->qty; 
-               $res[]=$st; 
-               $qty = $qty - $st->qty; //остаток
+        foreach ($stlist as $st) {
+            if ($st->qty >= $qty) {
+                $st->quantity = $qty;
+                $res[] = $st;
+                $qty = 0;
+                break;    //сразу нашлась партия
+            } else {
+                $st->quantity = $st->qty;
+                $res[] = $st;
+                $qty = $qty - $st->qty; //остаток
             }
         }
-        if($qty>0){  // если не  достаточно
-           return array();
+        if ($qty > 0) {  // если не  достаточно
+            return array();
         }
         return $res;
     }
-    
-    
+
 }

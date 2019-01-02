@@ -2,16 +2,16 @@
 
 namespace App\Pages\Report;
 
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\RedirectLink;
-use Zippy\Html\Panel;
-use App\Entity\Item;
-use App\Entity\Store;
-use App\Helper as H;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\RedirectLink;
+use \Zippy\Html\Panel;
+use \App\Entity\Item;
+use \App\Entity\Store;
+use \App\Helper as H;
 
 /**
  * Движение товара
@@ -65,7 +65,7 @@ class ItemActivity extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "movereport";
 
-  
+
         $this->detail->print->pagename = $reportpage;
         $this->detail->print->params = array('print', $reportname);
         $this->detail->html->pagename = $reportpage;
@@ -74,7 +74,7 @@ class ItemActivity extends \App\Pages\Base
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
-         $this->detail->pdf->pagename = $reportpage;
+        $this->detail->pdf->pagename = $reportpage;
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
@@ -103,7 +103,8 @@ class ItemActivity extends \App\Pages\Base
          SELECT               t.*,         
           (SELECT                   COALESCE(SUM(u.`quantity`), 0)              
             FROM entrylist_view u 
-              WHERE u.`document_date` < t.dt   AND u.item_id = t.item_id) AS begin_quantity  
+              WHERE u.`document_date` < t.dt   
+              AND u.stock_id = t.stock_id) AS begin_quantity  
                 
                 
                 FROM (             SELECT
@@ -129,7 +130,7 @@ class ItemActivity extends \App\Pages\Base
                        DATE(sc.document_date)) t
             ORDER BY dt  
         ";
-        
+
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {
@@ -138,10 +139,10 @@ class ItemActivity extends \App\Pages\Base
                 "name" => $row['itemname'],
                 "date" => date("d.m.Y", strtotime($row['dt'])),
                 "documents" => $row['docs'],
-                "in" => $row['begin_quantity'],
-                "obin" => $row['obin'],
-                "obout" => $row['obout'],
-                "out" => ($row['begin_quantity'] + $row['obin'] - $row['obout'])
+                "in" => H::fqty($row['begin_quantity']),
+                "obin" => H::fqty($row['obin']),
+                "obout" => H::fqty($row['obout']),
+                "out" => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
         }
 

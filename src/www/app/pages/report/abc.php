@@ -20,8 +20,9 @@ class ABC extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if(false ==\App\ACL::checkShowReport('ABC'))return;       
-          
+        if (false == \App\ACL::checkShowReport('ABC'))
+            return;
+
         $this->typelist[1] = "Товары,  прибыль";
         $this->typelist[2] = "Поставщики, объєм поставок";
         $this->typelist[3] = "Покупатель, объєм продаж";
@@ -55,7 +56,7 @@ class ABC extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "abc";
 
-  
+
         $this->detail->print->pagename = $reportpage;
         $this->detail->print->params = array('print', $reportname);
         $this->detail->html->pagename = $reportpage;
@@ -78,13 +79,12 @@ class ABC extends \App\Pages\Base
 //$image = 'z:/home/local.zstore/www/assets/images/noimage.jpg';
 //$imageData = base64_encode(file_get_contents($image));
 //$fi=getimagesize($image);
- 
 //$src = 'data:'.$fi['mime'].';base64,'.$imageData;
 
-     
+
         $header = array('from' => date('d.m.Y', $from),
             'to' => date('d.m.Y', $to),
-           // 'img'=>  '<img src="'.$src.'">' ,
+            // 'img'=>  '<img src="'.$src.'">' ,
             "type" => $this->typelist[$type]
         );
 
@@ -132,6 +132,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
+            $row['value'] = round($row['value']);
             $list[] = $row;
         }
 
@@ -155,6 +156,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
+            $row['value'] = round($row['value']);
             $list[] = $row;
         }
 
@@ -178,6 +180,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
+            $row['value'] = round($row['value']);
             $list[] = $row;
         }
 
@@ -203,6 +206,7 @@ class ABC extends \App\Pages\Base
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
+            $row['value'] = round($row['value']);
             $list[] = $row;
         }
 

@@ -47,7 +47,7 @@
                         <tr>
                             <th>Название</th>
                             <th>Ед.</th>
-                     
+
 
                             <th   class="text-right">Кол.</th>
                             <th    class="text-right" >Цена</th>
@@ -58,7 +58,7 @@
                         <tr zippy="detail">
                             <td zippy="tovar"></td>
                             <td zippy="msr"></td>
-                          
+
 
                             <td zippy="quantity"  class="text-right"></td>
                             <td zippy="price"  class="text-right"></td>
@@ -68,7 +68,7 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="3"  class="text-right">Всего:</td>
+                            <td colspan="4"  class="text-right">Всего:</td>
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
@@ -96,11 +96,11 @@
                         <label for="edittovar" >Название</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="edittovar" />
 
-    
+
                     </div>
                     <div class="form-group">
                         <label for="editquantity" >Количество</label>
-                        <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9]+"  style="width: 70px;">
+                        <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"  style="width: 70px;">
 
                     </div>
                     <div class="form-group">

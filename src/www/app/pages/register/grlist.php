@@ -21,12 +21,13 @@ use App\Application as App;
 use App\System;
 
 /**
- * журнал  заказов
+ * журнал  ТТН
  */
-class OrderList extends \App\Pages\Base
+class GRList extends \App\Pages\Base
 {
 
     private $_doc = null;
+    public $_pays = array();
 
     /**
      *
@@ -35,7 +36,7 @@ class OrderList extends \App\Pages\Base
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('OrderList'))
+        if (false == \App\ACL::checkShowReg('GRList'))
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -44,10 +45,10 @@ class OrderList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Неоплаченые', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(1 => 'Не проведенные', 2 => 'Неоплаченые', 3 => 'Все'), 0));
 
 
-        $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
@@ -56,151 +57,79 @@ class OrderList extends \App\Pages\Base
 
 
 
-
-
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
 
+        // $this->statuspan->statusform->add(new SubmitButton('bsend'))->onClick($this, 'statusOnSubmit');
+        //   $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
 
-        $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
 
-        $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
+        $this->add(new Panel("paypan"))->setVisible(false);
+        $this->paypan->add(new Label("pname"));
+        $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
+
+        $this->paypan->payform->add(new TextInput('pamount'));
+        $this->paypan->payform->add(new TextInput('pcomment'));
+        $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
+
+        $this->paypan->add(new DataView('paylist', new ArrayDataSource(new Prop($this, '_pays')), $this, 'payOnRow'))->Reload();
 
         $this->doclist->Reload();
     }
 
     public function filterOnSubmit($sender) {
 
-
+        $this->paypan->setVisible(false);
         $this->statuspan->setVisible(false);
 
-        $this->doclist->Reload();
+        $this->doclist->Reload(false);
     }
 
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
-
         $row->add(new Label('number', $doc->document_number));
 
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', $doc->amount));
-
+        $row->add(new Label('spay', $doc->amount - $doc->datatag));
+        $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
-
-
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-
-
         if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
         }
+        $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
     }
 
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-        $payed = $this->_doc->datatag >= $this->_doc->amount; //оплачен
-        $ttn = false;
-        //проверяем  что есть ТТН
-        $list = $this->_doc->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
-                $ttn = true;
-            }
-        }
-        if ($sender->id == "bcancel") {
-            $this->_doc->updateStatus(Document::STATE_CANCELED);
-            if ($ttn)
-                $this->setWarn('Для заказа уже создана  отпрака');
-        }
-        if ($sender->id == "bttn") {
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
-            return;
-        }
 
 
-        if ($sender->id == "bclose") {
-
-
-            $this->_doc->datatag = $this->_doc->amount;
-            $this->_doc->save();
-
-            $this->_doc->updateStatus(Document::STATE_CLOSED);
-            $this->statuspan->setVisible(false);
-            if ($ttn)
-                $this->setWarn('Для заказа была создана ТТН');
-        }
 
 
         $this->doclist->Reload(false);
+
+        $this->statuspan->setVisible(false);
+        //todo  отослать писмо 
+
         $this->updateStatusButtons();
     }
 
     public function updateStatusButtons() {
 
-        $this->statuspan->statusform->bclose->setVisible(true);
 
         $state = $this->_doc->state;
-
-        $payed = $this->_doc->datatag >= $this->_doc->amount; //оплачен
-        //доставлен
-        $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
-
-        $ttn = false;
-        //проверяем  что есть ТТН
-        $list = $this->_doc->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
-                $ttn = true;
-            }
-        }
-
-        $this->statuspan->statusform->bttn->setVisible(!$ttn);
-
-        //отмена   если  не было оплат и доставки
-        if ($this->_doc->datatag == 0 && $insh) {
-            $this->statuspan->statusform->bcancel->setVisible(false);
-        } else {
-            $this->statuspan->statusform->bcancel->setVisible(true);
-        }
-
-        //новый     
-        if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
-
-
-            $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bcancel->setVisible(false);
-        } else {
-
-            $this->statuspan->statusform->bcancel->setVisible(true);
-            $this->statuspan->statusform->bclose->setVisible(true);
-        }
-        //закрыт
-        if ($state == Document::STATE_CLOSED) {
-
-            $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bcancel->setVisible(false);
-            $this->statuspan->statusform->bttn->setVisible(false);
-            $this->statuspan->statusform->setVisible(false);
-        }
-
-
-        $this->_tvars['askclose'] = false;
-        if ($payed == false || $sent == false) {
-            $this->_tvars['askclose'] = true;
-        }
     }
 
     //просмотр
@@ -209,14 +138,13 @@ class OrderList extends \App\Pages\Base
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true))
             return;
-
+        $this->paypan->setVisible(false);
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
-        $this->doclist->Reload(true);
+        $this->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
-        $this->_tvars['askclose'] = false;
     }
 
     public function editOnClick($sender) {
@@ -225,7 +153,78 @@ class OrderList extends \App\Pages\Base
             return;
 
 
-        App::Redirect("\\App\\Pages\\Doc\\Order", $doc->document_id);
+        App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
+    }
+
+    //оплаты
+    public function payOnClick($sender) {
+        $this->statuspan->setVisible(false);
+
+
+        $this->_doc = $sender->owner->getDataItem();
+
+
+        $this->paypan->setVisible(true);
+
+        $this->statuspan->setVisible(false);
+        $this->doclist->setSelectedRow($sender->getOwner());
+        $this->doclist->Reload(false);
+
+        $this->goAnkor('dankor');
+
+        $this->paypan->payform->pamount->setText($this->_doc->amount - $this->_doc->datatag);
+        ;
+        $this->paypan->payform->pcomment->setText("");
+        ;
+        $this->paypan->pname->setText($this->_doc->document_number);
+        ;
+
+        $this->_pays = $this->_doc->getPayments();
+        $this->paypan->paylist->Reload();
+    }
+
+    public function payOnRow($row) {
+        $pay = $row->getDataItem();
+        $row->add(new Label('plamount', $pay->amount));
+        $row->add(new Label('pluser', $pay->user));
+        $row->add(new Label('pldate', date('Y-m-d', $pay->date)));
+        $row->add(new Label('plcomment', $pay->comment));
+    }
+
+    public function payOnSubmit($sender) {
+        $form = $this->paypan->payform;
+        $amount = $form->pamount->getText();
+        if ($amount == 0)
+            return;
+        $amount = $form->pamount->getText();
+        if ($amount == 0)
+            return;
+
+        $this->_doc->addPayment(System::getUser()->getUserName(), $amount, $form->pcomment->getText());
+        $this->_doc->datatag += $amount;
+        if ($this->_doc->datatag > $this->_doc->amount) {
+            $this->setWarn('Сумма  больше  необходимой  оплаты');
+        }
+
+        $this->_doc->save();
+        if ($this->_doc->datatag < $this->_doc->amount) {
+            //$this->_doc->updateStatus(Document::STATE_PART_PAYED);
+        }
+        if ($this->_doc->datatag == $this->_doc->amount) {
+            $this->_doc->updateStatus(Document::STATE_PAYED);
+        }
+        $this->setSuccess('Оплата добавлена');
+        if ($this->_doc->datatag == $this->_doc->amount) {
+
+            //закрываем если есть домтавка
+            //$this->_doc->updateStatus(Document::STATE_CLOSED);
+            //$this->setSuccess('Наряд оплаче и закрыт');    
+        }
+
+
+
+        $this->doclist->Reload(false);
+        $this->paypan->setVisible(false);
     }
 
 }
@@ -233,7 +232,7 @@ class OrderList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class OrderDataSource implements \Zippy\Interfaces\DataSource
+class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;
@@ -249,17 +248,15 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and meta_name  = 'Order' ";
+        $where .= " and meta_name  = 'GoodsReceipt' ";
 
 
 
 
         $status = $this->page->filter->status->getValue();
-        if ($status == 0) {
-            $where .= " and  state <> 9 ";
-        }
+
         if ($status == 1) {
-            $where .= " and  state =1 ";
+            $where .= " and  state <>" . Document::STATE_EXECUTED;
         }
         if ($status == 2) {
             $where .= " and  amount > datatag";
@@ -272,12 +269,12 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and meta_name  = 'Order' and  content like {$st} ";
+            $where .= " and meta_name  = 'GoodsReceipt' and  content like {$st} ";
         }
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = " meta_name  = 'Order' and document_number like  {$sn} ";
+            $where = " meta_name  = 'GoodsReceipt' and document_number like  {$sn} ";
         }
         if ($user->acltype == 2) {
 

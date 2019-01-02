@@ -36,8 +36,8 @@
 
 
     <body  > 
-    <div id="upbutton"><a href="#top"  class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
-    <a  id="top"></a>         
+        <div id="upbutton"><a href="#top"  class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
+        <a  id="top"></a>         
 
         <div style="background-color: #F0F0F0;" class="container-fluid"> 
             <div class="row"> 
@@ -49,8 +49,8 @@
 
                             <a class="navbar-brand  d-none d-md-block" href="/store">Zippy Склад</a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                              <span class=" "><i class="fa fa-bars"></i></span>
-             
+                                <span class=" "><i class="fa fa-bars"></i></span>
+
                             </button>   
 
 
@@ -70,27 +70,45 @@
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Отчеты    </a>
                                     <ul class="dropdown-menu  " zippy="repmenu"> </ul>
 
-                                </li> 
-                                 <li  class="nav-item dropdown">
-                                    <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Справочники    </a>
-                                    <ul class="dropdown-menu  " zippy="refmenu"> </ul>
-
+                                </li>
                                 <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Журналы    </a>
                                     <ul class="dropdown-menu  " zippy="regmenu"> </ul>
 
                                 </li> 
-                               
-                                 
-                                {{#shop}}
+                                <li  class="nav-item dropdown">
+                                    <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Справочники    </a>
+                                    <ul class="dropdown-menu  " zippy="refmenu"> </ul>
+
+
+
+
+                                    {{#shop}}
                                 <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Онлайн каталог    </a>
                                     <ul class="dropdown-menu  " zippy="shopmenu"> </ul>
 
                                 </li> 
-                                 {{/shop}}
+                                {{/shop}}
+
+                                <li  class="nav-item dropdown">
+                                    <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Сервис    </a>
+                                    <ul class="dropdown-menu  "  >  
 
 
+                                        <li>
+                                            <a class="dropdown-item  " href="/?p=App/Pages/Users">Пользователи</a>            
+                                        </li> 
+                                        <li>
+                                            <a class="dropdown-item  " href="/?p=App/Pages/Import">Импорт номенклатуры</a>            
+                                        </li> 
+                                        <li class="dropdown-divider"></li> 
+                                        <li  >
+                                            <a  class="dropdown-item  " href="/?p=App/Pages/Options">Настройки</a>            
+                                        </li> 
+                                    </ul>    
+
+                                </li> 
 
 
                             </ul>  
@@ -99,8 +117,8 @@
                             <ul class="navbar-nav   ">
                                 <!-- Messages: style can be found in dropdown.less-->
                                 <li class="nav-item    ">
-                                    <a data-toggle="popover" data-placement="bottom" data-content="{{picontent}}" class="nav-link  "  style="cursor:pointer" zippy="pageinfo"     >
-                                        <i class="fa fa-info-circle"></i>
+                                    <a data-html="true"  data-toggle="popover" data-placement="bottom" data-content="{{picontent}}" class="nav-link  "  style="cursor:pointer" zippy="pageinfo"     >
+                                        <i class="fa fa-question-circle "></i>
 
                                     </a>
 
@@ -120,16 +138,7 @@
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-user"></i> <span zippy="username"></span> </a>
 
                                     <ul class="dropdown-menu"  >
-                                        {{#isadmin}}               
 
-                                        <li>
-                                            <a class="dropdown-item  " href="/?p=App/Pages/Users">Пользователи</a>            
-                                        </li> 
-                                        <li  >
-                                            <a  class="dropdown-item  " href="/?p=App/Pages/Options">Настройки</a>            
-                                        </li> 
-                                       
-                                        {{/isadmin}}                   
 
 
 
@@ -138,8 +147,8 @@
                                             <a class="dropdown-item  " href="/?p=App/Pages/UserProfile">Мой профиль</a>            
                                         </li>                
                                         <li class="dropdown-divider"></li> 
-                                                                             
-                                        
+
+
                                         <li>
                                             <a class="dropdown-item  " zippy="logout">  Выйти</a>  
                                         </li>            
@@ -154,7 +163,7 @@
                     </nav>
                     {{#smart}}
                     <div class="navbar nav justify-content-start">
-                      {{{smart}}}
+                        {{{smart}}}
                     </div>
                     {{/smart}}
                 </div>
@@ -199,15 +208,15 @@ $(function () {
 
 $('.select2').select2();
 
-            $(window).scroll(function () {
-                if ($(this).scrollTop() > 600) {
-                    if ($('#upbutton').is(':hidden')) {
-                        $('#upbutton').css({opacity: 1}).fadeIn('slow');
-                    }
-                } else {
-                    $('#upbutton').stop(true, false).fadeOut('fast');
-                }
-            }); 
+$(window).scroll(function () {
+    if ($(this).scrollTop() > 600) {
+        if ($('#upbutton').is(':hidden')) {
+            $('#upbutton').css({opacity: 1}).fadeIn('slow');
+        }
+    } else {
+        $('#upbutton').stop(true, false).fadeOut('fast');
+    }
+});
 
         </script>   
     </body>

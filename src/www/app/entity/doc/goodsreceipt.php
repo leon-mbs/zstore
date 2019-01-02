@@ -14,7 +14,7 @@ class GoodsReceipt extends Document
 
     public function generateReport() {
 
-         
+
         $i = 1;
 
         $detail = array();
@@ -22,9 +22,9 @@ class GoodsReceipt extends Document
             $detail[] = array("no" => $i++,
                 "itemname" => $value['itemname'],
                 "itemcode" => $value['item_code'],
-                "quantity" => $value['quantity'],
+                "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
-                 "msr" => $value['msr'],
+                "msr" => $value['msr'],
                 "amount" => $value['amount']
             );
         }
@@ -54,7 +54,7 @@ class GoodsReceipt extends Document
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
-   
+
             $sc->setCustomer($this->customer_id);
 
             $sc->save();
@@ -81,17 +81,6 @@ class GoodsReceipt extends Document
         // $list['ReturnGoodsReceipt'] = 'Повернення постачальнику';
 
         return $list;
-    }
-
-    /**
-     * может быть отменен
-     * 
-     */
-    public function canCanceled() {
-        if ($this->datatag > 0) {
-            return false; //оплачен
-        }
-        return parent::canCanceled();
     }
 
 }

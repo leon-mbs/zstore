@@ -13,9 +13,8 @@
         <script language="javascript" src="/assets/js/fullcalendar.js"></script>        
         <script language="javascript" src="/assets/js/ru.js"></script>        
 
-        <script>
 
-        </script>   
+
     </head>
     <body>
         <div class="row">
@@ -36,7 +35,7 @@
                         <select class="form-control  mr-sm-2" zippy="filterassignedto">
                             <option value="0">Все</option>
                         </select>
-         <label for="filterassignedto"  >Пр. участок</label>
+                        <label for="filterassignedto"  >Пр. участок</label>
 
                         <select class="form-control  mr-sm-2" zippy="filterpa">
                             <option value="0">Все</option>
@@ -65,126 +64,128 @@
                 <ul class="nav nav-tabs">
                     <li class="nav-item"><a class="nav-link  active" href="#tasktab" data-toggle="tab">Список</li>
                     <li class="nav-item"><a class="nav-link" href="#caltab" data-toggle="tab">Календарь</li>
+
                 </ul>
 
                 <div class="tab-content">
                     <div id="tasktab" class="tab-pane  active">
-                       <a href="/?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Создать</a>
-          
-                 <div class="row">
-                  <div class="col-12    table-responsive" > 
+                        <a href="/?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Создать</a>
 
-                        <table class="table   table-sm table-hover">
-                            <tr>
+                        <div class="row">
+                            <div class="col-12    table-responsive" > 
 
-                                <th>Номер</th>
-                                <th>Описание</th>
+                                <table class="table   table-sm table-hover">
+                                    <tr>
 
-                                <th>Начало</th>
+                                        <th>Номер</th>
+                                        <th>Описание</th>
 
-                                <th style="text-align: right;">Час.</th>
-                                <th>Клиент</th>
-                                <th>Исполнители</th>
-                                <th>Статус</th>
-                                <th class="text-right">Сумма</th>
-                                <th class="text-right">К оплате</th>
-                                
+                                        <th>Начало</th>
 
+                                        <th style="text-align: right;">Час.</th>
+                                        <th>Клиент</th>
+                                        <th>Исполнители</th>
+                                        <th>Статус</th>
+                                        <th class="text-right">Сумма</th>
+                                        <th class="text-right">К оплате</th>
 
 
-                                
-
-                                <th style="width:100px;"> </th>
-
-                            </tr>
-                            <tr zippy="tasklist">
-
-                                <td zippy="tasknumber"></td>
-                                <td zippy="taskdesc"></td>
-
-                                <td zippy="taskstartdate" style="white-space:   nowrap" ></td>
-                                <td zippy="taskhours"  style="text-align: right;"></td>
-                                <td zippy="taskclient"></td>
-                                 <td zippy="taskemps"></td>
-                                <td zippy="taskstatus" ></td>
-                                <td zippy="taskamount"  class="text-right"></td>
-                                <td zippy="taskdebet"  class="text-right"></td>
-                                
 
 
-                               
-
-                                <td>
-                                    <a zippy="taskshow" title="Просмотр"><i class="fa fa-search-plus"></i></a>
-                                    &nbsp;&nbsp;<a zippy="taskpay" title="Оплаты"><i class="fa fa-credit-card"></i></a>
-                                    &nbsp;&nbsp;<a zippy="taskedit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                    
-                                </td>
-
-                            </tr>
-                            <tr>
-                             <th colspan="7" class="text-right">Всего</th>
-                             <th class="text-right" zippy="tamount"></th>
-                             <th class="text-right" zippy="tdebet"></th>
-                             <td > </td>
-                            </tr>
-                        </table>
-                        <div zippy="pag"></div>
-                      <a id="dankor"></a></div>     </div>       
-                        
-    <div class="row" zippy="paypan">
-                  <div class="col-12   ">
-                   
-                <div class="navbar nav">
-                    <form zippy="payform" class="form-inline ">
-                        <label>К оплате</label> 
-                        <input zippy="pamount" pattern="[0-9\-]+" style="width:100px;" placeholder="Сумма..." class="form-control mr-sm-2">
-                        <input zippy="pcomment"  style="width:250px;" placeholder="Коментарий..." class="form-control mr-sm-2">
-                        <button zippy="bpay" type="submit" class="  btn btn-info  mr-2 " >Добавить</button>
 
 
-                    </form>  
+                                        <th style="width:100px;"> </th>
 
-                </div> 
-                <b><i class="fa fa-credit-card"></i> Оплаты (  <span zippy="pname"></span>)</b><br>
-                <table cellpadding="4" >
-                    <tr zippy="paylist">
-                        <td zippy="pldate"></td>
-                        <td zippy="pluser"></td>
-                        <td  class="text-right">&nbsp;<span zippy="plamount">&nbsp;</span></td>
+                                    </tr>
+                                    <tr zippy="tasklist">
 
-                        <td zippy="plcomment"></td>
-                        
-                    </tr>
-                </table>                   
-                   </div>     </div> 
-   <div class="row" zippy="statuspan">
-                  <div class="col-12   ">
-                 
-                      
-            <div class="navbar nav">
-                    <form zippy="statusform" class="form-inline ">
-                        <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 " ><i class="fas fa-wrench"></i> На  выполнение</button>
-                        <button zippy="bclosed" type="submit" class="  btn btn-success  mr-2 " ><i class="fa fa-gavel"></i> Закончен</button>
-                        
-                        
-                    </form>
-                    
-                    
-                    
-                </div>  
+                                        <td zippy="tasknumber"></td>
+                                        <td zippy="taskdesc"></td>
 
-                        <div zippy="docview"></div>
-                        
-                </div>     </div>         
-                        
+                                        <td zippy="taskstartdate" style="white-space:   nowrap" ></td>
+                                        <td zippy="taskhours"  style="text-align: right;"></td>
+                                        <td zippy="taskclient"></td>
+                                        <td zippy="taskemps"></td>
+                                        <td zippy="taskstatus" ></td>
+                                        <td zippy="taskamount"  class="text-right"></td>
+                                        <td zippy="taskdebet"  class="text-right"></td>
+
+
+
+
+
+                                        <td>
+                                            <a zippy="taskshow" title="Просмотр"><i class="fa fa-search-plus"></i></a>
+                                            &nbsp;&nbsp;<a zippy="taskpay" title="Оплаты"><i class="fa fa-credit-card"></i></a>
+                                            &nbsp;&nbsp;<a zippy="taskedit" title="Редактировать"><i class="fa fa-edit"></i></a>
+
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <th colspan="7" class="text-right">Всего</th>
+                                        <th class="text-right" zippy="tamount"></th>
+                                        <th class="text-right" zippy="tdebet"></th>
+                                        <td > </td>
+                                    </tr>
+                                </table>
+                                <div zippy="pag"></div>
+                                <a id="dankor"></a></div>     </div>       
+
+                        <div class="row" zippy="paypan">
+                            <div class="col-12   ">
+
+                                <div class="navbar nav">
+                                    <form zippy="payform" class="form-inline ">
+                                        <label>К оплате</label> 
+                                        <input zippy="pamount" pattern="[0-9\-]+" style="width:100px;" placeholder="Сумма..." class="form-control mr-sm-2">
+                                        <input zippy="pcomment"  style="width:250px;" placeholder="Коментарий..." class="form-control mr-sm-2">
+                                        <button zippy="bpay" type="submit" class="  btn btn-info  mr-2 " >Добавить</button>
+
+
+                                    </form>  
+
+                                </div> 
+                                <b><i class="fa fa-credit-card"></i> Оплаты (  <span zippy="pname"></span>)</b><br>
+                                <table cellpadding="4" >
+                                    <tr zippy="paylist">
+                                        <td zippy="pldate"></td>
+                                        <td zippy="pluser"></td>
+                                        <td  class="text-right">&nbsp;<span zippy="plamount">&nbsp;</span></td>
+
+                                        <td zippy="plcomment"></td>
+
+                                    </tr>
+                                </table>                   
+                            </div>     </div> 
+                        <div class="row" zippy="statuspan">
+                            <div class="col-12   ">
+
+
+                                <div class="navbar nav">
+                                    <form zippy="statusform" class="form-inline ">
+                                        <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 " ><i class="fas fa-wrench"></i> На  выполнение</button>
+                                        <button zippy="bclosed" type="submit" class="  btn btn-success  mr-2 " ><i class="fa fa-gavel"></i> Закончен</button>
+
+
+                                    </form>
+
+
+
+                                </div>  
+
+                                <div zippy="docview"></div>
+
+                            </div>     </div>         
+
                     </div> <!-- tasktab -->
                     <div id="caltab" class="tab-pane   ">
 
                         <div zippy='calendar'></div>
 
 
-                    </div>  
+                    </div> 
+
                 </div>  
 
 

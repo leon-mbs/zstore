@@ -27,24 +27,33 @@ class GoodsIssue extends Document
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $value['itemname'],
                     "tovar_code" => $value['item_code'],
-                    "quantity" => $value['quantity'],
-                    "price" => $value['price'],
+                    "quantity" => H::fqty($value['quantity']),
                     "msr" => $value['msr'],
-                    "amount" => ($value['quantity'] ) * $value['price']
+                    "price" => $value['price'],
+                    "amount" => round($value['quantity'] * $value['price'])
                 );
             }
         }
 
-        $firm = \App\System::getOptions("common");
+        //$firm = \App\System::getOptions("common");
 
-         $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => date('d.m.Y', $this->document_date),
             "firmname" => $firm['firmname'],
             "customername" => $this->customer_name,
-            
+            "ship_address" => $this->headerdata["ship_address"],
+            "ship_number" => $this->headerdata["ship_number"],
+            "order" => $this->headerdata["order"],
+            "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
-            "total" => $this->headerdata["total"],
-            "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))
+            "total" => $this->headerdata["total"]
         );
+        if ($this->headerdata["sent_date"] > 0) {
+            $header['sent_date'] = date('d.m.Y', $this->headerdata["sent_date"]);
+        }
+        if ($this->headerdata["delivery_date"] > 0) {
+            $header['delivery_date'] = date('d.m.Y', $this->headerdata["delivery_date"]);
+        }
+        $this->headerdata["isorder"] = strlen($this->headerdata["order"]) > 0;
 
         $report = new \App\Report('goodsissue.tpl');
 
@@ -62,8 +71,8 @@ class GoodsIssue extends Document
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setStock($row['stock_id']);
             $sc->setExtCode($row['price'] - $row['partion']); //Для АВС 
-             
-                $sc->setCustomer($this->customer_id);
+
+            $sc->setCustomer($this->customer_id);
             $sc->save();
         }
 

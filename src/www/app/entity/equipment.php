@@ -11,8 +11,6 @@ namespace App\Entity;
 class Equipment extends \ZCL\DB\Entity
 {
 
-   
-
     protected function init() {
         $this->eq_id = 0;
     }
@@ -24,7 +22,7 @@ class Equipment extends \ZCL\DB\Entity
         $this->detail .= "<emp_name>{$this->emp_name}</emp_name>";
         $this->detail .= "<serial>{$this->serial}</serial>";
         $this->detail .= "<code>{$this->code}</code>";
-     
+
 
         $this->detail .= "</detail>";
 
@@ -38,13 +36,14 @@ class Equipment extends \ZCL\DB\Entity
         $this->emp_name = (string) ($xml->emp_name[0]);
         $this->serial = (string) ($xml->serial[0]);
         $this->code = (string) ($xml->code[0]);
-   
-   
-   
+
+
+
 
 
         parent::afterLoad();
     }
+
     protected function beforeDelete() {
 
         return $this->checkDelete();
@@ -52,6 +51,7 @@ class Equipment extends \ZCL\DB\Entity
 
     public function checkDelete() {
 
-       return  true;
-   }  
+        return true;
+    }
+
 }

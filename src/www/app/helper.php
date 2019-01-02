@@ -112,17 +112,17 @@ class Helper
 
     public static function generateSmartMenu() {
         $conn = \ZDB\DB::getConnect();
-         
+
         $rows = $conn->Execute("select *  from  metadata where smartmenu =1 ");
         $textmenu = "";
         $aclview = explode(',', System::getUser()->aclview);
-    
+
         foreach ($rows as $item) {
-            
-           if (!in_array($item['meta_id'], $aclview) && System::getUser()->acltype == 2)
+
+            if (!in_array($item['meta_id'], $aclview) && System::getUser()->acltype == 2)
                 continue;
-            
-            
+
+
             switch ((int) $item['meta_type']) {
                 case 1 :
                     $dir = "Pages/Doc";
@@ -146,8 +146,7 @@ class Helper
 
         return $textmenu;
     }
-    
-    
+
     public static function loadEmail($template, $keys = array()) {
         global $logger;
 
@@ -329,10 +328,22 @@ class Helper
         if ($common['defstore'] > 0) {
             return $common['defstore'];
         }
-        
-        \App\System::setErrorMsg('Не настроен склад  по  умолчанию') ;
+
+        \App\System::setErrorMsg('Не настроен склад  по  умолчанию');
         \App\Application::RedirectHome();
-        
+    }
+
+    public static function fqty($qty) {
+        $digit = 0;
+        $common = System::getOptions("common");
+        if ($common['qtydigits'] > 0) {
+            $digit = $common['qtydigits'];
+        }
+        if ($digit == 0) {
+            return round($qty);
+        } else {
+            return number_format($qty, $digit, '.', '');
+        }
     }
 
 }

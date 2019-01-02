@@ -28,8 +28,8 @@ class UserLogin extends \Zippy\Html\WebPage
     }
 
     public function onsubmit($sender) {
-        global $logger,$_config;
-        
+        global $logger, $_config;
+
         $this->setError('');
         $login = $sender->userlogin->getText();
         $password = $sender->userpassword->getText();
@@ -40,7 +40,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->setError('Введите пароль');
         }
 
-        if (strlen($login) > 0 && strlen($password)>0) {
+        if (strlen($login) > 0 && strlen($password) > 0) {
 
             $user = Helper::login($login, $password);
 
@@ -52,10 +52,10 @@ class UserLogin extends \Zippy\Html\WebPage
                 $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
                 //App::$app->getResponse()->toBack();
                 if ($this->loginform->remember->isChecked()) {
-                    
+
                     setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
                 }
-                $logger->info('Logined '. $user->userlogin. ', '.$_SERVER["REMOTE_ADDR"]);
+                $logger->info('Logined ' . $user->userlogin . ', ' . $_SERVER["REMOTE_ADDR"]);
                 if (\App\Session::getSession()->topage == null) {
                     App::RedirectURI('/store');
                 } else {

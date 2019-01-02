@@ -19,7 +19,8 @@ class ServiceList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if(false ==\App\ACL::checkShowRef('ServiceList'))return;       
+        if (false == \App\ACL::checkShowRef('ServiceList'))
+            return;
 
         $this->add(new Panel('servicetable'))->setVisible(true);
         $this->servicetable->add(new DataView('servicelist', new \ZCL\DB\EntityDataSource('\App\Entity\Service'), $this, 'servicelistOnRow'))->Reload();
@@ -46,8 +47,9 @@ class ServiceList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if(false ==\App\ACL::checkEditRef('ServiceList'))return;       
-     
+        if (false == \App\ACL::checkEditRef('ServiceList'))
+            return;
+
         $service_id = $sender->owner->getDataItem()->service_id;
         // $cnt=  \App\Entity\Item::findCnt("cat_id=".$cat_id);
         if ($cnt > 0) {
@@ -77,8 +79,9 @@ class ServiceList extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
-        if(false ==\App\ACL::checkEditRef('ServiceList'))return;       
-   
+        if (false == \App\ACL::checkEditRef('ServiceList'))
+            return;
+
         $this->_service->service_name = $this->servicedetail->editservice_name->getText();
         $this->_service->price = $this->servicedetail->editprice->getText();
         $this->_service->hours = $this->servicedetail->edithours->getText();

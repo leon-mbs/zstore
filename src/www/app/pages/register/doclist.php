@@ -33,9 +33,10 @@ class DocList extends \App\Pages\Base
      */
     public function __construct($docid = 0) {
         parent::__construct();
-        if(false ==\App\ACL::checkShowReg('DocList'))return;       
-        
-        
+        if (false == \App\ACL::checkShowReg('DocList'))
+            return;
+
+
         $filter = Filter::getFilter("doclist");
         if ($filter->to == null) {
             $filter->to = time() + (3 * 24 * 3600);
@@ -44,19 +45,19 @@ class DocList extends \App\Pages\Base
             $filter->doctype = 0;
             $filter->customer = 0;
             $filter->customer_name = '';
-        
-            $filter->searchnumber = '';  
+
+            $filter->searchnumber = '';
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
         $this->filter->add(new Date('to', $filter->to));
         $this->filter->add(new DropDownChoice('doctype', H::getDocTypes(), $filter->doctype));
-        
-        $this->filter->add(new ClickLink('erase',$this,"onErase"));
+
+        $this->filter->add(new ClickLink('erase', $this, "onErase"));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
         $this->filter->searchcust->setKey($filter->customer);
         $this->filter->searchcust->setText($filter->customer_name);
-        $this->filter->add(new TextInput('searchnumber',$filter->searchnumber));
+        $this->filter->add(new TextInput('searchnumber', $filter->searchnumber));
 
         if (strlen($filter->docgroup) > 0)
             $this->filter->docgroup->setValue($filter->docgroup);
@@ -79,21 +80,24 @@ class DocList extends \App\Pages\Base
 
     public function onErase($sender) {
         $filter = Filter::getFilter("doclist");
-        $filter->to = time()  ;
+        $filter->to = time();
         $filter->from = time() - (7 * 24 * 3600);
         $filter->page = 1;
         $filter->doctype = 0;
         $filter->customer = 0;
         $filter->customer_name = '';
-    
-        $filter->searchnumber = ''; 
-        
-        $this->filter->clean()        ;
-        $this->filter->to->setDate(time()  )       ;;
-        $this->filter->from->setDate(time() - (7 * 24 * 3600))       ;;
-        $this->filterOnSubmit($this->filter)       ;;
-            
+
+        $filter->searchnumber = '';
+
+        $this->filter->clean();
+        $this->filter->to->setDate(time());
+        ;
+        $this->filter->from->setDate(time() - (7 * 24 * 3600));
+        ;
+        $this->filterOnSubmit($this->filter);
+        ;
     }
+
     public function filterOnSubmit($sender) {
 
         $this->docview->setVisible(false);
@@ -105,7 +109,7 @@ class DocList extends \App\Pages\Base
         $filter->customer = $this->filter->searchcust->getKey();
         $filter->customer_name = $this->filter->searchcust->getText();
 
-       
+
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
 
         $this->doclist->setCurrentPage(1);
@@ -125,17 +129,16 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('amount', ($doc->amount > 0) ? $doc->amount : ""));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
- 
+
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
- 
+
         if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW) {
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
- 
         } else {
             $row->edit->setVisible(false);
             $row->delete->setVisible(false);
@@ -159,7 +162,8 @@ class DocList extends \App\Pages\Base
     //просмотр
     public function showOnClick($sender) {
         $item = $sender->owner->getDataItem();
-        if(false ==\App\ACL::checkShowDoc($item,true))return;       
+        if (false == \App\ACL::checkShowDoc($item, true))
+            return;
         $this->docview->setVisible(true);
         $this->docview->setDoc($item);
         $this->doclist->setSelectedRow($sender->getOwner());
@@ -170,7 +174,8 @@ class DocList extends \App\Pages\Base
     //редактирование
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
-        if(false ==\App\ACL::checkEditDoc($item,true))return;     
+        if (false == \App\ACL::checkEditDoc($item, true))
+            return;
         $type = H::getMetaType($item->meta_id);
         $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
         //   $item = $class::load($item->document_id);
@@ -183,10 +188,11 @@ class DocList extends \App\Pages\Base
 
     public function deleteOnClick($sender) {
         $this->docview->setVisible(false);
-        
+
         $doc = $sender->owner->getDataItem();
-        if(false ==\App\ACL::checkEditDoc($doc,true))return;     
-        
+        if (false == \App\ACL::checkEditDoc($doc, true))
+            return;
+
         $doc = $doc->cast();
         if ($doc->canDeleted() == false) {
 
@@ -194,15 +200,16 @@ class DocList extends \App\Pages\Base
         }
         Document::delete($doc->document_id);
         $this->doclist->Reload(true);
-        $this->resetURL(); 
+        $this->resetURL();
     }
 
     public function cancelOnClick($sender) {
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
-        if(false ==\App\ACL::checkEditDoc($doc,true))return;     
-        
+        if (false == \App\ACL::checkEditDoc($doc, true))
+            return;
+
         if (false == $doc->canCanceled()) {
             return;
         }
@@ -210,8 +217,8 @@ class DocList extends \App\Pages\Base
         $this->doclist->Reload();
         $this->resetURL();
     }
-    
-      public function OnAutoCustomer($sender) {
+
+    public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "Customer_name like " . $text);
     }
@@ -226,7 +233,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
         $user = System::getUser();
-        
+
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");
         $where = " date(document_date) >= " . $conn->DBDate($filter->from) . " and  date(document_date) <= " . $conn->DBDate($filter->to);
@@ -237,22 +244,21 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if ($filter->customer > 0) {
             $where .= " and customer_id  ={$filter->customer} ";
         }
-        
-        
-        
+
+
+
         if (strlen($filter->searchnumber) > 1) {
             // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where  = "    document_number like  {$sn} ";
+            $where = "    document_number like  {$sn} ";
         }
-        if($user->acltype == 2){
- 
-          
-          $where .= " and meta_id in({$user->aclview}) ";
-                   
+        if ($user->acltype == 2) {
+
+
+            $where .= " and meta_id in({$user->aclview}) ";
         }
-      
-        
+
+
         return $where;
     }
 

@@ -22,9 +22,9 @@ class ProdReceipt extends Document
             $detail[] = array("no" => $i++,
                 "itemname" => $value['itemname'],
                 "itemcode" => $value['item_code'],
-                "quantity" => $value['quantity'],
+                "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
-                "msr" => $value['msr'], 
+                "msr" => $value['msr'],
                 "amount" => $value['amount']
             );
         }

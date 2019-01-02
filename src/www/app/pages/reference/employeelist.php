@@ -24,7 +24,8 @@ class EmployeeList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if(false ==\App\ACL::checkShowRef('EmployeeList'))return;       
+        if (false == \App\ACL::checkShowRef('EmployeeList'))
+            return;
 
         $this->add(new Panel('employeetable'))->setVisible(true);
         $this->employeetable->add(new DataView('employeelist', new EDS('\App\Entity\Employee'), $this, 'employeelistOnRow'))->Reload();
@@ -49,8 +50,9 @@ class EmployeeList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if(false ==\App\ACL::checkEditRef('EmployeeList'))return;       
-        
+        if (false == \App\ACL::checkEditRef('EmployeeList'))
+            return;
+
         Employee::delete($sender->owner->getDataItem()->employee_id);
         $this->employeetable->employeelist->Reload();
     }
@@ -76,13 +78,14 @@ class EmployeeList extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
-       if(false ==\App\ACL::checkEditRef('EmployeeList'))return;       
- 
+        if (false == \App\ACL::checkEditRef('EmployeeList'))
+            return;
+
         $login = trim($this->employeedetail->editlogin->getText());
         if (strlen($login) > 0) {
             if ($login == "admin") {
-                 $this->setError('Недопустимый логин');
-                 return;
+                $this->setError('Недопустимый логин');
+                return;
             }
             $_emp = Employee::getFirst("login = '{$login}'");
             if ($_emp != null && $_emp->employee_id != $this->_employee->employee_id) {

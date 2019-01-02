@@ -65,11 +65,11 @@ class ShowDoc extends \Zippy\Html\WebPage
                 echo $xml['content'];
             }
             if ($type == "pdf") {
-              header("Content-type: application/pdf");
-            header("Content-Disposition: attachment;Filename={$filename}.pdf");
-            header("Content-Transfer-Encoding: binary");
-   
- 
+                header("Content-type: application/pdf");
+                header("Content-Disposition: attachment;Filename={$filename}.pdf");
+                header("Content-Transfer-Encoding: binary");
+
+
                 $dompdf = new \Dompdf\Dompdf();
                 $dompdf->loadHtml($html);
 
@@ -82,7 +82,7 @@ class ShowDoc extends \Zippy\Html\WebPage
                 // Output the generated PDF to Browser
                 $html = $dompdf->output();
                 echo $html;
-            }   
+            }
         } else {
             //$html = "<h4>Печатная форма  не  задана</h4>";
         }

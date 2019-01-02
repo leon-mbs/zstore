@@ -11,7 +11,6 @@ namespace App\Entity;
 class Employee extends \ZCL\DB\Entity
 {
 
-  
     protected function init() {
         $this->employee_id = 0;
     }
@@ -38,10 +37,13 @@ class Employee extends \ZCL\DB\Entity
 
         parent::afterLoad();
     }
+
     //найти  по  логину
-    public static  function getByLogin($login){
-         if(strlen($login)==0) return  null;
-         $login = Employee::qstr($login);
-         return Employee::getFirst("login=" .$login); 
+    public static function getByLogin($login) {
+        if (strlen($login) == 0)
+            return null;
+        $login = Employee::qstr($login);
+        return Employee::getFirst("login=" . $login);
     }
+
 }

@@ -7,11 +7,12 @@ namespace App;
  */
 abstract class RestFul
 {
+
     /**
-    * 
-    * 
-    * @param array $params
-    */
+     * 
+     * 
+     * @param array $params
+     */
     public function Execute($params) {
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {

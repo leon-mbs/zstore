@@ -76,8 +76,8 @@ class MoveItem extends \App\Pages\Base
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         $this->OnChangeStore($this->docform->storeto);
-        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
-   
+        if (false == \App\ACL::checkShowDoc($this->_doc))
+            return;
     }
 
     public function detailOnRow($row) {
@@ -87,14 +87,15 @@ class MoveItem extends \App\Pages\Base
         $row->add(new Label('msr', $item->msr));
 
 
-        $row->add(new Label('quantity', $item->quantity));
+        $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->partion));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
     public function deleteOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $item = $sender->owner->getDataItem();
         // unset($this->_itemlist[$item->item_id]);
 
@@ -130,7 +131,8 @@ class MoveItem extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
             $this->setError("Не выбран товар");
@@ -202,8 +204,8 @@ class MoveItem extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
-    
-            $logger->error($ee->getMessage() . " Документ ". $this->_doc->meta_desc);
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
 
             return;
         }

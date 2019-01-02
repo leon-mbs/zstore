@@ -21,8 +21,9 @@ class EmpTask extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-       
-        if(false ==\App\ACL::checkShowReport('EmpTask'))return;       
+
+        if (false == \App\ACL::checkShowReport('EmpTask'))
+            return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -48,7 +49,7 @@ class EmpTask extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "emptask";
 
-  
+
         $this->detail->print->pagename = $reportpage;
         $this->detail->print->params = array('print', $reportname);
         $this->detail->html->pagename = $reportpage;

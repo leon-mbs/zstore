@@ -31,7 +31,7 @@ class StockList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->filter->add(new DropDownChoice('searchstore', Store::getList(), H::getDefStore()));
-        $this->filter->add(new CheckBox('allpart'));
+
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
@@ -46,40 +46,33 @@ class StockList extends \App\Pages\Base
 
     public function itemlistOnRow($row) {
         $stock = $row->getDataItem();
+        $row->add(new Label('storename', $stock->storename));
         $row->add(new Label('itemname', $stock->itemname));
         $row->add(new Label('code', $stock->item_code));
         $row->add(new Label('msr', $stock->msr));
         $row->add(new Label('partion', $stock->partion));
-        $row->add(new Label('qty', $stock->qty));
-        $row->add(new Label('amount', $stock->qty * $stock->partion));
+        $row->add(new Label('qty', H::fqty($stock->qty)));
+        $row->add(new Label('amount', round($stock->qty * $stock->partion)));
 
-        $item = Item::load($stock->item_id);
+        $item = Item::load($stock->item_id) ;
         $row->add(new Label('cat_name', $item->cat_name));
-        //$row->add(new Label('storename', $stock->storename));        
-        $plist = array();
-        if($item->price1>0)$plist[]=$item->getPrice('price1',$stock->partion);
-        if($item->price2>0)$plist[]=$item->getPrice('price2',$stock->partion);
-        if($item->price3>0)$plist[]=$item->getPrice('price3',$stock->partion);
-        if($item->price4>0)$plist[]=$item->getPrice('price4',$stock->partion);
-        if($item->price5>0)$plist[]=$item->getPrice('price5',$stock->partion);
         
-        $row->add(new Label('price', implode(',',$plist)));
+        $plist = array();
+        if ($item->price1 > 0)
+            $plist[] = $item->getPrice('price1', $stock->partion);
+        if ($item->price2 > 0)
+            $plist[] = $item->getPrice('price2', $stock->partion);
+        if ($item->price3 > 0)
+            $plist[] = $item->getPrice('price3', $stock->partion);
+        if ($item->price4 > 0)
+            $plist[] = $item->getPrice('price4', $stock->partion);
+        if ($item->price5 > 0)
+            $plist[] = $item->getPrice('price5', $stock->partion);
 
-        $row->add(new ClickLink('delete', $this, 'deleteOnClick'))->setVisible($stock->qty == 0);
+        $row->add(new Label('price', implode(',', $plist)));
     }
 
     public function OnFilter($sender) {
-        $this->itemtable->itemlist->Reload();
-    }
-
-    public function deleteOnClick($sender) {
-
-        $this->resetURL();
-        $stock = $sender->owner->getDataItem();
-
-        $stock->deleted = 1;
-        $stock->save();
-
         $this->itemtable->itemlist->Reload();
     }
 
@@ -97,10 +90,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     private function getWhere() {
 
         $form = $this->page->filter;
-        $where = "qty <> 0 ";
-        if ($form->allpart->isChecked()) {
-            $where = "1=1 ";
-        }
+        $where = "1=1 ";
+
         $text = trim($form->searchkey->getText());
         $store = $form->searchstore->getValue();
         if ($store > 0) {

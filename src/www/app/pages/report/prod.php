@@ -21,7 +21,8 @@ class Prod extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-       if(false ==\App\ACL::checkShowReport('Prod'))return;       
+        if (false == \App\ACL::checkShowReport('Prod'))
+            return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -47,7 +48,7 @@ class Prod extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "prod";
 
-  
+
         $this->detail->print->pagename = $reportpage;
         $this->detail->print->params = array('print', $reportname);
         $this->detail->html->pagename = $reportpage;
@@ -56,7 +57,7 @@ class Prod extends \App\Pages\Base
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
-         $this->detail->pdf->pagename = $reportpage;
+        $this->detail->pdf->pagename = $reportpage;
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
@@ -97,7 +98,7 @@ class Prod extends \App\Pages\Base
             $detail[] = array(
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
-                "qty" => $row['qty'],
+                "qty" => H::fqty($row['qty']),
                 "summa" => $row['summa']
             );
             $sum1 += $row['summa'];
@@ -124,7 +125,7 @@ class Prod extends \App\Pages\Base
             $detail2[] = array(
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
-                "qty" => $row['qty'],
+                "qty" => H::fqty($row['qty']),
                 "summa" => $row['summa']
             );
             $sum2 += $row['summa'];

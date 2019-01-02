@@ -42,7 +42,7 @@ class Warranty extends \App\Pages\Base
 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-       
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -68,8 +68,8 @@ class Warranty extends \App\Pages\Base
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
 
-                        $this->docform->customer->setKey($this->_doc->customer_id);
-                        $this->docform->customer->setText($this->_doc->customer_name);
+            $this->docform->customer->setKey($this->_doc->customer_id);
+            $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
@@ -104,8 +104,8 @@ class Warranty extends \App\Pages\Base
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
-        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
-        
+        if (false == \App\ACL::checkShowDoc($this->_doc))
+            return;
     }
 
     public function detailOnRow($row) {
@@ -115,21 +115,21 @@ class Warranty extends \App\Pages\Base
         $row->add(new Label('sn', $item->sn));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('warranty', $item->warranty));
-        $row->add(new Label('quantity', $item->quantity));
+        $row->add(new Label('quantity', H::fqty($item->quantity));
         $row->add(new Label('price', $item->price));
-        $row->add(new Label('amount', $item->quantity * $item->price));
+        $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
 
     public function deleteOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
         $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
         $this->docform->detail->Reload();
-               
     }
 
     public function editOnClick($sender) {
@@ -187,7 +187,6 @@ class Warranty extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsn->setText("");
         $this->editdetail->editwarranty->setText("");
-                
     }
 
     public function cancelrowOnClick($sender) {
@@ -205,17 +204,18 @@ class Warranty extends \App\Pages\Base
     }
 
     public function savedocOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         if ($this->checkForm() == false) {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
-         $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->customer_id = $this->docform->customer->getKey();
 
 
         $this->_doc->headerdata = array(
             'pricetypename' => $this->docform->pricetype->getValueName(),
-           'pricetype' => $this->docform->pricetype->getValue(),            
+            'pricetype' => $this->docform->pricetype->getValue(),
         );
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
@@ -247,9 +247,9 @@ class Warranty extends \App\Pages\Base
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
-               $this->setError($ee->getMessage());
-  
-            $logger->error($ee->getMessage() . " Документ ". $this->_doc->meta_desc);
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
     }
@@ -275,7 +275,6 @@ class Warranty extends \App\Pages\Base
         $this->_tovarlist = array();
         $this->docform->detail->Reload();
         $store_id = $this->docform->store->getValue();
-               
     }
 
     public function OnAutoItem($sender) {
@@ -296,23 +295,21 @@ class Warranty extends \App\Pages\Base
 
 
         $item = Item::load($stock->item_id);
-        $this->editdetail->editprice->setText($item->getPrice($this->docform->pricetype->getValue(),$stock->price));
+        $this->editdetail->editprice->setText($item->getPrice($this->docform->pricetype->getValue(), $stock->price));
         $this->editdetail->qtystock->setText($stock->qty);
 
 
 
         $this->updateAjax(array('editprice', 'qtystock'));
     }
-     public function OnChangePriceType($sender) {
-            foreach ($this->_tovarlist as $stock) {
-              $item = Item::load($stock->item_id);
-              $stock->price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
-              
 
-            }    
- 
-            $this->docform->detail->Reload();
-             
+    public function OnChangePriceType($sender) {
+        foreach ($this->_tovarlist as $stock) {
+            $item = Item::load($stock->item_id);
+            $stock->price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
+        }
+
+        $this->docform->detail->Reload();
     }
 
 }

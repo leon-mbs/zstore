@@ -20,8 +20,8 @@ class Options extends \App\Pages\Base
 {
 
     private $metadatads;
-      public $pricelist = array();
-      
+    public $pricelist = array();
+
     public function __construct() {
         parent::__construct();
         if (System::getUser()->acltype == 2) {
@@ -32,9 +32,10 @@ class Options extends \App\Pages\Base
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new TextInput('firmname'));
         $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList()));
+        $this->common->add(new DropDownChoice('qtydigits'));
 
-        
-         
+
+
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
         $this->common->add(new TextInput('ceuro'));
@@ -45,7 +46,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('price4'));
         $this->common->add(new TextInput('price5'));
         //  $this->common->add(new Date('closeddate'));
-    
+
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
         $this->shop->add(new DropDownChoice('shopdefstore', \App\Entity\Store::getList()));
@@ -60,6 +61,7 @@ class Options extends \App\Pages\Base
 
         $this->common->firmname->setText($common['firmname']);
         $this->common->defstore->setValue($common['defstore']);
+        $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->cdoll->setText($common['cdoll']);
         $this->common->ceuro->setText($common['ceuro']);
         $this->common->crub->setText($common['crub']);
@@ -70,12 +72,12 @@ class Options extends \App\Pages\Base
         $this->common->price5->setText($common['price5']);
         $this->common->useval->setChecked($common['useval']);
         // $this->common->closeddate->setDate($common['closeddate']);
-        
-   
-        
+
+
+
 
         $this->onVal($this->common->useval);
-    
+
 
         $shop = System::getOptions("shop");
         if (!is_array($shop))
@@ -127,6 +129,7 @@ class Options extends \App\Pages\Base
         $common = array();
         $common['firmname'] = $this->common->firmname->getText();
         $common['defstore'] = $this->common->defstore->getValue();
+        $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['cdoll'] = $this->common->cdoll->getText();
         $common['ceuro'] = $this->common->ceuro->getText();
         $common['crub'] = $this->common->crub->getText();

@@ -35,8 +35,8 @@ class Customer extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
 
         $this->discount = doubleval($xml->discount[0]);
-        $this->type = (int)($xml->type[0]);
-        $this->jurid = (int)($xml->jurid[0]);
+        $this->type = (int) ($xml->type[0]);
+        $this->jurid = (int) ($xml->jurid[0]);
         $this->address = (string) ($xml->address[0]);
         $this->comment = (string) ($xml->comment[0]);
 
@@ -48,14 +48,22 @@ class Customer extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  entrylist where   customer_id = {$this->customer_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt == 0) ? true : false;
+        if ($cnt > 0)
+            return false;
+        $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
+        $cnt = $conn->GetOne($sql);
+        if ($cnt > 0)
+            return false;
+        return true;
         ;
     }
-     /**
+
+    /**
      * список   для комбо
      * 
      */
     public static function getList() {
-        return Customer::findArray("customer_name", "" );
+        return Customer::findArray("customer_name", "");
     }
+
 }

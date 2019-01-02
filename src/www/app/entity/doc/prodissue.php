@@ -27,10 +27,10 @@ class ProdIssue extends Document
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $value['itemname'],
                     "tovar_code" => $value['item_code'],
-                    "quantity" => $value['quantity'],
+                    "quantity" => H::fqty($value['quantity']),
                     "price" => $value['price'],
-                     "msr" => $value['msr'],
-                    "amount" => ($value['quantity'] ) * $value['price']
+                    "msr" => $value['msr'],
+                    "amount" => round($value['quantity'] * $value['price'])
                 );
             }
         }

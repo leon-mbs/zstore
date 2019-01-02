@@ -29,7 +29,6 @@ INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `me
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(14, 4, 'Услуги, работы', 'ServiceList', '', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(15, 1, 'Акт выполненных работ', 'ServiceAct', 'Продажи', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(16, 1, 'Возврат от покупателя', 'ReturnIssue', 'Продажи', '', 0, 0);
-INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(34, 1, 'ТТН', 'TTN', 'Продажи', 'Товарно -транспортная накладная. Создается на  основании заказа', 1, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(18, 3, 'Работы, наряды', 'TaskList', '', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(19, 1, 'Наряд', 'Task', '', 'Наряд на выполнение работы, задачи', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(20, 2, 'Оплата по нарядам', 'EmpTask', '', '', 0, 0);
@@ -38,11 +37,12 @@ INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `me
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(23, 5, 'Бренды', 'Manufacturers', '', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(24, 5, 'Группы товаров', 'GroupList', '', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(26, 5, 'Товары', 'ProductList', '', '', 0, 0);
-INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(27, 3, 'Журнал заказов', 'OrderList', '', '', 0, 0);
+INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(27, 3, 'Заказы', 'OrderList', '', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(28, 1, 'Заказ покупателя', 'Order', 'Продажи', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(30, 1, 'Оприходование  с  производства', 'ProdReceipt', 'Производство', 'Оприходование готовой продукции и полуфабрикатов  с  производства  на  склад.  ', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(31, 1, 'Списание на  производство', 'ProdIssue', 'Производство', 'Передача  на производство  материалов  и комплектующий.', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(32, 2, 'Отчет по производству', 'Prod', 'Производство', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(33, 4, 'Производственные участвки', 'ProdAreaList', '', '', 0, 0);
-INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(35, 3, 'Журнал ТТН', 'TTNList', '', '', 0, 0);
+INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(35, 3, 'Продажи', 'GIList', '', '', 0, 0);
 INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(36, 4, 'Оборудование', 'EqList', '', '', 0, 0);
+INSERT  INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(37, 3, 'Закупки', 'GRList', '', '', 0, 0);

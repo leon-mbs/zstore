@@ -51,10 +51,10 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('hours', "0"));
-        
+
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
-        $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", "" ), 0));
+        $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
 
         $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
@@ -94,8 +94,8 @@ class Task extends \App\Pages\Base
         $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name")));
         $this->editdetail3->add(new Button('cancelrow3'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail3->add(new SubmitButton('saverow3'))->onClick($this, 'saverow3OnClick');
-    
-    
+
+
         //equipment
         $this->add(new Form('editdetail4'))->setVisible(false);
         $this->editdetail4->add(new DropDownChoice('editeq', Equipment::findArray("eq_name", "", "eq_name")));
@@ -119,13 +119,13 @@ class Task extends \App\Pages\Base
             $this->docform->hours->setText($this->_doc->headerdata['hours']);
 
             $this->docform->start_date->setDate($this->_doc->headerdata['start_date']);
-              $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
+            $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
             $this->docform->document_date->setDate($this->_doc->headerdata['end_date']);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
-                        $this->docform->customer->setKey($this->_doc->customer_id);
-                        $this->docform->customer->setText($this->_doc->customer_name);
+            $this->docform->customer->setKey($this->_doc->customer_id);
+            $this->docform->customer->setText($this->_doc->customer_name);
             $this->OnChangeCustomer($this->docform->customer);
 
             foreach ($this->_doc->detaildata as $item) {
@@ -159,8 +159,8 @@ class Task extends \App\Pages\Base
         $this->docform->add(new DataView('detail4', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_eqlist')), $this, 'detail4OnRow'))->Reload();
         $this->calcTotal();
 
-        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
-    
+        if (false == \App\ACL::checkShowDoc($this->_doc))
+            return;
     }
 
     public function detailOnRow($row) {
@@ -199,7 +199,8 @@ class Task extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $service = $sender->owner->getDataItem();
 
 
@@ -239,10 +240,10 @@ class Task extends \App\Pages\Base
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('msr', $item->msr));
 
-        $row->add(new Label('quantity2', $item->quantity));
+        $row->add(new Label('quantity2', H::fqty($item->quantity)));
         $row->add(new Label('price2', $item->price));
 
-        $row->add(new Label('amount2', $item->quantity * $item->price));
+        $row->add(new Label('amount2', round($item->quantity * $item->price)));
         $row->add(new ClickLink('edit2'))->onClick($this, 'edit2OnClick');
         $row->add(new ClickLink('delete2'))->onClick($this, 'delete2OnClick');
     }
@@ -344,7 +345,6 @@ class Task extends \App\Pages\Base
         $this->docform->detail3->Reload();
     }
 
-    
     //equipment
     public function addeqOnClick($sender) {
         $this->editdetail4->setVisible(true);
@@ -379,16 +379,14 @@ class Task extends \App\Pages\Base
         $this->_emplist = array_diff_key($this->_eqlist, array($eq->eq_id => $this->_eqlist[$eq->eq_id]));
         $this->docform->detail4->Reload();
     }
-    
-    
-    
-    
+
     public function savedocOnClick($sender) {
-         if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
-       $this->_doc->document_number = $this->docform->document_number->getText();
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
+        $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
-          $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->customer_id = $this->docform->customer->getKey();
 
 
         if ($this->checkForm() == false) {
@@ -398,17 +396,16 @@ class Task extends \App\Pages\Base
         $this->calcTotal();
 
         $old = $this->_doc->cast();
-        
+
         $this->_doc->headerdata = array(
             'parea' => $this->docform->parea->getValue(),
             'pricetype' => $this->docform->pricetype->getValue(),
-             'pricetypename' => $this->docform->pricetype->getValueName(),
-           'store' => $this->docform->store->getValue(),
-             'hours' => $this->docform->hours->getText(),
-            
+            'pricetypename' => $this->docform->pricetype->getValueName(),
+            'store' => $this->docform->store->getValue(),
+            'hours' => $this->docform->hours->getText(),
             'start_date' => $this->docform->start_date->getDate(),
             'end_date' => $this->docform->document_date->getDate(),
-             'totaldisc' => $this->docform->totaldisc->getText(),
+            'totaldisc' => $this->docform->totaldisc->getText(),
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -434,7 +431,7 @@ class Task extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
 
 
-        
+
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -446,10 +443,10 @@ class Task extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-                    
-                 //  $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                    $this->_doc->updateStatus(Document::STATE_INPROCESS);
- 
+
+                //  $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                $this->_doc->updateStatus(Document::STATE_INPROCESS);
+
 
                 $this->_doc->save();
             } else {
@@ -457,17 +454,16 @@ class Task extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-          if ($isEdited) 
-              App::RedirectBack();
-          else 
-              App::Redirect("\\App\\Pages\\Register\\TaskList");                
-              
+            if ($isEdited)
+                App::RedirectBack();
+            else
+                App::Redirect("\\App\\Pages\\Register\\TaskList");
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
-             $this->setError($ee->getMessage());
-     
-            $logger->error($ee->getMessage() . " Документ ". $this->_doc->meta_desc);
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
     }
@@ -579,7 +575,7 @@ class Task extends \App\Pages\Base
         $this->editdetail2->qty->setText(Stock::getQuantity($id, $this->docform->document_date->getDate()));
 
         $item = Item::load($stock->item_id);
-        $price = $item->getPrice($this->docform->pricetype->getValue(),$stock->partion > 0 ? $stock->partion : 0);
+        $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
         //$price = $price - $price / 100 * $this->_discount;
 
 

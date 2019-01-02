@@ -26,17 +26,17 @@ class ReturnIssue extends Document
             } else {
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $value['itemname'],
-                    "quantity" => $value['quantity'],
+                    "quantity" => H::fqty($value['quantity']),
                     "price" => $value['price'],
-                    "msr" => $value['msr'], 
-                    "amount" => ($value['quantity'] ) * $value['price']
+                    "msr" => $value['msr'],
+                    "amount" => round($value['quantity'] * $value['price'])
                 );
             }
         }
 
         $firm = \App\System::getOptions("common");
 
-        
+
         $header = array('date' => date('d.m.Y', $this->document_date),
             "firmname" => $firm['firmname'],
             "customername" => $this->customer_name,
@@ -62,7 +62,7 @@ class ReturnIssue extends Document
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
 
-            
+
             $sc->setCustomer($this->customer_id);
             $sc->save();
         }

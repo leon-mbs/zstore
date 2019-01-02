@@ -18,20 +18,20 @@
                         <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
 
                     </div>
-                         <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="phone"  >Телефон</label>
-                       
-                            <input zippy="phone"   class="form-control" >
-                           
+
+                        <input zippy="phone"   class="form-control" >
+
                     </div>    
                     <div class="form-group  ">
                         <label for="email"  >Email</label>
-                       
-                            <input zippy="email"   class="form-control" >
-                          
+
+                        <input zippy="email"   class="form-control" >
+
                     </div>  
-                                 
-                <div class="form-group  ">
+
+                    <div class="form-group  ">
                         <label for="notes" >Комментарий </label>
 
                         <textarea class="form-control"  zippy="notes"></textarea>
@@ -49,7 +49,7 @@
                         <select class="form-control" zippy="store">
                         </select>
                     </div>
-                                    <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="pricetype" >Тип  цены</label>
                         <select class="form-control" zippy="pricetype">
                         </select>
@@ -57,17 +57,17 @@
 
                     <div class="form-group  ">
                         <label for="delivery"  >Доставка</label>
-                      
-                            <select  class="form-control" zippy="delivery"><option value="0">Выбрать</option></select>
-                       
+
+                        <select  class="form-control" zippy="delivery"><option value="0">Выбрать</option></select>
+
                     </div>
                     <div class="form-group  ">
                         <label data-label="address" for="address"  >Адрес</label>
-                 
-                            <input zippy="address"    class="form-control" >
-                          
+
+                        <input zippy="address"    class="form-control" >
+
                     </div>           
-                       
+
                 </div>
             </div>
             <div class="row">
@@ -79,7 +79,7 @@
                             <th>Название</th>
                             <th  >Код</th>
                             <th  >Ед.</th>
-                         
+
 
                             <th   class="text-right">Кол.</th>
                             <th    class="text-right" >Цена</th>
@@ -91,7 +91,7 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                            
+
 
                             <td zippy="quantity"  class="text-right"></td>
                             <td zippy="price"  class="text-right"></td>
@@ -101,7 +101,7 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="4"  class="text-right">Всего:</td>
+                            <td colspan="5"  class="text-right">Всего:</td>
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
@@ -113,9 +113,9 @@
             <div class="row">
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
-                   &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                   &nbsp;<input zippy="execdoc" type="submit" value="На  выполнение" class="btn btn-outline-primary  ">
-                   
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="На  выполнение" class="btn btn-outline-primary  ">
+
 
 
                 </div>
@@ -135,7 +135,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity" >Количество</label>
-                        <input autocomplete="off" class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9]+"  style="width: 70px;">
+                        <input autocomplete="off" class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"  style="width: 70px;">
 
                     </div>
                     <div class="form-group">

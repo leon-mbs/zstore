@@ -12,6 +12,7 @@ class System
 {
 
     private static $_options = array();   //  для кеширования  
+    private static $_cache = array();   //  для кеширования  
 
     /**
      * Возвращает  текущего  юзера
@@ -80,7 +81,17 @@ class System
         self::$_options[$group] = $options;
     }
 
-    
+    public static function setCache($key, $data) {
+        self::$_cache[$key] = $data;
+    }
+
+    public static function getCache($key) {
+
+        if (isset(self::$_cache[$key])) {
+            return self::$_cache[$key];
+        }
+        return null;
+    }
 
     public static function setSuccesMsg($msg) {
         Session::getSession()->smsg = $msg;

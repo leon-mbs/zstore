@@ -5,7 +5,7 @@
     <body>
         <div class="row">
 
-            <div class="col-12 col-lg-10 col-xl-8" zippy="itemtable">
+            <div class="col-12   col-xl-10" zippy="itemtable">
                 <h3>Товары на  складе </h3>
                 <form zippy="filter" class="form-inline">
 
@@ -14,18 +14,14 @@
                     <label for="searchstore">склад</label>
 
                     <select   class="form-control mr-sm-2" zippy="searchstore">
-                     <option value="0">Все склады </option>
+                        <option value="0">Все склады </option>
                     </select>         
                     <label for="searchcat">категория</label>
 
                     <select   class="form-control mr-sm-2" zippy="searchcat">
                         <option value="0">Не задана</option>
                     </select>         
-                    <div class="form-check   ">
 
-                        <input class="form-check-input"  type="checkbox" zippy="allpart">
-                        <label class="form-check-label mr-sm-3" for="allpart">Все партии </label>
-                    </div>
 
                     <input class="btn btn-outline-success  " type="submit" value="ОК">
 
@@ -33,6 +29,7 @@
 
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
+                        <th>Склад</th>
                         <th>Название</th>
 
                         <th>Артикул</th>
@@ -44,9 +41,10 @@
                         <th  style="text-align: right;">Прод. цена</th>
 
 
-                        <th style="width:56px"></th>
+
                     </tr>
                     <tr zippy="itemlist">
+                        <td zippy="storename"></td>
                         <td zippy="itemname"></td>
 
                         <td zippy="code"></td>
@@ -56,7 +54,7 @@
                         <td zippy="qty" style="text-align: right;"></td>
                         <td zippy="amount" style="text-align: right;"></td>
                         <td zippy="price" style="text-align: right;"></td>
-                        <td  ><a title="Удалить неиспользуемую партию" zippy="delete"> <i class="fa fa-trash"></i></a></td>
+
 
                     </tr>
                 </table>

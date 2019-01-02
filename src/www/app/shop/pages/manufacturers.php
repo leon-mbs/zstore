@@ -16,7 +16,8 @@ class Manufacturers extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-       if(false ==\App\ACL::checkShowCat('Manufacturers'))return;       
+        if (false == \App\ACL::checkShowCat('Manufacturers'))
+            return;
 
         $panellist = $this->add(new \Zippy\Html\Panel('list'));
 

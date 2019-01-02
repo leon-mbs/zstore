@@ -21,7 +21,8 @@ class Income extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-         if(false ==\App\ACL::checkShowReport('Income'))return;       
+        if (false == \App\ACL::checkShowReport('Income'))
+            return;
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
@@ -62,7 +63,7 @@ class Income extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "income";
 
-     
+
         $this->detail->print->pagename = $reportpage;
         $this->detail->print->params = array('print', $reportname);
         $this->detail->html->pagename = $reportpage;
@@ -165,7 +166,7 @@ class Income extends \App\Pages\Base
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
                 "dt" => date('Y-m-d', strtotime($row['dt'])),
-                "qty" => $row['qty'],
+                "qty" => H::fqty($row['qty']),
                 "summa" => $row['summa']
             );
         }

@@ -16,8 +16,8 @@ class Base extends \Zippy\Html\WebPage
 
     public function __construct($params = null) {
         global $_config;
-        
-        
+
+
         \Zippy\Html\WebPage::__construct();
 
 
@@ -44,8 +44,8 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new Label("refmenu", Helper::generateMenu(4), true));
         $this->add(new Label("shopmenu", Helper::generateMenu(5), true));
 
-        
-        
+
+
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $pi = $this->getPageInfo();
@@ -54,9 +54,9 @@ class Base extends \Zippy\Html\WebPage
             $this->pageinfo->setVisible(false);
         }
 
-        
-        
-        
+
+
+
         $this->_tvars["smart"] = Helper::generateSmartMenu();
         $this->_tvars["picontent"] = $pi;
         $this->_tvars["shop"] = $_config['common']['shop'] == 1;
@@ -132,7 +132,4 @@ class Base extends \Zippy\Html\WebPage
         \App\Application::$app->setReloadPage();
     }
 
-    
-     
-    
 }

@@ -87,8 +87,8 @@ class ProdIssue extends \App\Pages\Base
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
-        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
-        
+        if (false == \App\ACL::checkShowDoc($this->_doc))
+            return;
     }
 
     public function detailOnRow($row) {
@@ -98,16 +98,17 @@ class ProdIssue extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
 
-        $row->add(new Label('quantity', $item->quantity));
+        $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
 
-        $row->add(new Label('amount', $item->price * $item->quantity));
+        $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
 
     public function deleteOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -142,7 +143,8 @@ class ProdIssue extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("Не выбран товар");
@@ -232,9 +234,9 @@ class ProdIssue extends \App\Pages\Base
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
-             $this->setError($ee->getMessage());
-    
-            $logger->error($ee->getMessage() . " Документ ". $this->_doc->meta_desc);
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
     }

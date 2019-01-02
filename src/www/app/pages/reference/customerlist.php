@@ -34,11 +34,12 @@ class CustomerList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if(false ==\App\ACL::checkShowRef('CustomerList'))return;       
+        if (false == \App\ACL::checkShowRef('CustomerList'))
+            return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchtype',array(1=>'Покупатели',2=>'Поставщики'),0));
+        $this->filter->add(new DropDownChoice('searchtype', array(1 => 'Покупатели', 2 => 'Поставщики'), 0));
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
@@ -55,7 +56,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('editphone'));
         $this->customerdetail->add(new TextInput('editemail'));
         $this->customerdetail->add(new CheckBox('editjurid'));
-        $this->customerdetail->add(new DropDownChoice('edittype',array(1=>'Покупатель',2=>'Поставщик'),0));
+        $this->customerdetail->add(new DropDownChoice('edittype', array(1 => 'Покупатель', 2 => 'Поставщик'), 0));
         $this->customerdetail->add(new TextInput('discount'));
         $this->customerdetail->add(new TextArea('editcomment'));
 
@@ -76,7 +77,7 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->addeventform->add(new \ZCL\BT\DateTimePicker('addeventdate', time()));
         $this->contentview->addeventform->add(new TextInput('addeventtitle'));
         $this->contentview->addeventform->add(new TextArea('addeventdesc'));
-        
+
         $this->contentview->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
         $this->contentview->dw_eventlist->setPageSize(10);
@@ -92,8 +93,8 @@ class CustomerList extends \App\Pages\Base
             $search = Customer::qstr('%' . $search . '%');
             $where .= " and (customer_name like  {$search} or phone like {$search}    )";
         }
-       if ($type > 0) {
-            
+        if ($type > 0) {
+
             $where .= " and detail like '%<type>{$type}</type>%'    ";
         }
 
@@ -111,7 +112,7 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
         $row->add(new Label('customercomment', $item->comment));
-        
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -135,8 +136,9 @@ class CustomerList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-       if(false ==\App\ACL::checkEditRef('CustomerList'))return;       
- 
+        if (false == \App\ACL::checkEditRef('CustomerList'))
+            return;
+
 
         if (false == Customer::delete($sender->owner->getDataItem()->customer_id)) {
             $this->setError("Нельзя удалить контрагента");
@@ -158,8 +160,9 @@ class CustomerList extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
-        if(false ==\App\ACL::checkEditRef('CustomerList'))return;       
- 
+        if (false == \App\ACL::checkEditRef('CustomerList'))
+            return;
+
         $this->_customer->customer_name = $this->customerdetail->editcustomername->getText();
         if ($this->_customer->customer_name == '') {
             $this->setError("Введите наименование");
@@ -171,7 +174,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->discount = $this->customerdetail->discount->getText();
         $this->_customer->comment = $this->customerdetail->editcomment->getText();
         $this->_customer->type = $this->customerdetail->edittype->getValue();
-        $this->_customer->jurid = $this->customerdetail->editjurid->isChecked()?1:0;
+        $this->_customer->jurid = $this->customerdetail->editjurid->isChecked() ? 1 : 0;
 
         $this->_customer->Save();
         $this->customerdetail->setVisible(false);

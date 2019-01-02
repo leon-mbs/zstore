@@ -18,27 +18,29 @@ class Task extends Document
 
         $detail = array();
         foreach ($this->detaildata as $value) {
-            if($value['eq_id']>0)continue;
-            if($value['employee_id']>0)continue;
+            if ($value['eq_id'] > 0)
+                continue;
+            if ($value['employee_id'] > 0)
+                continue;
             $detail[] = array("no" => $i++,
                 "servicename" => $value['service_id'] > 0 ? $value['service_name'] : $value['itemname'],
-                "quantity" => $value['quantity'],
+                "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
-                "amount" => $value['quantity'] * $value['price']
+                "amount" => round($value['quantity'] * $value['price'])
             );
         }
-       $detail2 = array();
+        $detail2 = array();
         foreach ($this->detaildata as $value) {
-            if($value['eq_id']>0){
-                $detail2[] = array( 
+            if ($value['eq_id'] > 0) {
+                $detail2[] = array(
                     "eq_name" => $value['eq_name'],
-                    "code" => $value['code'] 
+                    "code" => $value['code']
                 );
             }
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "customer" => $this->customer_name ,
+            "customer" => $this->customer_name,
             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
             "document_number" => $this->document_number,
             "totaldisc" => $this->headerdata["totaldisc"],
@@ -46,7 +48,7 @@ class Task extends Document
         );
         $report = new \App\Report('task.tpl');
 
-        $html = $report->generate($header, $detail,$detail2);
+        $html = $report->generate($header, $detail, $detail2);
 
         return $html;
     }
@@ -61,13 +63,13 @@ class Task extends Document
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             if ($row['stock_id'] > 0) {
                 $sc->setStock($row['stock_id']);
-                if ($row['custpay'] == 1 )
+                if ($row['custpay'] == 1)
                     $sc->setCustomer($this->customer_id);
             }
             if ($row['service_id'] > 0) {
                 $sc->setService($row['service_id']);
-                 
-                    $sc->setCustomer($this->customer_id);
+
+                $sc->setCustomer($this->customer_id);
             }
 
             if ($row['employee_id'] > 0) {

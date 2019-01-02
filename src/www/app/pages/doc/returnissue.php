@@ -32,7 +32,6 @@ class ReturnIssue extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-   
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -44,9 +43,9 @@ class ReturnIssue extends \App\Pages\Base
 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-       
+
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-   
+
         $this->docform->add(new TextInput('notes'));
 
 
@@ -63,9 +62,9 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editprice'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-  
 
-   
+
+
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
@@ -77,8 +76,8 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-                        $this->docform->customer->setKey($this->_doc->customer_id);
-                        $this->docform->customer->setText($this->_doc->customer_name);
+            $this->docform->customer->setKey($this->_doc->customer_id);
+            $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -105,15 +104,15 @@ class ReturnIssue extends \App\Pages\Base
                             $item = new Item($item);
                             $this->_tovarlist[$item->item_id] = $item;
                         }
-                         $this->calcTotal();
+                        $this->calcTotal();
                     }
                 }
             }
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
-        if(false ==\App\ACL::checkShowDoc($this->_doc))return;       
-        
+        if (false == \App\ACL::checkShowDoc($this->_doc))
+            return;
     }
 
     public function detailOnRow($row) {
@@ -121,18 +120,19 @@ class ReturnIssue extends \App\Pages\Base
 
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('msr', $item->msr));
-        
 
-        $row->add(new Label('quantity', $item->quantity));
+
+        $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
 
-        $row->add(new Label('amount', $item->price * $item->quantity));
+        $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
 
     public function deleteOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -168,7 +168,8 @@ class ReturnIssue extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
-        if(false ==\App\ACL::checkEditDoc($this->_doc))return;       
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("Не выбран товар");
@@ -258,9 +259,9 @@ class ReturnIssue extends \App\Pages\Base
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
-              $this->setError($ee->getMessage());
-   
-            $logger->error($ee->getMessage() . " Документ ". $this->_doc->meta_desc);
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
     }
@@ -307,18 +308,15 @@ class ReturnIssue extends \App\Pages\Base
         $this->calcTotal();
     }
 
-    
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "Customer_name like " . $text);
     }
 
- 
-
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = Item::qstr('%' . $sender->getText() . '%');
-        return Item::findArray("itemname"," (itemname like {$text} or item_code like {$text}) ");
+        return Item::findArray("itemname", " (itemname like {$text} or item_code like {$text}) ");
     }
 
 }

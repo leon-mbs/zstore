@@ -6,7 +6,7 @@ namespace App\API;
  * Класс  для  работы  с  кассовыми  апаратами
  * пример  вызова /api/Pos/Add/1
  */
-class Pos  
+class Pos
 {
 
     //Демо

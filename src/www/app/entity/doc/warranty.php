@@ -18,11 +18,11 @@ class Warranty extends Document
         foreach ($this->detaildata as $value) {
             $detail[] = array(
                 "tovar_name" => $value['itemname'],
-                "quantity" => $value['quantity'],
+                "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
-                "amount" => $value['quantity'] * $value['price'],
+                "amount" => round($value['quantity'] * $value['price']),
                 "sn" => $value['sn'],
-                 "msr" => $value['msr'],
+                "msr" => $value['msr'],
                 "warranty" => $value['warranty']
             );
             $total += $value['quantity'] * $value['price'];
@@ -33,7 +33,7 @@ class Warranty extends Document
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "firmname" => $firm['name'],
-            "customer" =>  $this->customer_name ,
+            "customer" => $this->customer_name,
             "document_number" => $this->document_number
         );
 

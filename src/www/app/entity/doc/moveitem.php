@@ -65,8 +65,8 @@ class MoveItem extends Document
             $detail[] = array("no" => $i++,
                 "item_name" => $value['itemname'],
                 "price" => $value['partion'],
-                "msr" => $value['msr'],                
-                "quantity" => $value['quantity']);
+                "msr" => $value['msr'],
+                "quantity" => H::fqty($value['quantity']));
         }
 
 

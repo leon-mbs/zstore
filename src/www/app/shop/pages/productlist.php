@@ -36,19 +36,20 @@ class ProductList extends \App\Pages\Base
 
     private $rootgroup, $product;
     private $store = "";
-    private $op  ;
+    private $op;
     public $group = null, $attrlist = array();
 
     public function __construct() {
         parent::__construct();
-        if(false ==\App\ACL::checkShowCat('ProductList'))return;       
+        if (false == \App\ACL::checkShowCat('ProductList'))
+            return;
 
         $this->op = System::getOptions("shop");
-        if(strlen($this->op['defcust'])==0  || strlen($this->op['defstore'])==0 ||  strlen($this->op['defpricetype'])==0  ){
+        if (strlen($this->op['defcust']) == 0 || strlen($this->op['defstore']) == 0 || strlen($this->op['defpricetype']) == 0) {
             $this->setWarn('Не заданы все настройки магазина. Перейдите на страницу  настроек.');
         }
-      
-      
+
+
         $tree = $this->add(new Tree("tree"));
         $tree->onSelectNode($this, "onTree");
 
@@ -68,11 +69,11 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->plist->setPageSize(25);
 
         $this->add(new Panel('editpanel'))->setVisible(false);
-  
- 
+
+
         $editform = $this->editpanel->add(new Form('editform'));
         $editform->add(new AutocompleteTextInput('eitem'))->onText($this, 'OnAutoItem');
-        $editform->eitem->onChange($this,'onChangeItem');
+        $editform->eitem->onChange($this, 'onChangeItem');
         $editform->add(new TextInput('ename'));
         $editform->add(new TextInput('ecode'));
         $editform->add(new TextInput('eprice', 0));
@@ -89,7 +90,7 @@ class ProductList extends \App\Pages\Base
         $editform->add(new CheckBox('edisabled'));
         $editform->add(new ClickLink('bcancel'))->onClick($this, 'bcancelOnClick');
         $editform->add(new ClickLink('bdelete'))->onClick($this, 'bdeleteOnClick');
-        
+
         $editform->onSubmit($this, 'onSubmitForm');
 
         $this->listpanel->addnew->setVisible(false);
@@ -163,33 +164,31 @@ class ProductList extends \App\Pages\Base
 
 //новый
     public function addnewOnClick($sender) {
- 
+
         $this->product = new Product();
         $this->product->createdon = time();
         $this->product->group_id = $this->group->group_id;
         $this->editpanel->setVisible(true);
         $this->editpanel->editform->eitem->setKey(0);
         $this->editpanel->editform->eitem->setText('');
-        $this->editpanel->editform->eitem->setAttribute('readonly',null);        
+        $this->editpanel->editform->eitem->setAttribute('readonly', null);
         $this->listpanel->setVisible(false);
         $this->attrlist = $this->product->getAttrList();
-        $this->editpanel->editform->attrlist->Reload();        
+        $this->editpanel->editform->attrlist->Reload();
         $this->editpanel->editform->clean();
         $this->editpanel->editform->bdelete->setVisible(false);
         $this->editpanel->editform->egroup->setValue($this->group->group_id);
-         
     }
 
     //выбран товар 
     public function onChangeItem($sender) {
-         
+
         $item = Item::load($sender->getKey());
         $this->product->productname = $item->itemname;
         $this->product->item_code = $item->item_code;
         $this->editpanel->editform->ename->setText($this->product->productname);
         $this->editpanel->editform->ecode->setText($this->product->item_code);
-        $this->editpanel->editform->eprice->setText($item->getPrice($this->op['defpricetype'],$this->op['defstore']));
-        
+        $this->editpanel->editform->eprice->setText($item->getPrice($this->op['defpricetype'], $this->op['defstore']));
     }
 
     public function OnAutoItem($sender) {
@@ -215,37 +214,37 @@ class ProductList extends \App\Pages\Base
 
 //редактирование
     public function lnameOnClick($sender) {
- 
+
 
 
         $this->editpanel->setVisible(true);
         $this->listpanel->setVisible(false);
         $this->product = $sender->getOwner()->getDataItem();
-        $this->editpanel->editform->eitem->setAttribute('readonly','readonly');
-        
+        $this->editpanel->editform->eitem->setAttribute('readonly', 'readonly');
+
         $this->editpanel->editform->prephoto->setUrl('/loadimage.php?id=' . $this->product->image_id);
         $this->editpanel->editform->ename->setText($this->product->productname);
-        
+
         $item = Item::load($this->product->item_id);
         $this->editpanel->editform->eitem->setText($item->itemname);
         $this->editpanel->editform->eitem->setKey($this->product->item_id);
-        
+
         $this->editpanel->editform->ecode->setText($this->product->item_code);
         $this->editpanel->editform->edescshort->setText($this->product->description);
         $this->editpanel->editform->edescdet->setText($this->product->fulldescription);
         $this->editpanel->editform->emanuf->setValue($this->product->manufacturer_id);
 
         $this->editpanel->editform->bdelete->setVisible(true);
-        
+
 
         $this->editpanel->editform->edisabled->setChecked($this->product->deleted > 0);
- 
+
         $this->attrlist = $this->product->getAttrList();
         $this->editpanel->editform->attrlist->Reload();
         $this->editpanel->editform->egroup->setValue($this->group->group_id);
     }
 
-   public function onSubmitForm($sender) {
+    public function onSubmitForm($sender) {
         $this->product->manufacturer_id = $sender->emanuf->getValue();
 
 
@@ -258,7 +257,7 @@ class ProductList extends \App\Pages\Base
         $this->product->price = $sender->eprice->getText();
         $this->product->oldprice = $sender->eoldprice->getText();
         $this->product->deleted = $sender->edisabled->isChecked();
-        if(strlen($this->product->productname)==0){
+        if (strlen($this->product->productname) == 0) {
             $this->setError('Не указано имя');
             return;
         }
@@ -315,8 +314,7 @@ class ProductList extends \App\Pages\Base
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
     }
-    
-    
+
 //строка  атрибута
     public function attrlistOnRow($row) {
         $attr = $row->getDataItem();
@@ -330,7 +328,6 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->setVisible(true);
     }
 
- 
     public function bdeleteOnClick($sender) {
         if ($this->product->checkDelete() == false) {
             $this->setError('Продукт уже  используется');
@@ -341,8 +338,6 @@ class ProductList extends \App\Pages\Base
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
     }
-
- 
 
 }
 

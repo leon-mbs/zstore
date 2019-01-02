@@ -15,8 +15,6 @@ class UserProfile extends \App\Pages\Base
 {
 
     public $user;
- 
-     
 
     public function __construct() {
         parent::__construct();
@@ -25,7 +23,6 @@ class UserProfile extends \App\Pages\Base
 
         if ($this->user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
-             
         }
 
         $form = new Form('profileform');
@@ -42,8 +39,6 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('confirmpassword'));
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
-        
-       
     }
 
     public function onsubmit($sender) {
@@ -84,6 +79,4 @@ class UserProfile extends \App\Pages\Base
         $sender->confirmpassword->setText('');
     }
 
-
-    
 }

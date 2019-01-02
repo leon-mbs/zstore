@@ -44,7 +44,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new DataView('reldocs', new ArrayDataSource(new Prop($this, '_reldocs')), $this, 'relDoclistOnRow'));
 
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
-     
+
         $this->add(new DataView('dw_paylist', new ArrayDataSource(new Prop($this, '_paylist')), $this, 'payListOnRow'));
 
         $this->add(new Form('addrelform'))->onSubmit($this, 'OnReldocSubmit');
@@ -66,10 +66,10 @@ class DocView extends \Zippy\Html\PageFragment
         $this->_doc = $doc;
         $doc = $this->_doc->cast();
 
-               
-        
+
+
         $html = $doc->generateReport();
-        $this->preview->setText($html, true); 
+        $this->preview->setText($html, true);
         // проверяем  поддержку  экспорта
         $exportlist = $doc->supportedExport();
         $this->word->setVisible(in_array(Document::EX_WORD, $exportlist));
@@ -79,7 +79,7 @@ class DocView extends \Zippy\Html\PageFragment
 
         $reportpage = "App/Pages/ShowDoc";
 
-    
+
         $this->print->pagename = $reportpage;
         $this->print->params = array('print', $doc->document_id);
         $this->html->pagename = $reportpage;
@@ -97,7 +97,7 @@ class DocView extends \Zippy\Html\PageFragment
         //статусы
         $this->_statelist = $this->_doc->getLogList();
         $this->dw_statelist->Reload();
-  
+
         //оплаты
         $this->_paylist = $this->_doc->getPayments();
         $this->dw_paylist->Reload();
@@ -139,15 +139,15 @@ class DocView extends \Zippy\Html\PageFragment
     public function stateListOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('statehost', $item->hostname));
-        $row->add(new Label('statedate', date('Y.m.d H:i',$item->updatedon)));
+        $row->add(new Label('statedate', date('Y.m.d H:i', $item->updatedon)));
         $row->add(new Label('stateuser', $item->username));
         $row->add(new Label('statename', Document::getStateName($item->state)));
     }
-   
-   //вывод строки  оплат
+
+    //вывод строки  оплат
     public function payListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('paydate',date('Y-m-d',$item->date) ));
+        $row->add(new Label('paydate', date('Y-m-d', $item->date)));
         $row->add(new Label('payamount', $item->amount));
         $row->add(new Label('payuser', $item->user));
         $row->add(new Label('paycomment', $item->comment));

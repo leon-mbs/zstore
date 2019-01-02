@@ -47,8 +47,8 @@ class ServiceAct extends Document
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setService($row['service_id']);
 
-             
-                $sc->setCustomer($this->customer_id);
+
+            $sc->setCustomer($this->customer_id);
             $sc->save();
         }
         $conn->CompleteTrans();
