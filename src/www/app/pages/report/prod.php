@@ -132,14 +132,16 @@ class Prod extends \App\Pages\Base
         }
 
         $header = array('datefrom' => date('d.m.Y', $from),
-            'dateto' => date('d.m.Y', $to),
+          "_detail" => $detail,
+          "_detail2" => $detail2,
+           'dateto' => date('d.m.Y', $to),
             'sum1' => $sum1,
             'sum2' => $sum2
         );
 
         $report = new \App\Report('prod.tpl');
 
-        $html = $report->generate($header, $detail, $detail2);
+        $html = $report->generate($header );
 
         return $html;
     }

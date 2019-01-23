@@ -21,7 +21,7 @@ use App\Application as App;
 use App\System;
 
 /**
- * журнал  ТТН
+ * журнал  продаж
  */
 class GIList extends \App\Pages\Base
 {
@@ -48,7 +48,7 @@ class GIList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные', 3 => 'Все'), 0));
 
 
-        $doclist = $this->add(new DataView('doclist', new TTNDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
@@ -80,6 +80,8 @@ class GIList extends \App\Pages\Base
         $this->paypan->add(new DataView('paylist', new ArrayDataSource(new Prop($this, '_pays')), $this, 'payOnRow'))->Reload();
 
         $this->doclist->Reload();
+        $this->add(new ClickLink('csv', $this,'oncsv'));        
+
     }
 
     public function filterOnSubmit($sender) {
@@ -293,12 +295,39 @@ class GIList extends \App\Pages\Base
         $this->paypan->setVisible(false);
     }
 
+    public function oncsv($sender) {
+            $list = $this->doclist->getDataSource()->getItems(-1,-1,'document_id');
+            $csv="";
+ 
+            foreach($list as $d){
+               $csv.=  date('Y.m.d',$d->document_date) .';';    
+               $csv.=  $d->document_number .';';    
+               $csv.=  $d->headerdata['order'].';';    
+               $csv.=  $d->customer_name .';';    
+               $csv.=  $d->amount  .';'; 
+               $csv.=  $d->notes .';';     
+               $csv.="\n";
+            }
+            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+
+ 
+            header("Content-type: text/csv");
+            header("Content-Disposition: attachment;Filename=selllist.csv");
+            header("Content-Transfer-Encoding: binary");
+
+            echo $csv;
+            flush();
+            die;
+            
+    }
+    
+    
 }
 
 /**
  *  Источник  данных  для   списка  документов
  */
-class TTNDataSource implements \Zippy\Interfaces\DataSource
+class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;

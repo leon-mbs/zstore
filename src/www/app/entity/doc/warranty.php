@@ -32,6 +32,7 @@ class Warranty extends Document
 
 
         $header = array('date' => date('d.m.Y', $this->document_date),
+            "_detail" => $detail,
             "firmname" => $firm['name'],
             "customer" => $this->customer_name,
             "document_number" => $this->document_number
@@ -39,7 +40,7 @@ class Warranty extends Document
 
         $report = new \App\Report('warranty.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }

@@ -115,7 +115,7 @@ class Warranty extends \App\Pages\Base
         $row->add(new Label('sn', $item->sn));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('warranty', $item->warranty));
-        $row->add(new Label('quantity', H::fqty($item->quantity));
+        $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
         $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');

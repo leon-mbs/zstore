@@ -88,6 +88,7 @@ class TaskList extends \App\Pages\Base
         $this->statuspan->add(new Form('statusform'));
         $this->statuspan->statusform->add(new SubmitButton('binprocess'))->onClick($this, 'onStatus');
         $this->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'onStatus');
+        $this->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'onStatus');
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
@@ -95,6 +96,8 @@ class TaskList extends \App\Pages\Base
         $this->add(new \App\Calendar('calendar'))->setEvent($this, 'OnGal');
 
         $this->updateTasks();
+        $this->add(new ClickLink('csv', $this,'oncsv'));        
+        
     }
 
     public function tasklistOnRow($row) {
@@ -159,16 +162,27 @@ class TaskList extends \App\Pages\Base
         $this->paypan->setVisible(false);
         $this->statuspan->setVisible(true);
 
-        if ($this->_task->checkStates(array(Document::STATE_EXECUTED)) == false || $this->_task->status == Document::STATE_EDITED || $this->_task->status == Document::STATE_NEW) {
+       // if ($this->_task->checkStates(array(Document::STATE_EXECUTED)) == false || $this->_task->status == Document::STATE_EDITED || $this->_task->status == Document::STATE_NEW) {
+        if ($this->_task->state != Document::STATE_EXECUTED) {
             $this->statuspan->statusform->bclosed->setVisible(true);
         } else {
             $this->statuspan->statusform->bclosed->setVisible(false);
         }
-        if ($this->_task->status == Document::STATE_EDITED || $this->_task->status == Document::STATE_NEW) {
+        if ($this->_task->state == Document::STATE_CANCELED ||$this->_task->state == Document::STATE_EDITED || $this->_task->state == Document::STATE_NEW) {
             $this->statuspan->statusform->binprocess->setVisible(true);
+            $this->statuspan->statusform->bshifted->setVisible(true);
         } else {
             $this->statuspan->statusform->binprocess->setVisible(false);
+            $this->statuspan->statusform->bshifted->setVisible(false);
         }
+          if ($this->_task->state == Document::STATE_SHIFTED){
+             $this->statuspan->statusform->binprocess->setVisible(true);
+             
+          }
+         if ($this->_task->state == Document::STATE_INPROCESS){
+             $this->statuspan->statusform->bshifted->setVisible(true);
+             
+          }
 
 
 
@@ -193,6 +207,9 @@ class TaskList extends \App\Pages\Base
         if ($sender->id == 'binprocess') {
             $this->_task->updateStatus(Document::STATE_INPROCESS);
         }
+        if ($sender->id == 'bshifted') {
+            $this->_task->updateStatus(Document::STATE_SHIFTED);
+        }        
         if ($sender->id == 'bclosed') {
             $this->_task->updateStatus(Document::STATE_EXECUTED);
             if ($this->_task->amount == $this->_task->datatag) { //если оплачен
@@ -420,4 +437,32 @@ class TaskList extends \App\Pages\Base
         return Customer::findArray("customer_name", "customer_name like " . $text);
     }
 
+   public function oncsv($sender) {
+            $list = $this->tasklist->getDataSource()->getItems(-1,-1,'document_id');
+            $csv="";
+ 
+            foreach($list as $task){
+               $csv.=  $task->document_number .';';    
+               $csv.=  $task->customer_name .';'; 
+               $csv.=  $task->notes .';';    
+               $csv.=  date('Y-m-d H:i', $task->headerdata['start_date'])  .';'; 
+               $csv.=  $task->headerdata['hours']  .';'; 
+               $csv.=  Document::getStateName($task->state)  .';'; 
+               $csv.=  $task->amount .';'; 
+               
+               $csv.="\n";
+            }
+            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+
+ 
+            header("Content-type: text/csv");
+            header("Content-Disposition: attachment;Filename=taskslist.csv");
+            header("Content-Transfer-Encoding: binary");
+
+            echo $csv;
+            flush();
+            die;
+            
+    }    
+    
 }

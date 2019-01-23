@@ -42,6 +42,8 @@ class StockList extends \App\Pages\Base
 
 
         $this->itemtable->itemlist->Reload();
+        $this->add(new ClickLink('csv', $this,'oncsv'));        
+        
     }
 
     public function itemlistOnRow($row) {
@@ -76,6 +78,35 @@ class StockList extends \App\Pages\Base
         $this->itemtable->itemlist->Reload();
     }
 
+    
+   public function oncsv($sender) {
+            $list = $this->itemtable->itemlist->getDataSource()->getItems(-1,-1,'document_id');
+            $csv="";
+ 
+            foreach($list as $st){
+               $csv.=  $st->storename .';';    
+               $csv.=  $st->itemname .';';    
+               $csv.=  $st->item_code  .';'; 
+               $csv.=  $st->msr  .';'; 
+               $csv.=  $st->partion  .';'; 
+               $csv.=  H::fqty($st->qty)  .';'; 
+               $csv.=  round($st->qty * $st->partion)  .';'; 
+               $csv.="\n";
+            }
+            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+
+ 
+            header("Content-type: text/csv");
+            header("Content-Disposition: attachment;Filename=stockslist.csv");
+            header("Content-Transfer-Encoding: binary");
+
+            echo $csv;
+            flush();
+            die;
+            
+    }
+    
+    
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
@@ -90,7 +121,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     private function getWhere() {
 
         $form = $this->page->filter;
-        $where = "1=1 ";
+        $where = "qty <> 0 ";
 
         $text = trim($form->searchkey->getText());
         $store = $form->searchstore->getValue();

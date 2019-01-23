@@ -29,14 +29,14 @@ class MoveItem extends Document
 
             //списываем  со склада
             $stockfrom = $value['stock_id'];
-            $sc = new Entry($this->document_id, 0 - ($value['quantity'] ) * $stockfrom->partion, 0 - $value['quantity']);
+            $sc = new Entry($this->document_id, 0 - ($value['quantity']  * $value['partion']), 0 - $value['quantity']);
             $sc->setStock($stockfrom);
 
 
             $sc->save();
 
             $stockto = Stock::getStock($this->headerdata['storeto'], $value['item_id'], $value['partion'], true);
-            $sc = new Entry($this->document_id, ($value['quantity'] ) * $stockfrom->partion, $value['quantity']);
+            $sc = new Entry($this->document_id,  $value['quantity']   * $value['partion'], $value['quantity']);
             $sc->setStock($stockto->stock_id);
 
 
@@ -51,12 +51,7 @@ class MoveItem extends Document
     public function generateReport() {
 
 
-        $header = array(
-            'date' => date('d.m.Y', $this->document_date),
-            "from" => Store::load($this->headerdata["storefrom"])->storename,
-            "to" => Store::load($this->headerdata["storeto"])->storename,
-            "document_number" => $this->document_number
-        );
+
 
 
         $i = 1;
@@ -69,10 +64,16 @@ class MoveItem extends Document
                 "quantity" => H::fqty($value['quantity']));
         }
 
-
+         $header = array(
+            "_detail" => $detail,
+            'date' => date('d.m.Y', $this->document_date),
+            "from" => Store::load($this->headerdata["storefrom"])->storename,
+            "to" => Store::load($this->headerdata["storeto"])->storename,
+            "document_number" => $this->document_number
+        );
         $report = new \App\Report('moveitem.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header   );
 
         return $html;
     }

@@ -113,6 +113,7 @@ class ProdIssue extends \App\Pages\Base
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
         $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
+        $this->calcTotal();
         $this->docform->detail->Reload();
     }
 
@@ -137,7 +138,7 @@ class ProdIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setText($stock->itemname);
 
 
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id, $this->docform->document_date->getDate()));
+        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id));
 
         $this->_rowid = $stock->stock_id;
     }
@@ -163,7 +164,7 @@ class ProdIssue extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-
+        $this->calcTotal();
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
@@ -285,9 +286,9 @@ class ProdIssue extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $this->editdetail->qtystock->setText(Stock::getQuantity($id, $this->docform->document_date->getDate()));
+        $this->editdetail->qtystock->setText(Stock::getQuantity($id));
 
-        $item = Item::load($stock->item_id);
+       // $item = Item::load($stock->item_id);
 
 
         $this->editdetail->editprice->setText($stock->partion);

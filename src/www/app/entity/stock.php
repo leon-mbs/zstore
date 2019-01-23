@@ -29,7 +29,12 @@ class Stock extends \ZCL\DB\Entity
             $orderbyfield = "itemname";
             $orderbydir = "asc";
         }
-
+        if(strlen($criteria)>0){
+           $criteria = 'qty <> 0 and ' . $criteria ; 
+        } else {
+           $criteria = 'qty <> 0 ' ; 
+        }
+        
         $entitylist = self::find($criteria, $orderbyfield, $count, $offset);
 
         $list = array();
@@ -81,13 +86,21 @@ class Stock extends \ZCL\DB\Entity
      *
      */
     public static function getQuantity($stock_id, $date = null) {
-        if ($date == null) {
-            $date = strtotime('+10 year', time());
+        if($stock_id >0){
+            $stock = Stock::load($stock_id);
+            if ($date >0) {
+                $conn = \ZDB\DB::getConnect();
+                $where = "   stock_id = {$stock_id} and date(document_date) <= " . $conn->DBDate($date);
+                $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist_view  where " . $where;
+                return $conn->GetOne($sql);
+                
+            } else {
+              return $stock->qty;
+            }   
+            return 0;   
         }
-        $conn = \ZDB\DB::getConnect();
-        $where = "   stock_id = {$stock_id} and date(document_date) <= " . $conn->DBDate($date);
-        $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist_view  where " . $where;
-        return $conn->GetOne($sql);
+        
+       
     }
 
     /**

@@ -34,7 +34,8 @@ class GoodsIssue extends \App\Pages\Base
     private $_basedocid = 0;
     private $_rowid = 0;
     private $_order_id = 0;
-
+    private $_discount;
+    
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -50,13 +51,18 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
 
+      $this->docform->add(new Label('discount'))->setVisible(false);
+         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
+  
+        $this->docform->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта'),1))->onChange($this, 'OnDelivery');
 
         $this->docform->add(new TextInput('order'));
+   
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('ship_number'));
         $this->docform->add(new TextInput('ship_address'));
@@ -66,6 +72,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('senddoc'))->onClick($this, 'savedocOnClick');
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
@@ -106,6 +113,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->ship_number->setText($this->_doc->headerdata['ship_number']);
             $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
+            $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -138,6 +146,10 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
+                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
+                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
+                        $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
+                        $this->docform->delivery_date->setDate($basedoc->headerdata['delivery']);
 
                         $notfound = array();
                         $order = $basedoc->cast();
@@ -181,6 +193,7 @@ class GoodsIssue extends \App\Pages\Base
             return;
         $this->docform->payed->setChecked($this->_doc->datatag == $this->_doc->amount);
         $this->calcTotal();
+        $this->OnDelivery($this->docform->delivery);
     }
 
     public function detailOnRow($row) {
@@ -215,6 +228,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
+        $this->editdetail->qtystock->setText("");
         $this->docform->setVisible(false);
         $this->_rowid = 0;
     }
@@ -232,7 +246,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setText($stock->itemname);
 
 
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id, $this->docform->document_date->getDate()));
+        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id));
 
         $this->_rowid = $stock->stock_id;
     }
@@ -301,6 +315,7 @@ class GoodsIssue extends \App\Pages\Base
             'order' => $this->docform->order->getText(),
             'ship_address' => $this->docform->ship_address->getText(),
             'ship_number' => $this->docform->ship_number->getText(),
+            'delivery' => $this->docform->delivery->getValue(),
             'planned' => $this->docform->planned->isChecked() ? 1 : 0,
             'store' => $this->docform->store->getValue(),
             'emp_id' => $this->docform->emp->getValue(),
@@ -335,10 +350,26 @@ class GoodsIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                
+                $order = Document::load($this->_doc->headerdata['order_id']);
+                if ($order instanceof Document) {
+                    $order->updateStatus(Document::STATE_DELIVERED);
+
+                }
+            } else   
+                if ($sender->id == 'senddoc') {
+                if (!$isEdited)
+                    $this->_doc->updateStatus(Document::STATE_NEW);
+
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+                $this->_doc->headerdata['sent_date']=time();
+                $this->_doc->save();                
+                
                 $order = Document::load($this->_doc->headerdata['order_id']);
                 if ($order instanceof Document) {
                     $order->updateStatus(Document::STATE_INSHIPMENT);
+
                 }
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -415,10 +446,11 @@ class GoodsIssue extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $this->editdetail->qtystock->setText(Stock::getQuantity($id, $this->docform->document_date->getDate()));
+        $this->editdetail->qtystock->setText($stock->qty);
 
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
+        $price = $price - $price / 100 * $this->_discount;
 
 
 
@@ -433,13 +465,19 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function OnChangeCustomer($sender) {
-
+        $this->_discount = 0;
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-
+            $this->_discount = $customer->discount;
             $this->docform->ship_address->setText($customer->address);
         }
+        if ($this->_discount > 0) {
+            $this->docform->discount->setVisible(true);
+            $this->docform->discount->setText('Скидка ' . $this->_discount . '%');
+        } else {
+            $this->docform->discount->setVisible(false);
+        }        
     }
 
     public function OnAutoItem($sender) {
@@ -458,4 +496,59 @@ class GoodsIssue extends \App\Pages\Base
         $this->calcTotal();
     }
 
+    //добавление нового контрагента
+    public function addcustOnClick($sender) {
+        $this->editcust->setVisible(true);
+        $this->docform->setVisible(false);
+
+        $this->editcust->editcustname->setText('');
+        $this->editcust->editphone->setText('');
+    }
+
+    public function savecustOnClick($sender) {
+        $custname = trim($this->editcust->editcustname->getText());
+        if (strlen($custname) == 0) {
+            $this->setError("Не введено имя");
+            return;
+        }
+        $cust = new Customer();
+        $cust->customer_name = $custname;
+        $cust->phone = $this->editcust->editcustname->getText();
+        $cust->save();
+        $this->docform->customer->setText($cust->customer_name);
+        $this->docform->customer->setKey($cust->customer_id);
+
+        $this->editcust->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->docform->discount->setVisible(false);
+        $this->_discount = 0;
+    }
+
+    public function cancelcustOnClick($sender) {
+        $this->editcust->setVisible(false);
+        $this->docform->setVisible(true);
+    }
+    
+    public function OnDelivery($sender) {
+
+        if ($sender->getValue() == 2 || $sender->getValue() == 3) {
+            $this->docform->senddoc->setVisible(true);
+            $this->docform->execdoc->setVisible(false);
+            $this->docform->ship_address->setVisible(true);
+            $this->docform->ship_number->setVisible(true);
+            $this->docform->sent_date->setVisible(true);
+            $this->docform->sent_date->setVisible(true);
+            $this->docform->delivery_date->setVisible(true);
+            $this->docform->emp->setVisible(true);
+        } else {
+            $this->docform->senddoc->setVisible(false);
+            $this->docform->execdoc->setVisible(true);
+            $this->docform->ship_address->setVisible(false);
+            $this->docform->ship_number->setVisible(false);
+            $this->docform->sent_date->setVisible(false);
+            $this->docform->sent_date->setVisible(false);
+            $this->docform->delivery_date->setVisible(false);            
+            $this->docform->emp->setVisible(false);            
+        }
+    }   
 }

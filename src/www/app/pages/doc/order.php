@@ -350,6 +350,7 @@ class Order extends \App\Pages\Base
             $this->_discount = $customer->discount;
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
+            $this->docform->address->setText($customer->address);
         }
         $this->calcTotal();
         if ($this->_discount > 0) {

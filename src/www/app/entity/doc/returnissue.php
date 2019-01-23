@@ -38,7 +38,8 @@ class ReturnIssue extends Document
 
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "firmname" => $firm['firmname'],
+           "_detail" => $detail,
+             "firmname" => $firm['firmname'],
             "customername" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"],
@@ -47,7 +48,7 @@ class ReturnIssue extends Document
 
         $report = new \App\Report('returnissue.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }

@@ -23,10 +23,10 @@ class ABC extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('ABC'))
             return;
 
-        $this->typelist[1] = "Товары,  прибыль";
-        $this->typelist[2] = "Поставщики, объєм поставок";
-        $this->typelist[3] = "Покупатель, объєм продаж";
-        $this->typelist[4] = "Услуги, виручка";
+      $this->typelist[1] = "Товары,  прибыль";
+        $this->typelist[2] = "Поставщики, объем поставок";
+        $this->typelist[3] = "Покупатели, объем продаж";
+        $this->typelist[4] = "Услуги, выручка";
 
         $dt = new \Carbon\Carbon;
         $dt->subMonth();
@@ -82,11 +82,7 @@ class ABC extends \App\Pages\Base
 //$src = 'data:'.$fi['mime'].';base64,'.$imageData;
 
 
-        $header = array('from' => date('d.m.Y', $from),
-            'to' => date('d.m.Y', $to),
-            // 'img'=>  '<img src="'.$src.'">' ,
-            "type" => $this->typelist[$type]
-        );
+      
 
         $detail = array();
 
@@ -105,10 +101,15 @@ class ABC extends \App\Pages\Base
 
         $detail = $this->calc($detail);
 
-
+       $header = array('from' => date('d.m.Y', $from),
+            "_detail" => $detail,
+            'to' => date('d.m.Y', $to),
+            // 'img'=>  '<img src="'.$src.'">' ,
+            "type" => $this->typelist[$type]
+        );
         $report = new \App\Report('abc.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }
@@ -117,7 +118,7 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT itemname as name, SUM( ABS( extcode*quantity ) ) AS value
+                    SELECT items.itemname as name, SUM( ABS( extcode*quantity ) ) AS value
                     FROM  `entrylist_view` 
                        join items on entrylist_view.item_id = items.item_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
@@ -143,7 +144,7 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT customer_name as name, SUM( ABS( entrylist_view.amount ) ) AS value
+                    SELECT customers.customer_name as name, SUM( ABS( entrylist_view.amount ) ) AS value
                     FROM  `entrylist_view` 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
@@ -167,7 +168,7 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT customer_name as name, SUM( ABS( entrylist_view.amount ) ) AS value
+                    SELECT customers.customer_name as name, SUM( ABS( entrylist_view.amount ) ) AS value
                     FROM  `entrylist_view` 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
@@ -191,7 +192,7 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT service_name as name, SUM( ABS( entrylist_view.amount*entrylist_view.quantity ) ) AS value
+                    SELECT services.service_name as name, SUM( ABS( entrylist_view.amount*entrylist_view.quantity ) ) AS value
                     FROM  `entrylist_view` 
                        join services on entrylist_view.service_id = services.service_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 

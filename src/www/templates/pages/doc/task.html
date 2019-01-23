@@ -75,12 +75,12 @@
                             <th  >Название</th>
 
 
-                            <th width="40" style="text-align: right;width:50px;">Кол.</th>
-                            <th width="100" style="text-align: right;width:50px;">Цена</th>
+                            <th  class="text-right"  >Кол.</th>
+                            <th  class="text-right"  >Цена</th>
 
-                            <th width="67" style="text-align: right;width:50px;">Сумма</th>
+                            <th class="text-right"  >Сумма</th>
 
-                            <th wid th="75"></th>
+                            <th width="75"></th>
                         </tr>
                         <tr zippy="detail">
                             <td   zippy="service"></td>
@@ -90,7 +90,7 @@
 
                             <td zippy="amount"  class="text-right"></td>
 
-                            <td width="75">
+                            <td  >
                                 <a zippy="edit"><i class="fa fa-edit"></i></a>
                                 <a zippy="delete"><i class="fa fa-trash"></i></a>
 
@@ -101,18 +101,18 @@
 
 
                     </table>
-                    <a class="btn btn-outline-primary btn-sm" zippy="additem">Добавить материал</a>                     
-                    <h5>Материалы и комплектующие</h5>
+                    <a class="btn btn-outline-primary btn-sm" zippy="additem">Добавить комплектующие</a>                     
+                    <h5>Комплектующие</h5>
                     <table class="table  table-sm">
                         <tr>
 
                             <th>Название</th>
                             <th>Код</th>
                             <th>Ед.</th>
-                            <th width="40" style="text-align: right;width:50px;">Кол.</th>
-                            <th width="100" style="text-align: right;width:50px;">Цена</th>
+                            <th class="text-right"  >Кол.</th>
+                            <th  class="text-right"  >Цена</th>
 
-                            <th   style="text-align: right;width:50px;">Сумма</th>
+                            <th class="text-right"    >Сумма</th>
 
                             <th width="75"></th>
                         </tr> 
@@ -137,18 +137,47 @@
 
 
                     <table class="table  table-sm">  
+                      
                         <tr style="font-weight: bolder;">
-                            <td     class="text-right"> <span data-label="totaldisc" >Скидка:</span></td>
-                            <td   zippy="totaldisc"  style="text-align: right;width:50px;"></td>
-                            <td width="75px"> </td> 
-                        </tr>
-                        <tr style="font-weight: bolder;">
-                            <td    class="text-right">Всего работ и материалов к оплате:</td>
-                            <td   zippy="total"  style="text-align: right; width:50px; "></td>
+                            <td    class="text-right">Всего работ и комплектующих к оплате:</td>
+                            <td  class="text-right" zippy="total"  style=" width:50px; "></td>
                             <td   width="75px">  </td> 
                         </tr>
                     </table>
 
+                       <a class="btn btn-outline-primary btn-sm" zippy="additem5">Добавить материал</a>                     
+                    <h5>Расходные материалы</h5>
+                    <table class="table  table-sm">
+                        <tr>
+
+                            <th>Название</th>
+                            <th>Код</th>
+                            <th>Ед.</th>
+                            <th class="text-right"   >Кол.</th>
+                            <th  class="text-right"  >Цена</th>
+
+                            <th class="text-right"    >Сумма</th>
+
+                            <th width="75"></th>
+                        </tr> 
+                        <tr zippy="detail5">
+
+                            <td zippy="item5"></td>
+                            <td zippy="item_code5"></td>
+                            <td zippy="msr5"></td>
+                            <td zippy="quantity5"  class="text-right"></td>
+                            <td zippy="price5"  class="text-right"></td>
+
+                            <td zippy="amount5"  class="text-right"></td>
+
+                            <td width="75">
+
+                                <a zippy="edit5"><i class="fa fa-edit"></i></a>
+                                <a zippy="delete5"><i class="fa fa-trash"></i></a>
+
+                            </td>
+                        </tr>                                        
+                    </table>
 
                     <a class="btn btn-outline-primary btn-sm" zippy="addemp">Добавить исполнителя</a>                     
                     <h5>Исполнители</h5>
@@ -246,10 +275,7 @@
                         <label for="editprice2">Цена </label>
                         <input class="form-control" type="text" zippy="editprice2" required="required" pattern="[0-9\.]+"  value="0"                                 style="width: 100px;">
                     </div>
-                    <div class="  form-check">
-                        <input zippy="custpay" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="custpay">Оплачивается заказчиком отдельно</label>
-                    </div> 
+                   
                     <div class="form-group">
                         <input zippy="saverow2" type="submit" value="Сохранить" class="btn btn-outline-primary"> <input type="button"
                                                                                                                         zippy="cancelrow2"
@@ -258,7 +284,38 @@
                     </div>
                 </div>
             </div>
-        </form>    
+        </form>   
+        
+     <form zippy="editdetail5">
+            <h3>Редактирование </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="edititem5">Название </label>
+                        <input placeholder="Начните вводить..." class="form-control "   zippy="edititem5" />       
+                        <span style="font-size: smaller;">В наличии </span> <span zippy="qty5" style="font-size: smaller;">0</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="editquantity5">Количество</label>
+                        <input class="form-control" type="text" zippy="editquantity5" required="required"
+                               pattern="[0-9\.]+"></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="editprice5">Цена </label>
+                        <input class="form-control" type="text" zippy="editprice5" required="required" pattern="[0-9\.]+"  value="0"                                 style="width: 100px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <input zippy="saverow5" type="submit" value="Сохранить" class="btn btn-outline-primary"> <input type="button"
+                                                                                                                        zippy="cancelrow5"
+                                                                                                                        value="Отменить"
+                                                                                                                        class="btn btn-light ">
+                    </div>
+                </div>
+            </div>
+        </form>          
+         
         <form zippy="editdetail3">
             <h3>Добавить исполнителя </h3>
             <div class="row">

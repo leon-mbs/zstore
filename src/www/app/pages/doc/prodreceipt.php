@@ -132,6 +132,7 @@ class ProdReceipt extends \App\Pages\Base
         // unset($this->_itemlist[$item->item_id]);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
+        $this->calcTotal();
         $this->docform->detail->Reload();
     }
 
@@ -173,7 +174,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-
+        $this->calcTotal();
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');

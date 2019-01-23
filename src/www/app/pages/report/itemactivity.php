@@ -89,10 +89,7 @@ class ItemActivity extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
-        $header = array('datefrom' => date('d.m.Y', $from),
-            'dateto' => date('d.m.Y', $to),
-            "store" => Store::load($storeid)->storename
-        );
+
 
 
         $i = 1;
@@ -129,8 +126,9 @@ class ItemActivity extends \App\Pages\Base
                       
                        DATE(sc.document_date)) t
             ORDER BY dt  
-        ";
-
+        ";    
+        
+        
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {
@@ -146,10 +144,14 @@ class ItemActivity extends \App\Pages\Base
             );
         }
 
-
+          $header = array('datefrom' => date('d.m.Y', $from),
+           "_detail" => $detail,
+            'dateto' => date('d.m.Y', $to),
+            "store" => Store::load($storeid)->storename
+        );
         $report = new \App\Report('itemactivity.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }

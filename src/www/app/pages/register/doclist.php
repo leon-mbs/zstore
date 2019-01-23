@@ -76,6 +76,9 @@ class DocList extends \App\Pages\Base
             //$this->doclist->setSelectedRow($docid);
             $doclist->Reload();
         }
+        
+        $this->add(new ClickLink('csv', $this,'oncsv'));        
+        
     }
 
     public function onErase($sender) {
@@ -115,7 +118,7 @@ class DocList extends \App\Pages\Base
         $this->doclist->setCurrentPage(1);
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
-        $this->doclist->Reload();
+        $this->doclist->Reload();  
     }
 
     public function doclistOnRow($row) {
@@ -135,7 +138,7 @@ class DocList extends \App\Pages\Base
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
-        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW) {
+        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW|| $doc->state == Document::STATE_REFUSED) {
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
@@ -145,7 +148,7 @@ class DocList extends \App\Pages\Base
             $row->cancel->setVisible(true);
         }
 
-        //спписок документов   которые   могут  быть созданы  на  основании  текущего
+        //список документов   которые   могут  быть созданы  на  основании  текущего
         $basedon = $row->add(new Label('basedon'));
         $basedonlist = $doc->getRelationBased();
         if (count($basedonlist) == 0) {
@@ -160,6 +163,7 @@ class DocList extends \App\Pages\Base
     }
 
     //просмотр
+    
     public function showOnClick($sender) {
         $item = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($item, true))
@@ -221,6 +225,33 @@ class DocList extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "Customer_name like " . $text);
+    }
+
+    
+    public function oncsv($sender) {
+            $list = $this->doclist->getDataSource()->getItems(-1,-1,'document_id');
+            $csv="";
+ 
+            foreach($list as $d){
+               $csv.=  date('Y.m.d',$d->document_date) .';';    
+               $csv.=  $d->document_number .';';    
+               $csv.=  $d->meta_desc .';';    
+               $csv.=  $d->customer_name .';';    
+               $csv.=  $d->amount  .';'; 
+               $csv.=  $d->notes .';';     
+               $csv.="\n";
+            }
+            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+
+ 
+            header("Content-type: text/csv");
+            header("Content-Disposition: attachment;Filename=doclist.csv");
+            header("Content-Transfer-Encoding: binary");
+
+            echo $csv;
+            flush();
+            die;
+            
     }
 
 }

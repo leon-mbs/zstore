@@ -21,7 +21,7 @@ use App\Application as App;
 use App\System;
 
 /**
- * журнал  ТТН
+ * журнал  закупок
  */
 class GRList extends \App\Pages\Base
 {
@@ -78,6 +78,8 @@ class GRList extends \App\Pages\Base
         $this->paypan->add(new DataView('paylist', new ArrayDataSource(new Prop($this, '_pays')), $this, 'payOnRow'))->Reload();
 
         $this->doclist->Reload();
+        $this->add(new ClickLink('csv', $this,'oncsv'));        
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -227,6 +229,31 @@ class GRList extends \App\Pages\Base
         $this->paypan->setVisible(false);
     }
 
+    public function oncsv($sender) {
+            $list = $this->doclist->getDataSource()->getItems(-1,-1,'document_id');
+            $csv="";
+ 
+            foreach($list as $d){
+               $csv.=  date('Y.m.d',$d->document_date) .';';    
+               $csv.=  $d->document_number .';';    
+               $csv.=  $d->customer_name .';';    
+               $csv.=  $d->amount  .';'; 
+               $csv.=  $d->notes .';';     
+               $csv.="\n";
+            }
+            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+
+ 
+            header("Content-type: text/csv");
+            header("Content-Disposition: attachment;Filename=baylist.csv");
+            header("Content-Transfer-Encoding: binary");
+
+            echo $csv;
+            flush();
+            die;
+            
+    }
+     
 }
 
 /**

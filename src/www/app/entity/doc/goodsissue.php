@@ -35,17 +35,19 @@ class GoodsIssue extends Document
             }
         }
 
-        //$firm = \App\System::getOptions("common");
-
+        
+        $customer = \App\Entity\Customer::load($this->customer_id);
+        
         $header = array('date' => date('d.m.Y', $this->document_date),
+            "_detail" => $detail,
             "firmname" => $firm['firmname'],
-            "customername" => $this->customer_name,
+            "customername" => $this->customer_name. ', тел. '.$customer->phone,
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],
             "order" => $this->headerdata["order"],
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
-            "total" => $this->headerdata["total"]
+            "total" => $this->amount
         );
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = date('d.m.Y', $this->headerdata["sent_date"]);
@@ -53,11 +55,11 @@ class GoodsIssue extends Document
         if ($this->headerdata["delivery_date"] > 0) {
             $header['delivery_date'] = date('d.m.Y', $this->headerdata["delivery_date"]);
         }
-        $this->headerdata["isorder"] = strlen($this->headerdata["order"]) > 0;
+        $header["isorder"] =  $this->headerdata["delivery"]  > 1;
 
         $report = new \App\Report('goodsissue.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }

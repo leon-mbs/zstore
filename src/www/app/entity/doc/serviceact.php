@@ -27,13 +27,14 @@ class ServiceAct extends Document
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "customer" => $this->customer_name,
+           "_detail" => $detail,
+             "customer" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => $this->amount
         );
         $report = new \App\Report('serviceact.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }
@@ -46,6 +47,7 @@ class ServiceAct extends Document
 
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setService($row['service_id']);
+            $sc->setExtCode($row['amount']  ); //Для АВС 
 
 
             $sc->setCustomer($this->customer_id);

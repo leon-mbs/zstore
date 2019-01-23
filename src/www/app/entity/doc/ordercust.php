@@ -6,10 +6,10 @@ use App\Entity\Entry;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ   оприходование  с  производства
+ * Класс-сущность  документ приходная  накладая
  *
  */
-class ProdReceipt extends Document
+class OrderCust extends Document
 {
 
     public function generateReport() {
@@ -30,13 +30,14 @@ class ProdReceipt extends Document
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-           "_detail" => $detail,
-             "document_number" => $this->document_number,
+            "_detail" => $detail,
+            "customer_name" => $this->customer_name,
+            "document_number" => $this->document_number,
             "total" => $this->headerdata["total"]
         );
 
 
-        $report = new \App\Report('prodreceipt.tpl');
+        $report = new \App\Report('ordercust.tpl');
 
         $html = $report->generate($header );
 
@@ -44,27 +45,14 @@ class ProdReceipt extends Document
     }
 
     public function Execute() {
-        $types = array();
-        $common = \App\System::getOptions("common");
-
-        //аналитика
-        foreach ($this->detaildata as $row) {
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'], true);
-
-
-            $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
-            $sc->setStock($stock->stock_id);
-
-            $sc->save();
-        }
-
-        //$total = $this->headerdata['total'];
-
+ 
         return true;
     }
 
     public function getRelationBased() {
         $list = array();
+
+         $list['GoodsReceipt'] = 'Приходная накладная';
 
         return $list;
     }

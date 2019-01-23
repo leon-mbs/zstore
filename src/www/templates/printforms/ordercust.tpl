@@ -10,7 +10,7 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
-             <br> Накладная № {{document_number}} от {{date}} <br><br>
+             <br> Заявка № {{document_number}} от {{date}} <br><br>
         </td>
     </tr>
 

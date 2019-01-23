@@ -69,9 +69,7 @@ class EmpTask extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
-        $header = array('datefrom' => date('d.m.Y', $from),
-            'dateto' => date('d.m.Y', $to)
-        );
+
 
         $elist = Employee::find("", "emp_name");
 
@@ -127,7 +125,10 @@ class EmpTask extends \App\Pages\Base
             }
         }
 
-
+         $header = array('datefrom' => date('d.m.Y', $from),
+            "_detail" => $detail,
+            'dateto' => date('d.m.Y', $to)
+        );
         $report = new \App\Report('emptask.tpl');
 
         $html = $report->generate($header, $detail);

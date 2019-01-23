@@ -6,23 +6,25 @@
 
 
         <form zippy="docform">
-            <h3> Приходная накладная </h3>
+            <h3> Заявка  поставщику </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number" >Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
+ <div class="form-group">
+                        <label for="document_date" > Дата</label>
+                        <input class="form-control" type="text" zippy="document_date" required="required">
+                    </div>                    
                     <div class="form-group  ">
                         <label for="customer"  >Поставщик</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
 
                     </div>
-                                     
-               <div class="form-group">                                         
-                        <label for="order" >Заявка</label>
-                        <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order"  >
-                    </div>
+                                       
+                              
+
                     <div class="form-group  ">
                         <label for="notes" >Примечание </label>
 
@@ -31,30 +33,10 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="document_date" > Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
-                    </div>
-                    <div class="form-group  ">
-                        <label for="store" >На склад</label>
-                        <select class="form-control" zippy="store">
-                        </select>
-                    </div>
-               <div class="form-check">
-                        <input zippy="planned" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="planned">Запланированный</label>
-                    </div>                     
-                    <div class="form-check">
-                        <input zippy="payed" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="payed">Оплачен</label>
-                    </div>
-                    <div class="form-group">
-                        <label data-label="val" for="val">Валюта</label>
-                        <select zippy="val" class="form-control">
+                   
+ 
 
-                        </select>
-                        <span zippy="course"></span>
-                    </div>
+               
                 </div>
             </div>
             <div class="row">
@@ -99,10 +81,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-12">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="На выполнение" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="apprdoc" type="submit" value="На утверждение" class="btn btn-outline-primary  ">
 
 
                 </div>

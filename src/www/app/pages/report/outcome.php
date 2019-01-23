@@ -83,33 +83,7 @@ class Outcome extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
-        $header = array('datefrom' => date('d.m.Y', $from),
-            'dateto' => date('d.m.Y', $to)
-        );
-        if ($type == 1) {
-            $header['_type1'] = true;
-            $header['_type2'] = false;
-            $header['_type4'] = false;
-            $header['_type4'] = false;
-        }
-        if ($type == 2) {
-            $header['_type1'] = false;
-            $header['_type2'] = true;
-            $header['_type3'] = false;
-            $header['_type4'] = false;
-        }
-        if ($type == 3) {
-            $header['_type1'] = false;
-            $header['_type2'] = false;
-            $header['_type3'] = true;
-            $header['_type4'] = false;
-        }
-        if ($type == 4) {
-            $header['_type1'] = false;
-            $header['_type2'] = false;
-            $header['_type3'] = false;
-            $header['_type4'] = true;
-        }
+
 
 
 
@@ -189,10 +163,37 @@ class Outcome extends \App\Pages\Base
             );
         }
 
-
+         $header = array('datefrom' => date('d.m.Y', $from),
+          "_detail" => $detail,
+            'dateto' => date('d.m.Y', $to)
+        );
+        if ($type == 1) {
+            $header['_type1'] = true;
+            $header['_type2'] = false;
+            $header['_type4'] = false;
+            $header['_type4'] = false;
+        }
+        if ($type == 2) {
+            $header['_type1'] = false;
+            $header['_type2'] = true;
+            $header['_type3'] = false;
+            $header['_type4'] = false;
+        }
+        if ($type == 3) {
+            $header['_type1'] = false;
+            $header['_type2'] = false;
+            $header['_type3'] = true;
+            $header['_type4'] = false;
+        }
+        if ($type == 4) {
+            $header['_type1'] = false;
+            $header['_type2'] = false;
+            $header['_type3'] = false;
+            $header['_type4'] = true;
+        }
         $report = new \App\Report('outcome.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }

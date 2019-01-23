@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Журнал заказов </h3>
+                <h3>Журнал заявок </h3>
 
 
                 <div class="navbar nav">
@@ -39,7 +39,7 @@
 
                     </form>
                 </div>
-                <a href="/?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Создать</a>
+                <a href="/?p=App/Pages/Doc/OrderCust" class="btn btn-info mt-2 mb-3">Создать</a>
                 <br><a zippy="csv"  >Скачать  CSV</a>  
            
                 <table class="table   table-sm   ">
@@ -47,7 +47,7 @@
 
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th>Заказчик</th>
+                        <th>Поставщик</th>
                         <th class="text-right">Сумма </th>
                         <th>Статус</th>
 
@@ -99,7 +99,10 @@
                     <form zippy="statusform" class="form-inline ">
 
                         <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 " > <i class="fa fa-gavel"></i> Выполнен</button>
-                        <button zippy="bttn"  class= "btn btn-info  mr-2"  ><i class="fa fa-truck"></i> Создать отправку</button>
+                        <button zippy="bap"  class= "btn btn-success  mr-2"  ><i class="fas fa-thumbs-up"></i> Утвердить</button>
+                        <button zippy="bref"  class= "btn btn-danger  mr-2"  ><i class="fas fa-thumbs-down"></i> Отклонить</button>
+                        <button zippy="bttn"  class= "btn btn-primary  mr-2"  ><i class="fa fa-truck"></i> Создать приход</button>
+                        <button zippy="binp"  class= "btn btn-primary  mr-2"  ><i class="fa fa-cog"></i> На выполнение </button>
                         <button zippy="bcancel" type="submit" class="  btn btn-danger  mr-2 " > <i class="fa fa-trash"></i> Отменить</button>
 
 

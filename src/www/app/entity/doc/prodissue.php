@@ -39,7 +39,8 @@ class ProdIssue extends Document
 
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "firmname" => $firm['firmname'],
+           "_detail" => $detail,
+             "firmname" => $firm['firmname'],
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"],
             "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))
@@ -47,7 +48,7 @@ class ProdIssue extends Document
 
         $report = new \App\Report('prodissue.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }

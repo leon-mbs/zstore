@@ -125,7 +125,7 @@ class MoveItem extends \App\Pages\Base
 
         $this->editdetail->edititem->setKey($stock->stock_id);
         $this->editdetail->edititem->setValue($stock->itemname);
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id, $this->docform->document_date->getDate()));
+        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id));
 
         $this->_rowid = $stock->stock_id;
     }
@@ -224,7 +224,7 @@ class MoveItem extends \App\Pages\Base
             $this->setError("Не введен ни один  товар");
         }
         if ($this->docform->storeto->getValue() == $this->docform->storefrom->getValue()) {
-            $this->setError("Выбрат тот  же скдлад получатель");
+            $this->setError("Выбран тот  же склад получатель");
         }
 
 
@@ -238,7 +238,7 @@ class MoveItem extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $stock_id = $sender->getKey();
         $stock = Stock::load($stock_id);
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock_id, $this->docform->document_date->getDate()));
+        $this->editdetail->qtystock->setText($stock->qty) ;
         $store = Store::load($this->docform->storeto->getValue());
     }
 

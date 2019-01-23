@@ -1,5 +1,5 @@
  
-<table class="ctable" width="600" border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table class="ctable"  border="0" class="ctable" cellpadding="2" cellspacing="0">
 
 
     <tr>

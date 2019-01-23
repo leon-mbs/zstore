@@ -21,9 +21,9 @@ use App\Application as App;
 use App\System;
 
 /**
- * журнал  заказов
+ * журнал  заявок
  */
-class OrderList extends \App\Pages\Base
+class OrderCustList extends \App\Pages\Base
 {
 
     private $_doc = null;
@@ -44,19 +44,15 @@ class OrderList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Неоплаченые', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые',   3 => 'Все'), 0));
 
 
-        $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new OrderCustDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(25);
-
-
-
-
-
+ 
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -67,6 +63,9 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -86,7 +85,6 @@ class OrderList extends \App\Pages\Base
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
-
         $row->add(new Label('number', $doc->document_number));
 
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
@@ -94,16 +92,13 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', $doc->amount));
 
-
         $row->add(new Label('state', Document::getStateName($doc->state)));
-
-
+       // if($doc->state == Document::STATE_EXECUTED) $row->state->setText('Выполняется');
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
-
-        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW) {
+        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW|| $doc->state == Document::STATE_REFUSED) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
@@ -118,23 +113,31 @@ class OrderList extends \App\Pages\Base
         //проверяем  что есть ТТН
         $list = $this->_doc->ConnectedDocList();
         foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
+            if ($d->meta_name == 'GoodsReceipt') {
                 $ttn = true;
             }
         }
         if ($sender->id == "bcancel") {
             $this->_doc->updateStatus(Document::STATE_CANCELED);
             if ($ttn)
-                $this->setWarn('Для заказа уже создана  отпрака');
+                $this->setWarn('Для заказа уже создан приход');
         }
         if ($sender->id == "bttn") {
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
             return;
         }
 
 
+        if ($sender->id == "bap") {
+            $this->_doc->updateStatus(Document::STATE_APPROVED);
+        }
+        if ($sender->id == "bref") {
+            $this->_doc->updateStatus(Document::STATE_REFUSED);
+        }
+        if ($sender->id == "binp") {
+            $this->_doc->updateStatus(Document::STATE_INPROCESS);
+        }
         if ($sender->id == "bclose") {
-
 
             $this->_doc->datatag = $this->_doc->amount;
             $this->_doc->save();
@@ -142,7 +145,7 @@ class OrderList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
             if ($ttn)
-                $this->setWarn('Для заказа была создана ТТН');
+                $this->setWarn('Для заявки была создана приходная накладная');
         }
 
 
@@ -168,7 +171,8 @@ class OrderList extends \App\Pages\Base
                 $ttn = true;
             }
         }
-
+                $this->statuspan->statusform->binp->setVisible(false);
+    
         $this->statuspan->statusform->bttn->setVisible(!$ttn);
 
         //отмена   если  не было оплат и доставки
@@ -180,21 +184,41 @@ class OrderList extends \App\Pages\Base
 
         //новый     
         if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
-
-
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bcancel->setVisible(false);
+            $this->statuspan->statusform->binp->setVisible(true);
         } else {
 
             $this->statuspan->statusform->bcancel->setVisible(true);
             $this->statuspan->statusform->bclose->setVisible(true);
         }
-        //закрыт
+        $this->statuspan->statusform->bap->setVisible(false); 
+        $this->statuspan->statusform->bref->setVisible(false); 
+        if ($state == Document::STATE_WA) {
+           $this->statuspan->statusform->bap->setVisible(true); 
+           $this->statuspan->statusform->bref->setVisible(true); 
+           $this->statuspan->statusform->bttn->setVisible(false); 
+           $this->statuspan->statusform->binp->setVisible(false); 
+        }
+        if ($state == Document::STATE_APPROVED) {
+            $this->statuspan->statusform->bttn->setVisible(true); 
+            $this->statuspan->statusform->binp->setVisible(true); 
+        }  
+        if ($state == Document::STATE_INPROCESS) {
+            
+            $this->statuspan->statusform->binp->setVisible(false); 
+        }
+       if ($state == Document::STATE_REFUSED) {
+            
+            $this->statuspan->statusform->bttn->setVisible(false); 
+        }
+         //закрыт
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bcancel->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bap->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
 
@@ -227,10 +251,10 @@ class OrderList extends \App\Pages\Base
             return;
 
 
-        App::Redirect("\\App\\Pages\\Doc\\Order", $doc->document_id);
+        App::Redirect("\\App\\Pages\\Doc\\OrderCust", $doc->document_id);
     }
 
-   public function oncsv($sender) {
+    public function oncsv($sender) {
             $list = $this->doclist->getDataSource()->getItems(-1,-1,'document_id');
             $csv="";
  
@@ -247,7 +271,7 @@ class OrderList extends \App\Pages\Base
 
  
             header("Content-type: text/csv");
-            header("Content-Disposition: attachment;Filename=orderlist.csv");
+            header("Content-Disposition: attachment;Filename=ordercustlist.csv");
             header("Content-Transfer-Encoding: binary");
 
             echo $csv;
@@ -261,7 +285,7 @@ class OrderList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class OrderDataSource implements \Zippy\Interfaces\DataSource
+class OrderCustDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;
@@ -277,21 +301,13 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and meta_name  = 'Order' ";
-
-
-
-
+        $where .= " and meta_name  = 'OrderCust' ";
+  
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
             $where .= " and  state <> 9 ";
         }
-        if ($status == 1) {
-            $where .= " and  state =1 ";
-        }
-        if ($status == 2) {
-            $where .= " and  amount > datatag";
-        }
+       
         if ($status == 3) {
             
         }
@@ -300,15 +316,14 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and meta_name  = 'Order' and  content like {$st} ";
+            $where .= " and meta_name  = 'OrderCust' and  content like {$st} ";
         }
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = " meta_name  = 'Order' and document_number like  {$sn} ";
+            $where = " meta_name  = 'OrderCust' and document_number like  {$sn} ";
         }
         if ($user->acltype == 2) {
-
 
             $where .= " and meta_id in({$user->aclview}) ";
         }

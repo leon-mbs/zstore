@@ -28,6 +28,8 @@
                     <div class="form-group  ">
                         <label for="customer" >Покупатель</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
+                        <span zippy="discount" style="display:block;font-size:smaller"></span>
+                        <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
 
                     </div>
                     <div class="form-check">
@@ -52,27 +54,33 @@
                         <label for="order" >Заказ</label>
                         <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order"  >
                     </div>
+                    <div class="form-group">                                         
+                        <label for="delivery" >Доставка</label>
+                        <select  class="form-control" zippy="delivery">
+                          
+                        </select>
+                    </div>
                     <div class="form-group">
-                        <label for="ship_address" >Адрес доставки</label>
+                        <label data-label="ship_address" for="ship_address" >Адрес доставки</label>
                         <input    class="form-control" type="text" zippy="ship_address"   >
                     </div>                                       
                     <div class="form-group">
-                        <label for="ship_number" >Номер декларации</label>
+                        <label data-label="ship_number" for="ship_number" >Номер декларации</label>
                         <input    class="form-control" type="text" zippy="ship_number"   >
                     </div>                     
                     <div class="form-group  ">
-                        <label for="emp" >Ответственный за доставку</label>
+                        <label data-label="emp" for="emp" >Ответственный за доставку</label>
                         <select class="form-control select2" zippy="emp">
                             <option>Не указан</option>
                         </select>                    
                     </div>                
 
                     <div class="form-group">
-                        <label for="sent_date" > Дата отправки</label>
+                        <label data-label="sent_date" for="sent_date" > Дата отправки</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="sent_date" required="required">
                     </div>                    
                     <div class="form-group">
-                        <label for="delivery_date" > Дата доставки</label>
+                        <label data-label="delivery_date" for="delivery_date" > Дата доставки</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="delivery_date" required="required">
                     </div>                    
 
@@ -123,7 +131,8 @@
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Отправить" class="btn btn-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                    &nbsp;<input zippy="senddoc" type="submit" value="Отправить" class="btn btn-primary  ">
 
 
                 </div>

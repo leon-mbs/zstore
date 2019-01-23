@@ -30,6 +30,7 @@ class GoodsReceipt extends Document
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
+            "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"]
@@ -38,7 +39,7 @@ class GoodsReceipt extends Document
 
         $report = new \App\Report('goodsreceipt.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }
@@ -54,7 +55,7 @@ class GoodsReceipt extends Document
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
-
+            $sc->setExtCode($row['amount']  ); //Для АВС 
             $sc->setCustomer($this->customer_id);
 
             $sc->save();

@@ -162,8 +162,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setText($stock->itemname);
 
 
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->item_id, $this->docform->document_date->getDate()));
-
+   
         $this->_rowid = $stock->item_id;
     }
 
