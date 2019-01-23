@@ -50,7 +50,7 @@ class Helper
 
     public static function generateMenu($meta_type) {
         $conn = \ZDB\DB::getConnect();
-        $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
+        $rows = $conn->Execute("select * from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
         $groups = array();
         $textmenu = "";
@@ -63,15 +63,24 @@ class Helper
 
             if (strlen($meta_object['menugroup']) == 0) {
                 $menu[$meta_id] = $meta_object;
+
+                usort($menu, function ($item1, $item2) {
+                  return $item1['order'] <=> $item2['order'];
+                });
+
             } else {
                 if (!isset($groups[$meta_object['menugroup']])) {
                     $groups[$meta_object['menugroup']] = array();
                 }
                 $groups[$meta_object['menugroup']][$meta_id] = $meta_object;
+
+                usort($groups[$meta_object['menugroup']], function ($item1, $item2) {
+                  return $item1['order'] <=> $item2['order'];
+                });
             }
             if ($meta_object->smart == 1) {
                 
-            }
+            }            
         }
         switch ($meta_type) {
             case 1 :
@@ -95,16 +104,19 @@ class Helper
         foreach ($menu as $item) {
             $textmenu .= "<li><a class=\"dropdown-item\" href=\"/?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
         }
+
         foreach ($groups as $gname => $group) {
-            $textmenu .= "<li  ><a class=\"dropdown-item  dropdown-toggle\"     href=\"#\">$gname 
-             
-            </a>
-            <ul class=\"dropdown-menu\">";
+            if(sizeof($menu) > 0){
+              $textmenu .= "<li><a class=\"dropdown-item dropdown-toggle\" href=\"#\">$gname </a>
+                <ul class=\"dropdown-menu\">";
+            }
 
             foreach ($group as $item) {
-                $textmenu .= "<li ><a class=\"dropdown-item\"   href=\"/?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
+                $textmenu .= "<li ><a class=\"dropdown-item\" href=\"/?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
             }
-            $textmenu .= "</ul></li>";
+            if(sizeof($menu) > 0){
+              $textmenu .= "</ul></li>";
+            }
         }
 
         return $textmenu;
