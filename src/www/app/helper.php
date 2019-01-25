@@ -32,6 +32,7 @@ class Helper
             return $user;
         if (strlen($password) > 0) {
             $b = password_verify($password, $user->userpass);
+
             return $b ? $user : false;
         }
         return false;
@@ -48,7 +49,7 @@ class Helper
         return count($list) > 0;
     }
 
-    public static function generateMenu($meta_type) {
+    public static function generateMenu2($meta_type) {
         $conn = \ZDB\DB::getConnect();
         $rows = $conn->Execute("select * from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
@@ -120,6 +121,115 @@ class Helper
         }
 
         return $textmenu;
+    }
+
+
+    public static function generateMenu($meta_type) {
+      $conn = \ZDB\DB::getConnect();
+        $rows = $conn->Execute("select * from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
+        $menu = array();
+        $groups = array();
+        $textmenu = "";
+        $aclview = explode(',', System::getUser()->aclview);
+
+        foreach ($rows as $meta_object) {
+          $meta_id = $meta_object['meta_id'];
+
+          if (!in_array($meta_id, $aclview) && System::getUser()->acltype == 2)
+              continue;
+
+          if ($meta_object["meta_name"] === "divider" && $meta_object["order"] == 0)
+              continue;
+
+          if (!$meta_object["menugroup"]) {
+            array_push($menu, $meta_object);
+          } else {
+              if(strlen($meta_object["order"]) > 1){
+                $order = explode("-", $meta_object["order"]);
+              } else {
+                $order = array(intval($meta_object["order"]), 0);
+              }
+              
+              if (!$groups[$meta_object['menugroup']]) {
+                  $groups[$meta_object['menugroup']] = array();
+                  $groups[$meta_object['menugroup']]["order"] = $order[0];
+              }
+
+              $meta_object["order"] = $order[1];
+
+              array_push($groups[$meta_object['menugroup']], $meta_object);
+          }
+
+        }
+
+      $parsedData = $menu; 
+
+      foreach ($groups as $groupName => $group) {
+        $order = $group["order"];
+        unset($group["order"]);
+
+        usort($group, function ($item1, $item2) {
+          return $item1['order'] <=> $item2['order'];
+        });
+
+        array_push($parsedData, 
+          array(
+            'order' => $order, 
+            'description' => $groupName,
+            'group' => $group
+          )
+        );
+      }
+
+      usort($parsedData, function ($item1, $item2) {
+        return $item1['order'] <=> $item2['order'];
+      });
+
+      switch ($meta_type) {
+            case 1 :
+                $dir = "Pages/Doc";
+                break;
+            case 2 :
+                $dir = "Pages/Report";
+                break;
+            case 3 :
+                $dir = "Pages/Register";
+                break;
+            case 4 :
+                $dir = "Pages/Reference";
+                break;
+            case 5 :
+                $dir = "Shop/Pages";
+                break;
+        }
+
+      $html="";
+
+      foreach($parsedData as $item){
+
+        if(!$item["group"] && $item["meta_name"] != "divider"){
+          $html .= "<li><a class=\"dropdown-item\" href=\"/?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
+        } elseif($item["meta_name"] == "divider"){
+          $html .= "<li class='dropdown-divider'></li>";
+        } else {
+          $group = $item["group"];
+
+          if(sizeof($parsedData) > 1){
+            $html .= "<li><a class=\"dropdown-item dropdown-toggle\" href=\"#\">{$item['description']}</a>
+              <ul class=\"dropdown-menu\">";
+          }
+          foreach($group as $group_item){
+            if(isset($group_item) && isset($group_item["description"])){ 
+              $html .= "<li ><a class=\"dropdown-item\" href=\"/?p=App/{$dir}/{$group_item['meta_name']}\">{$group_item['description']}</a></li>";
+            } 
+          }
+          if(sizeof($parsedData) > 1){
+            $html .= "</ul></li>";
+          }
+        }
+      }
+
+      return $html;
     }
 
     public static function generateSmartMenu() {
