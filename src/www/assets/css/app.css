@@ -1,7 +1,18 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
     font-family:"Roboto","Helvetica Neue"  ;
-      background-color: #FaFaFa;
+    background-color: #FaFaFa;
+    margin-bottom: 60px;
 }
+
+.container-fluid{
+    padding-bottom: 20px;
+}
+
 .brand-logo {
     width: 115px;
     height: 45px;
@@ -11,9 +22,9 @@ body {
 }
 
 .logo-lg {
-font-family:  "Georgia";
-color:#00c0ef;
-font-style:italic  ;    
+    font-family:  "Georgia";
+    color:#00c0ef;
+    font-style:italic  ;    
 } 
 
 .ctable td {
@@ -62,20 +73,39 @@ font-style:italic  ;
     padding: 2px 4px;
 }
 
-   #upbutton {
-
-                height: 60px;
-                width: 60px;
-                bottom: 30px;
-                right: 30px;
-                cursor: pointer;
-                display: none;
-                position: fixed;
-                z-index: 999;
-            }
-            
- 
-    
-#tmenu a             {
+#upbutton {
+    height: 60px;
+    width: 60px;
+    bottom: 30px;
+    right: 30px;
+    cursor: pointer;
+    display: none;
+    position: fixed;
+    z-index: 999;
+}
+              
+#tmenu a{
     color:#000;
+}
+
+
+/*Footer*/
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #313131;
+  color: #ccc;
+}
+
+.footer a{
+    color: #ccc;
+}
+.footer a:hover{
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
 }
