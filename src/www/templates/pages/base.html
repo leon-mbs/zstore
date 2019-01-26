@@ -43,11 +43,12 @@
 
         <div style="background-color: #F0F0F0;" class="container-fluid"> 
             <div class="row"> 
-                <div class="col-12"> 
-                    <nav class="navbar navbar-expand-md   mr-2">
+                <div class="col-12 menu-header"> 
+                    <nav class="navbar navbar-expand-md mr-2">
                         <div class="navbar-header">
-
-                            <a class="navbar-brand  d-none d-md-block" href="/">Zippy Склад</a>
+                            <a class="navbar-brand  d-none d-md-block" href="/">
+                                <h2>Zippy Склад</h2>
+                            </a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class=" ">
                                     <i class="fa fa-bars"></i>
@@ -127,6 +128,8 @@
                             </ul>
                         </div>
                     </nav>
+                </div>
+                <div class="col-12 smart-menu">
                     {{#smart}}
                     <div class="navbar nav justify-content-start">
                         {{{smart}}}
@@ -135,11 +138,11 @@
                 </div>
             </div>
         </div>
-        <div style="margin-bottom:20px;" class="container-fluid"> 
+        <div style="margin-bottom:20px;" class="container-fluid content"> 
             <childpage/>
         </div>
         <footer class="footer">
-            <div class="container">
+            <div class="container-fluid">
                 <a href="https://zippy.com.ua/zstore">Zippy Склад 2015-2019</a>
             </div>
         </footer>

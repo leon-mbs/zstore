@@ -9,8 +9,9 @@ body {
     margin-bottom: 60px;
 }
 
-.container-fluid{
-    padding-bottom: 20px;
+/*Header*/
+a h2{
+    color: #fff;
 }
 
 .brand-logo {
@@ -40,7 +41,45 @@ body {
     height:20px;
 }
 
+.container-fluid.content{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 75px;
+    padding-left: 75px;
+}
+
 /* menu*/
+.menu-header{
+    background-color: #313131;
+    
+}
+
+.menu-header #tmenu>li>a{
+    color: rgba(255,255,255,.5);
+}
+
+.menu-header #tmenu>li>a:hover{
+    color: rgba(255,255,255,1);
+}
+
+.menu-header .dropdown-menu{
+    left: -30px;
+}
+
+.smart-menu {
+    background-color: #6c757d;
+}
+
+.smart-menu a.btn{
+    color: #ccc;
+    border-color: #ccc;
+}
+
+.smart-menu a.btn:hover{
+    background-color: #525b5d;
+    border-color: #ccc;
+}
+
 .navbar-light .navbar-nav .nav-link {
     color: rgb(64, 64, 64);
 }
@@ -84,9 +123,9 @@ body {
     z-index: 999;
 }
               
-#tmenu a{
+/*#tmenu a{
     color:#000;
-}
+}*/
 
 
 /*Footer*/
@@ -99,6 +138,11 @@ body {
   line-height: 60px; /* Vertically center the text there */
   background-color: #313131;
   color: #ccc;
+}
+
+.footer .container-fluid{
+    padding-right: 32px;
+    padding-left: 32px;
 }
 
 .footer a{
