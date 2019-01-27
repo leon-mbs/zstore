@@ -1,7 +1,19 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
     font-family:"Roboto","Helvetica Neue"  ;
-      background-color: #FaFaFa;
+    background-color: #FaFaFa;
+    margin-bottom: 60px;
 }
+
+/*Header*/
+a h2{
+    color: #fff;
+}
+
 .brand-logo {
     width: 115px;
     height: 45px;
@@ -11,9 +23,9 @@ body {
 }
 
 .logo-lg {
-font-family:  "Georgia";
-color:#00c0ef;
-font-style:italic  ;    
+    font-family:  "Georgia";
+    color:#00c0ef;
+    font-style:italic  ;    
 } 
 
 .ctable td {
@@ -29,7 +41,45 @@ font-style:italic  ;
     height:20px;
 }
 
+.container-fluid.content{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 75px;
+    padding-left: 75px;
+}
+
 /* menu*/
+.menu-header{
+    background-color: #313131;
+    
+}
+
+.menu-header #tmenu>li>a{
+    color: rgba(255,255,255,.5);
+}
+
+.menu-header #tmenu>li>a:hover{
+    color: rgba(255,255,255,1);
+}
+
+.menu-header .dropdown-menu{
+    left: -30px;
+}
+
+.smart-menu {
+    background-color: #6c757d;
+}
+
+.smart-menu a.btn{
+    color: #ccc;
+    border-color: #ccc;
+}
+
+.smart-menu a.btn:hover{
+    background-color: #525b5d;
+    border-color: #ccc;
+}
+
 .navbar-light .navbar-nav .nav-link {
     color: rgb(64, 64, 64);
 }
@@ -62,20 +112,146 @@ font-style:italic  ;
     padding: 2px 4px;
 }
 
-   #upbutton {
-
-                height: 60px;
-                width: 60px;
-                bottom: 30px;
-                right: 30px;
-                cursor: pointer;
-                display: none;
-                position: fixed;
-                z-index: 999;
-            }
-            
- 
-    
-#tmenu a             {
-    color:#000;
+#upbutton {
+    height: 60px;
+    width: 60px;
+    bottom: 30px;
+    right: 30px;
+    cursor: pointer;
+    display: none;
+    position: fixed;
+    z-index: 999;
 }
+              
+/*#tmenu a{
+    color:#000;
+}*/
+
+
+/*Footer*/
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #313131;
+  color: #ccc;
+}
+
+.footer .container-fluid{
+    padding-right: 32px;
+    padding-left: 32px;
+}
+
+.footer a{
+    color: #ccc;
+}
+.footer a:hover{
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+}
+
+/*LOGIN PAGE*/
+body.user-login{
+    background-color: #6c757d;
+    background-image: -webkit-linear-gradient(208deg, #6c757d 0%, #6c757d 60%, #292423 40%, #292423 40%);
+    background-image: -o-linear-gradient(208deg, #6c757d 0%, #6c757d 40%, #292423 40%, #292423 40%);
+    background-image: linear-gradient(298deg, #6c757d 0%, #6c757d 40%, #292423 40%, #292423 40%);
+
+
+    /*font-family: 'Noto Sans', sans-serif;*/
+    /*font-family: 'Roboto', sans-serif;*/ 
+    /*font-family: 'Open Sans', sans-serif;*/
+}
+
+body.user-login .row.justify-content-center{
+    margin-right: 0px;
+}
+
+.user-login-form{
+    background-color: #fff;
+}
+.user-login-form .description{
+    background-color: #353a3e;
+    color: #e6e6e6;
+    padding: 30px;
+}
+
+.user-login-form .description>a,
+.user-login-form .description>a:hover{
+    cursor: pointer;
+    text-decoration: none;
+    color: #e6e6e6; 
+}
+
+.description h1{
+    text-align: center;
+    font-size: 4em;
+    margin-bottom: -2px;
+    font-family: 'Noto Sans', sans-serif;
+    color: #3c99ea;
+}
+.description h2{
+    color: #e6e6e6;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+.descr{
+    font-size: 12px;
+    margin-top: 55px;
+}
+
+.login-form form{
+    margin-top: 43px;
+    padding-left: 35px;
+    padding-right: 35px;
+    margin-bottom: 45px;
+}
+
+.login-form .btn-primary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.login-form h2{
+    text-align: center;
+}
+
+.login-form .fas {
+    color: #cccccc;
+}
+.login-form .left-addon input  { 
+    padding-left:  35px; 
+}
+
+.login-form .form-check{
+    margin-top: 5px;
+}
+
+
+
+/*/////////////////////////////////////////////////*/
+/* enable absolute positioning */
+.inner-addon { 
+    position: relative; 
+}
+
+/* style icon */
+.inner-addon .fas {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .fas  { left:  0px;}
+.right-addon .fas{ right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
