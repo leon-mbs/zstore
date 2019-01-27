@@ -153,3 +153,105 @@ a h2{
     text-decoration: none;
     color: #fff;
 }
+
+/*LOGIN PAGE*/
+body.user-login{
+    background-color: #6c757d;
+    background-image: -webkit-linear-gradient(208deg, #6c757d 0%, #6c757d 60%, #292423 40%, #292423 40%);
+    background-image: -o-linear-gradient(208deg, #6c757d 0%, #6c757d 40%, #292423 40%, #292423 40%);
+    background-image: linear-gradient(298deg, #6c757d 0%, #6c757d 40%, #292423 40%, #292423 40%);
+
+
+    /*font-family: 'Noto Sans', sans-serif;*/
+    /*font-family: 'Roboto', sans-serif;*/ 
+    /*font-family: 'Open Sans', sans-serif;*/
+}
+
+body.user-login .row.justify-content-center{
+    margin-right: 0px;
+}
+
+.user-login-form{
+    background-color: #fff;
+}
+.user-login-form .description{
+    background-color: #353a3e;
+    color: #e6e6e6;
+    padding: 30px;
+}
+
+.user-login-form .description>a,
+.user-login-form .description>a:hover{
+    cursor: pointer;
+    text-decoration: none;
+    color: #e6e6e6; 
+}
+
+.description h1{
+    text-align: center;
+    font-size: 4em;
+    margin-bottom: -2px;
+    font-family: 'Noto Sans', sans-serif;
+    color: #3c99ea;
+}
+.description h2{
+    color: #e6e6e6;
+    text-align: center;
+    font-size: 2.5em;
+}
+
+.descr{
+    font-size: 12px;
+    margin-top: 55px;
+}
+
+.login-form form{
+    margin-top: 43px;
+    padding-left: 35px;
+    padding-right: 35px;
+    margin-bottom: 45px;
+}
+
+.login-form .btn-primary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.login-form h2{
+    text-align: center;
+}
+
+.login-form .fas {
+    color: #cccccc;
+}
+.login-form .left-addon input  { 
+    padding-left:  35px; 
+}
+
+.login-form .form-check{
+    margin-top: 5px;
+}
+
+
+
+/*/////////////////////////////////////////////////*/
+/* enable absolute positioning */
+.inner-addon { 
+    position: relative; 
+}
+
+/* style icon */
+.inner-addon .fas {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .fas  { left:  0px;}
+.right-addon .fas{ right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
