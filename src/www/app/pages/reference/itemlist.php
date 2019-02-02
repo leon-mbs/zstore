@@ -28,6 +28,7 @@ class ItemList extends \App\Pages\Base
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
+        $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
 
@@ -81,6 +82,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
+        $this->itemdetail->add(new CheckBox('editdisabled'));
 
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
@@ -95,6 +97,8 @@ class ItemList extends \App\Pages\Base
 
     public function itemlistOnRow($row) {
         $item = $row->getDataItem();
+        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+        
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
@@ -151,6 +155,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
+        $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
     }
 
     public function addOnClick($sender) {
@@ -191,6 +196,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->bar_code = $this->itemdetail->editbarcode->getText();
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
+        $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1:0;;
 
         $this->_item->Save();
 
@@ -214,9 +220,15 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $cat = $form->searchcat->getValue();
+        $showdis = $form->showdis->isChecked();
 
         if ($cat > 0) {
             $where = $where . " and cat_id=" . $cat;
+        }   
+        if ($showdis > 0) {
+            
+        } else {
+           $where = $where . " and disabled <> 1" ; 
         }
         if (strlen($text) > 0) {
             $text = Item::qstr('%' . $text . '%');

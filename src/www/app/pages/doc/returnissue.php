@@ -82,8 +82,8 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
 
             foreach ($this->_doc->detaildata as $item) {
-                $it = new Item($item);
-                $this->_tovarlist[$it->item_id] = $it;
+                $it = new Stock($item);
+                $this->_tovarlist[$it->stock_id] = $it;
             }
         } else {
             $this->_doc = Document::create('ReturnIssue');
@@ -101,15 +101,15 @@ class ReturnIssue extends \App\Pages\Base
 
 
                         foreach ($basedoc->detaildata as $item) {
-                            $item = new Item($item);
-                            $this->_tovarlist[$item->item_id] = $item;
+                            $item = new Stock($item);
+                            $this->_tovarlist[$item->stock_id] = $item;
                         }
-                        $this->calcTotal();
+                        
                     }
                 }
             }
         }
-
+        $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -136,7 +136,7 @@ class ReturnIssue extends \App\Pages\Base
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -163,7 +163,7 @@ class ReturnIssue extends \App\Pages\Base
 
 
    
-        $this->_rowid = $stock->item_id;
+        $this->_rowid = $stock->stock_id;
     }
 
     public function saverowOnClick($sender) {
@@ -175,15 +175,13 @@ class ReturnIssue extends \App\Pages\Base
             return;
         }
 
-        $item = Item::load($id);
+        $item = Stock::load($id);
         $item->quantity = $this->editdetail->editquantity->getText();
-
 
         $item->price = $this->editdetail->editprice->getText();
 
-
         unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$item->item_id] = $item;
+        $this->_tovarlist[$item->stock_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -314,8 +312,9 @@ class ReturnIssue extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        return Item::findArray("itemname", " (itemname like {$text} or item_code like {$text}) ");
+        $text = Stock::qstr('%' . $sender->getText() . '%');
+        return Stock::findArrayEx("store_id={$store_id} and  (itemname like {$text} or item_code like {$text}) ");
+
     }
 
 }

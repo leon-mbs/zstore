@@ -218,7 +218,8 @@ class DocList extends \App\Pages\Base
             return;
         }
         $doc->updateStatus(Document::STATE_CANCELED);
-        $this->doclist->Reload();
+        $this->doclist->setSelectedRow($sender->getOwner());
+        $this->doclist->Reload(false);
         $this->resetURL();
     }
 

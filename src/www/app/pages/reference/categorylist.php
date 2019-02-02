@@ -45,7 +45,7 @@ class CategoryList extends \App\Pages\Base
 
 
         $cat_id = $sender->owner->getDataItem()->cat_id;
-        $cnt = \App\Entity\Item::findCnt("cat_id=" . $cat_id);
+        $cnt = \App\Entity\Item::findCnt("  disabled <> 1  and cat_id=" . $cat_id);
         if ($cnt > 0) {
             $this->setError('Нельзя удалить категорию с товарами');
             return;

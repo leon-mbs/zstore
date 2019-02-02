@@ -33,103 +33,134 @@
 
 
     </head>
-    <body> 
-        <div id="upbutton">
-            <a href="#top" class="btn btn-secondary">
-                <b><i class="fa  fa-angle-double-up"></i></b>
-            </a>
-        </div>
-        <a id="top"></a>         
+
+
+    <body  > 
+        <div id="upbutton"><a href="#top"  class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
+        <a  id="top"></a>         
 
         <div style="background-color: #F0F0F0;" class="container-fluid"> 
             <div class="row"> 
-                <div class="col-12 menu-header"> 
-                    <nav class="navbar navbar-expand-md mr-2">
+                <div class="col-12"> 
+
+
+                    <nav class="navbar navbar-expand-md   mr-2">
                         <div class="navbar-header">
-                            <a class="navbar-brand  d-none d-md-block" href="/">
-                                <h2>Zippy Склад</h2>
-                            </a>
+
+                            <a class="navbar-brand  d-none d-md-block" href="/store">Zippy Склад</a>
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class=" ">
-                                    <i class="fa fa-bars"></i>
-                                </span>
-                            </button>
+                                <span class=" "><i class="fa fa-bars"></i></span>
+
+                            </button>   
+
+
                         </div>
                         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+
+
                             <ul id="tmenu" class="navbar-nav  ">
-                                <li class="nav-item dropdown">
+
+                                <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Документы    </a>
                                     <ul class="dropdown-menu  " zippy="docmenu"> </ul>
+
                                 </li> 
-                                <li class="nav-item dropdown">
+
+                                <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Отчеты    </a>
                                     <ul class="dropdown-menu  " zippy="repmenu"> </ul>
+
                                 </li>
-                                <li class="nav-item dropdown">
+                                <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Журналы    </a>
                                     <ul class="dropdown-menu  " zippy="regmenu"> </ul>
+
                                 </li> 
-                                <li class="nav-item dropdown">
+                                <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Справочники    </a>
                                     <ul class="dropdown-menu  " zippy="refmenu"> </ul>
-                                </li>
-                                {{#shop}}
-                                <li class="nav-item dropdown">
+
+
+
+
+                                    {{#shop}}
+                                <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Онлайн каталог    </a>
                                     <ul class="dropdown-menu  " zippy="shopmenu"> </ul>
+
                                 </li> 
                                 {{/shop}}
 
-                                <li class="nav-item dropdown">
+                                <li  class="nav-item dropdown">
                                     <a href="/ " class="nav-link dropdown-toggle" data-toggle="dropdown">Сервис    </a>
                                     <ul class="dropdown-menu  "  >  
+
+
                                         <li>
                                             <a class="dropdown-item  " href="/?p=App/Pages/Users">Пользователи</a>            
                                         </li> 
                                         <li>
-                                            <a class="dropdown-item  " href="/?p=App/Pages/Import">Импорт номенклатуры</a> 
+                                            <a class="dropdown-item  " href="/?p=App/Pages/Import">Импорт номенклатуры</a>            
                                         </li> 
                                         <li class="dropdown-divider"></li> 
-                                        <li>
+                                        <li  >
                                             <a  class="dropdown-item  " href="/?p=App/Pages/Options">Настройки</a>            
                                         </li> 
                                     </ul>    
+
                                 </li> 
+
+
                             </ul>  
+
 
                             <ul class="navbar-nav   ">
                                 <!-- Messages: style can be found in dropdown.less-->
                                 <li class="nav-item    ">
                                     <a data-html="true"  data-toggle="popover" data-placement="bottom" data-content="{{picontent}}" class="nav-link  "  style="cursor:pointer" zippy="pageinfo"     >
                                         <i class="fa fa-question-circle "></i>
+
                                     </a>
+
                                 </li>
                                 <li class="nav-item  " >
-                                    <a class="nav-link  "  href="/?p=App/Pages/NotifyList">
+                                    <a    class="nav-link  "  href="/?p=App/Pages/NotifyList">
                                         <i class="fa fa-bell "></i>
                                         <span style="font-size: smaller;" zippy="newnotcnt" class="badge badge-danger badge-pill  navbar-badge"></span>
+
                                     </a>
+
                                 </li> 
+
+
+
                                 <li class="nav-item dropdown  ">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" >
-                                        <i class="fa fa-user"></i> 
-                                        <span zippy="username"></span>
-                                    </a>
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-user"></i> <span zippy="username"></span> </a>
+
                                     <ul class="dropdown-menu"  >
+
+
+
+
                                         <li>
-                                            <a class="dropdown-item  " href="/?p=App/Pages/UserProfile">Мой профиль</a>
+
+                                            <a class="dropdown-item  " href="/?p=App/Pages/UserProfile">Мой профиль</a>            
                                         </li>                
                                         <li class="dropdown-divider"></li> 
+
+
                                         <li>
                                             <a class="dropdown-item  " zippy="logout">  Выйти</a>  
                                         </li>            
                                     </ul>
                                 </li>   
+
                             </ul>
+
+
+
                         </div>
                     </nav>
-                </div>
-                <div class="col-12 smart-menu">
                     {{#smart}}
                     <div class="navbar nav justify-content-start">
                         {{{smart}}}
@@ -138,49 +169,56 @@
                 </div>
             </div>
         </div>
-        <div style="margin-bottom:20px;" class="container-fluid content"> 
+
+
+
+        <div style="margin-bottom:20px;" class="container-fluid"> 
+
+
             <childpage/>
+
         </div>
-        <footer class="footer">
-            <div class="container-fluid">
-                <a href="https://zippy.com.ua/zstore">Zippy Склад 2015-2019</a>
-            </div>
-        </footer>
+
+
+
         <script>
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-center",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            };
 
-            $(function () {
-                $('[data-toggle="popover"]').popover()
-            })
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+};
+
+$(function () {
+    $('[data-toggle="popover"]').popover()
+})
 
 
-            $('.select2').select2();
+$('.select2').select2();
 
-            $(window).scroll(function () {
-                if ($(this).scrollTop() > 600) {
-                    if ($('#upbutton').is(':hidden')) {
-                        $('#upbutton').css({opacity: 1}).fadeIn('slow');
-                    }
-                } else {
-                    $('#upbutton').stop(true, false).fadeOut('fast');
-                }
-            });
+$(window).scroll(function () {
+    if ($(this).scrollTop() > 600) {
+        if ($('#upbutton').is(':hidden')) {
+            $('#upbutton').css({opacity: 1}).fadeIn('slow');
+        }
+    } else {
+        $('#upbutton').stop(true, false).fadeOut('fast');
+    }
+});
+
         </script>   
     </body>
+
 </html>

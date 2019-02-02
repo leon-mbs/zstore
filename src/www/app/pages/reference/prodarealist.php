@@ -46,7 +46,7 @@ class ProdAreaList extends \App\Pages\Base
 
 
         $pa_id = $sender->owner->getDataItem()->pa_id;
-        // $cnt = \App\Entity\Item::findCnt("cat_id=" . $pa_id);
+        // $cnt = \App\Entity\Item::findCnt(" disabled <> 1  and cat_id=" . $pa_id);
         if ($cnt > 0) {
             $this->setError('Нельзя удалить участок  ');
             return;

@@ -79,7 +79,7 @@ class GoodsReceipt extends Document
     public function getRelationBased() {
         $list = array();
 
-        // $list['ReturnGoodsReceipt'] = 'Повернення постачальнику';
+        // $list['ReturnGoodsReceipt'] = 'Возврат  поставщику';
 
         return $list;
     }

@@ -37,7 +37,7 @@ class ItemActivity extends \App\Pages\Base
         $this->detail->add(new RedirectLink('html', "movereport"));
         $this->detail->add(new RedirectLink('word', "movereport"));
         $this->detail->add(new RedirectLink('excel', "movereport"));
-        $this->detail->add(new RedirectLink('pdf', "abc"));
+        $this->detail->add(new RedirectLink('pdf', "movereport"));
         $this->detail->add(new Label('preview'));
     }
 
@@ -101,7 +101,7 @@ class ItemActivity extends \App\Pages\Base
           (SELECT                   COALESCE(SUM(u.`quantity`), 0)              
             FROM entrylist_view u 
               WHERE u.`document_date` < t.dt   
-              AND u.stock_id = t.stock_id) AS begin_quantity  
+              AND u.item_id = t.item_id) AS begin_quantity  
                 
                 
                 FROM (             SELECT

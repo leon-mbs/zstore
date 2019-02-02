@@ -45,7 +45,7 @@ class Income extends \App\Pages\Base
 
 
         $text = Item::qstr('%' . $sender->getText() . '%');
-        $list = Item::findArray('itemname', " (itemname like {$text} or item_code like {$text} ) ");
+        $list = Item::findArray('itemname', " disabled <> 1  and (itemname like {$text} or item_code like {$text} ) ");
         foreach ($list as $k => $v) {
             $r[$k] = $v;
         }

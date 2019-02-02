@@ -473,7 +473,7 @@ class Document extends \ZCL\DB\Entity
 
         if (strlen($type) > 0) {
             if ($type > 0) {
-                $where = $where . " and  mata_id ={$type}";
+                $where = $where . " and  meta_id ={$type}";
             } else {
                 $where = $where . " and  meta_name='{$type}'";
             }

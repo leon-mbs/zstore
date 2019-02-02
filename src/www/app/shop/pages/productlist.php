@@ -194,7 +194,7 @@ class ProductList extends \App\Pages\Base
     public function OnAutoItem($sender) {
 
         $text = Item::qstr('%' . trim($sender->getText()) . '%');
-        $list = Item::findArray("itemname", "  (itemname like {$text} or item_code like {$text}) ");
+        $list = Item::findArray("itemname", "  disabled <> 1  and (itemname like {$text} or item_code like {$text}) ");
 
         return $list;
     }
