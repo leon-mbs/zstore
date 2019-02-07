@@ -32,6 +32,7 @@ class Item extends \ZCL\DB\Entity
         $this->price5 = (string) ($xml->price5[0]);
         $this->curname = (string) ($xml->curname[0]);
         $this->currate = doubleval($xml->currate[0]);
+        $this->pricelist = (int)$xml->pricelist[0];
 
 
 
@@ -42,6 +43,7 @@ class Item extends \ZCL\DB\Entity
         parent::beforeSave();
         $this->detail = "<detail>";
         //упаковываем  данные в detail
+        $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
         $this->detail .= "<price3>{$this->price3}</price3>";

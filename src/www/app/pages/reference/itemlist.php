@@ -83,6 +83,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
+        $this->itemdetail->add(new CheckBox('editpricelist',true));
 
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
@@ -156,6 +157,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
+        $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
     }
 
     public function addOnClick($sender) {
@@ -197,6 +199,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1:0;;
+        $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1:0;;
 
         $this->_item->Save();
 

@@ -85,7 +85,7 @@ class Price extends \App\Pages\Base
      
         $detail = array();
          
-        $items = Item::find("disabled <>1","cat_name,itemname")   ;
+        $items = Item::find("disabled <>1 and detail like '%<pricelist>1</pricelist>%'","cat_name,itemname")   ;
         
  
 

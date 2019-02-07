@@ -10,9 +10,6 @@ use App\Helper as H;
 /**
  * Класс-сущность  локумент перемещения товаров
  *
- * @table=store_document
- * @view=store_document_view
- * @keyfield=document_id
  */
 class MoveItem extends Document
 {
