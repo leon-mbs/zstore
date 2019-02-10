@@ -42,7 +42,7 @@ class WDebitors extends \Zippy\Html\PageFragment
         }
 
 
-        $list = $this->add(new DataView('pdoclist', new ArrayDataSource($data), $this, 'OnRow'));
+        $list = $this->add(new DataView('ddoclist', new ArrayDataSource($data), $this, 'OnRow'));
         $list->Reload();
 
         if (count($data) == 0 || $visible == false) {

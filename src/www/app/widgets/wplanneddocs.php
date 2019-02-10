@@ -41,7 +41,7 @@ class WPlannedDocs extends \Zippy\Html\PageFragment
 
         if (count($data) == 0 || $visible == false) {
             $this->setVisible(false);
-        };
+        };   
     }
 
     public function doclistOnRow($row) {
