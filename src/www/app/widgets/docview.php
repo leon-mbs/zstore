@@ -244,6 +244,31 @@ class DocView extends \Zippy\Html\PageFragment
 
         $this->addmsgform->addmsg->setText('');
         $this->updateMessages();
+      
+         // уведомления
+            $user = System::getUser();
+            
+            $users = array();
+            $users[$this->_doc->user_id] = 0; //автор
+                  
+            foreach($this->_msglist as $msg){
+              $users[$msg->user_id] = 0;  //коментаторы  
+            }
+            $users = array_keys($users);
+            foreach($users as $adr){
+                if($adr == $user->user_id) continue;//себе не  нужно
+                
+                $n = new \App\Entity\Notify();
+                $n->user_id = $adr;
+                $n->message = "<b>Новый  коментарий к документу</b>";
+                $n->message .= "<br><b> Документ: </b> {$this->_doc->meta_desc} {$this->_doc->document_number} ";
+                $n->message .= "<br><b> Пользователь: </b> {$user->username}: ";
+                $n->message .= "<br> {$msg->message} ";
+                $n->message .= "<br>  <a href=\"/?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">Ответить</a> ";
+                $n->save();        
+              
+            }
+        
     }
 
     //список   комментариев

@@ -21,13 +21,15 @@
                     <select   class="form-control mr-sm-2" zippy="searchcat">
                         <option value="0">Не задана</option>
                     </select>         
-
-
+                     <label for="searchtype">тип</label>
+                     <select   class="form-control mr-sm-2" zippy="searchtype">
+                        <option value="0">Все</option>
+                    </select> 
                     <input class="btn btn-outline-success  " type="submit" value="ОК">
 
                 </form>
-                    <a zippy="csv"  >Скачать  CSV</a>  
-           
+                <a zippy="csv"  >Скачать  CSV</a>  
+
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
@@ -36,10 +38,10 @@
                         <th>Артикул</th>
                         <th>Категория</th>
                         <th>Ед.</th>
-                        <th  style="text-align: right;">Зак. цена</th>
-                        <th  style="text-align: right;">Кол.</th>
-                        <th  style="text-align: right;">На сумму</th>
-                        <th  style="text-align: right;">Прод. цена</th>
+                        <th  class="text-right text-nowrap">Зак. цена</th>
+                        <th  class="text-right text-nowrap" >Кол.  <i style="font-size: smaller;" title="Актуальное, ожидаемое, зарезервированное" class="fa fa-info-circle "></i>                                                   </th>
+                        <th  class="text-right text-nowrap">На сумму</th>
+                        <th  class="text-right text-nowrap ">Прод. цена</th>
 
 
 
@@ -48,7 +50,7 @@
                         <td zippy="storename"></td>
                         <td zippy="itemname"></td>
 
-                        <td zippy="code"></td>
+                        <td zippy="code" class=" text-nowrap"></td>
                         <td zippy="cat_name"></td>
                         <td zippy="msr"></td>
                         <td zippy="partion" style="text-align: right;"></td>

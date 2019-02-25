@@ -31,6 +31,7 @@ class StockList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->filter->add(new DropDownChoice('searchstore', Store::getList(), H::getDefStore()));
+        $this->filter->add(new DropDownChoice('searchtype',array('1'=>'Ожидаемые','2'=>'Зарезервированные','3'=>'Неликвиды') ));
 
 
         $this->add(new Panel('itemtable'))->setVisible(true);
@@ -42,8 +43,7 @@ class StockList extends \App\Pages\Base
 
 
         $this->itemtable->itemlist->Reload();
-        $this->add(new ClickLink('csv', $this,'oncsv'));        
-        
+        $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function itemlistOnRow($row) {
@@ -53,12 +53,25 @@ class StockList extends \App\Pages\Base
         $row->add(new Label('code', $stock->item_code));
         $row->add(new Label('msr', $stock->msr));
         $row->add(new Label('partion', $stock->partion));
-        $row->add(new Label('qty', H::fqty($stock->qty)));
+        $stock->qty = $stock->qty - $stock->wqty + $stock->rqty;
+        $q="<span>" . H::fqty($stock->qty) . "</span>";
+        $w="";
+        if($stock->wqty>0){
+            $w .= "<span class='text-success'>+" . H::fqty($stock->wqty) . "</span>"; 
+        }
+        if($stock->rqty>0){
+            $w .= "&nbsp;<span class='text-danger'>-" . H::fqty($stock->rqty) . "</span>"; 
+        }
+        if(strlen($w)>0){
+            $q .= "&nbsp;(".$w.")";
+        }
+        
+        $row->add(new Label('qty',$q,true ));
         $row->add(new Label('amount', round($stock->qty * $stock->partion)));
 
-        $item = Item::load($stock->item_id) ;
+        $item = Item::load($stock->item_id);
         $row->add(new Label('cat_name', $item->cat_name));
-        
+
         $plist = array();
         if ($item->price1 > 0)
             $plist[] = $item->getPrice('price1', $stock->partion);
@@ -78,35 +91,32 @@ class StockList extends \App\Pages\Base
         $this->itemtable->itemlist->Reload();
     }
 
-    
-   public function oncsv($sender) {
-            $list = $this->itemtable->itemlist->getDataSource()->getItems(-1,-1,'document_id');
-            $csv="";
- 
-            foreach($list as $st){
-               $csv.=  $st->storename .';';    
-               $csv.=  $st->itemname .';';    
-               $csv.=  $st->item_code  .';'; 
-               $csv.=  $st->msr  .';'; 
-               $csv.=  $st->partion  .';'; 
-               $csv.=  H::fqty($st->qty)  .';'; 
-               $csv.=  round($st->qty * $st->partion)  .';'; 
-               $csv.="\n";
-            }
-            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+    public function oncsv($sender) {
+        $list = $this->itemtable->itemlist->getDataSource()->getItems(-1, -1, 'document_id');
+        $csv = "";
 
- 
-            header("Content-type: text/csv");
-            header("Content-Disposition: attachment;Filename=stockslist.csv");
-            header("Content-Transfer-Encoding: binary");
+        foreach ($list as $st) {
+            $csv .= $st->storename . ';';
+            $csv .= $st->itemname . ';';
+            $csv .= $st->item_code . ';';
+            $csv .= $st->msr . ';';
+            $csv .= $st->partion . ';';
+            $csv .= H::fqty($st->qty) . ';';
+            $csv .= round($st->qty * $st->partion) . ';';
+            $csv .= "\n";
+        }
+        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
 
-            echo $csv;
-            flush();
-            die;
-            
+
+        header("Content-type: text/csv");
+        header("Content-Disposition: attachment;Filename=stockslist.csv");
+        header("Content-Transfer-Encoding: binary");
+
+        echo $csv;
+        flush();
+        die;
     }
-    
-    
+
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
@@ -119,9 +129,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     }
 
     private function getWhere() {
+        $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
-        $where = "qty <> 0 ";
+        $where = " (qty <> 0 or rqty <> 0 or wqty <> 0) ";
 
         $text = trim($form->searchkey->getText());
         $store = $form->searchstore->getValue();
@@ -129,6 +140,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             $where = $where . " and store_id=" . $store;
         }
         $cat = $form->searchcat->getValue();
+        
 
         if ($cat > 0) {
             $where = $where . " and cat_id=" . $cat;
@@ -137,6 +149,22 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             $text = Stock::qstr('%' . $text . '%');
             $where = $where . " and (itemname like {$text} or item_code like {$text} )  ";
         }
+        
+        $type = $form->searchtype->getValue();
+        if($type==1){
+           $where = $where . " and wqty>0 ";
+        }
+        if($type==2){
+           $where = $where . " and rqty>0 ";
+        }
+        if($type==3){
+           $in ="(select distinct sc.item_id  
+               from  entrylist_view  sc
+               where sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . " and document_date <=  " . $conn->DBDate(time()) . "
+               and sc.quantity < 0 )"; 
+           $where = $where . " and item_id not in ($in) ";
+        }
+        
         return $where;
     }
 

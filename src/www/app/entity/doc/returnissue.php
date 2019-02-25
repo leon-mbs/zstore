@@ -38,8 +38,8 @@ class ReturnIssue extends Document
 
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-           "_detail" => $detail,
-             "firmname" => $firm['firmname'],
+            "_detail" => $detail,
+            "firmname" => $firm['firmname'],
             "customername" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"],
@@ -48,7 +48,7 @@ class ReturnIssue extends Document
 
         $report = new \App\Report('returnissue.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }
@@ -58,7 +58,7 @@ class ReturnIssue extends Document
         $conn->StartTrans();
 
         foreach ($this->detaildata as $row) {
-             
+
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($row['stock_id']);

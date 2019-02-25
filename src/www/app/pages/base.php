@@ -29,10 +29,7 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
-
-        $cntn = \App\Entity\Notify::isNotify($user->user_id);
-        $this->add(new Label('newnotcnt', "" . $cntn))->setVisible($cntn > 0);
-
+     
 
         $this->add(new ClickLink("pageinfo"));
 
@@ -103,7 +100,12 @@ class Base extends \Zippy\Html\WebPage
         return strlen(System::getErrorMsg()) > 0;
     }
 
-    protected function beforeRender() {
+    public  function beforeRender(){
+        $user = System::getUser();
+        $cntn = \App\Entity\Notify::isNotify($user->user_id);
+       
+        $this->_tvars['bell']  = '<i class="fa fa-bell "></i>';
+        if($cntn>0) $this->_tvars['bell']  = '<i class="fa fa-bell text-danger"></i>';
         
     }
 

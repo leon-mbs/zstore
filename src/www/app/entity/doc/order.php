@@ -39,8 +39,8 @@ class Order extends \App\Entity\Doc\Document
 
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-           "_detail" => $detail,
-             "customername" => $this->customer_name,
+            "_detail" => $detail,
+            "customername" => $this->customer_name,
             "phone" => $this->headerdata["phone"],
             "email" => $this->headerdata["email"],
             "delivery" => $this->headerdata["delivery_name"],
@@ -62,7 +62,7 @@ class Order extends \App\Entity\Doc\Document
 
         $report = new \App\Report('order.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }

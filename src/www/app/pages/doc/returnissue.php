@@ -100,11 +100,10 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
 
-                        foreach ($basedoc->detaildata as $item) {
-                            $item = new Stock($item);
+                        foreach ($basedoc->detaildata as $_item) {
+                            $item = new Stock($_item);
                             $this->_tovarlist[$item->stock_id] = $item;
                         }
-                        
                     }
                 }
             }
@@ -162,7 +161,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setText($stock->itemname);
 
 
-   
+
         $this->_rowid = $stock->stock_id;
     }
 
@@ -312,9 +311,8 @@ class ReturnIssue extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = Stock::qstr('%' . $sender->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id} and  (itemname like {$text} or item_code like {$text}) ");
-
+        $text = trim($sender->getText()) ;
+        return Stock::findArrayAC($store_id,$text)  ;
     }
 
 }

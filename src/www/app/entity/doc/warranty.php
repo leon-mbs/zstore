@@ -40,7 +40,7 @@ class Warranty extends Document
 
         $report = new \App\Report('warranty.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }

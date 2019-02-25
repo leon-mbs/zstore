@@ -35,21 +35,21 @@ class RetCustIssue extends Document
             }
         }
 
-        
+
         $customer = \App\Entity\Customer::load($this->customer_id);
-        
+
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $firm['firmname'],
-            "customername" => $this->customer_name. ', тел. '.$customer->phone,
+            "customername" => $this->customer_name . ', тел. ' . $customer->phone,
             "document_number" => $this->document_number,
             "total" => $this->amount
         );
-     
-      
+
+
         $report = new \App\Report('retcustissue.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }
@@ -62,7 +62,7 @@ class RetCustIssue extends Document
 
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setStock($row['stock_id']);
-           // $sc->setExtCode(0 - $row['amount'])); //Для АВС 
+            // $sc->setExtCode(0 - $row['amount'])); //Для АВС 
 
             $sc->setCustomer($this->customer_id);
             $sc->save();

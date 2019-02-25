@@ -21,7 +21,7 @@
 </table>
 <br>
 <table class="ctable" width="600" cellspacing="0" cellpadding="1" border="0">
-     <tr style="font-weight: bolder;">
+    <tr style="font-weight: bolder;">
 
         <th colspan="5" style="text-align: left;">Работы и комиплектующие </th>
 
@@ -44,17 +44,17 @@
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
-   
-    
+
+
 
     <tr style="font-weight: bolder;">
         <td colspan="4" style="border-top: 1px solid black;" align="right">Всего:</td>
         <td style="border-top: 1px solid black;" align="right">{{total}} </td>
     </tr>
-         
 
 
-     <tr style="font-weight: bolder;">
+
+    <tr style="font-weight: bolder;">
 
         <th colspan="5" style="text-align: left;">Материалы </th>
 
@@ -67,7 +67,7 @@
         <th style="border: 1px solid black;" width="50" align="right">Цена</th>
         <th style="border: 1px solid black;" width="50" align="right">Сумма</th>
     </tr>          
-     {{#_detail5}}
+    {{#_detail5}}
     <tr>
         <td>{{no}}</td>
         <td>{{itemname}}</td>
@@ -77,7 +77,7 @@
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail5}}        
-         
+
     <tr style="font-weight: bolder;">
 
         <th colspan="5" style="text-align: left;">Оборудование </th>
@@ -85,7 +85,7 @@
     </tr>          
     {{#_detail2}}
     <tr>
-         
+
         <td colspan="2">{{eq_name}}</td>
 
         <td colspan="3" >{{code}} </td>
@@ -97,9 +97,9 @@
         <th colspan="5"  style="text-align: left;">Исполнители </th>
 
     </tr>
-        {{#_detail3}}
+    {{#_detail3}}
     <tr>
-        
+
         <td>{{emp_name}}</td>
 
         <td colspan="5" > </td>

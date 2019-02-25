@@ -18,30 +18,29 @@ class Stock extends \ZCL\DB\Entity
     }
 
     /**
-     * Метод  для   получения  имени  ТМЦ  с  ценой
+     * Метод  для   получения  имени  ТМЦ  с  ценой для выпадающих списков
      *
      * @param mixed $criteria
      * @return []
      * @static
      */
-    public static function findArrayEx($criteria = "", $orderbyfield = null, $orderbydir = null, $count = -1, $offset = -1) {
-        if ($orderbyfield == null) {
-            $orderbyfield = "itemname";
-            $orderbydir = "asc";
-        }
-        if(strlen($criteria)>0){
-           $criteria = 'qty <> 0 and ' . $criteria ; 
-        } else {
-           $criteria = 'qty <> 0 ' ; 
+    public static function findArrayAC($store,$partname="" ) {
+     
+ 
+        $criteria = "qty <>0 " ;
+        if(strlen($partname)>0)
+        {
+          $partname =  self::qstr('%'.$partname.'%');   
+          $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} )";   
         }
         
-        $entitylist = self::find($criteria, $orderbyfield, $count, $offset);
+ 
+        
+        $entitylist = self::find($criteria, "itemname");
 
         $list = array();
         foreach ($entitylist as $key => $value) {
-            $list[$key] = $value->itemname . ', ' . $value->partion;
-            //  if (strlen($value->item_code) > 0)
-            //     $list[$key] = $value->item_code . ', ' . $list[$key];
+            $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion) ;
         }
 
         return $list;
@@ -86,37 +85,21 @@ class Stock extends \ZCL\DB\Entity
      *
      */
     public static function getQuantity($stock_id, $date = null) {
-        if($stock_id >0){
+        if ($stock_id > 0) {
             $stock = Stock::load($stock_id);
-            if ($date >0) {
+            if ($date > 0) {
                 $conn = \ZDB\DB::getConnect();
                 $where = "   stock_id = {$stock_id} and date(document_date) <= " . $conn->DBDate($date);
                 $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist_view  where " . $where;
                 return $conn->GetOne($sql);
-                
             } else {
-              return $stock->qty;
-            }   
-            return 0;   
+                return $stock->qty;
+            }
+            return 0;
         }
-        
-       
     }
 
-    /**
-     * Количество зарезервинование  и  ожидаемое после  даты
-     *
-     * @param mixed $stock_id
-     * @param mixed $date
-     * @param mixed $acc Синтетический счет
-     * @return mixed Массив с  двумя  значениями 'r'  и 'w'
-     */
-    public static function getQuantityFuture($stock_id, $date) {
-        $conn = \ZDB\DB::getConnect();
-        $where = "    stock_id = {$stock_id} and date(document_date) > " . $conn->DBDate($date);
-        $sql = " select sum(quantity)  from entrylist_view  where  " . $where;
-        return $conn->GetRow($sql);
-    }
+    
 
     // Поиск партий
     public static function pickup($store_id, $item_id, $qty) {

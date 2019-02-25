@@ -70,7 +70,7 @@ class Task extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
         $this->docform->add(new Label('total'));
-        
+
 
         //service
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -88,7 +88,7 @@ class Task extends \App\Pages\Base
         $this->editdetail2->add(new TextInput('editquantity2'))->setText("1");
         $this->editdetail2->add(new TextInput('editprice2'));
         $this->editdetail2->add(new Label('qty'));
-        
+
         $this->editdetail2->add(new Button('cancelrow2'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail2->add(new SubmitButton('saverow2'))->onClick($this, 'saverow2OnClick');
 
@@ -99,7 +99,7 @@ class Task extends \App\Pages\Base
         $this->editdetail5->add(new TextInput('editquantity5'))->setText("1");
         $this->editdetail5->add(new TextInput('editprice5'));
         $this->editdetail5->add(new Label('qty5'));
-        
+
         $this->editdetail5->add(new Button('cancelrow5'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail5->add(new SubmitButton('saverow5'))->onClick($this, 'saverow5OnClick');
 
@@ -147,7 +147,7 @@ class Task extends \App\Pages\Base
                     $service = new Service($item);
                     $this->_servicelist[$service->service_id] = $service;
                 }
-                if ($item["item_id"] > 0 && strlen($item["item5_id"])==0) {
+                if ($item["item_id"] > 0 && strlen($item["item5_id"]) == 0) {
                     $stock = new Stock($item);
                     $this->_itemlist[$stock->stock_id] = $stock;
                 }
@@ -181,7 +181,7 @@ class Task extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
- 
+
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->editdetail2->setVisible(false);
@@ -251,9 +251,9 @@ class Task extends \App\Pages\Base
         $this->_servicelist[$service->service_id] = $service;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
-$this->calcTotal();        
-$this->docform->detail->Reload();
-        
+        $this->calcTotal();
+        $this->docform->detail->Reload();
+
         //очищаем  форму
         $this->editdetail->editservice->setKey(0);
         $this->editdetail->editservice->setText('');
@@ -293,7 +293,7 @@ $this->docform->detail->Reload();
 
         $this->editdetail2->editquantity2->setText(($item->quantity));
         $this->editdetail2->editprice2->setText($item->price);
-        
+
 
         $this->editdetail2->edititem->setKey($item->stock_id);
         $this->editdetail2->edititem->setText($item->itemname);
@@ -308,7 +308,7 @@ $this->docform->detail->Reload();
         $stock = Stock::load($id);
         $stock->quantity = $this->editdetail2->editquantity2->getText();
         $stock->price = $this->editdetail2->editprice2->getText();
-        
+
 
 
         $this->_itemlist[$stock->stock_id] = $stock;
@@ -324,14 +324,13 @@ $this->docform->detail->Reload();
         $this->editdetail2->editprice2->setText("0");
     }
 
-     public function delete2OnClick($sender) {
+    public function delete2OnClick($sender) {
         $item = $sender->owner->getDataItem();
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->stock_id => $this->_itemlist[$item->stock_id]));
         $this->docform->detail2->Reload();
         $this->calcTotal();
     }
 
-    
     public function detail5OnRow($row) {
         $item = $row->getDataItem();
 
@@ -363,7 +362,7 @@ $this->docform->detail->Reload();
 
         $this->editdetail5->editquantity5->setText(($item->quantity));
         $this->editdetail5->editprice5->setText($item->price);
-        
+
 
         $this->editdetail5->edititem5->setKey($item->stock_id);
         $this->editdetail5->edititem5->setText($item->itemname);
@@ -378,14 +377,14 @@ $this->docform->detail->Reload();
         $stock = Stock::load($id);
         $stock->quantity = $this->editdetail5->editquantity5->getText();
         $stock->price = $this->editdetail5->editprice5->getText();
-        $stock->amount =  $stock->quantity * $stock->price;
+        $stock->amount = $stock->quantity * $stock->price;
 
         $stock->item5_id = $stock->item_id;
         $this->_itemlist5[$stock->stock_id] = $stock;
         $this->editdetail5->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail5->Reload();
-       
+
         //очищаем  форму
         $this->editdetail5->edititem5->setKey(0);
         $this->editdetail5->edititem5->setText('');
@@ -394,18 +393,12 @@ $this->docform->detail->Reload();
         $this->editdetail5->editprice5->setText("0");
     }
 
- 
     public function deleteOnClick5($sender) {
         $item = $sender->owner->getDataItem();
         $this->_itemlist5 = array_diff_key($this->_itemlist5, array($item->stock_id => $this->_itemlist5[$item->stock_id]));
         $this->docform->detail5->Reload();
-         
     }
 
-    
-    
-    
-    
     //employee
     public function addempOnClick($sender) {
         $this->editdetail3->setVisible(true);
@@ -501,7 +494,6 @@ $this->docform->detail->Reload();
             'hours' => $this->docform->hours->getText(),
             'start_date' => $this->docform->start_date->getDate(),
             'end_date' => $this->docform->document_date->getDate(),
-            
             'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
@@ -511,7 +503,7 @@ $this->docform->detail->Reload();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();
         }
-       foreach ($this->_itemlist5 as $item) {
+        foreach ($this->_itemlist5 as $item) {
             $this->_doc->detaildata[] = $item->getData();
         }
         foreach ($this->_eqlist as $item) {
@@ -583,10 +575,9 @@ $this->docform->detail->Reload();
             $total = $total + $item->amount;
         }
 
-        
-        
+
+
         $this->docform->total->setText($total);
-        
     }
 
     /**
@@ -657,14 +648,16 @@ $this->docform->detail->Reload();
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = Item::qstr('%' . $this->editdetail2->edititem->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id}   and (itemname like {$text} or item_code like {$text}) ");
+        $text = trim($this->editdetail2->edititem->getText()) ;
+        return Stock::findArrayAC($store_id,$text)  ;
+        
     }
-   public function OnAutoItem5($sender) {
+
+    public function OnAutoItem5($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = Item::qstr('%' . $this->editdetail5->edititem5->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id}   and (itemname like {$text} or item_code like {$text}) ");
-    }
+        $text = trim($this->editdetail5->edititem->getText()) ;
+        return Stock::findArrayAC($store_id,$text)  ;
+     }
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
@@ -680,6 +673,7 @@ $this->docform->detail->Reload();
 
         $this->updateAjax(array('qty', 'editprice2'));
     }
+
     public function OnChangeItem5($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);

@@ -26,9 +26,9 @@ class Report
      * @param mixed $detail Двумерный массив  табличной  части
      * @param mixed $summary Список  полей  по  которым  вычисляются  итоговые  данные табличной части
      */
-    public function generate(array $header ) {
+    public function generate(array $header) {
 
- 
+
 
         $template = @file_get_contents(_ROOT . 'templates/printforms/' . $this->_template);
         if (strlen($template) == 0) {

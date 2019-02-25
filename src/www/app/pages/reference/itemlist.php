@@ -83,7 +83,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
-        $this->itemdetail->add(new CheckBox('editpricelist',true));
+        $this->itemdetail->add(new CheckBox('editpricelist', true));
 
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
@@ -99,7 +99,7 @@ class ItemList extends \App\Pages\Base
     public function itemlistOnRow($row) {
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-        
+
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
@@ -116,7 +116,7 @@ class ItemList extends \App\Pages\Base
         if ($item->price5 > 0)
             $plist[] = $item->price5;
         $row->add(new Label('price', implode(',', $plist)));
-        $row->add(new Label('qty', $item->qty));
+       
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -198,8 +198,10 @@ class ItemList extends \App\Pages\Base
         $this->_item->bar_code = $this->itemdetail->editbarcode->getText();
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
-        $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1:0;;
-        $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1:0;;
+        $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
+        ;
+        $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
+        ;
 
         $this->_item->Save();
 
@@ -227,11 +229,11 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         if ($cat > 0) {
             $where = $where . " and cat_id=" . $cat;
-        }   
+        }
         if ($showdis > 0) {
             
         } else {
-           $where = $where . " and disabled <> 1" ; 
+            $where = $where . " and disabled <> 1";
         }
         if (strlen($text) > 0) {
             $text = Item::qstr('%' . $text . '%');

@@ -39,20 +39,20 @@ class OrderCust extends Document
 
         $report = new \App\Report('ordercust.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }
 
     public function Execute() {
- 
+
         return true;
     }
 
     public function getRelationBased() {
         $list = array();
 
-         $list['GoodsReceipt'] = 'Приходная накладная';
+        $list['GoodsReceipt'] = 'Приходная накладная';
 
         return $list;
     }

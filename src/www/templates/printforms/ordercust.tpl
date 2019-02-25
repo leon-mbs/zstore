@@ -1,6 +1,6 @@
  
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
-    
+
 
     <tr>
         <td></td>
@@ -10,7 +10,7 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
-             <br> Заявка № {{document_number}} от {{date}} <br><br>
+            <br> Заявка № {{document_number}} от {{date}} <br><br>
         </td>
     </tr>
 

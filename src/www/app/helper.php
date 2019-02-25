@@ -334,7 +334,8 @@ class Helper
     }
 
     public static function fqty($qty) {
-        if(strlen($qty)==0) return '';         
+        if (strlen($qty) == 0)
+            return '';
         $digit = 0;
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {

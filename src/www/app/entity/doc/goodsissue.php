@@ -35,13 +35,13 @@ class GoodsIssue extends Document
             }
         }
 
-        
+
         $customer = \App\Entity\Customer::load($this->customer_id);
-        
+
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $firm['firmname'],
-            "customername" => $this->customer_name. ', тел. '.$customer->phone,
+            "customername" => $this->customer_name . ', тел. ' . $customer->phone,
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],
             "order" => $this->headerdata["order"],
@@ -55,11 +55,11 @@ class GoodsIssue extends Document
         if ($this->headerdata["delivery_date"] > 0) {
             $header['delivery_date'] = date('d.m.Y', $this->headerdata["delivery_date"]);
         }
-        $header["isorder"] =  $this->headerdata["delivery"]  > 1;
+        $header["isorder"] = $this->headerdata["delivery"] > 1;
 
         $report = new \App\Report('goodsissue.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }

@@ -39,7 +39,7 @@ class GoodsReceipt extends Document
 
         $report = new \App\Report('goodsreceipt.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }
@@ -55,7 +55,7 @@ class GoodsReceipt extends Document
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
-            $sc->setExtCode($row['amount']  ); //Для АВС 
+            $sc->setExtCode($row['amount']); //Для АВС 
             $sc->setCustomer($this->customer_id);
 
             $sc->save();
@@ -79,7 +79,7 @@ class GoodsReceipt extends Document
     public function getRelationBased() {
         $list = array();
 
-          $list['RetCustIssue'] = 'Возврат  поставщику';
+        $list['RetCustIssue'] = 'Возврат  поставщику';
 
         return $list;
     }

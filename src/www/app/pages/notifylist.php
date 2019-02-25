@@ -41,5 +41,5 @@ class NotifyList extends \App\Pages\Base
         $row->add(new Label("ndate", date("Y-m-d H:i", $notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);
     }
-
-}
+    
+    }

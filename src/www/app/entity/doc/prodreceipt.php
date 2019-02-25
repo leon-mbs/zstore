@@ -30,15 +30,15 @@ class ProdReceipt extends Document
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-           "_detail" => $detail,
-             "document_number" => $this->document_number,
+            "_detail" => $detail,
+            "document_number" => $this->document_number,
             "total" => $this->headerdata["total"]
         );
 
 
         $report = new \App\Report('prodreceipt.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }

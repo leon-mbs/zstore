@@ -163,8 +163,8 @@ class Outcome extends \App\Pages\Base
             );
         }
 
-         $header = array('datefrom' => date('d.m.Y', $from),
-          "_detail" => $detail,
+        $header = array('datefrom' => date('d.m.Y', $from),
+            "_detail" => $detail,
             'dateto' => date('d.m.Y', $to)
         );
         if ($type == 1) {
@@ -193,7 +193,7 @@ class Outcome extends \App\Pages\Base
         }
         $report = new \App\Report('outcome.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }

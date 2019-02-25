@@ -33,9 +33,7 @@ class RetCustIssue extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
- 
- 
-    
+
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -43,21 +41,21 @@ class RetCustIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
- 
+
 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
 
- 
+
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-       
- 
+
+
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-    
+
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
@@ -77,20 +75,20 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
- 
+
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
-        
-            
+
+
             $this->docform->document_date->setDate($this->_doc->document_date);
-    
+
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->notes->setText($this->_doc->notes);
- 
+
 
             foreach ($this->_doc->detaildata as $item) {
                 $stock = new Stock($item);
@@ -105,20 +103,19 @@ class RetCustIssue extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'GoodsReceipt') {
-                    
+
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-    
+
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                 
+
                         foreach ($basedoc->detaildata as $item) {
-                             
+
                             $stock = \App\Entity\Stock::getStock($basedoc->headerdata['store'], $item['item_id'], $item['price']);
-                            $stock->quantity=$item['quantity'];
-                            $stock->price=$item['price'];
+                            $stock->quantity = $item['quantity'];
+                            $stock->price = $item['price'];
                             $this->_tovarlist[$stock->stock_id] = $stock;
                         }
-                         
                     }
                 }
             }
@@ -134,7 +131,7 @@ class RetCustIssue extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('tovar', $item->itemname));
-         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
@@ -177,9 +174,10 @@ class RetCustIssue extends \App\Pages\Base
 
         $this->editdetail->edittovar->setKey($stock->stock_id);
         $this->editdetail->edittovar->setText($stock->itemname);
+        $st = Stock::load($stock->stock_id);  //для актуального 
+        $qty=$st->qty - $st->wqty + $st->rqty;
+        $this->editdetail->qtystock->setText(H:fqty($qty)) ;
 
-
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id));
 
         $this->_rowid = $stock->stock_id;
     }
@@ -233,18 +231,17 @@ class RetCustIssue extends \App\Pages\Base
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
-  
+
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->checkForm() == false) {
             return;
         }
-    
+
         $this->calcTotal();
         $old = $this->_doc->cast();
 
         $this->_doc->headerdata = array(
-             'store' => $this->docform->store->getValue()
-             
+            'store' => $this->docform->store->getValue()
         );
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
@@ -252,7 +249,7 @@ class RetCustIssue extends \App\Pages\Base
         }
 
         $this->_doc->amount = $this->docform->total->getText();
-  
+
         $isEdited = $this->_doc->document_id > 0;
 
 
@@ -266,12 +263,9 @@ class RetCustIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                
-                 
-            } else {  
-   
+            } else {
+
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-                 
             }
 
             if ($this->_basedocid > 0) {
@@ -342,9 +336,11 @@ class RetCustIssue extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $this->editdetail->qtystock->setText($stock->qty);
-       
-  
+        $qty=$stock->qty - $stock->wqty + $stock->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
+
+
+
         $this->editdetail->editprice->setText($stock->partion);
 
         $this->updateAjax(array('qtystock', 'editprice'));
@@ -355,12 +351,10 @@ class RetCustIssue extends \App\Pages\Base
         return Customer::findArray("customer_name", "Customer_name like " . $text);
     }
 
- 
-
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id} and qty>0    and (itemname like {$text} or item_code like {$text}) ");
+        $text = trim($sender->getText()) ;
+        return Stock::findArrayAC($store_id,$text)  ;
     }
 
-  }
+}

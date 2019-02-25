@@ -137,9 +137,9 @@ class ProdIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setKey($stock->stock_id);
         $this->editdetail->edittovar->setText($stock->itemname);
 
-
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id));
-
+        $st = Stock::load($stock->stock_id);  //для актуального 
+        $qty=$st->qty - $st->wqty + $st->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty) ) ;
         $this->_rowid = $stock->stock_id;
     }
 
@@ -286,9 +286,10 @@ class ProdIssue extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $this->editdetail->qtystock->setText(Stock::getQuantity($id));
+        $qty=$stock->qty - $stock->wqty + $stock->rqty;        
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
-       // $item = Item::load($stock->item_id);
+        // $item = Item::load($stock->item_id);
 
 
         $this->editdetail->editprice->setText($stock->partion);
@@ -298,8 +299,8 @@ class ProdIssue extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id}   and (itemname like {$text} or item_code like {$text}) ");
-    }
+        $text = trim($sender->getText()) ;
+        return Stock::findArrayAC($store_id,$text)  ;
+  }
 
 }

@@ -12,6 +12,7 @@ use \Zippy\Html\Panel;
 use \App\Entity\Item;
 use \App\Entity\Store;
 use \App\Helper as H;
+use App\Application as App;
 
 /**
  * Движение товара
@@ -31,6 +32,7 @@ class ItemActivity extends \App\Pages\Base
 
 
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
+         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('print', "movereport"));
@@ -39,6 +41,8 @@ class ItemActivity extends \App\Pages\Base
         $this->detail->add(new RedirectLink('excel', "movereport"));
         $this->detail->add(new RedirectLink('pdf', "movereport"));
         $this->detail->add(new Label('preview'));
+        \App\Session::getSession()->issubmit = false;
+    
     }
 
     public function OnAutoItem($sender) {
@@ -78,6 +82,11 @@ class ItemActivity extends \App\Pages\Base
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
+        
+        $this->detail->preview->setText("<b >Загрузка...</b>",true);
+        \App\Session::getSession()->printform = "";
+        \App\Session::getSession()->issubmit = true;
+                 
     }
 
     private function generateReport() {
@@ -97,14 +106,26 @@ class ItemActivity extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
 
         $sql = "
-         SELECT               t.*,         
-          (SELECT                   COALESCE(SUM(u.`quantity`), 0)              
-            FROM entrylist_view u 
-              WHERE u.`document_date` < t.dt   
-              AND u.item_id = t.item_id) AS begin_quantity  
-                
-                
-                FROM (             SELECT
+         SELECT  t.*,
+          
+         (
+        SELECT  
+          
+          COALESCE(SUM(sc2.`quantity`), 0)  
+         FROM entrylist_view sc2
+          JOIN store_stock_view st2
+            ON sc2.stock_id = st2.stock_id
+          JOIN documents dc2
+            ON sc2.document_id = dc2.document_id
+              WHERE st2.item_id = t.item_id  
+              AND st2.store_id = {$storeid} 
+              AND sc2.document_date  < t.dt   
+              GROUP BY st2.item_id 
+                                 
+         ) as begin_quantity   
+         
+          from (
+           select
           st.item_id,
           st.itemname,
           st.item_code,
@@ -123,12 +144,11 @@ class ItemActivity extends \App\Pages\Base
               AND DATE(sc.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
               GROUP BY st.item_id,
-                      
-                       DATE(sc.document_date)) t
-            ORDER BY dt  
-        ";    
-        
-        
+                       DATE(sc.document_date) ) t
+              ORDER BY t.dt  
+        ";
+
+
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {
@@ -137,23 +157,38 @@ class ItemActivity extends \App\Pages\Base
                 "name" => $row['itemname'],
                 "date" => date("d.m.Y", strtotime($row['dt'])),
                 "documents" => $row['docs'],
-                "in" => H::fqty($row['begin_quantity']),
+                "in" => H::fqty(strlen($row['begin_quantity']) > 0 ? $row['begin_quantity'] : 0),
                 "obin" => H::fqty($row['obin']),
                 "obout" => H::fqty($row['obout']),
                 "out" => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
         }
 
-          $header = array('datefrom' => date('d.m.Y', $from),
-           "_detail" => $detail,
+        $header = array('datefrom' => date('d.m.Y', $from),
+            "_detail" => $detail,
             'dateto' => date('d.m.Y', $to),
             "store" => Store::load($storeid)->storename
         );
         $report = new \App\Report('itemactivity.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }
+  
+    public function OnAutoLoad($sender) {
 
+        if (\App\Session::getSession()->issubmit === true) {
+            $html = $this->generateReport();
+            \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+            $this->detail->preview->setText($html, true);
+            $this->updateAjax(array('preview'));
+        }
+    }
+
+    public function beforeRender() {
+        parent::beforeRender();
+
+        App::addJavaScript("\$('#autoclick').click()", true);
+    }
 }

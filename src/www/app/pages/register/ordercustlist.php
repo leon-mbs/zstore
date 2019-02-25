@@ -44,7 +44,7 @@ class OrderCustList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые',   3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 3 => 'Все'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new OrderCustDataSource($this), $this, 'doclistOnRow'));
@@ -52,7 +52,7 @@ class OrderCustList extends \App\Pages\Base
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(25);
- 
+
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -70,8 +70,7 @@ class OrderCustList extends \App\Pages\Base
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this,'oncsv'));        
-        
+        $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function filterOnSubmit($sender) {
@@ -93,12 +92,12 @@ class OrderCustList extends \App\Pages\Base
         $row->add(new Label('amount', $doc->amount));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-       // if($doc->state == Document::STATE_EXECUTED) $row->state->setText('Выполняется');
+        // if($doc->state == Document::STATE_EXECUTED) $row->state->setText('Выполняется');
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
-        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW|| $doc->state == Document::STATE_REFUSED) {
+        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW || $doc->state == Document::STATE_REFUSED) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
@@ -171,12 +170,12 @@ class OrderCustList extends \App\Pages\Base
                 $ttn = true;
             }
         }
-                $this->statuspan->statusform->binp->setVisible(false);
-    
+        $this->statuspan->statusform->binp->setVisible(false);
+
         $this->statuspan->statusform->bttn->setVisible(!$ttn);
 
         //отмена   если  не было оплат и доставки
-        if ($this->_doc->datatag == 0  ) {
+        if ($this->_doc->datatag == 0) {
             $this->statuspan->statusform->bcancel->setVisible(false);
         } else {
             $this->statuspan->statusform->bcancel->setVisible(true);
@@ -192,27 +191,27 @@ class OrderCustList extends \App\Pages\Base
             $this->statuspan->statusform->bcancel->setVisible(true);
             $this->statuspan->statusform->bclose->setVisible(true);
         }
-        $this->statuspan->statusform->bap->setVisible(false); 
-        $this->statuspan->statusform->bref->setVisible(false); 
+        $this->statuspan->statusform->bap->setVisible(false);
+        $this->statuspan->statusform->bref->setVisible(false);
         if ($state == Document::STATE_WA) {
-           $this->statuspan->statusform->bap->setVisible(true); 
-           $this->statuspan->statusform->bref->setVisible(true); 
-           $this->statuspan->statusform->bttn->setVisible(false); 
-           $this->statuspan->statusform->binp->setVisible(false); 
+            $this->statuspan->statusform->bap->setVisible(true);
+            $this->statuspan->statusform->bref->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binp->setVisible(false);
         }
         if ($state == Document::STATE_APPROVED) {
-            $this->statuspan->statusform->bttn->setVisible(true); 
-            $this->statuspan->statusform->binp->setVisible(true); 
-        }  
+            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->binp->setVisible(true);
+        }
         if ($state == Document::STATE_INPROCESS) {
-            
-            $this->statuspan->statusform->binp->setVisible(false); 
+
+            $this->statuspan->statusform->binp->setVisible(false);
         }
-       if ($state == Document::STATE_REFUSED) {
-            
-            $this->statuspan->statusform->bttn->setVisible(false); 
+        if ($state == Document::STATE_REFUSED) {
+
+            $this->statuspan->statusform->bttn->setVisible(false);
         }
-         //закрыт
+        //закрыт
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
@@ -255,31 +254,30 @@ class OrderCustList extends \App\Pages\Base
     }
 
     public function oncsv($sender) {
-            $list = $this->doclist->getDataSource()->getItems(-1,-1,'document_id');
-            $csv="";
- 
-            foreach($list as $d){
-               $csv.=  date('Y.m.d',$d->document_date) .';';    
-               $csv.=  $d->document_number .';';    
-               $csv.=  $d->customer_name .';';    
-               $csv.=  $d->amount  .';'; 
-               $csv.=  Document::getStateName($d->state)  .';'; 
-               $csv.=  $d->notes .';';     
-               $csv.="\n";
-            }
-            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+        $csv = "";
 
- 
-            header("Content-type: text/csv");
-            header("Content-Disposition: attachment;Filename=ordercustlist.csv");
-            header("Content-Transfer-Encoding: binary");
+        foreach ($list as $d) {
+            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= $d->document_number . ';';
+            $csv .= $d->customer_name . ';';
+            $csv .= $d->amount . ';';
+            $csv .= Document::getStateName($d->state) . ';';
+            $csv .= $d->notes . ';';
+            $csv .= "\n";
+        }
+        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
 
-            echo $csv;
-            flush();
-            die;
-            
+
+        header("Content-type: text/csv");
+        header("Content-Disposition: attachment;Filename=ordercustlist.csv");
+        header("Content-Transfer-Encoding: binary");
+
+        echo $csv;
+        flush();
+        die;
     }
-    
+
 }
 
 /**
@@ -302,12 +300,12 @@ class OrderCustDataSource implements \Zippy\Interfaces\DataSource
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
         $where .= " and meta_name  = 'OrderCust' ";
-  
+
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
             $where .= " and  state <> 9 ";
         }
-       
+
         if ($status == 3) {
             
         }

@@ -154,9 +154,9 @@ class Income extends \App\Pages\Base
             );
         }
 
-         $header = array('datefrom' => date('d.m.Y', $from),
-           "_detail" => $detail,
-             'dateto' => date('d.m.Y', $to)
+        $header = array('datefrom' => date('d.m.Y', $from),
+            "_detail" => $detail,
+            'dateto' => date('d.m.Y', $to)
         );
         if ($type == 1) {
             $header['_type1'] = true;

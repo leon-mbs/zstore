@@ -125,8 +125,11 @@ class MoveItem extends \App\Pages\Base
 
         $this->editdetail->edititem->setKey($stock->stock_id);
         $this->editdetail->edititem->setValue($stock->itemname);
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id));
-
+        
+        $st = Stock::load($stock->stock_id);  //для актуального 
+        $qty=$st->qty - $st->wqty + $st->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty)  ) ;
+    fqty()
         $this->_rowid = $stock->stock_id;
     }
 
@@ -238,7 +241,10 @@ class MoveItem extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $stock_id = $sender->getKey();
         $stock = Stock::load($stock_id);
-        $this->editdetail->qtystock->setText($stock->qty) ;
+        $qty=$stock->qty - $stock->wqty + $stock->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
+
+
         $store = Store::load($this->docform->storeto->getValue());
     }
 
@@ -258,11 +264,10 @@ class MoveItem extends \App\Pages\Base
     }
 
     public function OnAutocompleteItem($sender) {
-        $text = Store::qstr('%' . trim($sender->getText()) . '%');
         $store_id = $this->docform->storefrom->getValue();
-
-        return Stock::findArrayEx("store_id={$store_id} and    (itemname  like {$text} or item_code  like {$text} )  ");
-    }
+        $text = trim($sender->getText()) ;
+        return Stock::findArrayAC($store_id,$text)  ;
+  }
 
     public function beforeRender() {
         parent::beforeRender();

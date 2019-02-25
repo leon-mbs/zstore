@@ -1,7 +1,7 @@
  
 <table class="ctable"   border="0" class="ctable" cellpadding="2" cellspacing="0">
 
-            
+
     <tr>
 
         <th align="center" colspan="9">
@@ -21,7 +21,7 @@
         <th  >{{price3name}}</th>
         <th  >{{price4name}}</th>
         <th  >{{price5name}}</th>
-         
+
     </tr>
     {{#_detail}}
     <tr>
@@ -36,7 +36,7 @@
         <td align="right">{{price3}}</td>
         <td align="right">{{price4}}</td>
         <td align="right">{{price5}}</td>
- 
+
     </tr>
     {{/_detail}}
 </table>

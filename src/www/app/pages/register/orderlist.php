@@ -71,8 +71,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this,'oncsv'));        
-        
+        $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function filterOnSubmit($sender) {
@@ -172,7 +171,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->bttn->setVisible(!$ttn);
 
         //отмена   если  не было оплат и доставки
-        if ($this->_doc->datatag == 0  ) {
+        if ($this->_doc->datatag == 0) {
             $this->statuspan->statusform->bcancel->setVisible(false);
         } else {
             $this->statuspan->statusform->bcancel->setVisible(true);
@@ -230,32 +229,31 @@ class OrderList extends \App\Pages\Base
         App::Redirect("\\App\\Pages\\Doc\\Order", $doc->document_id);
     }
 
-   public function oncsv($sender) {
-            $list = $this->doclist->getDataSource()->getItems(-1,-1,'document_id');
-            $csv="";
- 
-            foreach($list as $d){
-               $csv.=  date('Y.m.d',$d->document_date) .';';    
-               $csv.=  $d->document_number .';';    
-               $csv.=  $d->customer_name .';';    
-               $csv.=  $d->amount  .';'; 
-               $csv.=  Document::getStateName($d->state)  .';'; 
-               $csv.=  $d->notes .';';     
-               $csv.="\n";
-            }
-            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+    public function oncsv($sender) {
+        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+        $csv = "";
 
- 
-            header("Content-type: text/csv");
-            header("Content-Disposition: attachment;Filename=orderlist.csv");
-            header("Content-Transfer-Encoding: binary");
+        foreach ($list as $d) {
+            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= $d->document_number . ';';
+            $csv .= $d->customer_name . ';';
+            $csv .= $d->amount . ';';
+            $csv .= Document::getStateName($d->state) . ';';
+            $csv .= $d->notes . ';';
+            $csv .= "\n";
+        }
+        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
 
-            echo $csv;
-            flush();
-            die;
-            
+
+        header("Content-type: text/csv");
+        header("Content-Disposition: attachment;Filename=orderlist.csv");
+        header("Content-Transfer-Encoding: binary");
+
+        echo $csv;
+        flush();
+        die;
     }
-    
+
 }
 
 /**

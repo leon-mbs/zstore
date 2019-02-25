@@ -44,9 +44,9 @@ class OrderCust extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-          $this->docform->add(new TextInput('notes'));
- 
- 
+        $this->docform->add(new TextInput('notes'));
+
+
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -77,13 +77,13 @@ class OrderCust extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
-    
+
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
-   
+
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
                 $item->old = true;
@@ -97,7 +97,6 @@ class OrderCust extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    
                 }
             }
         }
@@ -105,8 +104,6 @@ class OrderCust extends \App\Pages\Base
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-
-        
     }
 
     public function onVal($sender) {
@@ -172,6 +169,8 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->_rowid = 0;
+         $this->editdetail->editprice->setText("0");
+        
     }
 
     public function saverowOnClick($sender) {
@@ -179,17 +178,11 @@ class OrderCust extends \App\Pages\Base
 
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
-        if ($id == 0 && strlen($name) < 2) {
+        if ($id == 0  ) {
             $this->setError("Не выбран товар");
             return;
         }
-        if ($id == 0) {
-            $item = new Item();  // создаем новый
-            $item->itemname = $name;
-            //todo наценка по дефолту
-            $item->save();
-            $id = $item->item_id;
-        }
+    
 
         $item = Item::load($id);
 
@@ -258,7 +251,7 @@ class OrderCust extends \App\Pages\Base
 
 
         $this->_doc->headerdata = array(
-             'total' => $this->docform->total->getText()
+            'total' => $this->docform->total->getText()
         );
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
@@ -267,24 +260,23 @@ class OrderCust extends \App\Pages\Base
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
- 
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
             $this->_doc->save();
 
-            
+
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             } else if ($sender->id == 'apprdoc') {
-                    if (!$isEdited)
+                if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_WA);
-               
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -303,8 +295,6 @@ class OrderCust extends \App\Pages\Base
                 App::RedirectBack();
             else
                 App::Redirect("\\App\\Pages\\Register\\OrderCustList");
-               
-            
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -342,7 +332,7 @@ class OrderCust extends \App\Pages\Base
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-      
+
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран  поставщик");
         }

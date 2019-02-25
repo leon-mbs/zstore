@@ -35,7 +35,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid = 0;
     private $_order_id = 0;
     private $_discount;
-    
+
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -51,18 +51,18 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
 
-      $this->docform->add(new Label('discount'))->setVisible(false);
-         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docform->add(new Label('discount'))->setVisible(false);
+        $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
-  
-        $this->docform->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта'),1))->onChange($this, 'OnDelivery');
+
+        $this->docform->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта'), 1))->onChange($this, 'OnDelivery');
 
         $this->docform->add(new TextInput('order'));
-   
+
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('ship_number'));
         $this->docform->add(new TextInput('ship_address'));
@@ -245,8 +245,9 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setKey($stock->stock_id);
         $this->editdetail->edittovar->setText($stock->itemname);
 
-
-        $this->editdetail->qtystock->setText(Stock::getQuantity($stock->stock_id));
+        $st = Stock::load($stock->stock_id);  //для актуального 
+        $qty=$st->qty - $st->wqty + $st->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty) ) ;
 
         $this->_rowid = $stock->stock_id;
     }
@@ -350,26 +351,24 @@ class GoodsIssue extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                
+
                 $order = Document::load($this->_doc->headerdata['order_id']);
                 if ($order instanceof Document) {
                     $order->updateStatus(Document::STATE_DELIVERED);
-
                 }
-            } else   
-                if ($sender->id == 'senddoc') {
+            } else
+            if ($sender->id == 'senddoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-                $this->_doc->headerdata['sent_date']=time();
-                $this->_doc->save();                
-                
+                $this->_doc->headerdata['sent_date'] = time();
+                $this->_doc->save();
+
                 $order = Document::load($this->_doc->headerdata['order_id']);
                 if ($order instanceof Document) {
                     $order->updateStatus(Document::STATE_INSHIPMENT);
-
                 }
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -446,7 +445,9 @@ class GoodsIssue extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $this->editdetail->qtystock->setText($stock->qty);
+        $qty=$stock->qty - $stock->wqty + $stock->rqty;
+        
+        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
 
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
@@ -477,13 +478,13 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->discount->setText('Скидка ' . $this->_discount . '%');
         } else {
             $this->docform->discount->setVisible(false);
-        }        
+        }
     }
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        return Stock::findArrayEx("store_id={$store_id} and qty>0    and (itemname like {$text} or item_code like {$text}) ");
+        $text = trim($sender->getText()) ;
+        return Stock::findArrayAC($store_id,$text)  ;
     }
 
     public function OnChangePriceType($sender) {
@@ -528,7 +529,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-    
+
     public function OnDelivery($sender) {
 
         if ($sender->getValue() == 2 || $sender->getValue() == 3) {
@@ -547,8 +548,9 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->ship_number->setVisible(false);
             $this->docform->sent_date->setVisible(false);
             $this->docform->sent_date->setVisible(false);
-            $this->docform->delivery_date->setVisible(false);            
-            $this->docform->emp->setVisible(false);            
+            $this->docform->delivery_date->setVisible(false);
+            $this->docform->emp->setVisible(false);
         }
-    }   
+    }
+
 }

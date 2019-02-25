@@ -32,7 +32,7 @@ class Item extends \ZCL\DB\Entity
         $this->price5 = (string) ($xml->price5[0]);
         $this->curname = (string) ($xml->curname[0]);
         $this->currate = doubleval($xml->currate[0]);
-        $this->pricelist = (int)$xml->pricelist[0];
+        $this->pricelist = (int) $xml->pricelist[0];
 
 
 
@@ -164,7 +164,7 @@ class Item extends \ZCL\DB\Entity
     public static function getQuantity($item_id, $store_id = 0) {
         if ($item_id > 0) {
             $conn = \ZDB\DB::getConnect();
-            $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock where   item_id = {$item_id} ";
+            $sql = "  select coalesce(sum(qty-wqty+rqty),0) as qty  from  store_stock where   item_id = {$item_id} ";
             if ($store_id > 0)
                 $sql .= " and store_id = " . $store_id;
             $cnt = $conn->GetOne($sql);

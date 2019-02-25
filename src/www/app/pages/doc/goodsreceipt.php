@@ -32,8 +32,8 @@ class GoodsReceipt extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-      private $_order_id = 0;
-      
+    private $_order_id = 0;
+
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -108,14 +108,14 @@ class GoodsReceipt extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                   if ($basedoc->meta_name == 'OrderCust') {
+                    if ($basedoc->meta_name == 'OrderCust') {
                         $this->_order_id = $basedocid;
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-                       
+
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
-                  
+
                         $notfound = array();
                         $order = $basedoc->cast();
 
@@ -133,12 +133,11 @@ class GoodsReceipt extends \App\Pages\Base
                         }
 
                         foreach ($order->detaildata as $_item) {
-                             $item = new Item($_item);
-                             $this->_itemlist[$item->item_id] = $item;
+                            $item = new Item($_item);
+                            $this->_itemlist[$item->item_id] = $item;
                         }
-                        $this->calcTotal(); 
+                        $this->calcTotal();
                     }
-                     
                 }
             }
         }
@@ -221,17 +220,11 @@ class GoodsReceipt extends \App\Pages\Base
 
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
-        if ($id == 0 && strlen($name) < 2) {
+        if ($id == 0  ) {
             $this->setError("Не выбран товар");
             return;
         }
-        if ($id == 0) {
-            $item = new Item();  // создаем новый
-            $item->itemname = $name;
-            //todo наценка по дефолту
-            $item->save();
-            $id = $item->item_id;
-        }
+        
 
         $item = Item::load($id);
 
@@ -328,7 +321,7 @@ class GoodsReceipt extends \App\Pages\Base
         try {
             $this->_doc->save();
             $order = Document::load($this->_doc->headerdata['order_id']);
-    
+
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
@@ -336,13 +329,13 @@ class GoodsReceipt extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 if ($order instanceof Document) {
                     $order->updateStatus(Document::STATE_CLOSED);
-                }                
+                }
             } else {
-                
+
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-            
-              
+
+
 
 
 
@@ -398,8 +391,6 @@ class GoodsReceipt extends \App\Pages\Base
 
         return !$this->isError();
     }
-
- 
 
     public function backtolistOnClick($sender) {
         App::RedirectBack();

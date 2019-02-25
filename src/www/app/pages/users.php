@@ -47,8 +47,6 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editonlymy'));
 
 
-        $this->editpan->editform->add(new CheckBox('editwnoliq'));
-        $this->editpan->editform->add(new CheckBox('editwhlitems'));
         $this->editpan->editform->add(new CheckBox('editwplanned'));
         $this->editpan->editform->add(new CheckBox('editwdebitors'));
 
@@ -85,10 +83,6 @@ class Users extends \App\Pages\Base
 
 
 
-        if (strpos($this->user->widgets, 'wnoliq') !== false)
-            $this->editpan->editform->editwnoliq->setChecked(true);
-        if (strpos($this->user->widgets, 'whlitems') !== false)
-            $this->editpan->editform->editwhlitems->setChecked(true);
         if (strpos($this->user->widgets, 'wplanned') !== false)
             $this->editpan->editform->editwplanned->setChecked(true);
         if (strpos($this->user->widgets, 'wdebitors') !== false)
@@ -144,12 +138,8 @@ class Users extends \App\Pages\Base
 
         $widgets = "";
 
-        if ($this->editpan->editform->editwnoliq->isChecked())
-            $widgets = $widgets . ',wnoliq';
         if ($this->editpan->editform->editwplanned->isChecked())
             $widgets = $widgets . ',wplanned';
-        if ($this->editpan->editform->editwhlitems->isChecked())
-            $widgets = $widgets . ',whlitems';
         if ($this->editpan->editform->editwdebitors->isChecked())
             $widgets = $widgets . ',wdebitors';
 

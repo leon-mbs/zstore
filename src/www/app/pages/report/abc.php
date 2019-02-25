@@ -23,7 +23,7 @@ class ABC extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('ABC'))
             return;
 
-      $this->typelist[1] = "Товары,  прибыль";
+        $this->typelist[1] = "Товары,  прибыль";
         $this->typelist[2] = "Поставщики, объем поставок";
         $this->typelist[3] = "Покупатели, объем продаж";
         $this->typelist[4] = "Услуги, выручка";
@@ -82,7 +82,7 @@ class ABC extends \App\Pages\Base
 //$src = 'data:'.$fi['mime'].';base64,'.$imageData;
 
 
-      
+
 
         $detail = array();
 
@@ -101,7 +101,7 @@ class ABC extends \App\Pages\Base
 
         $detail = $this->calc($detail);
 
-       $header = array('from' => date('d.m.Y', $from),
+        $header = array('from' => date('d.m.Y', $from),
             "_detail" => $detail,
             'to' => date('d.m.Y', $to),
             // 'img'=>  '<img src="'.$src.'">' ,
@@ -109,7 +109,7 @@ class ABC extends \App\Pages\Base
         );
         $report = new \App\Report('abc.tpl');
 
-        $html = $report->generate($header );
+        $html = $report->generate($header);
 
         return $html;
     }

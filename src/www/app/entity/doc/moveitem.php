@@ -26,14 +26,14 @@ class MoveItem extends Document
 
             //списываем  со склада
             $stockfrom = $value['stock_id'];
-            $sc = new Entry($this->document_id, 0 - ($value['quantity']  * $value['partion']), 0 - $value['quantity']);
+            $sc = new Entry($this->document_id, 0 - ($value['quantity'] * $value['partion']), 0 - $value['quantity']);
             $sc->setStock($stockfrom);
 
 
             $sc->save();
 
             $stockto = Stock::getStock($this->headerdata['storeto'], $value['item_id'], $value['partion'], true);
-            $sc = new Entry($this->document_id,  $value['quantity']   * $value['partion'], $value['quantity']);
+            $sc = new Entry($this->document_id, $value['quantity'] * $value['partion'], $value['quantity']);
             $sc->setStock($stockto->stock_id);
 
 
@@ -61,7 +61,7 @@ class MoveItem extends Document
                 "quantity" => H::fqty($value['quantity']));
         }
 
-         $header = array(
+        $header = array(
             "_detail" => $detail,
             'date' => date('d.m.Y', $this->document_date),
             "from" => Store::load($this->headerdata["storefrom"])->storename,
@@ -70,7 +70,7 @@ class MoveItem extends Document
         );
         $report = new \App\Report('moveitem.tpl');
 
-        $html = $report->generate($header   );
+        $html = $report->generate($header);
 
         return $html;
     }

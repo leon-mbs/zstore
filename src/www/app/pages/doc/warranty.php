@@ -278,15 +278,10 @@ class Warranty extends \App\Pages\Base
     }
 
     public function OnAutoItem($sender) {
-        $r = array();
         $store_id = $this->docform->store->getValue();
+        $text = trim($sender->getText()) ;
+        return Stock::findArrayAC($store_id,$text)  ;
 
-        $text = $sender->getText();
-        $list = Stock::findArrayEx("store_id={$store_id} and   (itemname like " . Stock::qstr('%' . $text . '%') . " or item_code like " . Stock::qstr('%' . $text . '%') . "  )");
-        foreach ($list as $k => $v) {
-            $r[$k] = $v;
-        }
-        return $r;
     }
 
     public function OnChangeItem($sender) {
@@ -296,7 +291,8 @@ class Warranty extends \App\Pages\Base
 
         $item = Item::load($stock->item_id);
         $this->editdetail->editprice->setText($item->getPrice($this->docform->pricetype->getValue(), $stock->price));
-        $this->editdetail->qtystock->setText($stock->qty);
+        $qty=$stock->qty - $stock->wqty + $stock->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
 
 
 

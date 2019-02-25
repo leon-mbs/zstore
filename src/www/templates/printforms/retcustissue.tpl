@@ -1,6 +1,6 @@
  
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
- 
+
 
 
     <tr>
@@ -8,8 +8,8 @@
         <td><b>Поставщик</b></td>
         <td colspan="4">{{customername}}</td>
     </tr>
-  
-           
+
+
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
             Возврат постващику № {{document_number}} от {{date}} <br> 
@@ -20,7 +20,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
         <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
-        
+
 
         <th   style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
         <th   style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
@@ -31,7 +31,7 @@
         <td align="right">{{no}}</td>
         <td  >{{tovar_name}}</td>
         <td  >{{tovar_code}}</td>
-         
+
 
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
