@@ -27,7 +27,7 @@ class Stock extends \ZCL\DB\Entity
     public static function findArrayAC($store,$partname="" ) {
      
  
-        $criteria = "qty <>0 " ;
+        $criteria = "qty <>0 and disabled <> 1 " ;
         if(strlen($partname)>0)
         {
           $partname =  self::qstr('%'.$partname.'%');   
