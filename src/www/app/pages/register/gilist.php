@@ -45,7 +45,7 @@ class GIList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные',5 => 'На выполнении', 3 => 'Все'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
@@ -63,6 +63,8 @@ class GIList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bsend'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bcloseact'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('inprocact'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new TextInput('ship_number'));
 
 
@@ -163,6 +165,18 @@ class GIList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
 
+        
+        if ($sender->id == "inprocact") {
+           $this->_doc->updateStatus(Document::STATE_INPROCESS);       
+           
+        }
+        if ($sender->id == "bcloseact") {
+           $this->_doc->updateStatus(Document::STATE_EXECUTED);       
+           $this->_doc->updateStatus(Document::STATE_CLOSED);       
+        }
+        
+        
+        
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
@@ -182,12 +196,16 @@ class GIList extends \App\Pages\Base
         if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
             $this->statuspan->statusform->bsend->setVisible(true);
             $this->statuspan->statusform->ship_number->setVisible(true);
+            $this->statuspan->statusform->inprocact->setVisible(true);
 
             $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bcloseact->setVisible(false);
         } else {
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
             $this->statuspan->statusform->bclose->setVisible(true);
+            $this->statuspan->statusform->bcloseact->setVisible(true);
+            $this->statuspan->statusform->inprocact->setVisible(true);
         }
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
@@ -195,12 +213,37 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bsend->setVisible(false);
         }
+       // в работе
+        if ($state == Document::STATE_INPROCESS) {
+
+            $this->statuspan->statusform->bcloseact->setVisible(true);
+            $this->statuspan->statusform->inprocact->setVisible(false);
+        }
+
         //закрыт
         if ($state == Document::STATE_CLOSED) {
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
+   
+   
+        
+        //прячем лишнее
+        if ($this->_doc->meta_name == 'GoodsIssue') {
+
+            $this->statuspan->statusform->bcloseact->setVisible(false);
+            $this->statuspan->statusform->inprocact->setVisible(false);
+        }        
+        if ($this->_doc->meta_name == 'ServiceAct') {
+
+            $this->statuspan->statusform->bsend->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->ship_number->setVisible(false);
+        }        
+        
+        
+        
     }
 
     //просмотр
@@ -340,10 +383,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and meta_name  = 'GoodsIssue' ";
-
-
-
+        $where .= " and (meta_name  = 'GoodsIssue' or meta_name  = 'ServiceAct' ) ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
@@ -357,6 +397,9 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         }
         if ($status == 4) {
             $where .= " and  amount > datatag";
+        }
+        if ($status == 5) {
+            $where .= " and state = " . Document::STATE_INPROCESS;
         }
         if ($status == 3) {
             

@@ -29,7 +29,7 @@ class WDebitors extends \Zippy\Html\PageFragment
         $conn = $conn = \ZDB\DB::getConnect();
         $sql = "select * from (
             select meta_desc,document_number, customer_name,   (   datatag-amount)  as am
-            from `documents_view` where meta_name in ('GoodsIssue','Goodsreceipt','Task') and amount > datatag
+            from `documents_view` where meta_name in ('GoodsIssue','GoodsReceipt','Task','ServiceAct') and amount > datatag
               
             ) t  order by am   ";
 

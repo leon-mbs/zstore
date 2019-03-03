@@ -137,7 +137,7 @@ class GoodsIssue extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
-                        $this->_order_id = $basedocid;
+                       
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->OnChangeCustomer($this->docform->customer);

@@ -44,6 +44,7 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('editemail'));
         $this->editpan->editform->add(new DropDownChoice('editacl'))->onChange($this, 'onAcl');
         ;
+        $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
 
 
@@ -77,6 +78,7 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->editlogin->setText($this->user->userlogin);
         $this->editpan->editform->editacl->setValue($this->user->acltype);
         $this->editpan->editform->editonlymy->setChecked($this->user->onlymy);
+        $this->editpan->editform->editdisabled->setChecked($this->user->disabled);
 
         $this->editpan->editform->metaaccess->setVisible($this->user->acltype == 2);
         $this->editpan->editform->metaaccess->metarow->Reload();
@@ -112,6 +114,7 @@ class Users extends \App\Pages\Base
         }
         $this->user->acltype = $this->editpan->editform->editacl->getValue();
         $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1 : 0;
+        $this->user->disabled = $this->editpan->editform->editdisabled->isChecked() ? 1 : 0;
 
         $pass = $this->editpan->editform->editpass->getText();
         if (strlen($pass) > 0) {
@@ -173,6 +176,7 @@ class Users extends \App\Pages\Base
     public function OnAddUserRow($datarow) {
         $item = $datarow->getDataItem();
         $datarow->add(new \Zippy\Html\Label("userlogin", $item->userlogin));
+        $datarow->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
         $datarow->add(new \Zippy\Html\Label("created", date('d.m.Y', $item->createdon)));
         $datarow->add(new \Zippy\Html\Label("email", $item->email));

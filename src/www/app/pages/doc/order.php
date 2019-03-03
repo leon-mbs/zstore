@@ -279,6 +279,7 @@ class Order extends \App\Pages\Base
                 App::RedirectBack();
             else
                 App::Redirect("\\App\\Pages\\Register\\OrderList");
+                
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();

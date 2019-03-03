@@ -20,6 +20,7 @@ class ServiceAct extends Document
         foreach ($this->detaildata as $value) {
             $detail[] = array("no" => $i++,
                 "servicename" => $value['service_name'],
+                "desc" => $value['desc'],
                 "quantity" => $value['quantity'],
                 "price" => $value['price'],
                 "amount" => $value['quantity'] * $value['price']

@@ -13,7 +13,7 @@ use ZCL\DB\Entity;
  */
 class User extends Entity
 {
-
+    private $_options = array();
     /**
      * @see Entity
      *
@@ -55,6 +55,10 @@ class User extends Entity
         $this->acledit = (string) ($xml->acledit[0]);
         $this->widgets = (string) ($xml->widgets[0]);
 
+        
+        if(strlen($this->options)>0) $this->_options = @unserialize($this->options) ;
+        
+        
         parent::afterLoad();
     }
 
@@ -72,6 +76,8 @@ class User extends Entity
         $this->acl .= "<widgets>{$this->widgets}</widgets>";
         $this->acl .= "</detail>";
 
+        $this->options = serialize($this->_options);
+        
         return true;
     }
 
@@ -131,4 +137,13 @@ class User extends Entity
         }
     }
 
+    
+    public function getOption($key){
+        return $this->_options[$key];
+    }
+    public function setOption($key,$value){
+        $this->_options[$key] = $value;
+    }
+    
+    
 }

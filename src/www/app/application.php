@@ -61,50 +61,52 @@ class Application extends \Zippy\WebApplication
             $class = $api[1];
 
             if ($class == 'echo') {  //для  теста  /api/echo/параметр
-                $response = "<echo>" . $api[2] . "</echo>";
-            } else {
+               echo $api[2];
+               die;
+            }                
+ 
 
                 try {
 
                     $file = _ROOT . "app/api/" . strtolower($class) . ".php";
+                    if(!file_exists($file)) {
+                        $this->Redirect404();
+                        die;
+                    }
                     require_once($file);
 
                     $class = "\\App\\API\\" . $class;
 
                     $page = new $class;
 
-                    //если RESTFul
+                    //  RESTFul
                     if ($page instanceof \App\RestFul) {
                         $params = array_slice($api, 2);
                         $page->Execute($params);
                         die;
                     }
-
+                    // JSON-RPC
+                     if ($page instanceof \App\JsonRPC) {
+                        $page->Execute();
+                        die;
+                    }                   
+                    
+                    //для произвольной страницы
                     $params = array_slice($api, 3);
-                    $response = call_user_func_array(array($page, $api[2]), $params);
+                    echo call_user_func_array(array($page, $api[2]), $params);
+                    die;                     
+                
                 } catch (Throwable $e) {
-
-
-                    $response = "<error>" . $e->getMessage() . "</error>";
+                    global $logger;
+                    $logger->error($e->getMessage());
+                    
+                    die("Server error") ;
                 }
-            }
-            $xml = '<?xml version="1.0" encoding="utf-8"?>' . $response;
-
-            header(`Content-Type: text/xml; charset=utf-8`);
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Pragma: public');
-
-            echo $xml;
-
-            die;
+            
+            
         }
 
         $arr = explode('/', $uri);
-
-
-
-
 
         $pages = array(
             "shop" => "\\App\\Shop\\Pages\\Main",

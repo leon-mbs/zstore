@@ -164,7 +164,7 @@ class Item extends \ZCL\DB\Entity
     public static function getQuantity($item_id, $store_id = 0) {
         if ($item_id > 0) {
             $conn = \ZDB\DB::getConnect();
-            $sql = "  select coalesce(sum(qty-wqty+rqty),0) as qty  from  store_stock where   item_id = {$item_id} ";
+            $sql = "  select coalesce(sum(qty-wqty+rqty),0) as qty  from  store_stock_view where   item_id = {$item_id} ";
             if ($store_id > 0)
                 $sql .= " and store_id = " . $store_id;
             $cnt = $conn->GetOne($sql);

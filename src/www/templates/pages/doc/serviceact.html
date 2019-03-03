@@ -23,11 +23,15 @@
 
                         <a style="font-size:smaller"  zippy="addcust">Добавить нового</a>
                     </div>
+                                        
                     <div class="  form-check">
                         <input zippy="planned" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="planned">Запланированный</label>
                     </div>                     
-
+                      <div class="form-check">
+                        <input zippy="payed" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="payed">Оплачен</label>
+                    </div>   
                     <div class="form-group  ">
                         <label for="notes" >Примечание</label>
 
@@ -43,6 +47,7 @@
                     <table class="table  table-sm">
                         <tr>
                             <th>Название</th>
+                            <th>Описание</th>
 
                             <th width="40" class="text-right">Кол.</th>
                             <th width="100" class="text-right">Цена</th>
@@ -53,6 +58,7 @@
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
+                            <td zippy="desc"></td>
 
                             <td zippy="quantity"  class="text-right"></td>
                             <td zippy="price"  class="text-right"></td>
@@ -78,6 +84,7 @@
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="inprocdoc" type="submit" value="На выполнение" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Выполнен" class="btn btn-outline-primary  ">
 
                 </div>
@@ -95,6 +102,10 @@
                     <div class="form-group">
                         <label for="editservice">Название </label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="editservice" />       
+                    </div>
+                    <div class="form-group">
+                        <label for="editdesc">Описание </label>
+                        <textarea   class="form-control "   zippy="editdesc" />       
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Количество</label>

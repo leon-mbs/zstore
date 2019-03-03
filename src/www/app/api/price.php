@@ -3,7 +3,7 @@
 namespace App\API;
 
 /**
- * Класс  для  экспорта-импорта  прайсв   \
+ * Класс  для  экспорта-импорта  прайсв    
  * пример  вызова /api/Price/1/2
  */
 class Price extends \App\RestFul

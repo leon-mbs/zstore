@@ -11,6 +11,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -18,6 +19,7 @@ use App\Entity\Customer;
 use App\Entity\Doc\Document;
 use App\Entity\Service;
 use App\Application as App;
+use App\System;
 
 /**
  * Страница  ввода  акта выполненных работ
@@ -30,7 +32,8 @@ class ServiceAct extends \App\Pages\Base
     private $_rowid = 0;
     private $_basedocid = 0;
     private $_discount;
-
+    
+    
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -40,10 +43,11 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer', false);
 
+        
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
-
+        $this->docform->add(new CheckBox('payed'));
         $this->docform->add(new Label('discount'))->setVisible(false);
 
 
@@ -52,6 +56,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('inprocdoc'))->onClick($this, 'savedocOnClick');
 
 
         $this->docform->add(new Label('total'));
@@ -61,6 +66,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextArea('editdesc'));
 
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -97,9 +103,11 @@ class ServiceAct extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     $this->docform->notes->setText($basedoc->meta_desc . " №" . $basedoc->document_number);
+                 
                 }
             }
         }
+        $this->docform->payed->setChecked($this->_doc->datatag == $this->_doc->amount);
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
@@ -111,6 +119,7 @@ class ServiceAct extends \App\Pages\Base
         $service = $row->getDataItem();
 
         $row->add(new Label('item', $service->service_name));
+        $row->add(new Label('desc', $service->desc));
 
         $row->add(new Label('quantity', $service->quantity));
         $row->add(new Label('price', $service->price));
@@ -125,6 +134,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
+        $this->editdetail->editdesc->setText(($service->desc));
         $this->editdetail->editquantity->setText(($service->quantity));
         $this->editdetail->editprice->setText($service->price);
 
@@ -148,6 +158,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->_rowid = 0;
+        $this->editdetail->editdesc->setText('');
         $this->editdetail->editquantity->setText(1);
         $this->editdetail->editprice->setText(0);
     }
@@ -161,6 +172,7 @@ class ServiceAct extends \App\Pages\Base
         $service = Service::load($id);
         $service->quantity = $this->editdetail->editquantity->getText();
         $service->price = $this->editdetail->editprice->getText();
+        $service->desc = $this->editdetail->editdesc->getText();
 
 
         $this->_servicelist[$service->service_id] = $service;
@@ -170,6 +182,7 @@ class ServiceAct extends \App\Pages\Base
         $this->calcTotal();
         //очищаем  форму
         $this->editdetail->editservice->setKey(0);
+        $this->editdetail->editdesc->setText('');
         $this->editdetail->editservice->setText('');
         $this->editdetail->editquantity->setText("1");
 
@@ -209,19 +222,34 @@ class ServiceAct extends \App\Pages\Base
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
+        if ($this->docform->payed->isChecked() == true && $this->_doc->datatag < $this->_doc->amount) {
 
-        $this->_doc->datatag = $this->_doc->amount;
-
+            $this->_doc->addPayment(System::getUser()->user_id, $this->_doc->amount - $this->_doc->datatag);
+            $this->_doc->datatag = $this->_doc->amount;
+        }
+         
+     
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
 
             $this->_doc->save();
 
-            if ($sender->id == 'execdoc') {
+            if ($sender->id != 'savedoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                
+              if ($sender->id == 'execdoc')   {
+                 $this->_doc->updateStatus(Document::STATE_EXECUTED); 
+                 $this->_doc->updateStatus(Document::STATE_CLOSED); 
+              } 
+                 
+              if ($sender->id == 'inprocdoc')    
+              {
+                 $this->_doc->updateStatus(Document::STATE_INPROCESS); 
+              }
+                 
+                
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }

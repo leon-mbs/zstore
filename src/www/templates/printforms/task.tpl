@@ -23,7 +23,7 @@
 <table class="ctable" width="600" cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
 
-        <th colspan="5" style="text-align: left;">Работы и комиплектующие </th>
+        <th colspan="5" style="text-align: left;">Работы и комплектующие </th>
 
     </tr>  
     <tr style="font-weight: bolder;">
