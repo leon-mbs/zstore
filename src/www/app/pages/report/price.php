@@ -89,12 +89,12 @@ class Price extends \App\Pages\Base
                 "name" => $item->itemname,
                 "cat" => $item->cat_name,
                 "msr" => $item->msr,
-                "price1" => $isp1 ? ($item->price1 ) : "",
-                "price2" => $isp2 ? ($item->price2 ) : "",
-                "price3" => $isp3 ? ($item->price3 ) : "",
-                "price4" => $isp4 ? ($item->price4 ) : "",
-                "price5" => $isp5 ? ($item->price5 ) : ""
-            );
+                "price1" => $isp1 ?  round($this->checkPrice($item->item_id,$item->price1)) : "",
+                "price2" => $isp2 ?  round($this->checkPrice($item->item_id,$item->price2)) : "",
+                "price3" => $isp3 ?  round($this->checkPrice($item->item_id,$item->price3)) : "",
+                "price4" => $isp4 ?  round($this->checkPrice($item->item_id,$item->price4)) : "",
+                "price5" => $isp5 ?  round($this->checkPrice($item->item_id,$item->price5)) : ""
+        );
         }
 
         $header = array(
@@ -111,6 +111,26 @@ class Price extends \App\Pages\Base
         $html = $report->generate($header);
 
         return $html;
+    }
+    //проверка на наценку
+    private function checkPrice($item_id,$price){
+            if (strpos($price, '%') > 0) {
+                $price = doubleval(str_replace('%', '', $price));
+                $conn = \ZDB\DB::getConnect();
+
+                $sql = "  select partion  from  store_stock where   item_id = {$item_id} order by stock_id desc limit 1";
+                $partionprice = $conn->GetOne($sql);            
+                if($partionprice>0){
+                   return $partionprice + (int) $partionprice / 100 * $price;    
+                }  else {
+                    return 0;
+                }
+                
+                
+            }else {
+                return  $price;
+            }
+                  
     }
 
 }

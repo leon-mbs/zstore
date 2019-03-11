@@ -1,0 +1,145 @@
+<html>
+
+    <body>
+
+
+        <form zippy="docform">
+            <h3> Заказ (услуги)</h3>
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="form-group">
+                        <label for="document_number" >Номер документа</label>
+                        <input class="form-control" type="text" zippy="document_number" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="document_date" > Дата</label>
+                        <input class="form-control" type="text" zippy="document_date" required="required">
+                    </div>
+                    <div class="form-group  ">
+                        <label for="customer" >Заказчик</label>
+
+                        <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
+                        <span zippy="discount" style="display:block;font-size:smaller"></span>
+
+                        <a style="font-size:smaller"  zippy="addcust">Добавить нового</a>
+                    </div>
+        
+                    <div class="form-group  ">
+                        <label for="notes" >Примечание</label>
+
+                        <input class="form-control" type="text" zippy="notes"  >
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-10">
+                    <a zippy="addrow">Добавить услугу</a>
+                    <table class="table  table-sm">
+                        <tr>
+                            <th>Название</th>
+                            <th>Описание</th>
+
+                            <th width="40" class="text-right">Кол.</th>
+                            <th width="100" class="text-right">Цена</th>
+
+                            <th width="67" class="text-right">Сумма</th>
+
+                            <th width="50"></th>
+                        </tr>
+                        <tr zippy="detail">
+                            <td zippy="item"></td>
+                            <td zippy="desc"></td>
+
+                            <td zippy="quantity"  class="text-right"></td>
+                            <td zippy="price"  class="text-right"></td>
+
+                            <td zippy="amount"  class="text-right"></td>
+
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr style="font-weight: bolder;">
+                            <td colspan="3"  class="text-right">Всего:</td>
+                            <td zippy="total"  class="text-right"></td>
+                            <td></td>
+                        </tr>
+
+
+
+                    </table>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="inprocdoc" type="submit" value="На выполнение" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="Выполнен" class="btn btn-outline-primary  ">
+
+                </div>
+            </div>
+
+        </form>
+
+
+
+        <form zippy="editdetail">
+            <h3>Редактирование </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editservice">Название </label>
+                        <input placeholder="Начните вводить..." class="form-control "   zippy="editservice" />       
+                    </div>
+                    <div class="form-group">
+                        <label for="editdesc">Описание </label>
+                        <textarea   class="form-control "   zippy="editdesc" />       
+                    </div>
+                    <div class="form-group">
+                        <label for="editquantity">Количество</label>
+                        <input class="form-control" type="text" zippy="editquantity" required="required"
+                               pattern="[0-9\.]+"></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="editprice">Цена </label>
+                        <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"  value="0"                                 style="width: 100px;">
+                    </div>
+
+                    <div class="form-group">
+                        <input zippy="saverow" type="submit" value="Сохранить" class="btn btn-outline-primary"> <input type="button"
+                                                                                                                       zippy="cancelrow"
+                                                                                                                       value="Отменить"
+                                                                                                                       class="btn btn-light ">
+                    </div>
+                </div>
+            </div>
+        </form>    
+
+        <form zippy="editcust">
+            <h3>&nbsp;Новый контрагент </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editcustname">Название </label>
+                        <input  class="form-control "   zippy="editcustname" required="required" />       
+                    </div>
+                    <div class="form-group">
+                        <label for="editphone">Телефон</label>
+                        <input class="form-control" type="text" zippy="editphone"  ></input>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                        <input type="button"   zippy="cancelcust"          value="Отменить"                                                                                                            class="btn btn-light ">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>

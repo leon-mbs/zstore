@@ -29,6 +29,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_DELIVERED = 14; // доставлен
     const STATE_REFUSED = 15; // отклонен
     const STATE_SHIFTED = 16; // отложен
+    const STATE_FAIL = 17; // Аннулирован
     // типы  экспорта
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -395,6 +396,8 @@ class Document extends \ZCL\DB\Entity
                 return "Отклонен";
             case Document::STATE_SHIFTED:
                 return "Отложен";
+            case Document::STATE_FAIL:
+                return "Аннулирован";
             case Document::STATE_INPROCESS:
                 return "Выполняется";
             default:

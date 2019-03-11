@@ -39,7 +39,9 @@
 
                     </form>
                 </div>
-                <a href="/?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Создать</a>
+                <a href="/?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Новый заказ</a>
+                &nbsp;<a href="/?p=App/Pages/Doc/ServiceOrder" class="btn btn-info mt-2 mb-3">Новый заказ (услуги)</a>
+                
                 <br><a zippy="csv"  >Скачать  CSV</a>  
 
                 <table class="table   table-sm   ">
@@ -82,10 +84,6 @@
 
                 <div zippy="pag">
                     <a id="dankor"></a></div> 
-
-
-
-
             </div>
 
         </div>
@@ -100,6 +98,7 @@
 
                         <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 " > <i class="fa fa-gavel"></i> Выполнен</button>
                         <button zippy="bttn"  class= "btn btn-info  mr-2"  ><i class="fa fa-truck"></i> Создать отправку</button>
+                        <button zippy="bact"  class= "btn btn-info  mr-2"  ><i class="fa fa-truck"></i> Создать акт</button>
                         <button zippy="bcancel" type="submit" class="  btn btn-danger  mr-2 " > <i class="fa fa-trash"></i> Отменить</button>
 
 
@@ -117,7 +116,7 @@
         <script>
             function check_bclose()
             {
-                return confirm("Заказ не  оплачен или  не  доставлен. Закрыть?")
+                return confirm("Заказ не  оплачен или  не  выполнен. Закрыть?")
 
             }
         </script>

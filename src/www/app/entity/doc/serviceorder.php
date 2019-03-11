@@ -5,11 +5,11 @@ namespace App\Entity\Doc;
 use App\Entity\Entry;
 
 /**
- * Класс-сущность  локумент акт  о  выполненных работах
+ * Класс-сущность  заказ  на  услуги
  *
  *
  */
-class ServiceAct extends Document
+class ServiceOrder extends Document
 {
 
     public function generateReport() {
@@ -30,12 +30,11 @@ class ServiceAct extends Document
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "customer" => $this->customer_name,
-            "order" => $this->headerdata["order"],
-            "gar" => $this->gar,
+            
             "document_number" => $this->document_number,
             "total" => $this->amount
         );
-        $report = new \App\Report('serviceact.tpl');
+        $report = new \App\Report('serviceorder.tpl');
 
         $html = $report->generate($header);
 
@@ -43,22 +42,17 @@ class ServiceAct extends Document
     }
 
     public function Execute() {
-        $conn = \ZDB\DB::getConnect();
-        $conn->StartTrans();
-
-        foreach ($this->detaildata as $row) {
-
-            $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
-            $sc->setService($row['service_id']);
-            $sc->setExtCode($row['amount']); //Для АВС 
-
-
-            $sc->setCustomer($this->customer_id);
-            $sc->save();
-        }
-        $conn->CompleteTrans();
-
+ 
         return true;
     }
 
+    
+    public function getRelationBased() {
+        $list = array();
+        $list['ServiceAct'] = 'Акт выполненных работ';
+
+
+        return $list;
+    }
+    
 }

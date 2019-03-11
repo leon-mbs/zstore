@@ -1,14 +1,6 @@
  
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
-    <tr>
-        <th width="30">&nbsp;</th>
-        <th width="100">&nbsp;</th>
-        <th width="150">&nbsp;</th>
-
-        <th width="60">&nbsp;</th>
-        <th width="60">&nbsp;</th>
-        <th width="80">&nbsp;</th>
-    </tr>
+ 
 
 
 
@@ -39,9 +31,9 @@
         <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
         <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
 
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сумма</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  align="right">Кол.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  align="right">Цена</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  align="right">Сумма</th>
     </tr>
     {{#_detail}}
     <tr>

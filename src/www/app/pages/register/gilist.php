@@ -173,6 +173,14 @@ class GIList extends \App\Pages\Base
         if ($sender->id == "bcloseact") {
            $this->_doc->updateStatus(Document::STATE_EXECUTED);       
            $this->_doc->updateStatus(Document::STATE_CLOSED);       
+           if ($order instanceof Document) {
+                $order = $order->cast();
+                if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->datatag) { //если  все   выполнено и оплачено закрываем  заказ
+                    $order->updateStatus(Document::STATE_CLOSED);
+                    $msg .= " Заказ {$order->document_number} закрыт";
+                }
+            }           
+           
         }
         
         
