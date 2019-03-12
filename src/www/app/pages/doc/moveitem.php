@@ -129,7 +129,7 @@ class MoveItem extends \App\Pages\Base
         $st = Stock::load($stock->stock_id);  //для актуального 
         $qty=$st->qty - $st->wqty + $st->rqty;
         $this->editdetail->qtystock->setText(H::fqty($qty)  ) ;
-    fqty()
+    
         $this->_rowid = $stock->stock_id;
     }
 
