@@ -176,7 +176,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setText($stock->itemname);
         $st = Stock::load($stock->stock_id);  //для актуального 
         $qty=$st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H:fqty($qty)) ;
+        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
 
 
         $this->_rowid = $stock->stock_id;

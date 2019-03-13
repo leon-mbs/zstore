@@ -175,7 +175,14 @@ class Document extends \ZCL\DB\Entity
         if (strlen($this->content) == 0) {
             return;
         }
-        $xml = new \SimpleXMLElement($this->content);
+
+       try{       
+          $xml = new \SimpleXMLElement($this->content);
+       } catch(\Exception $ee){
+            global $logger;
+            $logger->error("Документ ".$this->document_number ." ".$ee->getMessage());
+            return;   
+       } 
         foreach ($xml->header->children() as $child) {
             $this->headerdata[(string) $child->getName()] = (string) $child;
         }
