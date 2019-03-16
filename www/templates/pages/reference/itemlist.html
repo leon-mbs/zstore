@@ -49,8 +49,14 @@
                         <td zippy="price"  class="text-right"></td>
 
 
-                        <td aling="center"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
-                                zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+                        <td aling="center">
+                            {{#useset}}
+                              <a zippy="set" title="Комплекты"><i class="fa fa-cogs"></i></a> 
+                            {{/useset}}
+                            
+                            <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
+                            <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
+                        </td>
                     </tr>
                 </table>
                 <div zippy="pag"></div>
@@ -132,6 +138,25 @@
             </div>
         </div>
 
+        <div class="row">
 
+            <div class="col-12 col-md-8 col-xl-6" zippy="setpanel">
+               <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> К справочнику</a>
+               <h4 zippy="stitle"></h4>
+                   <form zippy="setform" class="form-inline mt-2 mb-2">
+                     <label for="editsname">Название</label>
+                     <input placeholder="Начните  вводить.." class="form-control  mr-sm-2" zippy="editsname"/>
+
+                   <label for="editsqty">Кол.</label>
+                   <input autocomplete="off" class="form-control  mr-sm-2" type="text" zippy="editsqty" required="required" pattern="[0-9\.]+" style="width:60px">
+                   <input class="btn btn-outline-success  " type="submit" value="Добавить">
+                </form>
+               <table class="table   table-sm  ">
+                <tr><th>Наименование</th><th>Код</th><th class="text-right">Кол.</th><th> </th></tr>
+                <tr zippy="setlist"><td zippy="sname"></td><td zippy="scode"></td><td class="text-right" zippy="sqty"></td><td><a zippy="sdel"><i class="fa fa-trash"></i></a> </td></tr>
+               </table>
+            </div>
+             
+       </div>
     </body>
 </html>

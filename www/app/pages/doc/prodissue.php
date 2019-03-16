@@ -46,6 +46,7 @@ class ProdIssue extends \App\Pages\Base
         $this->docform->add(new CheckBox('planned'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
@@ -116,6 +117,7 @@ class ProdIssue extends \App\Pages\Base
         $this->calcTotal();
         $this->docform->detail->Reload();
     }
+
 
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
@@ -303,4 +305,6 @@ class ProdIssue extends \App\Pages\Base
         return Stock::findArrayAC($store_id,$text)  ;
   }
 
+  
+  
 }

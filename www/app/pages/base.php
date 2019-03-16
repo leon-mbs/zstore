@@ -53,8 +53,9 @@ class Base extends \Zippy\Html\WebPage
             $this->pageinfo->setVisible(false);
         }
 
-
-
+        $options = System::getOptions('common');
+        
+        $this->_tvars["useset"] = $options['useset']==1;
 
         $this->_tvars["smart"] = Helper::generateSmartMenu();
         $this->_tvars["picontent"] = $pi;
