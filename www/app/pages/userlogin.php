@@ -55,7 +55,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
                     setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
                 }
-                $logger->info('Logined ' . $user->userlogin . ', ' . $_SERVER["REMOTE_ADDR"]);
+                //$logger->info('Logined ' . $user->userlogin . ', ' . $_SERVER["REMOTE_ADDR"]);
                 if (\App\Session::getSession()->topage == null) {
                     App::RedirectURI('/store');
                 } else {

@@ -232,21 +232,7 @@ class OrderCust extends \App\Pages\Base
             if ($common['useval'] != true)
                 continue;
 
-            if ($this->docform->val->getValue() == 2) {
-                $item->price = round($item->price * $common['cdoll']);
-                $item->curname = 'cdoll';
-                $item->currate = $common['cdoll'];
-            }
-            if ($this->docform->val->getValue() == 3) {
-                $item->price = round($item->price * $common['ceuro']);
-                $item->curname = 'ceuro';
-                $item->currate = $common['ceuro'];
-            }
-            if ($this->docform->val->getValue() == 4) {
-                $item->price = round($item->price * $common['crub']);
-                $item->curname = 'crub';
-                $item->currate = $common['crub'];
-            }
+         
         }
 
 
