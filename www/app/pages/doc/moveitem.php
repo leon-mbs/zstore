@@ -72,6 +72,8 @@ class MoveItem extends \App\Pages\Base
             }
         } else {
             $this->_doc = Document::create('MoveItem');
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
