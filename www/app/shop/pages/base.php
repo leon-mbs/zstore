@@ -21,7 +21,7 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars["islogined"] = $user->user_id > 0;
 
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/?p=/App/Shop/Pages/Order"))->setVisible(false);
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Shop/Pages/Order"))->setVisible(false);
         ;
 
 

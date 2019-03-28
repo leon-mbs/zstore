@@ -212,7 +212,7 @@ class DocView extends \Zippy\Html\PageFragment
     public function filelistOnRow($row) {
         $item = $row->getDataItem();
 
-        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . '?p=App/Pages/LoadFile&arg=' . $item->file_id));
+        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'index.php?p=App/Pages/LoadFile&arg=' . $item->file_id));
         $file->setValue($item->filename);
         $file->setAttribute('title', $item->description);
 
@@ -264,7 +264,7 @@ class DocView extends \Zippy\Html\PageFragment
                 $n->message .= "<br><b> Документ: </b> {$this->_doc->meta_desc} {$this->_doc->document_number} ";
                 $n->message .= "<br><b> Пользователь: </b> {$user->username}: ";
                 $n->message .= "<br> {$msg->message} ";
-                $n->message .= "<br>  <a href=\"/?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">Ответить</a> ";
+                $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">Ответить</a> ";
                 $n->save();        
               
             }
