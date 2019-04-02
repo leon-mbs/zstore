@@ -37,13 +37,12 @@ class Base extends \Zippy\Html\WebPage
 
 
 
-        $this->add(new Label("docmenu", Helper::generateMenu(1), true));
-        $this->add(new Label("repmenu", Helper::generateMenu(2), true));
-        $this->add(new Label("regmenu", Helper::generateMenu(3), true));
-        $this->add(new Label("refmenu", Helper::generateMenu(4), true));
-        $this->add(new Label("shopmenu", Helper::generateMenu(5), true));
-
-
+         
+        $this->_tvars["docmenu"]  = Helper::generateMenu(1);
+        $this->_tvars["repmenu"]  = Helper::generateMenu(2);
+        $this->_tvars["regmenu"]  = Helper::generateMenu(3);
+        $this->_tvars["refmenu"]  = Helper::generateMenu(4);
+        $this->_tvars["shopmenu"]  = Helper::generateMenu(5);
 
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';

@@ -20,12 +20,14 @@ class Options extends \App\Pages\Base
 {
 
     private $metadatads;
+    
     public $pricelist = array();
 
     public function __construct() {
         parent::__construct();
         if (System::getUser()->acltype == 2) {
-            App::Redirect('\App\Pages\Error', 'У вас нет доступа к  настройкам');
+            App::RedirectHome();
+            return;            
         }
 
 
