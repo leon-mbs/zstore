@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pages;
+namespace App\Shop\Pages;
 
 use \Zippy\Binding\PropertyBinding as Bind;
 use \Zippy\Html\DataList\DataView;
@@ -16,7 +16,7 @@ use \Zippy\Html\Panel;
 use App\System;
 use App\Application as App;
 
-class ShopOptions extends \App\Pages\Base
+class Options extends \App\Pages\Base
 {
  
 
