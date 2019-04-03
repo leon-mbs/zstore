@@ -208,7 +208,8 @@ class ProductList extends \App\Pages\Base
         $row->add(new Label("ldescshort", $item->description));
         $row->add(new Label("lcode", $item->item_code));
         $row->add(new Label("lprice", $item->price));
-        $row->add(new Label("lcnt", $item->qty));
+        $qty=\App\Entity\Item::getQuantity($item->item_id) ;
+        $row->add(new Label("lcnt",   $qty));
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadimage.php?id=' . $item->image_id . '&t=t');
     }
 
