@@ -40,7 +40,7 @@ CREATE TABLE `docrel` (
   `doc2` int(11) DEFAULT NULL,
   KEY `doc1` (`doc1`),
   KEY `doc2` (`doc2`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='����� �����  �����������';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
