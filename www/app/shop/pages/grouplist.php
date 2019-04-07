@@ -371,7 +371,7 @@ class GroupList extends \App\Pages\Base
         $this->attrpanel->attreditform->setVisible(false);
     }
 
-    protected function beforeRender() {
+    public function beforeRender() {
         parent::beforeRender();
 
         $this->groupform->setVisible(false);

@@ -22,17 +22,14 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["islogined"] = $user->user_id > 0;
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Shop/Pages/Order"))->setVisible(false);
-        ;
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('compare', "/index.php?p=/App/Shop/Pages/Compare"))->setVisible(false);
 
 
         $this->op = System::getOptions("shop");
-        if (!is_array($this->op))
-            $this->op = array();
+ 
     }
 
-    public function getPageInfo() {
-        return '';
-    }
+    
 
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg) {

@@ -139,12 +139,8 @@ class Product extends \ZCL\DB\Entity
      * 
      */
     public static function loadSEF($sef) {
-        $list = self::find("product_id={$sef} or sef='{$sef}'");
-        if (count($list) > 0) {
-            return array_pop($list);
-        } else {
-            return null;
-        }
+        return self::findFirst("product_id={$sef} or sef='{$sef}'");
+         
     }
 
 }
