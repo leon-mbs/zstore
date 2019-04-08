@@ -54,13 +54,15 @@
                                 <th>Наименование</th> <th style="text-align: right;">Цена </th><th style="text-align: right;">Кол.</th><th> </th>  </tr>
                             <tr zippy="plist">
                                 <td><img style="width:75px;" zippy="lphoto"> 
-                                <br><a href="#">Редактировать</a></td>
-                                <td><h6 ><a zippy="lname"></a></h6> 
+                                 </td>
+                                <td><h6 ><a zippy="lname" title="Редактировать"></a></h6> 
                                     Код: <span zippy="lcode"></span>
 
                                 </td>
 
 
+                                <td  ><a zippy="imedit" title="Редактировать фото"><i class="fa fa-images"></i></a> </td>
+                                
                                 <td style="text-align: right;"><span zippy="lprice"></span> </td>
                                 <td style="text-align: right;"><span zippy="lcnt"></span> </td>
                                 <td><p style="font-size: smaller;" zippy="ldescshort"></p></td>
@@ -73,7 +75,7 @@
 
 
 
-                        <form zippy="editform"  enctype="multipart/form-data">
+                        <form zippy="editform"  >
                             <h4>Редактирование</h4>
                             <div class="form-group row">
                                 <label class="col-4" for="eitem"   >Складское название</label>
@@ -168,6 +170,11 @@
                             </div>        
                         </form>
                     </div>
+                    
+                      <div zippy="editimagepanel"  class="col-12 col-lg-10 col-xl-8  "> 
+                                    <form zippy="editform"  enctype="multipart/form-data">
+                                   </form>
+                      </div>
                 </div>
             </div>
         </div>

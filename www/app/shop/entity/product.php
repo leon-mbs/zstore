@@ -28,6 +28,7 @@ class Product extends \ZCL\DB\Entity
         $this->rating = 0;  //рейтинг
         $this->comments = 0; //кол отзывов
         $this->attributevalues = array();
+        $this->images = array();
         $this->created = time();
     }
 
@@ -38,6 +39,7 @@ class Product extends \ZCL\DB\Entity
 
         $this->item_id = (int) ($xml->item_id[0]);
         $this->image_id = (int) ($xml->image_id[0]);
+        $images = (string) ($xml->images[0]);
         $this->topsold = (int) ($xml->topsold[0]);
         $this->oldprice = (string) ($xml->oldprice[0]);
         $this->item_code = (string) ($xml->item_code[0]);
@@ -47,7 +49,9 @@ class Product extends \ZCL\DB\Entity
         $this->rating = round($this->rating);
         $this->created = strtotime($this->created);
 
-
+        if(strlen($images)>0){
+           $tjis->images = explode(',',$images); 
+        }
 
         parent::afterLoad();
     }
@@ -58,6 +62,7 @@ class Product extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail .= "<item_id>{$this->item_id}</item_id>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
+        $this->detail .= "<images>".  implode(',',$this->images)  ."</images>";
         $this->detail .= "<topsold>{$this->topsold}</topsold>";
         $this->detail .= "<oldprice>{$this->oldprice}</oldprice>";
         $this->detail .= "<item_code>{$this->item_code}</item_code>";

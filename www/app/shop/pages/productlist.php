@@ -66,7 +66,7 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
         $this->listpanel->add(new DataView('plist', new ProductDataSource($this), $this, 'plistOnRow'));
         $this->listpanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->listpanel->plist));
-        $this->listpanel->plist->setPageSize(25);
+        $this->listpanel->plist->setPageSize(15);
 
         $this->add(new Panel('editpanel'))->setVisible(false);
 
@@ -140,12 +140,14 @@ class ProductList extends \App\Pages\Base
         $this->group = ProductGroup::load($nodeid);
         if ($this->group instanceof ProductGroup) {
             $ch = $this->group->getChildren();
+            //добавляем  только для  конечных групп
             $this->listpanel->addnew->setVisible(count($ch) == 0); // Добавляем  товар если  нет  дочерних груп у текущей]   
-            $this->listpanel->plist->Reload();
+
+        }
+             $this->listpanel->plist->Reload();
             $this->attrlist = array();
 
             $this->listpanel->setVisible(true);
-        }
     }
 
     public function searchformOnSubmit($sender) {
@@ -204,16 +206,18 @@ class ProductList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new ClickLink("lname", $this, "lnameOnClick"))->setValue($item->productname);
+        $row->add(new ClickLink("imedit", $this, "imeditOnClick"));
         // $row->add(new Label("lmanuf", $item->manufacturername));
         $row->add(new Label("ldescshort", $item->description));
         $row->add(new Label("lcode", $item->item_code));
         $row->add(new Label("lprice", $item->price));
-        $qty=\App\Entity\Item::getQuantity($item->item_id) ;
-        $row->add(new Label("lcnt",   $qty));
+        //$qty=\App\Entity\Item::getQuantity($item->item_id) ;
+        $row->add(new Label("lcnt",   $item->qty));
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadimage.php?id=' . $item->image_id . '&t=t');
     }
 
 //редактирование
+    
     public function lnameOnClick($sender) {
 
 
@@ -245,9 +249,12 @@ class ProductList extends \App\Pages\Base
         $this->editpanel->editform->egroup->setValue($this->group->group_id);
     }
 
+    public function imeditOnClick($sender) {
+        $this->product = $sender->getOwner()->getDataItem();
+    }
+    
     public function onSubmitForm($sender) {
         $this->product->manufacturer_id = $sender->emanuf->getValue();
-
 
         $this->product->productname = $sender->ename->getText();
         $this->product->item_id = $sender->eitem->getKey();
@@ -355,7 +362,13 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " group_id = " . ($this->page->group == null ? 0 : $this->page->group->group_id );
+        $where = "1=1 "  ;
+        if($this->page->group instanceof  ProductGroup) {
+            $gr = sprintf('%08s', $this->page->group->group_id)  ;
+            
+            $where .= " and  group_id in (select group_id from shop_productgroups where mpath like '%{$gr}%' ) " ;    
+        }
+        
         $st = $this->page->listpanel->searchform->skeyword->getText();
         $sm = $this->page->listpanel->searchform->smanuf->getValue();
         if ($sm > 0) {
