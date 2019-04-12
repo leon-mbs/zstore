@@ -8,8 +8,7 @@ use \App\Shop\Entity\ProductGroup;
 use \App\Shop\Entity\ProductAttribute;
 
 //класс  вспомагательных функций
-class Helper
-{
+class Helper {
 
     public static function getBreadScrumbs($id) {
 

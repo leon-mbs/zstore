@@ -8,8 +8,7 @@ use \App\Application as App;
 /**
  * Класс  для  упрвления доступом к метаобьектам
  */
-class ACL
-{
+class ACL {
 
     private static $_metas = array();
 

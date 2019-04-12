@@ -7,7 +7,7 @@ global $_config;
 if (strpos($_SERVER['REQUEST_URI'], 'index.php') > 1) {
     die('Сайт размещен не в  корневой папке');
 }
-;
+ 
 try {
 
     if ($_COOKIE['remember'] && \App\System::getUser()->user_id == 0) {
@@ -28,7 +28,7 @@ try {
     }
 
     if ($_config['common']['shop'] == 1) {
-        $app = new \App\Application('\App\Shop\Pages\Main');
+        $app = new \App\Application('\App\Shop\Pages\ProductList');
     } else {
         $app = new \App\Application('\App\Pages\Main');
     }

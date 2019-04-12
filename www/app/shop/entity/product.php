@@ -8,8 +8,7 @@ namespace App\Shop\Entity;
  * @table=shop_products
  * @view=shop_products_view
  */
-class Product extends \ZCL\DB\Entity
-{
+class Product extends \ZCL\DB\Entity {
 
     public $attributevalues;
 
@@ -49,8 +48,8 @@ class Product extends \ZCL\DB\Entity
         $this->rating = round($this->rating);
         $this->created = strtotime($this->created);
 
-        if(strlen($images)>0){
-           $tjis->images = explode(',',$images); 
+        if (strlen($images) > 0) {
+            $tjis->images = explode(',', $images);
         }
 
         parent::afterLoad();
@@ -62,7 +61,7 @@ class Product extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail .= "<item_id>{$this->item_id}</item_id>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
-        $this->detail .= "<images>".  implode(',',$this->images)  ."</images>";
+        $this->detail .= "<images>" . implode(',', $this->images) . "</images>";
         $this->detail .= "<topsold>{$this->topsold}</topsold>";
         $this->detail .= "<oldprice>{$this->oldprice}</oldprice>";
         $this->detail .= "<item_code>{$this->item_code}</item_code>";
@@ -145,7 +144,6 @@ class Product extends \ZCL\DB\Entity
      */
     public static function loadSEF($sef) {
         return self::findFirst("product_id={$sef} or sef='{$sef}'");
-         
     }
 
 }

@@ -19,8 +19,7 @@ use \App\Shop\Entity\Product;
 use \App\Shop\Helper;
 use \App\Filter;
 
-class Catalog extends Base
-{
+class Catalog extends Base {
 
     public $group_id = 0;
 
@@ -194,8 +193,7 @@ class Catalog extends Base
 
 }
 
-class CatDataSource implements \Zippy\Interfaces\DataSource
-{
+class CatDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 
@@ -276,8 +274,7 @@ class CatDataSource implements \Zippy\Interfaces\DataSource
 
 //компонент атрибута  товара для фильтра
 //выводит  элементы  формы  ввода   в  зависимости  от  типа  атрибута
-class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest
-{
+class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest {
 
     public $productattribute = null;
     public $value = array();
@@ -402,8 +399,7 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
 
 }
 
-class ManufacturerList extends \Zippy\Html\Form\CheckBoxList
-{
+class ManufacturerList extends \Zippy\Html\Form\CheckBoxList {
 
     public function RenderItem($name, $checked, $caption = "", $attr = "", $delimiter = "") {
         return " 

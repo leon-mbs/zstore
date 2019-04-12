@@ -13,8 +13,7 @@ use \App\Shop\Helper;
 use \ZCL\DB\EntityDataSource;
 use \Zippy\Html\Link\ClickLink;
 
-class Main extends Base
-{
+class Main extends Base {
 
     private $group_id = 0;
 
@@ -37,7 +36,7 @@ class Main extends Base
         }
 
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($id), true));
- 
+
         $this->add(new Panel("subcatlistp"));
 
         $this->subcatlistp->setVisible($id > 0);
@@ -47,24 +46,19 @@ class Main extends Base
 
         $this->add(new Panel("newlistp"));
         $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Shop\\Entity\\Product", "", "product_id desc", 12), $this, 'OnNewRow'))->Reload();
+    }
 
-
-   }
-
-   public function OnCatRow($datarow) {
+    public function OnCatRow($datarow) {
         $g = $datarow->getDataItem();
         $link = $g->gcnt > 0 ? "/scat/" . $g->group_id : "/pcat/" . $g->group_id;
         $datarow->add(new BookmarkableLink("scatimg", $link))->setValue("/loadimage.php?id=" . $g->image_id);
         $datarow->add(new BookmarkableLink("scatname", $link))->setValue($g->groupname);
-   }
+    }
 
     public function OnNewRow($row) {
         $item = $row->getDataItem();
         $row->add(new BookmarkableLink("nimage", "/sp/" . $item->product_id))->setValue('/loadimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("nname", "/sp/" . $item->product_id))->setValue($item->productname);
     }
-  
-
- 
 
 }

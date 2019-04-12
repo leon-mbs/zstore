@@ -8,8 +8,7 @@ namespace App\Shop\Entity;
  * @table=shop_orders
  * @view=shop_orders_view
  */
-class Order extends \ZCL\DB\Entity
-{
+class Order extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->order_id = 0;

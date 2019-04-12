@@ -17,8 +17,7 @@ use \App\Shop\Entity\ProductGroup;
 use \App\Shop\Entity\ProductAttribute;
 use \App\Shop\Helper;
 
-class GroupList extends \App\Pages\Base
-{
+class GroupList extends \App\Pages\Base {
 
     private $group = null, $rootgroup;
     public $attrlist = array();

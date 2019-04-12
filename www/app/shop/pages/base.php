@@ -11,8 +11,7 @@ use \App\Application as App;
 use \App\System;
 use \App\Entity\User;
 
-class Base extends \Zippy\Html\WebPage
-{
+class Base extends \Zippy\Html\WebPage {
 
     public function __construct($params = null) {
 
@@ -26,10 +25,7 @@ class Base extends \Zippy\Html\WebPage
 
 
         $this->op = System::getOptions("shop");
- 
     }
-
-    
 
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg) {

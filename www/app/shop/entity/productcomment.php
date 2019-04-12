@@ -7,8 +7,7 @@ namespace App\Shop\Entity;
  * @keyfield=comment_id
  * @table=shop_prod_comments
  */
-class ProductComment extends \ZCL\DB\Entity
-{
+class ProductComment extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->comment_id = 0;

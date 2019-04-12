@@ -16,25 +16,23 @@ use \Zippy\Html\Panel;
 use App\System;
 use App\Application as App;
 
-class Options extends \App\Pages\Base
-{
- 
+class Options extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
         if (System::getUser()->acltype == 2) {
             App::RedirectHome();
-            return;            
+            return;
         }
 
- 
+
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
         $this->shop->add(new DropDownChoice('shopdefstore', \App\Entity\Store::getList()));
         $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
 
-     
+
 
 
         $shop = System::getOptions("shop");
@@ -43,10 +41,8 @@ class Options extends \App\Pages\Base
         $this->shop->shopdefstore->setValue($shop['defstore']);
         $this->shop->shopdefcust->setValue($shop['defcust']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
+    }
 
-   }
-
-   
     public function saveShopOnClick($sender) {
         $shop = array();
 
@@ -61,5 +57,4 @@ class Options extends \App\Pages\Base
         $this->setSuccess('Сохранено');
     }
 
-  
 }

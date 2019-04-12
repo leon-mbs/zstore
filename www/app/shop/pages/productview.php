@@ -20,8 +20,7 @@ use \App\System;
 use \App\Application as App;
 
 //детализация  по товару, отзывы
-class ProductView extends Base
-{
+class ProductView extends Base {
 
     public $msg, $attrlist, $clist;
     protected $product_id, $gotocomment;
