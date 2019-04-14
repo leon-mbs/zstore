@@ -36,15 +36,21 @@
 
 
 <body>
+  <style>
+ .nav-link[data-toggle].collapsed:after {
+    content: "▾";
+}
+ 
+  </style>
     <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
     <a id="top"></a>
 
-    <div style="background-color: #F0F0F0;" class="container-fluid">
+    <div   class="container-fluid">
         <div class="row">
             <div class="col-12">
 
 
-                <nav class="navbar navbar-expand-md   mr-2   " style="background-color: #eaeaea;">
+                <nav class="navbar navbar-expand-md   mr-2   "  >
                     <div class="navbar-header">
 
                         <a class="navbar-brand  d-none d-md-block" href="/">Zippy Склад</a>
@@ -167,11 +173,7 @@
 
                     </div>
                 </nav>
-                {{#smart}}
-                <div class="navbar nav justify-content-start">
-                    {{{smart}}}
-                </div>
-                {{/smart}}
+               
             </div>
         </div>
     </div>
@@ -179,13 +181,68 @@
 
 
     <div style="margin-bottom:20px;" class="container-fluid">
+    <div  class="row">
+    <div class="col-2 collapse d-md-flex bg-dark pt-2 min-vh-100" id="sidebar">
+            <ul class="nav flex-column flex-nowrap">
+                <li class="nav-item"><a class="nav-link text-light" href="#">Overview</a></li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed text-light" href="#submenu1" data-toggle="collapse" data-target="#submenu1">Reports</a>
+                    <div class="collapse" id="submenu1" aria-expanded="false">
+                        <ul class="flex-column pl-2 nav">
+                            <li class="nav-item"><a class="nav-linktext-light py-0" href="#">Orders</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link collapsed py-1 text-light" href="#submenu1sub1" data-toggle="collapse" data-target="#submenu1sub1">Customers</a>
+                                <div class="collapse" id="submenu1sub1" aria-expanded="false">
+                                    <ul class="flex-column nav pl-4">
+                                        <li class="nav-item">
+                                            <a class="nav-link p-1" href="#">
+                                                <i class="fa fa-fw fa-clock-o"></i> Daily
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-1" href="#">
+                                                <i class="fa fa-fw fa-dashboard"></i> Dashboard
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-1" href="#">
+                                                <i class="fa fa-fw fa-bar-chart"></i> Charts
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link p-1" href="#">
+                                                <i class="fa fa-fw fa-compass"></i> Areas
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item"><a class="nav-link text-light" href="#">Analytics</a></li>
+                <li class="nav-item"><a class="nav-link text-light" href="#">Export</a></li>
+            </ul>
+        </div>
+        <div class="col  pt-2">
+        <h2>
+                <a href="" data-target="#sidebar" data-toggle="collapse" class="d-md-none"><i class="fa fa-bars"></i></a>
+                Content
+            </h2>
+         {{#smart}}
+                <div class="navbar nav justify-content-start">
+                    {{{smart}}}
+                </div>
+                {{/smart}}
+             <childpage/>
+        </div>
 
-
-        <childpage/>
+      
 
     </div>
+    </div>
 
-
+     
 
     <script>
         toastr.options = {
