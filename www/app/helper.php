@@ -54,6 +54,7 @@ class Helper
     }
 
     public static function generateMenu($meta_type) {
+        
         $conn = \ZDB\DB::getConnect();
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
@@ -98,18 +99,23 @@ class Helper
         $textmenu = "";
 
         foreach ($menu as $item) {
-            $textmenu .= "<li><a class=\"dropdown-item\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
+            $textmenu .= "<li class=\"nav-item\"><a class=\"nav-link text-light py-0\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
         }
+        $i=1;
         foreach ($groups as $gname => $group) {
-            $textmenu .= "<li  ><a class=\"dropdown-item  dropdown-toggle\"     href=\"#\">$gname 
+            $subm = $meta_type . ($i++);
+            $textmenu .= "<li class=\"nav-item\"> <a class=\"nav-link collapsed py-1 text-light\"     href=\"#{$subm}\" data-toggle=\"collapse\" data-target=\"#{$subm}\">$gname 
              
             </a>
-            <ul class=\"dropdown-menu\">";
+            <div class=\"collapse\" id=\"{$subm}\" aria-expanded=\"false\">
+            <ul class=\"flex-column nav pl-4\">";
 
             foreach ($group as $item) {
-                $textmenu .= "<li ><a class=\"dropdown-item\"   href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
+                $textmenu .= "<li  class=\"nav-item\">
+                  <a class=\"nav-link p-1 text-light\"   href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a>
+                </li>";
             }
-            $textmenu .= "</ul></li>";
+            $textmenu .= "</ul></div></li>";
         }
 
         return $textmenu;
