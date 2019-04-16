@@ -16,7 +16,7 @@
                     <select   class="form-control mr-sm-2" zippy="searchcat">
                         <option value="0">Не задана</option>
                     </select>         
-                    <div class="form-check   ">
+                    <div class="form-check">
 
                         <input title="Показать неактуальные" class="form-check-input"  type="checkbox" zippy="showdis">
                         <label class="form-check-label mr-sm-3" for="showdis">Все</label>
@@ -37,7 +37,7 @@
                         <th class="text-right">Отп. цена</th>
 
 
-                        <th style="width:100px"></th>
+                        <th style="width:100px"> </th>
                     </tr>
                     <tr zippy="itemlist">
                         <td zippy="itemname"></td>
@@ -51,10 +51,10 @@
 
                         <td aling="center">
                             {{#useset}}
-                              <a zippy="set" title="Комплекты"><i class="fa fa-cogs"></i></a> 
+                              <a zippy="set" title="Комплекты"><i class="fa fa-cogs"></i></a> &nbsp;
                             {{/useset}}
                             
-                            <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
+                            <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> &nbsp;
                             <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
@@ -62,8 +62,7 @@
                 <div zippy="pag"></div>
             </div>
 
-
-
+            
             <div class="col-12 col-md-6 col-xl-4"  >
                 <form   zippy="itemdetail"  >
                     <h4>Редактирование товара </h4>

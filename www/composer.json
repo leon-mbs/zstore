@@ -9,6 +9,7 @@
         "jbzoo/image": "3.0.4",
         "dompdf/dompdf": "v0.8.2",
         "roave/security-advisories": "dev-master",
+        "rmccue/requests": ">=1.0",
         "leon-mbs/zippy": "dev-master"
     }
 }
