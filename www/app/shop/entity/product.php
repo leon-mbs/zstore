@@ -11,6 +11,7 @@ namespace App\Shop\Entity;
 class Product extends \ZCL\DB\Entity {
 
     public $attributevalues;
+    public $images= array();
 
     protected function init() {
         $this->product_id = 0;
@@ -49,7 +50,7 @@ class Product extends \ZCL\DB\Entity {
         $this->created = strtotime($this->created);
 
         if (strlen($images) > 0) {
-            $tjis->images = explode(',', $images);
+            $this->images = explode(',', $images);
         }
 
         parent::afterLoad();

@@ -3,14 +3,14 @@
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4  ">
                 <h4>Администрирование</h4> 
-                <a class="btn btn-outline-info"> Обновить цены</a>       
+                <a zippy="updateprices" class="btn btn-outline-info"> Обновить цены</a>       
             </div>
         </div>
 
         <div class="row mt-4">
-            <div class="col-12  col-lg-6  col-xl-4  ">
+            <div class="col-12  col-sm-10 col-md-8 col-lg-6  col-xl-6  ">
                 <h4>Настройки</h4>
-                <form  zippy="shop"  >
+                <form  zippy="shop"   enctype="multipart/form-data" >
                     <div class="form-group  row">
                         <label class="col-sm-5 col-form-label" for="shopdefstore" >Склад для онлайна</label>
                         <div class="col-sm-7">
@@ -34,6 +34,20 @@
                                 <option value='0'>Не выбран</option>
                             </select>
                             <small class="form-text text-muted">Условный контрагент от имени  котрого будут  формироватся заказы</small>
+                        </div>                    
+                    </div>                    
+
+                    <div class="form-group  row"  >
+                        <label class="col-sm-5 col-form-label" for="email" >Email для обратной связи</label>
+                        <div class="col-sm-7">  
+                            <input class="form-control " zippy="email" />
+                        </div>                    
+                    </div>      
+                                  
+                    <div class="form-group  row"  >
+                        <label class="col-sm-5 col-form-label" for="logo" >Логотип</label>
+                        <div class="col-sm-7">  
+                            <input type="file" class="form-control " zippy="logo" />
                         </div>                    
                     </div>                    
 

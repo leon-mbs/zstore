@@ -23,8 +23,10 @@ class Base extends \Zippy\Html\WebPage {
         $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Shop/Pages/Order"))->setVisible(false);
         $this->add(new \Zippy\Html\Link\BookmarkableLink('compare', "/index.php?p=/App/Shop/Pages/Compare"))->setVisible(false);
 
-
         $this->op = System::getOptions("shop");
+        
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('logo',"/" ))->setVisible(strlen($this->op['logo']) > 0);
+        $this->logo->setValue($this->op['logo']);
     }
 
     //вывод ошибки,  используется   в дочерних страницах
