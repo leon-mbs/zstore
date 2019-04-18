@@ -10,15 +10,24 @@
         </div>    
         <div  class="row">
 
-            <div class="col-12 col-sm-4 col-lg-3 "  >  
+            <div class="col-12 col-sm-6 col-lg-4 "  >  
                 <div class="card ">  
                     <a data-type="image" zippy="product_image" data-toggle="lightbox" data-gallery="product" class="  card-link"    >
                         <img  class="card-img-top"  /></a>
-                </div>    
+                        
+                </div> 
+                {{#islistimage}}
+                <div>
+                <div zippy="imagelist">
+                  <a zippy="product_thumb" data-type="image"   data-toggle="lightbox" data-gallery="thumb">  <img  style="float:left; height:64px"     ></a>
+                </div>
+                </div>
+                {{/islistimage}}
+                
             </div>	
 
 
-            <div class="col-12 col-sm-8 col-lg-6 " 
+            <div class="col-12 col-sm-6 col-lg-4 " >
                  <div class="row">
                     <div class="col-12">
                         <span  zippy="novelty"  class="badge badge-success">Новинка</span>
@@ -38,45 +47,28 @@
                     </div> 
                     <div class="col-12">
                         <a zippy="addtocompare" >Добавить  к  сравнению</a><a zippy="compare" >Сравнить</a>
-                        &nbsp;&nbsp;&nbsp;<a onclick="openComments()" href="return false;" zippy="comments"></a> <input readonly="readonly"   type="hidden" class="rating"  zippy="rated"   value="0"  data-filled="fas fa-star" data-empty="far fa-star "/>
+                        <br><a onclick="openComments()" href="return false;" zippy="comments"></a> <input readonly="readonly"   type="hidden" class="rating"  zippy="rated"   value="0"  data-filled="fas fa-star" data-empty="far fa-star "/>
                     </div> 
                 </div> 
 
 
             </div>
 
-
-        </div>     <br>
-        <div  class="row">  
-            <div  class="col-12 col-md-10">  
-
-
-                <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link  active" href="#descriptiontab" data-toggle="tab">Описание</a></li>
-                    <li class="nav-item"><a class="nav-link   " href="#detailstab" data-toggle="tab">Характеристики</a></li>
-                    <li class="nav-item"><a class="nav-link   " id="mt" href="#messagestab" data-toggle="tab">Отзывы</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="row tab-pane active" id="descriptiontab">
-                        <div class="col-12 col-md-8"  >  
-                            <div zippy="fulldescription"  ></div>
-                        </div>
-                    </div>
-                    <div class="row tab-pane" id="detailstab">
-                        <div class="col-12 col-md-8"  >  
-                            <table    class="table table-sm   table-stripped  ">
+        <div class="col-12 col-sm-6 col-lg-4 " >
+            <div zippy="fulldescription"  ></div>
+        </div>     
+        <div class="col-12 col-sm-6 col-lg-6 col-xl-4" >
+        <h4>Характеритики</h4>
+  <table    class="table table-sm   table-stripped  ">
                                 <tr  zippy="attributelist">
                                     <td><span zippy="attrname" ></span></td>
                                     <td><span zippy="attrvalue" ></span></td>
                                 </tr>
                             </table>
-                        </div>
-                    </div>
-                    <div class=" tab-pane" id="messagestab">
-                        <div class="row "  >
-                            <div class="col-12 col-sm-8  col-sm-6 "  >  
-
-                                <table class="table"  >
+        </div>     
+        <div class="col-12 col-sm-6 col-lg-4 " >
+            <h4>Отзывы</h4>
+                    <table class="table"  >
                                     <tr zippy="commentlist">
                                         <td>
 
@@ -92,14 +84,9 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <div zippy="pag"></div>
-
-
-                            </div>
-                        </div>
-                        <div class="row  " id="messagestab">
-                            <div class="col-12 col-sm-6  col-sm-4 "  >  
-                                <form method="post" zippy="formcomment">
+                                <div zippy="pag"></div>   
+                                
+                               <form method="post" zippy="formcomment">
                                     <a name="commentbegin" ></a>  
                                     <div class="form-group">
                                         <label>Имя</label>
@@ -123,13 +110,13 @@
 
 
                                 </form>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
+                                         
+        </div>     
+        
+        
+        
+        </div>     
+       
         <script>
             $(document).ready(function () {
 

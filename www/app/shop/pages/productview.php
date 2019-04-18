@@ -17,6 +17,7 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\BookmarkableLink;
 use \Zippy\Html\DataList\DataView;
 use \App\System;
+use \Zippy\Html\DataList\ArrayDataSource;
 use \App\Application as App;
 
 //детализация  по товару, отзывы
@@ -77,7 +78,7 @@ class ProductView extends Base {
             $this->buy->setVisible(false);
         } else {
 
-            if (\App\Entity\Item::getQuantity($product->item_id) > 0) {
+            if ($product->qty > 0) {
                 $this->onstore->setText("В наличии");
                 $this->buy->setValue("Купить");
             } else {
@@ -86,7 +87,13 @@ class ProductView extends Base {
             }
         }
 
-
+        $imglist = array();
+        
+        foreach ($product->images as $id) {
+            $imglist[] = \App\Entity\Image::load($id);
+        }       
+        $this->add(new DataView('imagelist', new ArrayDataSource($imglist), $this, 'imglistOnRow'))->Reload();
+        $this->_tvars['islistimage'] =count($imglist)>1;
 
         $recently = \App\Session::getSession()->recently;
         if (!is_array($recently)) {
@@ -94,6 +101,10 @@ class ProductView extends Base {
         }
         $recently[$product->product_id] = $product->product_id;
         \App\Session::getSession()->recently = $recently;
+        
+        
+        
+        
     }
 
     public function OnAddAttributeRow(\Zippy\Html\DataList\DataRow $datarow) {
@@ -210,4 +221,12 @@ class ProductView extends Base {
         $this->comments->setValue("Отзывов({$product->comments})");
     }
 
+    public function imglistOnRow($row) {
+        $image = $row->getDataItem();
+        
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadimage.php?id={$image->image_id}&t=t");
+        $row->product_thumb->setAttribute('href', "/loadimage.php?id={$image->image_id}");
+         
+    }
+    
 }
