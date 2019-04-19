@@ -21,14 +21,14 @@ try {
 
             \App\System::setUser($user);
 
-            $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
-            $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
+          //  $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
+         //   $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
         }
 
     }
 
     if ($_config['common']['shop'] == 1) {
-        $app = new \App\Application('\App\Shop\Pages\ProductList');
+        $app = new \App\Application('\App\Shop\Pages\Main');
     } else {
         $app = new \App\Application('\App\Pages\Main');
     }

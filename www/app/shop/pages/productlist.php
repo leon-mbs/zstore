@@ -236,7 +236,6 @@ class ProductList extends \App\Pages\Base {
         $this->product = $sender->getOwner()->getDataItem();
         $this->editpanel->editform->eitem->setAttribute('readonly', 'readonly');
 
-
         $this->editpanel->editform->ename->setText($this->product->productname);
 
         $item = Item::load($this->product->item_id);
@@ -251,7 +250,6 @@ class ProductList extends \App\Pages\Base {
         $this->editpanel->editform->emanuf->setValue($this->product->manufacturer_id);
 
         $this->editpanel->editform->bdelete->setVisible(true);
-
 
         $this->editpanel->editform->edisabled->setChecked($this->product->deleted > 0);
 
