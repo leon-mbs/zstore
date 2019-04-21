@@ -77,7 +77,7 @@ class ProductList extends \App\Pages\Base {
         $editform->add(new TextInput('ename'));
         $editform->add(new TextInput('ecode'));
         $editform->add(new TextInput('eprice', 0));
-        $editform->add(new TextInput('especprice'));
+        
         $editform->add(new TextArea('edescshort'));
         $editform->add(new TextArea('edescdet'));
 
@@ -245,7 +245,7 @@ class ProductList extends \App\Pages\Base {
         $this->editpanel->editform->ecode->setText($this->product->item_code);
         $this->editpanel->editform->edescshort->setText($this->product->description);
         $this->editpanel->editform->edescdet->setText($this->product->fulldescription);
-        $this->editpanel->editform->especprice->setText($this->product->specprice);
+        
         $this->editpanel->editform->eprice->setText($this->product->price);
         $this->editpanel->editform->emanuf->setValue($this->product->manufacturer_id);
 
@@ -268,7 +268,7 @@ class ProductList extends \App\Pages\Base {
         $this->product->description = $sender->edescshort->getText();
         $this->product->fulldescription = $sender->edescdet->getText();
         $this->product->price = $sender->eprice->getText();
-        $this->product->especprice = $sender->especprice->getText();
+        
         $this->product->deleted = $sender->edisabled->isChecked();
         if (strlen($this->product->productname) == 0) {
             $this->setError('Не указано имя');

@@ -20,8 +20,6 @@ class Main extends Base {
     public function __construct($id = 0) {
         parent::__construct();
 
-
-
         $this->group_id = $id;
 
         $toplist = ProductGroup::find("parent_id=0");

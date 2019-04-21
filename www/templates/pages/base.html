@@ -85,9 +85,6 @@
 
                                 <ul class="dropdown-menu">
 
-
-
-
                                     <li>
 
                                         <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile">Мой профиль</a>
@@ -102,9 +99,6 @@
                             </li>
 
                         </ul>
-
-
-
                    
                 </nav>
                
@@ -116,11 +110,13 @@
 
     <div style="margin-bottom:20px;" class="container-fluid">
     <div  class="row">
-    <div class="col-12 col-md-4   col-lg-3 col-xl-2 collapse collapse d-md-flex bg-dark pt-2 min-vh-100" id="sidebar">
+    <div class=" col-12 col-md-4   col-lg-3 col-xl-2 collapse collapse d-md-flex bg-dark pt-2 min-vh-100" id="sidebar">
+ 
             <ul class="nav flex-column flex-nowrap">
                       
+                    
                 <li class="nav-item">
-                    <a class="nav-link collapsed text-light" href="#submenu1" data-toggle="collapse" data-target="#submenu1">Документы</a>
+                    <a class="nav-link collapsed text-light" href="#submenu1" data-toggle="collapse" data-target="#submenu1">Документы  </a>
                     <div class="collapse" id="submenu1" aria-expanded="false">
                         <ul class="flex-column pl-2 nav">
                              {{{docmenu}}}
@@ -183,7 +179,7 @@
             </ul> 
         </div>
         <div class="col-12    col-md-8 col-lg-9 col-xl-10  pt-2">
-
+    
          {{#smart}}
                 <div class="w-100 navbar nav justify-content-start d-none d-md-block">
                     {{{smart}}}

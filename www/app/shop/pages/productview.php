@@ -50,7 +50,7 @@ class ProductView extends Base {
         $this->add(new Label("novelty"))->setVisible($product->novelty == 1);
 
         $this->add(new Label('price', $product->price));
-        $this->add(new Label('oldprice', $product->oldprice))->setVisible($product->oldprice > 0);
+        
         $this->add(new Label('description', $product->description));
         $this->add(new Label('fulldescription', $product->fulldescription));
         $this->add(new TextInput('rated'))->setText($product->rating);
@@ -69,7 +69,7 @@ class ProductView extends Base {
         $form->add(new TextArea('comment'));
         $this->clist = ProductComment::findByProduct($product->product_id);
         $this->add(new \Zippy\Html\DataList\DataView('commentlist', new \Zippy\Html\DataList\ArrayDataSource(new PropertyBinding($this, 'clist')), $this, 'OnAddCommentRow'));
-        $this->commentlist->setPageSize(25);
+        $this->commentlist->setPageSize(5);
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->commentlist));
         $this->commentlist->Reload();
 

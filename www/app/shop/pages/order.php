@@ -74,7 +74,7 @@ class Order extends Base {
         $this->basketlist = Basket::getBasket()->list;
 
         if (Basket::getBasket()->isEmpty()) {
-            App::Redirect("\\App\\Shop\\Pages\\Catalog");
+            App::Redirect("\\App\\Shop\\Pages\\Catalog",0);
         } else {
             $this->OnUpdate($this);
         }

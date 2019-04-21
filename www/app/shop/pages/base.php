@@ -51,7 +51,9 @@ class Base extends \Zippy\Html\WebPage {
     }
 
     protected function beforeRender() {
-        
+        $this->shopcart->setVisible(\App\Shop\Basket::getBasket()->isEmpty() == false);
+        $this->showcompare->setVisible(\App\Shop\CompareList::getCompareList()->isEmpty() == false);
+
     }
 
     protected function afterRender() {

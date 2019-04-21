@@ -9,10 +9,7 @@ namespace App;
 class Application extends \Zippy\WebApplication
 {
 
-    public function __construct($homepage) {
-        parent::__construct($homepage);
-    }
-
+   
     /**
      * Возвращает  шаблон  страницы
      */

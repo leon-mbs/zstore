@@ -62,16 +62,11 @@ class Catalog extends Base {
 
         $this->add(new DataView('catlist', new CatDataSource($this), $this, 'plistOnRow'));
         $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->catlist));
-        $this->catlist->setPageSize(25);
+        $this->catlist->setPageSize(15);
         $this->catlist->Reload();
 
 
-        $this->add(new Panel('cartlistpanel'));
-        $this->cartlistpanel->add(new DataView('cartlist', \App\Shop\Basket::getBasket(), $this, "onCartRow"));
-        $this->add(new Panel('complistpanel'));
-        $this->complistpanel->add(new DataView('complist', \App\Shop\CompareList::getCompareList(), $this, "onCompRow"));
-        $this->cartlistpanel->cartlist->Reload();
-        $this->complistpanel->complist->Reload();
+ 
 
         //недавно  просмотренные
         $ra = array();
@@ -94,13 +89,14 @@ class Catalog extends Base {
     //строка товара
     public function plistOnRow($row) {
         $item = $row->getDataItem();
+ 
+        
         $row->add(new BookmarkableLink("simage", "/sp/" . $item->product_id))->setValue('/loadimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("scatname", "/sp/" . $item->product_id))->setValue($item->productname);
         $row->add(new Label("stopsold"))->setVisible($item->topsold == 1);
         $row->add(new Label("snovelty"))->setVisible($item->novelty == 1);
-        $row->add(new Label("soldprice", $item->oldprice))->setVisible($item->oldprice > 0);
         $row->add(new Label("sshortdesc", $item->description));
-        $row->add(new Label("sprice", $item->price));
+        $row->add(new Label("sprice",  $item->price));
         $row->add(new TextInput('srated'))->setText($item->rating);
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
         if ($item->qty > 0) {
@@ -112,18 +108,7 @@ class Catalog extends Base {
         }
     }
 
-    public function onCartRow($row) {
-        $item = $row->getDataItem();
-        $row->add(new Label("cartname", $item->productname));
-        $row->add(new ClickLink("cartdel", $this, 'oncartdel'));
-    }
-
-    public function onCompRow($row) {
-        $item = $row->getDataItem();
-        $row->add(new Label("compname", $item->productname));
-        $row->add(new ClickLink("compdel", $this, 'oncompdel'));
-    }
-
+ 
     public function oncartdel($sender) {
         $item = $sender->getOwner()->getDataItem();
         \App\Shop\Basket::getBasket()->deleteProduct($item->product_id);
@@ -156,9 +141,7 @@ class Catalog extends Base {
         $product->quantity = 1;
         \App\Shop\Basket::getBasket()->addProduct($product);
         $this->setSuccess("Товар  добавлен  в   корзину");
-        $this->cartlistpanel->setVisible(\App\Shop\Basket::getBasket()->isEmpty() == false);
-        $this->cartlistpanel->cartlist->setDataSource(\App\Shop\Basket::getBasket());
-        $this->cartlistpanel->cartlist->Reload();
+      
         $this->resetURL();
     }
 
@@ -180,16 +163,7 @@ class Catalog extends Base {
         $row->add(new FilterAttributeComponent('attrdata', $attr));
     }
 
-    protected function beforeRender() {
-        parent::beforeRender();
-        $this->cartlistpanel->cartlist->setDataSource(\App\Shop\Basket::getBasket());
-        $this->cartlistpanel->cartlist->Reload();
-        $this->cartlistpanel->setVisible(\App\Shop\Basket::getBasket()->isEmpty() == false);
-
-        $this->complistpanel->complist->setDataSource(\App\Shop\CompareList::getCompareList());
-        $this->complistpanel->complist->Reload();
-        $this->complistpanel->setVisible(\App\Shop\CompareList::getCompareList()->isEmpty() == false);
-    }
+  
 
 }
 
@@ -385,7 +359,7 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
         return $ret . "</div>";
     }
 
-    //Вынмаем данные формы  после  сабмита
+    //Вынимаем данные формы  после  сабмита
     public function getRequestData() {
 
         $this->value = @array_values($_POST[$this->id]);

@@ -20,7 +20,7 @@ class Product extends \ZCL\DB\Entity {
         $this->image_id = 0;
         $this->group_id = 0;
         $this->price = 0;
-        $this->oldprice = 0;
+     
         $this->novelty = 0; //новинка
         $this->sold = 0;   //кол продаж
         $this->topsold = 0; //топ продаж
@@ -41,7 +41,7 @@ class Product extends \ZCL\DB\Entity {
         $this->image_id = (int) ($xml->image_id[0]);
         $images = (string) ($xml->images[0]);
         $this->topsold = (int) ($xml->topsold[0]);
-        $this->oldprice = (string) ($xml->oldprice[0]);
+        
         $this->item_code = (string) ($xml->item_code[0]);
         $this->description = (string) ($xml->description[0]);
         $this->fulldescription = (string) ($xml->fulldescription[0]);
@@ -64,7 +64,7 @@ class Product extends \ZCL\DB\Entity {
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<images>" . implode(',', $this->images) . "</images>";
         $this->detail .= "<topsold>{$this->topsold}</topsold>";
-        $this->detail .= "<oldprice>{$this->oldprice}</oldprice>";
+        
         $this->detail .= "<item_code>{$this->item_code}</item_code>";
         $this->detail .= "<description><![CDATA[{$this->description}]]></description>";
         $this->detail .= "<fulldescription><![CDATA[{$this->fulldescription}]]></fulldescription>";

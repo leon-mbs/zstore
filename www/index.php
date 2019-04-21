@@ -27,13 +27,13 @@ try {
 
     }
 
-    if ($_config['common']['shop'] == 1) {
-        $app = new \App\Application('\App\Shop\Pages\Main');
-    } else {
-        $app = new \App\Application('\App\Pages\Main');
-    }
-
-    $app->Run();
+    $app = new \App\Application(); 
+  
+    if($_config['common']['shop'] == 1){
+        $app->Run('\App\Pages\Main');  
+    } else { 
+        $app->Run('\App\Pages\Main');
+    }  
 
     /* } catch (\ZippyERP\System\Exception $e) {
 Logger::getLogger("main")->error($e->getMessage(), e);
