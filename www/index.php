@@ -30,7 +30,7 @@ try {
     $app = new \App\Application(); 
   
     if($_config['common']['shop'] == 1){
-        $app->Run('\App\Pages\Main');  
+        $app->Run('\App\Shop\Pages\Main');  
     } else { 
         $app->Run('\App\Pages\Main');
     }  

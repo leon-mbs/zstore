@@ -15,3 +15,16 @@
     padding: 2px;
     text-align: center;
 }
+
+.price-arrow{
+     font-size:14px;
+}
+ .footer {
+    background-color: black;
+    color: #fff;
+}
+
+.footer   a {
+    color: #fff;
+    text-decoration: none;
+}
