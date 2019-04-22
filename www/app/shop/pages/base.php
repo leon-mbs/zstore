@@ -24,8 +24,8 @@ class Base extends \Zippy\Html\WebPage {
         $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Shop/Pages/Compare"))->setVisible(false);
 
         $this->op = System::getOptions("shop");
-        
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('logo',"/" ))->setVisible(strlen($this->op['logo']) > 0);
+
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
     }
 
@@ -53,7 +53,6 @@ class Base extends \Zippy\Html\WebPage {
     protected function beforeRender() {
         $this->shopcart->setVisible(\App\Shop\Basket::getBasket()->isEmpty() == false);
         $this->showcompare->setVisible(\App\Shop\CompareList::getCompareList()->isEmpty() == false);
-
     }
 
     protected function afterRender() {

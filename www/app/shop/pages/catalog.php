@@ -66,7 +66,7 @@ class Catalog extends Base {
         $this->catlist->Reload();
 
 
- 
+
 
         //недавно  просмотренные
         $ra = array();
@@ -89,14 +89,14 @@ class Catalog extends Base {
     //строка товара
     public function plistOnRow($row) {
         $item = $row->getDataItem();
- 
-        
+
+
         $row->add(new BookmarkableLink("simage", "/sp/" . $item->product_id))->setValue('/loadimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("scatname", "/sp/" . $item->product_id))->setValue($item->productname);
         $row->add(new Label("stopsold"))->setVisible($item->topsold == 1);
         $row->add(new Label("snovelty"))->setVisible($item->novelty == 1);
         $row->add(new Label("sshortdesc", $item->description));
-        $row->add(new Label("sprice",  $item->price));
+        $row->add(new Label("sprice", $item->price));
         $row->add(new TextInput('srated'))->setText($item->rating);
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
         if ($item->qty > 0) {
@@ -104,11 +104,10 @@ class Catalog extends Base {
         } else {
             $row->sbuy->setValue("Заказать");
         }
-        $row->add(new Label('arrowup' ))->setVisible($item->chprice == 'up');
-        $row->add(new Label('arrowdown' ))->setVisible($item->chprice == 'down');        
+        $row->add(new Label('arrowup'))->setVisible($item->chprice == 'up');
+        $row->add(new Label('arrowdown'))->setVisible($item->chprice == 'down');
     }
 
- 
     public function oncartdel($sender) {
         $item = $sender->getOwner()->getDataItem();
         \App\Shop\Basket::getBasket()->deleteProduct($item->product_id);
@@ -141,7 +140,7 @@ class Catalog extends Base {
         $product->quantity = 1;
         \App\Shop\Basket::getBasket()->addProduct($product);
         $this->setSuccess("Товар  добавлен  в   корзину");
-      
+
         $this->resetURL();
     }
 
@@ -162,8 +161,6 @@ class Catalog extends Base {
 
         $row->add(new FilterAttributeComponent('attrdata', $attr));
     }
-
-  
 
 }
 

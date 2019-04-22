@@ -23,8 +23,7 @@ use App\System;
 /**
  * журнал  докуметов
  */
-class DocList extends \App\Pages\Base
-{
+class DocList extends \App\Pages\Base {
 
     /**
      *
@@ -257,8 +256,7 @@ class DocList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class DocDataSource implements \Zippy\Interfaces\DataSource
-{
+class DocDataSource implements \Zippy\Interfaces\DataSource {
 
     private function getWhere() {
         $user = System::getUser();

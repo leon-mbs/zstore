@@ -10,8 +10,7 @@ use App\Helper as H;
  *
  *
  */
-class Task extends Document
-{
+class Task extends Document {
 
     public function generateReport() {
 

@@ -29,8 +29,7 @@ use App\Helper as H;
 /**
  * Страница  ввода  наряда  на  работу
  */
-class Task extends \App\Pages\Base
-{
+class Task extends \App\Pages\Base {
 
     public $_servicelist = array();
     public $_itemlist = array();
@@ -648,16 +647,15 @@ class Task extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = trim($this->editdetail2->edititem->getText()) ;
-        return Stock::findArrayAC($store_id,$text)  ;
-        
+        $text = trim($this->editdetail2->edititem->getText());
+        return Stock::findArrayAC($store_id, $text);
     }
 
     public function OnAutoItem5($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = trim($this->editdetail5->edititem->getText()) ;
-        return Stock::findArrayAC($store_id,$text)  ;
-     }
+        $text = trim($this->editdetail5->edititem->getText());
+        return Stock::findArrayAC($store_id, $text);
+    }
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();

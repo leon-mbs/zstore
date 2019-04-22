@@ -3,42 +3,42 @@
     <body>
 
         <div class="row">
-         
+
             <div data-label="wplanned" class="col-12 col-md-8  col-lg-6 col-xl-4">
                 <div zippy="wplanned"  >
                 </div>      
             </div>
-            
+
             <div data-label="wdebitors" class="col-12 col-md-8  col-lg-6 col-xl-4">
                 <div zippy="wdebitors"  >
                 </div>      
             </div>
-            
-          
-            
+
+
+
         </div>  
-          <!--
-           <br>
-          <a   onclick="test()">JSON</a>
-          <br>
-        <textarea class="form-control"  id="send">
+        <!--
+         <br>
+        <a   onclick="test()">JSON</a>
+        <br>
+      <textarea class="form-control"  id="send">
+      
+      </textarea> <br><br>
+      <div id="result">Результат</div>
+      <script>
+      
+       function test(){
+           var d = $('#send').val();
         
-        </textarea> <br><br>
-        <div id="result">Результат</div>
-        <script>
-        
-         function test(){
-             var d = $('#send').val();
-          
-             $.post('/api/Orders',d,function(data) {
-                     
-          $('#result').html(data);
- 
+           $.post('/api/Orders',d,function(data) {
+                   
+        $('#result').html(data);
+
 });
-         }
-        </script>
-        
-        
+       }
+      </script>
+      
+      
         -->
     </body>
 </html>

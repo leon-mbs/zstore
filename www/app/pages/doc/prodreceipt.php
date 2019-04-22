@@ -24,8 +24,7 @@ use App\Application as App;
 /**
  * Страница  ввода   оприходование с  производства
  */
-class ProdReceipt extends \App\Pages\Base
-{
+class ProdReceipt extends \App\Pages\Base {
 
     public $_itemlist = array();
     private $_doc;

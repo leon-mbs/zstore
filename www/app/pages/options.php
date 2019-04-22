@@ -16,18 +16,16 @@ use \Zippy\Html\Panel;
 use App\System;
 use App\Application as App;
 
-class Options extends \App\Pages\Base
-{
+class Options extends \App\Pages\Base {
 
     private $metadatads;
-    
     public $pricelist = array();
 
     public function __construct() {
         parent::__construct();
         if (System::getUser()->acltype == 2) {
             App::RedirectHome();
-            return;            
+            return;
         }
 
 

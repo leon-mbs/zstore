@@ -24,8 +24,7 @@ use Zippy\Html\Link\BookmarkableLink;
 /**
  * Страница контрагентов
  */
-class CustomerList extends \App\Pages\Base
-{
+class CustomerList extends \App\Pages\Base {
 
     private $_customer = null;
     public $_fileslist = array();

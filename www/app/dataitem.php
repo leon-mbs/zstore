@@ -3,8 +3,7 @@
 namespace App;
 
 // вспомагательный   класс  для   вывода  простых  списков
-class DataItem implements \Zippy\Interfaces\DataItem
-{
+class DataItem implements \Zippy\Interfaces\DataItem {
 
     public $id;
     protected $fields = array();

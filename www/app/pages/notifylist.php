@@ -11,8 +11,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 
-class NotifyList extends \App\Pages\Base
-{
+class NotifyList extends \App\Pages\Base {
 
     public $user = null;
 
@@ -41,5 +40,5 @@ class NotifyList extends \App\Pages\Base
         $row->add(new Label("ndate", date("Y-m-d H:i", $notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);
     }
-    
-    }
+
+}

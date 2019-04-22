@@ -9,8 +9,7 @@ use \ZCL\DB\DB as DB;
 /**
  * Вспомагательный  класс  для  работы  с  бизнес-данными
  */
-class Helper
-{
+class Helper {
 
     private static $meta = array(); //кеширует метаданные
 
@@ -21,18 +20,17 @@ class Helper
      * @param mixed $password
      * @return  boolean
      */
-
     public static function login($login, $password = null) {
 
         $user = User::findOne("  userlogin=  " . User::qstr($login));
 
         if ($user == null)
             return false;
-        
-        if ($user->disabled==1)
+
+        if ($user->disabled == 1)
             return false;
-            
-            
+
+
         if ($user->userpass == $password)
             return $user;
         if (strlen($password) > 0) {
@@ -54,7 +52,7 @@ class Helper
     }
 
     public static function generateMenu($meta_type) {
-        
+
         $conn = \ZDB\DB::getConnect();
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
@@ -101,7 +99,7 @@ class Helper
         foreach ($menu as $item) {
             $textmenu .= "<li class=\"nav-item\"><a class=\"nav-link text-light py-0\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
         }
-        $i=1;
+        $i = 1;
         foreach ($groups as $gname => $group) {
             $subm = $meta_type . ($i++);
             $textmenu .= "<li class=\"nav-item\"> <a class=\"nav-link collapsed py-1 text-light\"     href=\"#{$subm}\" data-toggle=\"collapse\" data-target=\"#{$subm}\">$gname 
@@ -187,10 +185,10 @@ class Helper
         return $conn->GetOne($sql);
     }
 
-    public static function sendLetter($template, $emailfrom,$emailto, $subject = "") {
- 
-   
-  
+    public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
+
+
+
 
         $mail = new \PHPMailer();
         $mail->setFrom($emailfrom, 'Онлайн каталог');
@@ -202,8 +200,8 @@ class Helper
 
 
         $mail->send();
-      
-          /*
+
+        /*
           $from_name = '=?utf-8?B?' . base64_encode("Онлайн каталог") . '?=';
           $subject = '=?utf-8?B?' . base64_encode($subject) . '?=';
           mail(
@@ -213,7 +211,7 @@ class Helper
           "From: " . $from_name." <{$_config['common']['emailfrom']}>\r\n".
           "Content-type: text/html; charset=\"utf-8\""
           );
-          */
+         */
     }
 
     /**

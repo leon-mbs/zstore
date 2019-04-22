@@ -3,8 +3,7 @@
 namespace App\Pages;
 
 //страница  для  загрузки  файла отчета
-class ShowReport extends \Zippy\Html\WebPage
-{
+class ShowReport extends \Zippy\Html\WebPage {
 
     public function __construct($type, $filename) {
 

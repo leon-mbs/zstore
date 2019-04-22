@@ -26,8 +26,7 @@ use \App\Application as App;
 /**
  * Страница  ввода  заказа
  */
-class Order extends \App\Pages\Base
-{
+class Order extends \App\Pages\Base {
 
     public $_tovarlist = array();
     private $_doc;
@@ -279,7 +278,6 @@ class Order extends \App\Pages\Base
                 App::RedirectBack();
             else
                 App::Redirect("\\App\\Pages\\Register\\OrderList");
-                
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -332,7 +330,7 @@ class Order extends \App\Pages\Base
         $price = round($price - $price / 100 * $this->_discount);
 
 
-        $this->editdetail->qtystock->setText(H::fqty(Item::getQuantity($id,$this->docform->store->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty(Item::getQuantity($id, $this->docform->store->getValue())));
         $this->editdetail->editprice->setText($price);
 
         $this->updateAjax(array('qtystock', 'editprice'));

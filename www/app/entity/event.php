@@ -11,8 +11,7 @@ use ZCL\DB\Entity;
  * @keyfield=event_id
 
  */
-class Event extends Entity
-{
+class Event extends Entity {
 
     protected function init() {
         $this->event_id = 0;

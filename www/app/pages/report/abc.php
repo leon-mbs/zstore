@@ -12,8 +12,7 @@ use Zippy\Html\Panel;
 /**
  * АВС анализ
  */
-class ABC extends \App\Pages\Base
-{
+class ABC extends \App\Pages\Base {
 
     private $typelist = array();
 

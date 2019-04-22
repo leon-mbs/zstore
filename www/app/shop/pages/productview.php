@@ -50,13 +50,13 @@ class ProductView extends Base {
         $this->add(new Label("novelty"))->setVisible($product->novelty == 1);
 
         $this->add(new Label('price', $product->price));
-        
+
         $this->add(new Label('description', $product->description));
         $this->add(new Label('fulldescription', $product->fulldescription));
-        $this->add(new Label('arrowup' ))->setVisible($product->chprice == 'up');
-        $this->add(new Label('arrowdown' ))->setVisible($product->chprice == 'down');
+        $this->add(new Label('arrowup'))->setVisible($product->chprice == 'up');
+        $this->add(new Label('arrowdown'))->setVisible($product->chprice == 'down');
         $this->add(new TextInput('rated'))->setText($product->rating);
-        $this->add(new Label('comments',"Отзывов({$product->comments})"));
+        $this->add(new Label('comments', "Отзывов({$product->comments})"));
 
         $list = Helper::getAttributeValuesByProduct($product);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -90,12 +90,12 @@ class ProductView extends Base {
         }
 
         $imglist = array();
-        
+
         foreach ($product->images as $id) {
             $imglist[] = \App\Entity\Image::load($id);
-        }       
+        }
         $this->add(new DataView('imagelist', new ArrayDataSource($imglist), $this, 'imglistOnRow'))->Reload();
-        $this->_tvars['islistimage'] =count($imglist)>1;
+        $this->_tvars['islistimage'] = count($imglist) > 1;
 
         $recently = \App\Session::getSession()->recently;
         if (!is_array($recently)) {
@@ -103,10 +103,6 @@ class ProductView extends Base {
         }
         $recently[$product->product_id] = $product->product_id;
         \App\Session::getSession()->recently = $recently;
-        
-        
-        
-        
     }
 
     public function OnAddAttributeRow(\Zippy\Html\DataList\DataRow $datarow) {
@@ -225,10 +221,9 @@ class ProductView extends Base {
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        
+
         $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadimage.php?id={$image->image_id}&t=t");
         $row->product_thumb->setAttribute('href', "/loadimage.php?id={$image->image_id}");
-         
     }
-    
+
 }

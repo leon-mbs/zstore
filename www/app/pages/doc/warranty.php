@@ -23,8 +23,7 @@ use App\Application as App;
 /**
  * Страница  ввода  гарантийного талона
  */
-class Warranty extends \App\Pages\Base
-{
+class Warranty extends \App\Pages\Base {
 
     public $_tovarlist = array();
     private $_doc;
@@ -279,9 +278,8 @@ class Warranty extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = trim($sender->getText()) ;
-        return Stock::findArrayAC($store_id,$text)  ;
-
+        $text = trim($sender->getText());
+        return Stock::findArrayAC($store_id, $text);
     }
 
     public function OnChangeItem($sender) {
@@ -291,8 +289,8 @@ class Warranty extends \App\Pages\Base
 
         $item = Item::load($stock->item_id);
         $this->editdetail->editprice->setText($item->getPrice($this->docform->pricetype->getValue(), $stock->price));
-        $qty=$stock->qty - $stock->wqty + $stock->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
+        $qty = $stock->qty - $stock->wqty + $stock->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
 
 

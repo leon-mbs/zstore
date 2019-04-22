@@ -8,8 +8,7 @@ namespace App\Entity;
  * @table=item_cat
  * @keyfield=cat_id
  */
-class Category extends \ZCL\DB\Entity
-{
+class Category extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->cat_id = 0;

@@ -9,8 +9,7 @@ use App\Entity\Entry;
  *
  *
  */
-class ServiceAct extends Document
-{
+class ServiceAct extends Document {
 
     public function generateReport() {
 

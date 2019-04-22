@@ -9,8 +9,7 @@ namespace App\Entity;
  * @view=store_stock_view
  * @keyfield=stock_id
  */
-class Stock extends \ZCL\DB\Entity
-{
+class Stock extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->stock_id = 0;
@@ -24,23 +23,22 @@ class Stock extends \ZCL\DB\Entity
      * @return []
      * @static
      */
-    public static function findArrayAC($store,$partname="" ) {
-     
- 
-        $criteria = "qty <>0 and disabled <> 1 " ;
-        if(strlen($partname)>0)
-        {
-          $partname =  self::qstr('%'.$partname.'%');   
-          $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} )";   
+    public static function findArrayAC($store, $partname = "") {
+
+
+        $criteria = "qty <>0 and disabled <> 1 ";
+        if (strlen($partname) > 0) {
+            $partname = self::qstr('%' . $partname . '%');
+            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} )";
         }
-        
- 
-        
+
+
+
         $entitylist = self::find($criteria, "itemname");
 
         $list = array();
         foreach ($entitylist as $key => $value) {
-            $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion) ;
+            $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion);
         }
 
         return $list;
@@ -98,8 +96,6 @@ class Stock extends \ZCL\DB\Entity
             return 0;
         }
     }
-
-    
 
     // Поиск партий
     public static function pickup($store_id, $item_id, $qty) {

@@ -10,8 +10,7 @@ use \App\System;
 use \App\Entity\User;
 use \Zippy\Html\Label;
 
-class UserLogin extends \Zippy\Html\WebPage
-{
+class UserLogin extends \Zippy\Html\WebPage {
 
     public $_errormsg;
 

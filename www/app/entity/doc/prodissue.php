@@ -10,8 +10,7 @@ use App\Util;
  * Класс-сущность  документ  списание в  производство 
  *
  */
-class ProdIssue extends Document
-{
+class ProdIssue extends Document {
 
     public function generateReport() {
 

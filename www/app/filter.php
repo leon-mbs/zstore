@@ -6,8 +6,7 @@ namespace App;
  *   Класс для  хранения   в сессии  параметров
  * отбора  для форм-фильтров
  */
-class Filter
-{
+class Filter {
 
     private $data = array();
 

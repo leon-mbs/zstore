@@ -77,7 +77,7 @@ class ProductList extends \App\Pages\Base {
         $editform->add(new TextInput('ename'));
         $editform->add(new TextInput('ecode'));
         $editform->add(new TextInput('eprice', 0));
-        
+
         $editform->add(new TextArea('edescshort'));
         $editform->add(new TextArea('edescdet'));
 
@@ -97,15 +97,13 @@ class ProductList extends \App\Pages\Base {
 
 
         $this->add(new Panel('editimagepanel'))->setVisible(false);
-        
+
         $this->editimagepanel->add(new ClickLink('backtoproduct'))->onClick($this, 'backtoproductOnClick');
         $this->editimagepanel->add(new Form('addimageform'))->onSubmit($this, "onImageSubmit");
         $this->editimagepanel->addimageform->add(new \Zippy\Html\Form\File("photo"));
         $this->editimagepanel->add(new DataView('imagelist', new ArrayDataSource(new PB($this, 'imglist')), $this, 'imglistOnRow'));
-        
-        
     }
-           
+
     //загрузить дерево
     public function ReloadTree() {
 
@@ -245,7 +243,7 @@ class ProductList extends \App\Pages\Base {
         $this->editpanel->editform->ecode->setText($this->product->item_code);
         $this->editpanel->editform->edescshort->setText($this->product->description);
         $this->editpanel->editform->edescdet->setText($this->product->fulldescription);
-        
+
         $this->editpanel->editform->eprice->setText($this->product->price);
         $this->editpanel->editform->emanuf->setValue($this->product->manufacturer_id);
 
@@ -269,7 +267,7 @@ class ProductList extends \App\Pages\Base {
         $this->product->fulldescription = $sender->edescdet->getText();
         $this->product->price = $sender->eprice->getText();
         $this->product->chprice = "up";
-        
+
         $this->product->deleted = $sender->edisabled->isChecked();
         if (strlen($this->product->productname) == 0) {
             $this->setError('Не указано имя');
@@ -372,40 +370,34 @@ class ProductList extends \App\Pages\Base {
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        $row->add(new \Zippy\html\Image("imgitem"))->setUrl("/simage/".$image->image_id);
+        $row->add(new \Zippy\html\Image("imgitem"))->setUrl("/simage/" . $image->image_id);
         $row->add(new ClickLink("icover", $this, "icoverOnClick"))->setVisible($image->image_id != $this->product->image_id);
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
-
     }
 
-    public function icoverOnClick($sender) { 
-         $image = $sender->getOwner()->getDataItem();
-         $this->product->image_id = $image->image_id;
-         $this->product->save();
-         $this->listpanel->plist->Reload();
-         $this->updateImages();
+    public function icoverOnClick($sender) {
+        $image = $sender->getOwner()->getDataItem();
+        $this->product->image_id = $image->image_id;
+        $this->product->save();
+        $this->listpanel->plist->Reload();
+        $this->updateImages();
     }
-    
+
     public function idelOnClick($sender) {
-         $image = $sender->getOwner()->getDataItem();
-         $this->product->images = array_diff($this->product->images, array($image->image_id));
-         $this->product->save();
-         $this->updateImages();
-         
+        $image = $sender->getOwner()->getDataItem();
+        $this->product->images = array_diff($this->product->images, array($image->image_id));
+        $this->product->save();
+        $this->updateImages();
     }
-    
-    
+
     public function updateImages() {
         $this->imglist = array();
-        
+
         foreach ($this->product->images as $id) {
             $this->imglist[] = \App\Entity\Image::load($id);
         }
         $this->editimagepanel->imagelist->Reload();
     }
-    
- 
-    
 
 }
 

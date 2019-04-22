@@ -23,8 +23,7 @@ use Zippy\Html\Link\SubmitLink;
 /**
  * Страница  ввода  акта выполненных работ
  */
-class ServiceAct extends \App\Pages\Base
-{
+class ServiceAct extends \App\Pages\Base {
 
     public $_servicelist = array();
     private $_doc;
@@ -32,9 +31,8 @@ class ServiceAct extends \App\Pages\Base
     private $_basedocid = 0;
     private $_discount;
     private $_order_id = 0;
-    
-    public function __construct($docid = 0, $basedocid = 0)
-    {
+
+    public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -48,7 +46,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new CheckBox('planned'));
         $this->docform->add(new CheckBox('payed'));
         $this->docform->add(new Label('discount'))->setVisible(false);
-         $this->docform->add(new TextInput('order'));
+        $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
@@ -100,7 +98,7 @@ class ServiceAct extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'ServiceOrder') {
-                       
+
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->OnChangeCustomer($this->docform->customer);
@@ -111,26 +109,23 @@ class ServiceAct extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                       
+
                         //проверяем  что уже есть отправка
                         $list = $order->ConnectedDocList();
                         foreach ($list as $d) {
-                                if ($d->meta_name == 'ServiceAct') {
+                            if ($d->meta_name == 'ServiceAct') {
                                 $this->setWarn('У заказа  уже  есть акт');
                                 break;
                             }
                         }
 
-                         
+
 
                         foreach ($order->detaildata as $item) {
                             $item = new Service($item);
                             $this->_servicelist[$item->service_id] = $item;
                         }
-                         
                     }
-
-
                 }
             }
         }
@@ -142,14 +137,12 @@ class ServiceAct extends \App\Pages\Base
             return;
         }
 
-        if($this->_order_id){
-            $this->docform->inprocdoc->setVisible(false);//Прячем  если  есть заказ чтобы не  дублировать 
+        if ($this->_order_id) {
+            $this->docform->inprocdoc->setVisible(false); //Прячем  если  есть заказ чтобы не  дублировать 
         }
-        
     }
 
-    public function detailOnRow($row)
-    {
+    public function detailOnRow($row) {
         $service = $row->getDataItem();
 
         $row->add(new Label('item', $service->service_name));
@@ -163,8 +156,7 @@ class ServiceAct extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
-    public function editOnClick($sender)
-    {
+    public function editOnClick($sender) {
         $service = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
@@ -178,8 +170,7 @@ class ServiceAct extends \App\Pages\Base
         $this->_rowid = $service->service_id;
     }
 
-    public function deleteOnClick($sender)
-    {
+    public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
@@ -191,8 +182,7 @@ class ServiceAct extends \App\Pages\Base
         $this->calcTotal();
     }
 
-    public function addrowOnClick($sender)
-    {
+    public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->_rowid = 0;
@@ -201,8 +191,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editprice->setText(0);
     }
 
-    public function saverowOnClick($sender)
-    {
+    public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getKey();
         if ($id == 0) {
             $this->setError("Не выбрана  услуга");
@@ -227,14 +216,12 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
     }
 
-    public function cancelrowOnClick($sender)
-    {
+    public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
     }
 
-    public function savedocOnClick($sender)
-    {
+    public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
@@ -286,12 +273,11 @@ class ServiceAct extends \App\Pages\Base
                 if ($sender->id == 'execdoc') {
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
-                    
+
                     $order = Document::load($this->_doc->headerdata['order_id']);
                     if ($order instanceof Document) {
                         $order->updateStatus(Document::STATE_CLOSED);
-                    }                    
-                    
+                    }
                 }
 
                 if ($sender->id == 'inprocdoc') {
@@ -299,9 +285,8 @@ class ServiceAct extends \App\Pages\Base
                     $order = Document::load($this->_doc->headerdata['order_id']);
                     if ($order instanceof Document) {
                         $order->updateStatus(Document::STATE_INPROCESS);
-                    }                    
+                    }
                 }
-
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -325,8 +310,7 @@ class ServiceAct extends \App\Pages\Base
      * Расчет  итого
      *
      */
-    private function calcTotal()
-    {
+    private function calcTotal() {
 
         $total = 0;
 
@@ -342,8 +326,7 @@ class ServiceAct extends \App\Pages\Base
      * Валидация   формы
      *
      */
-    private function checkForm()
-    {
+    private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
@@ -356,19 +339,16 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->detail->Reload();
     }
 
-    public function backtolistOnClick($sender)
-    {
+    public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
 
-    public function OnAutoCustomer($sender)
-    {
+    public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "customer_name like " . $text);
     }
 
-    public function OnChangeCustomer($sender)
-    {
+    public function OnChangeCustomer($sender) {
         $this->_discount = 0;
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
@@ -384,15 +364,13 @@ class ServiceAct extends \App\Pages\Base
         }
     }
 
-    public function OnAutoServive($sender)
-    {
+    public function OnAutoServive($sender) {
 
         $text = Service::qstr('%' . $sender->getText() . '%');
         return Service::findArray("service_name", "    service_name like {$text}");
     }
 
-    public function OnChangeServive($sender)
-    {
+    public function OnChangeServive($sender) {
         $id = $sender->getKey();
 
         $item = Service::load($id);
@@ -406,8 +384,7 @@ class ServiceAct extends \App\Pages\Base
     }
 
     //добавление нового контрагента
-    public function addcustOnClick($sender)
-    {
+    public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
         $this->docform->setVisible(false);
 
@@ -415,8 +392,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editcust->editphone->setText('');
     }
 
-    public function savecustOnClick($sender)
-    {
+    public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
             $this->setError("Не введено имя");
@@ -433,8 +409,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->setVisible(true);
     }
 
-    public function cancelcustOnClick($sender)
-    {
+    public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }

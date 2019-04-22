@@ -8,8 +8,7 @@ namespace App\Entity;
  * @table=stores
  * @keyfield=store_id
  */
-class Store extends \ZCL\DB\Entity
-{
+class Store extends \ZCL\DB\Entity {
 
     protected function init() {
 

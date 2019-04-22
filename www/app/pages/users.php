@@ -17,8 +17,7 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \Zippy\Binding\PropertyBinding as Bind;
 
-class Users extends \App\Pages\Base
-{
+class Users extends \App\Pages\Base {
 
     public $user = null;
 
@@ -222,8 +221,7 @@ class Users extends \App\Pages\Base
 
 }
 
-class UserDataSource implements \Zippy\Interfaces\DataSource
-{
+class UserDataSource implements \Zippy\Interfaces\DataSource {
 
     //private $model, $db;
 

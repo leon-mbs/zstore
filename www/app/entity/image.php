@@ -9,8 +9,7 @@ use \ZCL\DB\Entity;
  * @table=images
  * @keyfield=image_id
  */
-class Image extends Entity
-{
+class Image extends Entity {
 
     protected function init() {
         

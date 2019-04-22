@@ -30,7 +30,7 @@ class Options extends \App\Pages\Base {
 
 
 
-        
+
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
         $this->shop->add(new DropDownChoice('shopdefstore', \App\Entity\Store::getList()));
         $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
@@ -46,28 +46,25 @@ class Options extends \App\Pages\Base {
         $shop = System::getOptions("shop");
         if (!is_array($shop))
             $shop = array();
-            
+
         $this->shop->shopdefstore->setValue($shop['defstore']);
         $this->shop->shopdefcust->setValue($shop['defcust']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->email->setText($shop['email']);
-        
-        $this->add(new ClickLink('updateprices'))->onClick($this, 'updatePriceOnClick');                
-        
-        if(strlen($shop['aboutus']) > 10){
-           $this->texts->aboutus->setText(base64_decode($shop['aboutus']));
+
+        $this->add(new ClickLink('updateprices'))->onClick($this, 'updatePriceOnClick');
+
+        if (strlen($shop['aboutus']) > 10) {
+            $this->texts->aboutus->setText(base64_decode($shop['aboutus']));
         }
-        if(strlen($shop['contact']) > 10){
-           $this->texts->contact->setText(base64_decode($shop['contact']));
+        if (strlen($shop['contact']) > 10) {
+            $this->texts->contact->setText(base64_decode($shop['contact']));
         }
-        if(strlen($shop['delivery']) > 10){
-           $this->texts->delivery->setText(base64_decode($shop['delivery']));
+        if (strlen($shop['delivery']) > 10) {
+            $this->texts->delivery->setText(base64_decode($shop['delivery']));
         }
-         
-        
     }
 
-    
     public function saveShopOnClick($sender) {
         $shop = array();
 
@@ -91,43 +88,44 @@ class Options extends \App\Pages\Base {
                 $this->setError('Слишком большой размер изображения');
                 return;
             }
-     
+
             $name = basename($file["name"]);
-            move_uploaded_file($file["tmp_name"], _ROOT."upload/".$name);
-            
-             
-            $shop['logo'] = "/upload/".$name;  
-        }        
-        System::setOptions("shop",$shop); 
+            move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);
+
+
+            $shop['logo'] = "/upload/" . $name;
+        }
+        System::setOptions("shop", $shop);
         $this->setSuccess('Сохранено');
     }
-    
-    public function updatePriceOnClick($sender) {    
-       $shop = System::getOptions("shop");
-      
-       $prods = Product::find(" deleted = 0 ");
-       foreach($prods as $p){
-           $item  = Item::load($p->item_id);
-           $price = $item->getPrice($shop['defpricetype']) ;
-           $p->chprice="";
-           if($price > $p->price) $p->chprice="up";
-           if($price < $p->price) $p->chprice="down";
-           $p->price = $price;
-           $p->save();    
-       }
-       $this->setSuccess('Обновлено');
+
+    public function updatePriceOnClick($sender) {
+        $shop = System::getOptions("shop");
+
+        $prods = Product::find(" deleted = 0 ");
+        foreach ($prods as $p) {
+            $item = Item::load($p->item_id);
+            $price = $item->getPrice($shop['defpricetype']);
+            $p->chprice = "";
+            if ($price > $p->price)
+                $p->chprice = "up";
+            if ($price < $p->price)
+                $p->chprice = "down";
+            $p->price = $price;
+            $p->save();
+        }
+        $this->setSuccess('Обновлено');
     }
 
     public function saveTextsOnClick($sender) {
         $shop = System::getOptions("shop");
-        
-        $shop['aboutus']  = base64_encode( $this->texts->aboutus->getText()) ;
-        $shop['contact']  = base64_encode( $this->texts->contact->getText()) ;
-        $shop['delivery'] = base64_encode( $this->texts->delivery->getText()) ;
-        
-        System::setOptions("shop",$shop); 
+
+        $shop['aboutus'] = base64_encode($this->texts->aboutus->getText());
+        $shop['contact'] = base64_encode($this->texts->contact->getText());
+        $shop['delivery'] = base64_encode($this->texts->delivery->getText());
+
+        System::setOptions("shop", $shop);
         $this->setSuccess('Обновлено');
     }
-    
-    
+
 }

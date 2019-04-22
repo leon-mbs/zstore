@@ -25,8 +25,7 @@ use App\Application as App;
 /**
  * Страница  ввода  приходной  накладной
  */
-class GoodsReceipt extends \App\Pages\Base
-{
+class GoodsReceipt extends \App\Pages\Base {
 
     public $_itemlist = array();
     private $_doc;
@@ -220,11 +219,11 @@ class GoodsReceipt extends \App\Pages\Base
 
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
-        if ($id == 0  ) {
+        if ($id == 0) {
             $this->setError("Не выбран товар");
             return;
         }
-        
+
 
         $item = Item::load($id);
 

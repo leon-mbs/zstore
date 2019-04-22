@@ -8,8 +8,7 @@ use \App\Entity\User;
  * Класс  содержащи  методы  работы   с  наиболее  важными
  * системмными  данными
  */
-class System
-{
+class System {
 
     private static $_options = array();   //  для кеширования  
     private static $_cache = array();   //  для кеширования  
@@ -18,7 +17,6 @@ class System
      * Возвращает  текущего  юзера
      * @return  User
      */
-
     public static function getUser() {
         $user = Session::getSession()->user;
         if ($user == null) {

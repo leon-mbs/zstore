@@ -11,8 +11,7 @@ use App\Application as App;
 use App\System;
 use App\Entity\User;
 
-class Base extends \Zippy\Html\WebPage
-{
+class Base extends \Zippy\Html\WebPage {
 
     public function __construct($params = null) {
         global $_config;
@@ -26,23 +25,23 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
- 
-         
-        
+
+
+
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
-     
+
 
         $this->add(new ClickLink("pageinfo"));
 
 
 
-         
-        $this->_tvars["docmenu"]  = Helper::generateMenu(1);
-        $this->_tvars["repmenu"]  = Helper::generateMenu(2);
-        $this->_tvars["regmenu"]  = Helper::generateMenu(3);
-        $this->_tvars["refmenu"]  = Helper::generateMenu(4);
-        $this->_tvars["shopmenu"]  = Helper::generateMenu(5);
+
+        $this->_tvars["docmenu"] = Helper::generateMenu(1);
+        $this->_tvars["repmenu"] = Helper::generateMenu(2);
+        $this->_tvars["regmenu"] = Helper::generateMenu(3);
+        $this->_tvars["refmenu"] = Helper::generateMenu(4);
+        $this->_tvars["shopmenu"] = Helper::generateMenu(5);
 
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
@@ -53,8 +52,8 @@ class Base extends \Zippy\Html\WebPage
         }
 
         $options = System::getOptions('common');
-        
-        $this->_tvars["useset"] = $options['useset']==1;
+
+        $this->_tvars["useset"] = $options['useset'] == 1;
 
         $this->_tvars["smart"] = Helper::generateSmartMenu();
         $this->_tvars["picontent"] = $pi;
@@ -102,13 +101,13 @@ class Base extends \Zippy\Html\WebPage
         return strlen(System::getErrorMsg()) > 0;
     }
 
-    public  function beforeRender(){
+    public function beforeRender() {
         $user = System::getUser();
         $cntn = \App\Entity\Notify::isNotify($user->user_id);
-       
-        $this->_tvars['bell']  = '<i class="fa fa-bell "></i>';
-        if($cntn>0) $this->_tvars['bell']  = '<i class="fa fa-bell text-danger"></i>';
-        
+
+        $this->_tvars['bell'] = '<i class="fa fa-bell "></i>';
+        if ($cntn > 0)
+            $this->_tvars['bell'] = '<i class="fa fa-bell text-danger"></i>';
     }
 
     protected function afterRender() {

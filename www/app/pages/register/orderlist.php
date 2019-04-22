@@ -19,8 +19,7 @@ use Zippy\Html\Panel;
 /**
  * журнал  заказов
  */
-class OrderList extends \App\Pages\Base
-{
+class OrderList extends \App\Pages\Base {
 
     private $_doc = null;
 
@@ -29,8 +28,7 @@ class OrderList extends \App\Pages\Base
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('OrderList')) {
             return;
@@ -66,16 +64,14 @@ class OrderList extends \App\Pages\Base
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
-    public function filterOnSubmit($sender)
-    {
+    public function filterOnSubmit($sender) {
 
         $this->statuspan->setVisible(false);
 
         $this->doclist->Reload();
     }
 
-    public function doclistOnRow($row)
-    {
+    public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));
@@ -97,8 +93,7 @@ class OrderList extends \App\Pages\Base
         }
     }
 
-    public function statusOnSubmit($sender)
-    {
+    public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
 
@@ -128,7 +123,6 @@ class OrderList extends \App\Pages\Base
             if ($act) {
                 $this->setWarn('Для заказа уже создан акт');
             }
-
         }
 
         if ($sender->id == "bttn") {
@@ -154,15 +148,13 @@ class OrderList extends \App\Pages\Base
             if ($act) {
                 $this->setWarn('Для заказа был создан акт');
             }
-
         }
 
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
     }
 
-    public function updateStatusButtons()
-    {
+    public function updateStatusButtons() {
 
         $this->statuspan->statusform->bclose->setVisible(true);
 
@@ -223,19 +215,15 @@ class OrderList extends \App\Pages\Base
         if ($this->_doc->meta_name == 'Order') {
 
             $this->statuspan->statusform->bact->setVisible(false);
-
         }
         if ($this->_doc->meta_name == 'ServiceOrder') {
 
             $this->statuspan->statusform->bttn->setVisible(false);
-
         }
-
     }
 
     //просмотр
-    public function showOnClick($sender)
-    {
+    public function showOnClick($sender) {
 
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
@@ -251,8 +239,7 @@ class OrderList extends \App\Pages\Base
         $this->_tvars['askclose'] = false;
     }
 
-    public function editOnClick($sender)
-    {
+    public function editOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
@@ -261,8 +248,7 @@ class OrderList extends \App\Pages\Base
         App::Redirect("\\App\\Pages\\Doc\\Order", $doc->document_id);
     }
 
-    public function oncsv($sender)
-    {
+    public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";
 
@@ -291,18 +277,15 @@ class OrderList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class OrderDataSource implements \Zippy\Interfaces\DataSource
-{
+class OrderDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 
-    public function __construct($page)
-    {
+    public function __construct($page) {
         $this->page = $page;
     }
 
-    private function getWhere()
-    {
+    private function getWhere() {
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
@@ -322,7 +305,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and  amount > datatag";
         }
         if ($status == 3) {
-
+            
         }
 
         $st = trim($this->page->filter->searchtext->getText());
@@ -343,13 +326,11 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         return $where;
     }
 
-    public function getItemCount()
-    {
+    public function getItemCount() {
         return Document::findCnt($this->getWhere());
     }
 
-    public function getItems($start, $count, $sortfield = null, $asc = null)
-    {
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
 
         //$l = Traversable::from($docs);
@@ -358,9 +339,8 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         return $docs;
     }
 
-    public function getItem($id)
-    {
-
+    public function getItem($id) {
+        
     }
 
 }

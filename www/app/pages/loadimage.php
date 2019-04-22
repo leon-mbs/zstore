@@ -3,8 +3,7 @@
 namespace App\Pages;
 
 //страница  для  загрузки изображений 
-class LoadImage extends \Zippy\Html\WebPage
-{
+class LoadImage extends \Zippy\Html\WebPage {
 
     public function __construct($image_id, $t = null) {
         if (!is_numeric($image_id))

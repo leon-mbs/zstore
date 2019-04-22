@@ -9,8 +9,7 @@ namespace App\Entity;
  * @view=customers_view
  * @keyfield=customer_id
  */
-class Customer extends \ZCL\DB\Entity
-{
+class Customer extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->customer_id = 0;

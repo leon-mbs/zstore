@@ -12,8 +12,7 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use App\Entity\Service;
 
-class ServiceList extends \App\Pages\Base
-{
+class ServiceList extends \App\Pages\Base {
 
     private $_service;
 

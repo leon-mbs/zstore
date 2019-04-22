@@ -14,8 +14,7 @@ use \Carbon\Carbon;
 /**
  * Виджет для  просмотра запланированых документов
  */
-class WPlannedDocs extends \Zippy\Html\PageFragment
-{
+class WPlannedDocs extends \Zippy\Html\PageFragment {
 
     public function __construct($id) {
         parent::__construct($id);

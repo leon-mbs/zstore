@@ -23,8 +23,7 @@ use App\System;
 /**
  * журнал  заявок
  */
-class OrderCustList extends \App\Pages\Base
-{
+class OrderCustList extends \App\Pages\Base {
 
     private $_doc = null;
 
@@ -283,8 +282,7 @@ class OrderCustList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class OrderCustDataSource implements \Zippy\Interfaces\DataSource
-{
+class OrderCustDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 

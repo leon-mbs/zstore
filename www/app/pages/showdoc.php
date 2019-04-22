@@ -5,8 +5,7 @@ namespace App\Pages;
 use App\Entity\Doc\Document;
 
 //страница  для  загрузки  файла экпорта
-class ShowDoc extends \Zippy\Html\WebPage
-{
+class ShowDoc extends \Zippy\Html\WebPage {
 
     public function __construct($type, $docid) {
 

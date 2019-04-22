@@ -10,8 +10,7 @@ use App\Util;
  * Класс-сущность  документ расходная  накладая
  *
  */
-class GoodsIssue extends Document
-{
+class GoodsIssue extends Document {
 
     public function generateReport() {
 

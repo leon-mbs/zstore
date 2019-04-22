@@ -16,8 +16,7 @@ use App\Helper as H;
 /**
  * Отчет по продажам
  */
-class Outcome extends \App\Pages\Base
-{
+class Outcome extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();

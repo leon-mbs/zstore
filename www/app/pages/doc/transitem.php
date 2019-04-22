@@ -24,8 +24,7 @@ use App\Helper as H;
 /**
  * Страница  ввода перекомплектация товаров
  */
-class TransItem extends \App\Pages\Base
-{
+class TransItem extends \App\Pages\Base {
 
     public $_itemlist = array();
     private $_doc;
@@ -41,17 +40,17 @@ class TransItem extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new AutocompleteTextInput('fromitem'))->onText($this, 'OnAutocompleteItem');
         $this->docform->add(new AutocompleteTextInput('toitem'))->onText($this, 'OnAutocompleteItem');
-        
+
         $this->docform->add(new TextInput('fromquantity'));
         $this->docform->add(new TextInput('toquantity'));
         $this->docform->add(new TextInput('notes'));
 
-        
+
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-       $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-     
-       
+        $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
+
+
         if ($docid > 0) {    //загружаем   содержимок  документа на страницу
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -66,42 +65,39 @@ class TransItem extends \App\Pages\Base
             $this->docform->fromquantity->setText($this->_doc->headerdata['fromquantity']);
             $this->docform->toquantity->setText($this->_doc->headerdata['toquantity']);
             $this->docform->notes->setText($this->_doc->notes);
-
-             
         } else {
             $this->_doc = Document::create('TransItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            
         }
 
-        
+
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
 
-   public function backtolistOnClick($sender) {
+    public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
 
     public function savedocOnClick($sender) {
-        
-        $this->_doc->notes = $this->docform->notes->getText();
-  
 
-           $this->_doc->headerdata = array(
+        $this->_doc->notes = $this->docform->notes->getText();
+
+
+        $this->_doc->headerdata = array(
             'storefrom' => $this->docform->storefrom->getValue(),
             'fromitem' => $this->docform->fromitem->getKey(),
             'toitem' => $this->docform->toitem->getKey(),
-            'fromquantity' => $this->docform->fromquantity->getText() ,
+            'fromquantity' => $this->docform->fromquantity->getText(),
             'toquantity' => $this->docform->toquantity->getText()
         );
-        
+
         if ($this->checkForm() == false) {
             return;
-        }        
- 
+        }
+
         $fi = Stock::load($this->_doc->headerdata['fromitem']);
- 
+
         $this->_doc->amount = $fi->partion * $this->_doc->headerdata['fromquantity'];
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -141,30 +137,23 @@ class TransItem extends \App\Pages\Base
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
             $this->setError("Не введен номер документа");
         }
-        if($this->_doc->headerdata['fromquantity'] >0 && $this->_doc->headerdata['toquantity'] >0)
-        {
+        if ($this->_doc->headerdata['fromquantity'] > 0 && $this->_doc->headerdata['toquantity'] > 0) {
             
-        } else
-        {
-            $this->setError("Неверное количество");    
+        } else {
+            $this->setError("Неверное количество");
         }
-        if($this->_doc->headerdata['fromitem'] >0 && $this->_doc->headerdata['toitem'] >0)
-        {
+        if ($this->_doc->headerdata['fromitem'] > 0 && $this->_doc->headerdata['toitem'] > 0) {
             
-        } else
-        {
-            $this->setError("Не  введены  ТМЦ  ");    
+        } else {
+            $this->setError("Не  введены  ТМЦ  ");
         }
-        if($this->_doc->headerdata['fromitem'] == $this->_doc->headerdata['toitem'] )
-        {
-            $this->setError("Одинаковые ТМЦ");    
+        if ($this->_doc->headerdata['fromitem'] == $this->_doc->headerdata['toitem']) {
+            $this->setError("Одинаковые ТМЦ");
         }
 
         return !$this->isError();
     }
 
-    
-    
     public function OnChangeStore($sender) {
         $this->docform->fromitem->setText('');
         $this->docform->fromitem->setValue(0);
@@ -174,20 +163,15 @@ class TransItem extends \App\Pages\Base
         $this->docform->toquantity->setText(0);
     }
 
- 
-
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->storefrom->getValue();
-        $text = trim($sender->getText()) ;
-        if($sender->id=='fromitem'){
-           return Stock::findArrayAC($store_id,$text)  ;    
-        }  else {
-           $text = Item::qstr('%' . $sender->getText() . '%'); 
-           return Item::findArray('itemname', "(itemname like {$text} or item_code like {$text})  and disabled <> 1");
+        $text = trim($sender->getText());
+        if ($sender->id == 'fromitem') {
+            return Stock::findArrayAC($store_id, $text);
+        } else {
+            $text = Item::qstr('%' . $sender->getText() . '%');
+            return Item::findArray('itemname', "(itemname like {$text} or item_code like {$text})  and disabled <> 1");
         }
-        
-  }
-
-     
+    }
 
 }

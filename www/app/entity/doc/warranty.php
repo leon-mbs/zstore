@@ -8,8 +8,7 @@ use App\Helper as H;
  * Класс-сущность  документ гарантийного талон
  *
  */
-class Warranty extends Document
-{
+class Warranty extends Document {
 
     public function generateReport() {
 

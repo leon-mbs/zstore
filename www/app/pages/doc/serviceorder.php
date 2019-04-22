@@ -24,16 +24,14 @@ use App\System;
 /**
  * Страница  ввода  заказа на  услуги
  */
-class ServiceOrder extends \App\Pages\Base
-{
+class ServiceOrder extends \App\Pages\Base {
 
     public $_servicelist = array();
     private $_doc;
     private $_rowid = 0;
     private $_basedocid = 0;
     private $_discount;
-    
-    
+
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -43,10 +41,10 @@ class ServiceOrder extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer', false);
 
-        
+
 
         $this->docform->add(new TextInput('notes'));
- 
+
         $this->docform->add(new Label('discount'))->setVisible(false);
 
 
@@ -96,9 +94,8 @@ class ServiceOrder extends \App\Pages\Base
             }
         } else {
             $this->_doc = Document::create('ServiceOrder');
-
         }
-        
+
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
@@ -212,7 +209,7 @@ class ServiceOrder extends \App\Pages\Base
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
-     
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -222,18 +219,15 @@ class ServiceOrder extends \App\Pages\Base
             if ($sender->id != 'savedoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
-                
-              if ($sender->id == 'execdoc')   {
-                 $this->_doc->updateStatus(Document::STATE_EXECUTED); 
-                 $this->_doc->updateStatus(Document::STATE_CLOSED); 
-              } 
-                 
-              if ($sender->id == 'inprocdoc')    
-              {
-                 $this->_doc->updateStatus(Document::STATE_INPROCESS); 
-              }
-                 
-                
+
+                if ($sender->id == 'execdoc') {
+                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                    $this->_doc->updateStatus(Document::STATE_CLOSED);
+                }
+
+                if ($sender->id == 'inprocdoc') {
+                    $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                }
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }

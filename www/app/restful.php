@@ -5,8 +5,7 @@ namespace App;
 /**
  * Base class for RESTFul    
  */
-abstract class RestFul
-{
+abstract class RestFul {
 
     /**
      * 
