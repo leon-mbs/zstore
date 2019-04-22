@@ -34,7 +34,6 @@ class Product extends \ZCL\DB\Entity {
 
     protected function afterLoad() {
 
-
         $xml = @simplexml_load_string($this->detail);
 
         $this->item_id = (int) ($xml->item_id[0]);
@@ -43,8 +42,12 @@ class Product extends \ZCL\DB\Entity {
         $this->topsold = (int) ($xml->topsold[0]);
         
         $this->item_code = (string) ($xml->item_code[0]);
+        $this->chprice = (string) ($xml->chprice[0]);
         $this->description = (string) ($xml->description[0]);
         $this->fulldescription = (string) ($xml->fulldescription[0]);
+        $this->aboutus = (string) ($xml->aboutus[0]);
+        $this->contact = (string) ($xml->contact[0]);
+        $this->delivery = (string) ($xml->delivery[0]);
 
         $this->rating = round($this->rating);
         $this->created = strtotime($this->created);
@@ -66,8 +69,12 @@ class Product extends \ZCL\DB\Entity {
         $this->detail .= "<topsold>{$this->topsold}</topsold>";
         
         $this->detail .= "<item_code>{$this->item_code}</item_code>";
+        $this->detail .= "<chprice>{$this->chprice}</chprice>";
         $this->detail .= "<description><![CDATA[{$this->description}]]></description>";
         $this->detail .= "<fulldescription><![CDATA[{$this->fulldescription}]]></fulldescription>";
+        $this->detail .= "<aboutus><![CDATA[{$this->aboutus}]]></aboutus>";
+        $this->detail .= "<contact><![CDATA[{$this->contact}]]></contact>";
+        $this->detail .= "<delivery><![CDATA[{$this->delivery}]]></delivery>";
 
         $this->detail .= "</detail>";
 

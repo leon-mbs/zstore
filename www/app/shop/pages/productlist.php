@@ -268,6 +268,7 @@ class ProductList extends \App\Pages\Base {
         $this->product->description = $sender->edescshort->getText();
         $this->product->fulldescription = $sender->edescdet->getText();
         $this->product->price = $sender->eprice->getText();
+        $this->product->chprice = "up";
         
         $this->product->deleted = $sender->edisabled->isChecked();
         if (strlen($this->product->productname) == 0) {

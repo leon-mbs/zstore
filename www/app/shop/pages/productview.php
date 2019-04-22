@@ -53,8 +53,10 @@ class ProductView extends Base {
         
         $this->add(new Label('description', $product->description));
         $this->add(new Label('fulldescription', $product->fulldescription));
+        $this->add(new Label('arrowup' ))->setVisible($product->chprice == 'up');
+        $this->add(new Label('arrowdown' ))->setVisible($product->chprice == 'down');
         $this->add(new TextInput('rated'))->setText($product->rating);
-        $this->add(new BookmarkableLink('comments'))->setValue("Отзывов({$product->comments})");
+        $this->add(new Label('comments',"Отзывов({$product->comments})"));
 
         $list = Helper::getAttributeValuesByProduct($product);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();

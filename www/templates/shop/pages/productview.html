@@ -39,15 +39,15 @@
 
                     </div> 
                     <div class="col-12">
-                        <h3 ><del style="color:red;"  zippy="oldprice"></del>
-                            &nbsp;<b zippy="price"></b> грн</h3>
+                        
+                          <h4>  &nbsp;<b zippy="price"></b><i zippy="arrowdown" class="fa fa-arrow-down text-success price-arrow"></i><i zippy="arrowup" class="fa fa-arrow-up text-danger price-arrow"></i> грн</h4>
                         <br><b zippy="onstore"></b>
                         <br><a class="btn btn-success " zippy="buy" ></a>
 
                     </div> 
                     <div class="col-12">
                         <a zippy="addtocompare" >Добавить  к  сравнению</a><a zippy="compare" >Сравнить</a>
-                        <br><a onclick="openComments()" href="return false;" zippy="comments"></a> <input readonly="readonly"   type="hidden" class="rating"  zippy="rated"   value="0"  data-filled="fas fa-star" data-empty="far fa-star "/>
+                        <br> <input readonly="readonly"   type="hidden" class="rating"  zippy="rated"   value="0"  data-filled="fas fa-star" data-empty="far fa-star "/>&nbsp;<span zippy="comments"></span>
                     </div> 
                                          
                 </div> 
@@ -61,7 +61,7 @@
         <div class="col-12"></div> 
         <div class="col-12 col-sm-6 col-lg-6 col-xl-4" >
         <h4>Характеритики</h4>
-  <table    class="table table-sm   table-stripped  ">
+        <table    class="table table-sm   table-stripped  ">
                                 <tr  zippy="attributelist">
                                     <td><span zippy="attrname" ></span></td>
                                     <td><span zippy="attrvalue" ></span></td>
@@ -133,11 +133,7 @@
             });
 
 
-            function openComments() {
-
-                window.location = '#commentbegin';
-                $('#mt').click();
-            }
+           
 
 
         </script>

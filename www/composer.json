@@ -1,7 +1,7 @@
 {
     "require": {
         "php": ">=5.4",
-        "swiftmailer/swiftmailer": "v6.0.2",
+        "phpmailer/phpmailer": "~5.2",
         "monolog/monolog": "1.23.0",
         "ircmaxell/password-compat": "v1.0.4",
         "nesbot/Carbon": "1.29.2",

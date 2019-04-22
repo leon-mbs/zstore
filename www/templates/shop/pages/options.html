@@ -1,4 +1,6 @@
 <html>
+
+
     <body>
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4  ">
@@ -61,8 +63,46 @@
 
                 </form>
             </div>
-
-
+            <div class="col-12">
+             <h4>Тексты страниц</h4>
+             </div>
+            <div class="col-12 col-lg-10 col-xl-8">
+                <form zippy="texts">
+                     <div class="form-group   " >
+                       <label for="aboutus">О нас</label>
+                       <textarea zippy="aboutus" class="form-control ">
+                       </textarea>
+                     </div>             
+                     <div class="form-group   " >
+                       <label for="delivery">Оплата и доставка</label>
+                       <textarea zippy="delivery" class="form-control ">
+                       </textarea>
+                     </div>             
+                     <div class="form-group   " >
+                       <label for="contact">Контакты</label>
+                       <textarea zippy="contact" class="form-control ">
+                       </textarea>
+                     </div>             
+                     <div class="form-group   " >
+                     
+                            <button class="btn btn-outline-primary" type="submit"  >Сохранить</button>
+                     
+                     </div>             
+                </form>
+             </div>
+             
+    <script src="/assets/js/ckeditor/ckeditor.js" type="text/javascript"></script>
+        
+    <script>    var conf = {
+                    language: "ru",
+                    customConfig: '/assets/js/ckeditor/config.js',
+                    filebrowserBrowseUrl: '',
+                    filebrowserUploadUrl: '/upload.php'
+                }
+                CKEDITOR.replace('aboutus',conf );
+                CKEDITOR.replace('contact',conf );
+                CKEDITOR.replace('delivery',conf );
+    </script>
 
     </body>
 </html>

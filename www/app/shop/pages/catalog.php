@@ -100,12 +100,12 @@ class Catalog extends Base {
         $row->add(new TextInput('srated'))->setText($item->rating);
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
         if ($item->qty > 0) {
-            //$this->onstore->setText("В наличии");
             $row->sbuy->setValue("Купить");
         } else {
-            //$this->onstore->setText("Под заказ");
             $row->sbuy->setValue("Заказать");
         }
+        $row->add(new Label('arrowup' ))->setVisible($item->chprice == 'up');
+        $row->add(new Label('arrowdown' ))->setVisible($item->chprice == 'down');        
     }
 
  
