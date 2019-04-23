@@ -19,7 +19,7 @@ CREATE TABLE `customers` (
   `email` varchar(64) DEFAULT NULL,
   `phone` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `customers_view`;
 /*!50001 DROP VIEW IF EXISTS `customers_view`*/;
@@ -40,7 +40,7 @@ CREATE TABLE `docrel` (
   `doc2` int(11) DEFAULT NULL,
   KEY `doc1` (`doc1`),
   KEY `doc2` (`doc2`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  ;
+) ENGINE=innodb DEFAULT CHARSET=utf8 COMMENT='Связь между  документами';
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -61,7 +61,7 @@ CREATE TABLE `documents` (
   KEY `document_date` (`document_date`),
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -93,7 +93,7 @@ CREATE TABLE `employees` (
   `detail` mediumtext,
   `emp_name` varchar(64) NOT NULL,
   PRIMARY KEY (`employee_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `entrylist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -111,7 +111,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=90 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -188,7 +188,7 @@ CREATE TABLE `equipments` (
   `detail` mediumtext,
   `description` text,
   PRIMARY KEY (`eq_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `eventlist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -204,7 +204,7 @@ CREATE TABLE `eventlist` (
   PRIMARY KEY (`event_id`),
   KEY `user_id` (`user_id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `eventlist_view`;
 /*!50001 DROP VIEW IF EXISTS `eventlist_view`*/;
@@ -230,7 +230,7 @@ CREATE TABLE `files` (
   `description` varchar(255) DEFAULT NULL,
   `item_type` int(11) NOT NULL,
   PRIMARY KEY (`file_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=innodb DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `filesdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -239,7 +239,7 @@ CREATE TABLE `filesdata` (
   `file_id` int(11) DEFAULT NULL,
   `filedata` longblob,
   UNIQUE KEY `file_id` (`file_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=innodb DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `images`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -250,7 +250,7 @@ CREATE TABLE `images` (
   `mime` varchar(16) DEFAULT NULL,
   `thumb` longblob,
   PRIMARY KEY (`image_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_cat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -259,7 +259,7 @@ CREATE TABLE `item_cat` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(255) NOT NULL,
   PRIMARY KEY (`cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -270,7 +270,7 @@ CREATE TABLE `item_set` (
   `pitem_id` int(11) DEFAULT '0',
   `qty` int(11) DEFAULT '0',
   PRIMARY KEY (`set_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set_view`;
 /*!50001 DROP VIEW IF EXISTS `item_set_view`*/;
@@ -301,7 +301,7 @@ CREATE TABLE `items` (
   KEY `item_code` (`item_code`),
   KEY `itemname` (`itemname`),
   KEY `cat_id` (`cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `items_view`;
 /*!50001 DROP VIEW IF EXISTS `items_view`*/;
@@ -331,7 +331,7 @@ CREATE TABLE `messages` (
   `item_id` int(11) NOT NULL,
   `item_type` int(11) DEFAULT NULL,
   PRIMARY KEY (`message_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `messages_view`;
 /*!50001 DROP VIEW IF EXISTS `messages_view`*/;
@@ -359,7 +359,7 @@ CREATE TABLE `metadata` (
   `disabled` tinyint(4) NOT NULL,
   `smartmenu` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`meta_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `notifies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -372,16 +372,16 @@ CREATE TABLE `notifies` (
   `message` text NOT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `options` (
   `optname` varchar(64) NOT NULL,
-  `optvalue` text NOT NULL,
+  `optvalue` longtext NOT NULL,
   UNIQUE KEY `optname` (`optname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=innodb DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `parealist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -390,7 +390,7 @@ CREATE TABLE `parealist` (
   `pa_id` int(11) NOT NULL AUTO_INCREMENT,
   `pa_name` varchar(255) NOT NULL,
   PRIMARY KEY (`pa_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -400,7 +400,7 @@ CREATE TABLE `services` (
   `service_name` varchar(255) NOT NULL,
   `detail` text,
   PRIMARY KEY (`service_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -413,7 +413,7 @@ CREATE TABLE `shop_attributes` (
   `valueslist` varchar(255) DEFAULT NULL,
   `showinlist` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`attribute_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -424,7 +424,7 @@ CREATE TABLE `shop_attributes_order` (
   `pg_id` int(11) NOT NULL,
   `ordern` int(11) NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_attributes_view`*/;
@@ -449,7 +449,7 @@ CREATE TABLE `shop_attributevalues` (
   `attributevalue` varchar(255) NOT NULL,
   PRIMARY KEY (`attributevalue_id`),
   KEY `attribute_id` (`attribute_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_manufacturers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -459,7 +459,7 @@ CREATE TABLE `shop_manufacturers` (
   `manufacturername` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
   PRIMARY KEY (`manufacturer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_prod_comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -474,7 +474,7 @@ CREATE TABLE `shop_prod_comments` (
   `moderated` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`comment_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_productgroups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -486,7 +486,7 @@ CREATE TABLE `shop_productgroups` (
   `mpath` varchar(1024) DEFAULT NULL,
   `image_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_productgroups_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_productgroups_view`*/;
@@ -520,7 +520,7 @@ CREATE TABLE `shop_products` (
   `comments` int(11) DEFAULT '0',
   PRIMARY KEY (`product_id`),
   KEY `group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_products_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_products_view`*/;
@@ -542,7 +542,8 @@ SET character_set_client = utf8;
  1 AS `novelty`,
  1 AS `comments`,
  1 AS `groupname`,
- 1 AS `manufacturername`*/;
+ 1 AS `manufacturername`,
+ 1 AS `qty`*/;
 SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `store_stock`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -555,7 +556,7 @@ CREATE TABLE `store_stock` (
   `qty` int(11) DEFAULT NULL,
   PRIMARY KEY (`stock_id`),
   KEY `item_id` (`item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `store_stock_view`;
 /*!50001 DROP VIEW IF EXISTS `store_stock_view`*/;
@@ -586,7 +587,7 @@ CREATE TABLE `stores` (
   `storename` varchar(64) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`store_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='????? ????????';
+) ENGINE=innodb AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='????? ????????';
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -603,7 +604,7 @@ CREATE TABLE `users` (
   `options` text,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `userlogin` (`userlogin`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `users_view`;
 /*!50001 DROP VIEW IF EXISTS `users_view`*/;
@@ -746,7 +747,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `shop_products_view` AS select `p`.`product_id` AS `product_id`,`p`.`group_id` AS `group_id`,`p`.`productname` AS `productname`,`p`.`manufacturer_id` AS `manufacturer_id`,`p`.`price` AS `price`,`p`.`sold` AS `sold`,`p`.`deleted` AS `deleted`,`p`.`sef` AS `sef`,`p`.`item_id` AS `item_id`,`p`.`created` AS `created`,`p`.`detail` AS `detail`,`p`.`rating` AS `rating`,(case when (`p`.`created` > (now() - interval 1 month)) then 1 else 0 end) AS `novelty`,`p`.`comments` AS `comments`,`g`.`groupname` AS `groupname`,`m`.`manufacturername` AS `manufacturername` from ((`shop_products` `p` join `shop_productgroups` `g` on((`p`.`group_id` = `g`.`group_id`))) left join `shop_manufacturers` `m` on((`p`.`manufacturer_id` = `m`.`manufacturer_id`))) */;
+/*!50001 VIEW `shop_products_view` AS select `p`.`product_id` AS `product_id`,`p`.`group_id` AS `group_id`,`p`.`productname` AS `productname`,`p`.`manufacturer_id` AS `manufacturer_id`,`p`.`price` AS `price`,`p`.`sold` AS `sold`,`p`.`deleted` AS `deleted`,`p`.`sef` AS `sef`,`p`.`item_id` AS `item_id`,`p`.`created` AS `created`,`p`.`detail` AS `detail`,`p`.`rating` AS `rating`,(case when (`p`.`created` > (now() - interval 1 month)) then 1 else 0 end) AS `novelty`,`p`.`comments` AS `comments`,`g`.`groupname` AS `groupname`,`m`.`manufacturername` AS `manufacturername`,`i`.`qty` AS `qty` from (((`shop_products` `p` join `shop_productgroups` `g` on((`p`.`group_id` = `g`.`group_id`))) left join `shop_manufacturers` `m` on((`p`.`manufacturer_id` = `m`.`manufacturer_id`))) join `items_view` `i` on((`p`.`item_id` = `i`.`item_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
