@@ -2,7 +2,71 @@
     <body>
         <h2>Настройки системы </h2>
         <div class="row">
-            <div class="col-12 col-md-10 col-lg-8  mt-4">
+            <div class="col-12 col-md-6 col-lg-4     ">
+                <h4>Основные настройки</h4>
+
+                <form   zippy="common"  >
+
+                    <div class="form-group">
+                        <label for="firmname" >Название фирмы</label>
+                        <input class="form-control" type="text" zippy="firmname" required="required"   >
+                    </div>   
+                    <div class="form-group  ">
+                        <label for="defstore" >Склад по умолчанию</label>
+
+                        <select class="form-control" zippy="defstore">
+                            <option value='0'>Не выбран</option>
+                        </select>
+                    </div>  
+                    <div class="form-group  ">
+                        <label >Типы отпускных цен</label>
+                        <input class="form-control" type="text" zippy="price1" required="required"   >
+                        <input class="form-control" type="text" zippy="price2"     >
+                        <input class="form-control" type="text" zippy="price3"     >
+                        <input class="form-control" type="text" zippy="price4"    >
+                        <input class="form-control" type="text" zippy="price5"     >
+                        <small>Введите наименования типов цен. Ненужные поля оставте пустыми</small>
+
+                    </div> 
+                    <div class="form-group  ">
+                        <label for="qtydigits" >Знаков после точки  в количестве</label>
+
+                        <select style="width:75px;" class="form-control" zippy="qtydigits">
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                        </select>
+                    </div> 
+                    <div class="form-check">
+                        <input zippy="useset" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="useset">Использовать комплекты для продукции</label>
+                    </div>                               
+                    <div class="form-check">
+                        <input zippy="useval" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="useval">Использовать валюту при закупке</label>
+                    </div>                               
+                    <div class="form-group">
+                        <label data-label="cdoll" for="cdoll" >Курс доллара</label>
+                        <input style="width:100px;" class="form-control" type="text" zippy="cdoll"   pattern="[0-9\.]+"    >
+                    </div>
+
+                    <div class="form-group">
+                        <label data-label="ceuro" for="ceuro" >Курс евро</label>
+                        <input style="width:100px;" class="form-control" type="text" zippy="ceuro"  pattern="[0-9\.]+"   >
+                    </div>            
+                    <div class="form-group">
+                        <label data-label="crub" for="crub" >Курс рубля</label>
+                        <input  style="width:100px;" class="form-control" type="text" zippy="crub"   pattern="[0-9\.]+"    >
+                    </div>            
+
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit"  >Сохранить</button>
+                    </div>
+
+                </form>
+            </div>        
+            <div class="col-12 col-md-10 col-lg-8   ">
                 <h4>Настройка меню</h4>
                 <div zippy="listpan">
                     <div class="row">
@@ -110,70 +174,7 @@
 
 
             </div>
-            <div class="col-12 col-md-6 col-lg-4  mt-4  ">
-                <h4>Основные настройки</h4>
 
-                <form   zippy="common"  >
-
-                    <div class="form-group">
-                        <label for="firmname" >Название фирмы</label>
-                        <input class="form-control" type="text" zippy="firmname" required="required"   >
-                    </div>   
-                    <div class="form-group  ">
-                        <label for="defstore" >Склад по умолчанию</label>
-
-                        <select class="form-control" zippy="defstore">
-                            <option value='0'>Не выбран</option>
-                        </select>
-                    </div>  
-                    <div class="form-group  ">
-                        <label >Типы отпускных цен</label>
-                        <input class="form-control" type="text" zippy="price1" required="required"   >
-                        <input class="form-control" type="text" zippy="price2"     >
-                        <input class="form-control" type="text" zippy="price3"     >
-                        <input class="form-control" type="text" zippy="price4"    >
-                        <input class="form-control" type="text" zippy="price5"     >
-                        <small>Введите наименования типов цен. Ненужные поля оставте пустыми</small>
-
-                    </div> 
-                    <div class="form-group  ">
-                        <label for="qtydigits" >Знаков после точки  в количестве</label>
-
-                        <select style="width:75px;" class="form-control" zippy="qtydigits">
-                            <option value='0'>0</option>
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                            <option value='3'>3</option>
-                        </select>
-                    </div> 
-                    <div class="form-check">
-                        <input zippy="useset" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="useset">Использовать комплекты для продукции</label>
-                    </div>                               
-                    <div class="form-check">
-                        <input zippy="useval" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="useval">Использовать валюту при закупке</label>
-                    </div>                               
-                    <div class="form-group">
-                        <label data-label="cdoll" for="cdoll" >Курс доллара</label>
-                        <input style="width:100px;" class="form-control" type="text" zippy="cdoll"   pattern="[0-9\.]+"    >
-                    </div>
-
-                    <div class="form-group">
-                        <label data-label="ceuro" for="ceuro" >Курс евро</label>
-                        <input style="width:100px;" class="form-control" type="text" zippy="ceuro"  pattern="[0-9\.]+"   >
-                    </div>            
-                    <div class="form-group">
-                        <label data-label="crub" for="crub" >Курс рубля</label>
-                        <input  style="width:100px;" class="form-control" type="text" zippy="crub"   pattern="[0-9\.]+"    >
-                    </div>            
-
-                    <div class="form-group">
-                        <button class="btn btn-outline-primary" type="submit"  >Сохранить</button>
-                    </div>
-
-                </form>
-            </div>
 
 
         </div>
