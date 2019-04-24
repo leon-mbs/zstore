@@ -10,8 +10,7 @@ use ZCL\DB\Entity;
  * @keyfield=notify_id
 
  */
-class Notify extends Entity
-{
+class Notify extends Entity {
 
     protected function init() {
 

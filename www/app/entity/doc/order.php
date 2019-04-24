@@ -10,8 +10,7 @@ use App\Util;
  * Класс-сущность  документ расходная  накладая
  *
  */
-class Order extends \App\Entity\Doc\Document
-{
+class Order extends \App\Entity\Doc\Document {
 
     public function generateReport() {
 

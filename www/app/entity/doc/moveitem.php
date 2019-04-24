@@ -11,8 +11,7 @@ use App\Helper as H;
  * Класс-сущность  локумент перемещения товаров
  *
  */
-class MoveItem extends Document
-{
+class MoveItem extends Document {
 
     public function Execute() {
 

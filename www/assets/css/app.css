@@ -1,7 +1,8 @@
 body {
-    font-family:"Roboto","Helvetica Neue"  ;
-      background-color: #FaFaFa;
+    font-family: "Roboto", "Helvetica Neue";
+    background-color: #FaFaFa;
 }
+
 .brand-logo {
     width: 115px;
     height: 45px;
@@ -11,13 +12,14 @@ body {
 }
 
 .logo-lg {
-font-family:  "Georgia";
-color:#00c0ef;
-font-style:italic  ;    
-} 
+    font-family: "Georgia";
+    color: #00c0ef;
+    font-style: italic;
+}
 
 .ctable td {
-    padding: 2px;;
+    padding: 2px;
+    ;
 }
 
 .ctable th {
@@ -25,50 +27,62 @@ font-style:italic  ;
     text-align: center;
 }
 
-.icon20{
-    height:20px;
+.icon20 {
+    height: 20px;
 }
 
+
 /* menu*/
+
 .navbar-light .navbar-nav .nav-link {
     color: rgb(64, 64, 64);
 }
-.btco-menu li > a {
+
+.btco-menu li>a {
     padding: 10px 15px;
     color: #000;
-
 }
 
 .btco-menu .active a:focus,
-.btco-menu li a:focus ,
-.navbar > .show > a:focus{
+.btco-menu li a:focus,
+.navbar>.show>a:focus {
     background: transparent;
     outline: 0;
 }
 
-
-.dropdown-menu .show > .dropdown-toggle::after{
+.dropdown-menu .show>.dropdown-toggle::after {
     transform: rotate(-90deg);
 }
+
+
 /* menu*/
 
-
- 
-
-   #upbutton {
-
-                height: 60px;
-                width: 60px;
-                bottom: 30px;
-                right: 30px;
-                cursor: pointer;
-                display: none;
-                position: fixed;
-                z-index: 999;
-            }
-            
- 
-    
-#tmenu a             {
-    color:#000;
+#upbutton {
+    height: 60px;
+    width: 60px;
+    bottom: 30px;
+    right: 30px;
+    cursor: pointer;
+    display: none;
+    position: fixed;
+    z-index: 999;
 }
+
+#tmenu a {
+    color: #000;
+}
+
+.footer {
+    background-color: black;
+    color: #fff;
+}
+
+.footer   a {
+    color: #fff;
+    text-decoration: none;
+}
+
+
+ 
+ 
+ 

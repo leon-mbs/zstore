@@ -5,8 +5,7 @@ namespace App\Shop;
 use \App\System;
 
 //клаасс  списка сравоения
-class CompareList implements \Zippy\Interfaces\DataSource
-{
+class CompareList implements \Zippy\Interfaces\DataSource {
 
     public $list = array();
 

@@ -26,8 +26,7 @@ use \App\Application as App;
 /**
  * Страница  ввода  возврат  поставщику
  */
-class RetCustIssue extends \App\Pages\Base
-{
+class RetCustIssue extends \App\Pages\Base {
 
     public $_tovarlist = array();
     private $_doc;
@@ -175,8 +174,8 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setKey($stock->stock_id);
         $this->editdetail->edittovar->setText($stock->itemname);
         $st = Stock::load($stock->stock_id);  //для актуального 
-        $qty=$st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
+        $qty = $st->qty - $st->wqty + $st->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
 
         $this->_rowid = $stock->stock_id;
@@ -336,8 +335,8 @@ class RetCustIssue extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $qty=$stock->qty - $stock->wqty + $stock->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
+        $qty = $stock->qty - $stock->wqty + $stock->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
 
 
@@ -353,8 +352,8 @@ class RetCustIssue extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = trim($sender->getText()) ;
-        return Stock::findArrayAC($store_id,$text)  ;
+        $text = trim($sender->getText());
+        return Stock::findArrayAC($store_id, $text);
     }
 
 }

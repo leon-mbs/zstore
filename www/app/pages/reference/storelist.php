@@ -16,8 +16,7 @@ use Zippy\Html\Panel;
 use App\Entity\Store;
 use App\Helper as H;
 
-class StoreList extends \App\Pages\Base
-{
+class StoreList extends \App\Pages\Base {
 
     public $_store = null;
 

@@ -24,8 +24,7 @@ use App\Helper as H;
 /**
  * Страница  ввода перемещения товаров
  */
-class MoveItem extends \App\Pages\Base
-{
+class MoveItem extends \App\Pages\Base {
 
     public $_itemlist = array();
     private $_doc;
@@ -72,6 +71,7 @@ class MoveItem extends \App\Pages\Base
             }
         } else {
             $this->_doc = Document::create('MoveItem');
+            $this->docform->document_number->setText($this->_doc->nextNumber());
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
@@ -125,11 +125,11 @@ class MoveItem extends \App\Pages\Base
 
         $this->editdetail->edititem->setKey($stock->stock_id);
         $this->editdetail->edititem->setValue($stock->itemname);
-        
+
         $st = Stock::load($stock->stock_id);  //для актуального 
-        $qty=$st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty)  ) ;
-    
+        $qty = $st->qty - $st->wqty + $st->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty));
+
         $this->_rowid = $stock->stock_id;
     }
 
@@ -241,8 +241,8 @@ class MoveItem extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $stock_id = $sender->getKey();
         $stock = Stock::load($stock_id);
-        $qty=$stock->qty - $stock->wqty + $stock->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
+        $qty = $stock->qty - $stock->wqty + $stock->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
 
         $store = Store::load($this->docform->storeto->getValue());
@@ -265,9 +265,9 @@ class MoveItem extends \App\Pages\Base
 
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->storefrom->getValue();
-        $text = trim($sender->getText()) ;
-        return Stock::findArrayAC($store_id,$text)  ;
-  }
+        $text = trim($sender->getText());
+        return Stock::findArrayAC($store_id, $text);
+    }
 
     public function beforeRender() {
         parent::beforeRender();

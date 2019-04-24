@@ -24,8 +24,7 @@ use Zippy\Html\Link\BookmarkableLink;
 /**
  * Страница контрагентов
  */
-class CustomerList extends \App\Pages\Base
-{
+class CustomerList extends \App\Pages\Base {
 
     private $_customer = null;
     public $_fileslist = array();
@@ -224,7 +223,7 @@ class CustomerList extends \App\Pages\Base
     public function filelistOnRow($row) {
         $item = $row->getDataItem();
 
-        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . '?p=App/Pages/LoadFile&arg=' . $item->file_id));
+        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'index.php?p=App/Pages/LoadFile&arg=' . $item->file_id));
         $file->setValue($item->filename);
         $file->setAttribute('title', $item->description);
 

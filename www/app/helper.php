@@ -9,8 +9,7 @@ use \ZCL\DB\DB as DB;
 /**
  * Вспомагательный  класс  для  работы  с  бизнес-данными
  */
-class Helper
-{
+class Helper {
 
     private static $meta = array(); //кеширует метаданные
 
@@ -21,18 +20,17 @@ class Helper
      * @param mixed $password
      * @return  boolean
      */
-
     public static function login($login, $password = null) {
 
         $user = User::findOne("  userlogin=  " . User::qstr($login));
 
         if ($user == null)
             return false;
-        
-        if ($user->disabled==1)
+
+        if ($user->disabled == 1)
             return false;
-            
-            
+
+
         if ($user->userpass == $password)
             return $user;
         if (strlen($password) > 0) {
@@ -54,6 +52,7 @@ class Helper
     }
 
     public static function generateMenu($meta_type) {
+
         $conn = \ZDB\DB::getConnect();
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
@@ -98,18 +97,23 @@ class Helper
         $textmenu = "";
 
         foreach ($menu as $item) {
-            $textmenu .= "<li><a class=\"dropdown-item\" href=\"/?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
+            $textmenu .= "<li class=\"nav-item\"><a class=\"nav-link text-light py-0\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
         }
+        $i = 1;
         foreach ($groups as $gname => $group) {
-            $textmenu .= "<li  ><a class=\"dropdown-item  dropdown-toggle\"     href=\"#\">$gname 
+            $subm = $meta_type . ($i++);
+            $textmenu .= "<li class=\"nav-item\"> <a class=\"nav-link collapsed py-1 text-light\"     href=\"#{$subm}\" data-toggle=\"collapse\" data-target=\"#{$subm}\">$gname 
              
             </a>
-            <ul class=\"dropdown-menu\">";
+            <div class=\"collapse\" id=\"{$subm}\" aria-expanded=\"false\">
+            <ul class=\"flex-column nav pl-4\">";
 
             foreach ($group as $item) {
-                $textmenu .= "<li ><a class=\"dropdown-item\"   href=\"/?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
+                $textmenu .= "<li  class=\"nav-item\">
+                  <a class=\"nav-link p-1 text-light\"   href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a>
+                </li>";
             }
-            $textmenu .= "</ul></li>";
+            $textmenu .= "</ul></div></li>";
         }
 
         return $textmenu;
@@ -146,7 +150,7 @@ class Helper
                     break;
             }
 
-            $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
+            $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
         }
 
         return $textmenu;
@@ -181,15 +185,14 @@ class Helper
         return $conn->GetOne($sql);
     }
 
-    public static function sendLetter($template, $email, $subject = "") {
+    public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
 
 
-        $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 
 
         $mail = new \PHPMailer();
-        $mail->setFrom($_config['common']['emailfrom'], 'Биржа jobber');
-        $mail->addAddress($email);
+        $mail->setFrom($emailfrom, 'Онлайн каталог');
+        $mail->addAddress($emailto);
         $mail->Subject = $subject;
         $mail->msgHTML($template);
         $mail->CharSet = "UTF-8";
@@ -197,9 +200,9 @@ class Helper
 
 
         $mail->send();
-        /*
 
-          $from_name = '=?utf-8?B?' . base64_encode("Биржа jobber") . '?=';
+        /*
+          $from_name = '=?utf-8?B?' . base64_encode("Онлайн каталог") . '?=';
           $subject = '=?utf-8?B?' . base64_encode($subject) . '?=';
           mail(
           $email,

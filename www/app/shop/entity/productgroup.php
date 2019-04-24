@@ -10,8 +10,7 @@ namespace App\Shop\Entity;
  * @parentfield=parent_id
  * @pathfield=mpath  
  */
-class ProductGroup extends \ZCL\DB\TreeEntity
-{
+class ProductGroup extends \ZCL\DB\TreeEntity {
 
     protected function init() {
         $this->group_id = 0;
@@ -21,8 +20,10 @@ class ProductGroup extends \ZCL\DB\TreeEntity
 
     protected function beforeDelete() {
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("delete from shop_attributes where      group_id =" . $this->group_id);
-        Image::delete($this->image_id);
+        $conn->Execute("delete from shop_attributes where  group_id =" . $this->group_id);
+        foreach ($this->images as $image_id) {
+            \App\Entity\Image::delete($image_id);
+        }
     }
 
 }

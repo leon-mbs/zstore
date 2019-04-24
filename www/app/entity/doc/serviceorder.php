@@ -9,8 +9,7 @@ use App\Entity\Entry;
  *
  *
  */
-class ServiceOrder extends Document
-{
+class ServiceOrder extends Document {
 
     public function generateReport() {
 
@@ -30,7 +29,6 @@ class ServiceOrder extends Document
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "customer" => $this->customer_name,
-            
             "document_number" => $this->document_number,
             "total" => $this->amount
         );
@@ -42,11 +40,10 @@ class ServiceOrder extends Document
     }
 
     public function Execute() {
- 
+
         return true;
     }
 
-    
     public function getRelationBased() {
         $list = array();
         $list['ServiceAct'] = 'Акт выполненных работ';
@@ -54,5 +51,5 @@ class ServiceOrder extends Document
 
         return $list;
     }
-    
+
 }

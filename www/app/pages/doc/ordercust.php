@@ -25,8 +25,7 @@ use App\Application as App;
 /**
  * Страница  ввода  заявки  поставщику
  */
-class OrderCust extends \App\Pages\Base
-{
+class OrderCust extends \App\Pages\Base {
 
     public $_itemlist = array();
     private $_doc;
@@ -169,8 +168,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->_rowid = 0;
-         $this->editdetail->editprice->setText("0");
-        
+        $this->editdetail->editprice->setText("0");
     }
 
     public function saverowOnClick($sender) {
@@ -178,11 +176,11 @@ class OrderCust extends \App\Pages\Base
 
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
-        if ($id == 0  ) {
+        if ($id == 0) {
             $this->setError("Не выбран товар");
             return;
         }
-    
+
 
         $item = Item::load($id);
 
@@ -231,22 +229,6 @@ class OrderCust extends \App\Pages\Base
                 continue;
             if ($common['useval'] != true)
                 continue;
-
-            if ($this->docform->val->getValue() == 2) {
-                $item->price = round($item->price * $common['cdoll']);
-                $item->curname = 'cdoll';
-                $item->currate = $common['cdoll'];
-            }
-            if ($this->docform->val->getValue() == 3) {
-                $item->price = round($item->price * $common['ceuro']);
-                $item->curname = 'ceuro';
-                $item->currate = $common['ceuro'];
-            }
-            if ($this->docform->val->getValue() == 4) {
-                $item->price = round($item->price * $common['crub']);
-                $item->curname = 'crub';
-                $item->currate = $common['crub'];
-            }
         }
 
 

@@ -8,8 +8,7 @@ namespace App\Entity;
  * @table=employees
  * @keyfield=employee_id
  */
-class Employee extends \ZCL\DB\Entity
-{
+class Employee extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->employee_id = 0;

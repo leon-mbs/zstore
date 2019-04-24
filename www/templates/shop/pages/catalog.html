@@ -36,26 +36,7 @@
                         <input class="btn btn-info btn-sm  " type="submit" value="Применить">&nbsp;<a class="btn btn-light  btn-sm " zippy="sclear">Сброс</a>
                     </div>
                 </form>
-                <div zippy="cartlistpanel">
-                    <h5><b>Список покупок</b></h5>
-                    <table class="table table-sm">
-                        <tr zippy="cartlist">
-                            <td zippy="cartname"></td>
-                            <td  style="width:25px"><a zippy="cartdel"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                    </table>
-                    <a href="/?p=/App/Shop/Pages/Order">Сформировать заказ</a>
-                </div>
-                <div zippy="complistpanel">
-                    <h5><b>Список сравнений</b></h5>
-                    <table class="table table-sm">
-                        <tr zippy="complist">
-                            <td zippy="compname"></td>
-                            <td  style="width:25px"><a zippy="compdel"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                    </table>                    
-                    <a href="/?p=/App/Shop/Pages/Compare">Открыть</a>
-                </div>
+
             </div>
             <div class="col-12 col-sm-8 col-lg-9  col-xl-10">    
                 <div class="row">  
@@ -83,15 +64,15 @@
                             <span  zippy="snovelty" style="position:absolute" class="badge badge-success">Новинка</span>
                             <span  zippy="stopsold" style="position:absolute;left:80px" class="badge badge-warning">Топ продаж</span>
                             <a zippy="simage" data-toggle="lightbox" data-gallery="simage" ><img class="card-img-top"    /></a> 
-                            <a class="card-title  card-link" zippy="scatname"></a>
+                            <b><a class="card-title  card-link" zippy="scatname"></a></b>
                             <p  class="card-text"  zippy="sshortdesc"></p>
                             <div class="row">
                                 <div class="col-auto">
                                     <input   readonly="readonly"   type="hidden" class="rating"  zippy="srated"   value="0"  data-filled="fas fa-star" data-empty="far fa-star"/>
                                 </div>
                                 <div class="col-auto ">
-                                    <del><b style="color:red" zippy="soldprice"></b></del>
-                                    &nbsp;<b zippy="sprice"></b> грн 
+
+                                    <h4> <b zippy="sprice"></b><i zippy="arrowdown" class="fa fa-arrow-down text-success price-arrow"></i><i zippy="arrowup" class="fa fa-arrow-up text-danger price-arrow"> </i> грн </h4>
                                 </div>
                             </div>
                             <a zippy="sbuy" class="btn btn-success btn-sm">Купить</a>

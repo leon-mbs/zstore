@@ -22,8 +22,7 @@ use \App\System;
 use \Zippy\Html\Link\BookmarkableLink;
 
 //справочник  оборудования
-class EqList extends \App\Pages\Base
-{
+class EqList extends \App\Pages\Base {
 
     private $_item;
 
@@ -140,8 +139,7 @@ class EqList extends \App\Pages\Base
 
 }
 
-class EQDS implements \Zippy\Interfaces\DataSource
-{
+class EQDS implements \Zippy\Interfaces\DataSource {
 
     private $page;
 

@@ -30,8 +30,7 @@ use \App\Helper as H;
 use \App\System;
 use \App\Application;
 
-class TaskList extends \App\Pages\Base
-{
+class TaskList extends \App\Pages\Base {
 
     private $_task;
     private $_taskds;

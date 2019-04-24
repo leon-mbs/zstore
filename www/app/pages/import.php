@@ -20,8 +20,7 @@ use \Zippy\Html\Form\CheckBox;
 use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Form\TextInput;
 
-class Import extends \App\Pages\Base
-{
+class Import extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();

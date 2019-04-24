@@ -9,8 +9,7 @@ use App\Helper;
  * Класс-сущность документ
  *
  */
-class Document extends \ZCL\DB\Entity
-{
+class Document extends \ZCL\DB\Entity {
 
     // состояния  документа
     const STATE_NEW = 1;     //Новый
@@ -176,13 +175,13 @@ class Document extends \ZCL\DB\Entity
             return;
         }
 
-       try{       
-          $xml = new \SimpleXMLElement($this->content);
-       } catch(\Exception $ee){
+        try {
+            $xml = new \SimpleXMLElement($this->content);
+        } catch (\Exception $ee) {
             global $logger;
-            $logger->error("Документ ".$this->document_number ." ".$ee->getMessage());
-            return;   
-       } 
+            $logger->error("Документ " . $this->document_number . " " . $ee->getMessage());
+            return;
+        }
         foreach ($xml->header->children() as $child) {
             $this->headerdata[(string) $child->getName()] = (string) $child;
         }

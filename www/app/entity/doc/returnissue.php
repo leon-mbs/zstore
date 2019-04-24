@@ -10,8 +10,7 @@ use App\Util;
  * Класс-сущность  документ возвратная накладная
  *
  */
-class ReturnIssue extends Document
-{
+class ReturnIssue extends Document {
 
     public function generateReport() {
 

@@ -17,11 +17,11 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\BookmarkableLink;
 use \Zippy\Html\DataList\DataView;
 use \App\System;
+use \Zippy\Html\DataList\ArrayDataSource;
 use \App\Application as App;
 
 //детализация  по товару, отзывы
-class ProductView extends Base
-{
+class ProductView extends Base {
 
     public $msg, $attrlist, $clist;
     protected $product_id, $gotocomment;
@@ -50,11 +50,13 @@ class ProductView extends Base
         $this->add(new Label("novelty"))->setVisible($product->novelty == 1);
 
         $this->add(new Label('price', $product->price));
-        $this->add(new Label('oldprice', $product->oldprice))->setVisible($product->oldprice > 0);
+
         $this->add(new Label('description', $product->description));
         $this->add(new Label('fulldescription', $product->fulldescription));
+        $this->add(new Label('arrowup'))->setVisible($product->chprice == 'up');
+        $this->add(new Label('arrowdown'))->setVisible($product->chprice == 'down');
         $this->add(new TextInput('rated'))->setText($product->rating);
-        $this->add(new BookmarkableLink('comments'))->setValue("Отзывов({$product->comments})");
+        $this->add(new Label('comments', "Отзывов({$product->comments})"));
 
         $list = Helper::getAttributeValuesByProduct($product);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -69,7 +71,7 @@ class ProductView extends Base
         $form->add(new TextArea('comment'));
         $this->clist = ProductComment::findByProduct($product->product_id);
         $this->add(new \Zippy\Html\DataList\DataView('commentlist', new \Zippy\Html\DataList\ArrayDataSource(new PropertyBinding($this, 'clist')), $this, 'OnAddCommentRow'));
-        $this->commentlist->setPageSize(25);
+        $this->commentlist->setPageSize(5);
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->commentlist));
         $this->commentlist->Reload();
 
@@ -78,7 +80,7 @@ class ProductView extends Base
             $this->buy->setVisible(false);
         } else {
 
-            if (\App\Entity\Item::getQuantity($product->item_id) > 0) {
+            if ($product->qty > 0) {
                 $this->onstore->setText("В наличии");
                 $this->buy->setValue("Купить");
             } else {
@@ -87,7 +89,13 @@ class ProductView extends Base
             }
         }
 
+        $imglist = array();
 
+        foreach ($product->images as $id) {
+            $imglist[] = \App\Entity\Image::load($id);
+        }
+        $this->add(new DataView('imagelist', new ArrayDataSource($imglist), $this, 'imglistOnRow'))->Reload();
+        $this->_tvars['islistimage'] = count($imglist) > 1;
 
         $recently = \App\Session::getSession()->recently;
         if (!is_array($recently)) {
@@ -209,6 +217,13 @@ class ProductView extends Base
         $product->save();
         $this->rated->setText($product->rating);
         $this->comments->setValue("Отзывов({$product->comments})");
+    }
+
+    public function imglistOnRow($row) {
+        $image = $row->getDataItem();
+
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadimage.php?id={$image->image_id}&t=t");
+        $row->product_thumb->setAttribute('href', "/loadimage.php?id={$image->image_id}");
     }
 
 }

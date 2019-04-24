@@ -9,8 +9,7 @@ use \App\Shop\Entity\Manufacturer;
 use \App\Shop\Helper;
 
 //список   производителей
-class Manufacturers extends \App\Pages\Base
-{
+class Manufacturers extends \App\Pages\Base {
 
     public $msg;
 

@@ -5,8 +5,7 @@ namespace App\Shop;
 use \App\System;
 
 //класс  корзины
-class Basket implements \Zippy\Interfaces\DataSource
-{
+class Basket implements \Zippy\Interfaces\DataSource {
 
     public $list = array();
 

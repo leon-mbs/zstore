@@ -11,8 +11,7 @@ use Zippy\Html\Label;
 use App\System;
 use \Zippy\Html\DataList\DataView;
 
-class UserProfile extends \App\Pages\Base
-{
+class UserProfile extends \App\Pages\Base {
 
     public $user;
 

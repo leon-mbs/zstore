@@ -3,8 +3,7 @@
 namespace App\Pages;
 
 //страница  для  загрузки приатаченого  файла  
-class LoadFile extends \Zippy\Html\WebPage
-{
+class LoadFile extends \Zippy\Html\WebPage {
 
     public function __construct($file_id) {
         if (!is_numeric($file_id))

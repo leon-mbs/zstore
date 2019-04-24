@@ -25,8 +25,7 @@ use \App\Application as App;
 /**
  *  возвратная накладная
  */
-class ReturnIssue extends \App\Pages\Base
-{
+class ReturnIssue extends \App\Pages\Base {
 
     public $_tovarlist = array();
     private $_doc;
@@ -311,8 +310,8 @@ class ReturnIssue extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = trim($sender->getText()) ;
-        return Stock::findArrayAC($store_id,$text)  ;
+        $text = trim($sender->getText());
+        return Stock::findArrayAC($store_id, $text);
     }
 
 }

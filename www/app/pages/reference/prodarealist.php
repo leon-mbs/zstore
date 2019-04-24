@@ -13,8 +13,7 @@ use Zippy\Html\Panel;
 use App\Entity\ProdArea;
 
 //роизводственные  участвки
-class ProdAreaList extends \App\Pages\Base
-{
+class ProdAreaList extends \App\Pages\Base {
 
     private $_pa;
 

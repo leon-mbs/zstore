@@ -23,8 +23,7 @@ use App\System;
 /**
  * журнал  докуметов
  */
-class DocList extends \App\Pages\Base
-{
+class DocList extends \App\Pages\Base {
 
     /**
      *
@@ -155,7 +154,7 @@ class DocList extends \App\Pages\Base
         } else {
             $list = "";
             foreach ($basedonlist as $doctype => $docname) {
-                $list .= "<a  class=\"dropdown-item\" href=\"/?p=App/Pages/Doc/" . $doctype . "&arg=/0/{$doc->document_id}\">{$docname}</a>";
+                $list .= "<a  class=\"dropdown-item\" href=\"/index.php?p=App/Pages/Doc/" . $doctype . "&arg=/0/{$doc->document_id}\">{$docname}</a>";
             };
             $basedon = $row->add(new Label('basedlist'))->setText($list, true);
         }
@@ -257,8 +256,7 @@ class DocList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class DocDataSource implements \Zippy\Interfaces\DataSource
-{
+class DocDataSource implements \Zippy\Interfaces\DataSource {
 
     private function getWhere() {
         $user = System::getUser();

@@ -6,8 +6,7 @@ namespace App;
  * Класс  для  хранения  в сессии  пользовательских  данных
  *
  */
-class Session
-{
+class Session {
 
     private $values = array();
     public $filter = array();

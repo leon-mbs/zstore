@@ -10,8 +10,7 @@ use App\Util;
  * Класс-сущность  документ возврат  поставщику
  *
  */
-class RetCustIssue extends Document
-{
+class RetCustIssue extends Document {
 
     public function generateReport() {
 

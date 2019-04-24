@@ -26,8 +26,7 @@ use \App\Application as App;
 /**
  * Страница  ввода  расходной накладной
  */
-class GoodsIssue extends \App\Pages\Base
-{
+class GoodsIssue extends \App\Pages\Base {
 
     public $_tovarlist = array();
     private $_doc;
@@ -137,7 +136,7 @@ class GoodsIssue extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
-                       
+
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->OnChangeCustomer($this->docform->customer);
@@ -246,8 +245,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setText($stock->itemname);
 
         $st = Stock::load($stock->stock_id);  //для актуального 
-        $qty=$st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty) ) ;
+        $qty = $st->qty - $st->wqty + $st->rqty;
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
         $this->_rowid = $stock->stock_id;
     }
@@ -445,9 +444,9 @@ class GoodsIssue extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $qty=$stock->qty - $stock->wqty + $stock->rqty;
-        
-        $this->editdetail->qtystock->setText(H::fqty($qty)) ;
+        $qty = $stock->qty - $stock->wqty + $stock->rqty;
+
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
@@ -483,8 +482,8 @@ class GoodsIssue extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = trim($sender->getText()) ;
-        return Stock::findArrayAC($store_id,$text)  ;
+        $text = trim($sender->getText());
+        return Stock::findArrayAC($store_id, $text);
     }
 
     public function OnChangePriceType($sender) {

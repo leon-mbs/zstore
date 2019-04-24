@@ -8,8 +8,7 @@ namespace App\Entity;
  * @table=services
  * @keyfield=service_id
  */
-class Service extends \ZCL\DB\Entity
-{
+class Service extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->service_id = 0;

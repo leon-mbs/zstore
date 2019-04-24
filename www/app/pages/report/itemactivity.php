@@ -17,8 +17,7 @@ use App\Application as App;
 /**
  * Движение товара
  */
-class ItemActivity extends \App\Pages\Base
-{
+class ItemActivity extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
@@ -32,7 +31,7 @@ class ItemActivity extends \App\Pages\Base
 
 
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
-         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
+        $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('print', "movereport"));
@@ -42,7 +41,6 @@ class ItemActivity extends \App\Pages\Base
         $this->detail->add(new RedirectLink('pdf', "movereport"));
         $this->detail->add(new Label('preview'));
         \App\Session::getSession()->issubmit = false;
-    
     }
 
     public function OnAutoItem($sender) {
@@ -82,11 +80,10 @@ class ItemActivity extends \App\Pages\Base
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
-        
-        $this->detail->preview->setText("<b >Загрузка...</b>",true);
+
+        $this->detail->preview->setText("<b >Загрузка...</b>", true);
         \App\Session::getSession()->printform = "";
         \App\Session::getSession()->issubmit = true;
-                 
     }
 
     private function generateReport() {
@@ -175,7 +172,7 @@ class ItemActivity extends \App\Pages\Base
 
         return $html;
     }
-  
+
     public function OnAutoLoad($sender) {
 
         if (\App\Session::getSession()->issubmit === true) {
@@ -191,4 +188,5 @@ class ItemActivity extends \App\Pages\Base
 
         App::addJavaScript("\$('#autoclick').click()", true);
     }
+
 }

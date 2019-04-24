@@ -17,8 +17,7 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use App\Entity\Employee;
 
-class EmployeeList extends \App\Pages\Base
-{
+class EmployeeList extends \App\Pages\Base {
 
     private $_employee;
 

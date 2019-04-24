@@ -1,35 +1,33 @@
 <?php
- namespace App;
+
+namespace App;
 
 /**
  * Base class for Json RPC 
  * based  on https://github.com/datto/php-json-rpc    
  */
-abstract class JsonRPC
-{
-    const VERSION = '2.0';
-        
-    
-        
-     public function Execute() {
-          
+abstract class JsonRPC {
 
-            
-            $request = file_get_contents( 'php://input' );
-            
-            if (!is_string($request)) {
-               $response= self::parseError();
-            }
-            else {
-               $json = json_decode( $request, true  );
-               $response = $this->processInput($json);    
-            }
-            
-            
-            if($response != null) echo json_encode( $response );          
+    const VERSION = '2.0';
+
+    public function Execute() {
+
+
+
+        $request = file_get_contents('php://input');
+
+        if (!is_string($request)) {
+            $response = self::parseError();
+        } else {
+            $json = json_decode($request, true);
+            $response = $this->processInput($json);
         }
-     
-  
+
+
+        if ($response != null)
+            echo json_encode($response);
+    }
+
     /**
      * Processes the user input, and prepares a response (if necessary).
      *
@@ -41,10 +39,9 @@ abstract class JsonRPC
      * Returns an array of response/error objects when multiple queries are made.
      * Returns null when no response is necessary.
      */
-    private function processInput($input)
-    {
-       
-       
+    private function processInput($input) {
+
+
 
         if (!is_array($input)) {
             return self::parseError();
@@ -72,8 +69,7 @@ abstract class JsonRPC
      * Returns an array of response/error objects when multiple queries are made.
      * Returns null when no response is necessary.
      */
-    private function processBatchRequests($input)
-    {
+    private function processBatchRequests($input) {
         $replies = array();
 
         foreach ($input as $request) {
@@ -101,8 +97,7 @@ abstract class JsonRPC
      * Returns a response object or an error object.
      * Returns null when no response is necessary.
      */
-    private function processRequest($request)
-    {
+    private function processRequest($request) {
         if (!is_array($request)) {
             return self::requestError();
         }
@@ -163,21 +158,17 @@ abstract class JsonRPC
      * @return array
      * Returns a response object or an error object.
      */
-    private function processQuery($id, $method, $arguments)
-    {
-        
-            if(method_exists($this,$method) ==false){
-               return self::error($id, -32601, "Method '{$method}' not found"  );    
-            }
-        
-            $result =  @call_user_func_array(array($this,$method),$arguments);
- 
-            if($result != false){
-               return self::response($id, $result);   
-            }
-        
-            
-        
+    private function processQuery($id, $method, $arguments) {
+
+        if (method_exists($this, $method) == false) {
+            return self::error($id, -32601, "Method '{$method}' not found");
+        }
+
+        $result = @call_user_func_array(array($this, $method), $arguments);
+
+        if ($result != false) {
+            return self::response($id, $result);
+        }
     }
 
     /**
@@ -189,14 +180,10 @@ abstract class JsonRPC
      * @param array $arguments
      * Array of arguments that will be passed to the method.
      */
-    private function processNotification($method, $arguments)
-    {
-            if(method_exists($this,$method)){
-               @call_user_func_array(array($this,$method),$arguments);
-            }
-            
-            
-         
+    private function processNotification($method, $arguments) {
+        if (method_exists($this, $method)) {
+            @call_user_func_array(array($this, $method), $arguments);
+        }
     }
 
     /**
@@ -206,8 +193,7 @@ abstract class JsonRPC
      * @return array
      * Returns an error object.
      */
-    private static function parseError()
-    {
+    private static function parseError() {
         return self::error(null, -32700, 'Parse error');
     }
 
@@ -222,8 +208,7 @@ abstract class JsonRPC
      * @return array
      * Returns an error object.
      */
-    private static function requestError($id = null)
-    {
+    private static function requestError($id = null) {
         return self::error($id, -32600, 'Invalid Request');
     }
 
@@ -247,8 +232,7 @@ abstract class JsonRPC
      * @return array
      * Returns an error object.
      */
-    private static function error($id, $code, $message, $data = null)
-    {
+    private static function error($id, $code, $message, $data = null) {
         $error = array(
             'code' => $code,
             'message' => $message
@@ -278,15 +262,12 @@ abstract class JsonRPC
      * @return array
      * Returns a response object.
      */
-    private static function response($id, $result)
-    {
+    private static function response($id, $result) {
         return array(
             'jsonrpc' => self::VERSION,
             'id' => $id,
             'result' => $result
         );
-    }  
-    
-} 
-  
- 
+    }
+
+}

@@ -1,6 +1,5 @@
 <?php
 
-
 error_reporting(E_ALL ^ E_NOTICE);
 
 define('_ROOT', __DIR__ . '/');
@@ -9,13 +8,10 @@ define('_BASEURL', $http . "://" . $_SERVER["HTTP_HOST"] . '/');
 
 define('UPLOAD_USERS', 'uploads/users/');
 
-
 date_default_timezone_set('Europe/Kiev');
 
 require_once _ROOT . 'vendor/autoload.php';
 include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
-
-
 
 // логгер
 $logger = new \Monolog\Logger("main");
@@ -31,7 +27,6 @@ $logger->pushHandler($h1);
 $logger->pushHandler($h2);
 $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
 
-
 //чтение  конфигурации
 $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 
@@ -41,13 +36,13 @@ $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass']);
 
 //проверяем соединение
-try{
-   $conn =   \ZDB\DB::getConnect();
-}catch(Throwable $e){
-        echo  'Ошибка  соединения с  БД. Подробности  в логе.';
-         
-        $logger->error($e);
-        die;
+try {
+    $conn = \ZDB\DB::getConnect();
+} catch (Throwable $e) {
+    echo 'Ошибка  соединения с  БД. Подробности  в логе.';
+
+    $logger->error($e);
+    die;
 }
 
 // автолоад классов  приложения
@@ -55,12 +50,10 @@ function app_autoload($className)
 {
     $className = str_replace("\\", "/", ltrim($className, '\\'));
 
-
-
     if (strpos($className, 'App/') === 0) {
         $file = __DIR__ . DIRECTORY_SEPARATOR . strtolower($className) . ".php";
         if (file_exists($file)) {
-            require_once($file);
+            require_once $file;
         } else {
             die('Неверный класс ' . $className);
         }
@@ -69,14 +62,6 @@ function app_autoload($className)
 
 spl_autoload_register('app_autoload');
 
-
 session_start();
 
-
-
- 
-
 @mkdir(_ROOT . "logs");
-
-
-

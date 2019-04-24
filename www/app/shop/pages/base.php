@@ -11,8 +11,7 @@ use \App\Application as App;
 use \App\System;
 use \App\Entity\User;
 
-class Base extends \Zippy\Html\WebPage
-{
+class Base extends \Zippy\Html\WebPage {
 
     public function __construct($params = null) {
 
@@ -21,17 +20,13 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars["islogined"] = $user->user_id > 0;
 
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/?p=/App/Shop/Pages/Order"))->setVisible(false);
-        ;
-
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Shop/Pages/Order"))->setVisible(false);
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Shop/Pages/Compare"))->setVisible(false);
 
         $this->op = System::getOptions("shop");
-        if (!is_array($this->op))
-            $this->op = array();
-    }
 
-    public function getPageInfo() {
-        return '';
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
+        $this->logo->setValue($this->op['logo']);
     }
 
     //вывод ошибки,  используется   в дочерних страницах
@@ -56,7 +51,8 @@ class Base extends \Zippy\Html\WebPage
     }
 
     protected function beforeRender() {
-        
+        $this->shopcart->setVisible(\App\Shop\Basket::getBasket()->isEmpty() == false);
+        $this->showcompare->setVisible(\App\Shop\CompareList::getCompareList()->isEmpty() == false);
     }
 
     protected function afterRender() {

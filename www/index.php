@@ -7,7 +7,7 @@ global $_config;
 if (strpos($_SERVER['REQUEST_URI'], 'index.php') > 1) {
     die('Сайт размещен не в  корневой папке');
 }
-;
+       
 try {
 
     if ($_COOKIE['remember'] && \App\System::getUser()->user_id == 0) {
@@ -21,19 +21,19 @@ try {
 
             \App\System::setUser($user);
 
-            $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
-            $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
+          //  $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
+         //   $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
         }
 
     }
 
-    if ($_config['common']['shop'] == 1) {
-        $app = new \App\Application('\App\Shop\Pages\Main');
-    } else {
-        $app = new \App\Application('\App\Pages\Main');
-    }
-
-    $app->Run();
+    $app = new \App\Application(); 
+  
+    if($_config['common']['shop'] == 1){
+        $app->Run('\App\Shop\Pages\Main');  
+    } else { 
+        $app->Run('\App\Pages\Main');
+    }  
 
     /* } catch (\ZippyERP\System\Exception $e) {
 Logger::getLogger("main")->error($e->getMessage(), e);

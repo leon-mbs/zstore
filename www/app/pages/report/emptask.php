@@ -16,8 +16,7 @@ use App\Helper as H;
 /**
  * Движение товара
  */
-class EmpTask extends \App\Pages\Base
-{
+class EmpTask extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();

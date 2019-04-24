@@ -8,8 +8,7 @@ namespace App\Entity;
  * @table=entrylist
  * @keyfield=entry_id
  */
-class Entry extends \ZCL\DB\Entity
-{
+class Entry extends \ZCL\DB\Entity {
 
     /**
      *

@@ -5,8 +5,7 @@ namespace App;
 /**
  * Класс  для  рендеринга  печатных  форм
  */
-class Report
-{
+class Report {
 
     private $_template;
 

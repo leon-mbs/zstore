@@ -8,8 +8,7 @@ use \App\System\System;
 use \Zippy\WebApplication as App;
 
 //страница  сравнения  товаров
-class Compare extends Base
-{
+class Compare extends Base {
 
     public function __construct() {
         parent::__construct();
@@ -25,8 +24,7 @@ class Compare extends Base
 }
 
 //класс  формирующий  таблицу  сравнения
-class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\Requestable
-{
+class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\Requestable {
 
     public function getContent($attributes) {
         $result = "<table class=\"table table-stripped table-responsive  \" >";

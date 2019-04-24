@@ -9,8 +9,7 @@ use App\Helper as H;
  * Класс-сущность  документ   оприходование  с  производства
  *
  */
-class ProdReceipt extends Document
-{
+class ProdReceipt extends Document {
 
     public function generateReport() {
 

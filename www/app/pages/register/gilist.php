@@ -23,8 +23,7 @@ use App\System;
 /**
  * журнал  продаж
  */
-class GIList extends \App\Pages\Base
-{
+class GIList extends \App\Pages\Base {
 
     private $_doc = null;
     public $_pays = array();
@@ -45,7 +44,7 @@ class GIList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные',5 => 'На выполнении', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные', 5 => 'На выполнении', 3 => 'Все'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
@@ -165,26 +164,24 @@ class GIList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
 
-        
+
         if ($sender->id == "inprocact") {
-           $this->_doc->updateStatus(Document::STATE_INPROCESS);       
-           
+            $this->_doc->updateStatus(Document::STATE_INPROCESS);
         }
         if ($sender->id == "bcloseact") {
-           $this->_doc->updateStatus(Document::STATE_EXECUTED);       
-           $this->_doc->updateStatus(Document::STATE_CLOSED);       
-           if ($order instanceof Document) {
+            $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            $this->_doc->updateStatus(Document::STATE_CLOSED);
+            if ($order instanceof Document) {
                 $order = $order->cast();
                 if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->datatag) { //если  все   выполнено и оплачено закрываем  заказ
                     $order->updateStatus(Document::STATE_CLOSED);
                     $msg .= " Заказ {$order->document_number} закрыт";
                 }
-            }           
-           
+            }
         }
-        
-        
-        
+
+
+
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
@@ -221,7 +218,7 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bsend->setVisible(false);
         }
-       // в работе
+        // в работе
         if ($state == Document::STATE_INPROCESS) {
 
             $this->statuspan->statusform->bcloseact->setVisible(true);
@@ -234,24 +231,21 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
-   
-   
-        
+
+
+
         //прячем лишнее
         if ($this->_doc->meta_name == 'GoodsIssue') {
 
             $this->statuspan->statusform->bcloseact->setVisible(false);
             $this->statuspan->statusform->inprocact->setVisible(false);
-        }        
+        }
         if ($this->_doc->meta_name == 'ServiceAct') {
 
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
-        }        
-        
-        
-        
+        }
     }
 
     //просмотр
@@ -375,8 +369,7 @@ class GIList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
-{
+class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 

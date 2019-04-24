@@ -31,13 +31,12 @@ use \Zippy\Binding\PropertyBinding as PB;
 use \App\System;
 use \Zippy\Html\Form\AutocompleteTextInput;
 
-class ProductList extends \App\Pages\Base
-{
+class ProductList extends \App\Pages\Base {
 
     private $rootgroup, $product;
     private $store = "";
     private $op;
-    public $group = null, $attrlist = array();
+    public $group = null, $attrlist = array(), $imglist = array();
 
     public function __construct() {
         parent::__construct();
@@ -66,9 +65,10 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
         $this->listpanel->add(new DataView('plist', new ProductDataSource($this), $this, 'plistOnRow'));
         $this->listpanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->listpanel->plist));
-        $this->listpanel->plist->setPageSize(25);
+        $this->listpanel->plist->setPageSize(15);
 
         $this->add(new Panel('editpanel'))->setVisible(false);
+
 
 
         $editform = $this->editpanel->add(new Form('editform'));
@@ -77,14 +77,14 @@ class ProductList extends \App\Pages\Base
         $editform->add(new TextInput('ename'));
         $editform->add(new TextInput('ecode'));
         $editform->add(new TextInput('eprice', 0));
-        $editform->add(new TextInput('eoldprice'));
+
         $editform->add(new TextArea('edescshort'));
         $editform->add(new TextArea('edescdet'));
 
         $editform->add(new DropDownChoice('emanuf', \App\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
         $editform->add(new DropDownChoice('egroup', \App\Shop\Entity\ProductGroup::findArray('groupname', 'group_id not in (select parent_id from shop_productgroups)', 'groupname')));
-        $editform->add(new \Zippy\Html\Image('prephoto'));
-        $editform->add(new File('photo'));
+
+
 
         $editform->add(new DataView('attrlist', new ArrayDataSource(new PB($this, 'attrlist')), $this, 'attrlistOnRow'));
         $editform->add(new CheckBox('edisabled'));
@@ -94,6 +94,14 @@ class ProductList extends \App\Pages\Base
         $editform->onSubmit($this, 'onSubmitForm');
 
         $this->listpanel->addnew->setVisible(false);
+
+
+        $this->add(new Panel('editimagepanel'))->setVisible(false);
+
+        $this->editimagepanel->add(new ClickLink('backtoproduct'))->onClick($this, 'backtoproductOnClick');
+        $this->editimagepanel->add(new Form('addimageform'))->onSubmit($this, "onImageSubmit");
+        $this->editimagepanel->addimageform->add(new \Zippy\Html\Form\File("photo"));
+        $this->editimagepanel->add(new DataView('imagelist', new ArrayDataSource(new PB($this, 'imglist')), $this, 'imglistOnRow'));
     }
 
     //загрузить дерево
@@ -140,12 +148,13 @@ class ProductList extends \App\Pages\Base
         $this->group = ProductGroup::load($nodeid);
         if ($this->group instanceof ProductGroup) {
             $ch = $this->group->getChildren();
+            //добавляем  только для  конечных групп
             $this->listpanel->addnew->setVisible(count($ch) == 0); // Добавляем  товар если  нет  дочерних груп у текущей]   
-            $this->listpanel->plist->Reload();
-            $this->attrlist = array();
-
-            $this->listpanel->setVisible(true);
         }
+        $this->listpanel->plist->Reload();
+        $this->attrlist = array();
+
+        $this->listpanel->setVisible(true);
     }
 
     public function searchformOnSubmit($sender) {
@@ -204,15 +213,18 @@ class ProductList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new ClickLink("lname", $this, "lnameOnClick"))->setValue($item->productname);
+        $row->add(new ClickLink("imedit", $this, "imeditOnClick"));
         // $row->add(new Label("lmanuf", $item->manufacturername));
         $row->add(new Label("ldescshort", $item->description));
         $row->add(new Label("lcode", $item->item_code));
         $row->add(new Label("lprice", $item->price));
+        //$qty=\App\Entity\Item::getQuantity($item->item_id) ;
         $row->add(new Label("lcnt", $item->qty));
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadimage.php?id=' . $item->image_id . '&t=t');
     }
 
 //редактирование
+
     public function lnameOnClick($sender) {
 
 
@@ -222,7 +234,6 @@ class ProductList extends \App\Pages\Base
         $this->product = $sender->getOwner()->getDataItem();
         $this->editpanel->editform->eitem->setAttribute('readonly', 'readonly');
 
-        $this->editpanel->editform->prephoto->setUrl('/loadimage.php?id=' . $this->product->image_id);
         $this->editpanel->editform->ename->setText($this->product->productname);
 
         $item = Item::load($this->product->item_id);
@@ -232,10 +243,11 @@ class ProductList extends \App\Pages\Base
         $this->editpanel->editform->ecode->setText($this->product->item_code);
         $this->editpanel->editform->edescshort->setText($this->product->description);
         $this->editpanel->editform->edescdet->setText($this->product->fulldescription);
+
+        $this->editpanel->editform->eprice->setText($this->product->price);
         $this->editpanel->editform->emanuf->setValue($this->product->manufacturer_id);
 
         $this->editpanel->editform->bdelete->setVisible(true);
-
 
         $this->editpanel->editform->edisabled->setChecked($this->product->deleted > 0);
 
@@ -247,7 +259,6 @@ class ProductList extends \App\Pages\Base
     public function onSubmitForm($sender) {
         $this->product->manufacturer_id = $sender->emanuf->getValue();
 
-
         $this->product->productname = $sender->ename->getText();
         $this->product->item_id = $sender->eitem->getKey();
         $this->product->item_code = $sender->ecode->getText();
@@ -255,45 +266,12 @@ class ProductList extends \App\Pages\Base
         $this->product->description = $sender->edescshort->getText();
         $this->product->fulldescription = $sender->edescdet->getText();
         $this->product->price = $sender->eprice->getText();
-        $this->product->oldprice = $sender->eoldprice->getText();
+        $this->product->chprice = "up";
+
         $this->product->deleted = $sender->edisabled->isChecked();
         if (strlen($this->product->productname) == 0) {
             $this->setError('Не указано имя');
             return;
-        }
-
-        $file = $sender->photo->getFile();
-        if (strlen($file["tmp_name"]) > 0) {
-            $imagedata = getimagesize($file["tmp_name"]);
-
-            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Неверный формат');
-                return;
-            }
-
-            if ($imagedata[0] * $imagedata[1] > 1000000) {
-                $this->setError('Слишком большой размер изображения');
-                return;
-            }
-            $r = ((double) $imagedata[0]) / $imagedata[1];
-            if ($r > 1.1 || $r < 0.9) {
-                $this->setError('Изображеие должно  быть примерно квадратным');
-                return;
-            }
-
-            $image = new \App\Entity\Image();
-            $image->content = file_get_contents($file['tmp_name']);
-            $image->mime = $imagedata['mime'];
-            $th = new \JBZoo\Image\Image($file['tmp_name']);
-            $th = $th->resize(256, 256);
-            //$th->save();
-            $image->thumb = $th->getBinary();
-
-            $image->save();
-            $this->product->image_id = $image->image_id;
-
-            $sender->prephoto->setUrl('/loadimage.php?id=' . $this->product->image_id);
-            $sender->clean();
         }
 
 
@@ -339,10 +317,91 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->setVisible(true);
     }
 
+    public function imeditOnClick($sender) {
+        $this->product = $sender->getOwner()->getDataItem();
+        $this->listpanel->setVisible(false);
+        $this->editimagepanel->setVisible(true);
+        $this->updateImages();
+    }
+
+    public function backtoproductOnClick($sender) {
+
+        $this->listpanel->setVisible(true);
+        $this->editimagepanel->setVisible(false);
+    }
+
+    public function onImageSubmit($sender) {
+
+        $file = $sender->photo->getFile();
+        if (strlen($file["tmp_name"]) > 0) {
+            $imagedata = getimagesize($file["tmp_name"]);
+
+            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
+                $this->setError('Неверный формат');
+                return;
+            }
+
+            if ($imagedata[0] * $imagedata[1] > 1000000) {
+                $this->setError('Слишком большой размер изображения');
+                return;
+            }
+            $r = ((double) $imagedata[0]) / $imagedata[1];
+            if ($r > 1.1 || $r < 0.9) {
+                $this->setError('Изображеие должно  быть примерно квадратным');
+                return;
+            }
+
+            $image = new \App\Entity\Image();
+            $image->content = file_get_contents($file['tmp_name']);
+            $image->mime = $imagedata['mime'];
+            $th = new \JBZoo\Image\Image($file['tmp_name']);
+            $th = $th->resize(256, 256);
+            //$th->save();
+            $image->thumb = $th->getBinary();
+
+            $image->save();
+            $this->product->images[] = $image->image_id;
+            $this->product->save();
+            $sender->clean();
+
+            $this->updateImages();
+        }
+    }
+
+    public function imglistOnRow($row) {
+        $image = $row->getDataItem();
+        $row->add(new \Zippy\html\Image("imgitem"))->setUrl("/simage/" . $image->image_id);
+        $row->add(new ClickLink("icover", $this, "icoverOnClick"))->setVisible($image->image_id != $this->product->image_id);
+        $row->add(new ClickLink("idel", $this, "idelOnClick"));
+    }
+
+    public function icoverOnClick($sender) {
+        $image = $sender->getOwner()->getDataItem();
+        $this->product->image_id = $image->image_id;
+        $this->product->save();
+        $this->listpanel->plist->Reload();
+        $this->updateImages();
+    }
+
+    public function idelOnClick($sender) {
+        $image = $sender->getOwner()->getDataItem();
+        $this->product->images = array_diff($this->product->images, array($image->image_id));
+        $this->product->save();
+        $this->updateImages();
+    }
+
+    public function updateImages() {
+        $this->imglist = array();
+
+        foreach ($this->product->images as $id) {
+            $this->imglist[] = \App\Entity\Image::load($id);
+        }
+        $this->editimagepanel->imagelist->Reload();
+    }
+
 }
 
-class ProductDataSource implements \Zippy\Interfaces\DataSource
-{
+class ProductDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 
@@ -354,7 +413,13 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " group_id = " . ($this->page->group == null ? 0 : $this->page->group->group_id );
+        $where = "1=1 ";
+        if ($this->page->group instanceof ProductGroup) {
+            $gr = sprintf('%08s', $this->page->group->group_id);
+
+            $where .= " and  group_id in (select group_id from shop_productgroups where mpath like '%{$gr}%' ) ";
+        }
+
         $st = $this->page->listpanel->searchform->skeyword->getText();
         $sm = $this->page->listpanel->searchform->smanuf->getValue();
         if ($sm > 0) {
@@ -405,8 +470,7 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 
 //компонент атрибута  товара
 //выводит  элементы  формы  ввода   в  зависимости  от  типа  атрибута
-class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest
-{
+class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest {
 
     protected $productattribute = null;
 

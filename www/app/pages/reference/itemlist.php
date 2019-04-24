@@ -20,11 +20,10 @@ use \App\Entity\ItemSet;
 use \App\Entity\Category;
 use \App\System;
 
-class ItemList extends \App\Pages\Base
-{
+class ItemList extends \App\Pages\Base {
 
     private $_item;
-    private $_pitem_id=0;
+    private $_pitem_id = 0;
     public $_itemset = array();
 
     public function __construct($add = false) {
@@ -94,17 +93,17 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
-        
+
         $this->add(new Panel('setpanel'))->setVisible(false);
-        $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this,'_itemset'), $this, 'itemsetlistOnRow'));
+        $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
         $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
-        $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');        
-        $this->setpanel->setform->add(new TextInput('editsqty',1));
-        
+        $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
+        $this->setpanel->setform->add(new TextInput('editsqty', 1));
+
         $this->setpanel->add(new Label('stitle'));
-        $this->setpanel->add(new ClickLink('backtolist',$this,"onback"));
-      
-        
+        $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
+
+
         if ($add == false) {
             $this->itemtable->itemlist->Reload();
         } else {
@@ -132,7 +131,7 @@ class ItemList extends \App\Pages\Base
         if ($item->price5 > 0)
             $plist[] = $item->price5;
         $row->add(new Label('price', implode(',', $plist)));
-       
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
@@ -224,83 +223,80 @@ class ItemList extends \App\Pages\Base
 
         $this->itemtable->itemlist->Reload();
     }
- 
-    
-
 
     //комплекты
     public function onback($sender) {
         $this->setpanel->setVisible(false);
         $this->itemtable->setVisible(true);
-        
     }
+
     public function setOnClick($sender) {
         $item = $sender->owner->getDataItem();
         $this->_pitem_id = $item->item_id;
-        $this->_itemset = ItemSet::find("pitem_id=".$item->item_id,"itemname");
+        $this->_itemset = ItemSet::find("pitem_id=" . $item->item_id, "itemname");
         $this->setpanel->setVisible(true);
         $this->itemtable->setVisible(false);
-        
+
         $this->setpanel->stitle->setText($item->itemname);
 
-        $this->_itemset = ItemSet::find("pitem_id=".$this->_pitem_id ,"itemname");
+        $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
         $this->setpanel->setlist->Reload();
-        
-    }    
-    
+    }
+
     public function itemsetlistOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('sname', $item->itemname));
         $row->add(new Label('scode', $item->item_code));
         $row->add(new Label('sqty', $item->qty));
         $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
-        
-    }    
-  
+    }
+
     public function OnAutoSet($sender) {
         $text = Item::qstr('%' . $sender->getText() . '%');
-        $in="(". $this->_pitem_id;
-        foreach($this->_itemset as $is){
-            $in.= ",". $is->item_id   ;
+        $in = "(" . $this->_pitem_id;
+        foreach ($this->_itemset as $is) {
+            $in .= "," . $is->item_id;
         }
-        
-        $in.=")";
+
+        $in .= ")";
         return Item::findArray('itemname', "item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1");
-     }   
+    }
+
     public function OnAddSet($sender) {
-        $id  = $sender->editsname->getKey();
-        if($id==0){
+        $id = $sender->editsname->getKey();
+        if ($id == 0) {
             $this->setError("Не  выбран товар");
             return;
         }
-        
+
         $qty = $sender->editsqty->getText();
-        
+
         $set = new ItemSet();
         $set->pitem_id = $this->_pitem_id;
-        $set->item_id  = $id;
-        $set->qty  = $qty;
-        
-        $set->save() ;
+        $set->item_id = $id;
+        $set->qty = $qty;
 
-        $this->_itemset = ItemSet::find("pitem_id=".$this->_pitem_id ,"itemname");
+        $set->save();
 
-        $this->setpanel->setlist->Reload(); 
+        $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
+
+        $this->setpanel->setlist->Reload();
         $sender->clean();
-    } 
+    }
+
     public function ondelset($sender) {
         $item = $sender->owner->getDataItem();
- 
-        ItemSet::delete($item->set_id); 
- 
-        $this->_itemset = ItemSet::find("pitem_id=".$this->_pitem_id ,"itemname");
-         
+
+        ItemSet::delete($item->set_id);
+
+        $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
+
         $this->setpanel->setlist->Reload();
-    }       
+    }
+
 }
 
-class ItemDataSource implements \Zippy\Interfaces\DataSource
-{
+class ItemDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 

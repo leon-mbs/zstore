@@ -16,8 +16,7 @@ use App\Helper as H;
 /**
  * Отчет по закупкам
  */
-class Income extends \App\Pages\Base
-{
+class Income extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();

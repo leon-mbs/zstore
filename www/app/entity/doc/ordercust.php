@@ -9,8 +9,7 @@ use App\Helper as H;
  * Класс-сущность  документ приходная  накладая
  *
  */
-class OrderCust extends Document
-{
+class OrderCust extends Document {
 
     public function generateReport() {
 

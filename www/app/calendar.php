@@ -4,8 +4,7 @@ namespace App;
 
 use \App\Application;
 
-class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Requestable
-{
+class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Requestable {
 
     private $event = null;
     private $data = array();
@@ -118,8 +117,7 @@ EOT;
 
 }
 
-class CEvent
-{
+class CEvent {
 
     public $id, $title, $start, $end, $color;
 

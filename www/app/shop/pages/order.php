@@ -16,8 +16,7 @@ use \App\Entity\Doc\Document;
 use \App\System;
 
 //страница формирования заказа  пользователя
-class Order extends Base
-{
+class Order extends Base {
 
     public $sum = 0;
     public $basketlist;
@@ -75,7 +74,7 @@ class Order extends Base
         $this->basketlist = Basket::getBasket()->list;
 
         if (Basket::getBasket()->isEmpty()) {
-            App::Redirect("\\App\\Shop\\Pages\\Catalog");
+            App::Redirect("\\App\\Shop\\Pages\\Catalog", 0);
         } else {
             $this->OnUpdate($this);
         }

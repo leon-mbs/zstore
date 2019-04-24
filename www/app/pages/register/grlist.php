@@ -23,8 +23,7 @@ use App\System;
 /**
  * журнал  закупок
  */
-class GRList extends \App\Pages\Base
-{
+class GRList extends \App\Pages\Base {
 
     private $_doc = null;
     public $_pays = array();
@@ -257,8 +256,7 @@ class GRList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
-{
+class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 
