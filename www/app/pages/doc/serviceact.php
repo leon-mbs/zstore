@@ -319,7 +319,7 @@ class ServiceAct extends \App\Pages\Base {
 
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText($total);
     }
 
     /**

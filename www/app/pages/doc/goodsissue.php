@@ -186,7 +186,7 @@ class GoodsIssue extends \App\Pages\Base {
                 }
             }
         }
-           $this->calcTotal();
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -408,7 +408,7 @@ class GoodsIssue extends \App\Pages\Base {
 
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText($total);
     }
 
     /**

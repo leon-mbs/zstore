@@ -26,7 +26,6 @@ class Prod extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-         $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('print', "movereport"));
@@ -67,7 +66,6 @@ class Prod extends \App\Pages\Base {
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-        $parea = $this->filter->parea->getValue();
 
 
 
@@ -78,11 +76,6 @@ class Prod extends \App\Pages\Base {
         $sum2 = 0;
         $conn = \ZDB\DB::getConnect();
 
-        $wparea =   "";
-        if($parea >0){
-             $wparea =   " and content like '%<parea>{$parea}</parea>%' ";
-        }
-        
         $sql = "
           select i.`itemname`,i.`item_code`,0-sum(e.`quantity`) as qty, 0-sum(e.`amount`) as summa
               from `entrylist_view`  e
@@ -91,7 +84,7 @@ class Prod extends \App\Pages\Base {
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <>0
                and d.`meta_name` in ('ProdIssue')
-               {$wparea}
+ 
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.`itemname`,i.`item_code`
@@ -141,13 +134,10 @@ class Prod extends \App\Pages\Base {
             "_detail" => $detail,
             "_detail2" => $detail2,
             'dateto' => date('d.m.Y', $to),
-            'parea' => null,
             'sum1' => $sum1,
             'sum2' => $sum2
         );
-        if($parea >0){
-             $header['parea']  =  $this->filter->parea->getValueName()  ;
-        }
+
         $report = new \App\Report('prod.tpl');
 
         $html = $report->generate($header);

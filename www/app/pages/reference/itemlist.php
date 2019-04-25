@@ -131,7 +131,6 @@ class ItemList extends \App\Pages\Base {
         if ($item->price5 > 0)
             $plist[] = $item->price5;
         $row->add(new Label('price', implode(',', $plist)));
-        $row->add(new Label('desc', $item->description));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');

@@ -14,14 +14,10 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-             Оприходование с  производства № {{document_number}} от {{date}} <br> 
+            <br><br> Оприходование с  производства № {{document_number}} от {{date}} <br><br><br>
         </td>
     </tr>
-    <tr>
-        <td   colspan="7" valign="middle">
-             Производственный участок  <b>{{pareaname}}</b><br>
-        </td>
-    </tr>
+
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
