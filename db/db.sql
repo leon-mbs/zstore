@@ -61,7 +61,7 @@ CREATE TABLE `documents` (
   KEY `document_date` (`document_date`),
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=innodb AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -102,7 +102,7 @@ CREATE TABLE `entrylist` (
   `entry_id` int(11) NOT NULL AUTO_INCREMENT,
   `document_id` int(11) NOT NULL,
   `amount` int(11) NOT NULL DEFAULT '0',
-  `quantity` int(11) DEFAULT '0',
+  `quantity` decimal(11,3) DEFAULT '0.000',
   `customer_id` int(11) DEFAULT '0',
   `employee_id` int(11) DEFAULT '0',
   `extcode` int(11) DEFAULT '0',
@@ -111,7 +111,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-) ENGINE=innodb AUTO_INCREMENT=90 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=92 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -297,6 +297,7 @@ CREATE TABLE `items` (
   `cat_id` int(11) NOT NULL,
   `msr` varchar(64) DEFAULT NULL,
   `disabled` tinyint(1) DEFAULT '0',
+  `minqty` decimal(11,3) NOT NULL,
   PRIMARY KEY (`item_id`),
   KEY `item_code` (`item_code`),
   KEY `itemname` (`itemname`),
@@ -318,6 +319,7 @@ SET character_set_client = utf8;
  1 AS `cat_id`,
  1 AS `cat_name`,
  1 AS `disabled`,
+ 1 AS `minqty`,
  1 AS `qty`*/;
 SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `messages`;
@@ -359,7 +361,7 @@ CREATE TABLE `metadata` (
   `disabled` tinyint(4) NOT NULL,
   `smartmenu` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`meta_id`)
-) ENGINE=innodb AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `notifies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -553,10 +555,10 @@ CREATE TABLE `store_stock` (
   `item_id` int(11) NOT NULL,
   `partion` int(11) DEFAULT NULL,
   `store_id` int(11) NOT NULL,
-  `qty` int(11) DEFAULT NULL,
+  `qty` decimal(11,3) DEFAULT '0.000',
   PRIMARY KEY (`stock_id`),
   KEY `item_id` (`item_id`)
-) ENGINE=innodb AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=innodb AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `store_stock_view`;
 /*!50001 DROP VIEW IF EXISTS `store_stock_view`*/;
@@ -695,7 +697,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `items_view` AS select `items`.`item_id` AS `item_id`,`items`.`itemname` AS `itemname`,`items`.`description` AS `description`,`items`.`detail` AS `detail`,`items`.`item_code` AS `item_code`,`items`.`bar_code` AS `bar_code`,`items`.`msr` AS `msr`,`items`.`cat_id` AS `cat_id`,`item_cat`.`cat_name` AS `cat_name`,`items`.`disabled` AS `disabled`,(select sum(`store_stock`.`qty`) from `store_stock` where (`store_stock`.`item_id` = `items`.`item_id`)) AS `qty` from (`items` left join `item_cat` on((`items`.`cat_id` = `item_cat`.`cat_id`))) */;
+/*!50001 VIEW `items_view` AS select `items`.`item_id` AS `item_id`,`items`.`itemname` AS `itemname`,`items`.`description` AS `description`,`items`.`detail` AS `detail`,`items`.`item_code` AS `item_code`,`items`.`bar_code` AS `bar_code`,`items`.`msr` AS `msr`,`items`.`cat_id` AS `cat_id`,`item_cat`.`cat_name` AS `cat_name`,`items`.`disabled` AS `disabled`,`items`.`minqty` AS `minqty`,(select sum(`store_stock`.`qty`) from `store_stock` where (`store_stock`.`item_id` = `items`.`item_id`)) AS `qty` from (`items` left join `item_cat` on((`items`.`cat_id` = `item_cat`.`cat_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

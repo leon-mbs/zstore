@@ -51,3 +51,4 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(41, 1, 'Возврат поставщику', 'RetCustIssue', 'Закупки', '', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(43, 1, 'Заказ (услуги)', 'ServiceOrder', 'Продажи', '', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(44, 1, 'Перекомплектация ТМЦ', 'TransItem', 'Склад', 'Документ  преобразовывает  ТМЦ с одной формы упаковки  в другую.   Например  с бочек  в литры или ящиков  в  пачки', 0, 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(45, 3, 'Производство', 'ProdList', '', '', 0, 1);
