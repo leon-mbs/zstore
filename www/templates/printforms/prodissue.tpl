@@ -15,7 +15,12 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-            <br><br> Списание на производство № {{document_number}} от {{date}} <br><br><br>
+              Списание на производство № {{document_number}} от {{date}} <br> 
+        </td>
+    </tr>
+    <tr>
+        <td   colspan="7" valign="middle">
+              Производственный участок  <b>{{pareaname}}</b><br>
         </td>
     </tr>
 

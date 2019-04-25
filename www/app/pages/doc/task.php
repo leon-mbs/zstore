@@ -487,6 +487,7 @@ class Task extends \App\Pages\Base {
 
         $this->_doc->headerdata = array(
             'parea' => $this->docform->parea->getValue(),
+            'pareaname' => $this->docform->parea->getValueName(),
             'pricetype' => $this->docform->pricetype->getValue(),
             'pricetypename' => $this->docform->pricetype->getValueName(),
             'store' => $this->docform->store->getValue(),
@@ -576,7 +577,7 @@ class Task extends \App\Pages\Base {
 
 
 
-        $this->docform->total->setText($total);
+        $this->docform->total->setText(round($total));
     }
 
     /**

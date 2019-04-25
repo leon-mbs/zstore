@@ -41,7 +41,7 @@ class ProdReceipt extends \App\Pages\Base {
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
-
+        $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
@@ -73,6 +73,7 @@ class ProdReceipt extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
+               $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
@@ -85,7 +86,7 @@ class ProdReceipt extends \App\Pages\Base {
             $this->_doc = Document::create('ProdReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
         }
-
+        $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -202,6 +203,8 @@ class ProdReceipt extends \App\Pages\Base {
 
 
         $this->_doc->headerdata = array(
+            'parea' => $this->docform->parea->getValue(),
+            'pareaname' => $this->docform->parea->getValueName(),
             'store' => $this->docform->store->getValue(),
             'planned' => $this->docform->planned->isChecked() ? 1 : 0,
             'total' => $this->docform->total->getText()
@@ -261,7 +264,7 @@ class ProdReceipt extends \App\Pages\Base {
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText($total);
+        $this->docform->total->setText(round($total));
     }
 
     /**

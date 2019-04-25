@@ -69,7 +69,7 @@ class TransItem extends \App\Pages\Base {
             $this->_doc = Document::create('TransItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
         }
-
+         
 
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
