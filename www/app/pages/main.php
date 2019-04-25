@@ -16,6 +16,10 @@ class Main extends Base {
         $this->add(new \App\Widgets\WPlannedDocs("wplanned"));
 
         $this->add(new \App\Widgets\WDebitors("wdebitors"));
+       
+        $this->add(new \App\Widgets\WNoliq("wnoliq"));
+       
+        $this->add(new \App\Widgets\WMinQty("wminqty"));
     }
 
     public function getPageInfo() {
