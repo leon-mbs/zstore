@@ -257,7 +257,7 @@ class ServiceOrder extends \App\Pages\Base {
 
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText($total);
+        $this->docform->total->setText(round($total));
     }
 
     /**

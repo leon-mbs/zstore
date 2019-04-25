@@ -99,7 +99,7 @@ class OrderCust extends \App\Pages\Base {
                 }
             }
         }
-
+        $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -300,7 +300,7 @@ class OrderCust extends \App\Pages\Base {
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText($total);
+        $this->docform->total->setText(round($total));
     }
 
     /**

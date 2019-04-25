@@ -31,6 +31,7 @@ class ProdReceipt extends Document {
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "document_number" => $this->document_number,
+            "pareaname" => $this->headerdata["pareaname"],
             "total" => $this->headerdata["total"]
         );
 

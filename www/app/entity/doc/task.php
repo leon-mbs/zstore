@@ -68,6 +68,7 @@ class Task extends Document {
         }
 
         $header = array('date' => date('d.m.Y', $this->document_date),
+            "pareaname" => $this->headerdata["pareaname"],
             "customer" => $this->customer_name,
             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
             "document_number" => $this->document_number,

@@ -1,21 +1,29 @@
  
 <table class="ctable"   border="0" class="ctable" cellpadding="2" cellspacing="0">
 
-    <tr style="font-size:larger; font-weight: bolder;">
+    <tr  >
         <td align="center" colspan="4">
-            Отчет по производству
+           <h4> Отчет по производству  </h4>
         </td>
     </tr>            
     <tr>
 
-        <td align="center" colspan="4">
-            Период с {{datefrom}} по {{dateto}}  <br>
+        <td   colspan="4">
+            Период с <b>{{datefrom}}</b> по <b>{{dateto}}</b>  <br>
         </td>
     </tr>
+    {{#parea}}
     <tr>
 
         <td   colspan="4">
-            Списано на производство 
+             Производственный участок <b>{{parea}}</b><br>
+        </td>
+    </tr>
+    {{/parea}}
+    <tr>
+
+        <td   colspan="4">
+           <h5> Списано на производство </h5>
         </td>
     </tr>
 
@@ -55,7 +63,7 @@
     <tr>
 
         <td   colspan="4"> <br>
-            Оприходовано  с  производства 
+           <h5>  Оприходовано  с  производства  </h5>
         </td>
     </tr>
 
