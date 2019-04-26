@@ -48,7 +48,7 @@ class WNoliq extends \Zippy\Html\PageFragment
         }
 
         $noliqlist = $this->add(new DataView('noliqlist', new ArrayDataSource($data), $this, 'noliqlistOnRow'));
-        $noliqlist->setPageSize(20);
+        $noliqlist->setPageSize(10);
         $this->add(new \Zippy\Html\DataList\Paginator("noliqpag", $noliqlist));
         $noliqlist->Reload();
 
@@ -63,7 +63,7 @@ class WNoliq extends \Zippy\Html\PageFragment
 
         $row->add(new Label('noliqitem', $item->storename));
         $row->add(new Label('noliqstore', $item->itemname));
-        $row->add(new Label('qty', $item->qty));
+        $row->add(new Label('qty', Helper::fqty($item->qty)));
     }
 
 }

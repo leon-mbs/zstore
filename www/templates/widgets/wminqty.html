@@ -1,24 +1,25 @@
 <html>
     <body>
 
-
-        <h5  >Неликвидные  товары </h5>
+        <div  class="shadow-sm  p-3 mb-3 bg-white rounded" > 
+        <h5  >Минимальное количество</h5>
 
         <table class="table   table-sm">
             <tr>
-                <th>Склад</th>
+               
                 <th>Товар</th>
-                <th>Кол.</th>
+                <th class="text-right">В наличии</th>
+                <th  class="text-right">Минимум</th>
             </tr>
             <tr zippy="mqlist">
-                <td zippy="noliqitem"></td>
-                <td zippy="noliqstore"></td>
-                <td zippy="now" style="text-align: right;" ></td>
+                <td zippy="itemname"></td>
+                <td zippy="qty"  class="text-right"></td>
+                <td zippy="minqty" class="text-right" ></td> 
             </tr>
         </table>
         <div zippy="mqpag"></div>
 
-
+       </div>
 
     </body>
 </html>

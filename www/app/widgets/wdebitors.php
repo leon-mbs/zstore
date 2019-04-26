@@ -43,7 +43,9 @@ class WDebitors extends \Zippy\Html\PageFragment {
 
         $list = $this->add(new DataView('ddoclist', new ArrayDataSource($data), $this, 'OnRow'));
         $list->Reload();
-
+         $list->setPageSize(10);
+        $this->add(new \Zippy\Html\DataList\Paginator("wdpag", $list));
+        $list->Reload();
         if (count($data) == 0 || $visible == false) {
             $this->setVisible(false);
         };

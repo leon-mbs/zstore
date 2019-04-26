@@ -49,6 +49,8 @@ class Users extends \App\Pages\Base {
 
         $this->editpan->editform->add(new CheckBox('editwplanned'));
         $this->editpan->editform->add(new CheckBox('editwdebitors'));
+        $this->editpan->editform->add(new CheckBox('editwnoliq'));
+        $this->editpan->editform->add(new CheckBox('editwminqty'));
 
 
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
@@ -88,6 +90,11 @@ class Users extends \App\Pages\Base {
             $this->editpan->editform->editwplanned->setChecked(true);
         if (strpos($this->user->widgets, 'wdebitors') !== false)
             $this->editpan->editform->editwdebitors->setChecked(true);
+        if (strpos($this->user->widgets, 'wnoliq') !== false)
+            $this->editpan->editform->editwnoliq->setChecked(true);
+        if (strpos($this->user->widgets, 'wminqty') !== false)
+            $this->editpan->editform->editwminqty->setChecked(true);
+            
     }
 
     public function saveOnClick($sender) {
@@ -144,6 +151,10 @@ class Users extends \App\Pages\Base {
             $widgets = $widgets . ',wplanned';
         if ($this->editpan->editform->editwdebitors->isChecked())
             $widgets = $widgets . ',wdebitors';
+        if ($this->editpan->editform->editwnoliq->isChecked())
+            $widgets = $widgets . ',wnoliq';
+        if ($this->editpan->editform->editwminqty->isChecked())
+            $widgets = $widgets . ',wminqty';
 
 
         $this->user->widgets = trim($widgets, ',');

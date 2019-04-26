@@ -22,18 +22,13 @@ class WMinQty extends \Zippy\Html\PageFragment
     public function __construct($id) {
         parent::__construct($id);
 
-        $visible = (strpos(System::getUser()->widgets, 'wnoliq') !== false || System::getUser()->userlogin == 'admin');
+        $visible = (strpos(System::getUser()->widgets, 'wminqty') !== false || System::getUser()->userlogin == 'admin');
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
 
 
-        $sql = "select distinct sv.qty, sv.`item_id`,sv.`store_id`, sv.`itemname`,sv.`storename` from `store_stock_view`   sv 
-         where  sv.qty >0  and   
-                 sv.stock_id not  in(select sc.stock_id  
-               from  entrylist_view  sc
-               where sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . " and document_date <  " . $conn->DBDate(time()) . "
-               and sc.quantity < 0 )  
+        $sql = "select itemname,qty,minqty from items_view where  qty <  minqty   
                  
                 
                  ";
@@ -48,7 +43,7 @@ class WMinQty extends \Zippy\Html\PageFragment
         }
 
         $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'noliqlistOnRow'));
-        $mqlist->setPageSize(20);
+        $mqlist->setPageSize(10);
         $this->add(new \Zippy\Html\DataList\Paginator("mqpag", $mqlist));
         $mqlist->Reload();
 
@@ -61,9 +56,9 @@ class WMinQty extends \Zippy\Html\PageFragment
     public function noliqlistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('noliqitem', $item->storename));
-        $row->add(new Label('noliqstore', $item->itemname));
-        $row->add(new Label('now', $item->qty));
+        $row->add(new Label('itemname', $item->itemname));
+        $row->add(new Label('qty', Helper::fqty($item->qty)));
+        $row->add(new Label('minqty', Helper::fqty($item->minqty)));
     }
 
 }
