@@ -36,6 +36,8 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
         }
 
         $doclist = $this->add(new DataView('pdoclist', new ArrayDataSource($data), $this, 'doclistOnRow'));
+        $doclist->setPageSize(10);
+        $this->add(new \Zippy\Html\DataList\Paginator("plpag", $doclist));
         $doclist->Reload();
 
         if (count($data) == 0 || $visible == false) {
