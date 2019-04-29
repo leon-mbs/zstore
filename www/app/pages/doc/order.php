@@ -231,17 +231,16 @@ class Order extends \App\Pages\Base {
 
         $this->calcTotal();
         $old = $this->_doc->cast();
-        $ttn = $this->_doc->headerdata['ttn']; //запоминаем ТТН если  была
-        $this->_doc->headerdata = array(
-            'ttn' => $ttn,
-            'delivery' => $this->docform->delivery->getValue(),
-            'delivery_name' => $this->docform->delivery->getValueName(),
-            'address' => $this->docform->address->getText(),
-            'email' => $this->docform->email->getText(),
-            'pricetype' => $this->docform->pricetype->getValue(),
-            'store' => $this->docform->store->getValue(),
-            'total' => $this->docform->total->getText()
-        );
+
+        $this->_doc->headerdata['delivery'] =   $this->docform->delivery->getValue();
+        $this->_doc->headerdata['delivery_name'] =   $this->docform->delivery->getValueName();
+        $this->_doc->headerdata['address'] =   $this->docform->address->getText();
+        $this->_doc->headerdata['email'] =   $this->docform->delivery->getText();
+        $this->_doc->headerdata['pricetype'] =   $this->docform->pricetype->getValue();
+        $this->_doc->headerdata['store'] =   $this->docform->store->getValue();
+        $this->_doc->headerdata['total'] =   $this->docform->pricetype->getText();
+        
+      
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

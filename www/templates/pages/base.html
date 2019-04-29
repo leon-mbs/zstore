@@ -36,23 +36,95 @@
 
 
     <body>
-        <style>
+  <style>
             .nav-link[data-toggle].collapsed:after {
                 content: "▾";
-            }
+            }   
+   
+   #main {
+  background: #fff;
+  padding-left: 0;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
 
-        </style>
+#main.toggled {
+  padding-left: 250px;
+}
+
+#main.toggled #sidebar {
+  width: 250px;
+}
+
+#main #sidebar {
+  z-index: 1000;
+  position: fixed;
+  left: 250px;
+  width: 0;
+  height: 100%;
+  margin-left: -250px;
+  overflow-y: auto;
+  background: #000;
+  color: #fff;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+#main #sidebar .sidebar-nav {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  
+}
+
+ 
+
+ 
+
+#main #page-content {
+  width: 100%;
+  padding: 15px;
+  overflow: auto;
+}
+
+@media (min-width: 768px) {
+  #main {
+    padding-left: 0;
+  }
+  #main .toggled {
+    padding-left: 250px;
+  }
+  #main .toggled #sidebar {
+    width: 250px;
+  }
+  #main .toggled #page-content {
+    position: relative;
+    margin-right: 0;
+  }
+  #main #sidebar {
+    width: 0;
+  }
+  #main #page-content {
+    padding: 20px;
+    position: relative;
+    padding: 0 0;
+  }
+}
+
+   
+   </style>
         <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
         <a id="top"></a>
 
         <div   class="container-fluid  ">
             <div class="row">
                 <div class="col-3">
-
-                    <h3>
-                        <a href="" data-target="#sidebar" data-toggle="collapse" class="d-md-none"><i class="fa fa-bars"></i></a>
-
-                    </h3>  
+           
                     <div class="d-none d-md-block">
                         <h3 class="text-info">  <a href="/">Zippy Склад</a>   </h3> 
                     </div>        
@@ -107,16 +179,13 @@
         </div>
 
 
-
-        <div style="margin-bottom:20px;" class="container-fluid">
-            <div  class="row">
-                <div class=" col-12 col-md-4   col-lg-3 col-xl-2 collapse collapse d-md-flex bg-dark pt-2 min-vh-100" id="sidebar">
-
-                    <ul class="nav flex-column flex-nowrap">
+         <main id="main" role="main"   >
+        <section id="sidebar">
+   <ul class="nav flex-column flex-nowrap">
 
 
                         <li class="nav-item">
-                            <a class="nav-link collapsed text-light" href="#submenu1" data-toggle="collapse" data-target="#submenu1">Документы  </a>
+                            <a class="nav-link collapsed text-light  " href="#submenu1" data-toggle="collapse" data-target="#submenu1" style="font-weight:bolder">Документы  </a>
                             <div class="collapse" id="submenu1" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav">
                                     {{{docmenu}}}
@@ -125,7 +194,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link collapsed text-light" href="#submenu2" data-toggle="collapse" data-target="#submenu2">Отчеты</a>
+                            <a class="nav-link collapsed text-light" href="#submenu2" data-toggle="collapse" data-target="#submenu2" style="font-weight:bolder">Отчеты</a>
                             <div class="collapse" id="submenu2" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav">
                                     {{{repmenu}}}
@@ -134,7 +203,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link collapsed text-light" href="#submenu3" data-toggle="collapse" data-target="#submenu3">Журналы</a>
+                            <a class="nav-link collapsed text-light" href="#submenu3" data-toggle="collapse" data-target="#submenu3" style="font-weight:bolder">Журналы и списки</a>
                             <div class="collapse" id="submenu3" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav">
                                     {{{regmenu}}}
@@ -143,7 +212,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link collapsed text-light" href="#submenu4" data-toggle="collapse" data-target="#submenu4">Справочники</a>
+                            <a class="nav-link collapsed text-light" href="#submenu4" data-toggle="collapse" data-target="#submenu4" style="font-weight:bolder">Справочники</a>
                             <div class="collapse" id="submenu4" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav">
                                     {{{refmenu}}}
@@ -153,7 +222,7 @@
                         </li>
                         {{#shop}}
                         <li class="nav-item">
-                            <a class="nav-link collapsed text-light" href="#submenu5" data-toggle="collapse" data-target="#submenu5">Онлайн-каталог</a>
+                            <a class="nav-link collapsed text-light" href="#submenu5" data-toggle="collapse" data-target="#submenu5" style="font-weight:bolder">Онлайн-каталог</a>
                             <div class="collapse" id="submenu5" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav">
                                     {{{shopmenu}}}
@@ -164,7 +233,35 @@
                         </li>
                         {{/shop}}
                         <li class="nav-item">
-                            <a class="nav-link collapsed text-light" href="#submenu6" data-toggle="collapse" data-target="#submenu6">Сервис</a>
+                            <a class="nav-link collapsed text-light" href="#submenu5" data-toggle="collapse" data-target="#submenu7" style="font-weight:bolder">Дополнения</a>
+                            <div class="collapse" id="submenu7" aria-expanded="false">
+                                <ul class="flex-column pl-2 nav" >
+                                     <li class="nav-item">
+                                    <a class="nav-link collapsed py-1 text-light" href="#opencart" data-toggle="collapse" data-target="#opencart">Опенкарт              </a>
+                                    <div class="collapse" id="opencart" aria-expanded="false">
+                                        <ul class="flex-column nav pl-4">
+                                            <li class="nav-item">
+                                              <a class="nav-link p-1 text-light" href="/index.php?p=App/Modules/OCStore/Options">Настройки</a>
+                                            </li>
+                                           <li class="nav-item">
+                                              <a class="nav-link p-1 text-light" href="/index.php?p=App/Modules/OCStore/Orders">Заказы</a>
+                                            </li>
+                                           <li class="nav-item">
+                                              <a class="nav-link p-1 text-light" href="/index.php?p=App/Modules/OCStore/Items">Товары</a>
+                                            </li>
+                                           
+                                            
+                                        </ul>
+                                   </div> 
+                                      </li>  
+                                </ul>
+                                
+                                
+                                
+                            </div>
+                        </li>                        
+                        <li class="nav-item">
+                            <a class="nav-link collapsed text-light" href="#submenu6" data-toggle="collapse" data-target="#submenu6" style="font-weight:bolder">Сервис</a>
                             <div class="collapse" id="submenu6" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav">
                                     <li class="nav-item"><a class="nav-link text-light py-0" href="/index.php?p=App/Pages/Users">Пользователи</a></li>
@@ -177,22 +274,23 @@
                         </li>
 
                     </ul>   
-                </div>
-                <div class="col-12    col-md-8 col-lg-9 col-xl-10  pt-2">
-
-                    {{#smart}}
-                    <div class="w-100 navbar nav justify-content-start d-none d-md-block">
+        </section>
+        <section id="page-content">
+            <div class="container-fluid">
+            
+                  {{#smart}}   
+                    <div class="w-100 navbar nav justify-content-start  ">
+                      <a href="#toggle-menu"  id="toggle-menu" class="btn btn-secondary btn-sm mr-2"><i class="fa fa-bars"></i></a>            
+                       
                         {{{smart}}}
                     </div>
                     {{/smart}}
                     <childpage/>
-                </div>
 
-
-
+                
             </div>
-        </div>
-
+        </section>
+    </main>
 
 
         <script>
@@ -231,6 +329,27 @@ $(window).scroll(function () {
     } else {
         $('#upbutton').stop(true, false).fadeOut('fast');
     }
+});
+
+
+$(document).ready(function() {
+ 
+  $("#toggle-menu").click(function(e) {
+    e.preventDefault();
+    $("#main").toggleClass("toggled");
+  });
+  
+ 
+    if($(window).width() > 768) {
+        $('#main').addClass('toggled');
+              
+    }else{
+  
+        $('#main').removeClass('toggled');
+         
+    }
+ 
+  
 });
         </script>
     </body>
