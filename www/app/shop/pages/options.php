@@ -14,8 +14,8 @@ use \Zippy\Html\Form\File;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
-use App\System;
-use App\Application as App;
+use \App\System;
+use \App\Application as App;
 use \App\Shop\Entity\Product;
 use \App\Entity\Item;
 
@@ -23,8 +23,9 @@ class Options extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (System::getUser()->acltype == 2) {
-            App::RedirectHome();
+        if(strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin'){
+            System::setErrorMsg('Нет права доступа к  этой странице'); 
+             App::RedirectHome();
             return;
         }
 

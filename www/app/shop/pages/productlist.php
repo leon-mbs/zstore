@@ -40,8 +40,11 @@ class ProductList extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowCat('ProductList'))
+        if(strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin'){
+            System::setErrorMsg('Нет права доступа к  этой странице'); 
+             App::RedirectHome();
             return;
+        }
 
         $this->op = System::getOptions("shop");
         if (strlen($this->op['defcust']) == 0 || strlen($this->op['defstore']) == 0 || strlen($this->op['defpricetype']) == 0) {

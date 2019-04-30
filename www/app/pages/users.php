@@ -53,6 +53,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editwminqty'));
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
+        $this->editpan->editform->add(new CheckBox('editshop'));
 
 
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
@@ -99,6 +100,8 @@ class Users extends \App\Pages\Base {
 
         if (strpos($this->user->modules, 'ocstore') !== false)
             $this->editpan->editform->editocstore->setChecked(true);
+        if (strpos($this->user->modules, 'shop') !== false)
+            $this->editpan->editform->editshop->setChecked(true);
             
     }
 
@@ -165,6 +168,8 @@ class Users extends \App\Pages\Base {
         $this->user->widgets = trim($widgets, ',');
         
         $modules = "";
+        if ($this->editpan->editform->editshop->isChecked())
+            $modules = $modules . ',shop';
         if ($this->editpan->editform->editocstore->isChecked())
             $modules = $modules . ',ocstore';
         

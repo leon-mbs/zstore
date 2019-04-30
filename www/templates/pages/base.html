@@ -179,7 +179,7 @@
         </div>
 
 
-         <main id="main" role="main"   >
+         <main id="main" role="main"  class="toggled mb-4" >
         <section id="sidebar">
    <ul class="nav flex-column flex-nowrap">
 
@@ -232,12 +232,14 @@
                             </div>
                         </li>
                         {{/shop}}
+                        {{#ocstore}}
                         <li class="nav-item">
                             <a class="nav-link collapsed text-light" href="#submenu5" data-toggle="collapse" data-target="#submenu7" style="font-weight:bolder">Дополнения</a>
                             <div class="collapse" id="submenu7" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav" >
+                                     
                                      <li class="nav-item">
-                                    <a class="nav-link collapsed py-1 text-light" href="#opencart" data-toggle="collapse" data-target="#opencart">Опенкарт              </a>
+                                       <a class="nav-link collapsed py-1 text-light" href="#opencart" data-toggle="collapse" data-target="#opencart">Опенкарт              </a>
                                     <div class="collapse" id="opencart" aria-expanded="false">
                                         <ul class="flex-column nav pl-4">
                                             <li class="nav-item">
@@ -253,13 +255,15 @@
                                             
                                         </ul>
                                    </div> 
-                                      </li>  
+                                      </li> 
+                                     
                                 </ul>
                                 
                                 
                                 
                             </div>
-                        </li>                        
+                        </li> 
+                         {{/ocstore}}                         
                         <li class="nav-item">
                             <a class="nav-link collapsed text-light" href="#submenu6" data-toggle="collapse" data-target="#submenu6" style="font-weight:bolder">Сервис</a>
                             <div class="collapse" id="submenu6" aria-expanded="false">
@@ -340,14 +344,10 @@ $(document).ready(function() {
   });
   
  
-    if($(window).width() > 768) {
-        $('#main').addClass('toggled');
-              
-    }else{
-  
+    if($(window).width() <  768) {
         $('#main').removeClass('toggled');
-         
-    }
+              
+    } 
  
   
 });

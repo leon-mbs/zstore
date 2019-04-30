@@ -57,7 +57,11 @@ class Base extends \Zippy\Html\WebPage {
 
         $this->_tvars["smart"] = Helper::generateSmartMenu();
         $this->_tvars["picontent"] = $pi;
-        $this->_tvars["shop"] = $_config['common']['shop'] == 1;
+        
+        
+        
+        $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
+        $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
     }
 
     public function LogoutClick($sender) {

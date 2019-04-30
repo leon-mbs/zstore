@@ -7,6 +7,7 @@ use \Zippy\Html\DataList\DataRow;
 use \Zippy\Binding\PropertyBinding as Bind;
 use \App\Shop\Entity\Manufacturer;
 use \App\Shop\Helper;
+use \App\System;
 
 //список   производителей
 class Manufacturers extends \App\Pages\Base {
@@ -15,8 +16,11 @@ class Manufacturers extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowCat('Manufacturers'))
+        if(strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin'){
+            System::setErrorMsg('Нет права доступа к  этой странице'); 
+             App::RedirectHome();
             return;
+        }
 
         $panellist = $this->add(new \Zippy\Html\Panel('list'));
 

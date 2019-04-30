@@ -201,8 +201,7 @@ class ItemList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditRef('ItemList'))
             return;
 
-        $this->itemtable->setVisible(true);
-        $this->itemdetail->setVisible(false);
+
 
         $this->_item->itemname = $this->itemdetail->editname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
@@ -212,20 +211,31 @@ class ItemList extends \App\Pages\Base {
         $this->_item->price4 = $this->itemdetail->editprice4->getText();
         $this->_item->price5 = $this->itemdetail->editprice5->getText();
 
-        $this->_item->item_code = $this->itemdetail->editcode->getText();
+        $this->_item->item_code = trim($this->itemdetail->editcode->getText());
 
-        $this->_item->bar_code = $this->itemdetail->editbarcode->getText();
+        $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         ;
         $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
-        ;
-
+        
+        //проверка  уникальности артикула
+        if(strlen($this->_item->item_code) >0){
+          $code = Item::qstr($this->_item->item_code);
+          $cnt=Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
+          if($cnt > 0){
+              $this->setError('Такой  артикул уже существует');
+              return;
+          }
+        }
         $this->_item->Save();
 
         $this->itemtable->itemlist->Reload();
+        
+        $this->itemtable->setVisible(true);
+        $this->itemdetail->setVisible(false);        
     }
 
     //комплекты
