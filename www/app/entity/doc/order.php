@@ -45,7 +45,7 @@ class Order extends \App\Entity\Doc\Document {
             "delivery" => $this->headerdata["delivery_name"],
             "notes" => $this->notes,
             "document_number" => $this->document_number,
-            "total" => $this->headerdata["total"]
+            "total" => $this->amount
         );
         if ($this->headerdata["delivery"] == 2 || $this->headerdata["delivery"] == 3) {
             $header['delivery'] = $header['delivery'] . '. по адресу: ' . $this->headerdata["address"];

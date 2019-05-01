@@ -53,6 +53,7 @@ class Options extends \App\Pages\Base
         );
 
         $json = Helper::do_curl_request($url, $fields);
+        if($json ===false) return;
         $data = json_decode($json);
 
         if (strlen($data->error) > 0) {
@@ -98,7 +99,7 @@ class Options extends \App\Pages\Base
             $this->setError('Не задан  контрагент');
             return;
         }
-        if ($pricetype == 0) {
+        if (strlen($pricetype) < 2) {
             $this->setError('Не указан тип  цены');
             return;
         }

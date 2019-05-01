@@ -29,7 +29,11 @@ class Helper
 
         //execute post
         $result = curl_exec($ch);
-
+        if($result ===false){
+          $error=curl_error($ch) ;    
+          \App\System::setErrorMsg($error) ;
+        }
+        
         //close connection
         curl_close($ch);
 

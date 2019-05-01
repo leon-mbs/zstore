@@ -3,7 +3,7 @@
 </head>
 <body>
    <div class="row">
-            <div class="col-12 col-xl-10">
+            <div class="col-12 col-xl-10 shadow-sm    bg-white ">
 
                 <h3>Импорт заказов</h3>
 
@@ -20,8 +20,9 @@
                         </select>
        
 
-                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
-
+                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  " value="Загрузить">
+                    <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
+  
                     </form>
                 </div>
      
@@ -29,11 +30,13 @@
                 <table class="table   table-sm   ">
                     <tr>
 
+                      
                         <th>Номер</th>
                         <th>Дата</th>
                      
                         <th>Клиент</th>
                         <th class="text-right">Сумма </th>
+                        <th  > Комментарий</th>
                    
                       
                
@@ -42,11 +45,13 @@
                     </tr>  
                     <tr zippy="neworderslist">
 
+                       
                         <td zippy="number"></td>
                         <td class="text-nowrap" zippy="date"></td>
                    
                         <td zippy="customer"    ></td>
                         <td zippy="amount" class="text-right"  ></td>
+                        <td zippy="comment"    ></td>
                     
                         
 
@@ -55,77 +60,59 @@
 
                 </table>
                 <div class="navbar nav">
-                    <form zippy="importform" class="form-inline ">
- 
-       
-
-                        <input type="submit" class="  btn btn-outline-success  " value="Импортировать">
-
-                    </form>
+                    <a zippy="importbtn" class="  btn btn-outline-success  ">Импортировать</a>
+                   
                 </div>
             </div>
-         <div class="col-12 col-xl-10">
+         <div class="col-12 col-xl-10   shadow-sm    bg-white">
 
-                <h3>Обновление статусов  в магазине</h3>
-
+                <h3>Экспорт статусов в магазин</h3>
                 <div class="navbar nav">
-                    <form zippy="filter2" class="form-inline ">
- 
-                        <label   for="statusstore">Статус на складе </label>
-                        
-                        <select class="form-control mr-2" zippy="statusstore">
-                          <option value="0">Не  выбран</option>
-                        </select>
-       
-
-                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
-
-                    </form>
-                </div>
-     
-
+                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Обновить</a>
+                   
+                </div> 
+                 <form zippy="updateform"  >
                 <table class="table   table-sm   ">
                     <tr>
-
+                         <th style="width:30px"> </th>
                         <th>Номер</th>
+                        <th>OC Номер</th>
                         <th>Дата</th>
                      
                         <th>Клиент</th>
                         <th class="text-right">Сумма </th>
-                   
-                      
-               
-
-
+                        <th  >Статус </th>
+                         
+     
                     </tr>  
                     <tr zippy="orderslist">
-
+                         <td  ><input type="checkbox" zippy="ch"></td>
                         <td zippy="number2"></td>
+                        <td zippy="number3"></td>
                         <td class="text-nowrap" zippy="date2"></td>
                    
                         <td zippy="customer2"    ></td>
                         <td zippy="amount2" class="text-right"  ></td>
-                    
-                        
-
+                        <td zippy="state"    ></td>
+                         
 
                     </tr>
 
                 </table>
-                <div class="navbar nav">
-                    <form zippy="updateform" class="form-inline ">
- 
-                      <label   for="statusshop">Статус в  магазине </label>
+               
+                   
+                     <div class="ml-2 form-group row  ">
+                       <label   for="statusshop">Статус в магазине </label>
                         
-                        <select class="form-control mr-2" zippy="stastatusshoptusstore">
-                          <option value="0">Не  выбран</option>
+                        <select class="  mr-2" zippy="estatus">
+                            <option value="0">Не выбран</option>
                         </select>
           
-
-                        <input type="submit" class="  btn btn-outline-success  " value="Обновить">
-
+                        <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  " value="Отправить">
+                                    <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+  </div>
                     </form>
-                </div>
+               
             </div>
         </div>  
 </body>
