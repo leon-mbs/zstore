@@ -310,7 +310,7 @@ class GoodsReceipt extends \App\Pages\Base {
 
         if ($this->docform->payed->isChecked() == true && $this->_doc->datatag < $this->_doc->amount) {
 
-            $this->_doc->addPayment(System::getUser()->user_id, $this->_doc->amount == $this->_doc->datatag);
+            $this->_doc->addPayment(System::getUser()->getUserName(),   $this->_doc->amount);
             $this->_doc->datatag = $this->_doc->amount;
         }
 

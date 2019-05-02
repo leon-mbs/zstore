@@ -174,7 +174,7 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
-        $this->itemdetail->editminqty->setText($this->_item->minqty);
+        $this->itemdetail->editminqty->setText( \App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
     }
