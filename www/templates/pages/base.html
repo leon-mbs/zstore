@@ -36,97 +36,25 @@
 
 
     <body>
-  <style>
+        <style>
             .nav-link[data-toggle].collapsed:after {
                 content: "▾";
-            }   
-   
-   #main {
-  background: #fff;
-  padding-left: 0;
-  -webkit-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
+            }
 
-#main.toggled {
-  padding-left: 250px;
-}
-
-#main.toggled #sidebar {
-  width: 250px;
-}
-
-#main #sidebar {
-  z-index: 1000;
-  position: fixed;
-  left: 250px;
-  width: 0;
-  height: 100%;
-  margin-left: -250px;
-  overflow-y: auto;
-  background: #000;
-  color: #fff;
-  -webkit-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-#main #sidebar .sidebar-nav {
-  position: absolute;
-  top: 0;
-  width: 250px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  
-}
-
- 
-
- 
-
-#main #page-content {
-  width: 100%;
-  padding: 15px;
-  overflow: auto;
-}
-
-@media (min-width: 768px) {
-  #main {
-    padding-left: 0;
-  }
-  #main .toggled {
-    padding-left: 250px;
-  }
-  #main .toggled #sidebar {
-    width: 250px;
-  }
-  #main .toggled #page-content {
-    position: relative;
-    margin-right: 0;
-  }
-  #main #sidebar {
-    width: 0;
-  }
-  #main #page-content {
-    padding: 20px;
-    position: relative;
-    padding: 0 0;
-  }
-}
-
-   
-   </style>
+        </style>
         <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
         <a id="top"></a>
 
         <div   class="container-fluid  ">
             <div class="row">
                 <div class="col-3">
-           
+
+                    <h3>
+                        <a href="" data-target="#sidebar" data-toggle="collapse" class="d-md-none"><i class="fa fa-bars"></i></a>
+
+                    </h3>  
                     <div class="d-none d-md-block">
-                        <h3 class="text-info">  <a   style="text-decoration:none;" href="/">Zippy Склад</a>   </h3> 
+                        <h3 class="text-info">  <a style="text-decoration:none;" href="/">Zippy Склад</a>   </h3> 
                     </div>        
                 </div>        
                 <div class="col-9">
@@ -179,12 +107,15 @@
         </div>
 
 
-         <main id="main" role="main"  class="toggled mb-4" >
-        <section id="sidebar">
-   <ul class="nav flex-column flex-nowrap">
+
+        <div style="margin-bottom:20px;" class="container-fluid">
+            <div  class="row">
+                <div class=" col-12 col-md-4   col-lg-3 col-xl-2 collapse collapse d-md-flex bg-dark pt-2 min-vh-100" id="sidebar">
+
+                    <ul class="nav flex-column flex-nowrap">
 
 
-                        <li class="nav-item">
+                       <li class="nav-item">
                             <a class="nav-link collapsed text-light  " href="#submenu1" data-toggle="collapse" data-target="#submenu1" style="font-weight:bolder">Документы  </a>
                             <div class="collapse" id="submenu1" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav">
@@ -278,23 +209,22 @@
                         </li>
 
                     </ul>   
-        </section>
-        <section id="page-content">
-            <div class="container-fluid">
-            
-                  {{#smart}}   
-                    <div class="w-100 navbar nav justify-content-start  ">
-                      <a href="#toggle-menu"  id="toggle-menu" class="btn btn-secondary btn-sm mr-2"><i class="fa fa-bars"></i></a>            
-                       
+                </div>
+                <div class="col-12    col-md-8 col-lg-9 col-xl-10  pt-2">
+
+                    {{#smart}}
+                    <div class="w-100 navbar nav justify-content-start d-none d-md-block">
                         {{{smart}}}
                     </div>
                     {{/smart}}
                     <childpage/>
+                </div>
 
-                
+
+
             </div>
-        </section>
-    </main>
+        </div>
+
 
 
         <script>
@@ -333,23 +263,6 @@ $(window).scroll(function () {
     } else {
         $('#upbutton').stop(true, false).fadeOut('fast');
     }
-});
-
-
-$(document).ready(function() {
- 
-  $("#toggle-menu").click(function(e) {
-    e.preventDefault();
-    $("#main").toggleClass("toggled");
-  });
-  
- 
-    if($(window).width() <  768) {
-        $('#main').removeClass('toggled');
-              
-    } 
- 
-  
 });
         </script>
     </body>
