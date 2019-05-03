@@ -74,7 +74,7 @@
                  <form zippy="updateform"  >
                 <table class="table   table-sm   ">
                     <tr>
-                         <th style="width:30px"> </th>
+                         <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"> </th>
                         <th>Номер</th>
                         <th>OC Номер</th>
                         <th>Дата</th>
@@ -86,7 +86,7 @@
      
                     </tr>  
                     <tr zippy="orderslist">
-                         <td  ><input type="checkbox" zippy="ch"></td>
+                         <td  ><input type="checkbox" zippy="ch" class="chc"></td>
                         <td zippy="number2"></td>
                         <td zippy="number3"></td>
                         <td class="text-nowrap" zippy="date2"></td>
@@ -109,11 +109,19 @@
                         </select>
           
                         <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  " value="Отправить">
-                                    <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
-  </div>
+                                <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+                        </div>
                     </form>
                
             </div>
-        </div>  
+        </div> 
+        
+        <script>
+         function chclick(){
+             var ch = $("#chall").prop('checked')
+             $('.chc').prop('checked', ch)  
+         }
+         
+        </script> 
 </body>
 </html>

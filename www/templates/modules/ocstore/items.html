@@ -6,23 +6,12 @@
             <div class="col-12 col-xl-10">
 
                 <h3>Экспорт новых товаров</h3>
-                <div class="navbar nav">
-   
-                     <form zippy="getnewform" class="form-inline ">
-
-           
-
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  " value="Загрузить">
-                    <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
-  
-                    </form>  
-                    
-                                 
+                 
             </div> 
                <table class="table   table-sm   ">
                     <tr>
 
-                      
+                         <th style="width:30px"> </th>
                         <th>Наименование</th>
                         <th>Артикул</th>
                      
@@ -37,7 +26,7 @@
                     </tr>  
                     <tr zippy="neworderslist">
 
-                       
+                          <td  ><input type="checkbox" zippy="ch"></td>
                         <td zippy="number"></td>
                         <td class="text-nowrap" zippy="date"></td>
                    
