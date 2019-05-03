@@ -6,12 +6,66 @@
             <div class="col-12 col-xl-10">
 
                 <h3>Экспорт новых товаров</h3>
-                
+                <div class="navbar nav">
+   
+                     <form zippy="getnewform" class="form-inline ">
+
+           
+
+                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  " value="Загрузить">
+                    <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
+  
+                    </form>  
+                    
+                                 
+            </div> 
+               <table class="table   table-sm   ">
+                    <tr>
+
+                      
+                        <th>Наименование</th>
+                        <th>Артикул</th>
+                     
+                        <th>Клиент</th>
+                        <th class="text-right">Сумма </th>
+                        <th  > Описание</th>
+                   
+                      
+               
+
+
+                    </tr>  
+                    <tr zippy="neworderslist">
+
+                       
+                        <td zippy="number"></td>
+                        <td class="text-nowrap" zippy="date"></td>
+                   
+                        <td zippy="customer"    ></td>
+                        <td zippy="amount" class="text-right"  ></td>
+                        <td zippy="comment"    ></td>
+                    
+                        
+
+
+                    </tr>
+
+                </table>
+                <div class="navbar nav">
+                    <a zippy="exportbtn" class="  btn btn-outline-success  ">Экспортировать</a>
+                   <img id="loader2" style="display:none" src="/assets/images/ajax-loader.gif">
+              
+                </div>            
             </div> 
             <div class="col-12 col-xl-10">
 
                 <h3>Обновление цен  и количеств</h3>
-                
+  
+                <div class="navbar nav">
+                        <a zippy="exportbtn" class="  btn btn-outline-success  ">Обновить</a>
+                 <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+           
+                </div>              
             </div> 
     </div> 
 </body>
