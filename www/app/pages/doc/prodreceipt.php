@@ -166,6 +166,9 @@ class ProdReceipt extends \App\Pages\Base {
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
+        if ($item->price == 0) {
+            $this->setWarn("Не указана цена");
+        }
 
 
 

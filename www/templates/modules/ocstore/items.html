@@ -6,33 +6,44 @@
             <div class="col-12 col-xl-10">
 
                 <h3>Экспорт новых товаров</h3>
-                 
-            </div> 
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline ">
+
+   
+
+                   <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  " value="Загрузить">
+                    <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
+  
+                    </form>
+                </div>                
+              
+                <form zippy="exportform"  >
                <table class="table   table-sm   ">
                     <tr>
 
-                         <th style="width:30px"> </th>
+                       <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"> </th>
+ 
                         <th>Наименование</th>
                         <th>Артикул</th>
-                     
-                        <th>Клиент</th>
-                        <th class="text-right">Сумма </th>
-                        <th  > Описание</th>
+                        <th class="text-right" >Кол.</th>
+                        <th class="text-right" >Цена</th>
+                        <th> Описание</th>
+                         
                    
                       
                
 
 
                     </tr>  
-                    <tr zippy="neworderslist">
+                    <tr zippy="newitemlist">
 
-                          <td  ><input type="checkbox" zippy="ch"></td>
-                        <td zippy="number"></td>
-                        <td class="text-nowrap" zippy="date"></td>
-                   
-                        <td zippy="customer"    ></td>
-                        <td zippy="amount" class="text-right"  ></td>
-                        <td zippy="comment"    ></td>
+                          <td  ><input type="checkbox" zippy="ch" class="chc"></td>
+                        <td zippy="name"></td>
+                        <td zippy="code"></td>
+                        <td zippy="qty"  class="text-right" ></td>
+                        <td zippy="price"  class="text-right" ></td>
+                        <td zippy="desc"   ></td>
+                       
                     
                         
 
@@ -40,22 +51,60 @@
                     </tr>
 
                 </table>
-                <div class="navbar nav">
-                    <a zippy="exportbtn" class="  btn btn-outline-success  ">Экспортировать</a>
-                   <img id="loader2" style="display:none" src="/assets/images/ajax-loader.gif">
-              
-                </div>            
+              <div class="ml-2 form-group row  ">
+                       <label   for="ecat">Категория в магазине </label>
+                        
+                        <select class="select2  mr-2" zippy="ecat">
+                            <option value="0">Не выбрана</option>
+                        </select>
+          
+                        &nbsp;<input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success btn-sm  " value="Отправить">
+                                <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+                        </div>
+                    </form>           
             </div> 
-            <div class="col-12 col-xl-10">
+            <div class="col-12 col-md-8 col-xl-6">
 
                 <h3>Обновление цен  и количеств</h3>
   
                 <div class="navbar nav">
-                        <a zippy="exportbtn" class="  btn btn-outline-success  ">Обновить</a>
+                  <a zippy="updateqty" class="  btn btn-outline-success  ">Обновить количества</a>
                  <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
-           
+                 &nbsp;&nbsp;      
+                   <a zippy="updateprice" class="  btn btn-outline-success  ">Обновить цены</a>
+                 <img id="loader4" style="display:none" src="/assets/images/ajax-loader.gif">
+                      
+                  
                 </div>              
             </div> 
+            
+           <div class="col-12 col-md-8 col-xl-6">
+
+                <h3>Загрузка  товаров с магазина </h3>
+  
+                <div class="navbar nav">
+                  <a zippy="getitems" class="  btn btn-outline-success  ">Загрузить</a>
+                  <img id="loader6" style="display:none" src="/assets/images/ajax-loader.gif">
+               
+                  
+                </div>              
+            </div>             
     </div> 
+             <script>  
+              
+              function check_updateqty(){
+           
+                $('#loader3').removeAttr('style');    
+              }
+              function check_updateprice(){
+           
+                $('#loader4').removeAttr('style');    
+              }
+              function check_getitems(){
+           
+                $('#loader6').removeAttr('style');    
+              }
+              
+          </script>  
 </body>
 </html>

@@ -30,8 +30,8 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
         $form->add(new TextArea('key', $modules['ockey']));
-        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList()));
-        $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList()));
+        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(),$modules['occustomer_id']));
+        $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(),$modules['ocpricetype']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $form->add(new SubmitButton('check'))->onClick($this, 'checkOnClick');
@@ -49,40 +49,54 @@ class Options extends \App\Pages\Base
 
         $fields = array(
             'username' => $apiname,
-            'key' => $key,
+            'key' => $key 
+             
         );
 
         $json = Helper::do_curl_request($url, $fields);
         if($json ===false) return;
-        $data = json_decode($json);
+        $data = json_decode($json,true);
 
-        if (strlen($data->error) > 0) {
-            $this->setError($data->error);
+
+         if (is_array($data['error']) ) {
+            $this->setError(implode(' ',$data['error']));
+        } else 
+        if (strlen($data['error']) > 0) {
+            $this->setError($data['error']);
         }
 
-        if (strlen($data->success) > 0) {
+        if (strlen($data['success']) > 0) {
 
-            if (strlen($data->api_token) > 0) { //версия 3
-                System::getSession()->octoken = "api_token=" . $data->api_token;
+            if (strlen($data['api_token']) > 0) { //версия 3
+                System::getSession()->octoken = "api_token=" . $data['api_token'];
             }
-            if (strlen($data->token) > 0) { //версия 2.3
-                System::getSession()->octoken = "token=" . $data->token;
+            if (strlen($data['token']) > 0) { //версия 2.3
+                System::getSession()->octoken = "token=" . $data['token'];
             }
 
             $this->setSuccess('Соединение успешно');
 
-            $url = $site . '/index.php?route=api/zstore/statuses/3&' . System::getSession()->octoken;
+            //загружаем список статусов
+            $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
             $json = Helper::do_curl_request($url, array());
-            $data = json_decode($json);
+            $data = json_decode($json,true);
 
-            if ($data->error != "") {
-                $this->setError($data->error);
+            if ($data['error'] != "") {
+                $this->setError($data['error']);
             } else {
-                $statuses = array();
-                foreach ($data->statuses as $st) {
-                    $statuses[$st->order_status_id] = $st->name;
-                }
-                System::getSession()->statuses = $statuses;
+  
+                System::getSession()->statuses = $data['statuses'];
+            }
+            //загружаем список категорий
+            $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
+            $json = Helper::do_curl_request($url, array());
+            $data = json_decode($json,true);
+
+            if ($data['error'] != "") {
+                $this->setError($data['error']);
+            } else {
+  
+                System::getSession()->cats = $data['cats'];
             }
 
         }

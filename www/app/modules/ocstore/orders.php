@@ -67,14 +67,15 @@ class Orders extends \App\Pages\Base
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url, $fields);
         if($json ===false) return;
-        $data = json_decode($json);
-        if ($data->error == "") {
+        $data = json_decode($json,true);
+        if ($data['error'] == "") {
           
             
             
-            foreach ($data->orders as $o) {
+            foreach ($data['orders'] as $ocorder) {
                 
-                 $ocorder  = unserialize(base64_decode($o)) ;
+                 //$ocorder  =unserialize(base64_decode($o )) ; 
+  
                  
                  $isorder =  Document::findCnt("meta_name='Order' and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
                  if ($isorder > 0) { //уже импортирован
@@ -95,7 +96,7 @@ class Orders extends \App\Pages\Base
 
             $this->neworderslist->Reload();
         } else {
-            $this->setError($data->error);
+            $this->setError($data['error']);
         }
     }
 
@@ -203,20 +204,21 @@ class Orders extends \App\Pages\Base
              $this->setError('Не выбран ни один ордер');
              return;
          }        
-         $data= base64_encode(serialize($elist)) ;
-         
+         $data=  json_encode($elist) ;
+          
         $fields = array(
-            'data' => $data,
+            'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateorder&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url, $fields);
         if($json ===false) return;
-        $data = json_decode($json);
-        if ($data->error != "") {
-            $this->setError($data->error);
+        $data = json_decode($json,true);
+  
+        if ($data['error'] != "") {
+            $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Импортировано ".count($elist)." заказов"); 
+        $this->setSuccess("Обновлено ".count($elist)." заказов"); 
          
          
          foreach($this->_eorders as $order) {
