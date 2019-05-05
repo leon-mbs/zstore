@@ -48,12 +48,7 @@ class Options extends \App\Pages\Base {
         $this->common->add(new TextInput('price5'));
         //  $this->common->add(new Date('closeddate'));
 
-
-        $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        $this->shop->add(new DropDownChoice('shopdefstore', \App\Entity\Store::getList()));
-        $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
-        $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
-
+    
 
 
         $common = System::getOptions("common");
@@ -80,14 +75,7 @@ class Options extends \App\Pages\Base {
 
         $this->onVal($this->common->useval);
 
-
-        $shop = System::getOptions("shop");
-        if (!is_array($shop))
-            $shop = array();
-        $this->shop->shopdefstore->setValue($shop['defstore']);
-        $this->shop->shopdefcust->setValue($shop['defcust']);
-        $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
-
+    
 
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
@@ -151,20 +139,7 @@ class Options extends \App\Pages\Base {
         $this->setSuccess('Сохранено');
     }
 
-    public function saveShopOnClick($sender) {
-        $shop = array();
-
-        //todo контрагент магазина, кому  нотификацию
-
-        $shop['defcust'] = $this->shop->shopdefcust->getValue();
-        $shop['defstore'] = $this->shop->shopdefstore->getValue();
-        $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
-
-
-        System::setOptions("shop", $shop);
-        $this->setSuccess('Сохранено');
-    }
-
+   
     public function filterOnSubmit($sender) {
 
         $where = "1<>1 ";

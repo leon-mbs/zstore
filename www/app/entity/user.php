@@ -55,6 +55,7 @@ class User extends Entity {
         $this->aclview = (string) ($xml->aclview[0]);
         $this->acledit = (string) ($xml->acledit[0]);
         $this->widgets = (string) ($xml->widgets[0]);
+        $this->modules = (string) ($xml->modules[0]);
 
 
         if (strlen($this->options) > 0)
@@ -76,6 +77,7 @@ class User extends Entity {
         $this->acl .= "<aclview>{$this->aclview}</aclview>";
         $this->acl .= "<acledit>{$this->acledit}</acledit>";
         $this->acl .= "<widgets>{$this->widgets}</widgets>";
+        $this->acl .= "<modules>{$this->modules}</modules>";
         $this->acl .= "</detail>";
 
         $this->options = serialize($this->_options);

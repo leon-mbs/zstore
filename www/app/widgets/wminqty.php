@@ -28,7 +28,7 @@ class WMinQty extends \Zippy\Html\PageFragment
         $data = array();
 
 
-        $sql = "select itemname,qty,minqty from items_view where  qty <  minqty   
+        $sql = "select item_id, itemname,qty,minqty from items_view where  qty <  minqty   
                  
                 
                  ";
@@ -38,8 +38,8 @@ class WMinQty extends \Zippy\Html\PageFragment
 
             foreach ($rs as $row) {
 
-                $data[$row['item_id'] . '_' . $row['store_id']] = new DataItem($row);
-            }
+                $data[$row['item_id']] = new DataItem($row);
+             }
         }
 
         $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'noliqlistOnRow'));

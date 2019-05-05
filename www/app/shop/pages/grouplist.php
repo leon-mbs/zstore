@@ -16,6 +16,7 @@ use \App\Shop\Entity\Product;
 use \App\Shop\Entity\ProductGroup;
 use \App\Shop\Entity\ProductAttribute;
 use \App\Shop\Helper;
+use \App\System;
 
 class GroupList extends \App\Pages\Base {
 
@@ -25,8 +26,12 @@ class GroupList extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowCat('GroupList'))
+  
+        if(strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin'){
+            System::setErrorMsg('Нет права доступа к  этой странице'); 
+             App::RedirectHome();
             return;
+        }
 
 
 

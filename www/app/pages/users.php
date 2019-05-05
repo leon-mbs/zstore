@@ -46,11 +46,14 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
 
-
+        //виджеты
         $this->editpan->editform->add(new CheckBox('editwplanned'));
         $this->editpan->editform->add(new CheckBox('editwdebitors'));
         $this->editpan->editform->add(new CheckBox('editwnoliq'));
         $this->editpan->editform->add(new CheckBox('editwminqty'));
+        //модули
+        $this->editpan->editform->add(new CheckBox('editocstore'));
+        $this->editpan->editform->add(new CheckBox('editshop'));
 
 
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
@@ -94,6 +97,11 @@ class Users extends \App\Pages\Base {
             $this->editpan->editform->editwnoliq->setChecked(true);
         if (strpos($this->user->widgets, 'wminqty') !== false)
             $this->editpan->editform->editwminqty->setChecked(true);
+
+        if (strpos($this->user->modules, 'ocstore') !== false)
+            $this->editpan->editform->editocstore->setChecked(true);
+        if (strpos($this->user->modules, 'shop') !== false)
+            $this->editpan->editform->editshop->setChecked(true);
             
     }
 
@@ -158,6 +166,15 @@ class Users extends \App\Pages\Base {
 
 
         $this->user->widgets = trim($widgets, ',');
+        
+        $modules = "";
+        if ($this->editpan->editform->editshop->isChecked())
+            $modules = $modules . ',shop';
+        if ($this->editpan->editform->editocstore->isChecked())
+            $modules = $modules . ',ocstore';
+        
+        $this->user->modules = trim($modules, ',');
+        
         $this->user->save();
         $this->listpan->userrow->Reload();
         $this->listpan->setVisible(true);

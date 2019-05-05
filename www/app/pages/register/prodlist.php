@@ -64,8 +64,8 @@ class ProdList extends \App\Pages\Base {
     public function filterOnSubmit($sender) {
 
     
-
-        $this->doclist->Reload(false);
+              $this->docview->setVisible(false);
+        $this->doclist->Reload();
     }
 
     public function doclistOnRow($row) {

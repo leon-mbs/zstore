@@ -230,7 +230,9 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
-
+        if ($item->price == 0) {
+            $this->setWarn("Не указана цена");
+        }
 
 
         unset($this->_itemlist[$this->_rowid]);
@@ -310,7 +312,7 @@ class GoodsReceipt extends \App\Pages\Base {
 
         if ($this->docform->payed->isChecked() == true && $this->_doc->datatag < $this->_doc->amount) {
 
-            $this->_doc->addPayment(System::getUser()->user_id, $this->_doc->amount == $this->_doc->datatag);
+            $this->_doc->addPayment(System::getUser()->getUserName(),   $this->_doc->amount);
             $this->_doc->datatag = $this->_doc->amount;
         }
 
