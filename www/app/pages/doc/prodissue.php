@@ -152,10 +152,13 @@ class ProdIssue extends \App\Pages\Base {
             $this->setError("Не выбран товар");
             return;
         }
-
+ 
         $stock = Stock::load($id);
         $stock->quantity = $this->editdetail->editquantity->getText();
-
+       $qstock=$this->editdetail->qtystock->getText();
+        if($stock->quantity > $qstock)  {
+            $this->setWarn('Недостаточное  количество на  складе');
+        }
 
         $stock->price = $this->editdetail->editprice->getText();
 

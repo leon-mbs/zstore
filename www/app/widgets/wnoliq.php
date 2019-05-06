@@ -32,7 +32,7 @@ class WNoliq extends \Zippy\Html\PageFragment
          where  sv.qty >0  and   
                  sv.stock_id not  in(select sc.stock_id  
                from  entrylist_view  sc
-               where sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . " and document_date <  " . $conn->DBDate(time()) . "
+               where sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  
                and sc.quantity < 0 )  
                  
                 
