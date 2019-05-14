@@ -19,7 +19,7 @@ CREATE TABLE `customers` (
   `email` varchar(64) DEFAULT NULL,
   `phone` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
-)  AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `customers_view`;
 /*!50001 DROP VIEW IF EXISTS `customers_view`*/;
@@ -61,7 +61,7 @@ CREATE TABLE `documents` (
   KEY `document_date` (`document_date`),
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=96 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -93,7 +93,7 @@ CREATE TABLE `employees` (
   `detail` mediumtext,
   `emp_name` varchar(64) NOT NULL,
   PRIMARY KEY (`employee_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `entrylist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -111,7 +111,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-)  AUTO_INCREMENT=92 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -122,7 +122,7 @@ CREATE TABLE `entrylist` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
+/*!50003 CREATE*/  /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -147,7 +147,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
+/*!50003 CREATE*/   /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -188,7 +188,7 @@ CREATE TABLE `equipments` (
   `detail` mediumtext,
   `description` text,
   PRIMARY KEY (`eq_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `eventlist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -204,7 +204,7 @@ CREATE TABLE `eventlist` (
   PRIMARY KEY (`event_id`),
   KEY `user_id` (`user_id`),
   KEY `customer_id` (`customer_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `eventlist_view`;
 /*!50001 DROP VIEW IF EXISTS `eventlist_view`*/;
@@ -250,7 +250,7 @@ CREATE TABLE `images` (
   `mime` varchar(16) DEFAULT NULL,
   `thumb` longblob,
   PRIMARY KEY (`image_id`)
-)  AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_cat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -259,7 +259,7 @@ CREATE TABLE `item_cat` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(255) NOT NULL,
   PRIMARY KEY (`cat_id`)
-)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -270,7 +270,7 @@ CREATE TABLE `item_set` (
   `pitem_id` int(11) DEFAULT '0',
   `qty` int(11) DEFAULT '0',
   PRIMARY KEY (`set_id`)
-)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set_view`;
 /*!50001 DROP VIEW IF EXISTS `item_set_view`*/;
@@ -290,19 +290,19 @@ DROP TABLE IF EXISTS `items`;
 CREATE TABLE `items` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,
   `itemname` varchar(255) DEFAULT NULL,
-  `description` text,
+  `description` varchar(255) DEFAULT NULL,
   `detail` mediumtext NOT NULL,
   `item_code` varchar(64) DEFAULT NULL,
   `bar_code` varchar(64) DEFAULT NULL,
   `cat_id` int(11) NOT NULL,
   `msr` varchar(64) DEFAULT NULL,
   `disabled` tinyint(1) DEFAULT '0',
-  `minqty` decimal(11,3) NOT NULL DEFAULT '0.000',
+  `minqty` decimal(11,3) DEFAULT '0.000',
   PRIMARY KEY (`item_id`),
   KEY `item_code` (`item_code`),
   KEY `itemname` (`itemname`),
   KEY `cat_id` (`cat_id`)
-)  AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `items_view`;
 /*!50001 DROP VIEW IF EXISTS `items_view`*/;
@@ -333,7 +333,7 @@ CREATE TABLE `messages` (
   `item_id` int(11) NOT NULL,
   `item_type` int(11) DEFAULT NULL,
   PRIMARY KEY (`message_id`)
-)  AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `messages_view`;
 /*!50001 DROP VIEW IF EXISTS `messages_view`*/;
@@ -361,7 +361,7 @@ CREATE TABLE `metadata` (
   `disabled` tinyint(4) NOT NULL,
   `smartmenu` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`meta_id`)
-)  AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `notifies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -374,7 +374,7 @@ CREATE TABLE `notifies` (
   `message` text NOT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+)   DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -392,7 +392,7 @@ CREATE TABLE `parealist` (
   `pa_id` int(11) NOT NULL AUTO_INCREMENT,
   `pa_name` varchar(255) NOT NULL,
   PRIMARY KEY (`pa_id`)
-)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -402,7 +402,7 @@ CREATE TABLE `services` (
   `service_name` varchar(255) NOT NULL,
   `detail` text,
   PRIMARY KEY (`service_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)   DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -415,7 +415,7 @@ CREATE TABLE `shop_attributes` (
   `valueslist` varchar(255) DEFAULT NULL,
   `showinlist` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`attribute_id`)
-)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -426,7 +426,7 @@ CREATE TABLE `shop_attributes_order` (
   `pg_id` int(11) NOT NULL,
   `ordern` int(11) NOT NULL,
   PRIMARY KEY (`order_id`)
-)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_attributes_view`*/;
@@ -451,7 +451,7 @@ CREATE TABLE `shop_attributevalues` (
   `attributevalue` varchar(255) NOT NULL,
   PRIMARY KEY (`attributevalue_id`),
   KEY `attribute_id` (`attribute_id`)
-)  AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_manufacturers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -461,7 +461,7 @@ CREATE TABLE `shop_manufacturers` (
   `manufacturername` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
   PRIMARY KEY (`manufacturer_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_prod_comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -476,7 +476,7 @@ CREATE TABLE `shop_prod_comments` (
   `moderated` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`comment_id`),
   KEY `product_id` (`product_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_productgroups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -488,7 +488,7 @@ CREATE TABLE `shop_productgroups` (
   `mpath` varchar(1024) DEFAULT NULL,
   `image_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_productgroups_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_productgroups_view`*/;
@@ -522,7 +522,7 @@ CREATE TABLE `shop_products` (
   `comments` int(11) DEFAULT '0',
   PRIMARY KEY (`product_id`),
   KEY `group_id` (`group_id`)
-)  AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_products_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_products_view`*/;
@@ -558,7 +558,7 @@ CREATE TABLE `store_stock` (
   `qty` decimal(11,3) DEFAULT '0.000',
   PRIMARY KEY (`stock_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `store_stock_view`;
 /*!50001 DROP VIEW IF EXISTS `store_stock_view`*/;
@@ -589,7 +589,7 @@ CREATE TABLE `stores` (
   `storename` varchar(64) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`store_id`)
-)  AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='????? ????????';
+)    DEFAULT CHARSET=utf8 COMMENT='????? ????????';
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -606,7 +606,7 @@ CREATE TABLE `users` (
   `options` text,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `userlogin` (`userlogin`)
-)  AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+)    DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `users_view`;
 /*!50001 DROP VIEW IF EXISTS `users_view`*/;

@@ -261,8 +261,10 @@ class GoodsIssue extends \App\Pages\Base {
 
         $stock = Stock::load($id);
         $stock->quantity = $this->editdetail->editquantity->getText();
-
-
+        $qstock=$this->editdetail->qtystock->getText();
+        if($stock->quantity > $qstock)  {
+            $this->setWarn('Недостаточное  количество на  складе');
+        }
         $stock->price = $this->editdetail->editprice->getText();
 
 
