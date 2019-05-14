@@ -9,7 +9,7 @@ INSERT INTO `users` ( `userlogin`, `userpass`, `createdon`, `email`, `acl`, `sma
 INSERT  INTO `stores` (  `storename`, `description`) VALUES(  'Основной склад', '');
 
  
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:13:{s:8:"firmname";s:20:"Наша  фирма";s:8:"defstore";s:2:"19";s:9:"qtydigits";s:1:"1";s:5:"cdoll";s:1:"2";s:5:"ceuro";s:1:"5";s:4:"crub";s:3:"0.4";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:6:"useset";b:0;s:6:"useval";b:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:13:{s:8:"firmname";s:20:"Наша  фирма";s:8:"defstore";s:2:"19";s:9:"qtydigits";s:1:"2";s:5:"cdoll";s:1:"2";s:5:"ceuro";s:1:"5";s:4:"crub";s:3:"0.4";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:6:"useset";b:0;s:6:"useval";b:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
 
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(1, 4, 'Склады', 'StoreList', 'Товары', '', 0, 0);
@@ -51,4 +51,4 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(41, 1, 'Возврат поставщику', 'RetCustIssue', 'Закупки', '', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(43, 1, 'Заказ (услуги)', 'ServiceOrder', 'Продажи', '', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(44, 1, 'Перекомплектация ТМЦ', 'TransItem', 'Склад', 'Документ  преобразовывает  ТМЦ с одной формы упаковки  в другую.   Например  с бочек  в литры или ящиков  в  пачки', 0, 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(45, 3, 'Производство', 'ProdList', '', '', 0, 1);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(45, 3, 'Производство', 'ProdList', '', '', 0, 0);

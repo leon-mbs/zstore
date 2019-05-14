@@ -163,12 +163,12 @@
                             </div>
                         </li>
                         {{/shop}}
-                        
+                         {{#ocstore}}
                         <li class="nav-item">
                             <a class="nav-link collapsed text-light" href="#submenu5" data-toggle="collapse" data-target="#submenu7" style="font-weight:bolder">Дополнения</a>
                             <div class="collapse" id="submenu7" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav" >
-                                      {{#ocstore}}
+                                     
                                      <li class="nav-item">
                                        <a class="nav-link collapsed py-1 text-light" href="#opencart" data-toggle="collapse" data-target="#opencart">Опенкарт              </a>
                                       <div class="collapse" id="opencart" aria-expanded="false">
@@ -187,7 +187,7 @@
                                         </ul>
                                    </div> 
                                       </li> 
-                                      {{/ocstore}} 
+                                      
                                      
                                       
                                 </ul>
@@ -195,7 +195,7 @@
                                 
                                 
                             </div>
-                        </li> 
+                        </li> {{/ocstore}} 
                                                  
                         <li class="nav-item">
                             <a class="nav-link collapsed text-light" href="#submenu6" data-toggle="collapse" data-target="#submenu6" style="font-weight:bolder">Сервис</a>
