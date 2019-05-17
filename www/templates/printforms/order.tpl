@@ -7,21 +7,21 @@
     <tr>
         <td></td>
         <td>Заказчик</td>
-        <td colspan="6">{{customername}}</td>
+        <td colspan="7">{{customername}}</td>
     </tr>
     <tr>
         <td></td>
         <td>Телефон</td>
-        <td colspan="6">{{phone}}</td>
+        <td colspan="7">{{phone}}</td>
     </tr>
     <tr>
         <td></td>
         <td>Email</td>
-        <td colspan="6">{{email}}</td>
+        <td colspan="7">{{email}}</td>
     </tr>
 
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
             Заказ № {{document_number}} от {{date}}   
         </td>
     </tr>
@@ -30,6 +30,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
         <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
+        <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  align="right">Кол.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  align="right">Цена</th>
@@ -40,6 +41,7 @@
         <td align="right">{{no}}</td>
         <td colspan="2">{{tovar_name}}</td>
         <td colspan="2">{{tovar_code}}</td>
+        <td  >{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
@@ -47,7 +49,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="7" align="right">Итого:</td>
+        <td style="border-top:1px #000 solid;" colspan="8" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
