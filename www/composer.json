@@ -10,6 +10,6 @@
         "dompdf/dompdf": "v0.8.2",
         "roave/security-advisories": "dev-master",
         "rmccue/requests": ">=1.0",
-        "leon-mbs/zippy": "2.1.6"
+        "leon-mbs/zippy": "dev-master"
     }
 }
