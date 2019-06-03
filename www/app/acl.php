@@ -101,24 +101,7 @@ class ACL {
         return false;
     }
 
-    //проверка  на  доступ  к  страницам онлайн каталога 
-    public static function checkShowCat($page) {
-        if (System::getUser()->acltype != 2)
-            return true;
-
-        self::load();
-
-        $meta_id = self::$_metas['5_' . $page];
-        $aclview = explode(',', System::getUser()->aclview);
-
-        if (in_array($meta_id, $aclview)) {
-            return true;
-        }
-
-        System::setErrorMsg('Нет права  просмотра этой страницы');
-        App::RedirectHome();
-        return false;
-    }
+  
 
     //проверка  на  доступ  к  документу 
     public static function checkShowDoc($doc, $inreg = false) {
