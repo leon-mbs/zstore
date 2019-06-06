@@ -24,7 +24,7 @@ class OrderCust extends Document {
                 "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
                 "msr" => $value['msr'],
-                "amount" => $value['amount']
+                "amount" => round($value['quantity'] * $value['price'])
             );
         }
 

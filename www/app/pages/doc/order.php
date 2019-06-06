@@ -105,6 +105,8 @@ class Order extends \App\Pages\Base {
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
             $this->docform->address->setText($this->_doc->headerdata['address']);
+            $this->docform->customer->setKey($this->_doc->customer_id);
+            $this->docform->customer->setText($this->_doc->customer_name);
 
             foreach ($this->_doc->detaildata as $_item) {
                 $item = new Item($_item);

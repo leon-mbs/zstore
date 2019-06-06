@@ -22,6 +22,7 @@
     <tr style="font-weight: bolder;">
         <th width="20px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">№</th>
         <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Название</th>
+        <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
 
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кол.</th>
@@ -31,6 +32,7 @@
     <tr>
         <td>{{no}}</td>
         <td>{{item_name}}</td>
+        <td>{{msr}}</td>
 
 
         <td align="right">{{quantity}}</td>

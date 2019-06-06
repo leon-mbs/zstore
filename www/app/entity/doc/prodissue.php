@@ -43,6 +43,7 @@ class ProdIssue extends Document {
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,
             "total" => $this->headerdata["total"],
+            "notes" => $this->notes,
             "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))
         );
 

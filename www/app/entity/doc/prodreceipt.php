@@ -24,7 +24,7 @@ class ProdReceipt extends Document {
                 "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
                 "msr" => $value['msr'],
-                "amount" => $value['amount']
+                "amount" => round($value['quantity'] * $value['price'])
             );
         }
 
@@ -32,6 +32,7 @@ class ProdReceipt extends Document {
             "_detail" => $detail,
             "document_number" => $this->document_number,
             "pareaname" => $this->headerdata["pareaname"],
+             "notes" => $this->notes,
             "total" => $this->headerdata["total"]
         );
 

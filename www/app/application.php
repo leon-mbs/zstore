@@ -128,14 +128,6 @@ class Application extends \Zippy\WebApplication {
         }
     }
 
-    /**
-     * редирект по URL
-     * 
-     * @param mixed $message
-     * @param mixed $uri
-     */
-    public static function RedirectURI($uri) {
-        self::$app->getResponse()->toPage($uri);
-    }
+    
 
 }
