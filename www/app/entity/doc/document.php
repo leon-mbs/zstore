@@ -238,7 +238,9 @@ class Document extends \ZCL\DB\Entity {
         $conn->StartTrans();
         // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
         $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
-
+        //удаляем освободившиеся стоки
+        $conn->Execute("delete from store_stock where stock_id not in (select stock_id from entrylist) ");
+        
         $conn->CompleteTrans();
 
 
