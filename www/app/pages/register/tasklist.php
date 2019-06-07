@@ -141,14 +141,17 @@ class TaskList extends \App\Pages\Base {
         $row->add(new Label('taskemps', implode(', ', $emps)));
         $row->add(new Label('taskclient', $task->customer_name));
         $row->add(new Label('taskamount', $task->amount));
-        $row->add(new Label('taskdebet', $task->amount - $task->datatag));
+        $row->add(new Label('taskdebet',  $task->amount - $task->datatag));
 
         $this->_tamount = $this->_tamount + $task->amount;
-        $this->_tdebet = $this->_tdebet + $task->amount - $task->datatag;
+        $this->_tdebet  = $this->_tdebet + $task->amount - $task->datatag;
 
         $row->add(new ClickLink('taskshow'))->onClick($this, 'taskshowOnClick');
         $row->add(new ClickLink('taskedit'))->onClick($this, 'taskeditOnClick');
         $row->add(new ClickLink('taskpay'))->onClick($this, 'taskpayOnClick');
+        if ($task->state == Document::STATE_CLOSED){
+            $row->taskedit->setVisible(false);  
+        } 
     }
 
     //панель кнопок
