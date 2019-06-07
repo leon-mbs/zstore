@@ -67,6 +67,7 @@ class Item extends \ZCL\DB\Entity {
     public function checkDelete() {
 
         $conn = \ZDB\DB::getConnect();
+        
         $sql = "  select count(*)  from  store_stock where   item_id = {$this->item_id}";
         $cnt = $conn->GetOne($sql);
         return ($cnt > 0) ? false : true;
