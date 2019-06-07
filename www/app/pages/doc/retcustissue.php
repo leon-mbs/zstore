@@ -110,7 +110,7 @@ class RetCustIssue extends \App\Pages\Base {
 
                         foreach ($basedoc->detaildata as $item) {
 
-                            $stock = \App\Entity\Stock::getStock($basedoc->headerdata['store'], $item['item_id'], $item['price']);
+                            $stock = \App\Entity\Stock::getStock($basedoc->headerdata['store'], $item['item_id'], $item['price'], $item['snumber']);
                             $stock->quantity = $item['quantity'];
                             $stock->price = $item['price'];
                             $this->_tovarlist[$stock->stock_id] = $stock;

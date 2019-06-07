@@ -36,6 +36,7 @@ class Options extends \App\Pages\Base {
 
 
 
+        $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
@@ -67,6 +68,7 @@ class Options extends \App\Pages\Base {
         $this->common->price4->setText($common['price4']);
         $this->common->price5->setText($common['price5']);
         $this->common->useset->setChecked($common['useset']);
+        $this->common->usesnumber->setChecked($common['usesnumber']);
         $this->common->useval->setChecked($common['useval']);
         // $this->common->closeddate->setDate($common['closeddate']);
 
@@ -129,6 +131,7 @@ class Options extends \App\Pages\Base {
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
         $common['useset'] = $this->common->useset->isChecked();
+        $common['usesnumber'] = $this->common->usesnumber->isChecked();
         $common['useval'] = $this->common->useval->isChecked();
 
         // $common['closeddate'] = $this->common->closeddate->getDate();

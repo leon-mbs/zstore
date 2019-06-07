@@ -54,6 +54,7 @@ class Base extends \Zippy\Html\WebPage {
         $options = System::getOptions('common');
 
         $this->_tvars["useset"] = $options['useset'] == 1;
+        $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
 
         $this->_tvars["smart"] = Helper::generateSmartMenu();
         $this->_tvars["picontent"] = $pi;

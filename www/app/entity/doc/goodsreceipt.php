@@ -49,7 +49,7 @@ class GoodsReceipt extends Document {
 
         //аналитика
         foreach ($this->detaildata as $row) {
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'], true);
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'],$row['snumber'], true);
 
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);

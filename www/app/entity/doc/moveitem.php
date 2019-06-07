@@ -31,7 +31,7 @@ class MoveItem extends Document {
 
             $sc->save();
 
-            $stockto = Stock::getStock($this->headerdata['storeto'], $value['item_id'], $value['partion'], true);
+            $stockto = Stock::getStock($this->headerdata['storeto'], $value['item_id'], $value['partion'],$value['snumber'],, true);
             $sc = new Entry($this->document_id, $value['quantity'] * $value['partion'], $value['quantity']);
             $sc->setStock($stockto->stock_id);
 
