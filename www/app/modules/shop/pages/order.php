@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
 use \Zippy\Html\Label;
 use \Zippy\Html\Image;
@@ -8,10 +8,10 @@ use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Form\TextArea;
 use \Zippy\Html\Form\DropDownChoice;
-use \App\Shop\Helper;
-use \App\Shop\Basket;
+use \App\Modules\Shop\Helper;
+use \App\Modules\Shop\Basket;
 use \App\Application as App;
-use \App\Shop\Entity\Product;
+use \App\Modules\Shop\Entity\Product;
 use \App\Entity\Doc\Document;
 use \App\System;
 
@@ -74,7 +74,7 @@ class Order extends Base {
         $this->basketlist = Basket::getBasket()->list;
 
         if (Basket::getBasket()->isEmpty()) {
-            App::Redirect("\\App\\Shop\\Pages\\Catalog", 0);
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", 0);
         } else {
             $this->OnUpdate($this);
         }
@@ -164,7 +164,7 @@ class Order extends Base {
     public function OnAddRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         $datarow->setDataItem($item);
-        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Shop\Pages\ProductView', $item->product_id))->setValue($item->productname);
+        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->product_id))->setValue($item->productname);
         $datarow->add(new Label('price', $item->price));
         $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity')));
         $datarow->add(new \Zippy\Html\Link\ClickLink('delete', $this, 'OnDelete'));

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
-use \App\Shop\Comparelist;
-use \App\Shop\Helper;
+use \App\Modules\Shop\Comparelist;
+use \App\Modules\Shop\Helper;
 use \App\System\System;
 use \Zippy\WebApplication as App;
 
@@ -87,7 +87,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         $comparelist->deleteProduct($params[0]);
         if ($comparelist->isEmpty()) {
             $filter = \App\Filter::getFilter("ProductCatalog");
-            App::Redirect("\\App\\Shop\\Pages\\Catalog", $filter->group_id);
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->group_id);
         }
     }
 

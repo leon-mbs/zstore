@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\DataList\DataRow;
 use \Zippy\Binding\PropertyBinding as Bind;
-use \App\Shop\Entity\Manufacturer;
-use \App\Shop\Helper;
+use \App\Modules\Shop\Entity\Manufacturer;
+use \App\Modules\Shop\Helper;
 use \App\System;
 
 //список   производителей
@@ -24,7 +24,7 @@ class Manufacturers extends \App\Pages\Base {
 
         $panellist = $this->add(new \Zippy\Html\Panel('list'));
 
-        $panellist->add(new DataView("manufacturerslist", new \ZCL\DB\EntityDataSource('\App\Shop\Entity\Manufacturer'), $this, 'OnAddRow'));
+        $panellist->add(new DataView("manufacturerslist", new \ZCL\DB\EntityDataSource('\App\Modules\Shop\Entity\Manufacturer'), $this, 'OnAddRow'));
         $panellist->add(new \Zippy\Html\Link\ClickLink('addnew', $this, 'OnAddClick'));
 
 

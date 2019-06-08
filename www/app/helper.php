@@ -90,9 +90,7 @@ class Helper {
             case 4 :
                 $dir = "Pages/Reference";
                 break;
-            case 5 :
-                $dir = "Shop/Pages";
-                break;
+            
         }
         $textmenu = "";
 
@@ -145,9 +143,7 @@ class Helper {
                 case 4 :
                     $dir = "Pages/Reference";
                     break;
-                case 5 :
-                    $dir = "Shop/Pages";
-                    break;
+                 
             }
 
             $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";

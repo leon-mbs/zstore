@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Shop;
+namespace App\Modules\Shop;
 
 use \ZCL\DB\DB;
-use \App\Shop\Entity\Product;
-use \App\Shop\Entity\ProductGroup;
-use \App\Shop\Entity\ProductAttribute;
+use \App\Modules\Shop\Entity\Product;
+use \App\Modules\Shop\Entity\ProductGroup;
+use \App\Modules\Shop\Entity\ProductAttribute;
 
 //класс  вспомагательных функций
 class Helper {

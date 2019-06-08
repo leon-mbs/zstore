@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop\Entity;
+namespace App\Modules\Shop\Entity;
 
 //класс-сущность  строки  детализации  заказа
 /**

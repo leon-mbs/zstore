@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop;
+namespace App\Modules\Shop;
 
 use \App\System;
 

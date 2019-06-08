@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop\Entity;
+namespace App\Modules\Shop\Entity;
 
 //класс-сущность  товара
 /**
@@ -118,7 +118,7 @@ class Product extends \ZCL\DB\Entity {
         $conn = \ZCL\DB\DB::getConnect();
 
         //$attrlist = ProductAttribute::find("group_id=" . $this->group_id);
-        $attrlist = \App\Shop\Helper::getProductAttributeListByGroup($this->group_id);
+        $attrlist = \App\Modules\Shop\Helper::getProductAttributeListByGroup($this->group_id);
 
         $ret = array();
         $attrvalues = array();

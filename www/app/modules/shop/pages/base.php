@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
 use \Zippy\Binding\PropertyBinding;
 use \Zippy\Html\Label;
@@ -20,8 +20,8 @@ class Base extends \Zippy\Html\WebPage {
         $user = System::getUser();
         $this->_tvars["islogined"] = $user->user_id > 0;
 
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Shop/Pages/Order"))->setVisible(false);
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Shop/Pages/Compare"))->setVisible(false);
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Order"))->setVisible(false);
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Compare"))->setVisible(false);
 
         $this->op = System::getOptions("shop");
 
@@ -51,8 +51,8 @@ class Base extends \Zippy\Html\WebPage {
     }
 
     protected function beforeRender() {
-        $this->shopcart->setVisible(\App\Shop\Basket::getBasket()->isEmpty() == false);
-        $this->showcompare->setVisible(\App\Shop\CompareList::getCompareList()->isEmpty() == false);
+        $this->shopcart->setVisible(\App\Modules\Shop\Basket::getBasket()->isEmpty() == false);
+        $this->showcompare->setVisible(\App\Modules\Shop\CompareList::getCompareList()->isEmpty() == false);
     }
 
     protected function afterRender() {

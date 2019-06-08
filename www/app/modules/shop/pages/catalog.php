@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
 use \Carbon\Carbon;
 use \Zippy\Html\DataList\ArrayDataSource;
@@ -14,9 +14,9 @@ use \Zippy\Html\Form\TextArea;
 use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\BookmarkableLink;
-use \App\Shop\Entity\ProductGroup;
-use \App\Shop\Entity\Product;
-use \App\Shop\Helper;
+use \App\Modules\Shop\Entity\ProductGroup;
+use \App\Modules\Shop\Entity\Product;
+use \App\Modules\Shop\Helper;
 use \App\Filter;
 
 class Catalog extends Base {
@@ -37,7 +37,7 @@ class Catalog extends Base {
         $this->sfilter->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
         $this->sfilter->add(new ManufacturerList('mlist'));
 
-        foreach (\App\Shop\Entity\Manufacturer::find("manufacturer_id in(select manufacturer_id from shop_products where deleted <> 1 and group_id={$this->group_id})", "manufacturername") as $key => $value) {
+        foreach (\App\Modules\Shop\Entity\Manufacturer::find("manufacturer_id in(select manufacturer_id from shop_products where deleted <> 1 and group_id={$this->group_id})", "manufacturername") as $key => $value) {
             $this->sfilter->mlist->AddCheckBox($key, false, $value->manufacturername);
         }
         $this->sfilter->add(new DataView('attrlist', new ArrayDataSource(Helper::getProductSearchAttributeListByGroup($this->group_id)), $this, 'attrlistOnRow'))->Reload();
@@ -80,7 +80,7 @@ class Catalog extends Base {
             }
         }
         $this->add(new Panel("recentlyp"))->setVisible(count($ra) > 0);
-        $this->recentlyp->add(new DataView('rlist', new EntityDataSource("\\App\\Shop\\Entity\\Product", "  product_id in (" . implode(",", $ra) . ")"), $this, 'rOnRow'));
+        $this->recentlyp->add(new DataView('rlist', new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  product_id in (" . implode(",", $ra) . ")"), $this, 'rOnRow'));
         if (count($ra) > 0) {
             $this->recentlyp->rlist->Reload();
         }
@@ -110,12 +110,12 @@ class Catalog extends Base {
 
     public function oncartdel($sender) {
         $item = $sender->getOwner()->getDataItem();
-        \App\Shop\Basket::getBasket()->deleteProduct($item->product_id);
+        \App\Modules\Shop\Basket::getBasket()->deleteProduct($item->product_id);
     }
 
     public function oncompdel($sender) {
         $item = $sender->getOwner()->getDataItem();
-        \App\Shop\CompareList::getCompareList()->deleteProduct($item->product_id);
+        \App\Modules\Shop\CompareList::getCompareList()->deleteProduct($item->product_id);
     }
 
     public function rOnRow($row) {
@@ -138,7 +138,7 @@ class Catalog extends Base {
 
         $product = $sender->getOwner()->getDataItem();
         $product->quantity = 1;
-        \App\Shop\Basket::getBasket()->addProduct($product);
+        \App\Modules\Shop\Basket::getBasket()->addProduct($product);
         $this->setSuccess("Товар  добавлен  в   корзину");
 
         $this->resetURL();

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
 use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
@@ -17,13 +17,13 @@ use \Zippy\Html\Link\SubmitLink;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\BookmarkableLink;
 use \ZCL\BT\Tree;
-use \App\Shop\Entity\ProductGroup;
-use \App\Shop\Entity\Product;
+use \App\Modules\Shop\Entity\ProductGroup;
+use \App\Modules\Shop\Entity\Product;
 use \App\Entity\Item;
 use \App\Entity\Stock;
-use \App\Shop\Entity\ProductAttribute;
-use \App\Shop\Entity\ProductAttributeValue;
-use \App\Shop\Helper;
+use \App\Modules\Shop\Entity\ProductAttribute;
+use \App\Modules\Shop\Entity\ProductAttributeValue;
+use \App\Modules\Shop\Helper;
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\DataList\ArrayDataSource;
 use \ZCL\DB\EntityDataSource;
@@ -61,7 +61,7 @@ class ProductList extends \App\Pages\Base {
         $this->listpanel->add(new Form('searchform'))->onSubmit($this, 'searchformOnSubmit');
         $this->listpanel->searchform->add(new TextInput('skeyword'));
         $this->listpanel->searchform->add(new CheckBox('sstatus'));
-        $this->listpanel->searchform->add(new DropDownChoice('smanuf', \App\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
+        $this->listpanel->searchform->add(new DropDownChoice('smanuf', \App\Modules\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
         $this->listpanel->add(new Form('sortform'));
         $this->listpanel->sortform->add(new DropDownChoice('sorting'))->onChange($this, 'sortingOnChange');
@@ -84,8 +84,8 @@ class ProductList extends \App\Pages\Base {
         $editform->add(new TextArea('edescshort'));
         $editform->add(new TextArea('edescdet'));
 
-        $editform->add(new DropDownChoice('emanuf', \App\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
-        $editform->add(new DropDownChoice('egroup', \App\Shop\Entity\ProductGroup::findArray('groupname', 'group_id not in (select parent_id from shop_productgroups)', 'groupname')));
+        $editform->add(new DropDownChoice('emanuf', \App\Modules\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
+        $editform->add(new DropDownChoice('egroup', \App\Modules\Shop\Entity\ProductGroup::findArray('groupname', 'group_id not in (select parent_id from shop_productgroups)', 'groupname')));
 
 
 

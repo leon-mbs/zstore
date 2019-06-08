@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
 use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\TextArea;

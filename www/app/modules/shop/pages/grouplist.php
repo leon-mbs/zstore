@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
 use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
@@ -12,10 +12,10 @@ use \Zippy\Html\Form\CheckBox;
 use \Zippy\Html\Link\SubmitLink;
 use \Zippy\Html\Link\ClickLink;
 use \ZCL\BT\Tree;
-use \App\Shop\Entity\Product;
-use \App\Shop\Entity\ProductGroup;
-use \App\Shop\Entity\ProductAttribute;
-use \App\Shop\Helper;
+use \App\Modules\Shop\Entity\Product;
+use \App\Modules\Shop\Entity\ProductGroup;
+use \App\Modules\Shop\Entity\ProductAttribute;
+use \App\Modules\Shop\Helper;
 use \App\System;
 
 class GroupList extends \App\Pages\Base {

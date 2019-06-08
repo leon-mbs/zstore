@@ -151,26 +151,15 @@
                                 </ul>
                             </div>
                         </li>
-                        {{#shop}}
-                        <li class="nav-item">
-                            <a class="nav-link collapsed text-light" href="#submenu5" data-toggle="collapse" data-target="#submenu5" style="font-weight:bolder">Онлайн-каталог</a>
-                            <div class="collapse" id="submenu5" aria-expanded="false">
-                                <ul class="flex-column pl-2 nav">
-                                    {{{shopmenu}}}
-                                    <li class="nav-item  " ><h6 class="text-center text-white-50">_______________</h6></li>
-                                    <li class="nav-item"><a class="nav-link text-light py-0" href="/index.php?p=App/Shop/Pages/Options">Настройки</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        {{/shop}}
-                         {{#ocstore}}
+                 
+                          {{#modules}} 
                         <li class="nav-item">
                             <a class="nav-link collapsed text-light" href="#submenu5" data-toggle="collapse" data-target="#submenu7" style="font-weight:bolder">Дополнения</a>
                             <div class="collapse" id="submenu7" aria-expanded="false">
                                 <ul class="flex-column pl-2 nav" >
-                                     
+                                      {{#ocstore}} 
                                      <li class="nav-item">
-                                       <a class="nav-link collapsed py-1 text-light" href="#opencart" data-toggle="collapse" data-target="#opencart">Опенкарт              </a>
+                                       <a class="nav-link collapsed py-1 text-light" href="#opencart" data-toggle="collapse" data-target="#opencart">Обмен  с  Опенкарт              </a>
                                       <div class="collapse" id="opencart" aria-expanded="false">
                                         <ul class="flex-column nav pl-4">
                                             <li class="nav-item">
@@ -187,7 +176,22 @@
                                         </ul>
                                    </div> 
                                       </li> 
-                                      
+                                      {{/ocstore}}   
+              {{#shop}}
+                        <li class="nav-item">
+                            <a class="nav-link collapsed text-light" href="#submenu5" data-toggle="collapse" data-target="#submenu5" style="font-weight:bolder">Онлайн-каталог</a>
+                            <div class="collapse" id="submenu5" aria-expanded="false">
+                                <ul class="flex-column pl-2 nav">
+                                    
+                                    <li class="nav-item"><a class="nav-link text-light py-0" href="/index.php?p=App/Modules/Shop/Pages/GroupList">Группы товаров</a></li>
+                                    <li class="nav-item"><a class="nav-link text-light py-0" href="/index.php?p=App/Modules/Shop/Pages/ProductList">Товары</a></li>
+                                    <li class="nav-item"><a class="nav-link text-light py-0" href="/index.php?p=App/Modules/Shop/Pages/Manufacturers">Бренды</a></li>
+                                    <li class="nav-item  " ><h6 class="text-center text-white-50">_______________</h6></li>
+                                    <li class="nav-item"><a class="nav-link text-light py-0" href="/index.php?p=App/Modules/Shop/Pages/Options">Настройки</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        {{/shop}}                           
                                      
                                       
                                 </ul>
@@ -195,8 +199,8 @@
                                 
                                 
                             </div>
-                        </li> {{/ocstore}} 
-                                                 
+                        </li>  
+                          {{/modules}}                          
                         <li class="nav-item">
                             <a class="nav-link collapsed text-light" href="#submenu6" data-toggle="collapse" data-target="#submenu6" style="font-weight:bolder">Сервис</a>
                             <div class="collapse" id="submenu6" aria-expanded="false">

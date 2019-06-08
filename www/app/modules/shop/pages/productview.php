@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Shop\Pages;
+namespace App\Modules\Shop\Pages;
 
 use \Zippy\Html\Label;
 use \Zippy\Binding\PropertyBinding;
 use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Form\TextArea;
 use \Zippy\Binding\PropertyBinding as Bind;
-use \App\Shop\Helper;
+use \App\Modules\Shop\Helper;
 use \Zippy\Html\Image;
-use \App\Shop\Entity\Product;
-use \App\Shop\Entity\ProductComment;
+use \App\Modules\Shop\Entity\Product;
+use \App\Modules\Shop\Entity\ProductComment;
 use \Zippy\Html\Panel;
 use \Zippy\Html\Link\RedirectLink;
 use \Zippy\Html\Link\ClickLink;
@@ -62,7 +62,7 @@ class ProductView extends Base {
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
         $this->add(new ClickLink('buy', $this, 'OnBuy'));
         $this->add(new ClickLink('addtocompare', $this, 'OnAddCompare'));
-        $this->add(new RedirectLink('compare', "\\App\\Shop\\Pages\\Compare"))->setVisible(false);
+        $this->add(new RedirectLink('compare', "\\App\\Modules\\Shop\\Pages\\Compare"))->setVisible(false);
 
         $form = $this->add(new \Zippy\Html\Form\Form('formcomment'));
         $form->onSubmit($this, 'OnComment');
@@ -125,7 +125,7 @@ class ProductView extends Base {
     public function OnBuy($sender) {
         $product = Product::load($this->product_id);
         $product->quantity = 1;
-        \App\Shop\Basket::getBasket()->addProduct($product);
+        \App\Modules\Shop\Basket::getBasket()->addProduct($product);
         $this->setSuccess("Товар  добавлен  в   корзину");
         //$this->resetURL();
         App::RedirectURI('/pcat/' . $product->group_id);
@@ -134,7 +134,7 @@ class ProductView extends Base {
     //добавить к форме сравнения
     public function OnAddCompare($sender) {
         $product = Product::load($this->product_id);
-        $comparelist = \App\Shop\CompareList::getCompareList();
+        $comparelist = \App\Modules\Shop\CompareList::getCompareList();
         if (false == $comparelist->addProduct($product)) {
             $this->setWarn('Добавлять можно только товары с одинаковой категорией');
             return;
@@ -146,7 +146,7 @@ class ProductView extends Base {
     public function OnComment($sender) {
 
 
-        $comment = new \App\Shop\Entity\ProductComment();
+        $comment = new \App\Modules\Shop\Entity\ProductComment();
         $comment->product_id = $this->product_id;
         $comment->author = $this->formcomment->nick->getText();
         $comment->comment = $this->formcomment->comment->getText();
@@ -172,7 +172,7 @@ class ProductView extends Base {
             App::addJavaScript("openComments();", true);
             $this->gotocomment = false;
         }
-        if (\App\Shop\CompareList::getCompareList()->hasProsuct($this->product_id)) {
+        if (\App\Modules\Shop\CompareList::getCompareList()->hasProsuct($this->product_id)) {
             $this->compare->setVisible(true);
             $this->addtocompare->setVisible(false);
         } else {
