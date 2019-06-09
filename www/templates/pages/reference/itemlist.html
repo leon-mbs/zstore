@@ -121,12 +121,14 @@
                             <input pattern="[0-9\.]+"  style="width: 100px;" class="form-control" zippy="editminqty"/>
                         </div>
                     </div> 
+                       {{#usesnumber}} 
                    <div class="form-group row">
                         <label class="col-5 col-form-label" for="editterm">Срок годности, мес.</label>
                         <div class="col-7"> 
                             <input pattern="[0-9]+"  style="width: 100px;" class="form-control" zippy="editterm"/>
                         </div>
                     </div> 
+                        {{/usesnumber}} 
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="editdisabled">Неактуален</label>

@@ -51,6 +51,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editwdebitors'));
         $this->editpan->editform->add(new CheckBox('editwnoliq'));
         $this->editpan->editform->add(new CheckBox('editwminqty'));
+        $this->editpan->editform->add(new CheckBox('editwsdate'));
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
@@ -99,6 +100,8 @@ class Users extends \App\Pages\Base {
             $this->editpan->editform->editwnoliq->setChecked(true);
         if (strpos($this->user->widgets, 'wminqty') !== false)
             $this->editpan->editform->editwminqty->setChecked(true);
+        if (strpos($this->user->widgets, 'wsdate') !== false)
+            $this->editpan->editform->editwsdate->setChecked(true);
 
         if (strpos($this->user->modules, 'ocstore') !== false)
             $this->editpan->editform->editocstore->setChecked(true);
@@ -166,6 +169,8 @@ class Users extends \App\Pages\Base {
             $widgets = $widgets . ',wnoliq';
         if ($this->editpan->editform->editwminqty->isChecked())
             $widgets = $widgets . ',wminqty';
+       if ($this->editpan->editform->editwsdate->isChecked())
+            $widgets = $widgets . ',wsdate';
 
 
         $this->user->widgets = trim($widgets, ',');

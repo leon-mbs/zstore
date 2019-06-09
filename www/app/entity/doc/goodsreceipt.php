@@ -18,8 +18,14 @@ class GoodsReceipt extends Document {
 
         $detail = array();
         foreach ($this->detaildata as $value) {
+            $name =$value['itemname'];
+            if(strlen($value['snumber'])>0){
+               $name .= ' ('.$value['snumber'].','.date('Y-m-d',$value['sdate']).')';  
+            }
+            
+            
             $detail[] = array("no" => $i++,
-                "itemname" => $value['itemname'],
+                "itemname" => $name,
                 "itemcode" => $value['item_code'],
                 "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
@@ -49,8 +55,8 @@ class GoodsReceipt extends Document {
 
         //аналитика
         foreach ($this->detaildata as $row) {
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'],$row['snumber'], true);
-
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'],$row['snumber'],$row['sdate'], true);
+            
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);

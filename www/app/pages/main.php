@@ -20,6 +20,8 @@ class Main extends Base {
         $this->add(new \App\Widgets\WNoliq("wnoliq"));
        
         $this->add(new \App\Widgets\WMinQty("wminqty"));
+        
+        $this->add(new \App\Widgets\Wsdate("wsdate"));
     }
 
     public function getPageInfo() {

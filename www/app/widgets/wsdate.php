@@ -14,15 +14,15 @@ use \App\Entity\Item;
 use \App\DataItem;
 
 /**
- * Виджет для минимального количества на  складе
+ * Виджет для просроченных товаров
  */
-class WMinQty extends \Zippy\Html\PageFragment
+class Wsdate extends \Zippy\Html\PageFragment
 {
 
     public function __construct($id) {
         parent::__construct($id);
 
-        $visible = (strpos(System::getUser()->widgets, 'wminqty') !== false || System::getUser()->userlogin == 'admin');
+        $visible = (strpos(System::getUser()->widgets, 'wsdate') !== false || System::getUser()->userlogin == 'admin');
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
@@ -42,7 +42,7 @@ class WMinQty extends \Zippy\Html\PageFragment
              }
         }
 
-        $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'mqlistOnRow'));
+        $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'sdlistOnRow'));
         $mqlist->setPageSize(10);
         $this->add(new \Zippy\Html\DataList\Paginator("mqpag", $mqlist));
         $mqlist->Reload();
@@ -53,7 +53,7 @@ class WMinQty extends \Zippy\Html\PageFragment
         };
     }
 
-    public function mqlistOnRow($row) {
+    public function sdlistOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('itemname', $item->itemname));

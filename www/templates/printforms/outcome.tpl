@@ -4,13 +4,13 @@
 
     <tr>
 
-        <td align="center" colspan="4">
+        <td align="center" colspan="5">
             Период с {{datefrom}} по {{dateto}}    <br> <br>
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="4">
+        <td align="center" colspan="5">
             Продажи  по товарам  <br><br>
         </td>
     </tr> 
@@ -20,6 +20,7 @@
 
         <th align="right" style="border: solid black 1px">Кол.</th>
         <th align="right" style="border: solid black 1px">На сумму</th>
+        <th align="right" style="border: solid black 1px">Прибыль</th>
 
     </tr>
     {{#_detail}}
@@ -31,6 +32,7 @@
 
         <td align="right">{{qty}}</td>
         <td align="right">{{summa}} </td>
+        <td align="right">{{navar}} </td>
 
     </tr>
     {{/_detail}}
@@ -38,27 +40,29 @@
 {{/_type1}}
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="4">
+    <td align="center" colspan="5">
         Продажи  по покупателям  <br> <br>
     </td>
 </tr> 
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px" >Наименование</th>
+    <th colspan="3" style="border: solid black 1px" >Наименование</th>
 
 
 
     <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th  > </th>
     <th  > </th>
 </tr>
 {{#_detail}}
 <tr>
 
 
-    <td colspan="2">{{name}}</td>
+    <td colspan="3">{{name}}</td>
 
 
 
     <td align="right">{{summa}} </td>
+    <td  >  </td>
     <td  >  </td>
 </tr>
 {{/_detail}}
@@ -66,7 +70,7 @@
 {{/_type2}}
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="4">
+    <td align="center" colspan="5">
         Продажи  по датам  <br> <br>
     </td>
 </tr> 
@@ -74,6 +78,7 @@
     <th  style="border: solid black 1px;width:120px;" >Дата</th>
 
     <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th  > </th>
     <th  > </th>
     <th  > </th>
 
@@ -89,6 +94,7 @@
     <td align="right">{{summa}} </td>
     <td  >  </td>
     <td  >  </td>
+    <td  >  </td>
 
 </tr>
 {{/_detail}}
@@ -96,7 +102,7 @@
 {{/_type3}}
 {{#_type4}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="4">
+    <td align="center" colspan="5">
         Услуги и работы  <br><br>
     </td>
 </tr> 
@@ -106,6 +112,7 @@
 
     <th align="right" style="border: solid black 1px;width:60px;">Кол.</th>
     <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th  > </th>
     <th  > </th>
 </tr>
 {{#_detail}}
@@ -117,6 +124,7 @@
 
     <td align="right">{{qty}}</td>
     <td align="right">{{summa}} </td>
+    <td  >  </td>
     <td  >  </td>
 </tr>
 {{/_detail}}

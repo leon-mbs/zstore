@@ -68,7 +68,10 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('editsnumber'));
+        $this->editdetail->add(new Date('editsdate'));
 
+        
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
@@ -173,6 +176,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('snumber', $item->snumber));
+        $row->add(new Label('sdate', $item->sdate >0 ?date('Y-m-d',$item->sdate):''));
 
         $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -188,6 +193,8 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
+        $this->editdetail->editsnumber->setText($item->snumber);
+        $this->editdetail->editsdate->setDate($item->sdate);
 
 
         $this->editdetail->edititem->setKey($item->item_id);
@@ -230,11 +237,18 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
+        
         if ($item->price == 0) {
             $this->setWarn("Не указана цена");
         }
-
-
+        $item->snumber = $this->editdetail->editsnumber->getText();
+        $item->sdate = $this->editdetail->editsdate->getDate();
+        if($item->sdate == false)$item->sdate='';
+        if(strlen($item->snumber)>0 && strlen($item->sdate )==0) {
+           $this->setError("К серии должна быть введена дата");
+            return;
+            
+        }
         unset($this->_itemlist[$this->_rowid]);
         $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
@@ -248,6 +262,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->editdetail->editsnumber->setText("");
+        $this->editdetail->editsdate->setText("");
     }
 
     public function cancelrowOnClick($sender) {

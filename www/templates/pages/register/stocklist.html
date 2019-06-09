@@ -65,7 +65,11 @@
                   <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
-                   
+                            {{#usesnumber}} 
+                        <th  class="text-right text-nowrap">Серия</th>
+                        <th  class="text-right text-nowrap">Дата серии</th>
+                        <th  class="text-right text-nowrap">Годен до    </th>
+                            {{/usesnumber}} 
                         <th  class="text-right text-nowrap">Зак. цена</th>
                         <th  class="text-right text-nowrap" >Кол.  <i style="font-size: smaller;" title="Актуальное, ожидаемое, зарезервированное" class="fa fa-info-circle "></i>                                                   </th>
                         <th  class="text-right text-nowrap">На сумму</th>
@@ -76,7 +80,11 @@
                     </tr>
                     <tr zippy="stocklist">
                         <td zippy="storename"></td>
-                 
+                         {{#usesnumber}} 
+                        <td zippy="snumber" class="text-right  "></td>
+                        <td zippy="sdate"   class="text-right  "></td>
+                        <td zippy="sedate"  class="text-right  "></td>
+                         {{/usesnumber}} 
                         <td zippy="partion" class="text-right  "></td>
                         <td zippy="qty" class="text-right  "></td>
                         <td zippy="amount" class="text-right  "></td>

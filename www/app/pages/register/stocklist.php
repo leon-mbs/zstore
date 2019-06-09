@@ -77,7 +77,21 @@ class StockList extends \App\Pages\Base {
     public function detailistOnRow($row) {
         $stock = $row->getDataItem();
         $row->add(new Label('storename', $stock->storename));
-   
+        $row->add(new Label('snumber', $stock->snumber));
+        $row->add(new Label('sdate', ''));
+        
+        $row->add(new Label('sedate', ''));
+        
+        
+        
+        if(strlen($stock->snumber)>0  ){
+            $row->sdate->setText(date('Y-m-d',$stock->sdate));
+            if($this->_item->term>0){
+               $term =   strtotime("+{$this->_item->term} month",$stock->sdate);
+               $row->sedate->setText(date('Y-m-d',$term));       
+                     
+            }
+        }
         $row->add(new Label('partion', $stock->partion));
         $stock->qty = $stock->qty - $stock->wqty + $stock->rqty;
         $q = "<span>" . H::fqty($stock->qty) . "</span>";
