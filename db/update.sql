@@ -1,1 +1,0 @@
-ALTER TABLE `store_stock` ADD `snumber` VARCHAR(64) NULL AFTER `qty`, ADD `sdate` DATE NULL AFTER `snumber`;

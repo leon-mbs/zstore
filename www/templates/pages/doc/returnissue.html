@@ -47,6 +47,10 @@
                         <tr>
                             <th>Название</th>
                             <th>Ед.</th>
+                               {{#usesnumber}} 
+                            <th  >Серия</th>
+                            <th  >Дата</th>
+                                 {{/usesnumber}} 
 
 
                             <th   class="text-right">Кол.</th>
@@ -58,6 +62,10 @@
                         <tr zippy="detail">
                             <td zippy="tovar"></td>
                             <td zippy="msr"></td>
+                                {{#usesnumber}} 
+                            <td zippy="snumber"></td>
+                            <td zippy="sdate"></td>
+                              {{/usesnumber}} 
 
 
                             <td zippy="quantity"  class="text-right"></td>
@@ -68,7 +76,14 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="4"  class="text-right">Всего:</td>
+                         
+                            {{^usesnumber}} 
+                              <td colspan="4" class="text-right">Всего:</td>
+                             {{/usesnumber}} 
+                             {{#usesnumber}} 
+                               <td colspan="6" class="text-right">Всего:</td>
+                             {{/usesnumber}} 
+                            
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>

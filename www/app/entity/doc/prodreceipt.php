@@ -18,8 +18,15 @@ class ProdReceipt extends Document {
 
         $detail = array();
         foreach ($this->detaildata as $value) {
+            
+           $name =$value['itemname'];
+            if(strlen($value['snumber'])>0){
+               $name .= ' ('.$value['snumber'].','.date('Y-m-d',$value['sdate']).')';  
+            }
+             
+            
             $detail[] = array("no" => $i++,
-                "itemname" => $value['itemname'],
+                "itemname" => $name,
                 "itemcode" => $value['item_code'],
                 "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],

@@ -7,17 +7,21 @@
         <table class="table   table-sm">
             <tr>
                
+                <th>Склад</th>
                 <th>Товар</th>
-                <th class="text-right">В наличии</th>
-                <th  class="text-right">Минимум</th>
+                <th>Серия</th>
+                <th>Годен до</th>
+                <th class="text-right">Кол.</th>
             </tr>
-            <tr zippy="mqlist">
+            <tr zippy="sdlist">
+                <td zippy="storename"></td>
                 <td zippy="itemname"></td>
-                <td zippy="qty"  class="text-right"></td>
-                <td zippy="minqty" class="text-right" ></td> 
+                <td zippy="snumber"   ></td>
+                <td zippy="edate"   ></td> 
+                <td zippy="qty" class="text-right"  ></td> 
             </tr>
         </table>
-        <div zippy="mqpag"></div>
+        <div zippy="sdpag"></div>
 
        </div>
 

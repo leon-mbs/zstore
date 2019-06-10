@@ -11,6 +11,7 @@ use \App\System;
 use \App\Entity\Doc\Document;
 use \Carbon\Carbon;
 use \App\Entity\Item;
+use \App\Entity\Stock;
 use \App\DataItem;
 
 /**
@@ -27,38 +28,51 @@ class Wsdate extends \Zippy\Html\PageFragment
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
 
-
-        $sql = "select item_id, itemname,qty,minqty from items_view where  qty <  minqty   
-                 
+         
+                  
                 
-                 ";
 
         if ($visible) {
-            $rs = $conn->Execute($sql);
+        $items= Item::find("item_id in(select item_id from store_stock where  sdate is not null)");
+        
+        $stock= Stock::find("sdate is not null");
 
-            foreach ($rs as $row) {
 
-                $data[$row['item_id']] = new DataItem($row);
+            foreach ($stock as $st) {
+                 $item =  $items[$st->item_id]   ;
+                 if($item->term >0){
+                     $edate =    strtotime("+{$item->term} month",$st->sdate); 
+                     if($edate < time()){
+                        $st->edate = $edate;
+                        $data[$row['item_id']] = $st; 
+                     }
+                 }
+                 
              }
         }
 
-        $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'sdlistOnRow'));
-        $mqlist->setPageSize(10);
-        $this->add(new \Zippy\Html\DataList\Paginator("mqpag", $mqlist));
-        $mqlist->Reload();
+        $sdlist = $this->add(new DataView('sdlist', new ArrayDataSource($data), $this, 'sdlistOnRow'));
+        $sdlist->setPageSize(10);
+        $this->add(new \Zippy\Html\DataList\Paginator("sdpag", $sdlist));
+        $sdlist->Reload();
 
-
+        unset($items);
+        unset($stock);
+         
         if (count($data) == 0 || $visible == false) {
             $this->setVisible(false);
         };
     }
 
     public function sdlistOnRow($row) {
-        $item = $row->getDataItem();
+        $stock = $row->getDataItem();
 
-        $row->add(new Label('itemname', $item->itemname));
-        $row->add(new Label('qty', Helper::fqty($item->qty)));
-        $row->add(new Label('minqty', Helper::fqty($item->minqty)));
+        $row->add(new Label('storename', $stock->storename));
+        $row->add(new Label('itemname', $stock->itemname));
+        $row->add(new Label('snumber', $stock->snumber));
+        $row->add(new Label('edate', date('Y-m-d',$stock->edate)));
+        $row->add(new Label('qty', Helper::fqty($stock->qty))) ;
+       
     }
 
 }

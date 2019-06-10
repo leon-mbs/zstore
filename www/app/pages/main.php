@@ -21,7 +21,7 @@ class Main extends Base {
        
         $this->add(new \App\Widgets\WMinQty("wminqty"));
         
-        $this->add(new \App\Widgets\Wsdate("wsdate"));
+        $this->add(new \App\Widgets\Wsdate("wsdate"))->setVisible($this->_tvars["usesnumber"]);
     }
 
     public function getPageInfo() {

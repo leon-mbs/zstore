@@ -23,8 +23,13 @@ class RetCustIssue extends Document {
             if (isset($detail[$value['item_id']])) {
                 $detail[$value['item_id']]['quantity'] += $value['quantity'];
             } else {
+                $name =$value['itemname'];
+                if(strlen($value['snumber'])>0){
+                   $name .= ' ('.$value['snumber'].','.date('Y-m-d',$value['sdate']).')';  
+                }
+                
                 $detail[] = array("no" => $i++,
-                    "tovar_name" => $value['itemname'],
+                    "tovar_name" => $name,
                     "tovar_code" => $value['item_code'],
                     "quantity" => H::fqty($value['quantity']),
                     "msr" => $value['msr'],
