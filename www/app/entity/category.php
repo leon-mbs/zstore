@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Клас-сущность  категория товара
+ * Класс-сущность  категория товара
  *
  * @table=item_cat
  * @keyfield=cat_id

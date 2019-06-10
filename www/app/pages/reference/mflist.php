@@ -2,20 +2,21 @@
 
 namespace App\Pages\Reference;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Panel;
-use App\Entity\Category;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Panel;
+use \App\Entity\Category;
+
 
 /**
-* справочник категорийтоваров
+* Справочник  денежных счетов
 */
-class CategoryList extends \App\Pages\Base {
+class MFList extends \App\Pages\Base {
 
     private $_category;
 
