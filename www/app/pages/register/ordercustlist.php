@@ -2,23 +2,23 @@
 
 namespace App\Pages\Register;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\DataList\Paginator;
 use \Zippy\Html\DataList\ArrayDataSource;
 use \Zippy\Binding\PropertyBinding as Prop;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Panel;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use App\Entity\Doc\Document;
-use App\Helper as H;
-use App\Application as App;
-use App\System;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Panel;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \App\Entity\Doc\Document;
+use \App\Helper as H;
+use \App\Application as App;
+use \App\System;
 
 /**
  * журнал  заявок

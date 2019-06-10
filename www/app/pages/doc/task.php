@@ -2,29 +2,29 @@
 
 namespace App\Pages\Doc;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\SubmitLink;
-use App\Entity\Customer;
-use App\Entity\Doc\Document;
-use App\Entity\Service;
-use App\Entity\Store;
-use App\Entity\Stock;
-use App\Entity\Prodarea;
-use App\Entity\Item;
-use App\Entity\Employee;
-use App\Entity\Equipment;
-use App\Application as App;
-use App\Helper as H;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\SubmitLink;
+use \App\Entity\Customer;
+use \App\Entity\Doc\Document;
+use \App\Entity\Service;
+use \App\Entity\Store;
+use \App\Entity\Stock;
+use \App\Entity\Prodarea;
+use \App\Entity\Item;
+use \App\Entity\Employee;
+use \App\Entity\Equipment;
+use \App\Application as App;
+use \App\Helper as H;
 
 /**
  * Страница  ввода  наряда  на  работу

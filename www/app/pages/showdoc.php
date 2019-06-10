@@ -2,7 +2,7 @@
 
 namespace App\Pages;
 
-use App\Entity\Doc\Document;
+use \App\Entity\Doc\Document;
 
 //страница  для  загрузки  файла экпорта
 class ShowDoc extends \Zippy\Html\WebPage {

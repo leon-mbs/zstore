@@ -2,20 +2,20 @@
 
 namespace App\Widgets;
 
-use Zippy\Binding\PropertyBinding as Prop;
-use Zippy\Html\DataList\ArrayDataSource;
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\TextArea;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\RedirectLink;
-use App\Entity\Doc\Document;
-use App\Helper;
-use App\Application as App;
-use App\System;
+use \Zippy\Binding\PropertyBinding as Prop;
+use \Zippy\Html\DataList\ArrayDataSource;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\TextArea;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\RedirectLink;
+use \App\Entity\Doc\Document;
+use \App\Helper;
+use \App\Application as App;
+use \App\System;
 
 /**
  * Виджет для  просмотра  документов

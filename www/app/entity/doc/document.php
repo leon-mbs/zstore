@@ -2,8 +2,8 @@
 
 namespace App\Entity\Doc;
 
-use App\System;
-use App\Helper;
+use \App\System;
+use \App\Helper;
 
 /**
  * Класс-сущность документ

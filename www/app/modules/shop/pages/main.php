@@ -3,11 +3,11 @@
 namespace App\Modules\Shop\Pages;
 
 use Carbon\Carbon;
-use Zippy\Html\DataList\ArrayDataSource;
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Label;
-use Zippy\Html\Panel;
-use Zippy\Html\Link\BookmarkableLink;
+use \Zippy\Html\DataList\ArrayDataSource;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Label;
+use \Zippy\Html\Panel;
+use \Zippy\Html\Link\BookmarkableLink;
 use \App\Modules\Shop\Entity\ProductGroup;
 use \App\Modules\Shop\Helper;
 use \ZCL\DB\EntityDataSource;

@@ -2,9 +2,9 @@
 
 namespace App\Entity\Doc;
 
-use App\Entity\Entry;
-use App\Helper as H;
-use App\Util;
+use \App\Entity\Entry;
+use \App\Helper as H;
+use \App\Util;
 
 /**
  * Класс-сущность  документ возврат  поставщику

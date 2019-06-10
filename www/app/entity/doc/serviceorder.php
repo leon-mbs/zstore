@@ -2,7 +2,7 @@
 
 namespace App\Entity\Doc;
 
-use App\Entity\Entry;
+use \App\Entity\Entry;
 
 /**
  * Класс-сущность  заказ  на  услуги

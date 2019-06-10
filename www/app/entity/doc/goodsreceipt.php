@@ -2,8 +2,8 @@
 
 namespace App\Entity\Doc;
 
-use App\Entity\Entry;
-use App\Helper as H;
+use \App\Entity\Entry;
+use \App\Helper as H;
 
 /**
  * Класс-сущность  документ приходная  накладая

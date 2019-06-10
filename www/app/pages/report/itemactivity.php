@@ -12,7 +12,7 @@ use \Zippy\Html\Panel;
 use \App\Entity\Item;
 use \App\Entity\Store;
 use \App\Helper as H;
-use App\Application as App;
+use \App\Application as App;
 
 /**
  * Движение товара

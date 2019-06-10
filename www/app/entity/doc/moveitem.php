@@ -2,10 +2,10 @@
 
 namespace App\Entity\Doc;
 
-use App\Entity\Entry;
-use App\Entity\Stock;
-use App\Entity\Store;
-use App\Helper as H;
+use \App\Entity\Entry;
+use \App\Entity\Stock;
+use \App\Entity\Store;
+use \App\Helper as H;
 
 /**
  * Класс-сущность  локумент перемещения товаров

@@ -2,14 +2,14 @@
 
 namespace App\Pages;
 
-use Zippy\Binding\PropertyBinding;
-use Zippy\Html\Label;
-use Zippy\Html\Panel;
-use Zippy\Html\Link\ClickLink;
-use App\Helper;
-use App\Application as App;
-use App\System;
-use App\Entity\User;
+use \Zippy\Binding\PropertyBinding;
+use \Zippy\Html\Label;
+use \Zippy\Html\Panel;
+use \Zippy\Html\Link\ClickLink;
+use \App\Helper;
+use \App\Application as App;
+use \App\System;
+use \App\Entity\User;
 
 class Base extends \Zippy\Html\WebPage {
 

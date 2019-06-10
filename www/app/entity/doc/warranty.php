@@ -2,7 +2,7 @@
 
 namespace App\Entity\Doc;
 
-use App\Helper as H;
+use \App\Helper as H;
 
 /**
  * Класс-сущность  документ гарантийного талон
