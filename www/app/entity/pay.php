@@ -13,6 +13,10 @@ class Pay extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->pl_id = 0;
+        $this->paydate = time();
     }
-
+    protected function afterLoad() {
+        $this->paydate = strtotime($this->paydate);
+        
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Entity\Doc;
 use \App\System;
 use \App\Helper;
 
+
 /**
  * Класс-сущность документ
  *
@@ -490,7 +491,6 @@ class Document extends \ZCL\DB\Entity {
             return "Есть связаные документы, удалите связи";
         }
 
-
         $f = $this->checkStates(array(Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
   
@@ -508,10 +508,8 @@ class Document extends \ZCL\DB\Entity {
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from docstatelog where document_id=".$this->document_id);
         $conn->Execute("delete from paylist where document_id=".$this->document_id);
-
          
     }    
-    
    
 
     /**
@@ -540,15 +538,7 @@ class Document extends \ZCL\DB\Entity {
         $this->headerdata['pays'] = base64_encode(serialize($list));
     }
 
-    //возвращает список оплат
-    public function getPayments() {
-        if (strlen($this->headerdata['pays']) > 0) {
-            return @unserialize(base64_decode($this->headerdata['pays']));
-        }
-
-        return array();
-    }
-
+  
     /**
      *
      *  запись состояния в  лог документа
@@ -601,9 +591,17 @@ class Document extends \ZCL\DB\Entity {
     * @param mixed $mf
     * @param mixed $comment
     */
-    public function addPaymentIncome($user, $amount, $mf,$comment = '') {
-           
+    public function addPaymentIncome( $amount, $mf,$comment = '') {
+       $pay = new \App\Pay();    
+       $pay->mf_id = $mf;
+       $pay->document_id = $this->document_id;
+       $pay->amount = $amount;
+       $pay->notes = $comment;
+       
+       $pay->user_id = System::getUser()->user_id;
+       $pay->save();
     }
+  
     /**
     * расходный платеж
     * 
@@ -613,7 +611,15 @@ class Document extends \ZCL\DB\Entity {
     * @param mixed $comment
     */
     public function addPaymentOutcome($user, $amount, $mf,$comment = '') {
-           
+         $this->addPaymentIncome($user, 0-$amount, $mf,$comment);  
     }
 
+    //возвращает список оплат
+    public function getPayments() {
+        $list = \App\Pay::find("document_id=".$this->document_id,"mf_id");
+        
+        return $list;
+    }
+    
+    
 }

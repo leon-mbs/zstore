@@ -7,10 +7,11 @@ use \Zippy\Html\Form\Button;
 use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\TextArea;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
-use \App\Entity\Category;
+use \App\Entity\MoneyFund;
 
 
 /**
@@ -18,80 +19,89 @@ use \App\Entity\Category;
 */
 class MFList extends \App\Pages\Base {
 
-    private $_category;
+    private $_mf;
+    private $_balance ;
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('CategoryList'))
+        if (false == \App\ACL::checkShowRef('MFList'))
             return;
 
-        $this->add(new Panel('categorytable'))->setVisible(true);
-        $this->categorytable->add(new DataView('categorylist', new \ZCL\DB\EntityDataSource('\App\Entity\Category'), $this, 'categorylistOnRow'))->Reload();
-        $this->categorytable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->add(new Form('categorydetail'))->setVisible(false);
-        $this->categorydetail->add(new TextInput('editcat_name'));
-        $this->categorydetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-        $this->categorydetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->add(new Panel('mftable'))->setVisible(true);
+        $this->mftable->add(new DataView('mflist', new \ZCL\DB\EntityDataSource('\App\Entity\MoneyFund'), $this, 'mflistOnRow'))->Reload();
+        $this->mftable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+        $this->add(new Form('mfdetail'))->setVisible(false);
+        $this->mfdetail->add(new TextInput('editmf_name'));
+        $this->mfdetail->add(new TextArea('editmf_description'));
+        $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
+        $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        
+        $this->_balance = MoneyFund::Balance();
+        
     }
 
-    public function categorylistOnRow($row) {
+    public function mflistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('cat_name', $item->cat_name));
+        $row->add(new Label('mf_name', $item->mf_name));
+        $row->add(new Label('description', $item->description));
+        $row->add(new Label('amount', $this->_balance[$item->mf_id]));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('CategoryList'))
+        if (false == \App\ACL::checkEditRef('MFList'))
             return;
 
 
-        $cat_id = $sender->owner->getDataItem()->cat_id;
-        $cnt = \App\Entity\Item::findCnt("  disabled <> 1  and cat_id=" . $cat_id);
-        if ($cnt > 0) {
-            $this->setError('Нельзя удалить категорию с товарами');
+        $mf_id = $sender->owner->getDataItem()->mf_id;
+ 
+        $rc = MoneyFund::delete($mf_id);
+        if(strlen($rc) > 0){
+            $this->setError($rc) ;
             return;
-        }
-        Category::delete($cat_id);
-        $this->categorytable->categorylist->Reload();
+        }        
+        $this->mftable->mflist->Reload();
     }
 
     public function editOnClick($sender) {
-        $this->_category = $sender->owner->getDataItem();
-        $this->categorytable->setVisible(false);
-        $this->categorydetail->setVisible(true);
-        $this->categorydetail->editcat_name->setText($this->_category->cat_name);
+        $this->_mf = $sender->owner->getDataItem();
+        $this->mftable->setVisible(false);
+        $this->mfdetail->setVisible(true);
+        $this->mfdetail->editmf_name->setText($this->_mf->mf_name);
+        $this->mfdetail->editmf_description->setText($this->_mf->mf_description);
     }
 
     public function addOnClick($sender) {
-        $this->categorytable->setVisible(false);
-        $this->categorydetail->setVisible(true);
+        $this->mftable->setVisible(false);
+        $this->mfdetail->setVisible(true);
         // Очищаем  форму
-        $this->categorydetail->clean();
+        $this->mfdetail->clean();
 
-        $this->_category = new Category();
+        $this->_mf = new MoneyFund();
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('CategoryList'))
+        if (false == \App\ACL::checkEditRef('MFList'))
             return;
 
-        $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
-        if ($this->_category->cat_name == '') {
+        $this->_mf->mf_name = $this->mfdetail->editmf_name->getText();
+        $this->_mf->description = $this->mfdetail->editmf_description->getText();
+        if ($this->_mf->mf_name == '') {
             $this->setError("Введите наименование");
             return;
         }
 
-        $this->_category->Save();
-        $this->categorydetail->setVisible(false);
-        $this->categorytable->setVisible(true);
-        $this->categorytable->categorylist->Reload();
+        $this->_mf->Save();
+        $this->mfdetail->setVisible(false);
+        $this->mftable->setVisible(true);
+        $this->mftable->mflist->Reload();
     }
 
     public function cancelOnClick($sender) {
-        $this->categorytable->setVisible(true);
-        $this->categorydetail->setVisible(false);
+        $this->mftable->setVisible(true);
+        $this->mfdetail->setVisible(false);
     }
 
 }
