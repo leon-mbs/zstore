@@ -50,12 +50,8 @@ class Document extends \ZCL\DB\Entity {
      */
     public $detaildata = array();
 
-    /**
-     * массив статусов
-     * 
-     * @var mixed
-     */
-    private $logdata = array();
+ 
+    
 
     protected function init() {
         $this->document_id = 0;
@@ -149,19 +145,8 @@ class Document extends \ZCL\DB\Entity {
 
             $this->content .= "</row>";
         }
-        $this->content .= "</detail> ";
-        $this->content .= "<states> ";
-        foreach ($this->logdata as $state) {
-            $this->content .= "<staterow>";
-            $this->content .= "<stateno>{$state->state}</stateno>";
-            $this->content .= "<stateuser>{$state->user}</stateuser>";
-            $this->content .= "<stateusername><![CDATA[{$state->username}]]></stateusername>";
-            $this->content .= "<statehost>{$state->hostname}</statehost>";
-            $this->content .= "<statedt>{$state->updatedon}</statedt>";
-
-            $this->content .= "</staterow>";
-        }
-        $this->content .= "</states></doc>";
+        $this->content .= "</detail></doc> ";
+        
     }
 
     /**
@@ -193,20 +178,7 @@ class Document extends \ZCL\DB\Entity {
             }
             $this->detaildata[] = $_row;
         }
-        $this->logdata = array();
-        $result = $xml->xpath('//states');
-
-        if ((bool) (count($result))) {
-            foreach ($xml->states->children() as $row) {
-                $state = new \App\DataItem();
-                $state->state = (int) $row->stateno;
-                $state->hostname = (string) $row->statehost;
-                $state->user = (int) $row->stateuser;
-                $state->username = (string) $row->stateusername;
-                $state->updatedon = (int) $row->statedt;
-                $this->logdata[] = $state;
-            }
-        }
+       
     }
 
     /**
@@ -281,12 +253,7 @@ class Document extends \ZCL\DB\Entity {
         return $doc;
     }
 
-    protected function beforeDelete() {
 
-
-
-        return true;
-    }
 
     protected function afterSave($update) {
 
@@ -501,35 +468,51 @@ class Document extends \ZCL\DB\Entity {
         return Document::find($where);
     }
 
+    
     /**
-     * может быть удален
-     * 
-     */
-    public function canDeleted() {
+    * @see \ZDB\Entity
+    * 
+    */   
+    protected function beforeDelete() {
+
         $conn = \ZDB\DB::getConnect();
 
         $cnt = $conn->GetOne("select  count(*) from entrylist where  document_id = {$this->document_id}  ");
         if ($cnt > 0) {
-            System::setErrorMsg("У докуинта  есть записи в аналитике");
-            return false;
+         
+            return "У документа  есть записи в аналитике";
         }
 
 
         $cnt = $conn->GetOne("select  count(*) from docrel where  doc1 = {$this->document_id}  or  doc2 = {$this->document_id}");
         if ($cnt > 0) {
-            System::setErrorMsg("Есть связаные документы");
-            return false;
+           
+            return "Есть связаные документы, удалите связи";
         }
 
 
         $f = $this->checkStates(array(Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-            System::setErrorMsg("У документа были оплаты или доставки");
-            return false;
+  
+            return "У документа были оплаты или доставки";
         }
 
-        return true;
+        return "";
     }
+    /**
+    * @see \ZDB\Entity
+    * 
+    */
+    protected function afterDelete() {
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from docstatelog where document_id=".$this->document_id);
+        $conn->Execute("delete from paylist where document_id=".$this->document_id);
+
+         
+    }    
+    
+   
 
     /**
      * может быть отменен
@@ -572,17 +555,12 @@ class Document extends \ZCL\DB\Entity {
      * @param mixed $state
      */
     public function insertLog($state) {
-
-        $host = Document::qstr($_SERVER["REMOTE_ADDR"]);
+        $conn = \ZDB\DB::getConnect();
+        $host = $conn->qstr($_SERVER["REMOTE_ADDR"]);
         $user = \App\System::getUser();
-
-        $item = new \App\DataItem();
-        $item->state = $state;
-        $item->hostname = $host;
-        $item->user = $user->user_id;
-        $item->username = $user->username;
-        $item->updatedon = time();
-        $this->logdata[] = $item;
+      
+        $sql="insert into docstatelog (document_id,user_id,createdon,docstate,hostname) values({$this->document_id},{$user->user_id},now(),{$state},{$host})";
+        $conn->Execute($sql);
     }
 
     /**
@@ -590,10 +568,15 @@ class Document extends \ZCL\DB\Entity {
      *
      */
     public function getLogList() {
-
-
-
-        return $this->logdata;
+        $conn = \ZDB\DB::getConnect();
+        $rc = $conn->Execute("select * from docstatelog_view where document_id={$this->document_id} order  by  log_id");
+        $states = array();
+        foreach($rc as $row){
+             $row['createdon']=strtotime($row['createdon']);
+             $states[] = new \App\DataItem($row);
+        }
+        
+        return $states;
     }
 
     /**
@@ -602,17 +585,35 @@ class Document extends \ZCL\DB\Entity {
      * @param mixed $states
      */
     public function checkStates(array $states) {
+        if(count($states)==0) return false;
+        $conn = \ZDB\DB::getConnect();
+        $states = implode(',',$states) ;
+  
+        $cnt = $conn->getOne("select count(*) from docstatelog where docstate in({$states}) and document_id={$this->document_id}");
+        return $cnt > 0;
+    }
 
-
-
-        foreach ($this->logdata as $srow) {
-            foreach ($states as $state) {
-                if ($srow->state == $state)
-                    return true;
-            }
-        }
-
-        return false;
+    /**
+    * платеж от  покупателя
+    * 
+    * @param mixed $user
+    * @param mixed $amount
+    * @param mixed $mf
+    * @param mixed $comment
+    */
+    public function addPaymentIncome($user, $amount, $mf,$comment = '') {
+           
+    }
+    /**
+    * расходный платеж
+    * 
+    * @param mixed $user
+    * @param mixed $amount
+    * @param mixed $mf
+    * @param mixed $comment
+    */
+    public function addPaymentOutcome($user, $amount, $mf,$comment = '') {
+           
     }
 
 }

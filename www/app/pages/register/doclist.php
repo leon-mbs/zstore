@@ -71,8 +71,11 @@ class DocList extends \App\Pages\Base {
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
             $this->docview->setVisible(true);
-            $this->docview->setDoc(Document::load($docid));
+            $dc=Document::load($docid);
+            $this->docview->setDoc($dc);
             //$this->doclist->setSelectedRow($docid);
+            $filter->searchnumber =  $dc->document_number;
+            $this->filter->searchnumber->setText($dc->document_number)   ;
             $doclist->Reload();
         }
 
@@ -194,13 +197,12 @@ class DocList extends \App\Pages\Base {
         $doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
-
-        $doc = $doc->cast();
-        if ($doc->canDeleted() == false) {
-
+     
+        $del=Document::delete($doc->document_id);
+        if(strlen($del) > 0){
+            $this->setError($del);
             return;
         }
-        Document::delete($doc->document_id);
         $this->doclist->Reload(true);
         $this->resetURL();
     }

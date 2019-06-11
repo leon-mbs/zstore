@@ -102,6 +102,8 @@ class Users extends \App\Pages\Base {
             $this->editpan->editform->editwminqty->setChecked(true);
         if (strpos($this->user->widgets, 'wsdate') !== false)
             $this->editpan->editform->editwsdate->setChecked(true);
+       if (strpos($this->user->widgets, 'wrdoc') !== false)
+            $this->editpan->editform->editwrdoc->setChecked(true);
 
         if (strpos($this->user->modules, 'ocstore') !== false)
             $this->editpan->editform->editocstore->setChecked(true);
@@ -171,6 +173,8 @@ class Users extends \App\Pages\Base {
             $widgets = $widgets . ',wminqty';
        if ($this->editpan->editform->editwsdate->isChecked())
             $widgets = $widgets . ',wsdate';
+      if ($this->editpan->editform->editwrdoc->isChecked())
+            $widgets = $widgets . ',wrdoc';
 
 
         $this->user->widgets = trim($widgets, ',');
