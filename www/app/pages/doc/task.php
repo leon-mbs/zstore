@@ -485,17 +485,17 @@ class Task extends \App\Pages\Base {
 
         $old = $this->_doc->cast();
 
-        $this->_doc->headerdata = array(
-            'parea' => $this->docform->parea->getValue(),
-            'pareaname' => $this->docform->parea->getValueName(),
-            'pricetype' => $this->docform->pricetype->getValue(),
-            'pricetypename' => $this->docform->pricetype->getValueName(),
-            'store' => $this->docform->store->getValue(),
-            'hours' => $this->docform->hours->getText(),
-            'start_date' => $this->docform->start_date->getDate(),
-            'end_date' => $this->docform->document_date->getDate(),
-            'total' => $this->docform->total->getText()
-        );
+  
+       $this->_doc->headerdata['parea']   =   $this->docform->parea->getText();
+       $this->_doc->headerdata['pareaname']   =   $this->docform->pareaname->getValueName();
+       $this->_doc->headerdata['pricetype']   =   $this->docform->pricetype->getValue();
+       $this->_doc->headerdata['pricetypename']   =   $this->docform->pricetype->getValueName();
+       $this->_doc->headerdata['store']   =   $this->docform->store->getValue();
+       $this->_doc->headerdata['hours']   =   $this->docform->hours->getText();
+       $this->_doc->headerdata['start_date']   =   $this->docform->start_date->getDate();
+       $this->_doc->headerdata['end_date']   =   $this->docform->end_date->getDate();
+         
+        
         $this->_doc->detaildata = array();
         foreach ($this->_servicelist as $item) {
             $this->_doc->detaildata[] = $item->getData();

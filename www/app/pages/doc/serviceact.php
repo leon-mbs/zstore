@@ -239,13 +239,13 @@ class ServiceAct extends \App\Pages\Base {
 
         $old = $this->_doc->cast();
 
-        $this->_doc->headerdata = array(
-            'order' => $this->docform->order->getText(),
-            'order_id' => $this->_order_id,
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'gar' => $this->docform->gar->getText(),
-            'total' => $this->docform->total->getText(),
-        );
+ 
+        
+      $this->_doc->headerdata['order']   =   $this->docform->order->getText();
+      $this->_doc->headerdata['order_id']   =   $this->_order_id;
+      $this->_doc->headerdata['planned']   =   $this->docform->planned->isChecked() ? 1 : 0,;
+      $this->_doc->headerdata['gar']   =   $this->docform->gar->getText();
+          
         $this->_doc->detaildata = array();
         foreach ($this->_servicelist as $item) {
             $this->_doc->detaildata[] = $item->getData();

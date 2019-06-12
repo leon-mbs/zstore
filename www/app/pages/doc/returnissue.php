@@ -220,10 +220,9 @@ class ReturnIssue extends \App\Pages\Base {
         $this->calcTotal();
         $old = $this->_doc->cast();
 
-        $this->_doc->headerdata = array(
-            'store' => $this->docform->store->getValue(),
-            'total' => $this->docform->total->getText()
-        );
+  
+       $this->_doc->headerdata['store']   =   $this->docform->store->getValue();
+          
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

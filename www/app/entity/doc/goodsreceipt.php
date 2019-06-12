@@ -38,7 +38,7 @@ class GoodsReceipt extends Document {
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->headerdata["total"]
+            "total" => $this->amount
         );
 
 
@@ -76,7 +76,7 @@ class GoodsReceipt extends Document {
             }
         }
 
-        //$total = $this->headerdata['total'];
+      
 
         return true;
     }

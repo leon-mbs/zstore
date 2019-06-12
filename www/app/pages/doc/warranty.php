@@ -211,11 +211,11 @@ class Warranty extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
 
-
-        $this->_doc->headerdata = array(
-            'pricetypename' => $this->docform->pricetype->getValueName(),
-            'pricetype' => $this->docform->pricetype->getValue(),
-        );
+    
+        
+      $this->_doc->headerdata['pricetype']   =   $this->docform->pricetype->getValue();
+      $this->_doc->headerdata['pricetypename']   =   $this->docform->pricetype->getValueName();
+          
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

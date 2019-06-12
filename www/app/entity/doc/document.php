@@ -51,9 +51,10 @@ class Document extends \ZCL\DB\Entity {
      */
     public $detaildata = array();
 
- 
-    
-
+    /**
+    * начальная инициализация. Вызывается автоматически  в  конструкторе  Entity
+    * 
+    */
     protected function init() {
         $this->document_id = 0;
         $this->state = 0;
@@ -67,11 +68,15 @@ class Document extends \ZCL\DB\Entity {
 
         $this->basedoc = '';
         $this->headerdata = array();
-        $this->headerdata['incredit'] = 0; //оплата в  долг
-        $this->headerdata['inshipment'] = 0; //товары в  пути
+      
+       // $this->headerdata['inshipment'] = 0; //товары в  пути
         $this->headerdata['planned'] = 0; //запланированный
     }
 
+    /**
+    * возвращает метаданные  чтобы  работало в  дочерних классах
+    * 
+    */
     protected static function getMetadata() {
         return array('table' => 'documents', 'view' => 'documents_view', 'keyfield' => 'document_id');
     }
@@ -213,11 +218,10 @@ class Document extends \ZCL\DB\Entity {
         $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
         //удаляем освободившиеся стоки
         $conn->Execute("delete from store_stock where stock_id not in (select stock_id from entrylist) ");
+          
         
         $conn->CompleteTrans();
-
-
-
+   
         return true;
     }
 
@@ -253,7 +257,6 @@ class Document extends \ZCL\DB\Entity {
         $doc->unpackData();
         return $doc;
     }
-
 
 
     protected function afterSave($update) {
@@ -517,28 +520,14 @@ class Document extends \ZCL\DB\Entity {
      * 
      */
     public function canCanceled() {
-        $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_PART_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
             System::setWarnMsg("У документа были оплаты или доставки");
             return true;
         }
         return true;
     }
-
-    //добавляет оплату
-    public function addPayment($user, $amount, $comment = '') {
-        $list = $this->getPayments();
-        $item = new \App\DataItem();
-        $item->user = $user;
-        $item->amount = $amount;
-        $item->comment = $comment;
-        $item->date = time();
-        $list[] = $item;
-
-        $this->headerdata['pays'] = base64_encode(serialize($list));
-    }
-
-  
+   
     /**
      *
      *  запись состояния в  лог документа
@@ -584,15 +573,15 @@ class Document extends \ZCL\DB\Entity {
     }
 
     /**
-    * платеж от  покупателя
+    * Добавляет платеж
     * 
-    * @param mixed $user
-    * @param mixed $amount
-    * @param mixed $mf
-    * @param mixed $comment
+    * @param mixed $amount  сумма
+    * @param mixed $mf      денежный счет
+    * @param mixed $comment коментарий
     */
-    public function addPaymentIncome( $amount, $mf,$comment = '') {
-       $pay = new \App\Pay();    
+    public function addPayment( $amount, $mf,$comment = '') {
+       if(0==(int)$amount || 0==(int)$this->document_id || 0== $mf)  return;
+       $pay = new \App\Entity\Pay();    
        $pay->mf_id = $mf;
        $pay->document_id = $this->document_id;
        $pay->amount = $amount;
@@ -602,24 +591,23 @@ class Document extends \ZCL\DB\Entity {
        $pay->save();
     }
   
-    /**
-    * расходный платеж
-    * 
-    * @param mixed $user
-    * @param mixed $amount
-    * @param mixed $mf
-    * @param mixed $comment
-    */
-    public function addPaymentOutcome($user, $amount, $mf,$comment = '') {
-         $this->addPaymentIncome($user, 0-$amount, $mf,$comment);  
-    }
+   
 
     //возвращает список оплат
     public function getPayments() {
-        $list = \App\Pay::find("document_id=".$this->document_id,"mf_id");
+        $list = \App\Entity\Pay::find("document_id=".$this->document_id,"mf_id");
         
         return $list;
     }
+    //возвращает сумму  оплат по документу
+    public function getPaymentAmount() {
+        $conn = \ZDB\DB::getConnect();
+     
+        $sql="select coalesce(sum(amount),0) from paylist where document_id=".$this->document_id;
+        return $conn->GetOne($sql);
+        
+    }
     
+   
     
 }

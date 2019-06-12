@@ -46,8 +46,8 @@ class ReturnIssue extends Document {
             "firmname" => $firm['firmname'],
             "customername" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->headerdata["total"],
-            "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))
+            "total" => $this->amount,
+            "summa" => Util::ucfirst(Util::money2str($this->amount))
         );
 
         $report = new \App\Report('returnissue.tpl');

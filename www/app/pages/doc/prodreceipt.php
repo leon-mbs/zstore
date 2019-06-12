@@ -216,17 +216,13 @@ class ProdReceipt extends \App\Pages\Base {
         }
         $old = $this->_doc->cast();
         $this->calcTotal();
-
-
-
-
-        $this->_doc->headerdata = array(
-            'parea' => $this->docform->parea->getValue(),
-            'pareaname' => $this->docform->parea->getValueName(),
-            'store' => $this->docform->store->getValue(),
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'total' => $this->docform->total->getText()
-        );
+ 
+        
+       $this->_doc->headerdata['parea']   =   $this->docform->parea->getValue();
+       $this->_doc->headerdata['pareaname']   =   $this->docform->parea->getValueName();
+       $this->_doc->headerdata['store']   =   $this->docform->store->getValue();
+       $this->_doc->headerdata['planned']   =   $this->docform->planned->isChecked() ? 1 : 0;
+          
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();

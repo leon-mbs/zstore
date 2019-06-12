@@ -198,10 +198,8 @@ class ServiceOrder extends \App\Pages\Base {
         $this->calcTotal();
 
         $old = $this->_doc->cast();
-
-        $this->_doc->headerdata = array(
-            'total' => $this->docform->total->getText()
-        );
+ 
+         
         $this->_doc->detaildata = array();
         foreach ($this->_servicelist as $item) {
             $this->_doc->detaildata[] = $item->getData();

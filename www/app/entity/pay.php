@@ -15,6 +15,7 @@ class Pay extends \ZCL\DB\Entity {
         $this->pl_id = 0;
         $this->paydate = time();
     }
+    
     protected function afterLoad() {
         $this->paydate = strtotime($this->paydate);
         

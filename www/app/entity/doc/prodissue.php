@@ -48,9 +48,9 @@ class ProdIssue extends Document {
             "firmname" => $firm['firmname'],
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,
-            "total" => $this->headerdata["total"],
+            "total" => amount,
             "notes" => $this->notes,
-            "summa" => Util::ucfirst(Util::money2str($this->headerdata["total"]))
+            "summa" => Util::ucfirst(Util::money2str(amount))
         );
 
         $report = new \App\Report('prodissue.tpl');

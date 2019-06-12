@@ -40,7 +40,7 @@ class ProdReceipt extends Document {
             "document_number" => $this->document_number,
             "pareaname" => $this->headerdata["pareaname"],
              "notes" => $this->notes,
-            "total" => $this->headerdata["total"]
+            "total" => $this->amount
         );
 
 
@@ -65,7 +65,7 @@ class ProdReceipt extends Document {
             $sc->save();
         }
 
-        //$total = $this->headerdata['total'];
+   
 
         return true;
     }

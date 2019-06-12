@@ -314,22 +314,22 @@ class GoodsIssue extends \App\Pages\Base {
 
         $this->calcTotal();
         $old = $this->_doc->cast();
-
-        $this->_doc->headerdata = array(
-            'order' => $this->docform->order->getText(),
-            'ship_address' => $this->docform->ship_address->getText(),
-            'ship_number' => $this->docform->ship_number->getText(),
-            'delivery' => $this->docform->delivery->getValue(),
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'store' => $this->docform->store->getValue(),
-            'emp_id' => $this->docform->emp->getValue(),
-            'emp_name' => $this->docform->emp->getValueName(),
-            'pricetype' => $this->docform->pricetype->getValue(),
-            'pricetypename' => $this->docform->pricetype->getValueName(),
-            'delivery_date' => $this->docform->delivery_date->getDate(),
-            'sent_date' => $this->docform->sent_date->getDate(),
-            'order_id' => $this->_order_id
-        );
+        
+        $this->_doc->headerdata['order'] =   $this->docform->order->getText();
+        $this->_doc->headerdata['ship_address'] =   $this->docform->ship_address->getText();
+        $this->_doc->headerdata['ship_number'] =   $this->docform->ship_number->getText();
+        $this->_doc->headerdata['delivery'] =   $this->docform->delivery->getValue();
+        $this->_doc->headerdata['planned'] =   $this->docform->planned->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['store'] =   $this->docform->store->getValue();
+        $this->_doc->headerdata['emp_id'] =   $this->docform->emp->getValue();
+        $this->_doc->headerdata['emp_name'] =   $this->docform->emp->getValueName();
+        $this->_doc->headerdata['pricetype'] =   $this->docform->pricetype->getValue();
+        $this->_doc->headerdata['pricetypename'] =   $this->docform->pricetype->getValueName();
+        $this->_doc->headerdata['delivery_date'] =   $this->docform->delivery_date->getDate();
+        $this->_doc->headerdata['sent_date'] =   $this->docform->sent_date->getDate();
+        $this->_doc->headerdata['order_id'] =   $this->_order_id;
+        
+        
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

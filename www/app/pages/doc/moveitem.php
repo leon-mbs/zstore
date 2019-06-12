@@ -175,12 +175,12 @@ class MoveItem extends \App\Pages\Base {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
-
-
-        $this->_doc->headerdata = array(
-            'storefrom' => $this->docform->storefrom->getValue(),
-            'storeto' => $this->docform->storeto->getValue()
-        );
+  
+        
+        $this->_doc->headerdata['storefrom'] =   $this->docform->storefrom->getValue();
+        $this->_doc->headerdata['storeto']   =   $this->docform->storeto->getValue();
+  
+         
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();

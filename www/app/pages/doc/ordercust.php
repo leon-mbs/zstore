@@ -233,11 +233,8 @@ class OrderCust extends \App\Pages\Base {
             if ($common['useval'] != true)
                 continue;
         }
-
-
-        $this->_doc->headerdata = array(
-            'total' => $this->docform->total->getText()
-        );
+ 
+         
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();

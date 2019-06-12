@@ -308,14 +308,15 @@ class GoodsReceipt extends \App\Pages\Base {
             }
         }
 
-
-        $this->_doc->headerdata = array(
-            'order' => $this->docform->order->getText(),
-            'store' => $this->docform->store->getValue(),
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'total' => $this->docform->total->getText(),
-            'order_id' => $this->_order_id
-        );
+  
+ 
+       $this->_doc->headerdata['order']    =  $this->docform->order->getText();
+       $this->_doc->headerdata['store']    =  $this->docform->store->getValue();
+       $this->_doc->headerdata['planned']  =  $this->docform->planned->isChecked() ? 1 : 0;
+ 
+       $this->_doc->headerdata['order_id'] =  $this->_order_id;
+         
+        
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();

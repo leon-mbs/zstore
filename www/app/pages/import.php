@@ -188,7 +188,7 @@ class Import extends \App\Pages\Base {
             }
             $doc->amount = $amount;
             $doc->headerdata['store'] = $store;
-            $doc->headerdata['total'] = $amount;
+       
             $doc->save();
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);

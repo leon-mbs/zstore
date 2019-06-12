@@ -240,7 +240,7 @@ class Order extends \App\Pages\Base {
         $this->_doc->headerdata['email'] =   $this->docform->email->getText();
         $this->_doc->headerdata['pricetype'] =   $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] =   $this->docform->store->getValue();
-        $this->_doc->headerdata['total'] =   $this->docform->total->getText();
+     
         
       
         $this->_doc->detaildata = array();
