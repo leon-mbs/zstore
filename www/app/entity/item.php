@@ -67,7 +67,7 @@ class Item extends \ZCL\DB\Entity {
         //проверка на партии
         $sql = "  select count(*)  from  store_stock where   item_id = {$this->item_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "ТМЦ уже  используется" : "true";
+        return ($cnt > 0) ? "ТМЦ уже  используется" : "";
     }
 
      

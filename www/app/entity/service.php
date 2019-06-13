@@ -39,4 +39,12 @@ class Service extends \ZCL\DB\Entity {
         return true;
     }
 
+    protected function beforeDelete() {
+
+        $conn = \ZDB\DB::getConnect();
+       //    $sql = "  select count(*)  from  store_stock where   store_id = {$this->store_id}";
+      //     $cnt = $conn->GetOne($sql);
+        return ($cnt > 0) ? "Нельзя удалять используемую услугу" : "";
+    }
+    
 }

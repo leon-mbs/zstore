@@ -50,12 +50,12 @@ class ServiceList extends \App\Pages\Base {
             return;
 
         $service_id = $sender->owner->getDataItem()->service_id;
-        // $cnt=  \App\Entity\Item::findCnt(" disabled <> 1  and cat_id=".$cat_id);
-        if ($cnt > 0) {
-            // $this->setError('Нельзя удалить категорию с товарами');
-            //  return;
-        }
-        Service::delete($service_id);
+ 
+        $del=Service::delete($service_id);
+        if(strlen($del) > 0){
+            $this->setError($del);
+            return;
+        }        
         $this->servicetable->servicelist->Reload();
     }
 
