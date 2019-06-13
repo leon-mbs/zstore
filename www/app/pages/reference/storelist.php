@@ -56,12 +56,13 @@ class StoreList extends \App\Pages\Base {
     public function storedeleteOnClick($sender) {
         if (false == \App\ACL::checkEditRef('StoreList'))
             return;
-
-        if (false == Store::delete($sender->owner->getDataItem()->store_id)) {
-            $this->setError("Нельзя удалить цей  склад");
+   
+        
+        $del = Store::delete($sender->owner->getDataItem()->store_id);
+        if(strlen($del) > 0){
+            $this->setError($del);
             return;
         }
-
         $this->storetable->storelist->Reload();
     }
 

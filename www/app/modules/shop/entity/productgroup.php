@@ -18,7 +18,19 @@ class ProductGroup extends \ZCL\DB\TreeEntity {
         $this->mpath = '';
     }
 
-    protected function beforeDelete() {
+   
+   protected function beforeDelete() {
+  
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select count(*)  from  shop_products where   group_id = {$this->group_id}";
+        $cnt = $conn->GetOne($sql);
+        return ($cnt > 0) ? "Нельзя удалять используемую группу" : "";
+
+
+    }  
+   
+   
+    protected function afterDelete() {
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete from shop_attributes where  group_id =" . $this->group_id);
         foreach ($this->images as $image_id) {

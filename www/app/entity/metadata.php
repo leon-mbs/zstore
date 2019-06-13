@@ -15,9 +15,7 @@ class MetaData extends \ZCL\DB\Entity {
     const METATYPE_REF = 3;
     const METATYPE_REG = 4;
 
-    protected function beforeDelete() {
-        return true;
-    }
+   
 
     public static function getNames() {
         $list = array();

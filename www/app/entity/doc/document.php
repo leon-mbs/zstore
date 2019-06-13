@@ -488,6 +488,11 @@ class Document extends \ZCL\DB\Entity {
          
             return "У документа  есть записи в аналитике";
         }
+        $cnt = $conn->GetOne("select  count(*) from paylist where  document_id = {$this->document_id}  ");
+        if ($cnt > 0) {
+         
+            return "У документа  есть оплаты";
+        }
 
 
         $cnt = $conn->GetOne("select  count(*) from docrel where  doc1 = {$this->document_id}  or  doc2 = {$this->document_id}");

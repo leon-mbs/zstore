@@ -161,12 +161,12 @@ class GroupList extends \App\Pages\Base {
     }
 
     public function OnDelGroup($sender) {
-        $pcnt = Product::findCnt("group_id=" . $this->group->group_id);
-        if ($pcnt > 0) {
-            $this->setError('Граппа  с товарами!');
+     
+       $del=ProductGroup::delete($this->group->group_id);
+       if(strlen($del) > 0){
+            $this->setError($del);
             return;
-        }
-        ProductGroup::delete($this->group->group_id);
+        }              
         $this->group = null;
         $this->ReloadTree();
     }

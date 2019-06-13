@@ -208,7 +208,12 @@ class Users extends \App\Pages\Base {
     //удаление  юзера
     public function OnRemove($sender) {
         $user = $sender->getOwner()->getDataItem();
-        User::delete($user->user_id);
+        $del = User::delete($user->user_id);
+       if(strlen($del) > 0){
+            $this->setError($del) ;
+            return;
+        }            
+        
         $this->listpan->userrow->Reload();
     }
 

@@ -145,14 +145,12 @@ class ItemList extends \App\Pages\Base {
             return;
 
         $item = $sender->owner->getDataItem();
-        //проверка на партии
-        if ($item->checkDelete()) {
-            Item::delete($item->item_id);
-        } else {
-            $this->setError("Нельзя удалить  товар");
+   
+        $del= Item::delete($item->item_id) ;
+        if(strlen($del) > 0){
+            $this->setError($del);
             return;
         }
-
 
 
         $this->itemtable->itemlist->Reload();

@@ -41,11 +41,12 @@ class Manufacturers extends \App\Pages\Base {
 
     public function OnDeleteClick($sender) {
         $item = $sender->getOwner()->getDataItem();
-        if (false == $item->checkDelete()) {
-            $this->setError("Этот бренд уже  используется");
+ 
+        $del=Manufacturer::delete($item->manufacturer_id);
+        if(strlen($del) > 0){
+            $this->setError($del);
             return;
-        }
-        Manufacturer::delete($item->manufacturer_id);
+        }            
         $this->list->manufacturerslist->Reload();
     }
 

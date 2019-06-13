@@ -57,9 +57,9 @@ class MFList extends \App\Pages\Base {
 
         $mf_id = $sender->owner->getDataItem()->mf_id;
  
-        $rc = MoneyFund::delete($mf_id);
-        if(strlen($rc) > 0){
-            $this->setError($rc) ;
+        $del = MoneyFund::delete($mf_id);
+        if(strlen($del) > 0){
+            $this->setError($del) ;
             return;
         }        
         $this->mftable->mflist->Reload();

@@ -15,15 +15,12 @@ class Manufacturer extends \ZCL\DB\Entity {
 
     protected function beforeDelete() {
 
-        return $this->checkDelete();
-    }
-
-    public function checkDelete() {
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "  select count(*)  from  store_stock where   item_id = {$this->item_id}";
+       $conn = \ZDB\DB::getConnect();
+        $sql = "  select count(*)  from  shop_products where   manufacturer_id = {$this->manufacturer_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? false : true;
+        return ($cnt > 0) ? "Производитель используется в  товарах" : ""; 
     }
+
+    
 
 }

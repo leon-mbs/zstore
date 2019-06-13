@@ -47,12 +47,13 @@ class CategoryList extends \App\Pages\Base {
 
 
         $cat_id = $sender->owner->getDataItem()->cat_id;
-        $cnt = \App\Entity\Item::findCnt("  disabled <> 1  and cat_id=" . $cat_id);
-        if ($cnt > 0) {
-            $this->setError('Нельзя удалить категорию с товарами');
+  
+        $del=Category::delete($cat_id);
+        if(strlen($del) > 0){
+            $this->setError($del);
             return;
-        }
-        Category::delete($cat_id);
+        }            
+       
         $this->categorytable->categorylist->Reload();
     }
 

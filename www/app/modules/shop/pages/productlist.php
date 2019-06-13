@@ -310,11 +310,12 @@ class ProductList extends \App\Pages\Base {
     }
 
     public function bdeleteOnClick($sender) {
-        if ($this->product->checkDelete() == false) {
-            $this->setError('Продукт уже  используется');
+         
+        $del=Product::delete($this->product->product_id);
+        if(strlen($del) > 0){
+            $this->setError($del);
             return;
-        }
-        Product::delete($this->product->product_id);
+        }            
         $this->listpanel->plist->Reload();
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);

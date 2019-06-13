@@ -19,7 +19,7 @@ class ProductAttribute extends \ZCL\DB\Entity {
         $this->value = '';
     }
 
-    protected function beforeDelete() {
+    protected function afterDelete() {
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete from shop_attributevalues where  attribute_id=" . $this->attribute_id);
         $conn->Execute("delete from shop_attributes_order where  attr_id=" . $this->attribute_id);

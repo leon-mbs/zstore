@@ -93,21 +93,20 @@ class Product extends \ZCL\DB\Entity {
     }
 
     protected function beforeDelete() {
-
-        if (false == $this->checkDelete())
-            return false;
-
-        $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("delete from shop_attributevalues where  product_id=" . $this->product_id);
-        \App\Entity\Image::delete($this->image_id);
-    }
-
-    public function checkDelete() {
-
+  
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from   documents_view where  meta_name='Order' and content like '%<product_id>{$this->product_id}</product_id>%' ";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? false : true;
+        return ($cnt > 0) ? "Товар уже  использован  в заказах" : "";
+
+
+    }
+
+    public function afterDelete() {
+        
+        $conn = \ZCL\DB\DB::getConnect();
+        $conn->Execute("delete from shop_attributevalues where  product_id=" . $this->product_id);
+        \App\Entity\Image::delete($this->image_id);        
     }
 
     /**

@@ -63,17 +63,14 @@ class Item extends \ZCL\DB\Entity {
 
     protected function beforeDelete() {
 
-        return $this->checkDelete();
-    }
-
-    public function checkDelete() {
-
         $conn = \ZDB\DB::getConnect();
-        
+        //проверка на партии
         $sql = "  select count(*)  from  store_stock where   item_id = {$this->item_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? false : true;
+        return ($cnt > 0) ? "ТМЦ уже  используется" : "true";
     }
+
+     
 
     //Вычисляет  отпускную цену
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
