@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-12 col-lg-10 col-xl-8  ">
                 <div zippy="customertable">
-                    <h3>Справочник контрагентов </h3>
+                    <h2>Справочник контрагентов </h2>
                     <form zippy="filter" class="form-inline ">
 
                         <label for="searchkey">Поиск</label>
@@ -107,8 +107,8 @@
 
         <a name="contentviewlink"></a>
         <div class="row" zippy="contentview">
-            <div class="col-auto">
-                <h5> Расписание событий </h5>
+            <div class="col-auto mt-2">
+                <h4> Расписание событий </h4>
                 <table class="table table-sm">
                     <tr zippy="dw_eventlist">
                         <td> <span zippy="eventdate"></span><br>
@@ -145,8 +145,8 @@
                     <input class="btn btn-outline-success  " type="submit" value="Добавить">
                 </form>
             </div>
-            <div class="col-auto">
-                <h5> Коментарии </h5>
+            <div class="col-auto mt-2">
+                <h4> Коментарии </h4>
                 <table class="table table-sm">
                     <tr zippy="dw_msglist">
                         <td><span zippy="msgdate"></span>, <span style="color:navy" zippy="msguser"></span>:
@@ -165,8 +165,8 @@
                     <input class="btn btn-outline-success  " type="submit" value="Добавить">
                 </form>
             </div>
-            <div class="col-auto">
-                <h5> Прикрепленные файлы </h5>
+            <div class="col-auto mt-2">  
+                <h4> Прикрепленные файлы </h4>
                 <table class="table table-sm">
                     <tr zippy="dw_files"  >
                         <td><a zippy="filename" target="_blank"></a></td>
@@ -176,7 +176,7 @@
                 <hr>
                 <form zippy="addfileform" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="addfile">Вибрать файл</label>
+                        <label for="addfile">Выбрать файл</label>
                         <input type="file" class="form-control" required="required" zippy="addfile">
 
                     </div>

@@ -17,7 +17,6 @@ class Item extends \ZCL\DB\Entity {
         $this->curname = '';
         $this->currate = 0;
         $this->price = 0;
-        
     }
 
     protected function afterLoad() {
@@ -34,7 +33,7 @@ class Item extends \ZCL\DB\Entity {
         $this->currate = doubleval($xml->currate[0]);
         $this->pricelist = (int) $xml->pricelist[0];
         $this->term = (int) $xml->term[0];
-      
+
 
 
 
@@ -47,7 +46,7 @@ class Item extends \ZCL\DB\Entity {
         //упаковываем  данные в detail
         $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
         $this->detail .= "<term>{$this->term}</term>";
-    
+
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
         $this->detail .= "<price3>{$this->price3}</price3>";
@@ -69,8 +68,6 @@ class Item extends \ZCL\DB\Entity {
         $cnt = $conn->GetOne($sql);
         return ($cnt > 0) ? "ТМЦ уже  используется" : "";
     }
-
-     
 
     //Вычисляет  отпускную цену
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 

@@ -15,8 +15,6 @@ class MetaData extends \ZCL\DB\Entity {
     const METATYPE_REF = 3;
     const METATYPE_REG = 4;
 
-   
-
     public static function getNames() {
         $list = array();
         $list[1] = "Документ";

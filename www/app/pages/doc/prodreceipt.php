@@ -69,13 +69,13 @@ class ProdReceipt extends \App\Pages\Base {
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
-               $this->docform->parea->setValue($this->_doc->headerdata['parea']);
+            $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
@@ -103,8 +103,8 @@ class ProdReceipt extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
-         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate >0 ?date('Y-m-d',$item->sdate):''));
+        $row->add(new Label('snumber', $item->snumber));
+        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
         $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -177,11 +177,11 @@ class ProdReceipt extends \App\Pages\Base {
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
         $item->sdate = $this->editdetail->editsdate->getDate();
-        if($item->sdate == false)$item->sdate='';
-        if(strlen($item->snumber)>0 && strlen($item->sdate )==0) {
-           $this->setError("К серии должна быть введена дата");
+        if ($item->sdate == false)
+            $item->sdate = '';
+        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0) {
+            $this->setError("К серии должна быть введена дата");
             return;
-            
         }
 
 
@@ -199,7 +199,7 @@ class ProdReceipt extends \App\Pages\Base {
 
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
-        $this->editdetail->editsdate->setText("");        
+        $this->editdetail->editsdate->setText("");
     }
 
     public function cancelrowOnClick($sender) {
@@ -214,15 +214,15 @@ class ProdReceipt extends \App\Pages\Base {
         if ($this->checkForm() == false) {
             return;
         }
-        $old = $this->_doc->cast();
+
         $this->calcTotal();
- 
-        
-       $this->_doc->headerdata['parea']   =   $this->docform->parea->getValue();
-       $this->_doc->headerdata['pareaname']   =   $this->docform->parea->getValueName();
-       $this->_doc->headerdata['store']   =   $this->docform->store->getValue();
-       $this->_doc->headerdata['planned']   =   $this->docform->planned->isChecked() ? 1 : 0;
-          
+
+
+        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
+
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();
@@ -230,7 +230,7 @@ class ProdReceipt extends \App\Pages\Base {
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
-        $this->_doc->datatag = $this->_doc->amount;
+        $this->_doc->payamount = $this->_doc->amount;
 
 
         $conn = \ZDB\DB::getConnect();

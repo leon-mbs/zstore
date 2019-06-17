@@ -16,9 +16,9 @@ class Manufacturers extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if(strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin'){
-            System::setErrorMsg('Нет права доступа к  этой странице'); 
-             App::RedirectHome();
+        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('Нет права доступа к  этой странице');
+            App::RedirectHome();
             return;
         }
 
@@ -41,12 +41,12 @@ class Manufacturers extends \App\Pages\Base {
 
     public function OnDeleteClick($sender) {
         $item = $sender->getOwner()->getDataItem();
- 
-        $del=Manufacturer::delete($item->manufacturer_id);
-        if(strlen($del) > 0){
+
+        $del = Manufacturer::delete($item->manufacturer_id);
+        if (strlen($del) > 0) {
             $this->setError($del);
             return;
-        }            
+        }
         $this->list->manufacturerslist->Reload();
     }
 

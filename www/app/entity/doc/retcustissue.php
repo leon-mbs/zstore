@@ -23,11 +23,11 @@ class RetCustIssue extends Document {
             if (isset($detail[$value['item_id']])) {
                 $detail[$value['item_id']]['quantity'] += $value['quantity'];
             } else {
-                $name =$value['itemname'];
-                if(strlen($value['snumber'])>0){
-                   $name .= ' ('.$value['snumber'].','.date('Y-m-d',$value['sdate']).')';  
+                $name = $value['itemname'];
+                if (strlen($value['snumber']) > 0) {
+                    $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
                 }
-                
+
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $name,
                     "tovar_code" => $value['item_code'],
@@ -60,7 +60,7 @@ class RetCustIssue extends Document {
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-        $conn->StartTrans();
+
 
         foreach ($this->detaildata as $row) {
 
@@ -72,7 +72,7 @@ class RetCustIssue extends Document {
             $sc->save();
         }
 
-        $conn->CompleteTrans();
+
         return true;
     }
 

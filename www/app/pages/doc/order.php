@@ -91,7 +91,7 @@ class Order extends \App\Pages\Base {
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -232,24 +232,24 @@ class Order extends \App\Pages\Base {
         }
 
         $this->calcTotal();
-        $old = $this->_doc->cast();
 
-        $this->_doc->headerdata['delivery'] =   $this->docform->delivery->getValue();
-        $this->_doc->headerdata['delivery_name'] =   $this->docform->delivery->getValueName();
-        $this->_doc->headerdata['address'] =   $this->docform->address->getText();
-        $this->_doc->headerdata['email'] =   $this->docform->email->getText();
-        $this->_doc->headerdata['pricetype'] =   $this->docform->pricetype->getValue();
-        $this->_doc->headerdata['store'] =   $this->docform->store->getValue();
-     
-        
-      
+
+        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
+        $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
+        $this->_doc->headerdata['address'] = $this->docform->address->getText();
+        $this->_doc->headerdata['email'] = $this->docform->email->getText();
+        $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
         }
 
         $this->_doc->amount = $this->docform->total->getText();
-        //$this->_doc->datatag = $this->_doc->amount;
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();

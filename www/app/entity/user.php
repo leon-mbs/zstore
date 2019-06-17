@@ -92,8 +92,8 @@ class User extends Entity {
     protected function beforeDelete() {
 
         $conn = \ZDB\DB::getConnect();
-           $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
-           $cnt = $conn->GetOne($sql);
+        $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
+        $cnt = $conn->GetOne($sql);
         return ($cnt > 0) ? "Нельзя удалять пользователя с документами" : true;
     }
 

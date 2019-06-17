@@ -106,7 +106,7 @@ class OrderCustList extends \App\Pages\Base {
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-        $payed = $this->_doc->datatag >= $this->_doc->amount; //оплачен
+        $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         $ttn = false;
         //проверяем  что есть ТТН
         $list = $this->_doc->ConnectedDocList();
@@ -137,7 +137,7 @@ class OrderCustList extends \App\Pages\Base {
         }
         if ($sender->id == "bclose") {
 
-            $this->_doc->datatag = $this->_doc->amount;
+            $this->_doc->payamount = $this->_doc->amount;
             $this->_doc->save();
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
@@ -157,7 +157,7 @@ class OrderCustList extends \App\Pages\Base {
 
         $state = $this->_doc->state;
 
-        $payed = $this->_doc->datatag >= $this->_doc->amount; //оплачен
+        $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         //доставлен
         $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
 
@@ -174,7 +174,7 @@ class OrderCustList extends \App\Pages\Base {
         $this->statuspan->statusform->bttn->setVisible(!$ttn);
 
         //отмена   если  не было оплат и доставки
-        if ($this->_doc->datatag == 0) {
+        if ($this->_doc->payamount == 0) {
             $this->statuspan->statusform->bcancel->setVisible(false);
         } else {
             $this->statuspan->statusform->bcancel->setVisible(true);

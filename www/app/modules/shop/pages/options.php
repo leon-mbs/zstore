@@ -23,9 +23,9 @@ class Options extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if(strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin'){
-            System::setErrorMsg('Нет права доступа к  этой странице'); 
-             App::RedirectHome();
+        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('Нет права доступа к  этой странице');
+            App::RedirectHome();
             return;
         }
 

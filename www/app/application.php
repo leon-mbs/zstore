@@ -128,6 +128,4 @@ class Application extends \Zippy\WebApplication {
         }
     }
 
-    
-
 }

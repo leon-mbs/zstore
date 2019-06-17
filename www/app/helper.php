@@ -90,7 +90,6 @@ class Helper {
             case 4 :
                 $dir = "Pages/Reference";
                 break;
-            
         }
         $textmenu = "";
 
@@ -143,7 +142,6 @@ class Helper {
                 case 4 :
                     $dir = "Pages/Reference";
                     break;
-                 
             }
 
             $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
@@ -333,10 +331,30 @@ class Helper {
             return $common['defstore'];
         }
 
-        \App\System::setErrorMsg('Не настроен склад  по  умолчанию');
-        \App\Application::RedirectHome();
+        \App\System::setErrorMsg('Не задан склад  по  умолчанию');
+        \App\Application::Redirect("\\App\\Pages\\Options");
     }
 
+    /**
+     * Возвращает расчетный счет  по  умолчанию
+     * 
+     */
+    public static function getDefMF() {
+        $common = System::getOptions("common");
+        if ($common['defmf'] > 0) {
+            return $common['defmf'];
+        }
+
+        \App\System::setErrorMsg('Не задан денежный счет по  умолчанию');
+        \App\Application::Redirect("\\App\\Pages\\Options");
+    }
+
+    /**
+     * Форматирование количества
+     * 
+     * @param mixed $qty
+     * @return mixed
+     */
     public static function fqty($qty) {
         if (strlen($qty) == 0)
             return '';

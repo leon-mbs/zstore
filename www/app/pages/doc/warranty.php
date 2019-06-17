@@ -64,7 +64,7 @@ class Warranty extends \App\Pages\Base {
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -101,7 +101,7 @@ class Warranty extends \App\Pages\Base {
                 }
             }
         }
-         
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -211,11 +211,11 @@ class Warranty extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
 
-    
-        
-      $this->_doc->headerdata['pricetype']   =   $this->docform->pricetype->getValue();
-      $this->_doc->headerdata['pricetypename']   =   $this->docform->pricetype->getValueName();
-          
+
+
+        $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
+        $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

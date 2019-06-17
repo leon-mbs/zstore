@@ -5,11 +5,9 @@ namespace App\Modules\OCStore;
 /**
  * Вспомагательный  класс
  */
-class Helper
-{
+class Helper {
 
-    public static function do_curl_request($url, $params = array())
-    {
+    public static function do_curl_request($url, $params = array()) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -29,14 +27,15 @@ class Helper
 
         //execute post
         $result = curl_exec($ch);
-        if($result ===false){
-          $error=curl_error($ch) ;    
-          \App\System::setErrorMsg($error) ;
+        if ($result === false) {
+            $error = curl_error($ch);
+            \App\System::setErrorMsg($error);
         }
-        
+
         //close connection
         curl_close($ch);
 
         return $result;
     }
+
 }

@@ -141,17 +141,17 @@ class TaskList extends \App\Pages\Base {
         $row->add(new Label('taskemps', implode(', ', $emps)));
         $row->add(new Label('taskclient', $task->customer_name));
         $row->add(new Label('taskamount', $task->amount));
-        $row->add(new Label('taskdebet',  $task->amount - $task->datatag));
+        $row->add(new Label('taskdebet', $task->amount - $task->payamount));
 
         $this->_tamount = $this->_tamount + $task->amount;
-        $this->_tdebet  = $this->_tdebet + $task->amount - $task->datatag;
+        $this->_tdebet = $this->_tdebet + $task->amount - $task->payamount;
 
         $row->add(new ClickLink('taskshow'))->onClick($this, 'taskshowOnClick');
         $row->add(new ClickLink('taskedit'))->onClick($this, 'taskeditOnClick');
         $row->add(new ClickLink('taskpay'))->onClick($this, 'taskpayOnClick');
-        if ($task->state == Document::STATE_CLOSED){
-            $row->taskedit->setVisible(false);  
-        } 
+        if ($task->state == Document::STATE_CLOSED) {
+            $row->taskedit->setVisible(false);
+        }
     }
 
     //панель кнопок
@@ -184,8 +184,6 @@ class TaskList extends \App\Pages\Base {
         }
 
 
-
-
         $this->statuspan->docview->setDoc($this->_task);
         $this->tasklist->setSelectedRow($sender->getOwner());
         $this->tasklist->Reload(false);
@@ -211,16 +209,9 @@ class TaskList extends \App\Pages\Base {
         }
         if ($sender->id == 'bclosed') {
             $this->_task->updateStatus(Document::STATE_EXECUTED);
-            if ($this->_task->amount == $this->_task->datatag) { //если оплачен
+            if ($this->_task->amount == $this->_task->payamount) { //если оплачен
                 $this->_task->updateStatus(Document::STATE_CLOSED);
                 $this->setSuccess('Наряд закрыт');
-            } else {
-                if ($this->_task->datatag == 0) {
-                    $this->_task->updateStatus(Document::STATE_WP);
-                }
-                if ($this->_task->datatag > 0) {
-                    // $this->_task->updateStatus(Document::STATE_PART_PAYED);           
-                }
             }
         }
 
@@ -241,7 +232,7 @@ class TaskList extends \App\Pages\Base {
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText($this->_task->amount - $this->_task->datatag);
+        $this->paypan->payform->pamount->setText($this->_task->amount - $this->_task->payamount);
         ;
         $this->paypan->payform->pcomment->setText("");
         ;
@@ -270,20 +261,18 @@ class TaskList extends \App\Pages\Base {
             return;
 
         $this->_task->addPayment(System::getUser()->getUserName(), $amount, $form->pcomment->getText());
-        $this->_task->datatag += $amount;
-        if ($this->_task->datatag > $this->_task->amount) {
+        $this->_task->payamount += $amount;
+        if ($this->_task->payamount > $this->_task->amount) {
             $this->setWarn('Сумма  больше  необходимой  оплаты');
         }
 
         $this->_task->save();
-        if ($this->_task->datatag < $this->_task->amount) {
+        if ($this->_task->payamount < $this->_task->amount) {
             // $this->_task->updateStatus(Document::STATE_PART_PAYED);
         }
-        if ($this->_task->datatag == $this->_task->amount) {
-            $this->_task->updateStatus(Document::STATE_PAYED);
-        }
+
         $this->setSuccess('Оплата добавлена');
-        if ($this->_task->datatag == $this->_task->amount && $this->_task->checkStates(array(Document::STATE_EXECUTED))) {
+        if ($this->_task->payamount == $this->_task->amount && $this->_task->checkStates(array(Document::STATE_EXECUTED))) {
             //закрываем если был выполнен
             $this->_task->updateStatus(Document::STATE_CLOSED);
             $this->setSuccess('Наряд оплаче и закрыт');
@@ -350,7 +339,7 @@ class TaskList extends \App\Pages\Base {
                 $col = "#ffc107";
             if ($item->state == Document::STATE_CLOSED)
                 $col = "#dddddd";
-            if ($item->state == Document::STATE_CLOSED && $item->amount > $task->datatag)
+            if ($item->state == Document::STATE_CLOSED && $item->amount > $task->payamount)
                 $col = "#ff0000";
 
 

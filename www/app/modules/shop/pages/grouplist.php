@@ -26,10 +26,10 @@ class GroupList extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-  
-        if(strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin'){
-            System::setErrorMsg('Нет права доступа к  этой странице'); 
-             App::RedirectHome();
+
+        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('Нет права доступа к  этой странице');
+            App::RedirectHome();
             return;
         }
 
@@ -161,12 +161,12 @@ class GroupList extends \App\Pages\Base {
     }
 
     public function OnDelGroup($sender) {
-     
-       $del=ProductGroup::delete($this->group->group_id);
-       if(strlen($del) > 0){
+
+        $del = ProductGroup::delete($this->group->group_id);
+        if (strlen($del) > 0) {
             $this->setError($del);
             return;
-        }              
+        }
         $this->group = null;
         $this->ReloadTree();
     }

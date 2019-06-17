@@ -65,8 +65,6 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->_doc = $doc;
         $doc = $this->_doc->cast();
 
-
-
         $html = $doc->generateReport();
         $this->preview->setText($html, true);
         // проверяем  поддержку  экспорта
@@ -98,7 +96,7 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->dw_statelist->Reload();
 
         //оплаты
-        $this->_paylist = $this->_doc->getPayments();
+        $this->_paylist = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->dw_paylist->Reload();
 
         //список приатаченных  файлов
@@ -147,9 +145,11 @@ class DocView extends \Zippy\Html\PageFragment {
     public function payListOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('paydate', date('Y-m-d', $item->paydate)));
-        $row->add(new Label('payamount', $item->amount));
+        $row->add(new Label('payamountp', $item->amount > 0 ? $item->amount : ""));
+        $row->add(new Label('payamountm', $item->amount < 0 ? 0 - $item->amount : ""));
         $row->add(new Label('payuser', $item->username));
         $row->add(new Label('paycomment', $item->notes));
+        $row->add(new Label('paymf', $item->mf_name));
     }
 
     /**

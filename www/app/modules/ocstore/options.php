@@ -10,11 +10,9 @@ use \Zippy\Html\Form\TextArea;
 use \Zippy\Html\Form\TextInput;
 use \Zippy\WebApplication as App;
 
-class Options extends \App\Pages\Base
-{
+class Options extends \App\Pages\Base {
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
@@ -30,16 +28,14 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
         $form->add(new TextArea('key', $modules['ockey']));
-        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(),$modules['occustomer_id']));
-        $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(),$modules['ocpricetype']));
+        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['occustomer_id']));
+        $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $form->add(new SubmitButton('check'))->onClick($this, 'checkOnClick');
-
     }
 
-    public function checkOnClick($sender)
-    {
+    public function checkOnClick($sender) {
         $site = $this->cform->site->getText();
         $apiname = $this->cform->apiname->getText();
         $key = $this->cform->key->getText();
@@ -49,18 +45,18 @@ class Options extends \App\Pages\Base
 
         $fields = array(
             'username' => $apiname,
-            'key' => $key 
-             
+            'key' => $key
         );
 
         $json = Helper::do_curl_request($url, $fields);
-        if($json ===false) return;
-        $data = json_decode($json,true);
+        if ($json === false)
+            return;
+        $data = json_decode($json, true);
 
 
-         if (is_array($data['error']) ) {
-            $this->setError(implode(' ',$data['error']));
-        } else 
+        if (is_array($data['error'])) {
+            $this->setError(implode(' ', $data['error']));
+        } else
         if (strlen($data['error']) > 0) {
             $this->setError($data['error']);
         }
@@ -79,31 +75,29 @@ class Options extends \App\Pages\Base
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
             $json = Helper::do_curl_request($url, array());
-            $data = json_decode($json,true);
+            $data = json_decode($json, true);
 
             if ($data['error'] != "") {
                 $this->setError($data['error']);
             } else {
-  
+
                 System::getSession()->statuses = $data['statuses'];
             }
             //загружаем список категорий
             $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
             $json = Helper::do_curl_request($url, array());
-            $data = json_decode($json,true);
+            $data = json_decode($json, true);
 
             if ($data['error'] != "") {
                 $this->setError($data['error']);
             } else {
-  
+
                 System::getSession()->cats = $data['cats'];
             }
-
         }
     }
 
-    public function saveOnClick($sender)
-    {
+    public function saveOnClick($sender) {
         $site = $this->cform->site->getText();
         $apiname = $this->cform->apiname->getText();
         $key = $this->cform->key->getText();
@@ -131,4 +125,5 @@ class Options extends \App\Pages\Base
         System::setOptions("modules", $modules);
         $this->setSuccess('Сохранено');
     }
+
 }

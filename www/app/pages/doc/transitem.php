@@ -52,7 +52,7 @@ class TransItem extends \App\Pages\Base {
 
 
         if ($docid > 0) {    //загружаем   содержимок  документа на страницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
@@ -69,7 +69,7 @@ class TransItem extends \App\Pages\Base {
             $this->_doc = Document::create('TransItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
         }
-         
+
 
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -83,13 +83,13 @@ class TransItem extends \App\Pages\Base {
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-   
-       $this->_doc->headerdata['storefrom']   =   $this->docform->storefrom->getValue();
-       $this->_doc->headerdata['fromitem']   =   $this->docform->fromitem->getKey();
-       $this->_doc->headerdata['toitem']   =   $this->docform->toitem->getKey();
-       $this->_doc->headerdata['fromquantity']   =   $this->docform->fromquantity->getText();
-       $this->_doc->headerdata['toquantity']   =   $this->docform->toquantity->getText();
-        
+
+        $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
+        $this->_doc->headerdata['fromitem'] = $this->docform->fromitem->getKey();
+        $this->_doc->headerdata['toitem'] = $this->docform->toitem->getKey();
+        $this->_doc->headerdata['fromquantity'] = $this->docform->fromquantity->getText();
+        $this->_doc->headerdata['toquantity'] = $this->docform->toquantity->getText();
+
 
         if ($this->checkForm() == false) {
             return;

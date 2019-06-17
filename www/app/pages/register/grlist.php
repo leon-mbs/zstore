@@ -69,7 +69,7 @@ class GRList extends \App\Pages\Base {
         $this->add(new Panel("paypan"))->setVisible(false);
         $this->paypan->add(new Label("pname"));
         $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-
+        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
         $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
@@ -96,7 +96,7 @@ class GRList extends \App\Pages\Base {
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', $doc->amount));
-        $row->add(new Label('spay', $doc->amount - $doc->datatag));
+        $row->add(new Label('spay', abs($doc->amount - $doc->payamount)));
         $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
@@ -172,23 +172,24 @@ class GRList extends \App\Pages\Base {
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText($this->_doc->amount - $this->_doc->datatag);
+        $this->paypan->payform->pamount->setText($this->_doc->amount - $this->_doc->payamount);
         ;
         $this->paypan->payform->pcomment->setText("");
         ;
         $this->paypan->pname->setText($this->_doc->document_number);
         ;
 
-        $this->_pays = $this->_doc->getPayments();
+        $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();
     }
 
     public function payOnRow($row) {
         $pay = $row->getDataItem();
-        $row->add(new Label('plamount', $pay->amount));
-        $row->add(new Label('pluser', $pay->user));
-        $row->add(new Label('pldate', date('Y-m-d', $pay->date)));
-        $row->add(new Label('plcomment', $pay->comment));
+        $row->add(new Label('plamount', 0 - $pay->amount));
+        $row->add(new Label('pluser', $pay->username));
+        $row->add(new Label('pldate', date('Y-m-d', $pay->paydate)));
+        $row->add(new Label('plmft', $pay->mf_name));
+        $row->add(new Label('plcomment', $pay->notes));
     }
 
     public function payOnSubmit($sender) {
@@ -200,21 +201,18 @@ class GRList extends \App\Pages\Base {
         if ($amount == 0)
             return;
 
-        $this->_doc->addPayment(System::getUser()->getUserName(), $amount, $form->pcomment->getText());
-        $this->_doc->datatag += $amount;
-        if ($this->_doc->datatag > $this->_doc->amount) {
+
+        \App\Entity\Pay::addPayment($this->_doc->document_id, 0 - $amount, $form->payment->getValue(), $form->pcomment->getText());
+        $this->_doc->payamount = 0 - \App\Entity\Pay::getPaymentAmount($this->_doc->document_id);
+        if ($this->_doc->payamount > $this->_doc->amount) {
             $this->setWarn('Сумма  больше  необходимой  оплаты');
         }
 
         $this->_doc->save();
-        if ($this->_doc->datatag < $this->_doc->amount) {
-            //$this->_doc->updateStatus(Document::STATE_PART_PAYED);
-        }
-        if ($this->_doc->datatag == $this->_doc->amount) {
-            $this->_doc->updateStatus(Document::STATE_PAYED);
-        }
+
+
         $this->setSuccess('Оплата добавлена');
-        if ($this->_doc->datatag == $this->_doc->amount) {
+        if ($this->_doc->payamount == $this->_doc->amount) {
 
             //закрываем если есть домтавка
             //$this->_doc->updateStatus(Document::STATE_CLOSED);
@@ -282,7 +280,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and  state <>" . Document::STATE_EXECUTED;
         }
         if ($status == 2) {
-            $where .= " and  amount > datatag";
+            $where .= " and  amount > payamount";
         }
         if ($status == 3) {
             

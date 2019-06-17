@@ -102,7 +102,7 @@ class GIList extends \App\Pages\Base {
         $row->add(new Label('amount', $doc->amount));
         $row->add(new Label('order', $doc->headerdata['order']));
         $row->add(new Label('customer', $doc->customer_name));
-        $row->add(new Label('spay', $doc->amount - $doc->datatag));
+        $row->add(new Label('spay', $doc->amount - $doc->payamount));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
@@ -150,7 +150,7 @@ class GIList extends \App\Pages\Base {
 
             if ($order instanceof Document) {
                 $order = $order->cast();
-                if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->datatag) { //если  все  доставлено и оплачено закрываем  заказ
+                if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->payamount) { //если  все  доставлено и оплачено закрываем  заказ
                     $order->updateStatus(Document::STATE_CLOSED);
                     $msg .= " Заказ {$order->document_number} закрыт";
                 }
@@ -173,7 +173,7 @@ class GIList extends \App\Pages\Base {
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             if ($order instanceof Document) {
                 $order = $order->cast();
-                if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->datatag) { //если  все   выполнено и оплачено закрываем  заказ
+                if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->payamount) { //если  все   выполнено и оплачено закрываем  заказ
                     $order->updateStatus(Document::STATE_CLOSED);
                     $msg .= " Заказ {$order->document_number} закрыт";
                 }
@@ -288,7 +288,7 @@ class GIList extends \App\Pages\Base {
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText($this->_doc->amount - $this->_doc->datatag);
+        $this->paypan->payform->pamount->setText($this->_doc->amount - $this->_doc->payamount);
         ;
         $this->paypan->payform->pcomment->setText("");
         ;
@@ -317,25 +317,17 @@ class GIList extends \App\Pages\Base {
             return;
 
         $this->_doc->addPayment(System::getUser()->getUserName(), $amount, $form->pcomment->getText());
-        $this->_doc->datatag += $amount;
-        if ($this->_doc->datatag > $this->_doc->amount) {
+        $this->_doc->payamount += $amount;
+        if ($this->_doc->payamount > $this->_doc->amount) {
             $this->setWarn('Сумма  больше  необходимой  оплаты');
         }
 
         $this->_doc->save();
-        if ($this->_doc->datatag < $this->_doc->amount) {
-            //$this->_doc->updateStatus(Document::STATE_PART_PAYED);
-        }
-        if ($this->_doc->datatag == $this->_doc->amount) {
-            //$this->_doc->updateStatus(Document::STATE_PAYED);
-        }
+
         $this->setSuccess('Оплата добавлена');
 
-
-
-
         $this->doclist->Reload(false);
-        ;
+
         $this->paypan->setVisible(false);
     }
 
@@ -397,7 +389,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and state = " . Document::STATE_INSHIPMENT;
         }
         if ($status == 4) {
-            $where .= " and  amount > datatag";
+            $where .= " and  amount > payamount";
         }
         if ($status == 5) {
             $where .= " and state = " . Document::STATE_INPROCESS;

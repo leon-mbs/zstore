@@ -92,19 +92,19 @@ class ItemActivity extends \App\Pages\Base {
 
         $storeid = $this->filter->store->getValue();
         $itemid = $this->filter->item->getKey();
-        $snumber= $this->filter->snumber->getText();
+        $snumber = $this->filter->snumber->getText();
 
-        $it =   "1=1";
-        if($itemid > 0 ){
-           $it .= " and st.item_id=" . $itemid  ;    
-        } 
-        if(strlen($snumber) > 0 ){
-           $it .= " and st.snumber=" . Stock::qstr($snumber)  ;    
-        } 
-         
+        $it = "1=1";
+        if ($itemid > 0) {
+            $it .= " and st.item_id=" . $itemid;
+        }
+        if (strlen($snumber) > 0) {
+            $it .= " and st.snumber=" . Stock::qstr($snumber);
+        }
+
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
- 
+
         $i = 1;
         $detail = array();
         $conn = \ZDB\DB::getConnect();
@@ -137,7 +137,7 @@ class ItemActivity extends \App\Pages\Base {
           date(sc.document_date) AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
-          GROUP_CONCAT(dc.document_number) AS docs
+          GROUP_CONCAT(distinct dc.document_number) AS docs
         FROM entrylist_view sc
           JOIN store_stock_view st
             ON sc.stock_id = st.stock_id
@@ -159,7 +159,7 @@ class ItemActivity extends \App\Pages\Base {
             $detail[] = array(
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
-                "date" => date("d.m.Y", strtotime($row['dt'])),
+                "date" => date("Y-m-d", strtotime($row['dt'])),
                 "documents" => $row['docs'],
                 "in" => H::fqty(strlen($row['begin_quantity']) > 0 ? $row['begin_quantity'] : 0),
                 "obin" => H::fqty($row['obin']),

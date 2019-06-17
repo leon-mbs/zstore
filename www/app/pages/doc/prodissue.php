@@ -40,7 +40,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->add(new Date('document_date'))->setDate(time());
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
+        $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
 
@@ -67,14 +67,14 @@ class ProdIssue extends \App\Pages\Base {
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
+            $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -102,7 +102,7 @@ class ProdIssue extends \App\Pages\Base {
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate >0 ?date('Y-m-d',$item->sdate):''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
         $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -154,11 +154,11 @@ class ProdIssue extends \App\Pages\Base {
             $this->setError("Не выбран товар");
             return;
         }
- 
+
         $stock = Stock::load($id);
         $stock->quantity = $this->editdetail->editquantity->getText();
-       $qstock=$this->editdetail->qtystock->getText();
-        if($stock->quantity > $qstock)  {
+        $qstock = $this->editdetail->qtystock->getText();
+        if ($stock->quantity > $qstock) {
             $this->setWarn('Недостаточное  количество на  складе');
         }
 
@@ -201,22 +201,22 @@ class ProdIssue extends \App\Pages\Base {
         }
 
         $this->calcTotal();
-        $old = $this->_doc->cast();
- 
-        
-       $this->_doc->headerdata['parea']   =   $this->docform->parea->getValue();
-       $this->_doc->headerdata['pareaname']   =   $this->docform->parea->getValueName();
-       $this->_doc->headerdata['store']   =   $this->docform->store->getValue();
-       $this->_doc->headerdata['planned']   =   $this->docform->planned->isChecked() ? 1 : 0;
-           
-        
+
+
+
+        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
         }
 
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->datatag = $this->_doc->amount;
+        $this->_doc->payamount = $this->_doc->amount;
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();

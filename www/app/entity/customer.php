@@ -54,7 +54,6 @@ class Customer extends \ZCL\DB\Entity {
         if ($cnt > 0)
             return "На  контрагента есть  ссылки  в  документах";
         return "";
-         
     }
 
     /**

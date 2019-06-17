@@ -9,8 +9,8 @@
         <td  >
             <b> Склад:</b>  
         </td>
-       <td  >
-             {{from}}
+        <td  >
+            {{from}}
         </td>
 
     </tr>
@@ -19,7 +19,7 @@
             <b>Входной ТМЦ:</b> 
         </td>
         <td  >
-             {{fromitemname}}
+            {{fromitemname}}
         </td>
     </tr>
     <tr>
@@ -27,7 +27,7 @@
             <b>Выходной ТМЦ:</b>  
         </td>
         <td  >
-             {{toitemname}}
+            {{toitemname}}
         </td>
     </tr>
     <tr>
@@ -35,14 +35,14 @@
             <b>Сумма:</b>  
         </td>
         <td  >
-             {{amount}}
+            {{amount}}
         </td>
     </tr>
 
 
 
- 
-  
+
+
 </table>
 
 

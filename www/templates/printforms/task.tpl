@@ -16,7 +16,7 @@
             Произв. участок:
         </td>
         <td>
-           {{pareaname}}
+            {{pareaname}}
         </td>
         <td>
 
@@ -28,7 +28,7 @@
             Наряд № {{document_number}} с {{startdate}} по {{date}} 
         </td>
     </tr>
-    
+
 </table>
 <br>
 <table class="ctable" width="600" cellspacing="0" cellpadding="1" border="0">

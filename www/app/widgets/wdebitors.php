@@ -27,10 +27,10 @@ class WDebitors extends \Zippy\Html\PageFragment {
 
         $conn = $conn = \ZDB\DB::getConnect();
         $sql = "select * from (
-            select meta_desc,document_number, customer_name,   (   datatag-amount)  as am
-            from `documents_view` where meta_name in ('GoodsIssue','GoodsReceipt','Task','ServiceAct') and amount > datatag
+            select meta_desc,document_number, customer_name,   ( amount - payamount)  as am 
+            from `documents_view` where amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in('GoodsReceipt','GoodsIssue','Task','ServiceAct') 
               
-            ) t  order by am   ";
+            ) t  order by am desc  ";
 
         if ($visible) {
 
@@ -43,7 +43,7 @@ class WDebitors extends \Zippy\Html\PageFragment {
 
         $list = $this->add(new DataView('ddoclist', new ArrayDataSource($data), $this, 'OnRow'));
         $list->Reload();
-         $list->setPageSize(10);
+        $list->setPageSize(10);
         $this->add(new \Zippy\Html\DataList\Paginator("wdpag", $list));
         $list->Reload();
         if (count($data) == 0 || $visible == false) {
@@ -55,7 +55,7 @@ class WDebitors extends \Zippy\Html\PageFragment {
         $item = $row->getDataItem();
 
         $row->add(new Label('cust', $item->customer_name));
-        $row->add(new Label('amount', 0 - ($item->am)));
+        $row->add(new Label('amount', $item->am));
         $row->add(new Label('type', $item->meta_desc));
         $row->add(new Label('number', $item->document_number));
     }

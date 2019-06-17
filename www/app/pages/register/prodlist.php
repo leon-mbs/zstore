@@ -26,7 +26,6 @@ use \App\System;
 class ProdList extends \App\Pages\Base {
 
     private $_doc = null;
-  
 
     /**
      *
@@ -43,8 +42,8 @@ class ProdList extends \App\Pages\Base {
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
         $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
 
- 
-  
+
+
 
         $doclist = $this->add(new DataView('doclist', new ProdDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
@@ -54,17 +53,17 @@ class ProdList extends \App\Pages\Base {
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
- 
 
- 
+
+
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function filterOnSubmit($sender) {
 
-    
-              $this->docview->setVisible(false);
+
+        $this->docview->setVisible(false);
         $this->doclist->Reload();
     }
 
@@ -76,17 +75,14 @@ class ProdList extends \App\Pages\Base {
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', $doc->amount));
-        
+
         $row->add(new Label('pareaname', $doc->headerdata["pareaname"]));
 
-        
+
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-     
     }
-
- 
 
     //просмотр
     public function showOnClick($sender) {
@@ -96,7 +92,7 @@ class ProdList extends \App\Pages\Base {
             return;
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
-          $this->docview->setVisible(true);
+        $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
     }
 
@@ -106,10 +102,8 @@ class ProdList extends \App\Pages\Base {
             return;
 
 
-        App::Redirect("\\App\\Pages\\Doc\\".$doc->meta_name, $doc->document_id);
+        App::Redirect("\\App\\Pages\\Doc\\" . $doc->meta_name, $doc->document_id);
     }
-
- 
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
@@ -161,13 +155,12 @@ class ProdDataSource implements \Zippy\Interfaces\DataSource {
 
 
         $parea = $this->page->filter->parea->getValue();
-        if($parea >0){
-           $where .= " and content like '%<parea>{$parea}</parea>%'  ";
-        
+        if ($parea > 0) {
+            $where .= " and content like '%<parea>{$parea}</parea>%'  ";
         }
-      
 
-      
+
+
         if ($user->acltype == 2) {
 
 

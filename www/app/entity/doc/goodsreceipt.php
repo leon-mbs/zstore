@@ -18,12 +18,12 @@ class GoodsReceipt extends Document {
 
         $detail = array();
         foreach ($this->detaildata as $value) {
-            $name =$value['itemname'];
-            if(strlen($value['snumber'])>0){
-               $name .= ' ('.$value['snumber'].','.date('Y-m-d',$value['sdate']).')';  
+            $name = $value['itemname'];
+            if (strlen($value['snumber']) > 0) {
+                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
             }
-            
-            
+
+
             $detail[] = array("no" => $i++,
                 "itemname" => $name,
                 "itemcode" => $value['item_code'],
@@ -55,8 +55,8 @@ class GoodsReceipt extends Document {
 
         //аналитика
         foreach ($this->detaildata as $row) {
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'],$row['snumber'],$row['sdate'], true);
-            
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'], $row['snumber'], $row['sdate'], true);
+
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
@@ -75,8 +75,11 @@ class GoodsReceipt extends Document {
                 $it->save();
             }
         }
+        if ($this->headerdata['payment'] > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], $this->headerdata['paynotes']);
+            $this->payamount = $this->amount;
+        }
 
-      
 
         return true;
     }

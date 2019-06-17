@@ -18,13 +18,13 @@ class ProdReceipt extends Document {
 
         $detail = array();
         foreach ($this->detaildata as $value) {
-            
-           $name =$value['itemname'];
-            if(strlen($value['snumber'])>0){
-               $name .= ' ('.$value['snumber'].','.date('Y-m-d',$value['sdate']).')';  
+
+            $name = $value['itemname'];
+            if (strlen($value['snumber']) > 0) {
+                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
             }
-             
-            
+
+
             $detail[] = array("no" => $i++,
                 "itemname" => $name,
                 "itemcode" => $value['item_code'],
@@ -39,7 +39,7 @@ class ProdReceipt extends Document {
             "_detail" => $detail,
             "document_number" => $this->document_number,
             "pareaname" => $this->headerdata["pareaname"],
-             "notes" => $this->notes,
+            "notes" => $this->notes,
             "total" => $this->amount
         );
 
@@ -57,7 +57,7 @@ class ProdReceipt extends Document {
 
         //аналитика
         foreach ($this->detaildata as $row) {
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'],$row['snumber'],$row['sdate'], true);
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'], $row['snumber'], $row['sdate'], true);
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
@@ -65,7 +65,7 @@ class ProdReceipt extends Document {
             $sc->save();
         }
 
-   
+
 
         return true;
     }

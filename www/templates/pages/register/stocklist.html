@@ -11,65 +11,65 @@
 
 
                     <input autocomplete="off" placeholder="Имя  или  код..." class="form-control mr-sm-2" type="text" zippy="searchkey">
-                         
+
                     <label for="searchcat">категория</label>
 
                     <select   class="form-control mr-sm-2" zippy="searchcat">
                         <option value="0">Не задана</option>
                     </select>         
-              
+
                     <input class="btn btn-outline-success  " type="submit" value="ОК">
-  
+
                 </form>
                 <a zippy="csv"  >Скачать  CSV</a>  
 
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
-                       
-                         <th>Название</th>
 
-                        
+                        <th>Название</th>
+
+
                         <th>Артикул</th>
                         <th>Категория</th>
                         <th>Ед.</th>
-                       
+
                         <th  class="text-right  " >Кол.   </th>
                         <th    > </th>
-                        
-                       
+
+
 
 
 
                     </tr>
                     <tr zippy="itemlist">
-                       
+
                         <td zippy="itemname"></td>
 
                         <td zippy="code" class=" text-nowrap"></td>
                         <td zippy="cat_name"></td>
                         <td zippy="msr"></td>
-                
+
                         <td zippy="qty" class="text-right  "></td>
                         <td  >  <a zippy="show" title="Детальная информация"><i class="fa fa-eye"></i></a>   </td>
-                        
+
 
 
                     </tr>
                 </table>
                 <div zippy="pag"></div>
-               
+
             </div>
-             <div class="col-12   col-xl-10" zippy="detailpanel">
-                    <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> К списку</a>
-                    <h4 zippy="itemdetname"></h4>
-                  <table class="table   table-responsive-sm   table-sm  table-hover ">
+            <div class="col-12   col-xl-10" zippy="detailpanel">
+                <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> К списку</a>
+                <h4 zippy="itemdetname"></h4>
+                <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
-                            {{#usesnumber}} 
+                        {{#usesnumber}} 
                         <th  class="text-right text-nowrap">Серия</th>
                         <th  class="text-right text-nowrap">Дата серии</th>
                         <th  class="text-right text-nowrap">Годен до    </th>
-                            {{/usesnumber}} 
+                        {{/usesnumber}} 
                         <th  class="text-right text-nowrap">Зак. цена</th>
                         <th  class="text-right text-nowrap" >Кол.  <i style="font-size: smaller;" title="Актуальное, ожидаемое, зарезервированное" class="fa fa-info-circle "></i>                                                   </th>
                         <th  class="text-right text-nowrap">На сумму</th>
@@ -80,11 +80,11 @@
                     </tr>
                     <tr zippy="stocklist">
                         <td zippy="storename"></td>
-                         {{#usesnumber}} 
+                        {{#usesnumber}} 
                         <td zippy="snumber" class="text-right  "></td>
                         <td zippy="sdate"   class="text-right  "></td>
                         <td zippy="sedate"  class="text-right  "></td>
-                         {{/usesnumber}} 
+                        {{/usesnumber}} 
                         <td zippy="partion" class="text-right  "></td>
                         <td zippy="qty" class="text-right  "></td>
                         <td zippy="amount" class="text-right  "></td>
@@ -93,7 +93,7 @@
 
                     </tr>
                 </table>              
-                </div>
+            </div>
 
 
 

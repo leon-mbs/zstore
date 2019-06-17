@@ -18,8 +18,8 @@ class Store extends \ZCL\DB\Entity {
     protected function beforeDelete() {
 
         $conn = \ZDB\DB::getConnect();
-           $sql = "  select count(*)  from  store_stock where   store_id = {$this->store_id}";
-           $cnt = $conn->GetOne($sql);
+        $sql = "  select count(*)  from  store_stock where   store_id = {$this->store_id}";
+        $cnt = $conn->GetOne($sql);
         return ($cnt > 0) ? "Нельзя удалять используемый склад" : true;
     }
 

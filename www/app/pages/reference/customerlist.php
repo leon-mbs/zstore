@@ -139,12 +139,12 @@ class CustomerList extends \App\Pages\Base {
             return;
 
 
-        $del = Customer::delete($sender->owner->getDataItem()->customer_id);   
-        if(strlen($del) > 0){
+        $del = Customer::delete($sender->owner->getDataItem()->customer_id);
+        if (strlen($del) > 0) {
             $this->setError($del);
             return;
-        }    
-  
+        }
+
 
         $this->customertable->customerlist->Reload();
     }

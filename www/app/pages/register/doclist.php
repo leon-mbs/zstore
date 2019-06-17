@@ -71,11 +71,11 @@ class DocList extends \App\Pages\Base {
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
             $this->docview->setVisible(true);
-            $dc=Document::load($docid);
+            $dc = Document::load($docid);
             $this->docview->setDoc($dc);
             //$this->doclist->setSelectedRow($docid);
-            $filter->searchnumber =  $dc->document_number;
-            $this->filter->searchnumber->setText($dc->document_number)   ;
+            $filter->searchnumber = $dc->document_number;
+            $this->filter->searchnumber->setText($dc->document_number);
             $doclist->Reload();
         }
 
@@ -197,9 +197,9 @@ class DocList extends \App\Pages\Base {
         $doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
-     
-        $del=Document::delete($doc->document_id);
-        if(strlen($del) > 0){
+
+        $del = Document::delete($doc->document_id);
+        if (strlen($del) > 0) {
             $this->setError($del);
             return;
         }
@@ -225,7 +225,7 @@ class DocList extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "Customer_name like " . $text);
+        return Customer::findArray("customer_name", "customer_name like " . $text);
     }
 
     public function oncsv($sender) {

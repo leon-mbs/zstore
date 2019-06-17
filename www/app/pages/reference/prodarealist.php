@@ -43,12 +43,12 @@ class ProdAreaList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditRef('ProdAreaList'))
             return;
 
- 
-        $del=ProdArea::delete($pa_id);
-        if(strlen($del) > 0){
+
+        $del = ProdArea::delete($pa_id);
+        if (strlen($del) > 0) {
             $this->setError($del);
             return;
-        }        
+        }
         $this->patable->palist->Reload();
     }
 

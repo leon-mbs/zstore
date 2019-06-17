@@ -17,9 +17,6 @@ class TransItem extends Document {
     public function Execute() {
 
         $conn = \ZDB\DB::getConnect();
-        $conn->StartTrans();
-
-
 
 
         //списываем  со склада
@@ -32,14 +29,13 @@ class TransItem extends Document {
 
         $ti = Item::load($this->headerdata['toitem']);
         $price = round(($this->amount ) / $this->headerdata["toquantity"]);
-        $stockto = Stock::getStock($this->headerdata['storefrom'], $ti->item_id, $price,"","", true);
+        $stockto = Stock::getStock($this->headerdata['storefrom'], $ti->item_id, $price, "", "", true);
         $sc = new Entry($this->document_id, $this->headerdata["toquantity"] * $price, $this->headerdata["toquantity"]);
         $sc->setStock($stockto->stock_id);
 
         $sc->save();
 
 
-        $conn->CompleteTrans();
         return true;
     }
 

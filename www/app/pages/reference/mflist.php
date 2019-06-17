@@ -13,14 +13,13 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\MoneyFund;
 
-
 /**
-* Справочник  денежных счетов
-*/
+ * Справочник  денежных счетов
+ */
 class MFList extends \App\Pages\Base {
 
     private $_mf;
-    private $_balance ;
+    private $_balance;
 
     public function __construct() {
         parent::__construct();
@@ -35,9 +34,8 @@ class MFList extends \App\Pages\Base {
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-        
+
         $this->_balance = MoneyFund::Balance();
-        
     }
 
     public function mflistOnRow($row) {
@@ -56,12 +54,12 @@ class MFList extends \App\Pages\Base {
 
 
         $mf_id = $sender->owner->getDataItem()->mf_id;
- 
+
         $del = MoneyFund::delete($mf_id);
-        if(strlen($del) > 0){
-            $this->setError($del) ;
+        if (strlen($del) > 0) {
+            $this->setError($del);
             return;
-        }        
+        }
         $this->mftable->mflist->Reload();
     }
 

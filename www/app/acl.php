@@ -101,8 +101,6 @@ class ACL {
         return false;
     }
 
-  
-
     //проверка  на  доступ  к  документу 
     public static function checkShowDoc($doc, $inreg = false) {
         $user = System::getUser();

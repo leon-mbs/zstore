@@ -74,7 +74,7 @@ class OrderCust extends \App\Pages\Base {
 
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -223,7 +223,7 @@ class OrderCust extends \App\Pages\Base {
         if ($this->checkForm() == false) {
             return;
         }
-        $old = $this->_doc->cast();
+
         $this->calcTotal();
 
         $common = System::getOptions("common");
@@ -233,8 +233,8 @@ class OrderCust extends \App\Pages\Base {
             if ($common['useval'] != true)
                 continue;
         }
- 
-         
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();

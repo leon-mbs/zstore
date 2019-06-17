@@ -47,10 +47,10 @@
                             <th>Название</th>
                             <th  >Код</th>
                             <th  >Ед.</th>
-                             {{#usesnumber}} 
+                            {{#usesnumber}} 
                             <th  >Серия</th>
                             <th  >Дата</th>
-                                 {{/usesnumber}} 
+                            {{/usesnumber}} 
 
                             <th   class="text-right">Кол.</th>
                             <th    class="text-right" >Цена</th>
@@ -62,10 +62,10 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                               {{#usesnumber}} 
+                            {{#usesnumber}} 
                             <td zippy="snumber"></td>
                             <td zippy="sdate"></td>
-                              {{/usesnumber}} 
+                            {{/usesnumber}} 
 
 
                             <td zippy="quantity"  class="text-right"></td>
@@ -76,13 +76,13 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                          {{^usesnumber}} 
-                              <td colspan="5" class="text-right">Всего:</td>
-                             {{/usesnumber}} 
-                             {{#usesnumber}} 
-                               <td colspan="7" class="text-right">Всего:</td>
-                             {{/usesnumber}} 
- 
+                            {{^usesnumber}} 
+                            <td colspan="5" class="text-right">Всего:</td>
+                            {{/usesnumber}} 
+                            {{#usesnumber}} 
+                            <td colspan="7" class="text-right">Всего:</td>
+                            {{/usesnumber}} 
+
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>

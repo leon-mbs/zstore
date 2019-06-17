@@ -58,7 +58,7 @@ class MoveItem extends \App\Pages\Base {
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
 
         if ($docid > 0) {    //загружаем   содержимок  документа на страницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
@@ -82,11 +82,11 @@ class MoveItem extends \App\Pages\Base {
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
- 
+
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate >0 ?date('Y-m-d',$item->sdate):''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
@@ -175,12 +175,14 @@ class MoveItem extends \App\Pages\Base {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
-  
-        
-        $this->_doc->headerdata['storefrom'] =   $this->docform->storefrom->getValue();
-        $this->_doc->headerdata['storeto']   =   $this->docform->storeto->getValue();
-  
-         
+
+
+        $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
+        $this->_doc->headerdata['storefromname'] = $this->docform->storefrom->getValueName();
+        $this->_doc->headerdata['storeto'] = $this->docform->storeto->getValue();
+        $this->_doc->headerdata['storetoname'] = $this->docform->storeto->getValueName();
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();

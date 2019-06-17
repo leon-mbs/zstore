@@ -17,8 +17,7 @@ use \App\DataItem;
 /**
  * Виджет для просроченных товаров
  */
-class Wsdate extends \Zippy\Html\PageFragment
-{
+class Wsdate extends \Zippy\Html\PageFragment {
 
     public function __construct($id) {
         parent::__construct($id);
@@ -28,27 +27,26 @@ class Wsdate extends \Zippy\Html\PageFragment
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
 
-         
-                  
-                
+
+
+
 
         if ($visible) {
-        $items= Item::find("item_id in(select item_id from store_stock where  sdate is not null)");
-        
-        $stock= Stock::find("sdate is not null");
+            $items = Item::find("item_id in(select item_id from store_stock where  sdate is not null)");
+
+            $stock = Stock::find("sdate is not null");
 
 
             foreach ($stock as $st) {
-                 $item =  $items[$st->item_id]   ;
-                 if($item->term >0){
-                     $edate =    strtotime("+{$item->term} month",$st->sdate); 
-                     if($edate < time()){
+                $item = $items[$st->item_id];
+                if ($item->term > 0) {
+                    $edate = strtotime("+{$item->term} month", $st->sdate);
+                    if ($edate < time()) {
                         $st->edate = $edate;
-                        $data[$row['item_id']] = $st; 
-                     }
-                 }
-                 
-             }
+                        $data[$row['item_id']] = $st;
+                    }
+                }
+            }
         }
 
         $sdlist = $this->add(new DataView('sdlist', new ArrayDataSource($data), $this, 'sdlistOnRow'));
@@ -58,7 +56,7 @@ class Wsdate extends \Zippy\Html\PageFragment
 
         unset($items);
         unset($stock);
-         
+
         if (count($data) == 0 || $visible == false) {
             $this->setVisible(false);
         };
@@ -70,9 +68,8 @@ class Wsdate extends \Zippy\Html\PageFragment
         $row->add(new Label('storename', $stock->storename));
         $row->add(new Label('itemname', $stock->itemname));
         $row->add(new Label('snumber', $stock->snumber));
-        $row->add(new Label('edate', date('Y-m-d',$stock->edate)));
-        $row->add(new Label('qty', Helper::fqty($stock->qty))) ;
-       
+        $row->add(new Label('edate', date('Y-m-d', $stock->edate)));
+        $row->add(new Label('qty', Helper::fqty($stock->qty)));
     }
 
 }

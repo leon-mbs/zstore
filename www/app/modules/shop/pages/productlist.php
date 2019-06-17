@@ -40,9 +40,9 @@ class ProductList extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if(strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin'){
-            System::setErrorMsg('Нет права доступа к  этой странице'); 
-             App::RedirectHome();
+        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('Нет права доступа к  этой странице');
+            App::RedirectHome();
             return;
         }
 
@@ -310,12 +310,12 @@ class ProductList extends \App\Pages\Base {
     }
 
     public function bdeleteOnClick($sender) {
-         
-        $del=Product::delete($this->product->product_id);
-        if(strlen($del) > 0){
+
+        $del = Product::delete($this->product->product_id);
+        if (strlen($del) > 0) {
             $this->setError($del);
             return;
-        }            
+        }
         $this->listpanel->plist->Reload();
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);

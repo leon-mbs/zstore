@@ -4,15 +4,15 @@
         <td colspan="6" >
             Заказчик:  {{customer}}
         </td>
- 
-         
+
+
     </tr>
-   <tr>
+    <tr>
         <td colspan="6" >
             Заказ:  {{order}}
         </td>
- 
-         
+
+
     </tr>
 
     <tr style="font-weight: bolder;">
@@ -48,7 +48,7 @@
         <td style="border-top: 1px solid black;" align="right">{{total}} </td>
     </tr>
     <tr>
-         <td colspan="6"><br>
+        <td colspan="6"><br>
             Гарантия: {{gar}}
         </td>    
     </tr>

@@ -16,9 +16,12 @@ use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Form\TextArea;
 use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\SubmitLink;
+use \App\Entity\MoneyFund;
+use \App\Helper as H;
 
 /**
  * Страница  ввода  акта выполненных работ
@@ -44,7 +47,9 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('gar'));
         $this->docform->add(new CheckBox('planned'));
-        $this->docform->add(new CheckBox('payed'));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new TextInput('paynotes'));
+
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('order'));
 
@@ -75,13 +80,15 @@ class ServiceAct extends \App\Pages\Base {
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
         if ($docid > 0) { //загружаем   содержимок  документа на страницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->headerdata['notes']);
             $this->docform->gar->setText($this->_doc->headerdata['gar']);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_order_id = $this->_doc->headerdata['order_id'];
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -129,7 +136,6 @@ class ServiceAct extends \App\Pages\Base {
                 }
             }
         }
-        $this->docform->payed->setChecked($this->_doc->datatag == $this->_doc->amount);
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
@@ -140,6 +146,12 @@ class ServiceAct extends \App\Pages\Base {
         if ($this->_order_id) {
             $this->docform->inprocdoc->setVisible(false); //Прячем  если  есть заказ чтобы не  дублировать 
         }
+        $this->onMF($this->docform->payment);
+    }
+
+    public function onMF($sender) {
+        $mf = $sender->getValue();
+        $this->docform->paynotes->setVisible($mf > 0);
     }
 
     public function detailOnRow($row) {
@@ -237,15 +249,14 @@ class ServiceAct extends \App\Pages\Base {
 
         $this->calcTotal();
 
-        $old = $this->_doc->cast();
 
- 
-        
-      $this->_doc->headerdata['order']   =   $this->docform->order->getText();
-      $this->_doc->headerdata['order_id']   =   $this->_order_id;
-      $this->_doc->headerdata['planned']   =   $this->docform->planned->isChecked() ? 1 : 0,;
-      $this->_doc->headerdata['gar']   =   $this->docform->gar->getText();
-          
+        $this->_doc->headerdata['order'] = $this->docform->order->getText();
+        $this->_doc->headerdata['order_id'] = $this->_order_id;
+        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+
         $this->_doc->detaildata = array();
         foreach ($this->_servicelist as $item) {
             $this->_doc->detaildata[] = $item->getData();
@@ -253,11 +264,7 @@ class ServiceAct extends \App\Pages\Base {
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
-        if ($this->docform->payed->isChecked() == true && $this->_doc->datatag < $this->_doc->amount) {
 
-            $this->_doc->addPayment(System::getUser()->user_id, $this->_doc->amount - $this->_doc->datatag);
-            $this->_doc->datatag = $this->_doc->amount;
-        }
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();

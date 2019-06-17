@@ -13,8 +13,8 @@ use \Zippy\Html\Panel;
 use \App\Entity\Category;
 
 /**
-* справочник категорийтоваров
-*/
+ * справочник категорийтоваров
+ */
 class CategoryList extends \App\Pages\Base {
 
     private $_category;
@@ -47,13 +47,13 @@ class CategoryList extends \App\Pages\Base {
 
 
         $cat_id = $sender->owner->getDataItem()->cat_id;
-  
-        $del=Category::delete($cat_id);
-        if(strlen($del) > 0){
+
+        $del = Category::delete($cat_id);
+        if (strlen($del) > 0) {
             $this->setError($del);
             return;
-        }            
-       
+        }
+
         $this->categorytable->categorylist->Reload();
     }
 

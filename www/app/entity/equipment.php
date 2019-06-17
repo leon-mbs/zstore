@@ -43,6 +43,4 @@ class Equipment extends \ZCL\DB\Entity {
         parent::afterLoad();
     }
 
-       
-
 }

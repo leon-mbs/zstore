@@ -88,7 +88,7 @@ class Task extends Document {
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-        $conn->StartTrans();
+
 
         foreach ($this->detaildata as $row) {
 
@@ -122,7 +122,10 @@ class Task extends Document {
             }
         }
 
-        $conn->CompleteTrans();
+        if ($this->headerdata['payment'] > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], $this->headerdata['paynotes']);
+            $this->payamount = $this->amount;
+        }
 
         return true;
     }
