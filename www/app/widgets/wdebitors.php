@@ -27,7 +27,7 @@ class WDebitors extends \Zippy\Html\PageFragment {
 
         $conn = $conn = \ZDB\DB::getConnect();
         $sql = "select * from (
-            select meta_desc,document_number, customer_name,   ( amount - payamount)  as am 
+            select meta_desc,document_number, customer_name,  abs( amount - payamount)  as am 
             from `documents_view` where amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in('GoodsReceipt','GoodsIssue','Task','ServiceAct') 
               
             ) t  order by am desc  ";

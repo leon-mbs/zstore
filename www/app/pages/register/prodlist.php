@@ -34,7 +34,7 @@ class ProdList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('GRList'))
+        if (false == \App\ACL::checkShowReg('ProdList'))
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');

@@ -34,7 +34,7 @@ class OrderCustList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('OrderList'))
+        if (false == \App\ACL::checkShowReg('OrderCustList'))
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
