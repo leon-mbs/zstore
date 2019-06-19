@@ -364,8 +364,7 @@ class Document extends \ZCL\DB\Entity {
                 return "Утвержден";
             case Document::STATE_DELETED:
                 return "Удален";
-            case Document::STATE_WP:
-                return "Ожидает оплату";
+    
             case Document::STATE_WA:
                 return "Ожидает утверждения";
             case Document::STATE_INSHIPMENT:

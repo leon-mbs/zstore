@@ -140,7 +140,7 @@ class Task extends \App\Pages\Base {
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
-            $this->docform->document_date->setDate($this->_doc->headerdata['end_date']);
+            $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
@@ -496,14 +496,14 @@ class Task extends \App\Pages\Base {
         $this->calcTotal();
 
 
-        $this->_doc->headerdata['parea'] = $this->docform->parea->getText();
-        $this->_doc->headerdata['pareaname'] = $this->docform->pareaname->getValueName();
+        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['hours'] = $this->docform->hours->getText();
         $this->_doc->headerdata['start_date'] = $this->docform->start_date->getDate();
-        $this->_doc->headerdata['end_date'] = $this->docform->end_date->getDate();
+        $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
 

@@ -27,7 +27,7 @@ class WRDoc extends \Zippy\Html\PageFragment {
         $data = array();
 
         if ($visible) {
-            $sql = "select distinct document_id,meta_desc,document_number from docstatelog_view where user_id={$user->user_id} and createdon > " . $conn->DBDate(strtotime("-1 month", time())) . "   order by log_id";
+            $sql = "select distinct document_id,meta_desc,document_number from docstatelog_view where user_id={$user->user_id} and createdon > " . $conn->DBDate(strtotime("-1 month", time())) . "   order by log_id desc";
 
 
             $rc = $conn->Execute($sql);
