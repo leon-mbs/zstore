@@ -4,7 +4,7 @@ namespace App\Pages\Reference;
 
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\DataList\ArrayDataSource;
-use Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Form\AutocompleteTextInput;
 use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\TextInput;
@@ -83,6 +83,7 @@ class ItemList extends \App\Pages\Base {
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editminqty'));
+        $this->itemdetail->add(new TextInput('editterm'));
         $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
@@ -144,14 +145,12 @@ class ItemList extends \App\Pages\Base {
             return;
 
         $item = $sender->owner->getDataItem();
-        //проверка на партии
-        if ($item->checkDelete()) {
-            Item::delete($item->item_id);
-        } else {
-            $this->setError("Нельзя удалить  товар");
+
+        $del = Item::delete($item->item_id);
+        if (strlen($del) > 0) {
+            $this->setError($del);
             return;
         }
-
 
 
         $this->itemtable->itemlist->Reload();
@@ -174,7 +173,8 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
-        $this->itemdetail->editminqty->setText( \App\Helper::fqty($this->_item->minqty));
+        $this->itemdetail->editterm->setText($this->_item->term);
+        $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
     }
@@ -215,27 +215,28 @@ class ItemList extends \App\Pages\Base {
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
+        $this->_item->term = $this->itemdetail->editterm->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
-        ;
+
         $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
-        
+
         //проверка  уникальности артикула
-        if(strlen($this->_item->item_code) >0){
-          $code = Item::qstr($this->_item->item_code);
-          $cnt=Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
-          if($cnt > 0){
-              $this->setError('Такой  артикул уже существует');
-              return;
-          }
+        if (strlen($this->_item->item_code) > 0) {
+            $code = Item::qstr($this->_item->item_code);
+            $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
+            if ($cnt > 0) {
+                $this->setError('Такой  артикул уже существует');
+                return;
+            }
         }
         $this->_item->Save();
 
         $this->itemtable->itemlist->Reload();
-        
+
         $this->itemtable->setVisible(true);
-        $this->itemdetail->setVisible(false);        
+        $this->itemdetail->setVisible(false);
     }
 
     //комплекты

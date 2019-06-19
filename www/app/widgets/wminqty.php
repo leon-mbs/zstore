@@ -16,8 +16,7 @@ use \App\DataItem;
 /**
  * Виджет для минимального количества на  складе
  */
-class WMinQty extends \Zippy\Html\PageFragment
-{
+class WMinQty extends \Zippy\Html\PageFragment {
 
     public function __construct($id) {
         parent::__construct($id);
@@ -39,10 +38,10 @@ class WMinQty extends \Zippy\Html\PageFragment
             foreach ($rs as $row) {
 
                 $data[$row['item_id']] = new DataItem($row);
-             }
+            }
         }
 
-        $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'noliqlistOnRow'));
+        $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'mqlistOnRow'));
         $mqlist->setPageSize(10);
         $this->add(new \Zippy\Html\DataList\Paginator("mqpag", $mqlist));
         $mqlist->Reload();
@@ -53,7 +52,7 @@ class WMinQty extends \Zippy\Html\PageFragment
         };
     }
 
-    public function noliqlistOnRow($row) {
+    public function mqlistOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('itemname', $item->itemname));

@@ -17,7 +17,6 @@ class Item extends \ZCL\DB\Entity {
         $this->curname = '';
         $this->currate = 0;
         $this->price = 0;
-        
     }
 
     protected function afterLoad() {
@@ -33,7 +32,8 @@ class Item extends \ZCL\DB\Entity {
         $this->curname = (string) ($xml->curname[0]);
         $this->currate = doubleval($xml->currate[0]);
         $this->pricelist = (int) $xml->pricelist[0];
-      
+        $this->term = (int) $xml->term[0];
+
 
 
 
@@ -45,7 +45,8 @@ class Item extends \ZCL\DB\Entity {
         $this->detail = "<detail>";
         //упаковываем  данные в detail
         $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
-    
+        $this->detail .= "<term>{$this->term}</term>";
+
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
         $this->detail .= "<price3>{$this->price3}</price3>";
@@ -61,16 +62,11 @@ class Item extends \ZCL\DB\Entity {
 
     protected function beforeDelete() {
 
-        return $this->checkDelete();
-    }
-
-    public function checkDelete() {
-
         $conn = \ZDB\DB::getConnect();
-        
+        //проверка на партии
         $sql = "  select count(*)  from  store_stock where   item_id = {$this->item_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? false : true;
+        return ($cnt > 0) ? "ТМЦ уже  используется" : "";
     }
 
     //Вычисляет  отпускную цену

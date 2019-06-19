@@ -25,6 +25,7 @@ use \Zippy\Html\Link\BookmarkableLink;
 class EqList extends \App\Pages\Base {
 
     private $_item;
+    public $_uselist = array();
 
     public function __construct() {
         parent::__construct();
@@ -35,9 +36,11 @@ class EqList extends \App\Pages\Base {
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchemp', Employee::findArray("emp_name", "", "emp_name"), 0));
 
+
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('eqlist', new EQDS($this), $this, 'eqlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+
         $this->itemtable->eqlist->setPageSize(25);
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->eqlist));
         $this->itemtable->eqlist->setSelectedClass('table-success');
@@ -55,6 +58,11 @@ class EqList extends \App\Pages\Base {
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+
+        $this->add(new Panel('usetable'))->setVisible(false);
+        $this->usetable->add(new Label('usename'));
+        $this->usetable->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
+        $this->usetable->add(new DataView('uselist', new ArrayDataSource($this, '_uselist'), $this, 'uselistOnRow'));
     }
 
     public function eqlistOnRow($row) {
@@ -63,6 +71,7 @@ class EqList extends \App\Pages\Base {
         $row->add(new Label('code', $item->code));
         $row->add(new Label('serial', $item->serial));
 
+        $row->add(new ClickLink('use'))->onClick($this, 'useOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -83,6 +92,38 @@ class EqList extends \App\Pages\Base {
 
 
         $this->itemtable->eqlist->Reload();
+    }
+
+    public function useOnClick($sender) {
+        $this->itemtable->setVisible(false);
+        $this->usetable->setVisible(true);
+        $item = $sender->getOwner()->getDataItem();
+        $this->usetable->usename->setText($item->eq_name);
+        $this->_uselist = array();
+
+        $list = \App\Entity\Doc\Document::find("meta_name='task' and state not in(2,3,1,9) ", "document_date desc");
+
+
+        foreach ($list as $task) {
+            foreach ($task->detaildata as $value) {
+                if ($value['eq_id'] > 0) {
+
+                    $it = new \App\DataItem(array(
+                        "usetask" => $task->document_number,
+                        "useplace" => $value['eq_name']
+                    ));
+                    $this->_uselist[] = $it;
+                }
+            }
+        }
+
+        $this->usetable->uselist->Reload();
+    }
+
+    public function uselistOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('usetask', $item->usetask));
+        $row->add(new Label('useplace', $item->useplace));
     }
 
     public function editOnClick($sender) {
@@ -110,6 +151,7 @@ class EqList extends \App\Pages\Base {
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
+        $this->usetable->setVisible(false);
     }
 
     public function OnFilter($sender) {

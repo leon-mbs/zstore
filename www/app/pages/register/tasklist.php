@@ -39,9 +39,9 @@ class TaskList extends \App\Pages\Base {
     public $_store_id = 0;
     public $_discount = 0;
     private $_taskscnt = array();
-    public $_pays = array();
+   
     public $_tamount = 0;
-    public $_tdebet = 0;
+   
 
     public function __construct() {
 
@@ -69,18 +69,9 @@ class TaskList extends \App\Pages\Base {
 
 
         $this->add(new Label("tamount"));
-        $this->add(new Label("tdebet"));
+     
 
-        $this->add(new Panel("paypan"))->setVisible(false);
-        $this->paypan->add(new Label("pname"));
-        $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-
-        $this->paypan->payform->add(new TextInput('pamount'));
-        $this->paypan->payform->add(new TextInput('pcomment'));
-        $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
-
-        $this->paypan->add(new DataView('paylist', new ArrayDataSource(new Prop($this, '_pays')), $this, 'payOnRow'))->Reload();
-
+  
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -118,10 +109,6 @@ class TaskList extends \App\Pages\Base {
             $row->taskstatus->setText('<span class="badge badge-success">Выполняется</span>', true);
         if ($task->state == Document::STATE_SHIFTED)
             $row->taskstatus->setText('<span class="badge badge-warning">Отложена</span>', true);
-        if ($task->state == Document::STATE_WP)
-            $row->taskstatus->setText('<span class="badge badge-warning">Ожидает оплату</span>', true);
-        if ($task->state == Document::STATE_PART_PAYED)
-            $row->taskstatus->setText('<span class="badge badge-warning">Ожидает оплату</span>', true);
         if ($task->state == Document::STATE_CLOSED)
             $row->taskstatus->setText('<span class="badge badge-default">Закончено</span>', true);
 
@@ -141,14 +128,14 @@ class TaskList extends \App\Pages\Base {
         $row->add(new Label('taskemps', implode(', ', $emps)));
         $row->add(new Label('taskclient', $task->customer_name));
         $row->add(new Label('taskamount', $task->amount));
-        $row->add(new Label('taskdebet', $task->amount - $task->datatag));
-
+   
         $this->_tamount = $this->_tamount + $task->amount;
-        $this->_tdebet = $this->_tdebet + $task->amount - $task->datatag;
-
+    
         $row->add(new ClickLink('taskshow'))->onClick($this, 'taskshowOnClick');
         $row->add(new ClickLink('taskedit'))->onClick($this, 'taskeditOnClick');
-        $row->add(new ClickLink('taskpay'))->onClick($this, 'taskpayOnClick');
+         if ($task->state == Document::STATE_CLOSED) {
+            $row->taskedit->setVisible(false);
+        }
     }
 
     //панель кнопок
@@ -157,7 +144,7 @@ class TaskList extends \App\Pages\Base {
         if (false == \App\ACL::checkShowDoc($this->_task, true))
             return;
 
-        $this->paypan->setVisible(false);
+       
         $this->statuspan->setVisible(true);
 
         // if ($this->_task->checkStates(array(Document::STATE_EXECUTED)) == false || $this->_task->status == Document::STATE_EDITED || $this->_task->status == Document::STATE_NEW) {
@@ -179,8 +166,6 @@ class TaskList extends \App\Pages\Base {
         if ($this->_task->state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->bshifted->setVisible(true);
         }
-
-
 
 
         $this->statuspan->docview->setDoc($this->_task);
@@ -208,16 +193,9 @@ class TaskList extends \App\Pages\Base {
         }
         if ($sender->id == 'bclosed') {
             $this->_task->updateStatus(Document::STATE_EXECUTED);
-            if ($this->_task->amount == $this->_task->datatag) { //если оплачен
+            if ($this->_task->amount == $this->_task->payamount) { //если оплачен
                 $this->_task->updateStatus(Document::STATE_CLOSED);
                 $this->setSuccess('Наряд закрыт');
-            } else {
-                if ($this->_task->datatag == 0) {
-                    $this->_task->updateStatus(Document::STATE_WP);
-                }
-                if ($this->_task->datatag > 0) {
-                    // $this->_task->updateStatus(Document::STATE_PART_PAYED);           
-                }
             }
         }
 
@@ -226,72 +204,8 @@ class TaskList extends \App\Pages\Base {
         $this->tasklist->Reload(false);
     }
 
-    //панель оплат
-    public function taskpayOnClick($sender) {
-        $this->_task = $sender->getOwner()->getDataItem();
-
-        $this->paypan->setVisible(true);
-
-        $this->statuspan->setVisible(false);
-        $this->tasklist->setSelectedRow($sender->getOwner());
-        $this->tasklist->Reload(false);
-
-        $this->goAnkor('dankor');
-
-        $this->paypan->payform->pamount->setText($this->_task->amount - $this->_task->datatag);
-        ;
-        $this->paypan->payform->pcomment->setText("");
-        ;
-        $this->paypan->pname->setText($this->_task->document_number);
-        ;
-
-        $this->_pays = $this->_task->getPayments();
-        $this->paypan->paylist->Reload();
-    }
-
-    public function payOnRow($row) {
-        $pay = $row->getDataItem();
-        $row->add(new Label('plamount', $pay->amount));
-        $row->add(new Label('pluser', $pay->user));
-        $row->add(new Label('pldate', date('Y-m-d', $pay->date)));
-        $row->add(new Label('plcomment', $pay->comment));
-    }
-
-    public function payOnSubmit($sender) {
-        $form = $this->paypan->payform;
-        $amount = $form->pamount->getText();
-        if ($amount == 0)
-            return;
-        $amount = $form->pamount->getText();
-        if ($amount == 0)
-            return;
-
-        $this->_task->addPayment(System::getUser()->getUserName(), $amount, $form->pcomment->getText());
-        $this->_task->datatag += $amount;
-        if ($this->_task->datatag > $this->_task->amount) {
-            $this->setWarn('Сумма  больше  необходимой  оплаты');
-        }
-
-        $this->_task->save();
-        if ($this->_task->datatag < $this->_task->amount) {
-            // $this->_task->updateStatus(Document::STATE_PART_PAYED);
-        }
-        if ($this->_task->datatag == $this->_task->amount) {
-            $this->_task->updateStatus(Document::STATE_PAYED);
-        }
-        $this->setSuccess('Оплата добавлена');
-        if ($this->_task->datatag == $this->_task->amount && $this->_task->checkStates(array(Document::STATE_EXECUTED))) {
-            //закрываем если был выполнен
-            $this->_task->updateStatus(Document::STATE_CLOSED);
-            $this->setSuccess('Наряд оплаче и закрыт');
-        }
-
-
-
-        $this->updateTasks();
-        $this->paypan->setVisible(false);
-    }
-
+ 
+ 
     public function updateTasks() {
         $user = System::getUser();
 
@@ -319,17 +233,17 @@ class TaskList extends \App\Pages\Base {
             $sql .= " and meta_id in({$user->aclview}) ";
         }
         $this->_tamount = 0;
-        $this->_tdebet = 0;
+      
 
         $this->_taskds->setWhere($sql);
         $this->tasklist->Reload();
         $this->tamount->setText($this->_tamount);
-        $this->tdebet->setText($this->_tdebet);
+        
 
         $this->updateCal();
 
         $this->statuspan->setVisible(false);
-        $this->paypan->setVisible(false);
+         
     }
 
     //обновить календар
@@ -347,7 +261,7 @@ class TaskList extends \App\Pages\Base {
                 $col = "#ffc107";
             if ($item->state == Document::STATE_CLOSED)
                 $col = "#dddddd";
-            if ($item->state == Document::STATE_CLOSED && $item->amount > $task->datatag)
+            if ($item->state == Document::STATE_CLOSED && $item->amount > $task->payamount)
                 $col = "#ff0000";
 
 

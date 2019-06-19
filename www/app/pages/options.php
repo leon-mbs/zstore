@@ -13,8 +13,8 @@ use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
-use App\System;
-use App\Application as App;
+use \App\System;
+use \App\Application as App;
 
 class Options extends \App\Pages\Base {
 
@@ -32,10 +32,12 @@ class Options extends \App\Pages\Base {
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new TextInput('firmname'));
         $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList()));
+        $this->common->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList()));
         $this->common->add(new DropDownChoice('qtydigits'));
 
 
 
+        $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
@@ -48,7 +50,7 @@ class Options extends \App\Pages\Base {
         $this->common->add(new TextInput('price5'));
         //  $this->common->add(new Date('closeddate'));
 
-    
+
 
 
         $common = System::getOptions("common");
@@ -57,6 +59,7 @@ class Options extends \App\Pages\Base {
 
         $this->common->firmname->setText($common['firmname']);
         $this->common->defstore->setValue($common['defstore']);
+        $this->common->defmf->setValue($common['defmf']);
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->cdoll->setText($common['cdoll']);
         $this->common->ceuro->setText($common['ceuro']);
@@ -67,6 +70,7 @@ class Options extends \App\Pages\Base {
         $this->common->price4->setText($common['price4']);
         $this->common->price5->setText($common['price5']);
         $this->common->useset->setChecked($common['useset']);
+        $this->common->usesnumber->setChecked($common['usesnumber']);
         $this->common->useval->setChecked($common['useval']);
         // $this->common->closeddate->setDate($common['closeddate']);
 
@@ -75,7 +79,7 @@ class Options extends \App\Pages\Base {
 
         $this->onVal($this->common->useval);
 
-    
+
 
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
@@ -85,7 +89,7 @@ class Options extends \App\Pages\Base {
         $this->listpan->filter->add(new CheckBox('fdic'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('frep'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('freg'))->setChecked(true);
-        $this->listpan->filter->add(new CheckBox('fshop'))->setChecked(true);
+
         $this->listpan->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
         $this->listpan->add(new DataView('metarow', $this->metadatads, $this, 'metarowOnRow'))->Reload();
 
@@ -119,6 +123,7 @@ class Options extends \App\Pages\Base {
         $common = array();
         $common['firmname'] = $this->common->firmname->getText();
         $common['defstore'] = $this->common->defstore->getValue();
+        $common['defmf'] = $this->common->defmf->getValue();
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['cdoll'] = $this->common->cdoll->getText();
         $common['ceuro'] = $this->common->ceuro->getText();
@@ -129,6 +134,7 @@ class Options extends \App\Pages\Base {
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
         $common['useset'] = $this->common->useset->isChecked();
+        $common['usesnumber'] = $this->common->usesnumber->isChecked();
         $common['useval'] = $this->common->useval->isChecked();
 
         // $common['closeddate'] = $this->common->closeddate->getDate();
@@ -139,7 +145,6 @@ class Options extends \App\Pages\Base {
         $this->setSuccess('Сохранено');
     }
 
-   
     public function filterOnSubmit($sender) {
 
         $where = "1<>1 ";
@@ -155,9 +160,7 @@ class Options extends \App\Pages\Base {
         if ($this->listpan->filter->freg->isChecked()) {
             $where .= " or meta_type = 3";
         }
-        if ($this->listpan->filter->fshop->isChecked()) {
-            $where .= " or meta_type = 5";
-        }
+
 
 
         $this->metadatads->setWhere($where);

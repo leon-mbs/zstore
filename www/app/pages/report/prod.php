@@ -2,16 +2,16 @@
 
 namespace App\Pages\Report;
 
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\RedirectLink;
-use Zippy\Html\Panel;
-use App\Entity\Employee;
-use App\Entity\Doc\Document;
-use App\Helper as H;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\RedirectLink;
+use \Zippy\Html\Panel;
+use \App\Entity\Employee;
+use \App\Entity\Doc\Document;
+use \App\Helper as H;
 
 /**
  * отчет по  производству
@@ -26,7 +26,7 @@ class Prod extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-         $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
+        $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('print', "movereport"));
@@ -78,11 +78,11 @@ class Prod extends \App\Pages\Base {
         $sum2 = 0;
         $conn = \ZDB\DB::getConnect();
 
-        $wparea =   "";
-        if($parea >0){
-             $wparea =   " and content like '%<parea>{$parea}</parea>%' ";
+        $wparea = "";
+        if ($parea > 0) {
+            $wparea = " and content like '%<parea>{$parea}</parea>%' ";
         }
-        
+
         $sql = "
           select i.`itemname`,i.`item_code`,0-sum(e.`quantity`) as qty, 0-sum(e.`amount`) as summa
               from `entrylist_view`  e
@@ -145,8 +145,8 @@ class Prod extends \App\Pages\Base {
             'sum1' => $sum1,
             'sum2' => $sum2
         );
-        if($parea >0){
-             $header['parea']  =  $this->filter->parea->getValueName()  ;
+        if ($parea > 0) {
+            $header['parea'] = $this->filter->parea->getValueName();
         }
         $report = new \App\Report('prod.tpl');
 

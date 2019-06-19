@@ -2,23 +2,23 @@
 
 namespace App\Pages\Doc;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Label;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\SubmitLink;
-use App\Entity\Doc\Document;
-use App\Entity\Item;
-use App\Entity\Stock;
-use App\Entity\Store;
-use App\Helper as H;
-use App\Application as App;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Label;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\SubmitLink;
+use \App\Entity\Doc\Document;
+use \App\Entity\Item;
+use \App\Entity\Stock;
+use \App\Entity\Store;
+use \App\Helper as H;
+use \App\Application as App;
 
 /**
  * Страница  ввода  гарантийного талона
@@ -64,7 +64,7 @@ class Warranty extends \App\Pages\Base {
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -101,7 +101,7 @@ class Warranty extends \App\Pages\Base {
                 }
             }
         }
-         
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -212,10 +212,10 @@ class Warranty extends \App\Pages\Base {
         $this->_doc->customer_id = $this->docform->customer->getKey();
 
 
-        $this->_doc->headerdata = array(
-            'pricetypename' => $this->docform->pricetype->getValueName(),
-            'pricetype' => $this->docform->pricetype->getValue(),
-        );
+
+        $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
+        $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

@@ -19,6 +19,7 @@ use \App\Entity\Doc\Document;
 use \App\Entity\Item;
 use \App\Entity\Stock;
 use \App\Entity\Store;
+use \App\Entity\MoneyFund;
 use \App\Helper as H;
 use \App\Application as App;
 
@@ -46,6 +47,8 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new TextInput('paynotes'));
 
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -68,7 +71,7 @@ class ReturnIssue extends \App\Pages\Base {
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
 
@@ -79,6 +82,8 @@ class ReturnIssue extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->notes->setText($this->_doc->notes);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
             foreach ($this->_doc->detaildata as $item) {
                 $it = new Stock($item);
@@ -111,6 +116,12 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
+        $this->onMF($this->docform->payment);
+    }
+
+    public function onMF($sender) {
+        $mf = $sender->getValue();
+        $this->docform->paynotes->setVisible($mf > 0);
     }
 
     public function detailOnRow($row) {
@@ -118,6 +129,8 @@ class ReturnIssue extends \App\Pages\Base {
 
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('snumber', $item->snumber));
+        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
@@ -216,12 +229,13 @@ class ReturnIssue extends \App\Pages\Base {
         }
 
         $this->calcTotal();
-        $old = $this->_doc->cast();
 
-        $this->_doc->headerdata = array(
-            'store' => $this->docform->store->getValue(),
-            'total' => $this->docform->total->getText()
-        );
+
+
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

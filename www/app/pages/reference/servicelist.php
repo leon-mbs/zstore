@@ -2,15 +2,15 @@
 
 namespace App\Pages\Reference;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Panel;
-use App\Entity\Service;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Panel;
+use \App\Entity\Service;
 
 class ServiceList extends \App\Pages\Base {
 
@@ -50,12 +50,12 @@ class ServiceList extends \App\Pages\Base {
             return;
 
         $service_id = $sender->owner->getDataItem()->service_id;
-        // $cnt=  \App\Entity\Item::findCnt(" disabled <> 1  and cat_id=".$cat_id);
-        if ($cnt > 0) {
-            // $this->setError('Нельзя удалить категорию с товарами');
-            //  return;
+
+        $del = Service::delete($service_id);
+        if (strlen($del) > 0) {
+            $this->setError($del);
+            return;
         }
-        Service::delete($service_id);
         $this->servicetable->servicelist->Reload();
     }
 

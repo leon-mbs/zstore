@@ -13,7 +13,11 @@ class Stock extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->stock_id = 0;
-        $this->deleted = 0;
+    }
+
+    protected function afterLoad() {
+        if (strlen($this->sdate) > 0)
+            $this->sdate = strtotime($this->sdate);
     }
 
     /**
@@ -26,18 +30,19 @@ class Stock extends \ZCL\DB\Entity {
     public static function findArrayAC($store, $partname = "") {
 
 
-        $criteria = "qty <>0 and disabled <> 1 ";
+        $criteria = "qty <> 0 and disabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $partname = self::qstr('%' . $partname . '%');
-            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} )";
+            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} or snumber like {$partname} )";
         }
 
-
-
-        $entitylist = self::find($criteria, "itemname");
+        $entitylist = self::find($criteria, "sdate asc");
 
         $list = array();
         foreach ($entitylist as $key => $value) {
+            if (strlen($value->snumber) > 0) {
+                $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
+            }
             $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion);
         }
 
@@ -52,11 +57,15 @@ class Stock extends \ZCL\DB\Entity {
      * @param mixed $price Цена
      * @param mixed $create Создать  если  не   существует
      */
-    public static function getStock($store_id, $item_id, $price, $create = false) {
+    public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
+        $conn = \ZDB\DB::getConnect();
 
         $where = "store_id = {$store_id} and item_id = {$item_id} and partion = {$price} ";
 
-        $conn = \ZDB\DB::getConnect();
+        if (strlen($snumber) > 0) {
+
+            $where .= "  and  snumber =  " . self::qstr($snumber);
+        }
 
         //на  случай если удален
         //$conn->Execute("update store_stock set deleted=0 where " . $where);
@@ -67,6 +76,9 @@ class Stock extends \ZCL\DB\Entity {
             $stock->store_id = $store_id;
             $stock->item_id = $item_id;
             $stock->partion = $price;
+            $stock->snumber = $snumber;
+            if ($sdate > 0)
+                $stock->sdate = $sdate;
 
             $stock->save();
         }
@@ -101,7 +113,7 @@ class Stock extends \ZCL\DB\Entity {
     public static function pickup($store_id, $item_id, $qty) {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item_id} and qty >0   ";
-        $stlist = self::find($where, 'stock_id');
+        $stlist = self::find($where, 'sdate,stock_id');
         foreach ($stlist as $st) {
             if ($st->qty >= $qty) {
                 $st->quantity = $qty;

@@ -2,23 +2,23 @@
 
 namespace App\Pages\Register;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\DataList\Paginator;
 use \Zippy\Html\DataList\ArrayDataSource;
 use \Zippy\Binding\PropertyBinding as Prop;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Panel;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use App\Entity\Doc\Document;
-use App\Helper as H;
-use App\Application as App;
-use App\System;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Panel;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \App\Entity\Doc\Document;
+use \App\Helper as H;
+use \App\Application as App;
+use \App\System;
 
 /**
  * журнал  заявок
@@ -34,7 +34,7 @@ class OrderCustList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('OrderList'))
+        if (false == \App\ACL::checkShowReg('OrderCustList'))
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -106,7 +106,7 @@ class OrderCustList extends \App\Pages\Base {
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-        $payed = $this->_doc->datatag >= $this->_doc->amount; //оплачен
+        $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         $ttn = false;
         //проверяем  что есть ТТН
         $list = $this->_doc->ConnectedDocList();
@@ -137,7 +137,7 @@ class OrderCustList extends \App\Pages\Base {
         }
         if ($sender->id == "bclose") {
 
-            $this->_doc->datatag = $this->_doc->amount;
+            $this->_doc->payamount = $this->_doc->amount;
             $this->_doc->save();
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
@@ -157,7 +157,7 @@ class OrderCustList extends \App\Pages\Base {
 
         $state = $this->_doc->state;
 
-        $payed = $this->_doc->datatag >= $this->_doc->amount; //оплачен
+        $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         //доставлен
         $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
 
@@ -174,7 +174,7 @@ class OrderCustList extends \App\Pages\Base {
         $this->statuspan->statusform->bttn->setVisible(!$ttn);
 
         //отмена   если  не было оплат и доставки
-        if ($this->_doc->datatag == 0) {
+        if ($this->_doc->payamount == 0) {
             $this->statuspan->statusform->bcancel->setVisible(false);
         } else {
             $this->statuspan->statusform->bcancel->setVisible(true);

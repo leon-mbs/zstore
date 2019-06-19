@@ -76,7 +76,7 @@ class RetCustIssue extends \App\Pages\Base {
 
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
 
@@ -110,7 +110,7 @@ class RetCustIssue extends \App\Pages\Base {
 
                         foreach ($basedoc->detaildata as $item) {
 
-                            $stock = \App\Entity\Stock::getStock($basedoc->headerdata['store'], $item['item_id'], $item['price']);
+                            $stock = \App\Entity\Stock::getStock($basedoc->headerdata['store'], $item['item_id'], $item['price'], $item['snumber']);
                             $stock->quantity = $item['quantity'];
                             $stock->price = $item['price'];
                             $this->_tovarlist[$stock->stock_id] = $stock;
@@ -132,6 +132,8 @@ class RetCustIssue extends \App\Pages\Base {
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('snumber', $item->snumber));
+        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
@@ -237,11 +239,11 @@ class RetCustIssue extends \App\Pages\Base {
         }
 
         $this->calcTotal();
-        $old = $this->_doc->cast();
 
-        $this->_doc->headerdata = array(
-            'store' => $this->docform->store->getValue()
-        );
+
+
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

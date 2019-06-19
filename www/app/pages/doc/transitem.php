@@ -2,24 +2,24 @@
 
 namespace App\Pages\Doc;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\SubmitLink;
-use App\Entity\Doc\Document;
-use App\Entity\Item;
-use App\Entity\Stock;
-use App\Entity\Store;
-use App\Application as App;
-use App\Helper as H;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\SubmitLink;
+use \App\Entity\Doc\Document;
+use \App\Entity\Item;
+use \App\Entity\Stock;
+use \App\Entity\Store;
+use \App\Application as App;
+use \App\Helper as H;
 
 /**
  * Страница  ввода перекомплектация товаров
@@ -52,7 +52,7 @@ class TransItem extends \App\Pages\Base {
 
 
         if ($docid > 0) {    //загружаем   содержимок  документа на страницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
@@ -69,7 +69,7 @@ class TransItem extends \App\Pages\Base {
             $this->_doc = Document::create('TransItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
         }
-         
+
 
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -84,13 +84,12 @@ class TransItem extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata = array(
-            'storefrom' => $this->docform->storefrom->getValue(),
-            'fromitem' => $this->docform->fromitem->getKey(),
-            'toitem' => $this->docform->toitem->getKey(),
-            'fromquantity' => $this->docform->fromquantity->getText(),
-            'toquantity' => $this->docform->toquantity->getText()
-        );
+        $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
+        $this->_doc->headerdata['fromitem'] = $this->docform->fromitem->getKey();
+        $this->_doc->headerdata['toitem'] = $this->docform->toitem->getKey();
+        $this->_doc->headerdata['fromquantity'] = $this->docform->fromquantity->getText();
+        $this->_doc->headerdata['toquantity'] = $this->docform->toquantity->getText();
+
 
         if ($this->checkForm() == false) {
             return;

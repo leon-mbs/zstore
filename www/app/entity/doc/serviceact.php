@@ -2,7 +2,7 @@
 
 namespace App\Entity\Doc;
 
-use App\Entity\Entry;
+use \App\Entity\Entry;
 
 /**
  * Класс-сущность  локумент акт  о  выполненных работах
@@ -43,7 +43,7 @@ class ServiceAct extends Document {
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-        $conn->StartTrans();
+
 
         foreach ($this->detaildata as $row) {
 
@@ -55,7 +55,12 @@ class ServiceAct extends Document {
             $sc->setCustomer($this->customer_id);
             $sc->save();
         }
-        $conn->CompleteTrans();
+        if ($this->headerdata['payment'] > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], $this->headerdata['paynotes']);
+            $this->payamount = $this->amount;
+        }
+
+
 
         return true;
     }

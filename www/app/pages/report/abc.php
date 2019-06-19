@@ -2,12 +2,12 @@
 
 namespace App\Pages\Report;
 
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Label;
-use Zippy\Html\Link\RedirectLink;
-use Zippy\Html\Panel;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\RedirectLink;
+use \Zippy\Html\Panel;
 
 /**
  * АВС анализ

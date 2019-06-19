@@ -2,23 +2,23 @@
 
 namespace App\Pages\Register;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Panel;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use App\Entity\Doc\Document;
-use App\Entity\Customer;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\DataList\Paginator;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Panel;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \App\Entity\Doc\Document;
+use \App\Entity\Customer;
 use \Zippy\Html\Form\AutocompleteTextInput;
-use App\Filter;
-use App\Helper as H;
-use App\Application as App;
-use App\System;
+use \App\Filter;
+use \App\Helper as H;
+use \App\Application as App;
+use \App\System;
 
 /**
  * журнал  докуметов
@@ -71,8 +71,11 @@ class DocList extends \App\Pages\Base {
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
             $this->docview->setVisible(true);
-            $this->docview->setDoc(Document::load($docid));
+            $dc = Document::load($docid);
+            $this->docview->setDoc($dc);
             //$this->doclist->setSelectedRow($docid);
+            $filter->searchnumber = $dc->document_number;
+            $this->filter->searchnumber->setText($dc->document_number);
             $doclist->Reload();
         }
 
@@ -195,12 +198,11 @@ class DocList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
-        $doc = $doc->cast();
-        if ($doc->canDeleted() == false) {
-
+        $del = Document::delete($doc->document_id);
+        if (strlen($del) > 0) {
+            $this->setError($del);
             return;
         }
-        Document::delete($doc->document_id);
         $this->doclist->Reload(true);
         $this->resetURL();
     }
@@ -223,7 +225,7 @@ class DocList extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "Customer_name like " . $text);
+        return Customer::findArray("customer_name", "customer_name like " . $text);
     }
 
     public function oncsv($sender) {

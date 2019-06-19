@@ -2,8 +2,8 @@
 
 namespace App\Entity\Doc;
 
-use App\Entity\Entry;
-use App\Helper as H;
+use \App\Entity\Entry;
+use \App\Helper as H;
 
 /**
  * Класс-сущность  документ приходная  накладая
@@ -18,8 +18,14 @@ class GoodsReceipt extends Document {
 
         $detail = array();
         foreach ($this->detaildata as $value) {
+            $name = $value['itemname'];
+            if (strlen($value['snumber']) > 0) {
+                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
+            }
+
+
             $detail[] = array("no" => $i++,
-                "itemname" => $value['itemname'],
+                "itemname" => $name,
                 "itemcode" => $value['item_code'],
                 "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
@@ -32,7 +38,7 @@ class GoodsReceipt extends Document {
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->headerdata["total"]
+            "total" => $this->amount
         );
 
 
@@ -49,7 +55,7 @@ class GoodsReceipt extends Document {
 
         //аналитика
         foreach ($this->detaildata as $row) {
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'], true);
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'], $row['snumber'], $row['sdate'], true);
 
 
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
@@ -69,8 +75,11 @@ class GoodsReceipt extends Document {
                 $it->save();
             }
         }
+        if ($this->headerdata['payment'] > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], $this->headerdata['paynotes']);
+            $this->payamount = $this->amount;
+        }
 
-        //$total = $this->headerdata['total'];
 
         return true;
     }

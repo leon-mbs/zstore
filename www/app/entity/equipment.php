@@ -43,14 +43,4 @@ class Equipment extends \ZCL\DB\Entity {
         parent::afterLoad();
     }
 
-    protected function beforeDelete() {
-
-        return $this->checkDelete();
-    }
-
-    public function checkDelete() {
-
-        return true;
-    }
-
 }

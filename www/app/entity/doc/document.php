@@ -2,8 +2,8 @@
 
 namespace App\Entity\Doc;
 
-use App\System;
-use App\Helper;
+use \App\System;
+use \App\Helper;
 
 /**
  * Класс-сущность документ
@@ -15,20 +15,18 @@ class Document extends \ZCL\DB\Entity {
     const STATE_NEW = 1;     //Новый
     const STATE_EDITED = 2;  //Отредактирован
     const STATE_CANCELED = 3;      //Отменен
-    const STATE_EXECUTED = 5;      // Проведен, выполнен
+    const STATE_EXECUTED = 5;      // Проведен 
     const STATE_APPROVED = 4;      //  Утвержден
     const STATE_DELETED = 6;       //  Удален
     const STATE_INPROCESS = 7; // в  работе
     const STATE_WA = 8; // ждет подтверждения
     const STATE_CLOSED = 9; // Закрыт , доставлен, выполнен
-    const STATE_WP = 10; // Ждет оплату
     const STATE_INSHIPMENT = 11; // Отгружен
-    const STATE_PAYED = 12; // оплачен
-    const STATE_PART_PAYED = 13; // частично оплачен
     const STATE_DELIVERED = 14; // доставлен
     const STATE_REFUSED = 15; // отклонен
     const STATE_SHIFTED = 16; // отложен
     const STATE_FAIL = 17; // Аннулирован
+    const STATE_DONE = 18; // Закончен
     // типы  экспорта
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -51,17 +49,14 @@ class Document extends \ZCL\DB\Entity {
     public $detaildata = array();
 
     /**
-     * массив статусов
+     * начальная инициализация. Вызывается автоматически  в  конструкторе  Entity
      * 
-     * @var mixed
      */
-    private $logdata = array();
-
     protected function init() {
         $this->document_id = 0;
         $this->state = 0;
         $this->customer_id = 0;
-        $this->datatag = 0;
+
         $this->document_number = '';
         $this->notes = '';
 
@@ -70,11 +65,15 @@ class Document extends \ZCL\DB\Entity {
 
         $this->basedoc = '';
         $this->headerdata = array();
-        $this->headerdata['incredit'] = 0; //оплата в  долг
-        $this->headerdata['inshipment'] = 0; //товары в  пути
+        $this->detaildata = array();
+
         $this->headerdata['planned'] = 0; //запланированный
     }
 
+    /**
+     * возвращает метаданные  чтобы  работало в  дочерних классах
+     * 
+     */
     protected static function getMetadata() {
         return array('table' => 'documents', 'view' => 'documents_view', 'keyfield' => 'document_id');
     }
@@ -149,19 +148,7 @@ class Document extends \ZCL\DB\Entity {
 
             $this->content .= "</row>";
         }
-        $this->content .= "</detail> ";
-        $this->content .= "<states> ";
-        foreach ($this->logdata as $state) {
-            $this->content .= "<staterow>";
-            $this->content .= "<stateno>{$state->state}</stateno>";
-            $this->content .= "<stateuser>{$state->user}</stateuser>";
-            $this->content .= "<stateusername><![CDATA[{$state->username}]]></stateusername>";
-            $this->content .= "<statehost>{$state->hostname}</statehost>";
-            $this->content .= "<statedt>{$state->updatedon}</statedt>";
-
-            $this->content .= "</staterow>";
-        }
-        $this->content .= "</states></doc>";
+        $this->content .= "</detail></doc> ";
     }
 
     /**
@@ -193,20 +180,6 @@ class Document extends \ZCL\DB\Entity {
             }
             $this->detaildata[] = $_row;
         }
-        $this->logdata = array();
-        $result = $xml->xpath('//states');
-
-        if ((bool) (count($result))) {
-            foreach ($xml->states->children() as $row) {
-                $state = new \App\DataItem();
-                $state->state = (int) $row->stateno;
-                $state->hostname = (string) $row->statehost;
-                $state->user = (int) $row->stateuser;
-                $state->username = (string) $row->stateusername;
-                $state->updatedon = (int) $row->statedt;
-                $this->logdata[] = $state;
-            }
-        }
     }
 
     /**
@@ -222,11 +195,7 @@ class Document extends \ZCL\DB\Entity {
      *
      */
     public function Execute() {
-
-        if (trim(get_class($this), "\\") == 'App\Entity\Doc\Document') {
-            //если  екземпляр  базового типа Document приводим  к  дочернему  типу
-            $this->cast()->Execute();
-        }
+        
     }
 
     /**
@@ -236,15 +205,28 @@ class Document extends \ZCL\DB\Entity {
     protected function Cancel() {
         $conn = \ZDB\DB::getConnect();
         $conn->StartTrans();
-        // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
-        $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
-        //удаляем освободившиеся стоки
-        $conn->Execute("delete from store_stock where stock_id not in (select stock_id from entrylist) ");
-        
-        $conn->CompleteTrans();
+        try {
+            // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
+            $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+            //удаляем освободившиеся стоки
+            $conn->Execute("delete from store_stock where stock_id not in (select stock_id from entrylist) ");
 
+            //удаляем оплату
+            if ($this->headerdata['payment'] > 0) {
+                $conn->Execute("delete from paylist where document_id =" . $this->document_id);
+                $this->payamount = 0;
+            }
 
+            $conn->CompleteTrans();
+        } catch (\Exception $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            \App\System::setErrorMsg($ee->getMessage());
 
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+
+            return false;
+        }
         return true;
     }
 
@@ -279,13 +261,6 @@ class Document extends \ZCL\DB\Entity {
         $doc = new $class($this->getData());
         $doc->unpackData();
         return $doc;
-    }
-
-    protected function beforeDelete() {
-
-
-
-        return true;
     }
 
     protected function afterSave($update) {
@@ -354,6 +329,7 @@ class Document extends \ZCL\DB\Entity {
 
         $this->state = $state;
         $this->insertLog($state);
+
         $this->save();
 
         //  $conn = \ZDB\DB::getConnect();
@@ -388,16 +364,13 @@ class Document extends \ZCL\DB\Entity {
                 return "Утвержден";
             case Document::STATE_DELETED:
                 return "Удален";
-            case Document::STATE_WP:
-                return "Ожидает оплату";
+    
             case Document::STATE_WA:
                 return "Ожидает утверждения";
             case Document::STATE_INSHIPMENT:
                 return "В доставке";
-            case Document::STATE_PAYED:
-                return "Оплачен";
-            case Document::STATE_PART_PAYED:
-                return "Частично оплачен";
+            case Document::STATE_DONE:
+                return "Выполнен";
             case Document::STATE_DELIVERED:
                 return "Доставлен";
             case Document::STATE_REFUSED:
@@ -415,7 +388,8 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * Возвращает  следующий  номер  при  автонумерации
-     *
+     *  
+     * @return mixed
      */
     public function nextNumber() {
 
@@ -423,8 +397,13 @@ class Document extends \ZCL\DB\Entity {
         $class = explode("\\", get_called_class());
         $metaname = $class[count($class) - 1];
         $doc = Document::getFirst("meta_name='" . $metaname . "'", "document_id desc");
-        if ($doc == null)
-            return '';
+        if ($doc == null) {
+            // $doc = Document::getFirst("", "document_id desc");
+            //  $id=$doc->document_id  ;
+            return "D" . substr('' . time(), 2);
+        }
+
+
         $prevnumber = $doc->document_number;
         if (strlen($prevnumber) == 0)
             return '';
@@ -502,33 +481,49 @@ class Document extends \ZCL\DB\Entity {
     }
 
     /**
-     * может быть удален
+     * @see \ZDB\Entity
      * 
      */
-    public function canDeleted() {
+    protected function beforeDelete() {
+
         $conn = \ZDB\DB::getConnect();
 
         $cnt = $conn->GetOne("select  count(*) from entrylist where  document_id = {$this->document_id}  ");
         if ($cnt > 0) {
-            System::setErrorMsg("У докуинта  есть записи в аналитике");
-            return false;
+
+            return "У документа  есть записи в аналитике";
+        }
+        $cnt = $conn->GetOne("select  count(*) from paylist where  document_id = {$this->document_id}  ");
+        if ($cnt > 0) {
+
+            return "У документа  есть оплаты";
         }
 
 
         $cnt = $conn->GetOne("select  count(*) from docrel where  doc1 = {$this->document_id}  or  doc2 = {$this->document_id}");
         if ($cnt > 0) {
-            System::setErrorMsg("Есть связаные документы");
-            return false;
+
+            return "Есть связаные документы, удалите связи";
         }
 
-
-        $f = $this->checkStates(array(Document::STATE_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        $f = $this->checkStates(array(Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-            System::setErrorMsg("У документа были оплаты или доставки");
-            return false;
+
+            return "У документа были отправки или доставки";
         }
 
-        return true;
+        return "";
+    }
+
+    /**
+     * @see \ZDB\Entity
+     * 
+     */
+    protected function afterDelete() {
+
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
+        $conn->Execute("delete from paylist where document_id=" . $this->document_id);
     }
 
     /**
@@ -536,34 +531,12 @@ class Document extends \ZCL\DB\Entity {
      * 
      */
     public function canCanceled() {
-        $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_PART_PAYED, Document::STATE_PART_PAYED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-            System::setWarnMsg("У документа были оплаты или доставки");
+            System::setWarnMsg("У документа были отправки или доставки");
             return true;
         }
         return true;
-    }
-
-    //добавляет оплату
-    public function addPayment($user, $amount, $comment = '') {
-        $list = $this->getPayments();
-        $item = new \App\DataItem();
-        $item->user = $user;
-        $item->amount = $amount;
-        $item->comment = $comment;
-        $item->date = time();
-        $list[] = $item;
-
-        $this->headerdata['pays'] = base64_encode(serialize($list));
-    }
-
-    //возвращает список оплат
-    public function getPayments() {
-        if (strlen($this->headerdata['pays']) > 0) {
-            return @unserialize(base64_decode($this->headerdata['pays']));
-        }
-
-        return array();
     }
 
     /**
@@ -572,17 +545,12 @@ class Document extends \ZCL\DB\Entity {
      * @param mixed $state
      */
     public function insertLog($state) {
-
-        $host = Document::qstr($_SERVER["REMOTE_ADDR"]);
+        $conn = \ZDB\DB::getConnect();
+        $host = $conn->qstr($_SERVER["REMOTE_ADDR"]);
         $user = \App\System::getUser();
 
-        $item = new \App\DataItem();
-        $item->state = $state;
-        $item->hostname = $host;
-        $item->user = $user->user_id;
-        $item->username = $user->username;
-        $item->updatedon = time();
-        $this->logdata[] = $item;
+        $sql = "insert into docstatelog (document_id,user_id,createdon,docstate,hostname) values({$this->document_id},{$user->user_id},now(),{$state},{$host})";
+        $conn->Execute($sql);
     }
 
     /**
@@ -590,10 +558,15 @@ class Document extends \ZCL\DB\Entity {
      *
      */
     public function getLogList() {
+        $conn = \ZDB\DB::getConnect();
+        $rc = $conn->Execute("select * from docstatelog_view where document_id={$this->document_id} order  by  log_id");
+        $states = array();
+        foreach ($rc as $row) {
+            $row['createdon'] = strtotime($row['createdon']);
+            $states[] = new \App\DataItem($row);
+        }
 
-
-
-        return $this->logdata;
+        return $states;
     }
 
     /**
@@ -602,17 +575,13 @@ class Document extends \ZCL\DB\Entity {
      * @param mixed $states
      */
     public function checkStates(array $states) {
+        if (count($states) == 0)
+            return false;
+        $conn = \ZDB\DB::getConnect();
+        $states = implode(',', $states);
 
-
-
-        foreach ($this->logdata as $srow) {
-            foreach ($states as $state) {
-                if ($srow->state == $state)
-                    return true;
-            }
-        }
-
-        return false;
+        $cnt = $conn->getOne("select count(*) from docstatelog where docstate in({$states}) and document_id={$this->document_id}");
+        return $cnt > 0;
     }
 
 }

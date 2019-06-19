@@ -43,12 +43,12 @@
 
                         <th>Поставщик</th>
                         <th class="text-right">Сумма </th>
-                        <th class="text-right">К оплате </th>    
+                      
                         <th>Статус</th>
 
 
 
-                        <th></th>
+                        <th>Примечание</th>
                         <th></th>
 
 
@@ -60,15 +60,13 @@
 
                         <td zippy="customer"    ></td>
                         <td zippy="amount" class="text-right"  ></td>
-                        <td   zippy="spay" class="text-right"></td>
-
+                      
                         <td class="text-nowrap"  zippy="state"> </td>
                         <td   zippy="onotes"> </td>
 
                         <td class="text-nowrap" >
                             <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
-                            &nbsp; <a zippy="pay" title="Оплата"><i class="fa fa-credit-card"></i></a>
-
+                       
                             &nbsp; <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
 
                         </td>
@@ -79,38 +77,13 @@
                 </table>
 
                 <div zippy="pag">
-                    </div> 
-                  <a id="dankor"></a>
+                </div> 
+                <a id="dankor"></a>
             </div>
 
         </div>
 
-        <div class="row" zippy="paypan">
-            <div class="col-12   ">
-
-                <div class="navbar nav">
-                    <form zippy="payform" class="form-inline ">
-                        <label>К оплате</label> 
-                        <input zippy="pamount" pattern="[0-9\-]+" style="width:100px;" placeholder="Сумма..." class="form-control mr-sm-2">
-                        <input zippy="pcomment"  style="width:250px;" placeholder="Коментарий..." class="form-control mr-sm-2">
-                        <button zippy="bpay" type="submit" class="  btn btn-info  mr-2 " >Добавить</button>
-
-
-                    </form>  
-
-                </div> 
-                <b><i class="fa fa-credit-card"></i> Оплаты (  <span zippy="pname"></span>)</b><br>
-                <table cellpadding="4" >
-                    <tr zippy="paylist">
-                        <td zippy="pldate"></td>
-                        <td zippy="pluser"></td>
-                        <td  class="text-right">&nbsp;<span zippy="plamount">&nbsp;</span></td>
-
-                        <td zippy="plcomment"></td>
-
-                    </tr>
-                </table>                   
-            </div>     </div>   
+    
 
         <div class="row" zippy="statuspan">
             <div class="col-12">

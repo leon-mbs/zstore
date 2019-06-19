@@ -2,24 +2,24 @@
 
 namespace App\Pages\Reference;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\ArrayDataSource;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\TextArea;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Panel;
-use App\Helper;
-use App\Entity\Customer;
-use Zippy\Binding\PropertyBinding as Bind;
-use App\System;
-use Zippy\Html\Link\BookmarkableLink;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\DataList\ArrayDataSource;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\TextArea;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Panel;
+use \App\Helper;
+use \App\Entity\Customer;
+use \Zippy\Binding\PropertyBinding as Bind;
+use \App\System;
+use \Zippy\Html\Link\BookmarkableLink;
 
 /**
  * Страница контрагентов
@@ -139,11 +139,12 @@ class CustomerList extends \App\Pages\Base {
             return;
 
 
-        if (false == Customer::delete($sender->owner->getDataItem()->customer_id)) {
-            $this->setError("Нельзя удалить контрагента");
+        $del = Customer::delete($sender->owner->getDataItem()->customer_id);
+        if (strlen($del) > 0) {
+            $this->setError($del);
             return;
         }
-        ;
+
 
         $this->customertable->customerlist->Reload();
     }

@@ -29,7 +29,7 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
         // список  запланированных документов
         $where = "state not in( " . Document::STATE_CANCELED . "," . Document::STATE_EDITED . "," . Document::STATE_NEW . ") ";
         $where = $where . " and  document_date >= " . $conn->DBDate(strtotime('-5 days'));
-        $where = $where . " and  meta_name in ('ServiceAct','GoodsIssue','GoodsReceipt') ";
+        //   $where = $where . " and  meta_name in ('ServiceAct','GoodsIssue','GoodsReceipt') ";
         $where = $where . " and  content like '%<planned>1</planned>%'";
         if ($visible) {
             $data = Document::find($where, "document_date desc");
@@ -49,7 +49,8 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
         $item = $row->getDataItem();
         $item = $item->cast();
         $dt = date('d-m-Y', $item->document_date);
-        $row->add(new Label('number', $item->document_number));
+        $row->add(new \Zippy\Html\Link\RedirectLink("number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
+
         $row->add(new Label('date', $dt));
         $row->add(new Label('type', $item->meta_desc));
 
@@ -59,12 +60,12 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
         $end = $date->endOfDay()->timestamp;
 
         if (time() < $start) {
-            $row->number->setAttribute('class', 'badge  ');
+            $row->date->setAttribute('class', 'badge  ');
         } else
         if (time() > $end) {
-            $row->number->setAttribute('class', 'badge badge-danger');
+            $row->date->setAttribute('class', 'badge badge-danger');
         } else {
-            $row->number->setAttribute('class', 'badge badge-warning');
+            $row->date->setAttribute('class', 'badge badge-warning');
         }
     }
 

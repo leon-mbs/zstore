@@ -22,6 +22,7 @@ use \App\Helper as H;
 class StockList extends \App\Pages\Base {
 
     public $_item;
+
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('StockList'))
@@ -30,9 +31,9 @@ class StockList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
-   
 
-        $this->add(new Panel('itempanel')) ;
+
+        $this->add(new Panel('itempanel'));
         $this->itempanel->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
 
         $this->itempanel->itemlist->setPageSize(25);
@@ -42,42 +43,50 @@ class StockList extends \App\Pages\Base {
 
         $this->itempanel->itemlist->Reload();
         $this->itempanel->add(new ClickLink('csv', $this, 'oncsv'));
-        
-        
+
+
         $this->add(new Panel('detailpanel'))->setVisible(false);
         $this->detailpanel->add(new ClickLink('back'))->onClick($this, 'backOnClick');
         $this->detailpanel->add(new Label('itemdetname'));
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
-        
     }
 
     public function itemlistOnRow($row) {
         $item = $row->getDataItem();
-      
+
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
-   
 
-        $row->add(new Label('qty',H::fqty($item->qty)));
-         
-       
+
+        $row->add(new Label('qty', H::fqty($item->qty)));
+
+
         $row->add(new Label('cat_name', $item->cat_name));
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        
- 
-      
     }
-   
+
     public function OnFilter($sender) {
         $this->itempanel->itemlist->Reload();
     }
-   
-   
+
     public function detailistOnRow($row) {
         $stock = $row->getDataItem();
         $row->add(new Label('storename', $stock->storename));
-   
+        $row->add(new Label('snumber', $stock->snumber));
+        $row->add(new Label('sdate', ''));
+
+        $row->add(new Label('sedate', ''));
+
+
+
+        if (strlen($stock->snumber) > 0) {
+            $row->sdate->setText(date('Y-m-d', $stock->sdate));
+            if ($this->_item->term > 0) {
+                $term = strtotime("+{$this->_item->term} month", $stock->sdate);
+                $row->sedate->setText(date('Y-m-d', $term));
+            }
+        }
         $row->add(new Label('partion', $stock->partion));
         $stock->qty = $stock->qty - $stock->wqty + $stock->rqty;
         $q = "<span>" . H::fqty($stock->qty) . "</span>";
@@ -96,7 +105,7 @@ class StockList extends \App\Pages\Base {
         $row->add(new Label('amount', round($stock->qty * $stock->partion)));
 
         $item = Item::load($stock->item_id);
-     
+
 
         $plist = array();
         if ($item->price1 > 0)
@@ -114,33 +123,32 @@ class StockList extends \App\Pages\Base {
     }
 
     public function backOnClick($sender) {
-         
-         $this->itempanel->setVisible(true);
-         $this->detailpanel->setVisible(false);
-         
+
+        $this->itempanel->setVisible(true);
+        $this->detailpanel->setVisible(false);
     }
+
     public function showOnClick($sender) {
-         $this->_item = $sender->getOwner()->getDataItem();
-         $this->itempanel->setVisible(false);
-         $this->detailpanel->setVisible(true);
-         $this->detailpanel->itemdetname->setText($this->_item->itemname);
-         $this->detailpanel->stocklist->Reload();
+        $this->_item = $sender->getOwner()->getDataItem();
+        $this->itempanel->setVisible(false);
+        $this->detailpanel->setVisible(true);
+        $this->detailpanel->itemdetname->setText($this->_item->itemname);
+        $this->detailpanel->stocklist->Reload();
     }
-   
 
     public function oncsv($sender) {
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
         $csv = "";
 
         foreach ($list as $st) {
-         
+
             $csv .= $st->itemname . ';';
             $csv .= $st->item_code . ';';
-            
+
             $csv .= $st->msr . ';';
             $csv .= $st->cat_name . ';';
             $csv .= H::fqty($st->qty) . ';';
-          
+
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -157,7 +165,6 @@ class StockList extends \App\Pages\Base {
 
 }
 
-
 class ItemDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
@@ -172,8 +179,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         $form = $this->page->filter;
         $where = " qty>0  and disabled <> 1 ";
 
-        
-   
+
+
         $cat = $form->searchcat->getValue();
 
 
@@ -184,20 +191,20 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         if (strlen($text) > 0) {
             $form->searchcat->setValue(0); //поиск независимо от категории
             $text = Stock::qstr('%' . $text . '%');
-            $where =   "   (itemname like {$text} or item_code like {$text} )  ";
+            $where = "   (itemname like {$text} or item_code like {$text} )  ";
         }
 
-       
-    
+
+
         return $where;
     }
 
-    public function getItemCount() {  
+    public function getItemCount() {
         return Item::findCnt($this->getWhere());
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return Item::find($this->getWhere(), "itemname asc", $count, $start); 
+        return Item::find($this->getWhere(), "itemname asc", $count, $start);
     }
 
     public function getItem($id) {
@@ -215,21 +222,21 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     private function getWhere() {
-        
+
 
         $form = $this->page->filter;
         $where = "item_id = {$this->page->_item->item_id} and  (qty <> 0 or rqty <> 0 or wqty <> 0) ";
-        
-    
+
+
         return $where;
     }
 
-    public function getItemCount() {  
+    public function getItemCount() {
         return Stock::findCnt($this->getWhere());
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return Stock::find($this->getWhere(), "", $count, $start); 
+        return Stock::find($this->getWhere(), "", $count, $start);
     }
 
     public function getItem($id) {

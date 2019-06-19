@@ -2,24 +2,24 @@
 
 namespace App\Pages\Doc;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\TextArea;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\SubmitLink;
-use App\Entity\Customer;
-use App\Entity\Doc\Document;
-use App\Entity\Service;
-use App\Application as App;
-use App\System;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\TextArea;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\SubmitLink;
+use \App\Entity\Customer;
+use \App\Entity\Doc\Document;
+use \App\Entity\Service;
+use \App\Application as App;
+use \App\System;
 
 /**
  * Страница  ввода  заказа на  услуги
@@ -80,7 +80,7 @@ class ServiceOrder extends \App\Pages\Base {
 
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->headerdata['notes']);
 
@@ -197,11 +197,9 @@ class ServiceOrder extends \App\Pages\Base {
 
         $this->calcTotal();
 
-        $old = $this->_doc->cast();
 
-        $this->_doc->headerdata = array(
-            'total' => $this->docform->total->getText()
-        );
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_servicelist as $item) {
             $this->_doc->detaildata[] = $item->getData();

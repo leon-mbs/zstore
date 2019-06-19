@@ -2,16 +2,19 @@
 
 namespace App\Pages\Reference;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Panel;
-use App\Entity\Category;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Panel;
+use \App\Entity\Category;
 
+/**
+ * справочник категорийтоваров
+ */
 class CategoryList extends \App\Pages\Base {
 
     private $_category;
@@ -44,12 +47,13 @@ class CategoryList extends \App\Pages\Base {
 
 
         $cat_id = $sender->owner->getDataItem()->cat_id;
-        $cnt = \App\Entity\Item::findCnt("  disabled <> 1  and cat_id=" . $cat_id);
-        if ($cnt > 0) {
-            $this->setError('Нельзя удалить категорию с товарами');
+
+        $del = Category::delete($cat_id);
+        if (strlen($del) > 0) {
+            $this->setError($del);
             return;
         }
-        Category::delete($cat_id);
+
         $this->categorytable->categorylist->Reload();
     }
 

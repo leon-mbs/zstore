@@ -1,23 +1,23 @@
  
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
-   
+
 
 
 
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
-              Списание на производство № {{document_number}} от {{date}} <br> 
+            Списание на производство № {{document_number}} от {{date}} <br> 
         </td>
     </tr>
     <tr>
         <td   colspan="8" valign="middle">
-              Производственный участок  <b>{{pareaname}}</b><br>
+            Производственный участок  <b>{{pareaname}}</b><br>
         </td>
     </tr>
     <tr>
         <td   colspan="8" valign="middle">
-               {{notes}} <br>
+            {{notes}} <br>
         </td>
     </tr>
 

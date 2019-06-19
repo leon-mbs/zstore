@@ -19,6 +19,13 @@
                         </select>
                     </div>  
                     <div class="form-group  ">
+                        <label for="defmf" >Денежный счет по умолчанию</label>
+
+                        <select class="form-control" zippy="defmf">
+                            <option value='0'>Не выбран</option>
+                        </select>
+                    </div>  
+                    <div class="form-group  ">
                         <label >Типы отпускных цен</label>
                         <input class="form-control" type="text" zippy="price1" required="required"   >
                         <input class="form-control" type="text" zippy="price2"     >
@@ -41,6 +48,10 @@
                     <div class="form-check">
                         <input zippy="useset" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="useset">Использовать комплекты для продукции</label>
+                    </div>                               
+                    <div class="form-check">
+                        <input zippy="usesnumber" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="usesnumber">Использовать учет по  партиям производителя</label>
                     </div>                               
                     <div class="form-check">
                         <input zippy="useval" type="checkbox" class="form-check-input"  >
@@ -93,13 +104,7 @@
                                     <input class="form-check-input"  type="checkbox" zippy="freg">
                                     <label class="form-check-label mr-sm-2" for="freg">Журналы</label>
                                 </div>               
-                                {{#shop}}
-                                <div class="form-check   ">
 
-                                    <input class="form-check-input"  type="checkbox" zippy="fshop">
-                                    <label class="form-check-label mr-sm-2" for="fshop">Онлайн кат.</label>
-                                </div>               
-                                {{/shop}}
                                 <button type="submit" class="btn btn-outline-success   ">Обновить</button>
                             </form>
                             <a class="btn btn-outline-info   " zippy="addnew">Добавить</a>
@@ -178,7 +183,7 @@
 
 
         </div>
-       
+
 
     </body>
 </html>

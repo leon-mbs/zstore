@@ -2,20 +2,20 @@
 
 namespace App\Widgets;
 
-use Zippy\Binding\PropertyBinding as Prop;
-use Zippy\Html\DataList\ArrayDataSource;
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\TextArea;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\RedirectLink;
-use App\Entity\Doc\Document;
-use App\Helper;
-use App\Application as App;
-use App\System;
+use \Zippy\Binding\PropertyBinding as Prop;
+use \Zippy\Html\DataList\ArrayDataSource;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\TextArea;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\RedirectLink;
+use \App\Entity\Doc\Document;
+use \App\Helper;
+use \App\Application as App;
+use \App\System;
 
 /**
  * Виджет для  просмотра  документов
@@ -65,8 +65,6 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->_doc = $doc;
         $doc = $this->_doc->cast();
 
-
-
         $html = $doc->generateReport();
         $this->preview->setText($html, true);
         // проверяем  поддержку  экспорта
@@ -98,7 +96,7 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->dw_statelist->Reload();
 
         //оплаты
-        $this->_paylist = $this->_doc->getPayments();
+        $this->_paylist = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->dw_paylist->Reload();
 
         //список приатаченных  файлов
@@ -138,18 +136,20 @@ class DocView extends \Zippy\Html\PageFragment {
     public function stateListOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('statehost', $item->hostname));
-        $row->add(new Label('statedate', date('Y.m.d H:i', $item->updatedon)));
+        $row->add(new Label('statedate', date('Y.m.d H:i', $item->createdon)));
         $row->add(new Label('stateuser', $item->username));
-        $row->add(new Label('statename', Document::getStateName($item->state)));
+        $row->add(new Label('statename', Document::getStateName($item->docstate)));
     }
 
     //вывод строки  оплат
     public function payListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('paydate', date('Y-m-d', $item->date)));
-        $row->add(new Label('payamount', $item->amount));
-        $row->add(new Label('payuser', $item->user));
-        $row->add(new Label('paycomment', $item->comment));
+        $row->add(new Label('paydate', date('Y-m-d', $item->paydate)));
+        $row->add(new Label('payamountp', $item->amount > 0 ? $item->amount : ""));
+        $row->add(new Label('payamountm', $item->amount < 0 ? 0 - $item->amount : ""));
+        $row->add(new Label('payuser', $item->username));
+        $row->add(new Label('paycomment', $item->notes));
+        $row->add(new Label('paymf', $item->mf_name));
     }
 
     /**

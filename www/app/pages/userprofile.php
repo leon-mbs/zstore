@@ -2,13 +2,13 @@
 
 namespace App\Pages;
 
-use Zippy\Binding\PropertyBinding as Bind;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Label;
-use App\System;
+use \Zippy\Binding\PropertyBinding as Bind;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Label;
+use \App\System;
 use \Zippy\Html\DataList\DataView;
 
 class UserProfile extends \App\Pages\Base {

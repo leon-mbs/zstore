@@ -16,8 +16,7 @@ use \App\DataItem;
 /**
  * Виджет для  просмотра неликвидных товаров
  */
-class WNoliq extends \Zippy\Html\PageFragment
-{
+class WNoliq extends \Zippy\Html\PageFragment {
 
     public function __construct($id) {
         parent::__construct($id);

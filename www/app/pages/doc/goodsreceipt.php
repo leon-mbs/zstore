@@ -2,25 +2,26 @@
 
 namespace App\Pages\Doc;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\SubmitLink;
-use App\Entity\Customer;
-use App\Entity\Doc\Document;
-use App\Entity\Item;
-use App\Entity\Store;
-use App\Helper as H;
-use App\System;
-use App\Application as App;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\SubmitLink;
+use \App\Entity\Customer;
+use \App\Entity\Doc\Document;
+use \App\Entity\Item;
+use \App\Entity\Store;
+use \App\Entity\MoneyFund;
+use \App\Helper as H;
+use \App\System;
+use \App\Application as App;
 
 /**
  * Страница  ввода  приходной  накладной
@@ -36,9 +37,7 @@ class GoodsReceipt extends \App\Pages\Base {
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
-
         $common = System::getOptions("common");
-
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -48,13 +47,14 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('planned'));
-        $this->docform->add(new CheckBox('payed'));
+
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new TextInput('paynotes'));
 
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
         $this->docform->add(new Label('course', 'Курс 1'));
         $this->docform->val->setVisible($common['useval'] == true);
         $this->docform->course->setVisible($common['useval'] == true);
-
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -68,6 +68,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('editsnumber'));
+        $this->editdetail->add(new Date('editsdate'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
@@ -79,10 +81,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
-
-
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
 
@@ -93,6 +93,8 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
@@ -135,17 +137,21 @@ class GoodsReceipt extends \App\Pages\Base {
                             $item = new Item($_item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
-                         
                     }
                 }
             }
         }
-         $this->calcTotal();
+        $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
 
-        $this->docform->payed->setChecked($this->_doc->datatag == $this->_doc->amount);
+        $this->onMF($this->docform->payment);
+    }
+
+    public function onMF($sender) {
+        $mf = $sender->getValue();
+        $this->docform->paynotes->setVisible($mf > 0);
     }
 
     public function onVal($sender) {
@@ -167,12 +173,13 @@ class GoodsReceipt extends \App\Pages\Base {
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
-
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('snumber', $item->snumber));
+        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
         $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -188,6 +195,8 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
+        $this->editdetail->editsnumber->setText($item->snumber);
+        $this->editdetail->editsdate->setDate($item->sdate);
 
 
         $this->editdetail->edititem->setKey($item->item_id);
@@ -230,11 +239,18 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
+
         if ($item->price == 0) {
             $this->setWarn("Не указана цена");
         }
-
-
+        $item->snumber = $this->editdetail->editsnumber->getText();
+        $item->sdate = $this->editdetail->editsdate->getDate();
+        if ($item->sdate == false)
+            $item->sdate = '';
+        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0) {
+            $this->setError("К серии должна быть введена дата");
+            return;
+        }
         unset($this->_itemlist[$this->_rowid]);
         $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
@@ -248,6 +264,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->editdetail->editsnumber->setText("");
+        $this->editdetail->editsdate->setText("");
     }
 
     public function cancelrowOnClick($sender) {
@@ -265,7 +283,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($this->checkForm() == false) {
             return;
         }
-        $old = $this->_doc->cast();
+
         $this->calcTotal();
 
         $common = System::getOptions("common");
@@ -293,13 +311,15 @@ class GoodsReceipt extends \App\Pages\Base {
         }
 
 
-        $this->_doc->headerdata = array(
-            'order' => $this->docform->order->getText(),
-            'store' => $this->docform->store->getValue(),
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'total' => $this->docform->total->getText(),
-            'order_id' => $this->_order_id
-        );
+        $this->_doc->headerdata['order'] = $this->docform->order->getText();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
+
+        $this->_doc->headerdata['order_id'] = $this->_order_id;
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();
@@ -307,14 +327,6 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
-
-
-
-        if ($this->docform->payed->isChecked() == true && $this->_doc->datatag < $this->_doc->amount) {
-
-            $this->_doc->addPayment(System::getUser()->getUserName(),   $this->_doc->amount);
-            $this->_doc->datatag = $this->_doc->amount;
-        }
 
 
         $conn = \ZDB\DB::getConnect();
@@ -335,9 +347,6 @@ class GoodsReceipt extends \App\Pages\Base {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
-
-
 
 
             if ($this->_basedocid > 0) {

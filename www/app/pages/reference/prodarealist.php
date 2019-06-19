@@ -2,15 +2,15 @@
 
 namespace App\Pages\Reference;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Panel;
-use App\Entity\ProdArea;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Panel;
+use \App\Entity\ProdArea;
 
 //роизводственные  участвки
 class ProdAreaList extends \App\Pages\Base {
@@ -44,13 +44,11 @@ class ProdAreaList extends \App\Pages\Base {
             return;
 
 
-        $pa_id = $sender->owner->getDataItem()->pa_id;
-        // $cnt = \App\Entity\Item::findCnt(" disabled <> 1  and cat_id=" . $pa_id);
-        if ($cnt > 0) {
-            $this->setError('Нельзя удалить участок  ');
+        $del = ProdArea::delete($pa_id);
+        if (strlen($del) > 0) {
+            $this->setError($del);
             return;
         }
-        ProdArea::delete($pa_id);
         $this->patable->palist->Reload();
     }
 

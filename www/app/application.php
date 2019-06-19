@@ -101,15 +101,15 @@ class Application extends \Zippy\WebApplication {
         $arr = explode('/', $uri);
 
         $pages = array(
-            "shop" => "\\App\\Shop\\Pages\\Main",
+            "shop" => "\\App\\Modules\\Shop\\Pages\\Main",
             "store" => "\\App\\Pages\\Main",
-            "sp" => "\\App\\Shop\\Pages\\ProductView",
-            "aboutus" => "\\App\\Shop\\Pages\\AboutUs",
-            "delivery" => "\\App\\Shop\\Pages\\Delivery",
-            "contact" => "\\App\\Shop\\Pages\\Contact",
+            "sp" => "\\App\\Modules\\Shop\\Pages\\ProductView",
+            "aboutus" => "\\App\\Modules\\Shop\\Pages\\AboutUs",
+            "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
+            "contact" => "\\App\\Modules\\Shop\\Pages\\Contact",
             "simage" => "\\App\\Pages\\LoadImage",
-            "scat" => "\\App\\Shop\\Pages\\Main",
-            "pcat" => "\\App\\Shop\\Pages\\Catalog"
+            "scat" => "\\App\\Modules\\Shop\\Pages\\Main",
+            "pcat" => "\\App\\Modules\\Shop\\Pages\\Catalog"
         );
 
         if (strlen($pages[$arr[0]]) > 0) {
@@ -127,7 +127,5 @@ class Application extends \Zippy\WebApplication {
             self::$app->LoadPage($pages[$uri]);
         }
     }
-
-    
 
 }

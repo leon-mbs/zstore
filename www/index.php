@@ -29,8 +29,8 @@ try {
 
     $app = new \App\Application(); 
   
-    if($_config['common']['shop'] == 1){
-        $app->Run('\App\Shop\Pages\Main');  
+    if($_config['modules']['shop'] == 1){
+        $app->Run('\App\Modules\Shop\Pages\Main');  
     } else { 
         $app->Run('\App\Pages\Main');
     }  

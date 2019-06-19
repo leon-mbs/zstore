@@ -36,10 +36,17 @@
                         <input zippy="planned" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="planned">Запланированный</label>
                     </div>  
-                    <div class="form-check">
-                        <input zippy="payed" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="payed">Оплачен</label>
-                    </div>                                           
+                    <div class="form-group  ">
+                        <label for="payment" >Оплата</label>
+                        <select class="form-control" zippy="payment">
+                            <option value="0">Оплата позже</option>
+                        </select>
+                    </div> 
+
+                    <div class="form-group">
+                        <label data-label="paynotes" for="paynotes" > Комментарий к оплате</label>
+                        <input class="form-control" type="text" zippy="paynotes" >
+                    </div>                                         
                     <div class="form-group  ">
                         <label for="notes" >Примечание </label>
 
@@ -96,7 +103,12 @@
                             <th>Название</th>
                             <th  >Код</th>
                             <th  >Ед.</th>
-                            <th  >Партия</th>
+                            {{#usesnumber}} 
+                            <th  >Серия</th>
+                            <th  >Дата</th>
+                            {{/usesnumber}} 
+
+                            <th  >Уч. цена</th>
 
                             <th   class="text-right">Кол.</th>
                             <th    class="text-right" >Цена</th>
@@ -108,6 +120,11 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
+                            {{#usesnumber}} 
+                            <td zippy="snumber"></td>
+                            <td zippy="sdate"></td>
+                            {{/usesnumber}} 
+
                             <td zippy="partion"></td>
 
                             <td zippy="quantity"  class="text-right"></td>
@@ -118,7 +135,14 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="6"  class="text-right">Всего:</td>
+
+                            {{^usesnumber}} 
+                            <td colspan="6" class="text-right">Всего:</td>
+                            {{/usesnumber}} 
+                            {{#usesnumber}} 
+                            <td colspan="8" class="text-right">Всего:</td>
+                            {{/usesnumber}} 
+
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>

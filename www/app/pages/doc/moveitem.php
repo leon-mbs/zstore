@@ -2,24 +2,24 @@
 
 namespace App\Pages\Doc;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\SubmitLink;
-use App\Entity\Doc\Document;
-use App\Entity\Item;
-use App\Entity\Stock;
-use App\Entity\Store;
-use App\Application as App;
-use App\Helper as H;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\SubmitLink;
+use \App\Entity\Doc\Document;
+use \App\Entity\Item;
+use \App\Entity\Stock;
+use \App\Entity\Store;
+use \App\Application as App;
+use \App\Helper as H;
 
 /**
  * Страница  ввода перемещения товаров
@@ -58,7 +58,7 @@ class MoveItem extends \App\Pages\Base {
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
 
         if ($docid > 0) {    //загружаем   содержимок  документа на страницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
@@ -85,6 +85,8 @@ class MoveItem extends \App\Pages\Base {
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('snumber', $item->snumber));
+        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
@@ -175,10 +177,12 @@ class MoveItem extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata = array(
-            'storefrom' => $this->docform->storefrom->getValue(),
-            'storeto' => $this->docform->storeto->getValue()
-        );
+        $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
+        $this->_doc->headerdata['storefromname'] = $this->docform->storefrom->getValueName();
+        $this->_doc->headerdata['storeto'] = $this->docform->storeto->getValue();
+        $this->_doc->headerdata['storetoname'] = $this->docform->storeto->getValueName();
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();

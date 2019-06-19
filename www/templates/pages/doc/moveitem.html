@@ -37,12 +37,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-10 xol-xl-8">
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
                             <th>Ед.</th>
-
+                            {{#usesnumber}} 
+                            <th  >Серия</th>
+                            <th  >Дата</th>
+                            {{/usesnumber}} 
                             <th width="40"  class="text-right" >Кол.</th>
                             <th width="40"  class="text-right" >Цена</th>
                             <th width="50"></th>
@@ -50,7 +53,10 @@
                         <tr zippy="detail">
                             <td zippy="item"></td>
                             <td zippy="msr"></td>
-
+                            {{#usesnumber}} 
+                            <td zippy="snumber"></td>
+                            <td zippy="sdate"></td>
+                            {{/usesnumber}} 
                             <td zippy="quantity"  class="text-right" ></td>
                             <td zippy="price"  class="text-right" ></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i> <a zippy="delete"><i class="fa fa-trash"></i></a></td>

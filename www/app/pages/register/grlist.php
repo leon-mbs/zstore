@@ -2,23 +2,23 @@
 
 namespace App\Pages\Register;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\DataList\Paginator;
 use \Zippy\Html\DataList\ArrayDataSource;
 use \Zippy\Binding\PropertyBinding as Prop;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Panel;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use App\Entity\Doc\Document;
-use App\Helper as H;
-use App\Application as App;
-use App\System;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Panel;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \App\Entity\Doc\Document;
+use \App\Helper as H;
+use \App\Application as App;
+use \App\System;
 
 /**
  * журнал  закупок
@@ -26,7 +26,7 @@ use App\System;
 class GRList extends \App\Pages\Base {
 
     private $_doc = null;
-    public $_pays = array();
+ 
 
     /**
      *
@@ -66,23 +66,14 @@ class GRList extends \App\Pages\Base {
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
-        $this->add(new Panel("paypan"))->setVisible(false);
-        $this->paypan->add(new Label("pname"));
-        $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-
-        $this->paypan->payform->add(new TextInput('pamount'));
-        $this->paypan->payform->add(new TextInput('pcomment'));
-        $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
-
-        $this->paypan->add(new DataView('paylist', new ArrayDataSource(new Prop($this, '_pays')), $this, 'payOnRow'))->Reload();
-
+   
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function filterOnSubmit($sender) {
 
-        $this->paypan->setVisible(false);
+    
         $this->statuspan->setVisible(false);
 
         $this->doclist->Reload(false);
@@ -96,8 +87,7 @@ class GRList extends \App\Pages\Base {
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', $doc->amount));
-        $row->add(new Label('spay', $doc->amount - $doc->datatag));
-        $row->add(new Label('customer', $doc->customer_name));
+         $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
@@ -108,8 +98,7 @@ class GRList extends \App\Pages\Base {
         } else {
             $row->edit->setVisible(false);
         }
-        $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
-    }
+      }
 
     public function statusOnSubmit($sender) {
 
@@ -138,7 +127,7 @@ class GRList extends \App\Pages\Base {
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true))
             return;
-        $this->paypan->setVisible(false);
+        
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
@@ -156,77 +145,7 @@ class GRList extends \App\Pages\Base {
         App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
     }
 
-    //оплаты
-    public function payOnClick($sender) {
-        $this->statuspan->setVisible(false);
-
-
-        $this->_doc = $sender->owner->getDataItem();
-
-
-        $this->paypan->setVisible(true);
-
-        $this->statuspan->setVisible(false);
-        $this->doclist->setSelectedRow($sender->getOwner());
-        $this->doclist->Reload(false);
-
-        $this->goAnkor('dankor');
-
-        $this->paypan->payform->pamount->setText($this->_doc->amount - $this->_doc->datatag);
-        ;
-        $this->paypan->payform->pcomment->setText("");
-        ;
-        $this->paypan->pname->setText($this->_doc->document_number);
-        ;
-
-        $this->_pays = $this->_doc->getPayments();
-        $this->paypan->paylist->Reload();
-    }
-
-    public function payOnRow($row) {
-        $pay = $row->getDataItem();
-        $row->add(new Label('plamount', $pay->amount));
-        $row->add(new Label('pluser', $pay->user));
-        $row->add(new Label('pldate', date('Y-m-d', $pay->date)));
-        $row->add(new Label('plcomment', $pay->comment));
-    }
-
-    public function payOnSubmit($sender) {
-        $form = $this->paypan->payform;
-        $amount = $form->pamount->getText();
-        if ($amount == 0)
-            return;
-        $amount = $form->pamount->getText();
-        if ($amount == 0)
-            return;
-
-        $this->_doc->addPayment(System::getUser()->getUserName(), $amount, $form->pcomment->getText());
-        $this->_doc->datatag += $amount;
-        if ($this->_doc->datatag > $this->_doc->amount) {
-            $this->setWarn('Сумма  больше  необходимой  оплаты');
-        }
-
-        $this->_doc->save();
-        if ($this->_doc->datatag < $this->_doc->amount) {
-            //$this->_doc->updateStatus(Document::STATE_PART_PAYED);
-        }
-        if ($this->_doc->datatag == $this->_doc->amount) {
-            $this->_doc->updateStatus(Document::STATE_PAYED);
-        }
-        $this->setSuccess('Оплата добавлена');
-        if ($this->_doc->datatag == $this->_doc->amount) {
-
-            //закрываем если есть домтавка
-            //$this->_doc->updateStatus(Document::STATE_CLOSED);
-            //$this->setSuccess('Наряд оплаче и закрыт');    
-        }
-
-
-
-        $this->doclist->Reload(false);
-        $this->paypan->setVisible(false);
-    }
-
+ 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";
@@ -282,7 +201,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and  state <>" . Document::STATE_EXECUTED;
         }
         if ($status == 2) {
-            $where .= " and  amount > datatag";
+            $where .= " and  amount > payamount";
         }
         if ($status == 3) {
             

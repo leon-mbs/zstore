@@ -2,29 +2,30 @@
 
 namespace App\Pages\Doc;
 
-use Zippy\Html\DataList\DataView;
-use Zippy\Html\Form\AutocompleteTextInput;
-use Zippy\Html\Form\Button;
-use Zippy\Html\Form\CheckBox;
-use Zippy\Html\Form\Date;
-use Zippy\Html\Form\Form;
-use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\SubmitButton;
-use Zippy\Html\Form\TextInput;
-use Zippy\Html\Label;
-use Zippy\Html\Link\ClickLink;
-use Zippy\Html\Link\SubmitLink;
-use App\Entity\Customer;
-use App\Entity\Doc\Document;
-use App\Entity\Service;
-use App\Entity\Store;
-use App\Entity\Stock;
-use App\Entity\Prodarea;
-use App\Entity\Item;
-use App\Entity\Employee;
-use App\Entity\Equipment;
-use App\Application as App;
-use App\Helper as H;
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\Form\AutocompleteTextInput;
+use \Zippy\Html\Form\Button;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\SubmitLink;
+use \App\Entity\Customer;
+use \App\Entity\Doc\Document;
+use \App\Entity\Service;
+use \App\Entity\Store;
+use \App\Entity\Stock;
+use \App\Entity\Prodarea;
+use \App\Entity\Item;
+use \App\Entity\Employee;
+use \App\Entity\Equipment;
+use \App\Application as App;
+use \App\Helper as H;
+use \App\Entity\MoneyFund;
 
 /**
  * Страница  ввода  наряда  на  работу
@@ -57,6 +58,8 @@ class Task extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new TextInput('paynotes'));
 
         $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
         $this->docform->add(new SubmitLink('additem'))->onClick($this, 'additemOnClick');
@@ -126,7 +129,7 @@ class Task extends \App\Pages\Base {
 
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->hours->setText($this->_doc->headerdata['hours']);
@@ -134,8 +137,10 @@ class Task extends \App\Pages\Base {
             $this->docform->start_date->setDate($this->_doc->headerdata['start_date']);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
-            $this->docform->document_date->setDate($this->_doc->headerdata['end_date']);
+            $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
@@ -179,6 +184,13 @@ class Task extends \App\Pages\Base {
 
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
+
+        $this->onMF($this->docform->payment);
+    }
+
+    public function onMF($sender) {
+        $mf = $sender->getValue();
+        $this->docform->paynotes->setVisible($mf > 0);
     }
 
     public function cancelrowOnClick($sender) {
@@ -483,19 +495,19 @@ class Task extends \App\Pages\Base {
 
         $this->calcTotal();
 
-        $old = $this->_doc->cast();
 
-        $this->_doc->headerdata = array(
-            'parea' => $this->docform->parea->getValue(),
-            'pareaname' => $this->docform->parea->getValueName(),
-            'pricetype' => $this->docform->pricetype->getValue(),
-            'pricetypename' => $this->docform->pricetype->getValueName(),
-            'store' => $this->docform->store->getValue(),
-            'hours' => $this->docform->hours->getText(),
-            'start_date' => $this->docform->start_date->getDate(),
-            'end_date' => $this->docform->document_date->getDate(),
-            'total' => $this->docform->total->getText()
-        );
+        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
+        $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
+        $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['hours'] = $this->docform->hours->getText();
+        $this->_doc->headerdata['start_date'] = $this->docform->start_date->getDate();
+        $this->_doc->document_date = $this->docform->document_date->getDate();
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_servicelist as $item) {
             $this->_doc->detaildata[] = $item->getData();

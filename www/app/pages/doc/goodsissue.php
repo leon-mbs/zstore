@@ -19,6 +19,7 @@ use \App\Entity\Doc\Document;
 use \App\Entity\Item;
 use \App\Entity\Stock;
 use \App\Entity\Store;
+use \App\Entity\MoneyFund;
 use \App\Helper as H;
 use \App\System;
 use \App\Application as App;
@@ -45,7 +46,9 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new Date('sent_date'));
         $this->docform->add(new Date('delivery_date'));
         $this->docform->add(new CheckBox('planned'));
-        $this->docform->add(new CheckBox('payed'));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new TextInput('paynotes'));
+
 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
@@ -100,7 +103,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
-            $this->_doc = Document::load($docid);
+            $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
 
@@ -113,6 +116,8 @@ class GoodsIssue extends \App\Pages\Base {
             $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -186,13 +191,18 @@ class GoodsIssue extends \App\Pages\Base {
                 }
             }
         }
-           $this->calcTotal();
+        $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-        $this->docform->payed->setChecked($this->_doc->datatag == $this->_doc->amount);
         $this->calcTotal();
         $this->OnDelivery($this->docform->delivery);
+        $this->onMF($this->docform->payment);
+    }
+
+    public function onMF($sender) {
+        $mf = $sender->getValue();
+        $this->docform->paynotes->setVisible($mf > 0);
     }
 
     public function detailOnRow($row) {
@@ -202,6 +212,8 @@ class GoodsIssue extends \App\Pages\Base {
         $row->add(new Label('partion', $item->partion));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('snumber', $item->snumber));
+        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', $item->price));
@@ -261,8 +273,8 @@ class GoodsIssue extends \App\Pages\Base {
 
         $stock = Stock::load($id);
         $stock->quantity = $this->editdetail->editquantity->getText();
-        $qstock=$this->editdetail->qtystock->getText();
-        if($stock->quantity > $qstock)  {
+        $qstock = $this->editdetail->qtystock->getText();
+        if ($stock->quantity > $qstock) {
             $this->setWarn('Недостаточное  количество на  складе');
         }
         $stock->price = $this->editdetail->editprice->getText();
@@ -311,34 +323,32 @@ class GoodsIssue extends \App\Pages\Base {
         $order = Document::load($this->_order_id);
 
         $this->calcTotal();
-        $old = $this->_doc->cast();
 
-        $this->_doc->headerdata = array(
-            'order' => $this->docform->order->getText(),
-            'ship_address' => $this->docform->ship_address->getText(),
-            'ship_number' => $this->docform->ship_number->getText(),
-            'delivery' => $this->docform->delivery->getValue(),
-            'planned' => $this->docform->planned->isChecked() ? 1 : 0,
-            'store' => $this->docform->store->getValue(),
-            'emp_id' => $this->docform->emp->getValue(),
-            'emp_name' => $this->docform->emp->getValueName(),
-            'pricetype' => $this->docform->pricetype->getValue(),
-            'pricetypename' => $this->docform->pricetype->getValueName(),
-            'delivery_date' => $this->docform->delivery_date->getDate(),
-            'sent_date' => $this->docform->sent_date->getDate(),
-            'order_id' => $this->_order_id
-        );
+
+        $this->_doc->headerdata['order'] = $this->docform->order->getText();
+        $this->_doc->headerdata['ship_address'] = $this->docform->ship_address->getText();
+        $this->_doc->headerdata['ship_number'] = $this->docform->ship_number->getText();
+        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
+        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
+        $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
+        $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
+        $this->_doc->headerdata['delivery_date'] = $this->docform->delivery_date->getDate();
+        $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
+        $this->_doc->headerdata['order_id'] = $this->_order_id;
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
         }
 
         $this->_doc->amount = $this->docform->total->getText();
-        if ($this->docform->payed->isChecked() == true && $this->_doc->datatag < $this->_doc->amount) {
 
-            $this->_doc->addPayment(System::getUser()->user_id, $this->_doc->amount - $this->_doc->datatag);
-            $this->_doc->datatag = $this->_doc->amount;
-        }
         $isEdited = $this->_doc->document_id > 0;
 
 
