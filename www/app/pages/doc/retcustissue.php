@@ -47,6 +47,8 @@ class RetCustIssue extends \App\Pages\Base {
 
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+       $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new TextInput('paynotes'));
 
 
         $this->docform->add(new TextInput('notes'));
@@ -85,6 +87,8 @@ class RetCustIssue extends \App\Pages\Base {
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
+           $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -124,8 +128,15 @@ class RetCustIssue extends \App\Pages\Base {
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
         $this->calcTotal();
+        $this->onMF($this->docform->payment);        
     }
 
+    public function onMF($sender) {
+        $mf = $sender->getValue();
+        $this->docform->paynotes->setVisible($mf > 0);
+    }
+    
+    
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
@@ -232,6 +243,8 @@ class RetCustIssue extends \App\Pages\Base {
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->checkForm() == false) {

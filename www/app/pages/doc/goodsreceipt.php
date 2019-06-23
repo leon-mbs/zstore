@@ -448,4 +448,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
     }
 
+    protected function getNumberTemplate(){
+         return  'ПН-000001';
+    }    
+    
 }

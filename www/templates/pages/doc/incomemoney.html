@@ -8,7 +8,7 @@
         <form zippy="docform">
             <h3> Приходный ордер</h3>
             <div class="row">
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number" >Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" >
@@ -19,14 +19,21 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="mfto" >На счет</label>
-                        <select class="form-control" zippy="mfto">
+                        <label for="payment" >На счет</label>
+                        <select class="form-control" zippy="payment">
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="amount" >Сумма</label>
                         <input pattern="[0-9]+" class="form-control" type="text" zippy="amount" >
-                    </div>                    
+                    </div>  
+                    <div class="form-group">
+                        <label for="mtype" >Тип дохода</label>
+                        <select class="form-control" zippy="mtype">
+                          <option value="0">Не выбран</option> 
+                        </select>
+                    </div>
+                                      
                     <div class="form-group  ">
                         <label for="notes" >Примечание </label>
 

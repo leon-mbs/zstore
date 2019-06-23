@@ -76,7 +76,7 @@ class GoodsReceipt extends Document {
             }
         }
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], $this->headerdata['paynotes']);
+            \App\Entity\Pay::addPayment($this->document_id,0-$this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
             $this->payamount = $this->amount;
         }
 
@@ -92,4 +92,7 @@ class GoodsReceipt extends Document {
         return $list;
     }
 
+    protected function getNumberTemplate(){
+         return  'ПН-000000';
+    }      
 }

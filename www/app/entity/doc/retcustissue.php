@@ -71,6 +71,10 @@ class RetCustIssue extends Document {
             $sc->setCustomer($this->customer_id);
             $sc->save();
         }
+        if ($this->headerdata['payment'] > 0) {
+            \App\Entity\Pay::addPayment($this->document_id,   $this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_INCOME, $this->headerdata['paynotes']);
+            $this->payamount = $this->amount;
+        }
 
 
         return true;
@@ -83,5 +87,9 @@ class RetCustIssue extends Document {
 
         return $list;
     }
+
+    protected function getNumberTemplate(){
+         return  'ВП-000000';
+    }      
 
 }

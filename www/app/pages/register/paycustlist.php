@@ -216,13 +216,14 @@ class PayCustList extends \App\Pages\Base {
             return;
         }
 
-        
-        //закупки
-        if($this->_doc->meta_name == 'GoodsReceipt'){
+        $type=  \App\Entity\Pay::PAY_BASE_INCOME;
+        //закупки  и возвраты
+        if($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'ReturnIssue'){
             $amount  = 0 - $amount;
+             $type =  \App\Entity\Pay::PAY_BASE_OUTCOME;
         }
         
-        \App\Entity\Pay::addPayment($this->_doc->document_id,   $amount, $form->payment->getValue(), $form->pcomment->getText());
+        \App\Entity\Pay::addPayment($this->_doc->document_id,   $amount, $form->payment->getValue(),$type, $form->pcomment->getText());
         $this->_doc->payamount = abs(\App\Entity\Pay::getPaymentAmount($this->_doc->document_id));
 
 

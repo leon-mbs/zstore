@@ -123,11 +123,15 @@ class Task extends Document {
         }
 
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], $this->headerdata['paynotes']);
+            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_INCOME, $this->headerdata['paynotes']);
             $this->payamount = $this->amount;
         }
 
         return true;
     }
+
+    protected function getNumberTemplate(){
+         return  'НР-000000';
+    }      
 
 }

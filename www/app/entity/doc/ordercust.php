@@ -56,4 +56,9 @@ class OrderCust extends Document {
         return $list;
     }
 
+
+    protected function getNumberTemplate(){
+         return  'ЗКП-000000';
+    }      
+    
 }

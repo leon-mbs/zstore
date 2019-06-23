@@ -100,6 +100,8 @@ class ServiceAct extends \App\Pages\Base {
             }
         } else {
             $this->_doc = Document::create('ServiceAct');
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+
             if ($basedocid > 0) { //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
@@ -420,5 +422,6 @@ class ServiceAct extends \App\Pages\Base {
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
+  
+    
 }

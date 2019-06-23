@@ -28,6 +28,7 @@ use \App\System;
 class PayList extends \App\Pages\Base {
 
     private $_doc = null;
+    private $_ptlist = null;
 
     /**
      *
@@ -38,11 +39,14 @@ class PayList extends \App\Pages\Base {
         if (false == \App\ACL::checkShowReg('PayList'))
             return;
 
+        $this->_ptlist =  \App\Entity\Pay::getPayTypeList();    
+            
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
+        $this->filter->add(new DropDownChoice('ftype',$this->_ptlist , 0));
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
 
         $doclist = $this->add(new DataView('doclist', new PayListDataSource($this), $this, 'doclistOnRow'));
@@ -57,6 +61,9 @@ class PayList extends \App\Pages\Base {
 
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
+        
+        $this->_ptlist[0] ='';
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -84,9 +91,8 @@ class PayList extends \App\Pages\Base {
         $row->add(new Label('mf_name', $doc->mf_name));
         $row->add(new Label('username', $doc->username));
         $row->add(new Label('customer_name', $doc->customer_name));
-
-
-
+        $row->add(new Label('paytype', $this->_ptlist[$doc->paytype] ));
+ 
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
     }
@@ -155,10 +161,14 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource {
         $where = " date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(paydate) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
         $author = $this->page->filter->fuser->getValue();
+        $type = $this->page->filter->ftype->getValue();
         $cust = $this->page->filter->fcustomer->getKey();
         $mf = $this->page->filter->fmfund->getValue();
 
 
+        if ($type > 0) {
+            $where .= " and paytype=" . $type;
+        }
         if ($cust > 0) {
             $where .= " and d.customer_id=" . $cust;
         }
@@ -183,7 +193,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource {
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  p.*,d.`customer_name`,d.`meta_id` from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere() . " order  by  pl_id desc   ";
+        $sql = "select  p.*,d.`customer_name`,d.`meta_id`,d.`notes` from documents_view  d join `paylist_view` p on d.`document_id` = p.`document_id` where " . $this->getWhere() . " order  by  pl_id desc   ";
         if ($count > 0)
             $sql .= " limit {$start},{$count}";
 
