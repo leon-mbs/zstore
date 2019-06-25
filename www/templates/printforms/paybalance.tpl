@@ -14,7 +14,7 @@
     </tr>
    <tr>
 
-        <td align="center" colspan="2">
+        <td   colspan="2">
               <b>Доходы</b> 
         </td>
     </tr>
@@ -38,7 +38,7 @@
     </tr>
   <tr>
 
-        <td align="center" colspan="2">
+        <td   colspan="2">
               <b>Расходы</b>>
         </td>
     </tr>
