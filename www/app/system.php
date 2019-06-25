@@ -66,6 +66,18 @@ class System {
 
         return self::$_options[$group];
     }
+    /**
+    * возвращает настройку
+    * 
+    * @param mixed $group
+    * @param mixed $option
+    */
+    public static function getOption($group,$option) {
+
+        $options = self::getOptions($group);
+
+        return $options[$option];
+    }
 
     /**
      * Записывает набор  параметров  по имени набора
