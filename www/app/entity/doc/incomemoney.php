@@ -15,7 +15,7 @@ class IncomeMoney extends Document {
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, $this->amount, $this->headerdata['mfto'], notes);
+        Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'],$this->headerdata['type'], $this->notes);
 
 
         return true;
@@ -23,12 +23,14 @@ class IncomeMoney extends Document {
 
     public function generateReport() {
 
+        $pt = Pay::getPayTypeList(1);
 
         $header = array(
             'amount' => $this->amount,
             'date' => date('d.m.Y', $this->document_date),
             "notes" => $this->notes,
-            "to" => $this->headerdata["mftoname"],
+            "type" => $pt[$this->headerdata["type"]] ,
+            "to" => $this->headerdata["paymentname"],
             "document_number" => $this->document_number
         );
         $report = new \App\Report('incomemoney.tpl');
@@ -37,5 +39,9 @@ class IncomeMoney extends Document {
 
         return $html;
     }
+
+    protected function getNumberTemplate(){
+         return  'ПО-000000';
+    }      
 
 }

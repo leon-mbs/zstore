@@ -19,6 +19,11 @@
 </tr>
 <tr>
     <td colspan="4">
+        <b>Тип дохода:</b> {{type}}
+    </td>
+</tr>
+<tr>
+    <td colspan="4">
         {{notes}}
     </td>
 </tr>

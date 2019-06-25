@@ -52,6 +52,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editwnoliq'));
         $this->editpan->editform->add(new CheckBox('editwminqty'));
         $this->editpan->editform->add(new CheckBox('editwsdate'));
+        $this->editpan->editform->add(new CheckBox('editwrdoc'));
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));

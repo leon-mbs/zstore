@@ -94,6 +94,8 @@ class ServiceOrder extends \App\Pages\Base {
             }
         } else {
             $this->_doc = Document::create('ServiceOrder');
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+
         }
 
 

@@ -76,4 +76,8 @@ class ProdReceipt extends Document {
         return $list;
     }
 
+    protected function getNumberTemplate(){
+         return  'ОП-000000';
+    }      
+
 }

@@ -15,7 +15,7 @@ class OutcomeMoney extends Document {
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['mffrom'], notes);
+        Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['payment'],$this->headerdata['type'], $this->notes);
 
 
         return true;
@@ -23,12 +23,14 @@ class OutcomeMoney extends Document {
 
     public function generateReport() {
 
+        $pt = Pay::getPayTypeList(2);
 
         $header = array(
             'amount' => $this->amount,
             'date' => date('d.m.Y', $this->document_date),
             "notes" => $this->notes,
-            "from" => $this->headerdata["mffromname"],
+            "from" => $this->headerdata["paymentname"],
+            "type" => $pt[$this->headerdata["type"]] ,
             "document_number" => $this->document_number
         );
         $report = new \App\Report('outcomemoney.tpl');
@@ -37,5 +39,9 @@ class OutcomeMoney extends Document {
 
         return $html;
     }
+
+    protected function getNumberTemplate(){
+         return  'РО-000000';
+    }      
 
 }

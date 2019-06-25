@@ -62,4 +62,8 @@ class TransItem extends Document {
         return $html;
     }
 
+    protected function getNumberTemplate(){
+         return  'ПК-000000';
+    }      
+
 }

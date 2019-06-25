@@ -77,4 +77,8 @@ class MoveItem extends Document {
         return $html;
     }
 
+    protected function getNumberTemplate(){
+         return  'ДТ-000000';
+    }      
+
 }

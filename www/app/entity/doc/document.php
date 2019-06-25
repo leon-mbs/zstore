@@ -398,13 +398,13 @@ class Document extends \ZCL\DB\Entity {
         $metaname = $class[count($class) - 1];
         $doc = Document::getFirst("meta_name='" . $metaname . "'", "document_id desc");
         if ($doc == null) {
-            // $doc = Document::getFirst("", "document_id desc");
-            //  $id=$doc->document_id  ;
-            return "D" . substr('' . time(), 2);
+            $prevnumber = $this->getNumberTemplate();
+        }  else {
+           $prevnumber = $doc->document_number; 
         }
 
 
-        $prevnumber = $doc->document_number;
+        
         if (strlen($prevnumber) == 0)
             return '';
         $number = preg_replace('/[^0-9]/', '', $prevnumber);
@@ -584,4 +584,12 @@ class Document extends \ZCL\DB\Entity {
         return $cnt > 0;
     }
 
+    /**
+    * возвращает шаблон номераЮ перегружается дочерними классам
+    * типа ПР-000000.  Буквенный код должен  быть уникальным для типа документа
+    */
+    protected function getNumberTemplate(){
+         return  '';
+    }
+    
 }

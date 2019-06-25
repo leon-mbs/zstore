@@ -13,6 +13,7 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\SubmitLink;
 use \App\Entity\Doc\Document;
+use \App\Entity\Pay;
 use \App\Entity\MoneyFund;
 use \App\Application as App;
 use \App\Helper as H;
@@ -31,7 +32,8 @@ class OutcomeMoney extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('mffrom', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(2) ));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('amount'));
 
@@ -45,7 +47,8 @@ class OutcomeMoney extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->mfto->setValue($this->_doc->headerdata['mfto']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->mtype->setValue($this->_doc->headerdata['type']);
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->amount->setText($this->_doc->amount);
         } else {
@@ -62,8 +65,9 @@ class OutcomeMoney extends \App\Pages\Base {
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-        $this->_doc->headerdata['mffrom'] = $this->docform->mffrom->getValue();
-        $this->_doc->headerdata['mffromname'] = $this->docform->mffrom->getValueName();
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paymentname'] = $this->docform->payment->getValueName();
+        $this->_doc->headerdata['type'] = $this->docform->mtype->getValue();
 
         $this->_doc->amount = $this->docform->amount->getText();
         $this->_doc->document_number = trim($this->docform->document_number->getText());
@@ -112,6 +116,9 @@ class OutcomeMoney extends \App\Pages\Base {
 
         if (($this->_doc->amount > 0) == false) {
             $this->setError("Не введена сумма");
+        }
+        if ($this->docform->mtype->getValue() == 0) {
+            $this->setError("Не выбран тип расхода");
         }
 
         return !$this->isError();
