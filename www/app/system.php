@@ -12,9 +12,7 @@ class System {
 
     private static $_options = array();   //  для кеширования  
     private static $_cache = array();   //  для кеширования  
-
- 
-    
+      
     
     /**
      * Возвращает  текущего  юзера

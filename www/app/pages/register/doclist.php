@@ -133,6 +133,9 @@ class DocList extends \App\Pages\Base {
         $row->add(new Label('amount', ($doc->amount > 0) ? $doc->amount : ""));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
+        $row->add(new Label('hasmsg'     ))->setVisible($doc->mcnt > 0);
+        $row->add(new Label('hasfiles'   ))->setVisible($doc->fcnt > 0 || $doc->dcnt > 0);
+        $row->add(new Label('isplanned'  ))->setVisible($doc->headerdata['planned'] == 1);
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');

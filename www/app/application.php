@@ -42,12 +42,10 @@ class Application extends \Zippy\WebApplication {
      */
     public function Route($uri) {
 
-
         if (preg_match('/^[-#a-zA-Z0-9\/_]+$/', $uri) == 0) {
 
             self::Redirect404();
         }
-
 
         $api = explode('/', $uri);
 
@@ -59,7 +57,6 @@ class Application extends \Zippy\WebApplication {
                 echo $api[2];
                 die;
             }
-
 
             try {
 

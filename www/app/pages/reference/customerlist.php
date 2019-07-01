@@ -111,6 +111,9 @@ class CustomerList extends \App\Pages\Base {
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
         $row->add(new Label('customercomment', $item->comment));
+        $row->add(new Label('hasmsg'     ))->setVisible($item->mcnt > 0);
+        $row->add(new Label('hasfiles'   ))->setVisible($item->fcnt > 0  );
+        $row->add(new Label('isplanned'   ))->setVisible($item->ecnt > 0  );
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
@@ -212,7 +215,10 @@ class CustomerList extends \App\Pages\Base {
         $this->contentview->addfileform->adddescfile->setText('');
         $this->updateFiles();
         $this->goAnkor('contentviewlink');
+        $this->customertable->customerlist->Reload(false);
     }
+        
+   
 
     // обновление  списка  прикрепленных файлов
     private function updateFiles() {
@@ -236,7 +242,10 @@ class CustomerList extends \App\Pages\Base {
         $file = $sender->owner->getDataItem();
         Helper::deleteFile($file->file_id);
         $this->updateFiles();
+        $this->customertable->customerlist->Reload(false);
     }
+        
+    
 
     /**
      * добавление коментария
@@ -257,6 +266,7 @@ class CustomerList extends \App\Pages\Base {
         $this->contentview->addmsgform->addmsg->setText('');
         $this->updateMessages();
         $this->goAnkor('contentviewlink');
+        $this->customertable->customerlist->Reload(false);
     }
 
     //список   комментариев
@@ -281,7 +291,10 @@ class CustomerList extends \App\Pages\Base {
         $msg = $sender->owner->getDataItem();
         \App\Entity\Message::delete($msg->message_id);
         $this->updateMessages();
+        $this->customertable->customerlist->Reload(false);
     }
+        
+   
 
     public function OnEventSubmit($sender) {
         $event = new \App\Entity\Event();
@@ -308,6 +321,8 @@ class CustomerList extends \App\Pages\Base {
         $this->contentview->addeventform->clean();
         $this->updateEvents();
         $this->goAnkor('contentviewlink');
+        $this->customertable->customerlist->Reload(false);
+        
     }
 
     //список   событий
@@ -334,6 +349,8 @@ class CustomerList extends \App\Pages\Base {
         $event = $sender->owner->getDataItem();
         \App\Entity\Event::delete($event->event_id);
         $this->updateEvents();
+        $this->customertable->customerlist->Reload(false);
+        
     }
 
 }
