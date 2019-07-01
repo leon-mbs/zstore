@@ -48,4 +48,9 @@ class MoneyFund extends \ZCL\DB\Entity {
         return MoneyFund::findArray("mf_name", "");
     }
 
+    
+    public static function getByCode($code) {
+
+       return   MoneyFund::findOne("mf_code=". MoneyFund::qstr($code)) ;
+    }
 }
