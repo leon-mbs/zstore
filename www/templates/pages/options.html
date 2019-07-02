@@ -45,6 +45,11 @@
                             <option value='3'>3</option>
                         </select>
                     </div> 
+
+                    <div class="form-check">
+                        <input zippy="autoarticle" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="autoarticle">  Автоматически создавать артикулы</label>
+                    </div>                               
                     <div class="form-check">
                         <input zippy="useset" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="useset">Использовать комплекты для продукции</label>
@@ -121,8 +126,8 @@
                                     <td><span zippy="meta_name"></span></td>
                                     <td><span zippy="type"></span></td>
                                     <td><span zippy="menugroup"></span></td>
-                                    <td style="white-space:   nowrap"><a zippy="rowedit"><i class="fa fa-edit"></a> <a
-                                            zippy="rowdelete"> <i class="fa fa-trash"></a></td>
+                                    <td style="white-space:   nowrap"><a zippy="rowedit"><i class="fa fa-edit"></a> 
+                                     &nbsp;&nbsp;<a  zippy="rowdelete"> <i class="fa fa-trash"></a></td>
                                 </tr>
                             </table>
                         </div>
@@ -179,11 +184,13 @@
 
 
             </div>
-
-
-
+ 
         </div>
-
+         <script>
+            function check_rowdelete() {
+                return confirm("Удалить  запись?")
+            }
+        </script>
 
     </body>
 </html>

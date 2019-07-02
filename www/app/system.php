@@ -12,9 +12,7 @@ class System {
 
     private static $_options = array();   //  для кеширования  
     private static $_cache = array();   //  для кеширования  
-
- 
-    
+      
     
     /**
      * Возвращает  текущего  юзера
@@ -65,6 +63,18 @@ class System {
         }
 
         return self::$_options[$group];
+    }
+    /**
+    * возвращает настройку
+    * 
+    * @param mixed $group
+    * @param mixed $option
+    */
+    public static function getOption($group,$option) {
+
+        $options = self::getOptions($group);
+
+        return $options[$option];
     }
 
     /**

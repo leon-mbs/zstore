@@ -172,4 +172,16 @@ class Item extends \ZCL\DB\Entity {
         return 0;
     }
 
+    /**
+    * генерирует новый артикул
+    * 
+    */
+    public static function getNextArticle(){
+        $conn = \ZDB\DB::getConnect();
+        
+        $sql = "  select max(item_id)  from  items ";
+        $id = $conn->GetOne($sql);
+       
+        return "ID" . sprintf("%04d", ++$id);
+    }
 }
