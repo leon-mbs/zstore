@@ -30,7 +30,10 @@ SET character_set_client = utf8;
  1 AS `customer_name`,
  1 AS `detail`,
  1 AS `email`,
- 1 AS `phone`*/;
+ 1 AS `phone`,
+ 1 AS `mcnt`,
+ 1 AS `fcnt`,
+ 1 AS `ecnt`*/;
 SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `docrel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -54,7 +57,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=120 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=122 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -112,7 +115,10 @@ SET character_set_client = utf8;
  1 AS `notes`,
  1 AS `payamount`,
  1 AS `meta_name`,
- 1 AS `meta_desc`*/;
+ 1 AS `meta_desc`,
+ 1 AS `mcnt`,
+ 1 AS `fcnt`,
+ 1 AS `dcnt`*/;
 SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `employees`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -234,7 +240,7 @@ CREATE TABLE `eventlist` (
   PRIMARY KEY (`event_id`),
   KEY `user_id` (`user_id`),
   KEY `customer_id` (`customer_id`)
-)  DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `eventlist_view`;
 /*!50001 DROP VIEW IF EXISTS `eventlist_view`*/;
@@ -259,8 +265,9 @@ CREATE TABLE `files` (
   `filename` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `item_type` int(11) NOT NULL,
-  PRIMARY KEY (`file_id`)
-)  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`file_id`),
+  KEY `item_id` (`item_id`)
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `filesdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -332,7 +339,7 @@ CREATE TABLE `items` (
   KEY `item_code` (`item_code`),
   KEY `itemname` (`itemname`),
   KEY `cat_id` (`cat_id`)
-)  AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `items_view`;
 /*!50001 DROP VIEW IF EXISTS `items_view`*/;
@@ -362,8 +369,9 @@ CREATE TABLE `messages` (
   `message` text,
   `item_id` int(11) NOT NULL,
   `item_type` int(11) DEFAULT NULL,
-  PRIMARY KEY (`message_id`)
-)  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`message_id`),
+  KEY `item_id` (`item_id`)
+)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `messages_view`;
 /*!50001 DROP VIEW IF EXISTS `messages_view`*/;
@@ -391,7 +399,7 @@ CREATE TABLE `metadata` (
   `disabled` tinyint(4) NOT NULL,
   `smartmenu` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`meta_id`)
-)  AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `mfund`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -400,6 +408,7 @@ CREATE TABLE `mfund` (
   `mf_id` int(11) NOT NULL AUTO_INCREMENT,
   `mf_name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `mf_code` varchar(64) NOT NULL,
   PRIMARY KEY (`mf_id`)
 )  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -709,7 +718,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `customers_view` AS select `customers`.`customer_id` AS `customer_id`,`customers`.`customer_name` AS `customer_name`,`customers`.`detail` AS `detail`,`customers`.`email` AS `email`,`customers`.`phone` AS `phone` from `customers` */;
+/*!50001 VIEW `customers_view` AS select `customers`.`customer_id` AS `customer_id`,`customers`.`customer_name` AS `customer_name`,`customers`.`detail` AS `detail`,`customers`.`email` AS `email`,`customers`.`phone` AS `phone`,(select count(0) from `messages` `m` where ((`m`.`item_id` = `customers`.`customer_id`) and (`m`.`item_type` = 2))) AS `mcnt`,(select count(0) from `files` `f` where ((`f`.`item_id` = `customers`.`customer_id`) and (`f`.`item_type` = 2))) AS `fcnt`,(select count(0) from `eventlist` `e` where ((`e`.`customer_id` = `customers`.`customer_id`) and (`e`.`eventdate` >= now()))) AS `ecnt` from `customers` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -735,7 +744,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`payamount` AS `payamount`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc` from (((`documents` `d` join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) */;
+/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`payamount` AS `payamount`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc`,(select count(0) from `messages` `m` where ((`m`.`item_id` = `d`.`document_id`) and (`m`.`item_type` = 1))) AS `mcnt`,(select count(0) from `files` `f` where ((`f`.`item_id` = `d`.`document_id`) and (`f`.`item_type` = 1))) AS `fcnt`,(select count(0) from `docrel` where ((`docrel`.`doc1` = `d`.`document_id`) or (`docrel`.`doc2` = `d`.`document_id`))) AS `dcnt` from (((`documents` `d` join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
