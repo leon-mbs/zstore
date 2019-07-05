@@ -104,7 +104,7 @@ class Application extends \Zippy\WebApplication {
             "aboutus" => "\\App\\Modules\\Shop\\Pages\\AboutUs",
             "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
             "contact" => "\\App\\Modules\\Shop\\Pages\\Contact",
-            "simage" => "\\App\\Pages\\LoadImage",
+         //  "simage" => "\\App\\Pages\\LoadImage",
             "scat" => "\\App\\Modules\\Shop\\Pages\\Main",
             "pcat" => "\\App\\Modules\\Shop\\Pages\\Catalog"
         );

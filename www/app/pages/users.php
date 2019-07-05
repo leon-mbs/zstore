@@ -53,6 +53,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editwminqty'));
         $this->editpan->editform->add(new CheckBox('editwsdate'));
         $this->editpan->editform->add(new CheckBox('editwrdoc'));
+        $this->editpan->editform->add(new CheckBox('editwopendoc' ));
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
@@ -72,6 +73,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->setVisible(true);
         // Очищаем  форму
         $this->editpan->editform->clean();
+        $this->editpan->editform->editwopendoc->setChecked(true);
 
         $this->user = new User();
     }
@@ -105,6 +107,8 @@ class Users extends \App\Pages\Base {
             $this->editpan->editform->editwsdate->setChecked(true);
         if (strpos($this->user->widgets, 'wrdoc') !== false)
             $this->editpan->editform->editwrdoc->setChecked(true);
+        if (strpos($this->user->widgets, 'wopendoc') !== false)
+            $this->editpan->editform->editwopendoc->setChecked(true);
 
         if (strpos($this->user->modules, 'ocstore') !== false)
             $this->editpan->editform->editocstore->setChecked(true);
@@ -174,6 +178,8 @@ class Users extends \App\Pages\Base {
             $widgets = $widgets . ',wsdate';
         if ($this->editpan->editform->editwrdoc->isChecked())
             $widgets = $widgets . ',wrdoc';
+        if ($this->editpan->editform->editwopendoc->isChecked())
+            $widgets = $widgets . ',wopendoc';
 
 
         $this->user->widgets = trim($widgets, ',');

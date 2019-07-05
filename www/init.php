@@ -26,6 +26,7 @@ $h2->setFormatter($formatter);
 $logger->pushHandler($h1);
 $logger->pushHandler($h2);
 $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
+@mkdir(_ROOT . "logs");
 
 //чтение  конфигурации
 $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
@@ -64,4 +65,4 @@ spl_autoload_register('app_autoload');
 
 session_start();
 
-@mkdir(_ROOT . "logs");
+

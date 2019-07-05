@@ -23,7 +23,9 @@ class Main extends Base {
 
         $this->add(new \App\Widgets\Wsdate("wsdate"))->setVisible($this->_tvars["usesnumber"]);
 
-        $this->add(new \App\Widgets\WRDoc("wrdoc"));
+        $this->add(new \App\Widgets\WOpenDocs("wrdoc"));
+        
+        $this->add(new \App\Widgets\WRDoc("wopendoc"));
     }
 
     public function getPageInfo() {
