@@ -1,24 +1,20 @@
 <?php
+require_once 'init.php';
 
-namespace App\Pages;
-
-//страница  для  загрузки приатаченого  файла  
-class LoadFile extends \Zippy\Html\WebPage {
-
-    public function __construct($file_id) {
-        if (!is_numeric($file_id))
+        if (!is_numeric($_REQUEST['id']))
             die;
+
+
 
         $user = \App\System::getUser();
         if ($user->user_id == 0) {
             die;
         }
 
-        $file = \App\Helper::loadFile($file_id);
+        $file = \App\Helper::loadFile($_REQUEST['id']);
         if ($file == null)
             die;
-
-        //$type = "";
+            
         $pos = strrpos($file['filename'], '.');
         if ($pos !== false) {
             //$type = substr($file['filename'], $pos + 1);
@@ -37,7 +33,5 @@ class LoadFile extends \Zippy\Html\WebPage {
             flush();
             echo $file['filedata'];
         }
-        die;
-    }
-
-}
+        die;            
+        

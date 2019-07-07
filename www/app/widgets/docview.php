@@ -211,7 +211,7 @@ class DocView extends \Zippy\Html\PageFragment {
     public function filelistOnRow($row) {
         $item = $row->getDataItem();
 
-        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'index.php?p=App/Pages/LoadFile&arg=' . $item->file_id));
+        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'loadfile.php?id=' . $item->file_id));
         $file->setValue($item->filename);
         $file->setAttribute('title', $item->description);
 
