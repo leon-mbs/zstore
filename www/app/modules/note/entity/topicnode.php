@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entity;
+namespace App\Modules\Note\Entity;
 
 /**
  *  Класс  инкапсулирующий  комбинацию  топик-узел (используется  для поиска)
- * @table=topicnodeview
- * @view=topicnodeview
+ * @table=note_topicnodeview
+ * @view=note_topicnodeview
  * @keyfield=tn_id
  */
 class TopicNode extends \ZCL\DB\Entity
@@ -36,7 +36,7 @@ class TopicNode extends \ZCL\DB\Entity
         }
 
 
-        $sql = "  select * from topicnodeview   where (1=1   ";
+        $sql = "  select * from note_topicnodeview   where (1=1   ";
 
         foreach ($arr as $t) {
 
@@ -63,7 +63,7 @@ class TopicNode extends \ZCL\DB\Entity
      */
     public static function searchByTag($tag) {
 
-        $sql = "  select * from topicnodeview   where topic_id in (select topic_id from tags where tagvalue  = " . Topic::qstr($tag) . " ) and  user_id=" . \App\System::getUser()->user_id;
+        $sql = "  select * from note_topicnodeview   where topic_id in (select topic_id from note_tags where tagvalue  = " . Topic::qstr($tag) . " ) and  user_id=" . \App\System::getUser()->user_id;
 
         $list = TopicNode::findBySql($sql);
 
@@ -73,7 +73,7 @@ class TopicNode extends \ZCL\DB\Entity
     // поиск избранных 
     public static function searchFav() {
 
-        $sql = "  select * from topicnodeview   where topic_id in (select topic_id from topics where favorites  = 1  ) and  user_id=" . \App\System::getUser()->user_id;
+        $sql = "  select * from note_topicnodeview   where topic_id in (select topic_id from note_topics where favorites  = 1  ) and  user_id=" . \App\System::getUser()->user_id;
 
         $list = TopicNode::findBySql($sql);
 

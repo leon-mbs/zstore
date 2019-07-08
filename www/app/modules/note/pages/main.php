@@ -126,6 +126,7 @@ class Main extends \App\Pages\Base
         $topic = new Topic();
         $this->editform->edittags->setSuggestions($topic->getSuggestionTags());
         $this->_tvars['editor'] = true;
+        \App\Session::getSession()->topic_id = $topic->topic_id;
     }
 
     //редактировать  топик
@@ -305,7 +306,7 @@ class Main extends \App\Pages\Base
     public function onTopic($row) {
 
        $topic = $row->getDataItem(); 
-       $this->_farr = \App\Entity\File::findByTopic($topic->topic_id);
+       $this->_farr = Helper::findFileByTopic($topic->topic_id);
        $this->filelist->Reload();
        $this->topiclist->setSelectedRow($row);
        $this->topiclist->Reload();
@@ -391,13 +392,13 @@ class Main extends \App\Pages\Base
         if (strlen($file['tmp_name']) > 0) {
             if (filesize($file['tmp_name']) / 1024 / 1024 > 1) {
 
-                $this->setError("Файл шлишком  большой");
+                $this->setError("Файл слишком  большой");
                 return;
             }
         } else
             return;
 
-        $f = new \App\Entity\File();
+        $f = new \App\DataItem();
         $f->content = file_get_contents($file['tmp_name']);
         $f->topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
         ;
@@ -410,7 +411,7 @@ class Main extends \App\Pages\Base
         // $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
         $f->save();
 
-        $this->_farr = \App\Entity\File::findByTopic($f->topic_id);
+        $this->_farr = Helper::findFileByTopic($f->topic_id);
         $this->filelist->Reload();
     }
 
@@ -423,7 +424,7 @@ class Main extends \App\Pages\Base
     public function onFileDel($sender) {
         $file = $sender->getOwner()->getDataItem();
         \App\Entity\File::delete($file->file_id);
-        $this->_farr = \App\Entity\File::findByTopic($file->topic_id);
+        $this->_farr = Helper::findFileByTopic($file->topic_id);
         $this->filelist->Reload();
     }
 
@@ -477,7 +478,7 @@ class Main extends \App\Pages\Base
      * @see WebPage
      * 
      */
-    protected function beforeRender() {
+    public function beforeRender() {
         parent::beforeRender();
 
         $nodeid = $this->tree->selectedNodeId();

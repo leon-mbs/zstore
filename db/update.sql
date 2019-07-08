@@ -32,9 +32,21 @@ CREATE TABLE `note_nodes` (
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`node_id`),
   KEY `user_id` (`user_id`)
-) DEFAULT
+) DEFAULT CHARSET=utf8;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `topicsview` AS 
+CREATE   VIEW `topicnodeview` AS 
+  select 
+    `topicnode`.`topic_id` AS `topic_id`,
+    `topicnode`.`node_id` AS `node_id`,
+    `topicnode`.`tn_id` AS `tn_id`,
+    `topics`.`title` AS `title`,
+    `nodes`.`user_id` AS `user_id`,
+    `topics`.`content` AS `content` 
+  from 
+    ((`topics` join `topicnode` on((`topics`.`topic_id` = `topicnode`.`topic_id`))) join `nodes` on((`nodes`.`node_id` = `topicnode`.`node_id`)));
+
+
+CREATE   VIEW `topicsview` AS 
   select 
     `t`.`topic_id` AS `topic_id`,
     `t`.`title` AS `title`,
@@ -45,26 +57,22 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
   from 
     (`topics` `t` join `topicnodeview` `tn` on((`t`.`topic_id` = `tn`.`topic_id`)));
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `topicnodeview` AS 
-  select 
-    `topicnode`.`topic_id` AS `topic_id`,
-    `topicnode`.`node_id` AS `node_id`,
-    `topicnode`.`tn_id` AS `tn_id`,
-    `topics`.`title` AS `title`,
-    `nodes`.`user_id` AS `user_id`,
-    `topics`.`content` AS `content` 
-  from 
-    ((`topics` join `topicnode` on((`topics`.`topic_id` = `topicnode`.`topic_id`))) join `nodes` on((`nodes`.`node_id` = `topicnode`.`node_id`)));
 	
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `topicsview` AS 
+CREATE   VIEW note_nodesview AS 
   select 
-    `t`.`topic_id` AS `topic_id`,
-    `t`.`title` AS `title`,
-    `t`.`content` AS `content`,
-    `t`.`favorites` AS `favorites`,
-    `t`.`ispublic` AS `ispublic`,
-    `tn`.`user_id` AS `user_id` 
+    note_nodes.node_id AS node_id,
+    note_nodes.pid AS pid,
+    note_nodes.title AS title,
+    note_nodes.mpath AS mpath,
+    note_nodes.user_id AS user_id,
+    (
+  select 
+    count(note_topicnode.topic_id) AS Count(topic_id) 
   from 
-    (`topics` `t` join `topicnodeview` `tn` on((`t`.`topic_id` = `tn`.`topic_id`)));	
+    note_topicnode 
+  where 
+    (note_topicnode.node_id = note_nodes.node_id)) AS tcnt 
+  from 
+    note_nodes;	
 	
 	

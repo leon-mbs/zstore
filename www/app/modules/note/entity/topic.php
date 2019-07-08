@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entity;
+namespace App\Modules\Note\Entity;
 
 /**
  *  Класс  инкапсулирующий топик
- * @table=topics
- * @view=topicsview
+ * @table=note_topics
+ * @view=note_topicsview
  * @keyfield=topic_id
  */
 class Topic extends \ZCL\DB\Entity
@@ -22,7 +22,7 @@ class Topic extends \ZCL\DB\Entity
      * @param mixed $node_id
      */
     public static function findByNode($node_id) {
-        return self::find("topic_id in (select topic_id from topicnode where node_id={$node_id})");
+        return self::find("topic_id in (select topic_id from note_topicnode where node_id={$node_id})");
     }
 
     /**
@@ -34,10 +34,10 @@ class Topic extends \ZCL\DB\Entity
 
         $conn = \ZCL\DB\DB::getConnect();
 
-        $conn->Execute("delete from topicnode where node_id= {$node_id} ");
+        $conn->Execute("delete from note_topicnode where node_id= {$node_id} ");
 
-        $conn->Execute("delete from topics where topic_id not  in (select topic_id from topicnode)");
-        $conn->Execute("delete from files where topic_id not  in (select topic_id from topicnode)");
+        $conn->Execute("delete from note_topics where topic_id not  in (select topic_id from note_topicnode)");
+        $conn->Execute("delete from files where item_type=4 and  item_id not  in (select topic_id from note_topicnode)");
     }
 
     /**
@@ -47,7 +47,7 @@ class Topic extends \ZCL\DB\Entity
      */
     public function addToNode($node_id) {
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("insert into topicnode(topic_id,node_id)values({$this->topic_id},{$node_id})");
+        $conn->Execute("insert into note_topicnode(topic_id,node_id)values({$this->topic_id},{$node_id})");
     }
 
     /**
@@ -57,7 +57,7 @@ class Topic extends \ZCL\DB\Entity
      */
     public function removeFromNode($node_id) {
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("delete from topicnode where topic_id= {$this->topic_id} and node_id = {$node_id}");
+        $conn->Execute("delete from note_topicnode where topic_id= {$this->topic_id} and node_id = {$node_id}");
     }
 
     /**
@@ -66,8 +66,8 @@ class Topic extends \ZCL\DB\Entity
      */
     protected function beforeDelete() {
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("delete from files where topic_id=" . $this->topic_id);
-        $conn->Execute("delete from topicnode where topic_id=" . $this->topic_id);
+        $conn->Execute("delete from files where item_type=4 and  item_id=" . $this->topic_id);
+        $conn->Execute("delete from note_topicnode where topic_id=" . $this->topic_id);
 
         return true;
     }
@@ -79,10 +79,10 @@ class Topic extends \ZCL\DB\Entity
      */
     public function saveTags($tags) {
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("delete from tags where topic_id=" . $this->topic_id);
+        $conn->Execute("delete from note_tags where topic_id=" . $this->topic_id);
 
         foreach ($tags as $tag) {
-            $conn->Execute("insert tags (topic_id,tagvalue) values (" . $this->topic_id . "," . $conn->qstr($tag) . ")");
+            $conn->Execute("insert note_tags (topic_id,tagvalue) values (" . $this->topic_id . "," . $conn->qstr($tag) . ")");
         }
     }
 
@@ -93,7 +93,7 @@ class Topic extends \ZCL\DB\Entity
     public function getTags() {
         $tl = array();
         $conn = \ZCL\DB\DB::getConnect();
-        $rc = $conn->GetCol("select distinct tagvalue from tags where topic_id=" . $this->topic_id);
+        $rc = $conn->GetCol("select distinct tagvalue from note_tags where topic_id=" . $this->topic_id);
         foreach($rc as $k=>$v){
            if(strlen($v))$tl[$k] = $v;
         }
@@ -106,7 +106,7 @@ class Topic extends \ZCL\DB\Entity
      */
     public function getSuggestionTags() {
         $conn = \ZCL\DB\DB::getConnect();
-        return $conn->GetCol("select distinct tagvalue from tags where topic_id <> " . $this->topic_id);
+        return $conn->GetCol("select distinct tagvalue from note_tags where topic_id <> " . $this->topic_id);
     }
 
 }

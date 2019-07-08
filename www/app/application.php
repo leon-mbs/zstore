@@ -100,6 +100,7 @@ class Application extends \Zippy\WebApplication {
         $pages = array(
             "shop" => "\\App\\Modules\\Shop\\Pages\\Main",
             "store" => "\\App\\Pages\\Main",
+            "topic" => "\\App\\Modules\\Note\\Pages\\ShowTopic",
             "sp" => "\\App\\Modules\\Shop\\Pages\\ProductView",
             "aboutus" => "\\App\\Modules\\Shop\\Pages\\AboutUs",
             "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity;
+namespace App\Modules\Note\Entity;
 
 use \ZCL\DB\TreeEntity;
 
 /**
  *  Класс  инкапсулирующий   узел дерева
- * @table=nodes
- * @view=nodesview
+ * @table=note_nodes
+ * @view=note_nodesview
  * @keyfield=node_id
  * @parentfield=pid
  * @pathfield=mpath
@@ -23,7 +23,7 @@ class Node extends TreeEntity
 
     protected function beforeDelete() {
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("delete from topicnode where node_id=" . $this->node_id);
+        $conn->Execute("delete from note_topicnode where node_id=" . $this->node_id);
 
         return true;
     }
