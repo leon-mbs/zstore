@@ -1,3 +1,6 @@
+/*Обновление  с  версии v1.5.0*/
+
+
 CREATE TABLE `note_nodes` (
   `node_id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL,
@@ -46,18 +49,15 @@ CREATE  VIEW `note_topicnodeview` AS
     ((`note_topics` join `note_topicnode` on((`note_topics`.`topic_id` = `note_topicnode`.`topic_id`))) join `note_nodes` on((`note_nodes`.`node_id` = `note_topicnode`.`node_id`)));
 
 
-	
-CREATE     VIEW `note_topicsview` AS
+CREATE  VIEW note_topicsview AS 
   select 
-    `t`.`topic_id` AS `topic_id`,
-    `t`.`title` AS `title`,
-    `t`.`content` AS `content`,
-    `t`.`favorites` AS `favorites`,
-    `t`.`ispublic` AS `ispublic`,
-    `tn`.`user_id` AS `user_id` 
+    t.topic_id AS topic_id,
+    t.title AS title,
+    t.content AS content,
+    t.favorites AS favorites,
+    t.ispublic AS ispublic 
   from 
-    (`note_topics` `t` join `note_topicnodeview` `tn` on((`t`.`topic_id` = `tn`.`topic_id`)));
-	
+    note_topics t;	
 CREATE   VIEW `note_nodesview` AS
   select 
     `note_nodes`.`node_id` AS `node_id`,

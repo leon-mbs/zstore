@@ -50,7 +50,8 @@ class Topic extends \ZCL\DB\Entity
         $conn->Execute("insert into note_topicnode(topic_id,node_id)values({$this->topic_id},{$node_id})");
     }
 
-    /**
+   
+   /**
      * удалить с  узла
      * 
      * @param mixed $node_id
@@ -69,7 +70,18 @@ class Topic extends \ZCL\DB\Entity
         $conn->Execute("delete from files where item_type=4 and  item_id=" . $this->topic_id);
         $conn->Execute("delete from note_topicnode where topic_id=" . $this->topic_id);
 
-        return true;
+        return "";
+    }
+ 
+    /**
+    * возвращает количество  узлов  в  которых упоминается
+    * 
+    */
+    public function getNodesCnt() {
+        $conn = \ZCL\DB\DB::getConnect();
+        
+        return $conn->GetOne("select count(*) from note_topicnode where topic_id=" . $this->topic_id);
+        
     }
 
     /**

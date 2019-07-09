@@ -348,13 +348,20 @@ class Main extends \App\Pages\Base
 
     //удалить топик
     public function onTopicDelete($sender) {
-        Topic::delete($this->topiclist->getSelectedRow()->getDataItem()->topic_id);
+        $topic=$this->topiclist->getSelectedRow()->getDataItem() ;
+        
+        $topic->removeFromNode($this->tree->selectedNodeId());
+        
+        $nodes = $topic->getNodesCnt();
+        if($nodes==0){ //если ни в одном  узле
+           Topic::delete($topic->topic_id);   
+        }
         $this->topiclist->setSelectedRow();
         $this->ReloadTopic($this->tree->selectedNodeId());
         $this->ReloadTree();
     }
 
-    //вставить   в  узел топик  или  шорткат
+    //вставить  в  узел топик  или  шорткат
     public function onTopicPaste($sender) {
         if ($this->clipboard[1] != 'topic')
             return;
@@ -390,7 +397,7 @@ class Main extends \App\Pages\Base
     public function OnFile($form) {
         $file = $form->editfile->getFile();
         if (strlen($file['tmp_name']) > 0) {
-            if (filesize($file['tmp_name']) / 1024 / 1024 > 1) {
+            if (filesize($file['tmp_name']) / 1024 / 1024 > 10) {
 
                 $this->setError("Файл слишком  большой");
                 return;
@@ -398,33 +405,26 @@ class Main extends \App\Pages\Base
         } else
             return;
 
-        $f = new \App\DataItem();
-        $f->content = file_get_contents($file['tmp_name']);
-        $f->topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
-        ;
-        $imagedata = @getimagesize($file['tmp_name']);
-        if (is_array($imagedata)) {
-            $f->mime = $imagedata['mime'];
-        }
-        $f->size = filesize($file['tmp_name']);
-        $f->filename = $file['name'];
-        // $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $f->save();
+        $topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
+           
+        Helper::addFile($file,$topic_id)   ; 
 
-        $this->_farr = Helper::findFileByTopic($f->topic_id);
+        $this->_farr = Helper::findFileByTopic($topic_id);
         $this->filelist->Reload();
     }
 
     public function onFileRow($row) {
         $file = $row->getDataItem();
         $row->add(new ClickLink("filedel", $this, "onFileDel"));
-        $row->add(new BookmarkableLink("filelink", "/files/" . $file->file_id))->setValue($file->filename);
+        $row->add(new BookmarkableLink("filelink", "/loadfile.php?id=" . $file->file_id))->setValue($file->filename);
     }
 
     public function onFileDel($sender) {
         $file = $sender->getOwner()->getDataItem();
-        \App\Entity\File::delete($file->file_id);
-        $this->_farr = Helper::findFileByTopic($file->topic_id);
+        Helper::deleteFile($file->file_id);
+        $topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
+ 
+        $this->_farr = Helper::findFileByTopic($topic_id);
         $this->filelist->Reload();
     }
 

@@ -10,7 +10,7 @@ use \ZCL\DB\DB as DB;
  */
 class Helper
 {
-       public static function addFile($file, $itemid ) {
+    public static function addFile($file, $itemid ) {
         $conn = DB::getConnect();
         $filename = $file['name'];
 
@@ -25,6 +25,7 @@ class Helper
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
         $conn->Execute($sql);
     }
+ 
     public static function deleteFile($file_id) {
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete  from  files  where  file_id={$file_id}");

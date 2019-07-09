@@ -23,19 +23,13 @@ class Users extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (System::getUser()->userlogin !== 'admin') {
-            System::setErrorMsg('Пользователями может  управлять только  admin');
-            App::RedirectHome();
-            return;
-        }
-
-
-
+  
 
         $this->add(new Panel("listpan"));
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource(), $this, 'OnAddUserRow'))->Reload();
 
+        
         $this->add(new Panel("editpan"))->setVisible(false);
         $this->editpan->add(new Form('editform'));
         $this->editpan->editform->add(new TextInput('editlogin'));
@@ -67,9 +61,22 @@ class Users extends \App\Pages\Base {
 
         $this->editpan->editform->add(new Panel('metaaccess'))->setVisible(false);
         $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "meta_type"), $this, 'metarowOnRow'));
+        
+        $this->add(new Panel("msgpan"))->setVisible(false);
+        $this->msgpan->add(new Form('msgform'))->onSubmit($this, 'OnSend');
+        $this->msgpan->msgform->add(new Button('cancelm'))->onClick($this, 'cancelOnClick');
+        $this->msgpan->msgform->add(new TextArea('msgtext'));
+        
     }
 
     public function onAdd($sender) {
+        
+        if (System::getUser()->userlogin !== 'admin') {
+            System::setErrorMsg('Пользователями может  управлять только  admin');
+    
+            return;
+        }           
+        
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
         // Очищаем  форму
@@ -80,6 +87,13 @@ class Users extends \App\Pages\Base {
     }
 
     public function onEdit($sender) {
+      
+        if (System::getUser()->userlogin !== 'admin') {
+            System::setErrorMsg('Пользователями может  управлять только  admin');
+    
+            return;
+        }         
+      
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
 
@@ -120,6 +134,8 @@ class Users extends \App\Pages\Base {
     }
 
     public function saveOnClick($sender) {
+        
+        
 
         $this->user->email = $this->editpan->editform->editemail->getText();
         $this->user->userlogin = $this->editpan->editform->editlogin->getText();
@@ -207,6 +223,7 @@ class Users extends \App\Pages\Base {
     public function cancelOnClick($sender) {
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
+        $this->msgpan->setVisible(false);
     }
 
     public function onAcl($sender) {
@@ -216,7 +233,15 @@ class Users extends \App\Pages\Base {
     }
 
     //удаление  юзера
+
     public function OnRemove($sender) {
+        
+        if (System::getUser()->userlogin !== 'admin') {
+            System::setErrorMsg('Пользователями может  управлять только  admin');
+    
+            return;
+        }        
+        
         $user = $sender->getOwner()->getDataItem();
         $del = User::delete($user->user_id);
         if (strlen($del) > 0) {
@@ -236,7 +261,8 @@ class Users extends \App\Pages\Base {
         $datarow->add(new \Zippy\Html\Label("email", $item->email));
         $datarow->add(new \Zippy\Html\Link\ClickLink("edit", $this, "OnEdit"))->setVisible($item->userlogin != 'admin');
         $datarow->add(new \Zippy\Html\Link\ClickLink("remove", $this, "OnRemove"))->setVisible($item->userlogin != 'admin');
-        return $datarow;
+        $datarow->add(new \Zippy\Html\Link\ClickLink("msg", $this, "OnMsg")) ;
+         
     }
 
     public function metarowOnRow($row) {
@@ -273,7 +299,32 @@ class Users extends \App\Pages\Base {
         $row->add(new CheckBox('viewacc', new Bind($item, 'viewacc')));
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
     }
+    
+    public function OnMsg($sender) {
+        $this->user = $sender->getOwner()->getDataItem();
+        $this->listpan->setVisible(false);
+        $this->msgpan->setVisible(true);
+       
+    }
 
+    public function OnSend($sender) {
+        $msg = trim($sender->msgtext->getText());
+        if(strlen($msg)==0) return;
+      
+        $from = System::getUser();
+         
+        $n = new \App\Entity\Notify();
+        $n->user_id = $this->user->user_id;
+        $n->message = "Сообщение от пользователя <b>{$from->username}</b> <br><br>";
+        $n->message .= $msg ;
+        
+        $n->save();         
+        
+        $this->listpan->setVisible(true);
+        $this->msgpan->setVisible(false);
+        $this->setInfo('Отправлено');
+    }
+    
 }
 
 class UserDataSource implements \Zippy\Interfaces\DataSource {

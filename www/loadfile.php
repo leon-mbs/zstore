@@ -21,7 +21,6 @@ require_once 'init.php';
         }
         $size = strlen($file['filedata']);
         if ($size > 0) {
-            header('Content-Description: File Transfer');
             header('Content-Type: application/octet-stream');
             header('Content-Disposition: attachment; filename=' . $file['filename']);
             header('Content-Transfer-Encoding: binary');
@@ -29,7 +28,7 @@ require_once 'init.php';
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Pragma: public');
             header('Content-Length: ' . $size);
-
+ 
             flush();
             echo $file['filedata'];
         }

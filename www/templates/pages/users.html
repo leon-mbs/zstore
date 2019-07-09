@@ -17,6 +17,8 @@
 
                             <th  >Email</th>
                             <th width="24">&nbsp;</th>
+                            <th width="24">&nbsp;</th>
+                            <th width="24">&nbsp;</th>
                         </tr>
                     </thead>
 
@@ -26,6 +28,7 @@
                             <td zippy="created" align="center" style="white-space:nowrap"></td>
 
                             <td zippy="email"  ></td>
+                            <td><a zippy="msg"><i class="fa fa-comment"></i></a></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
                             <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
                         </tr>
@@ -155,8 +158,21 @@
                     </div>
                 </form> 
             </div>
+        <div zippy="msgpan" class="col-12 col-sm-10  col-md-6  col-lg-4">
+                <h4>Сообщение  пользователю</h4>   
+                <form zippy="msgform" role="form">
+                    <div class="form-group">
+                         
+                        <textarea   class="form-control" zippy="msgtext"  />
+                        
+                    </div>  
+                    <div class="form-group">
 
-
+                        <button type="submit" class="btn btn-primary   ">Отправить</button>
+                        &nbsp; <a zippy="cancelm" class="btn btn-light    ">Отменить</a>
+                    </div>
+                </form> 
+             </div>       
         </div>
         <script>
             function check_remove() {
