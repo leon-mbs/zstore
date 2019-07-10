@@ -153,14 +153,17 @@ class Helper {
     public static function loadEmail($template, $keys = array()) {
         global $logger;
 
-        $templatepath = _ROOT . 'templates/email/' . $template . '.tpl';
-        if (file_exists(strtolower($templatepath)) == false) {
+        $templatepath = _ROOT . 'templates/email/' .   $template  . '.tpl';
+        if (file_exists(  $templatepath ) == false) {
 
             $logger->error($templatepath . " is wrong");
             return "";
         }
-        $template = @file_get_contents(strtolower($templatepath));
-
+        
+       
+        
+        $template = @file_get_contents(  $templatepath );
+                                            
         $m = new \Mustache_Engine();
         $template = $m->render($template, $keys);
 
