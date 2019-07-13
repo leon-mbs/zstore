@@ -18,7 +18,6 @@ class Application extends \Zippy\WebApplication {
         $arr = explode('\\', $name);
         $templatepath =  'templates/';
 
-
         $className = str_replace("\\", "/", ltrim($name, '\\'));
 
         if (strpos($className, 'App/') === 0) {

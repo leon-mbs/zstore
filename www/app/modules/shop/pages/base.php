@@ -17,8 +17,14 @@ class Base extends \Zippy\Html\WebPage {
 
         \Zippy\Html\WebPage::__construct();
 
+        $shop = System::getOptions("shop");
+        if (!is_array($shop))
+            $shop = array();
+
+        
         $user = System::getUser();
         $this->_tvars["islogined"] = $user->user_id > 0;
+        $this->_tvars["currencyname"] = $shop["currencyname"];
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Order"))->setVisible(false);
         $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Compare"))->setVisible(false);
