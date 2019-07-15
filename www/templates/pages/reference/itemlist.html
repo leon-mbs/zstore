@@ -35,6 +35,7 @@
                         <th>Ед.</th>
 
                         <th class="text-right">Отп. цена</th>
+                        <th >Ячейка</th>
                         <th >Примечание</th>
 
 
@@ -48,6 +49,7 @@
                         <td zippy="msr"></td>
 
                         <td zippy="price"  class="text-right"></td>
+                        <td zippy="cell"  ></td>
                         <td zippy="desc"  ></td>
 
 
@@ -127,8 +129,15 @@
                         <div class="col-7"> 
                             <input pattern="[0-9]+"  style="width: 100px;" class="form-control" zippy="editterm"/>
                         </div>
-                    </div> 
+                    </div>  
+ 
                     {{/usesnumber}} 
+                   <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editcell">Номер ячейки на  складе.</label>
+                        <div class="col-7"> 
+                            <input    class="form-control" zippy="editcell"/>
+                        </div>
+                    </div>                     
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="editdisabled">Неактуален</label>

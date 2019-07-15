@@ -374,7 +374,7 @@ class ProductList extends \App\Pages\Base {
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        $row->add(new \Zippy\html\Image("imgitem"))->setUrl("/simage/" . $image->image_id);
+        $row->add(new \Zippy\html\Image("imgitem"))->setUrl('/loadimage.php?id=' . $image->image_id . "&t=t");
         $row->add(new ClickLink("icover", $this, "icoverOnClick"))->setVisible($image->image_id != $this->product->image_id);
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }

@@ -267,7 +267,7 @@ CREATE TABLE `files` (
   `item_type` int(11) NOT NULL,
   PRIMARY KEY (`file_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `filesdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -287,7 +287,7 @@ CREATE TABLE `images` (
   `mime` varchar(16) DEFAULT NULL,
   `thumb` longblob,
   PRIMARY KEY (`image_id`)
-)  AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_cat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -408,10 +408,93 @@ CREATE TABLE `mfund` (
   `mf_id` int(11) NOT NULL AUTO_INCREMENT,
   `mf_name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `mf_code` varchar(64) NOT NULL,
+  `mf_data` varchar(64) NOT NULL,
   PRIMARY KEY (`mf_id`)
 )  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `note_nodes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note_nodes` (
+  `node_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `mpath` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`node_id`),
+  KEY `user_id` (`user_id`)
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `note_nodesview`;
+/*!50001 DROP VIEW IF EXISTS `note_nodesview`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `note_nodesview` AS SELECT 
+ 1 AS `node_id`,
+ 1 AS `pid`,
+ 1 AS `title`,
+ 1 AS `mpath`,
+ 1 AS `user_id`,
+ 1 AS `tcnt`*/;
+SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `note_tags`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note_tags` (
+  `tag_id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic_id` int(11) NOT NULL,
+  `tagvalue` varchar(255) NOT NULL,
+  PRIMARY KEY (`tag_id`),
+  KEY `topic_id` (`topic_id`)
+)  AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `note_topicnode`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note_topicnode` (
+  `topic_id` int(11) NOT NULL,
+  `node_id` int(11) NOT NULL,
+  `tn_id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`tn_id`),
+  KEY `topic_id` (`topic_id`),
+  KEY `node_id` (`node_id`)
+)  AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `note_topicnodeview`;
+/*!50001 DROP VIEW IF EXISTS `note_topicnodeview`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `note_topicnodeview` AS SELECT 
+ 1 AS `topic_id`,
+ 1 AS `node_id`,
+ 1 AS `tn_id`,
+ 1 AS `title`,
+ 1 AS `user_id`,
+ 1 AS `content`*/;
+SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `note_topics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note_topics` (
+  `topic_id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `favorites` tinyint(1) NOT NULL DEFAULT '0',
+  `ispublic` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`topic_id`)
+)  AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `note_topicsview`;
+/*!50001 DROP VIEW IF EXISTS `note_topicsview`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `note_topicsview` AS SELECT 
+ 1 AS `topic_id`,
+ 1 AS `title`,
+ 1 AS `content`,
+ 1 AS `favorites`,
+ 1 AS `ispublic`*/;
+SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `notifies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -423,7 +506,7 @@ CREATE TABLE `notifies` (
   `message` text NOT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -570,7 +653,7 @@ CREATE TABLE `shop_productgroups` (
   `mpath` varchar(1024) DEFAULT NULL,
   `image_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`)
-)  DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_productgroups_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_productgroups_view`*/;
@@ -810,6 +893,45 @@ SET character_set_client = @saved_cs_client;
 /*!50001 CREATE  */
 /*!50013  */
 /*!50001 VIEW `messages_view` AS select `messages`.`message_id` AS `message_id`,`messages`.`user_id` AS `user_id`,`messages`.`created` AS `created`,`messages`.`message` AS `message`,`messages`.`item_id` AS `item_id`,`messages`.`item_type` AS `item_type`,`users_view`.`username` AS `username` from (`messages` join `users_view` on((`messages`.`user_id` = `users_view`.`user_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `note_nodesview`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 CREATE  */
+/*!50013  */
+/*!50001 VIEW `note_nodesview` AS select `note_nodes`.`node_id` AS `node_id`,`note_nodes`.`pid` AS `pid`,`note_nodes`.`title` AS `title`,`note_nodes`.`mpath` AS `mpath`,`note_nodes`.`user_id` AS `user_id`,(select count(`note_topicnode`.`topic_id`) AS `Count(topic_id)` from `note_topicnode` where (`note_topicnode`.`node_id` = `note_nodes`.`node_id`)) AS `tcnt` from `note_nodes` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `note_topicnodeview`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 CREATE  */
+/*!50013  */
+/*!50001 VIEW `note_topicnodeview` AS select `note_topicnode`.`topic_id` AS `topic_id`,`note_topicnode`.`node_id` AS `node_id`,`note_topicnode`.`tn_id` AS `tn_id`,`note_topics`.`title` AS `title`,`note_nodes`.`user_id` AS `user_id`,`note_topics`.`content` AS `content` from ((`note_topics` join `note_topicnode` on((`note_topics`.`topic_id` = `note_topicnode`.`topic_id`))) join `note_nodes` on((`note_nodes`.`node_id` = `note_topicnode`.`node_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `note_topicsview`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 CREATE  */
+/*!50013  */
+/*!50001 VIEW `note_topicsview` AS select `t`.`topic_id` AS `topic_id`,`t`.`title` AS `title`,`t`.`content` AS `content`,`t`.`favorites` AS `favorites`,`t`.`ispublic` AS `ispublic` from `note_topics` `t` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

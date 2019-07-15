@@ -3,18 +3,27 @@ require_once 'init.php';
   
 if(isset($_FILES['upload'])){
    
-     $message = '';   
+       $message = '';   
        $imagedata = @getimagesize($_FILES['upload']['tmp_name']);
        if(is_array($imagedata)) {
-               
-    
+         $filename = basename($_FILES['upload']['name']);      
+         if($_REQUEST['m'] == "note") {  //модуль базы знаний   
      
-         $filename = basename($_FILES['upload']['name']);
-         move_uploaded_file($file["tmp_name"], _ROOT."upload/".$filename);
-            
+            $image = new \App\Entity\Image();
+            $image->content = file_get_contents($_FILES['upload']['tmp_name']);
+            $image->mime = $imagedata['mime'];
+  
+            $image->save();      
+         
+            $url="/loadimage.php?id=". $image->image_id;
+                
+         }
+         else {
+           move_uploaded_file($file["tmp_name"], _ROOT."upload/".$filename);
+           $url="/upload/". $filename;
              
-             
-         $url="/upload/". $filename;
+         }
+         
         
        } else {
          $message ="Неверное  изображение!"; 

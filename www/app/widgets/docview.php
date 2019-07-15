@@ -135,7 +135,7 @@ class DocView extends \Zippy\Html\PageFragment {
     //вывод строки  лога состояний
     public function stateListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('statehost', $item->hostname));
+      //  $row->add(new Label('statehost', $item->hostname));
         $row->add(new Label('statedate', date('Y.m.d H:i', $item->createdon)));
         $row->add(new Label('stateuser', $item->username));
         $row->add(new Label('statename', Document::getStateName($item->docstate)));
@@ -144,7 +144,7 @@ class DocView extends \Zippy\Html\PageFragment {
     //вывод строки  оплат
     public function payListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('paydate', date('Y-m-d', $item->paydate)));
+        $row->add(new Label('paydate', date('Y.m.d', $item->paydate)));
         $row->add(new Label('payamountp', $item->amount > 0 ? $item->amount : ""));
         $row->add(new Label('payamountm', $item->amount < 0 ? 0 - $item->amount : ""));
         $row->add(new Label('payuser', $item->username));
@@ -211,7 +211,7 @@ class DocView extends \Zippy\Html\PageFragment {
     public function filelistOnRow($row) {
         $item = $row->getDataItem();
 
-        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'index.php?p=App/Pages/LoadFile&arg=' . $item->file_id));
+        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'loadfile.php?id=' . $item->file_id));
         $file->setValue($item->filename);
         $file->setAttribute('title', $item->description);
 

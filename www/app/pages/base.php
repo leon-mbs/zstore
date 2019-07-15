@@ -63,8 +63,9 @@ class Base extends \Zippy\Html\WebPage {
 
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
+        $this->_tvars["note"] = $_config['modules']['note'] == 1;
         //если  включен хоть один модуль
-        $this->_tvars["modules"] = $this->_tvars["shop"] || $this->_tvars["ocstore"];
+        $this->_tvars["modules"] = $this->_tvars["shop"] || $this->_tvars["ocstore"] || $this->_tvars["note"];
     }
 
     public function LogoutClick($sender) {

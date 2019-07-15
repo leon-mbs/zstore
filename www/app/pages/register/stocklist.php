@@ -191,7 +191,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         if (strlen($text) > 0) {
             $form->searchcat->setValue(0); //поиск независимо от категории
             $text = Stock::qstr('%' . $text . '%');
-            $where = "   (itemname like {$text} or item_code like {$text} )  ";
+            $where = "   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }
 
 

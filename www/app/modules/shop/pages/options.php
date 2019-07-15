@@ -37,6 +37,7 @@ class Options extends \App\Pages\Base {
         $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new TextInput('email'));
+        $this->shop->add(new TextInput('currencyname'));
         $this->shop->add(new File('logo'));
 
         $this->add(new Form('texts'))->onSubmit($this, 'saveTextsOnClick');
@@ -51,7 +52,7 @@ class Options extends \App\Pages\Base {
         $this->shop->shopdefstore->setValue($shop['defstore']);
         $this->shop->shopdefcust->setValue($shop['defcust']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
-        $this->shop->email->setText($shop['email']);
+        $this->shop->currencyname->setText($shop['currencyname']);
 
         $this->add(new ClickLink('updateprices'))->onClick($this, 'updatePriceOnClick');
 
@@ -75,6 +76,7 @@ class Options extends \App\Pages\Base {
         $shop['defstore'] = $this->shop->shopdefstore->getValue();
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();
+        $shop['currencyname'] = $this->shop->currencyname->getText();
 
         $file = $sender->logo->getFile();
         if (strlen($file["tmp_name"]) > 0) {

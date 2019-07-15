@@ -33,6 +33,7 @@ class Item extends \ZCL\DB\Entity {
         $this->currate = doubleval($xml->currate[0]);
         $this->pricelist = (int) $xml->pricelist[0];
         $this->term = (int) $xml->term[0];
+        $this->cell = (string) $xml->cell[0];
 
 
 
@@ -46,6 +47,7 @@ class Item extends \ZCL\DB\Entity {
         //упаковываем  данные в detail
         $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
         $this->detail .= "<term>{$this->term}</term>";
+        $this->detail .= "<cell>{$this->cell}</cell>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
