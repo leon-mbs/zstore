@@ -53,6 +53,8 @@ class Base extends \Zippy\Html\WebPage {
 
         $options = System::getOptions('common');
 
+        $this->_tvars["defoptions"] = ($options['defstore'] > 0 && $options['defmf'] > 0 )  == false;
+        
         $this->_tvars["useset"] = $options['useset'] == 1;
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
 
