@@ -19,6 +19,7 @@ use \App\Entity\Doc\Document;
 use \App\Entity\Item;
 use \App\Entity\Stock;
 use \App\Entity\Store;
+use \App\Entity\MoneyFund;
 use \App\Helper as H;
 use \App\System;
 use \App\Application as App;
