@@ -35,15 +35,29 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         $this->employeedetail->add(new TextInput('editlogin'));
         $this->employeedetail->add(new TextInput('editemp_name'));
+
         $this->employeedetail->add(new TextInput('editemail'));
         $this->employeedetail->add(new TextArea('editcomment'));
+        
+        $this->employeedetail->add(new TextInput('editzhour',0));        
+        $this->employeedetail->add(new TextInput('editzmon',0));        
+        $this->employeedetail->add(new TextInput('editadvance',0));        
+        $this->employeedetail->add(new DropDownChoice('editztype',array(1=>'Ставка',2=>'Почасовая',3=>'Сдельная'),1))->onChange($this,"onType");
+        $this->onType($this->employeedetail->editztype);
     }
 
+    public function onType($sender){
+        $t = $sender->getValue();
+        $this->employeedetail->editzmon->setVisible($t==1) ;        
+        $this->employeedetail->editzhour->setVisible($t==2) ;        
+    }
+    
     public function employeelistOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
+        $row->add(new Label('balance', $item->balance));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -64,6 +78,10 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->editemp_name->setText($this->_employee->emp_name);
         $this->employeedetail->editcomment->setText($this->_employee->comment);
         $this->employeedetail->editemail->setText($this->_employee->email);
+        $this->employeedetail->editztype->setValue($this->_employee->ztype);
+        $this->employeedetail->editzhour->setText($this->_employee->zhour);
+        $this->employeedetail->editzmon->setText($this->_employee->zmon);
+        $this->employeedetail->editadvance->setText($this->_employee->advance);
     }
 
     public function addOnClick($sender) {
@@ -101,6 +119,10 @@ class EmployeeList extends \App\Pages\Base {
         $this->_employee->emp_name = $this->employeedetail->editemp_name->getText();
         $this->_employee->email = $this->employeedetail->editemail->getText();
         $this->_employee->comment = $this->employeedetail->editcomment->getText();
+        $this->_employee->ztype = $this->employeedetail->editztype->getValue();
+        $this->_employee->advance = $this->employeedetail->editadvance->getText();
+        $this->_employee->zmon = $this->employeedetail->editzmon->getText();
+        $this->_employee->zhour = $this->employeedetail->editzhour->getText();
 
         $this->_employee->Save();
 

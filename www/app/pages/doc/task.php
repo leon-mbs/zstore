@@ -80,6 +80,7 @@ class Task extends \App\Pages\Base {
         $this->editdetail->editservice->onChange($this, 'OnChangeServive', true);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('edithour'));
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
@@ -208,6 +209,7 @@ class Task extends \App\Pages\Base {
 
         $row->add(new Label('quantity', $service->quantity));
         $row->add(new Label('price', $service->price));
+        $row->add(new Label('hours', $service->hours));
 
         $row->add(new Label('amount', $service->quantity * $service->price));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -231,6 +233,7 @@ class Task extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText(($service->quantity));
         $this->editdetail->editprice->setText($service->price);
+        $this->editdetail->edithour->setText($service->hour);
 
         $this->editdetail->editservice->setKey($service->service_id);
         $this->editdetail->editservice->setText($service->service_name);
@@ -256,6 +259,7 @@ class Task extends \App\Pages\Base {
         $service = Service::load($id);
         $service->quantity = $this->editdetail->editquantity->getText();
         $service->price = $this->editdetail->editprice->getText();
+        $service->hour = $this->editdetail->edithour->getText();
 
 
         $this->_servicelist[$service->service_id] = $service;
@@ -654,7 +658,8 @@ class Task extends \App\Pages\Base {
 
 
         $this->editdetail->editprice->setText($price);
-        $this->updateAjax(array('editprice'));
+        $this->editdetail->edithours->setText($item->hours);
+        $this->updateAjax(array('editprice','edithours'));
     }
 
     public function OnAutoItem($sender) {

@@ -88,6 +88,7 @@
 
                             <th  class="text-right"  >Кол.</th>
                             <th  class="text-right"  >Цена</th>
+                            <th  class="text-right"  >Часов</th>
 
                             <th class="text-right"  >Сумма</th>
 
@@ -98,6 +99,7 @@
 
                             <td zippy="quantity"  class="text-right"></td>
                             <td zippy="price"  class="text-right"></td>
+                            <td zippy="hours"  class="text-right"></td>
 
                             <td zippy="amount"  class="text-right"></td>
 
@@ -250,12 +252,15 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Количество</label>
-                        <input class="form-control" type="text" zippy="editquantity" required="required"
-                               pattern="[0-9\.]+"></input>
+                        <input class="form-control" type="text" zippy="editquantity"    pattern="[0-9\.]+"></input>
                     </div>
                     <div class="form-group">
                         <label for="editprice">Цена </label>
                         <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"  value="0"                                 style="width: 100px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="edithours">Часов </label>
+                        <input class="form-control" type="text" zippy="edithours"   pattern="[0-9\.]+"  value="0"                                 style="width: 100px;">
                     </div>
 
                     <div class="form-group">
