@@ -74,3 +74,14 @@ CREATE   VIEW `note_nodesview` AS
     (`note_topicnode`.`node_id` = `note_nodes`.`node_id`)) AS `tcnt` 
   from 
     `note_nodes`;
+	
+	
+/*Обновление  с  версии v1.6.0*/
+	
+	ALTER TABLE `services` ADD `disabled` TINYINT(1) NULL DEFAULT '0'  ;
+	ALTER TABLE `employees` ADD `disabled` TINYINT(1) NULL DEFAULT '0'  ;
+    ALTER TABLE `equipments` ADD `disabled` TINYINT(1) NULL DEFAULT '0'  ;
+   	
+	
+
+	

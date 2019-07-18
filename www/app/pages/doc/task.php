@@ -52,7 +52,7 @@ class Task extends \App\Pages\Base {
 
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('hours', "0"));
+        $this->docform->add(new TextInput('taskhours', "0"));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
@@ -80,7 +80,7 @@ class Task extends \App\Pages\Base {
         $this->editdetail->editservice->onChange($this, 'OnChangeServive', true);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
-        $this->editdetail->add(new TextInput('edithour'));
+        $this->editdetail->add(new TextInput('edithours'));
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
@@ -133,7 +133,7 @@ class Task extends \App\Pages\Base {
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->hours->setText($this->_doc->headerdata['hours']);
+            $this->docform->taskhours->setText($this->_doc->headerdata['taskhours']);
 
             $this->docform->start_date->setDate($this->_doc->headerdata['start_date']);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
@@ -209,7 +209,7 @@ class Task extends \App\Pages\Base {
 
         $row->add(new Label('quantity', $service->quantity));
         $row->add(new Label('price', $service->price));
-        $row->add(new Label('hours', $service->hours));
+        $row->add(new Label('hour', $service->hour));
 
         $row->add(new Label('amount', $service->quantity * $service->price));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -233,7 +233,7 @@ class Task extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText(($service->quantity));
         $this->editdetail->editprice->setText($service->price);
-        $this->editdetail->edithour->setText($service->hour);
+        $this->editdetail->edithours->setText($service->hours);
 
         $this->editdetail->editservice->setKey($service->service_id);
         $this->editdetail->editservice->setText($service->service_name);
@@ -259,7 +259,7 @@ class Task extends \App\Pages\Base {
         $service = Service::load($id);
         $service->quantity = $this->editdetail->editquantity->getText();
         $service->price = $this->editdetail->editprice->getText();
-        $service->hour = $this->editdetail->edithour->getText();
+        $service->hours = $this->editdetail->edithours->getText();
 
 
         $this->_servicelist[$service->service_id] = $service;
@@ -504,7 +504,7 @@ class Task extends \App\Pages\Base {
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['hours'] = $this->docform->hours->getText();
+        $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->headerdata['start_date'] = $this->docform->start_date->getDate();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();

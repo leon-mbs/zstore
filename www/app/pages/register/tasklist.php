@@ -100,7 +100,7 @@ class TaskList extends \App\Pages\Base {
 
 
         $row->add(new Label('taskstartdate', date('Y-m-d H:i', $task->headerdata['start_date'])));
-        $row->add(new Label('taskhours', $task->headerdata['hours']));
+        $row->add(new Label('taskhours', $task->headerdata['taskhours']));
 
 
         $row->add(new Label('taskstatus'));
@@ -356,7 +356,7 @@ class TaskList extends \App\Pages\Base {
             $csv .= $task->customer_name . ';';
             $csv .= $task->notes . ';';
             $csv .= date('Y-m-d H:i', $task->headerdata['start_date']) . ';';
-            $csv .= $task->headerdata['hours'] . ';';
+            $csv .= $task->headerdata['taskhours'] . ';';
             $csv .= Document::getStateName($task->state) . ';';
             $csv .= $task->amount . ';';
 
