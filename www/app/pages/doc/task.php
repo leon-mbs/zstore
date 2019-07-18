@@ -108,14 +108,14 @@ class Task extends \App\Pages\Base {
 
         //employer
         $this->add(new Form('editdetail3'))->setVisible(false);
-        $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name")));
+        $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "disabled<>1", "emp_name")));
         $this->editdetail3->add(new Button('cancelrow3'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail3->add(new SubmitButton('saverow3'))->onClick($this, 'saverow3OnClick');
 
 
         //equipment
         $this->add(new Form('editdetail4'))->setVisible(false);
-        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::findArray("eq_name", "", "eq_name")));
+        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::findArray("eq_name", "disabled<>1", "eq_name")));
         $this->editdetail4->add(new Button('cancelrow4'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
@@ -645,7 +645,7 @@ class Task extends \App\Pages\Base {
     public function OnAutoServive($sender) {
 
         $text = Service::qstr('%' . $sender->getText() . '%');
-        return Service::findArray("service_name", "    service_name like {$text}");
+        return Service::findArray("service_name", "  disabled<>1 and  service_name like {$text}");
     }
 
     public function OnChangeServive($sender) {

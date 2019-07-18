@@ -136,7 +136,8 @@ class EqList extends \App\Pages\Base {
         $this->itemdetail->editname->setText($this->_item->eq_name);
 
         $this->itemdetail->editemp->setValue($this->_item->emp_id);
-
+        $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
+ 
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->code);
         $this->itemdetail->editserial->setText($this->_item->serial);
@@ -175,6 +176,7 @@ class EqList extends \App\Pages\Base {
 
         $this->_item->serial = $this->itemdetail->editserial->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
+        $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_item->Save();
 
