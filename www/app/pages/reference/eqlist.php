@@ -35,6 +35,7 @@ class EqList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchemp', Employee::findArray("emp_name", "", "emp_name"), 0));
+        $this->filter->add(new CheckBox('showdis'));
 
 
         $this->add(new Panel('itemtable'))->setVisible(true);
@@ -54,6 +55,7 @@ class EqList extends \App\Pages\Base {
         $this->itemdetail->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
+        $this->itemdetail->add(new CheckBox('editdisabled'));
 
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
@@ -134,7 +136,8 @@ class EqList extends \App\Pages\Base {
         $this->itemdetail->editname->setText($this->_item->eq_name);
 
         $this->itemdetail->editemp->setValue($this->_item->emp_id);
-
+        $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
+ 
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->code);
         $this->itemdetail->editserial->setText($this->_item->serial);
@@ -173,6 +176,7 @@ class EqList extends \App\Pages\Base {
 
         $this->_item->serial = $this->itemdetail->editserial->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
+        $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_item->Save();
 
@@ -195,10 +199,16 @@ class EQDS implements \Zippy\Interfaces\DataSource {
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $emp = $form->searchemp->getValue();
+        $showdis = $form->showdis->isChecked();
 
         if ($emp > 0) {
             $where = $where . " and detail like '%<emp_id>{$emp}</emp_id>%' ";
         }
+        if ($showdis > 0) {
+            
+        } else {
+            $where = $where . " and disabled <> 1";
+        }        
         if (strlen($text) > 0) {
             $text = Equipment::qstr('%' . $text . '%');
             $where = $where . " and (eq_name like {$text} or detail like {$text} )  ";

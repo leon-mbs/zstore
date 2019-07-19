@@ -28,6 +28,7 @@ class Task extends Document {
                 "servicename" => $value['service_id'] > 0 ? $value['service_name'] : $value['itemname'],
                 "quantity" => H::fqty($value['quantity']),
                 "price" => $value['price'],
+                "hours" => $value['hours'],
                 "amount" => round($value['quantity'] * $value['price'])
             );
         }

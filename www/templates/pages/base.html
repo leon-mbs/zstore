@@ -223,7 +223,11 @@
                     </ul>   
                 </div>
                 <div class="col-12    col-md-8 col-lg-9 col-xl-10  pt-2">
-
+       {{#defoptions}}
+       <div class="alert alert-danger" role="alert">
+          Не заданы  в <a href="/index.php?p=App/Pages/Options">настройках</a> склад или  касса.
+        </div>
+       {{/defoptions}} 
                     {{#smart}}
                     <div class="w-100 navbar nav justify-content-start d-none d-md-block">
                         {{{smart}}}

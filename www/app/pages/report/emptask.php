@@ -76,11 +76,11 @@ class EmpTask extends \App\Pages\Base {
         $detail = array();
         $conn = \ZDB\DB::getConnect();
 
-        $where = "   meta_name='Task' and state=9  
+        $where = "   meta_name='Task'   
               AND DATE( document_date) >= " . $conn->DBDate($from) . "
               AND DATE( document_date) <= " . $conn->DBDate($to) . "
                 
-        ";
+        and state= " .Document::STATE_EXECUTED;
 
         $docs = Document::find($where);
 
@@ -104,7 +104,7 @@ class EmpTask extends \App\Pages\Base {
 
                     if ($doc->headerdata['hours'] > 0) {
                         if ($elist[$item["employee_id"]]->hours > 0)
-                            $elist[$item["employee_id"]]->hours = $elist[$item["employee_id"]]->hours + $doc->headerdata['hours'];
+                            $elist[$item["employee_id"]]->hours = $elist[$item["employee_id"]]->hours + $doc->headerdata['taskhours'];
                         else
                             $elist[$item["employee_id"]]->hours = $doc->headerdata['hours'];
                     }

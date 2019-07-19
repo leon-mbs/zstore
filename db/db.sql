@@ -57,7 +57,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=122 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=131 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -94,7 +94,7 @@ CREATE TABLE `documents` (
   KEY `document_date` (`document_date`),
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -127,9 +127,10 @@ CREATE TABLE `employees` (
   `employee_id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(64) DEFAULT NULL,
   `detail` mediumtext,
+  `disabled` tinyint(1) DEFAULT '0',
   `emp_name` varchar(64) NOT NULL,
   PRIMARY KEY (`employee_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `entrylist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -222,6 +223,7 @@ CREATE TABLE `equipments` (
   `eq_id` int(11) NOT NULL AUTO_INCREMENT,
   `eq_name` varchar(255) DEFAULT NULL,
   `detail` mediumtext,
+  `disabled` tinyint(1) DEFAULT '0',
   `description` text,
   PRIMARY KEY (`eq_id`)
 )  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -399,7 +401,7 @@ CREATE TABLE `metadata` (
   `disabled` tinyint(4) NOT NULL,
   `smartmenu` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`meta_id`)
-)  AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `mfund`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -566,6 +568,7 @@ CREATE TABLE `services` (
   `service_id` int(11) NOT NULL AUTO_INCREMENT,
   `service_name` varchar(255) NOT NULL,
   `detail` text,
+  `disabled` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`service_id`)
 )  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -687,7 +690,7 @@ CREATE TABLE `shop_products` (
   `comments` int(11) DEFAULT '0',
   PRIMARY KEY (`product_id`),
   KEY `group_id` (`group_id`)
-)  DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_products_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_products_view`*/;

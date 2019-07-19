@@ -144,6 +144,7 @@ class Options extends \App\Pages\Base {
 
         System::setOptions("shop", $shop);
         $this->setSuccess('Сохранено');
+        $this->_tvars["defoptions"] = false;
     }
 
     public function filterOnSubmit($sender) {
