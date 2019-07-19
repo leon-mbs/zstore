@@ -102,9 +102,9 @@
     {{#_detail3}}
     <tr>
 
-        <td>{{emp_name}}</td>
+        <td colspan="6">{{emp_name}}</td>
 
-        <td colspan="6" > </td>
+        
 
     </tr>
     {{/_detail3}}

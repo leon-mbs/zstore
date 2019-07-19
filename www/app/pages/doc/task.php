@@ -209,7 +209,7 @@ class Task extends \App\Pages\Base {
 
         $row->add(new Label('quantity', $service->quantity));
         $row->add(new Label('price', $service->price));
-        $row->add(new Label('hour', $service->hour));
+        $row->add(new Label('hours', $service->hours));
 
         $row->add(new Label('amount', $service->quantity * $service->price));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
