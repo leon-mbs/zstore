@@ -52,6 +52,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
         $this->editpan->editform->add(new CheckBox('editnote'));
+        $this->editpan->editform->add(new CheckBox('editissue'));
 
 
 
@@ -131,6 +132,8 @@ class Users extends \App\Pages\Base {
             $this->editpan->editform->editshop->setChecked(true);
         if (strpos($this->user->modules, 'note') !== false)
             $this->editpan->editform->editnote->setChecked(true);
+        if (strpos($this->user->modules, 'issue') !== false)
+            $this->editpan->editform->editissue->setChecked(true);
     }
 
     public function saveOnClick($sender) {
@@ -210,6 +213,8 @@ class Users extends \App\Pages\Base {
             $modules = $modules . ',note';
         if ($this->editpan->editform->editocstore->isChecked())
             $modules = $modules . ',ocstore';
+        if ($this->editpan->editform->editissue->isChecked())
+            $modules = $modules . ',issue';
 
         $this->user->modules = trim($modules, ',');
 

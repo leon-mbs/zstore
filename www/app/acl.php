@@ -96,7 +96,7 @@ class ACL {
             return true;
         }
 
-        System::setErrorMsg('Нет права  просмотра данного ; журнала');
+        System::setErrorMsg('Нет права  просмотра данного   журнала');
         App::RedirectHome();
         return false;
     }
