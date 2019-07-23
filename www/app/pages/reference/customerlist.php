@@ -39,6 +39,7 @@ class CustomerList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchtype', array(1 => 'Покупатели', 2 => 'Поставщики'), 0));
+        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется',Customer::STATUS_WAIT=>'Потенциальный'), Customer::STATUS_ACTUAL));
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
@@ -51,11 +52,13 @@ class CustomerList extends \App\Pages\Base {
         $this->customertable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('customerdetail'))->setVisible(false);
         $this->customerdetail->add(new TextInput('editaddress'));
+        $this->customerdetail->add(new TextInput('editcity'));
         $this->customerdetail->add(new TextInput('editcustomername'));
         $this->customerdetail->add(new TextInput('editphone'));
         $this->customerdetail->add(new TextInput('editemail'));
         $this->customerdetail->add(new CheckBox('editjurid'));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => 'Покупатель', 2 => 'Поставщик'), 0));
+        $this->customerdetail->add(new DropDownChoice('editstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется',Customer::STATUS_WAIT=>'Потенциальный'), Customer::STATUS_ACTUAL));
         $this->customerdetail->add(new TextInput('discount'));
         $this->customerdetail->add(new TextArea('editcomment'));
 
@@ -84,9 +87,10 @@ class CustomerList extends \App\Pages\Base {
     }
 
     public function OnSearch($sender) {
+        $status = $this->filter->searchstatus->getValue();
         $type = $this->filter->searchtype->getValue();
         $search = trim($this->filter->searchkey->getText());
-        $where = "1=1";
+        $where = "status=".$status;
 
         if (strlen($search) > 0) {
             $search = Customer::qstr('%' . $search . '%');
@@ -131,9 +135,11 @@ class CustomerList extends \App\Pages\Base {
         $this->customerdetail->editphone->setText($this->_customer->phone);
         $this->customerdetail->editemail->setText($this->_customer->email);
         $this->customerdetail->editaddress->setText($this->_customer->address);
+        $this->customerdetail->editcity->setText($this->_customer->city);
         $this->customerdetail->discount->setText($this->_customer->discount);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
+        $this->customerdetail->editstatus->setValue($this->_customer->status);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
     }
 
@@ -174,9 +180,11 @@ class CustomerList extends \App\Pages\Base {
         $this->_customer->phone = $this->customerdetail->editphone->getText();
         $this->_customer->email = $this->customerdetail->editemail->getText();
         $this->_customer->address = $this->customerdetail->editaddress->getText();
+        $this->_customer->city = $this->customerdetail->editcity->getText();
         $this->_customer->discount = $this->customerdetail->discount->getText();
         $this->_customer->comment = $this->customerdetail->editcomment->getText();
         $this->_customer->type = $this->customerdetail->edittype->getValue();
+        $this->_customer->status = $this->customerdetail->editstatus->getValue();
         $this->_customer->jurid = $this->customerdetail->editjurid->isChecked() ? 1 : 0;
 
         $this->_customer->Save();

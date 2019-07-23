@@ -11,8 +11,13 @@ namespace App\Entity;
  */
 class Customer extends \ZCL\DB\Entity {
 
+    const   STATUS_ACTUAL = 0;  //актуальный
+    const   STATUS_DISABLED = 1; //не используется
+    const   STATUS_WAIT = 2 ;//потенциальный
+    
     protected function init() {
         $this->customer_id = 0;
+        $this->status = 0;
     }
 
     protected function beforeSave() {
@@ -61,7 +66,10 @@ class Customer extends \ZCL\DB\Entity {
      * 
      */
     public static function getList() {
-        return Customer::findArray("customer_name", "");
+        $row= Customer::findArray("customer_name", "status=". Customer::STATUS_ACTUAL);
     }
 
+    
+  
+    
 }

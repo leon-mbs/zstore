@@ -81,7 +81,40 @@ CREATE   VIEW `note_nodesview` AS
 	ALTER TABLE `services` ADD `disabled` TINYINT(1) NULL DEFAULT '0'  ;
 	ALTER TABLE `employees` ADD `disabled` TINYINT(1) NULL DEFAULT '0'  ;
     ALTER TABLE `equipments` ADD `disabled` TINYINT(1) NULL DEFAULT '0'  ;
-   	
+ 	
 	
+	ALTER TABLE `customers` ADD `status` SMALLINT(4) NOT NULL DEFAULT '0'  ;
+  	ALTER TABLE `customers` ADD `city` VARCHAR(255) NULL AFTER `status`;
+ /*Обновление  с  версии v1.7.0*/
+ ALTER VIEW customers_view AS 
+  select 
+    customers.customer_id AS customer_id,
+    customers.customer_name AS customer_name,
+    customers.detail AS detail,
+    customers.email AS email,
+    customers.phone AS phone,
+    customers.status AS status,
+    customers.city AS city,
+    (
+  select 
+    count(0) 
+  from 
+    messages m 
+  where 
+    ((m.item_id = customers.customer_id) and (m.item_type = 2))) AS mcnt,(
+  select 
+    count(0) 
+  from 
+    files f 
+  where 
+    ((f.item_id = customers.customer_id) and (f.item_type = 2))) AS fcnt,(
+  select 
+    count(0) 
+  from 
+    eventlist e 
+  where 
+    ((e.customer_id = customers.customer_id) and (e.eventdate >= now()))) AS ecnt 
+  from 
+    customers;	
 
 	
