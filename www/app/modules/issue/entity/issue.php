@@ -22,7 +22,7 @@ class Issue extends Issue
         $this->hours = 0;
  
         $this->price = 0;
-        $this->created = time();
+        $this->createdon = time();
         $this->lastupdate = time();
          
  
@@ -34,26 +34,31 @@ class Issue extends Issue
         $this->detail = "<content>";
         $this->detail .= "<hours>{$this->discount}</hours>";
         $this->detail .= "<price>{$this->type}</price>";
+        $this->detail .= "<createdon>{$this->createdon}</createdon>";
+        $this->detail .= "<createdby>{$this->createdby}</createdby>";
         $this->detail .= "<desc><![CDATA[{$this->desc}]]></desc>";
+ 
+        $this->detail .= "<createdbyname><![CDATA[{$this->createdbyname}]]></createdbyname>";
         $this->detail .= "</content>";
 
         return true;
     }
 
     protected function afterLoad() {
-        $this->created = strtotime($this->created);
+   
         $this->lastupdate = strtotime($this->lastupdate);
         
-       
         //распаковываем  данные из  
         $xml = simplexml_load_string($this->content);
-
      
         $this->hours = (int) ($xml->hours[0]);
         $this->price = (int) ($xml->price[0]);
+        $this->createdon = (int) ($xml->createdon[0]);
+        $this->createdby = (int) ($xml->createdby[0]);
+        $this->createdbyname = (string) ($xml->createdbyname[0]);
       
         $this->desc = (string) ($xml->desc[0]);
-
+  
         parent::afterLoad();
     }
   
