@@ -6,12 +6,21 @@ namespace App\Modules\Issue\Entity;
 /**
  *  Класс  инкапсулирующий   задачу
  * @table=issue_issuelist
- * @view=issue_issuelistview
+ * @view=issue_issuelist_view
  * @keyfield=issue_id
 
  */
-class Issue extends Issue
+class Issue extends \ZCL\DB\Entity
 {
+    const STATUS_NEW=0;
+    const STATUS_CLOSE=1;
+    const STATUS_INPROCESS=2;
+    //const STATUS_FINISHED=3;
+    const STATUS_QA=4;
+    const STATUS_REOPENED=5;
+    const STATUS_RETURNED=6;
+    const STATUS_WA=7;
+    const STATUS_SHIFTED=8;
 
     protected function init() {
         $this->issue_id = 0;
@@ -62,4 +71,19 @@ class Issue extends Issue
         parent::afterLoad();
     }
   
+  
+    public static function getStatusList(){
+        $list = array();
+        $list[self::STATUS_NEW] =  'Новая';
+        $list[self::STATUS_CLOSE] =  'Закрыта';
+        $list[self::STATUS_INPROCESS] =  'В работе';
+      //  $list[self::STATUS_FINISHED] =  'Закончена';
+        $list[self::STATUS_QA] =  'На проверке';
+        $list[self::STATUS_REOPENED] =  'Переоткрыта';
+        $list[self::STATUS_RETURNED] =  'Возвращена на доработку';
+        $list[self::STATUS_WA] =  'На  утверждении';
+        $list[self::STATUS_SHIFTED] =  'Отложена';
+        
+        return $list;
+    }
 }

@@ -10,6 +10,7 @@ use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\Button;
 use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Form\TextArea;
+use \Zippy\Html\Form\AutocompleteTextInput;
 use \Zippy\Html\Form\CheckBox;
 use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Form\SubmitButton;
@@ -18,12 +19,15 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\BookmarkableLink;
 use \Zippy\Html\Link\SubmitLink;
 use \ZCL\DB\EntityDataSource;
+use \Zippy\Html\DataList\Paginator;
 use \App\Application as App;
 use \App\System;
 use \App\Modules\Issue\Helper;
 use \App\Filter;
 use \ZCL\BT\Tags;
 use \App\Modules\Issue\Entity\Issue;
+use \App\Entity\Customer;
+use \App\Entity\User;
  
 
 /**
@@ -33,87 +37,107 @@ class IssueList extends \App\Pages\Base
 {
  
 
-    public function __construct() {
+    public function __construct($id=0) {
         parent::__construct();
 
-        $allow = (strpos(System::getUser()->modules, 'issue') !== false || System::getUser()->userlogin == 'admin');
+        $user = System::getUser();
+        
+        $allow = (strpos($user->modules, 'issue') !== false || $user->userlogin == 'admin');
         if(!$allow){
             System::setErrorMsg('Нет права  доступа  к   модулю ');
             App::RedirectHome();
-            return false;
+            return  ;
         }
  
+        $this->add(new  Panel("listpan"));
+         
+        $this->listpan->add(new Form('filter'))->onSubmit($this, 'reload');
+        $this->listpan->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
+        $this->listpan->filter->add(new TextInput('searchnumber', $filter->searchnumber));
+        
+        //пользователи ассоциированные с сотрудниками
+        $this->listpan->filter->add(new DropDownChoice('searchassignedto', User::findArray('username', 'employee_id > 0', 'username'), $user->user_id));
+        
+        $stlist = Issue::getStatusList();
+        $stlist[-1]='Открытые';
+        $stlist[100]='Все';
+        $this->listpan->filter->add(new DropDownChoice('searchstatus',  $stlist  , -1));
+         
+        
+        $this->listpan->add(new Form('sort'))->onSubmit($this, 'reload');
+        $this->listpan->sort->add(new DropDownChoice('sorttype', array(0=>'Последние измененные',1=>'Дата создания',2=>'Приоритет'),0));
+        
+        
+        $list = $this->listpan->add(new DataView('list', new IssueDS($this), $this, 'listOnRow'));
+        $list->setPageSize(25);
+        $this->listpan->add(new Paginator('pag', $list));
+        
+        $this->add(new  Panel("editpan"))->setVisible(false);
+        $this->add(new  Panel("statuspan"))->setVisible(false) ;
+        $this->add(new  Panel("msgpan"))->setVisible(false)  ;
+
  
+       // $this->reload(null);
     }
 
+    public function reload($sender) {
+
+    }
    
  
     //вывод строки  списка   
 
-    public function onRow($row) {
-        $topic = $row->getDataitem();
-        $row->add(new Label('title', $topic->title));
-        //$row->add(new ClickLink('title', $this,'onTopic'));
-        $fav = $row->add(new Label('fav'));
-        $fav->setVisible($topic->favorites > 0);
+    public function listOnRow($row) {
+        $doc = $row->getDataItem();
+    }
+ 
+  
+
    
-    }
- 
- 
-    //аплоад файла
-    public function OnFile($form) {
-        $file = $form->editfile->getFile();
-        if (strlen($file['tmp_name']) > 0) {
-            if (filesize($file['tmp_name']) / 1024 / 1024 > 10) {
-
-                $this->setError("Файл слишком  большой");
-                return;
-            }
-        } else
-            return;
-
-        $topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
-           
-        Helper::addFile($file,$topic_id)   ; 
-
-        $this->_farr = Helper::findFileByTopic($topic_id);
-        $this->filelist->Reload();
-    }
-
-    public function onFileRow($row) {
-        $file = $row->getDataItem();
-        $row->add(new ClickLink("filedel", $this, "onFileDel"));
-        $row->add(new BookmarkableLink("filelink", "/loadfile.php?id=" . $file->file_id))->setValue($file->filename);
-    }
-
-    public function onFileDel($sender) {
-        $file = $sender->getOwner()->getDataItem();
-        Helper::deleteFile($file->file_id);
-        $topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
- 
-        $this->_farr = Helper::findFileByTopic($topic_id);
-        $this->filelist->Reload();
-    }
-
-    //обработчик поиска
-    public function OnSearch($form) {
-        $text = $form->skeyword->getText();
-        $t = $form->searchtype->getValue();
-        if ($text == "") {
-            $this->setError('Enter text!');
-            return;
-        }
-
-        $this->_sarr = TopicNode::searchByText($text, $t, $form->searchtitle->isChecked());
-        $this->searchlist->Reload();
-    }
-
-    //обработчик  поиска  по тегу
-    public function OnTagList($sender) {
-        $text = $sender->getSelectedValue();
-        $this->_sarr = TopicNode::searchByTag($text);
-        $this->searchlist->Reload();
+    public function OnAutoCustomer($sender) {
+        $text = Customer::qstr('%' . $sender->getText() . '%');
+        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
     }
 
  
+}
+class IssueDS implements \Zippy\Interfaces\DataSource {
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+        
+
+        $conn = \ZDB\DB::getConnect();
+         
+        $where = "" ;
+
+     
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Issue::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+       
+        $sort="lastupdate desc" ;
+        $s = $page->listpan->sort->sorttype->getValue();
+        if($s==1)   $sort="issue_id desc" ;
+        if($s==2)   $sort="priority desc" ;
+        
+        return Issue::find($this->getWhere(), $sort, $count, $start);
+
+        
+    }
+
+    public function getItem($id) {
+        
+    }
+
 }
