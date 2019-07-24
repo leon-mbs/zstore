@@ -13,7 +13,7 @@ namespace App\Modules\Issue\Entity;
 class Issue extends \ZCL\DB\Entity
 {
     const STATUS_NEW=0;
-    const STATUS_CLOSE=1;
+    const STATUS_CLOSED=1;
     const STATUS_INPROCESS=2;
     //const STATUS_FINISHED=3;
     const STATUS_QA=4;
@@ -40,15 +40,15 @@ class Issue extends \ZCL\DB\Entity
     protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные  
-        $this->detail = "<content>";
-        $this->detail .= "<hours>{$this->discount}</hours>";
-        $this->detail .= "<price>{$this->type}</price>";
-        $this->detail .= "<createdon>{$this->createdon}</createdon>";
-        $this->detail .= "<createdby>{$this->createdby}</createdby>";
-        $this->detail .= "<desc><![CDATA[{$this->desc}]]></desc>";
+        $this->content = "<content>";
+        $this->content .= "<hours>{$this->hours}</hours>";
+        $this->content .= "<price>{$this->price}</price>";
+        $this->content .= "<createdon>{$this->createdon}</createdon>";
+        $this->content .= "<createdby>{$this->createdby}</createdby>";
+        $this->content .= "<desc><![CDATA[{$this->desc}]]></desc>";
  
-        $this->detail .= "<createdbyname><![CDATA[{$this->createdbyname}]]></createdbyname>";
-        $this->detail .= "</content>";
+        $this->content .= "<createdbyname><![CDATA[{$this->createdbyname}]]></createdbyname>";
+        $this->content .= "</content>";
 
         return true;
     }
@@ -75,7 +75,7 @@ class Issue extends \ZCL\DB\Entity
     public static function getStatusList(){
         $list = array();
         $list[self::STATUS_NEW] =  'Новая';
-        $list[self::STATUS_CLOSE] =  'Закрыта';
+        $list[self::STATUS_CLOSED] =  'Закрыта';
         $list[self::STATUS_INPROCESS] =  'В работе';
       //  $list[self::STATUS_FINISHED] =  'Закончена';
         $list[self::STATUS_QA] =  'На проверке';

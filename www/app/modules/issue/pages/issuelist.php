@@ -35,7 +35,7 @@ use \App\Entity\User;
  */
 class IssueList extends \App\Pages\Base 
 {
- 
+    public $_issue;
 
     public function __construct($id=0) {
         parent::__construct();
@@ -71,27 +71,119 @@ class IssueList extends \App\Pages\Base
         $list = $this->listpan->add(new DataView('list', new IssueDS($this), $this, 'listOnRow'));
         $list->setPageSize(25);
         $this->listpan->add(new Paginator('pag', $list));
+        $this->listpan->add(new ClickLink('addnew', $this,'onNew'));
         
-        $this->add(new  Panel("editpan"))->setVisible(false);
+        $this->add(new  Panel("editpan"))->setVisible(false)  ;
+        $this->editpan->add(new Form('editform'))->onSubmit($this, 'onSaveIssue');
+        $this->editpan->editform->add(new TextInput('edittitle' ));
+        $this->editpan->editform->add(new TextArea('editcontent'));
+        $this->editpan->editform->add(new DropDownChoice('editpr', array(0=>'Нормальный',1=>'Высокий',-1=>'Низкий'),0));
+        $this->editpan->editform->add(new TextInput('editprice' ));
+        $this->editpan->editform->add(new TextInput('edithour' ));
+   
+        $this->editpan->editform->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
+        $this->editpan->editform->add(new ClickLink('editcancel',$this,'onCancel' ));
+         
+        
         $this->add(new  Panel("statuspan"))->setVisible(false) ;
         $this->add(new  Panel("msgpan"))->setVisible(false)  ;
 
  
-       // $this->reload(null);
+         $this->listpan->list->Reload(); 
     }
 
-    public function reload($sender) {
-
-    }
-   
  
+  
+    public function onNew($sender) {
+         $this->editpan->editform->clean(); 
+         $this->editpan->setVisible(true);
+         $this->listpan->setVisible(false);
+         $this->_issue = new Issue();
+    } 
+ 
+    public function onCancel($sender) {
+   
+         $this->listpan->setVisible(true);
+         $this->editpan->setVisible(false);
+         $this->msgpan->setVisible(false);
+         $this->statuspan->setVisible(false);
+         
+    } 
+     
+   
     //вывод строки  списка   
 
     public function listOnRow($row) {
-        $doc = $row->getDataItem();
+        $issue = $row->getDataItem();
+        $row->add(new Label('issue_id', $issue->issue_id));
+        $row->add(new Label('title', $issue->issue_name));
+        $row->add(new Label('issignedto', $issue->username));
+        $row->add(new Label('prup' ))->setVisible($issue->priority==1);
+        $row->add(new Label('prdown' ))->setVisible($issue->priority== -1);
+        $st = Issue::getStatusList();
+        $row->add(new Label('status',$st[$issue->status] ));
+       
+        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new ClickLink('openstatus'))->onClick($this, 'statusOnClick');
+        $row->add(new ClickLink('opencomment'))->onClick($this, 'commentlOnClick');
+        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+          
     }
  
-  
+    public function editOnClick($sender) {
+   
+         $this->_issue = $sender->getOwner()->getDataItem();
+         $this->listpan->setVisible(false);
+         $this->editpan->setVisible(true);
+
+         $sender->edittitle->setText($this->_issue->issue_name);
+         $sender->editcontent->setText($this->_issue->desc);
+         $sender->editcust->setKey($this->_issue->customer_id);
+         $sender->editcust->setText($this->_issue->customer_name);
+         $sender->editpr->setText($this->_issue->desc);
+         $sender->edithour->setText($this->_issue->desc);
+         $sender->editprice->setText($this->_issue->desc);
+         
+    }   
+ 
+    public function onSaveIssue($sender) {
+
+        
+        $this->_issue->issue_name = $sender->edittitle->getText();
+        $this->_issue->desc = $sender->editcontent->getText();
+        $this->_issue->customer_id = $sender->editcust->getKey();
+        $this->_issue->priority = $sender->editpr->getValue();
+        $this->_issue->hours = $sender->edithour->getText();
+        $this->_issue->price = $sender->editprice->getText();
+        $this->_issue->save();
+        
+        $this->listpan->setVisible(true);
+        $this->editpan->setVisible(false); 
+        $this->listpan->list->Reload();       
+    }   
+    public function statusOnClick($sender) {
+   
+         $this->_issue = $sender->getOwner()->getDataItem();
+         $this->listpan->setVisible(false);
+         $this->statuspan->setVisible(true);
+          
+    }   
+
+    public function commentlOnClick($sender) {
+   
+         $this->_issue = $sender->getOwner()->getDataItem();
+         $this->listpan->setVisible(false);
+         $this->msgpan->setVisible(true);
+          
+    }   
+
+    public function deleteOnClick($sender) {
+   
+         $issue = $sender->getOwner()->getDataItem();
+ 
+         $this->listpan->list->Reload();       
+          
+    }   
 
    
     public function OnAutoCustomer($sender) {
@@ -109,14 +201,25 @@ class IssueDS implements \Zippy\Interfaces\DataSource {
     }
 
     private function getWhere() {
-        
+        $status = $this->page->listpan->filter->searchstatus->getValue();
+        $number = trim($this->page->listpan->filter->searchnumber->getText());
+        $assignedto = $this->page->listpan->filter->searchassignedto->getValue();
+        $cust = $this->page->listpan->filter->searchcust->getKey();
 
         $conn = \ZDB\DB::getConnect();
          
-        $where = "" ;
+        $where = "1=1 " ;
+        if($status == 100)  $where .= " and status <> " . Issue::STATUS_CLOSED;
+        if($status < 100 && $status >= 0) $where .= " and status = " . $status;
+        if($cust > 0)       $where .= " and customer_id = " . $cust;
+        if($assignedto > 0) $where .= " and user_id = " . $assignedto ;
 
-     
-
+        if(strlen($number) > 0){
+            $s= Issue::qstr('%'.$number.'%') ;
+             
+            $where .= " and (content like {$s} or issue_name like {$s} or issue_id=".Issue::qstr($number).")  ";
+        }
+          
         return $where;
     }
 
@@ -127,13 +230,11 @@ class IssueDS implements \Zippy\Interfaces\DataSource {
     public function getItems($start, $count, $sortfield = null, $asc = null) {
        
         $sort="lastupdate desc" ;
-        $s = $page->listpan->sort->sorttype->getValue();
+        $s = $this->page->listpan->sort->sorttype->getValue();
         if($s==1)   $sort="issue_id desc" ;
         if($s==2)   $sort="priority desc" ;
         
         return Issue::find($this->getWhere(), $sort, $count, $start);
-
-        
     }
 
     public function getItem($id) {

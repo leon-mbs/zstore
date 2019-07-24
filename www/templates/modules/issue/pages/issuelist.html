@@ -20,7 +20,7 @@
                         <select class="form-control mr-sm-2  " zippy="searchassignedto">
                             <option value="0">Не выбран</option>
                         </select>
-                        <label for="searchcust"> Контрагент  </label>
+                        <label for="searchcust"> заказчик  </label>
                         <input placeholder="Начните вводить..." class="form-control mr-2" type="text" zippy="searchcust"  >
 
     
@@ -38,22 +38,30 @@
                         <input type="submit" class="mr-2  btn btn-outline-success  " value="ОК">
                       </form>
                 </div>       
-                <a class="btn btn-sm btn-outline-success">Новая задача</a>   
+                <a zippy="addnew" class="btn btn-sm btn-outline-success">Новая задача</a>   
                 <table class="table   table-sm  table-hover   ">
                     <tr>
-                        <th>Документ</th>
                         <th> </th>
-                  </tr>   <tbody>
+                        <th style="width:40px">#</th>
+                        <th>Название</th>
+                        <th>Исполнитель</th>
+                        <th>Статус  </th>
+                        <th>  </th>
+                    </tr>   <tbody>
                         <tr zippy="list">
-                            <td zippy="name"></td>
+                            <td class="text-right"><i zippy="prup" class="fa fa-arrow-up text-danger"></i><i zippy="prdown" class="fa fa-arrow-down text-success"></i></td>
+                            <td zippy="issue_id"> </td>
+                            <td zippy="title"></td>
+                            <td zippy="issignedto"></td>
+                            <td zippy="status"></td>
                             <td  > 
-                               <a><i class="fa fa-comments"></a>
+                               <a zippy="opencomment"><i class="fa fa-comments"></a>
                                &nbsp;&nbsp;
-                               <a><i class="fa fa-gavel"></a>
+                               <a zippy="openstatus"><i class="fa fa-gavel"></a>
                                &nbsp;&nbsp;                            
-                               <a><i class="fa fa-edit"></a>
+                               <a zippy="edit"><i class="fa fa-edit"></a>
                                &nbsp;&nbsp;                            
-                               <a><i class="fa fa-trash"></a>
+                               <a zippy="delete"><i class="fa fa-trash"></a>
 
                                
                               </td>
@@ -66,7 +74,7 @@
         </div>
     </div>
     <div class="row" zippy="editpan">
-        <div class="col-12 col-xl-10">
+        <div class="col-12 col-md-10 col-xl-6">
            <form zippy="editform">
                 <div class="form-group">
                     <label for="edittitle">Название</label>
@@ -76,9 +84,34 @@
                     <label for="editcontent">Описание</label>
                     <textarea style="height:200px;" class="form-control" zippy="editcontent"></textarea>
                 </div>
-
-                <a zippy="editcancel" class="btn btn-light">Отмена</a>&nbsp;
-                <a zippy="editsave" class="btn btn-primary">Сохранить</a>
+             <div class="form-group">
+                        <label for="editpr">Приоритет  </label>
+                        <select class="form-control    " zippy="editpr" style="width:200px">
+                             
+                        </select>
+             </div>                  
+                
+                <div class="form-group">
+                    <label for="edithour">Планируемое время</label>
+                
+                    <input style="width:40px" zippy="edithour" pattern="[0-9\.]+" type="text"   class="form-control"   >
+                   
+                </div> 
+               <div class="form-group">
+                     <label for="editcust"> Заказчик  </label>
+                     <input style="width:300px" placeholder="Начните вводить..." class="form-control mr-2" type="text" zippy="editcust"  >
+              </div>                
+                 <div class="form-group">
+                    <label for="editprice">Стоимость</label>
+                    <input pattern="[0-9]+" style="width:60px" type="text"    class="form-control" zippy="editprice">
+                </div>                
+              
+                
+                
+                   <div class="form-group">
+                     <a zippy="editcancel" class="btn btn-light">Отмена</a>&nbsp;
+                     <input type="submit"   class="btn btn-outline-primary" value="Сохранить">
+                  </div> 
             </form>            
         
 
@@ -86,10 +119,47 @@
     </div>
     <div class="row" zippy="statuspan">
         <div class="col-12 col-xl-10">
-           
-            
-        
+             <h4 zippy="sttitle"></h4>
+            <form zippy="stform">
+          
+             <div class="form-group">
+                <label for="ststatus">Статус </label>
+                <select class="form-control mr-sm-2  " zippy="ststatus">
+                     
+                </select>
 
+             </div>
+             <div class="form-group">
+                <label for="stuser">Перевести на </label>
+                <select class="form-control mr-sm-2  " zippy="stuser">
+                     
+                </select>
+
+             </div>
+              <div class="form-group">
+                <label for="stpr">Приоритет  </label>
+                <select class="form-control    " zippy="stpr" style="width:200px">
+                     
+                </select>
+             </div>
+                
+              <div class="form-group">
+                    <label  > Время выполнения</label>
+                
+                     <div class="input-group"  style="width:140px">
+                      <input zippy="sthour" pattern="[0-9]+" type="text"   class="form-control"   >
+
+                       <div class="input-group-prepend">
+                         <span class="input-group-text"> : </span>
+                       </div>
+                     <input zippy="stminute" pattern="[0-9]+" type="text"   class="form-control"  >
+                    </div>        
+                </div>     
+                <div class="form-group">
+                     <a zippy="stcancel" class="btn btn-light">Отмена</a>&nbsp;
+                     <input type="submit"   class="btn btn-outline-primary" value="Сохранить">
+                  </div> 
+            </form>   
         </div>
     </div>
     <div class="row" zippy="msgpan">
