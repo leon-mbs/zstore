@@ -11,6 +11,18 @@ use \ZCL\DB\DB as DB;
  */
 class Helper {
 
+    public static function addHistory($issue_id ,$hours,$notes='') {
+         $user = \App\System::getUser();
+         
+    }
+    public static function getHistory($issue_id ) {
+         $list=array();
+         
+         
+         return $list;
+    }
+    
+    
     public static function addFile($file, $itemid) {
         $conn = DB::getConnect();
         $filename = $file['name'];

@@ -125,7 +125,24 @@
                 <a href="javascript:void(0);"><i class="fa fa-paperclip"></i> Прикрепить файл</a>    
                 <br>
                 <h5  >Коментарии</h5>
-
+                  <table style="width:400px" class="table table-sm">
+                                    <tr zippy="msglist">
+                                        <td><span zippy="msgdate"></span>, <span style="color:navy" zippy="msguser"></span>:
+                                            <br><span   zippy="msgdata"></span>
+                                        </td>
+                                        <td valign="top"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td> 
+                                    </tr>
+                                </table>
+                                <form zippy="addmsgform" id="msgankor">
+                                    <label> Коментарий: </label>
+                                    <div class="form-group">
+                                        <textarea class="form-control" required="required" zippy="msgdata" style="width:400px;height:120px;"></textarea>
+                                    </div> 
+                                    <input class="btn btn-light  " type="submit" value="Добавить">
+                                </form>
+                
+                
+                
             </div>
             <div class="col-12 col-md-4 col-xl-3">
                 <form zippy="stform">
@@ -138,7 +155,7 @@
                             </select>
                         </div>
                         <div class="col-2">
-                            <input type="submit" class="   btn btn-outline-success  " value="ОК">
+                            <input zippy="ststatusok" type="submit" class="   btn btn-outline-success  " value="ОК">
 
                         </div>
                     </div>
@@ -151,7 +168,7 @@
                             </select>
                         </div>
                         <div class="col-2">
-                            <input type="submit" class="   btn btn-outline-success  " value="ОК">
+                            <input zippy="stuserok" type type="submit" class="   btn btn-outline-success  " value="ОК">
 
                         </div>
                     </div>
@@ -159,33 +176,33 @@
                         <label for="stpr" class="col-4">Приоритет  </label>
 
                         <div class="col-6">
-                            <select class="form-control    " zippy="stpr" style="width:200px">
+                            <select class="form-control   " zippy="stpr" style="width:200px">
 
                             </select>
                         </div>
                         <div class="col-2">
-                            <input type="submit" class="   btn btn-outline-success  " value="ОК">
+                            <input zippy="stprok" type="submit" class="   btn btn-outline-success  " value="ОК">
 
                         </div>          
                     </div>
 
                     <div class="form-group row">
-                        <label for="sthour" class="col-4"> Время выполнения</label>
+                        <label for="sthours" class="col-4"> Время выполнения</label>
                         <div class="col-6">
-                            <input zippy="sthour" pattern="[0-9]+" type="text"   class="form-control"   >
+                            <input zippy="sthours" pattern="[0-9]+" type="text"   class="form-control"   >
                         </div>
                         <div class="col-2">
-                            <input type="submit" class="   btn btn-outline-success  " value="ОК">
+                            <input zippy="sthoursok" type="submit" class="   btn btn-outline-success  " value="ОК">
 
                         </div>                   
                     </div>     
 
                 </form>          
                 <table class=" table table-sm">
-                    <tr>
-                        <td>time</td>
-                        <td>user</td>
-                        <td>comment</td>
+                    <tr zippy="stlist">
+                        <td zippy="sttime"></td>
+                        <td zippy="stuser"> </td>
+                        <td zippy="stnotes"> </td>
                     </tr>
                 </table>
 

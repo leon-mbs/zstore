@@ -20,6 +20,7 @@ use \Zippy\Html\Link\BookmarkableLink;
 use \Zippy\Html\Link\SubmitLink;
 use \ZCL\DB\EntityDataSource;
 use \Zippy\Html\DataList\Paginator;
+use \Zippy\Html\DataList\ArrayDataSource;
 use \App\Application as App;
 use \App\System;
 use \App\Modules\Issue\Helper;
@@ -35,6 +36,7 @@ use \App\Entity\User;
 class IssueList extends \App\Pages\Base {
 
     public $_issue;
+    public $_stlist = array();
 
     public function __construct($id = 0) {
         parent::__construct();
@@ -82,16 +84,34 @@ class IssueList extends \App\Pages\Base {
 
         $this->editpan->editform->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
         $this->editpan->editform->add(new ClickLink('editcancel', $this, 'onCancel'));
-
-
-
+ 
         $this->add(new Panel("msgpan"))->setVisible(false);
         $this->msgpan->add(new ClickLink('back', $this, 'onCancel'));
         $this->msgpan->add(new Label('mtitle'));
         $this->msgpan->add(new Label('mdesc'));
-
-
+        $stform = $this->msgpan->add(new Form('stform'));
+         
+        $stform->add(new DropDownChoice('ststatus', $stlist, -1));
+        $stform->add(new DropDownChoice('stpr', array(0 => 'Нормальный', 1 => 'Высокий', -1 => 'Низкий'), 0));
+        $stform->add(new DropDownChoice('stuser', User::findArray('username', 'employee_id > 0', 'username'),   0 ));
+        $stform->add(new TextInput('sthours'));
+        $stform->add(new SubmitButton('ststatusok'))->onClick($this,"onStatus");
+        $stform->add(new SubmitButton('stuserok'))->onClick($this,"onStatus");
+        $stform->add(new SubmitButton('stprok'))->onClick($this,"onStatus");
+        $stform->add(new SubmitButton('sthoursok'))->onClick($this,"onStatus");
+    
+        $this->msgpan->add(new DataView('stlist', new ArrayDataSource($this,'_stlist'), $this, 'stlistOnRow'));
+         
+        $this->msgpan->add(new Form('addmsgform'))->onSubmit('onAddMsg');
+        $this->msgpan->addmsgform->add(new TextArea('msgdata'));
+        
         $this->listpan->list->Reload();
+        
+        $issue = Issue::load($id);
+        if($issue instanceof Issue) {
+            $this->openIssue($issue);
+        }
+        
     }
 
     public function onNew($sender) {
@@ -176,16 +196,32 @@ class IssueList extends \App\Pages\Base {
         $this->listpan->list->Reload();
     }
 
-    public function commentlOnClick($sender) {
-
-        $this->_issue = $sender->getOwner()->getDataItem();
+    public function openIssue($issue) {
+        $this->_issue = $issue; 
         $this->listpan->setVisible(false);
         $this->msgpan->setVisible(true);
 
         $this->msgpan->mtitle->setText('#' . $this->_issue->issue_id . ' ' . $this->_issue->issue_name);
         $this->msgpan->mdesc->setText($this->_issue->desc, true);
+        $this->msgpan->stform->ststatus->setValue($this->_issue->status);
+        $this->msgpan->stform->stpr->setValue($this->_issue->priority);
+        $this->msgpan->stform->stuser->setValue($this->_issue->user_id);
+        $this->msgpan->stform->sthours->setText('0');
+        $this->updateStList();       
+       
+    }
+    
+    public function commentlOnClick($sender) {
+
+        $this->openIssue($sender->getOwner()->getDataItem());
+        
     }
 
+    public function updateStList(){
+        $this->_stlist = Helper::getHistory($this->_issue->issue_id);
+        $this->msgpan->stlist->Reload();
+    }
+    
     public function deleteOnClick($sender) {
 
         $issue = $sender->getOwner()->getDataItem();
@@ -196,7 +232,79 @@ class IssueList extends \App\Pages\Base {
         }
         $this->listpan->list->Reload();
     }
-
+    
+    public function onStatus($sender) {
+         
+        if($sender->id=='ststatusok'){
+             $status = $this->msgpan->stform->ststatus->getValue();
+             if($status==$this->_issue->status)  return;
+             $this->_issue->status = $status;
+             $this->_issue->lastupdate = time();
+             $this->_issue->save();
+             Helper::addHistory($this->_issue,0,'Статус '.$this->msgpan->stform->ststatus->getValueName());
+             
+        } 
+        if($sender->id=='stprok'){
+             $priority = $this->msgpan->stform->stpr->getValue();
+             if($priority==$this->_issue->priority)  return;
+             $this->_issue->priority = $priority;
+             $this->_issue->lastupdate = time();
+             $this->_issue->save();
+             Helper::addHistory($this->_issue,0,'Приоритет '.$this->msgpan->stform->stpr->getValueName());
+             
+        } 
+        
+        if($sender->id=='stuserok'){
+             $user_id = $this->msgpan->stform->stuser->getValue();
+             if($user_id==$this->_issue->user_id)  return;
+             $this->_issue->user_id = $user_id;
+             $this->_issue->lastupdate = time();
+             $this->_issue->save();
+             Helper::addHistory($this->_issue->issue_id,0,'Переназначена на  '.$this->msgpan->stform->stuser->getValueName());
+             
+            $n = new \App\Entity\Notify();
+            $n->user_id = $user_id;
+            $n->message = " На  вас переведена задача <a href=\"/index.php?p=App/Modules/Issue/Pages/IssueList&arg={$this->_issue->issue_id}\">{$this->_issue->issue_name}</a> ";
+            $n->save();             
+             
+             
+        } 
+       if($sender->id=='sthoursok'){
+             $hours = $this->msgpan->stform->sthours->getText();
+             if($hours > 0 )  {
+                 Helper::addHistory($this->_issue->issue_id,$hours,"Добавлено время {$hours} ");
+                                  
+             }
+             
+        } 
+        
+        $this->updateStList();
+        
+    }
+    
+    public function listOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('sttime', date('Y-m-d',strtotime($item->changed))  ));
+        $row->add(new Label('stuser', $item->username));
+        $row->add(new Label('stnotes', $item->notes));
+        
+    }
+    
+    public function onAddMsg($sender) {
+      
+        
+        
+        $this->goAnkor('msgankor'); 
+    }
+    
+    public function listMsgOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('sttime', date('Y-m-d',strtotime($item->changed))  ));
+        $row->add(new Label('stuser', $item->username));
+        $row->add(new Label('stnotes', $item->notes));
+        
+    }    
+    
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
