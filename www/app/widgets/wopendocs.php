@@ -18,15 +18,15 @@ class WOpenDocs extends \Zippy\Html\PageFragment {
 
     public function __construct($id) {
         parent::__construct($id);
-  
-        $visible = (strpos(System::getUser()->widgets, 'wopendoc') !== false  || System::getUser()->userlogin == 'admin');
+
+        $visible = (strpos(System::getUser()->widgets, 'wopendoc') !== false || System::getUser()->userlogin == 'admin');
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
 
         // список  запланированных документов
         $where = " state   in( " . Document::STATE_CANCELED . "," . Document::STATE_EDITED . "," . Document::STATE_NEW . ") ";
-         
+
         if ($visible) {
             $data = Document::find($where, "document_date desc");
         }
@@ -49,8 +49,6 @@ class WOpenDocs extends \Zippy\Html\PageFragment {
 
         $row->add(new Label('date', $dt));
         $row->add(new Label('type', $item->meta_desc));
- 
- 
     }
 
 }

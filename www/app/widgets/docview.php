@@ -135,7 +135,7 @@ class DocView extends \Zippy\Html\PageFragment {
     //вывод строки  лога состояний
     public function stateListOnRow($row) {
         $item = $row->getDataItem();
-      //  $row->add(new Label('statehost', $item->hostname));
+        //  $row->add(new Label('statehost', $item->hostname));
         $row->add(new Label('statedate', date('Y.m.d H:i', $item->createdon)));
         $row->add(new Label('stateuser', $item->username));
         $row->add(new Label('statename', Document::getStateName($item->docstate)));

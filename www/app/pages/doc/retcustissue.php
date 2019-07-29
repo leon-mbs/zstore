@@ -363,7 +363,7 @@ class RetCustIssue extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "Customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
     }
 
     public function OnAutoItem($sender) {
