@@ -23,10 +23,71 @@
     </head>
 
     <body>
-        
+           <div class="row">
+            <div class="col-12 col-md-10 col-xl-8">
+
+
+     <h3>Статистика по задачам</h3>    
+       <div class="navbar nav">
+                    <form zippy="filter" class="form-inline ">
+
+                        <label   for="from">С  </label>
+                        <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
+
+
+                        <label for="to">  по  </label>
+                        <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
+                        
+                        <input type="submit" class="mr-2  btn btn-outline-success  " value="ОК">
+                        
 
 
 
+                    </form>
+                </div>
+                  <table data-label="elist" class="table   table-sm     ">
+                  <tr >
+                    <th>Сотрудник</th>
+                    <th class="text-right">Время</th>
+                    <th> </th>
+                  </tr>
+                  <tr zippy="elist">
+                    <td zippy="ename"> </td>
+                    <td zippy="etime" class="text-right"> </td>
+                     <td><a zippy="eshow"><i class="fa fa-eye"></a> </td>
+                  </tr>
+                  <br>
+                  <table data-label="elist" class="table   table-sm     ">
+                  <tr >
+                    <th>Клиент</th>
+                    <th class="text-right">Сумма</th>
+                    <th> </th>
+                  </tr>
+                  <tr zippy="clist">
+                    <td zippy="cname"> </td>
+                    <td zippy="csum" class="text-right"> </td>
+                    <td><a zippy="cshow"><i class="fa fa-eye"></a> </td>
+                  </tr>
+
+                  <div zippy="detailpan">
+                  <h4 zippy="name"></h4>
+                 <table data-label="elist" class="table   table-sm     ">
+                  <tr >
+                    <th>Задача</th>
+                    <th class="text-right">Время</th>
+                    <th class="text-right">Сумма</th>
+                    <th class="text-right">Закрыта</th>
+                   
+                  </tr>
+                  <tr zippy="elist">
+                    <td zippy="dname"> </td>
+                    <td zippy="dtime" class="text-right"> </td>
+                    <td zippy="dsum" class="text-right"> </td>
+                    <td zippy="dsate"  > </td>
+                    </tr>                  
+                  </div>
+                  
+       </div>    </div>
     </body>
 
 </html>
