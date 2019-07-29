@@ -24,6 +24,9 @@ class Stat extends \App\Pages\Base {
             App::RedirectHome();
             return false;
         }
+        
+        
+        
     }
 
 }

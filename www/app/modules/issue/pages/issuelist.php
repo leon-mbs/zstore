@@ -35,15 +35,18 @@ use \App\Entity\User;
  */
 class IssueList extends \App\Pages\Base {
 
+    public $_user;
     public $_issue;
     public $_stlist = array();
+    public $_msglist = array();
+    public $_fileslist = array();
 
     public function __construct($id = 0) {
         parent::__construct();
 
-        $user = System::getUser();
+        $this->_user = System::getUser();
 
-        $allow = (strpos($user->modules, 'issue') !== false || $user->userlogin == 'admin');
+        $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->userlogin == 'admin');
         if (!$allow) {
             System::setErrorMsg('Нет права  доступа  к   модулю ');
             App::RedirectHome();
@@ -102,9 +105,15 @@ class IssueList extends \App\Pages\Base {
     
         $this->msgpan->add(new DataView('stlist', new ArrayDataSource($this,'_stlist'), $this, 'stlistOnRow'));
          
-        $this->msgpan->add(new Form('addmsgform'))->onSubmit('onAddMsg');
+        $this->msgpan->add(new Form('addmsgform'))->onSubmit($this,'onAddMsg');
         $this->msgpan->addmsgform->add(new TextArea('msgdata'));
+        $this->msgpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
+       
+        $this->msgpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
+        $this->msgpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
+        $this->msgpan->add(new DataView('filelist', new ArrayDataSource($this, '_fileslist'), $this, 'fileListOnRow'));
         
+         
         $this->listpan->list->Reload();
         
         $issue = Issue::load($id);
@@ -157,8 +166,8 @@ class IssueList extends \App\Pages\Base {
 
         $this->_issue = $sender->getOwner()->getDataItem();
 
-        $user = System::getUser();
-        if ($user->username != 'admin' && $user->user_id != $this->_issue->createdby) {
+         
+        if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
             $this->setError('Редактировать  может  только  автор или  администатор');
             return;
         }
@@ -185,9 +194,9 @@ class IssueList extends \App\Pages\Base {
         $this->_issue->hours = $sender->edithours->getText();
         $this->_issue->price = $sender->editprice->getText();
         if ($this->_issue->issue_id == 0) {
-            $user = System::getUser();
-            $this->_issue->createdby = $user->user_id;
-            $this->_issue->createdbyname = $user->username;
+             
+            $this->_issue->createdby = $this->_user->user_id;
+            $this->_issue->createdbyname = $this->_user->username;
         }
         $this->_issue->save();
 
@@ -208,7 +217,7 @@ class IssueList extends \App\Pages\Base {
         $this->msgpan->stform->stuser->setValue($this->_issue->user_id);
         $this->msgpan->stform->sthours->setText('0');
         $this->updateStList();       
-       
+        $this->updateMessages();   
     }
     
     public function commentlOnClick($sender) {
@@ -217,11 +226,7 @@ class IssueList extends \App\Pages\Base {
         
     }
 
-    public function updateStList(){
-        $this->_stlist = Helper::getHistory($this->_issue->issue_id);
-        $this->msgpan->stlist->Reload();
-    }
-    
+     
     public function deleteOnClick($sender) {
 
         $issue = $sender->getOwner()->getDataItem();
@@ -233,6 +238,92 @@ class IssueList extends \App\Pages\Base {
         $this->listpan->list->Reload();
     }
     
+ 
+    public function onAddMsg($sender) {
+        $msg = new \App\Entity\Message();
+        $msg->message = $this->msgpan->addmsgform->msgdata->getText();
+        $msg->created = time();
+        $msg->user_id = $this->_user->user_id;
+        $msg->item_id = $this->_issue->issue_id;
+        $msg->item_type = \App\Entity\Message::TYPE_ISSUE;
+        if (strlen($msg->message) == 0)
+            return;
+        $msg->save();
+
+        $this->msgpan->addmsgform->msgdata->setText('');
+        $this->updateMessages();      
+        
+        
+        $this->goAnkor('msgankor'); 
+    }
+     //список   комментариев
+    private function updateMessages() {
+        $this->_msglist = \App\Entity\Message::find('item_type =5 and item_id=' . $this->_issue->issue_id);
+        $this->msgpan->msglist->Reload();
+        $this->_fileslist =  \App\Helper::getFileList($this->_issue->issue_id,5 );
+        $this->msgpan->filelist->Reload();  
+            
+        
+          
+    } 
+      
+    public function msgListOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('msgdate', date("Y-m-d H:i", $item->created)  ));
+        $row->add(new Label('msguser', $item->username));
+        $row->add(new Label('msgdata', $item->message));
+        $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
+        if ($this->_user->username == 'admin' || $this->_user->user_id == $item->user_id) {
+            $row->delmsg->setVisible(true);
+        } else {
+            $row->delmsg->setVisible(false);
+        }
+          
+         
+    }    
+    
+    public function deleteMmsOnClick($sender) {
+        $msg = $sender->getOwner()->getDataItem();  
+        
+        \App\Entity\Message::delete($msg->message_id);
+        $this->updateMessages();  
+    }
+
+    public function OnFileSubmit($sender) {
+
+        $file = $sender->addfile->getFile();
+        if ($file['size'] > 10000000) {
+            $this->getOwnerPage()->setError("Файл больше 10М!");
+            return;
+        }
+
+        \App\Helper::addFile($file, $this->_issue->issue_id ,'',5);
+  
+        $this->updateMessages();
+    }
+   public function filelistOnRow($row) {
+        $item = $row->getDataItem();
+
+        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'loadfile.php?id=' . $item->file_id));
+        $file->setValue($item->filename);
+       // $file->setAttribute('title', $item->description);
+
+        $row->add(new ClickLink('delfile'))->onClick($this, 'deleteFileOnClick');
+
+        if ($this->_user->username == 'admin' || $this->_user->user_id == $this->_issue->createdby) {
+            $row->delfile->setVisible(true);
+        } else {
+            $row->delfile->setVisible(false);
+        }
+   
+   
+   }
+     public function deleteFileOnClick($sender) {
+        $file = $sender->owner->getDataItem();
+         \App\Helper::deleteFile($file->file_id);
+        $this->updateMessages(); 
+    }
+   
     public function onStatus($sender) {
          
         if($sender->id=='ststatusok'){
@@ -241,7 +332,7 @@ class IssueList extends \App\Pages\Base {
              $this->_issue->status = $status;
              $this->_issue->lastupdate = time();
              $this->_issue->save();
-             Helper::addHistory($this->_issue,0,'Статус '.$this->msgpan->stform->ststatus->getValueName());
+             Helper::addHistory($this->_issue->issue_id,0,'Статус '.$this->msgpan->stform->ststatus->getValueName());
              
         } 
         if($sender->id=='stprok'){
@@ -250,13 +341,17 @@ class IssueList extends \App\Pages\Base {
              $this->_issue->priority = $priority;
              $this->_issue->lastupdate = time();
              $this->_issue->save();
-             Helper::addHistory($this->_issue,0,'Приоритет '.$this->msgpan->stform->stpr->getValueName());
+             Helper::addHistory($this->_issue->issue_id,0,'Приоритет '.$this->msgpan->stform->stpr->getValueName());
              
         } 
         
         if($sender->id=='stuserok'){
              $user_id = $this->msgpan->stform->stuser->getValue();
+             if($user_id==0){
+                 return;
+             }
              if($user_id==$this->_issue->user_id)  return;
+             
              $this->_issue->user_id = $user_id;
              $this->_issue->lastupdate = time();
              $this->_issue->save();
@@ -275,36 +370,27 @@ class IssueList extends \App\Pages\Base {
                  Helper::addHistory($this->_issue->issue_id,$hours,"Добавлено время {$hours} ");
                                   
              }
-             
+             $this->msgpan->stform->sthours->setText('');
         } 
         
         $this->updateStList();
         
     }
     
-    public function listOnRow($row) {
+    public function stlistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('sttime', date('Y-m-d',strtotime($item->changed))  ));
+        $row->add(new Label('sttime', date('Y-m-d',$item->changed)  ));
         $row->add(new Label('stuser', $item->username));
         $row->add(new Label('stnotes', $item->notes));
         
     }
     
-    public function onAddMsg($sender) {
-      
-        
-        
-        $this->goAnkor('msgankor'); 
+    public function updateStList(){
+        $this->_stlist = Helper::getHistoryList($this->_issue->issue_id);
+        $this->msgpan->stlist->Reload();
     }
-    
-    public function listMsgOnRow($row) {
-        $item = $row->getDataItem();
-        $row->add(new Label('sttime', date('Y-m-d',strtotime($item->changed))  ));
-        $row->add(new Label('stuser', $item->username));
-        $row->add(new Label('stnotes', $item->notes));
-        
-    }    
-    
+
+       
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);

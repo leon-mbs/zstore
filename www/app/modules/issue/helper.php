@@ -13,36 +13,31 @@ class Helper {
 
     public static function addHistory($issue_id ,$hours,$notes='') {
          $user = \App\System::getUser();
-         
+         $conn = DB::getConnect();
+         $notes = $conn->qstr($notes);
+         $changed = $conn->DBDate(time()); 
+         $sql = "insert  into issue_history (issue_id,changed,user_id,duration,notes) values ({$issue_id},{$changed},{$user->user_id},{$hours},{$notes}) ";
+         $conn->Execute($sql);
+        
     }
-    public static function getHistory($issue_id ) {
+    public static function getHistoryList($issue_id ) {
          $list=array();
-         
+         $conn = DB::getConnect();
+         $sql = "select * from  issue_history_view where issue_id={$issue_id} order  by id";
+         $res = $conn->Execute($sql);
+         foreach($res as $v){
+             $item = new \App\DataItem();
+ 
+             $item->changed  = strtotime($v['changed']);
+             $item->username = $v['username'];
+             $item->notes  = $v['notes'];
+             $list[]= $item;
+         }
          
          return $list;
     }
     
     
-    public static function addFile($file, $itemid) {
-        $conn = DB::getConnect();
-        $filename = $file['name'];
-
-
-        $filename = $conn->qstr($filename);
-        $sql = "insert  into files (item_id,filename,description,item_type) values ({$itemid},{$filename},'',4) ";
-        $conn->Execute($sql);
-        $id = $conn->Insert_ID();
-
-        $data = file_get_contents($file['tmp_name']);
-        $data = $conn->qstr($data);
-        $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
-        $conn->Execute($sql);
-    }
-
-    public static function deleteFile($file_id) {
-        $conn = \ZDB\DB::getConnect();
-        $conn->Execute("delete  from  files  where  file_id={$file_id}");
-        $conn->Execute("delete  from  filesdata  where  file_id={$file_id}");
-    }
-
+ 
+  
 }
