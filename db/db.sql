@@ -18,6 +18,8 @@ CREATE TABLE `customers` (
   `detail` mediumtext NOT NULL,
   `email` varchar(64) DEFAULT NULL,
   `phone` varchar(64) DEFAULT NULL,
+  `status` smallint(4) NOT NULL DEFAULT '0',
+  `city` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
 )  AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -31,6 +33,8 @@ SET character_set_client = utf8;
  1 AS `detail`,
  1 AS `email`,
  1 AS `phone`,
+ 1 AS `status`,
+ 1 AS `city`,
  1 AS `mcnt`,
  1 AS `fcnt`,
  1 AS `ecnt`*/;
@@ -159,7 +163,7 @@ CREATE TABLE `entrylist` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -269,7 +273,7 @@ CREATE TABLE `files` (
   `item_type` int(11) NOT NULL,
   PRIMARY KEY (`file_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `filesdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -291,6 +295,66 @@ CREATE TABLE `images` (
   PRIMARY KEY (`image_id`)
 )  AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `issue_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `issue_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `issue_id` int(11) NOT NULL,
+  `changed` datetime NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `duration` int(11) NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `issue_id` (`issue_id`)
+)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `issue_history_view`;
+/*!50001 DROP VIEW IF EXISTS `issue_history_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `issue_history_view` AS SELECT 
+ 1 AS `id`,
+ 1 AS `issue_id`,
+ 1 AS `changed`,
+ 1 AS `user_id`,
+ 1 AS `duration`,
+ 1 AS `notes`,
+ 1 AS `username`,
+ 1 AS `issue_name`*/;
+SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `issue_issuelist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `issue_issuelist` (
+  `issue_id` int(11) NOT NULL AUTO_INCREMENT,
+  `issue_name` varchar(255) NOT NULL,
+  `content` longtext NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `status` smallint(6) NOT NULL,
+  `priority` tinyint(4) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `lastupdate` datetime DEFAULT NULL,
+  PRIMARY KEY (`issue_id`)
+)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `issue_issuelist_view`;
+/*!50001 DROP VIEW IF EXISTS `issue_issuelist_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `issue_issuelist_view` AS SELECT 
+ 1 AS `issue_id`,
+ 1 AS `issue_name`,
+ 1 AS `content`,
+ 1 AS `customer_id`,
+ 1 AS `status`,
+ 1 AS `priority`,
+ 1 AS `user_id`,
+ 1 AS `lastupdate`,
+ 1 AS `username`,
+ 1 AS `customer_name`,
+ 1 AS `totaltime`*/;
+SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `item_cat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -373,7 +437,7 @@ CREATE TABLE `messages` (
   `item_type` int(11) DEFAULT NULL,
   PRIMARY KEY (`message_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `messages_view`;
 /*!50001 DROP VIEW IF EXISTS `messages_view`*/;
@@ -410,9 +474,8 @@ CREATE TABLE `mfund` (
   `mf_id` int(11) NOT NULL AUTO_INCREMENT,
   `mf_name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `mf_data` varchar(64) NOT NULL,
   PRIMARY KEY (`mf_id`)
-)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_nodes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -508,7 +571,7 @@ CREATE TABLE `notifies` (
   `message` text NOT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -793,6 +856,7 @@ SET character_set_client = utf8;
  1 AS `acl`,
  1 AS `options`,
  1 AS `disabled`,
+ 1 AS `employee_id`,
  1 AS `username`*/;
 SET character_set_client = @saved_cs_client;
 /*!50001 DROP VIEW IF EXISTS `customers_view`*/;
@@ -804,7 +868,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `customers_view` AS select `customers`.`customer_id` AS `customer_id`,`customers`.`customer_name` AS `customer_name`,`customers`.`detail` AS `detail`,`customers`.`email` AS `email`,`customers`.`phone` AS `phone`,(select count(0) from `messages` `m` where ((`m`.`item_id` = `customers`.`customer_id`) and (`m`.`item_type` = 2))) AS `mcnt`,(select count(0) from `files` `f` where ((`f`.`item_id` = `customers`.`customer_id`) and (`f`.`item_type` = 2))) AS `fcnt`,(select count(0) from `eventlist` `e` where ((`e`.`customer_id` = `customers`.`customer_id`) and (`e`.`eventdate` >= now()))) AS `ecnt` from `customers` */;
+/*!50001 VIEW `customers_view` AS select `customers`.`customer_id` AS `customer_id`,`customers`.`customer_name` AS `customer_name`,`customers`.`detail` AS `detail`,`customers`.`email` AS `email`,`customers`.`phone` AS `phone`,`customers`.`status` AS `status`,`customers`.`city` AS `city`,(select count(0) from `messages` `m` where ((`m`.`item_id` = `customers`.`customer_id`) and (`m`.`item_type` = 2))) AS `mcnt`,(select count(0) from `files` `f` where ((`f`.`item_id` = `customers`.`customer_id`) and (`f`.`item_type` = 2))) AS `fcnt`,(select count(0) from `eventlist` `e` where ((`e`.`customer_id` = `customers`.`customer_id`) and (`e`.`eventdate` >= now()))) AS `ecnt` from `customers` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -857,6 +921,32 @@ SET character_set_client = @saved_cs_client;
 /*!50001 CREATE  */
 /*!50013  */
 /*!50001 VIEW `eventlist_view` AS select `e`.`user_id` AS `user_id`,`e`.`eventdate` AS `eventdate`,`e`.`title` AS `title`,`e`.`description` AS `description`,`e`.`notify_id` AS `notify_id`,`e`.`event_id` AS `event_id`,`e`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name` from (`eventlist` `e` left join `customers` `c` on((`e`.`customer_id` = `c`.`customer_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `issue_history_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 CREATE  */
+/*!50013  */
+/*!50001 VIEW `issue_history_view` AS select `h`.`id` AS `id`,`h`.`issue_id` AS `issue_id`,`h`.`changed` AS `changed`,`h`.`user_id` AS `user_id`,`h`.`duration` AS `duration`,`h`.`notes` AS `notes`,`u`.`username` AS `username`,`i`.`issue_name` AS `issue_name` from ((`issue_history` `h` join `users_view` `u` on((`h`.`user_id` = `u`.`user_id`))) join `issue_issuelist` `i` on((`h`.`issue_id` = `i`.`issue_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `issue_issuelist_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 CREATE  */
+/*!50013  */
+/*!50001 VIEW `issue_issuelist_view` AS select `i`.`issue_id` AS `issue_id`,`i`.`issue_name` AS `issue_name`,`i`.`content` AS `content`,`i`.`customer_id` AS `customer_id`,`i`.`status` AS `status`,`i`.`priority` AS `priority`,`i`.`user_id` AS `user_id`,`i`.`lastupdate` AS `lastupdate`,`u`.`username` AS `username`,`c`.`customer_name` AS `customer_name`,coalesce((select sum(`issue_history`.`duration`) from `issue_history` where (`issue_history`.`issue_id` = `i`.`issue_id`)),0) AS `totaltime` from ((`issue_issuelist` `i` left join `users_view` `u` on((`i`.`user_id` = `u`.`user_id`))) left join `customers_view` `c` on((`i`.`customer_id` = `c`.`customer_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1012,7 +1102,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `users_view` AS select `users`.`user_id` AS `user_id`,`users`.`userlogin` AS `userlogin`,`users`.`userpass` AS `userpass`,`users`.`createdon` AS `createdon`,`users`.`email` AS `email`,`users`.`acl` AS `acl`,`users`.`options` AS `options`,`users`.`disabled` AS `disabled`,(case when isnull(`employees`.`emp_name`) then `users`.`userlogin` else `employees`.`emp_name` end) AS `username` from (`users` left join `employees` on((`users`.`userlogin` = `employees`.`login`))) */;
+/*!50001 VIEW `users_view` AS select `users`.`user_id` AS `user_id`,`users`.`userlogin` AS `userlogin`,`users`.`userpass` AS `userpass`,`users`.`createdon` AS `createdon`,`users`.`email` AS `email`,`users`.`acl` AS `acl`,`users`.`options` AS `options`,`users`.`disabled` AS `disabled`,coalesce(`employees`.`employee_id`,0) AS `employee_id`,(case when isnull(`employees`.`emp_name`) then `users`.`userlogin` else `employees`.`emp_name` end) AS `username` from (`users` left join `employees` on(((`users`.`userlogin` = `employees`.`login`) and (`employees`.`disabled` <> 1)))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
