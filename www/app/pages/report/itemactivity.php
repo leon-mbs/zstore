@@ -133,7 +133,7 @@ class ItemActivity extends \App\Pages\Base {
           st.item_id,
           st.itemname,
           st.item_code,
-            st.stock_id,
+            
           date(sc.document_date) AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
@@ -148,6 +148,8 @@ class ItemActivity extends \App\Pages\Base {
               AND DATE(sc.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
               GROUP BY st.item_id,
+          st.itemname,
+          st.item_code,
                        DATE(sc.document_date) ) t
               ORDER BY t.dt  
         ";
