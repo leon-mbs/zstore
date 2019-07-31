@@ -9,6 +9,8 @@
         <div class="row" zippy="listpan">
             <div class="col-12 col-xl-10">
                 <div class="navbar nav">
+                   <h3>Менеджер задач </h3>
+
                     <form zippy="filter" class="form-inline ">
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"  >
 
@@ -46,6 +48,8 @@
                         <th>Название</th>
                         <th>Исполнитель</th>
                         <th>Статус  </th>
+                        <th class="text-right">План, час.</th>
+                        <th class="text-right">Факт, час.  </th>
                         <th>  </th>
                     </tr>   <tbody>
                         <tr zippy="list">
@@ -54,6 +58,8 @@
                             <td zippy="title"></td>
                             <td zippy="issignedto"></td>
                             <td zippy="status"></td>
+                            <td zippy="ptime" class="text-right"></td>
+                            <td zippy="ftime" class="text-right"></td>
                             <td  > 
                                 <a zippy="opencomment"><i class="fa fa-comments"></a>
                                 &nbsp;&nbsp;
@@ -93,7 +99,7 @@
                     <div class="form-group">
                         <label for="edithours">Планируемое время</label>
 
-                        <input style="width:40px" zippy="edithours" pattern="[0-9\.]+" type="text"   class="form-control"   >
+                        <input style="width:60px" zippy="edithours" pattern="[0-9\.]+" type="text"   class="form-control"   >
 
                     </div> 
                     <div class="form-group">

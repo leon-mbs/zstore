@@ -11,12 +11,14 @@ use \ZCL\DB\DB as DB;
  */
 class Helper {
 
-    public static function addHistory($issue_id ,$hours,$notes='') {
+    public static function addHistory($issue_id ,$status,$hours,$notes='') {
          $user = \App\System::getUser();
          $conn = DB::getConnect();
          $notes = $conn->qstr($notes);
-         $changed = $conn->DBDate(time()); 
-         $sql = "insert  into issue_history (issue_id,changed,user_id,duration,notes) values ({$issue_id},{$changed},{$user->user_id},{$hours},{$notes}) ";
+         $createdon = $conn->DBDate(time()); 
+         if($status==null)$status='NULL';
+         if($hours==null)$hours='NULL';
+         $sql = "insert  into issue_history (issue_id,createdon,user_id,duration,notes,status) values ({$issue_id},{$createdon},{$user->user_id},{$hours},{$notes},{$status}) ";
          $conn->Execute($sql);
         
     }
@@ -28,7 +30,7 @@ class Helper {
          foreach($res as $v){
              $item = new \App\DataItem();
  
-             $item->changed  = strtotime($v['changed']);
+             $item->createdon  = strtotime($v['createdon']);
              $item->username = $v['username'];
              $item->notes  = $v['notes'];
              $list[]= $item;
