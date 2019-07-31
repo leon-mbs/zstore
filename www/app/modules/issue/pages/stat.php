@@ -22,7 +22,6 @@ class Stat extends \App\Pages\Base {
     public $_clist = array();
     public $_dlist = array();
     public $_elist = array();
-    private  $_issue;
     
     public function __construct() {
 
@@ -135,24 +134,31 @@ class Stat extends \App\Pages\Base {
     }
      
      public function showOnClick($sender) {
+         $this->filter->setVisible(false);   
          $this->elist->setVisible(false);   
          $this->clist->setVisible(false);   
          $this->detailpan->setVisible(true);
+     
+         $from = $this->filter->from->getDate();
+         $to = $this->filter->to->getDate(true);
          
          $this->_dlist=array();
          $conn = DB::getConnect();
           
-         $this->_item = $sender->getOwner()->getDataItem()  ;
+         $item = $sender->getOwner()->getDataItem()  ;
          
          if(substr($sender->id,0,5) =="eshow"){
-             $this->detailpan->name->setText($this->_item->username);
-             
-             
+             $this->detailpan->name->setText($item->username);
+             $sql="select issue_id,issue_name, price,lastupdate,
+             (select sum(duration) from issue_history where issue_history.user_id ={$item->user_id}  and issue_history.issue_id= issue_issuelist.issue_id  ) as    total
+             from issue_issuelist where  status=1 and    date(lastupdate) >= " . $conn->DBDate($from) . " and  date(lastupdate) <= " . $conn->DBDate($to) ." 
+             having total >0  order  by issue_id";
          }
          
          if(substr($sender->id,0,5)  =="cshow"){
-             $this->detailpan->name->setText($this->_item->customer_name);
-             
+             $this->detailpan->name->setText($item->customer_name);
+               $sql="select issue_id,issue_name,  lastupdate, price as  total  from issue_issuelist  
+               where customer_id ={$item->customer_id} and price>0 and   status=1 and    date(lastupdate) >= " . $conn->DBDate($from) . " and  date(lastupdate) <= " . $conn->DBDate($to) . " order  by issue_id" ;
              
          }
          
@@ -161,10 +167,11 @@ class Stat extends \App\Pages\Base {
              $item = new \App\DataItem();
  
            
-             $item->totaltime = $issue['totaltime'];
+        
+             $item->issue_id = $issue['issue_id'];
              $item->issue_name = $issue['issue_name'];
-             $item->price  = $issue['price'];
-             $item->lastupdate  = $issue['lastupdate'];
+             $item->total  = $issue['total'];
+             $item->lastupdate  =  $issue['lastupdate'];
              $this->_dlist[]= $item;
          }         
          
@@ -175,14 +182,15 @@ class Stat extends \App\Pages\Base {
         $issue = $row->getDataItem();
         $row->add(new Label('did', "#".$issue->issue_id));
         $row->add(new Label('dname', $issue->issue_name));
-        $row->add(new Label('dtime', $issue->totaltime));
-        $row->add(new Label('dprice', $issue->price));
-        $row->add(new Label('dsate', date('Y.m.d',$issue->lastupdate)));
+        
+        $row->add(new Label('dtotal', $issue->total));
+        $row->add(new Label('ddate', date('Y.m.d',strtotime($issue->lastupdate))));
       
         
     }     
      
      public function onBack($sender) {
+         $this->filter->setVisible(true);   
          $this->elist->setVisible(true);   
          $this->clist->setVisible(true);   
          $this->detailpan->setVisible(false);
