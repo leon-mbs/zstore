@@ -68,7 +68,7 @@ class IssueList extends \App\Pages\Base {
         $this->listpan->filter->add(new DropDownChoice('searchstatus', $stlist, -1));
 
 
-        $this->listpan->add(new Form('sort'))->onSubmit($this, 'reload');
+        $this->listpan->add(new Form('sort'))->onSubmit($this, 'onFilter');
         $this->listpan->sort->add(new DropDownChoice('sorttype', array(0 => 'Последние измененные', 1 => 'Дата создания', 2 => 'Приоритет'), 0));
 
 
@@ -155,16 +155,25 @@ class IssueList extends \App\Pages\Base {
         $row->add(new Label('prup'))->setVisible($issue->priority == 1);
         $row->add(new Label('prdown'))->setVisible($issue->priority == -1);
         $st = Issue::getStatusList();
-        $row->add(new Label('status', $st[$issue->status]));
+        $status=$st[$issue->status] ;
+        if($issue->status==Issue::STATUS_NEW) $status='<span class="badge badge-info">'.$status.'</span>';
+        if($issue->status==Issue::STATUS_CLOSED) $status='<span class="badge badge-secondary">'.$status.'</span>';
+        $row->add(new Label('status',$status,true ));
+        $row->add(new Label('ptime', $issue->hours));
+        $row->add(new Label('ftime', $issue->totaltime));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->add(new ClickLink('opencomment'))->onClick($this, 'commentlOnClick');
+        $row->add(new ClickLink('opencomment'))->onClick($this, 'commentOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
     public function editOnClick($sender) {
 
         $this->_issue = $sender->getOwner()->getDataItem();
+        if($this->_issue->status ==Issue::STATUS_CLOSED){
+            $this->setError('Задача  закрыта') ;
+            return;
+        }
 
          
         if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
@@ -220,7 +229,7 @@ class IssueList extends \App\Pages\Base {
         $this->updateMessages();   
     }
     
-    public function commentlOnClick($sender) {
+    public function commentOnClick($sender) {
 
         $this->openIssue($sender->getOwner()->getDataItem());
         
@@ -332,18 +341,25 @@ class IssueList extends \App\Pages\Base {
              $this->_issue->status = $status;
              $this->_issue->lastupdate = time();
              $this->_issue->save();
-             Helper::addHistory($this->_issue->issue_id,0,'Статус '.$this->msgpan->stform->ststatus->getValueName());
-             
+             Helper::addHistory($this->_issue->issue_id,$status,null,'Статус '.$this->msgpan->stform->ststatus->getValueName());
+             $this->updateStList();
+             return;
         } 
+        if($this->_issue->status ==Issue::STATUS_CLOSED){
+            $this->setError('Задача  закрыта') ;
+            return;
+        }        
         if($sender->id=='stprok'){
              $priority = $this->msgpan->stform->stpr->getValue();
              if($priority==$this->_issue->priority)  return;
              $this->_issue->priority = $priority;
              $this->_issue->lastupdate = time();
              $this->_issue->save();
-             Helper::addHistory($this->_issue->issue_id,0,'Приоритет '.$this->msgpan->stform->stpr->getValueName());
+             Helper::addHistory($this->_issue->issue_id,null,null,'Приоритет '.$this->msgpan->stform->stpr->getValueName());
              
         } 
+        
+
         
         if($sender->id=='stuserok'){
              $user_id = $this->msgpan->stform->stuser->getValue();
@@ -355,7 +371,7 @@ class IssueList extends \App\Pages\Base {
              $this->_issue->user_id = $user_id;
              $this->_issue->lastupdate = time();
              $this->_issue->save();
-             Helper::addHistory($this->_issue->issue_id,0,'Переназначена на  '.$this->msgpan->stform->stuser->getValueName());
+             Helper::addHistory($this->_issue->issue_id,null,null,'Переназначена на  '.$this->msgpan->stform->stuser->getValueName());
              
             $n = new \App\Entity\Notify();
             $n->user_id = $user_id;
@@ -367,7 +383,7 @@ class IssueList extends \App\Pages\Base {
        if($sender->id=='sthoursok'){
              $hours = $this->msgpan->stform->sthours->getText();
              if($hours > 0 )  {
-                 Helper::addHistory($this->_issue->issue_id,$hours,"Добавлено время {$hours} ");
+                 Helper::addHistory($this->_issue->issue_id,null,$hours,"Добавлено время {$hours} ");
                                   
              }
              $this->msgpan->stform->sthours->setText('');
@@ -379,7 +395,7 @@ class IssueList extends \App\Pages\Base {
     
     public function stlistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('sttime', date('Y-m-d',$item->changed)  ));
+        $row->add(new Label('sttime', date('Y-m-d',$item->createdon)  ));
         $row->add(new Label('stuser', $item->username));
         $row->add(new Label('stnotes', $item->notes));
         
@@ -396,6 +412,9 @@ class IssueList extends \App\Pages\Base {
         return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
     }
 
+    
+    
+    
 }
 
 class IssueDS implements \Zippy\Interfaces\DataSource {
@@ -415,7 +434,7 @@ class IssueDS implements \Zippy\Interfaces\DataSource {
         $conn = \ZDB\DB::getConnect();
 
         $where = "1=1 ";
-        if ($status == 100)
+        if ($status == -1)
             $where .= " and status <> " . Issue::STATUS_CLOSED;
         if ($status < 100 && $status >= 0)
             $where .= " and status = " . $status;

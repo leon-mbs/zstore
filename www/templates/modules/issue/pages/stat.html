@@ -24,7 +24,7 @@
 
     <body>
            <div class="row">
-            <div class="col-12 col-md-10 col-xl-8">
+            <div class="col-12 col-md-8 col-xl-6">
 
 
      <h3>Статистика по задачам</h3>    
@@ -48,43 +48,49 @@
                   <table data-label="elist" class="table   table-sm     ">
                   <tr >
                     <th>Сотрудник</th>
-                    <th class="text-right">Время</th>
-                    <th> </th>
+                    <th class="text-right"  >Время</th>
+                    <th style="width:30px"> </th>
                   </tr>
                   <tr zippy="elist">
                     <td zippy="ename"> </td>
                     <td zippy="etime" class="text-right"> </td>
                      <td><a zippy="eshow"><i class="fa fa-eye"></a> </td>
                   </tr>
+                  </table>
+                 
                   <br>
                   <table data-label="clist" class="table   table-sm     ">
                   <tr >
                     <th>Клиент</th>
                     <th class="text-right">Сумма</th>
-                    <th> </th>
+                    <th  style="width:30px"> </th>
                   </tr>
                   <tr zippy="clist">
                     <td zippy="cname"> </td>
                     <td zippy="csum" class="text-right"> </td>
                     <td><a zippy="cshow"><i class="fa fa-eye"></a> </td>
                   </tr>
-
+                 </table>
                   <div zippy="detailpan">
+                  <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a>
                   <h4 zippy="name"></h4>
-                 <table data-label="elist" class="table   table-sm     ">
+                 <table   class="table   table-sm     ">
                   <tr >
+                    <th style="width:30px"> </th>
                     <th>Задача</th>
                     <th class="text-right">Время</th>
                     <th class="text-right">Сумма</th>
                     <th class="text-right">Закрыта</th>
                    
                   </tr>
-                  <tr zippy="elist">
+                  <tr zippy="dlist">
+                    <td zippy="did"> </td>
                     <td zippy="dname"> </td>
                     <td zippy="dtime" class="text-right"> </td>
-                    <td zippy="dsum" class="text-right"> </td>
+                    <td zippy="dprice" class="text-right"> </td>
                     <td zippy="dsate"  > </td>
-                    </tr>                  
+                    </tr>
+                   </table>                    
                   </div>
                   
        </div>    </div>
