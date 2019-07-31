@@ -114,11 +114,9 @@ class Base extends \Zippy\Html\WebPage {
 
     public function beforeRender() {
         $user = System::getUser();
-        $cntn = \App\Entity\Notify::isNotify($user->user_id);
-
-        $this->_tvars['bell'] = '<i class="fa fa-bell "></i>';
-        if ($cntn > 0)
-            $this->_tvars['bell'] = '<i class="fa fa-bell text-danger"></i>';
+        $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
+        
+  
     }
 
     protected function afterRender() {

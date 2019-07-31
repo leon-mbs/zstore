@@ -94,23 +94,24 @@ class Helper {
         $textmenu = "";
 
         foreach ($menu as $item) {
-            $textmenu .= "<li class=\"nav-item\"><a class=\"nav-link text-light py-0\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
+            $textmenu .= "<li><a href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
         }
         $i = 1;
         foreach ($groups as $gname => $group) {
             $subm = $meta_type . ($i++);
-            $textmenu .= "<li class=\"nav-item\"> <a class=\"nav-link collapsed py-1 text-light\"     href=\"#{$subm}\" data-toggle=\"collapse\" data-target=\"#{$subm}\">$gname 
+            $textmenu .= "<li class=\"treeview\"> <a href=\"#{$subm}\" data-toggle=\"collapse\" data-target=\"#{$subm}\"><span class=\"pull-right-container\">
+                                    <i class=\"fa fa-angle-left pull-right\"></i>
+                                </span>$gname 
              
             </a>
-            <div class=\"collapse\" id=\"{$subm}\" aria-expanded=\"false\">
-            <ul class=\"flex-column nav pl-4\">";
+            <ul class=\"treeview-menu\">";
 
             foreach ($group as $item) {
-                $textmenu .= "<li  class=\"nav-item\">
-                  <a class=\"nav-link p-1 text-light\"   href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a>
+                $textmenu .= "<li>
+                  <a href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a>
                 </li>";
             }
-            $textmenu .= "</ul></div></li>";
+            $textmenu .= "</ul></li>";
         }
 
         return $textmenu;
