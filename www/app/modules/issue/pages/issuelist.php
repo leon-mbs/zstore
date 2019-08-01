@@ -239,6 +239,19 @@ class IssueList extends \App\Pages\Base {
     public function deleteOnClick($sender) {
 
         $issue = $sender->getOwner()->getDataItem();
+        
+        if($issue->status ==Issue::STATUS_CLOSED){
+            $this->setError('Задача  закрыта') ;
+            return;
+        }
+
+         
+        if ($this->_user->username != 'admin' && $this->_user->user_id != $issue->createdby) {
+            $this->setError('Удалить  может  только  автор или  администатор');
+            return;
+        }        
+        
+        
         $msg = Issue::delete($issue->issue_id);
         if (strlen(msg) > 0) {
             $this->setError($msg);

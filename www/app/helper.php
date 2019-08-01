@@ -57,7 +57,9 @@ class Helper {
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
         $groups = array();
-        $textmenu = "";
+   
+        $arraymenu = array("groups"=>array(),"items"=> array());
+        
         $aclview = explode(',', System::getUser()->aclview);
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
@@ -91,29 +93,28 @@ class Helper {
                 $dir = "Pages/Reference";
                 break;
         }
-        $textmenu = "";
+ 
 
         foreach ($menu as $item) {
-            $textmenu .= "<li class=\"nav-item\"><a class=\"nav-link text-light py-0\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a></li>";
+             
+            $arraymenu['items'][]=array('name'=>$item['description'],'link'=>"/index.php?p=App/{$dir}/{$item['meta_name']}");
+            
         }
         $i = 1;
         foreach ($groups as $gname => $group) {
-            $subm = $meta_type . ($i++);
-            $textmenu .= "<li class=\"nav-item\"> <a class=\"nav-link collapsed py-1 text-light\"     href=\"#{$subm}\" data-toggle=\"collapse\" data-target=\"#{$subm}\">$gname 
-             
-            </a>
-            <div class=\"collapse\" id=\"{$subm}\" aria-expanded=\"false\">
-            <ul class=\"flex-column nav pl-4\">";
-
+              
+            $items = array();
+            
             foreach ($group as $item) {
-                $textmenu .= "<li  class=\"nav-item\">
-                  <a class=\"nav-link p-1 text-light\"   href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a>
-                </li>";
+ 
+                $items[] = array('name'=>$item['description'],'link'=>"/index.php?p=App/{$dir}/{$item['meta_name']}");
             }
-            $textmenu .= "</ul></div></li>";
+            $textmenu .= "</ul></li>";
+            
+            $arraymenu['groups'][] = array('grname'=>$gname,'items'=>$items) ;
         }
 
-        return $textmenu;
+        return $arraymenu;
     }
 
     public static function generateSmartMenu() {

@@ -68,7 +68,7 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
         //если  включен хоть один модуль
-        $this->_tvars["modules"] = $this->_tvars["shop"] || $this->_tvars["issue"] || $this->_tvars["ocstore"] || $this->_tvars["note"];
+       // $this->_tvars["modules"] = $this->_tvars["shop"] || $this->_tvars["issue"] || $this->_tvars["ocstore"] || $this->_tvars["note"];
     }
 
     public function LogoutClick($sender) {
@@ -114,11 +114,9 @@ class Base extends \Zippy\Html\WebPage {
 
     public function beforeRender() {
         $user = System::getUser();
-        $cntn = \App\Entity\Notify::isNotify($user->user_id);
-
-        $this->_tvars['bell'] = '<i class="fa fa-bell "></i>';
-        if ($cntn > 0)
-            $this->_tvars['bell'] = '<i class="fa fa-bell text-danger"></i>';
+        $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
+        
+  
     }
 
     protected function afterRender() {

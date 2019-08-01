@@ -40,10 +40,18 @@ class Issue extends \ZCL\DB\Entity {
      * 
      */
     protected function beforeDelete() {
-
+    
         return '';
     }
+     protected function afterDelete() {
 
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from messages where item_type=".\App\Entity\Message::TYPE_ISSUE." and item_id=" . $this->issue_id);
+        $conn->Execute("delete from files where item_type=".\App\Entity\Message::TYPE_DOC ." and item_id=" . $this->issue_id);
+        $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)"  );
+        
+        
+    }
     protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные  
