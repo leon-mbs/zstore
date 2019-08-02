@@ -31,6 +31,7 @@ class StockList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
+        $this->filter->add(new DropDownChoice('searchstore', Store::getList(), 0));
 
 
         $this->add(new Panel('itempanel'));
@@ -59,7 +60,7 @@ class StockList extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
 
 
-        $row->add(new Label('qty', H::fqty($item->qty)));
+        $row->add(new Label('qty', H::fqty(Item::getQuantity($item->item_id,  $this->filter->searchstore->getValue()))));
 
 
         $row->add(new Label('cat_name', $item->cat_name));
@@ -182,10 +183,14 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
 
 
         $cat = $form->searchcat->getValue();
+        $store = $form->searchstore->getValue();
 
 
         if ($cat > 0) {
             $where = $where . " and cat_id=" . $cat;
+        }
+        if ($store > 0) {
+            $where = $where . " and item_id in (select item_id from store_stock where  store_id={$store}) "  ;
         }
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
@@ -204,6 +209,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
+           
+        
         return Item::find($this->getWhere(), "itemname asc", $count, $start);
     }
 
@@ -226,6 +233,10 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource {
 
         $form = $this->page->filter;
         $where = "item_id = {$this->page->_item->item_id} and  (qty <> 0 or rqty <> 0 or wqty <> 0) ";
+        $store = $form->searchstore->getValue();
+        if ($store > 0) {
+            $where  = $where . " and   store_id={$store}  "  ;
+        }
 
 
         return $where;
