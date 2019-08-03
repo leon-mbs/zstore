@@ -151,19 +151,25 @@
                      <h5  >Коментарии</h5>
                     <table style="width:400px" class="table table-sm">
                         <tr zippy="msglist">
-                            <td><span zippy="msgdate"></span>, <span style="color:navy" zippy="msguser"></span>:
+                            <td> 
+                              <span><b   zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
+                            
                                 <br><span   zippy="msgdata"></span>
+                                
                             </td>
                             <td valign="top"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td> 
                         </tr>
                     </table>
-                    <form zippy="addmsgform" id="msgankor">
+                    <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
                         <label> Коментарий: </label>
                         <div class="form-group">
                             <textarea class="form-control" required="required" zippy="msgdata" style="width:400px;height:120px;"></textarea>
                         </div> 
                         <input class="btn btn-outline-success  " type="submit" value="Добавить">
                     </form>
+              
+              
+                 
                 
                 
                 
