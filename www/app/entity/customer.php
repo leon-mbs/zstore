@@ -66,7 +66,7 @@ class Customer extends \ZCL\DB\Entity {
      * 
      */
     public static function getList() {
-        $row= Customer::findArray("customer_name", "status=". Customer::STATUS_ACTUAL);
+        return Customer::findArray("customer_name", "status=". Customer::STATUS_ACTUAL);
     }
 
     
