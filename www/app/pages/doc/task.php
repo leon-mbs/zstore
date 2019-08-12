@@ -670,7 +670,7 @@ class Task extends \App\Pages\Base {
 
     public function OnAutoItem5($sender) {
         $store_id = $this->docform->store->getValue();
-        $text = trim($this->editdetail5->edititem->getText());
+        $text = trim($this->editdetail5->edititem5->getText());
         return Stock::findArrayAC($store_id, $text);
     }
 

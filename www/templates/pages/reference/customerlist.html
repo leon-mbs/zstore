@@ -4,7 +4,7 @@
 
     <body>
         <div class="row">
-            <div class="col-12 col-lg-10 col-xl-8  ">
+            <div class="col-12   col-xl-10  ">
                 <div zippy="customertable">
                     <h2>Справочник контрагентов </h2>
                     <form zippy="filter" class="form-inline ">
@@ -124,8 +124,8 @@
 
 
         <a name="contentviewlink"></a>
-        <div class="row" zippy="contentview">
-            <div class="col-auto mt-2">
+        <div class="row mt-2" zippy="contentview">
+            <div class="col-4 col-xl-3 ">  
                 <h4> Расписание событий </h4>
                 <table class="table table-sm">
                     <tr zippy="dw_eventlist">
@@ -163,11 +163,13 @@
                     <input class="btn btn-outline-success  " type="submit" value="Добавить">
                 </form>
             </div>
-            <div class="col-auto mt-2">
+            <div class="col-4 col-xl-3 ">  
                 <h4> Коментарии </h4>
                 <table class="table table-sm">
                     <tr zippy="dw_msglist">
-                        <td><span zippy="msgdate"></span>, <span style="color:navy" zippy="msguser"></span>:
+                        <td>
+                        <span><b   zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
+
                             <p zippy="msgdata"></p>
                         </td>
                         <td valign="top" style="width: 30px;"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
@@ -183,7 +185,7 @@
                     <input class="btn btn-outline-success  " type="submit" value="Добавить">
                 </form>
             </div>
-            <div class="col-auto mt-2">  
+            <div class="col-4 col-xl-3 ">  
                 <h4> Прикрепленные файлы </h4>
                 <table class="table table-sm">
                     <tr zippy="dw_files"  >

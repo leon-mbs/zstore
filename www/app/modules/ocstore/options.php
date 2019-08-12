@@ -14,7 +14,7 @@ class Options extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-
+                
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('Нет права доступа к  странице');
 
@@ -28,7 +28,7 @@ class Options extends \App\Pages\Base {
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
         $form->add(new TextArea('key', $modules['ockey']));
-        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['occustomer_id']));
+        $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['occustomer_id']>0 ? $modules['occustomer_id'] :0));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');

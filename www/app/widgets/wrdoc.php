@@ -27,7 +27,7 @@ class WRDoc extends \Zippy\Html\PageFragment {
         $data = array();
 
         if ($visible) {
-            $sql = "select distinct document_id,meta_desc,document_number from docstatelog_view where user_id={$user->user_id} and createdon > " . $conn->DBDate(strtotime("-1 month", time()));
+            $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time()));
 
 
             $rc = $conn->Execute($sql);
@@ -49,11 +49,11 @@ class WRDoc extends \Zippy\Html\PageFragment {
 
     public function doclistOnRow($row) {
         $item = $row->getDataItem();
-
-
-
-
+         
+   
+        $row->add(new Label('date', date('Y.m.d', strtotime($item->document_date))));
         $row->add(new Label('type', $item->meta_desc));
+        $row->add(new Label('amount', $item->amount));
         $row->add(new \Zippy\Html\Link\RedirectLink("number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
     }
 

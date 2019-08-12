@@ -44,11 +44,12 @@ class WOpenDocs extends \Zippy\Html\PageFragment {
     public function doclistOnRow($row) {
         $item = $row->getDataItem();
         $item = $item->cast();
-        $dt = date('d-m-Y', $item->document_date);
+     
         $row->add(new \Zippy\Html\Link\RedirectLink("number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
 
-        $row->add(new Label('date', $dt));
+        $row->add(new Label('date', date('Y.m.d', $item->document_date)));
         $row->add(new Label('type', $item->meta_desc));
+        $row->add(new Label('amount', $item->amount));
     }
 
 }

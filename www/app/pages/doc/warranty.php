@@ -209,7 +209,7 @@ class Warranty extends \App\Pages\Base {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
-        $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->customer_id = $this->docform->customer->getText();
 
 
 
