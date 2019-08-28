@@ -52,17 +52,19 @@ class Base extends \Zippy\Html\WebPage {
         }
 
         $options = System::getOptions('common');
-
-        $this->_tvars["defoptions"] = ($options['defstore'] > 0 && $options['defmf'] > 0 )  == false;
+      
+        if(($options['defstore'] > 0 && $options['defmf'] > 0 )  == false)
+        {
+           $this->setError("Не заданы в <a href=\"/index.php?p=App/Pages/Options\">настройках</a> склад или  касса.");
+        }
         
         $this->_tvars["useset"] = $options['useset'] == 1;
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
+        $this->_tvars["usescanner"] = $common['usescanner'] == 1;
 
         $this->_tvars["smart"] = Helper::generateSmartMenu();
         $this->_tvars["picontent"] = $pi;
-
-
-
+ 
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
@@ -116,7 +118,15 @@ class Base extends \Zippy\Html\WebPage {
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         
-  
+        if (strlen(System::getErrorMsg()) > 0)
+            $this->_tvars['alerterror']= System::getErrorMsg();
+        if (strlen(System::getWarnMsg()) > 0)
+            $this->_tvars['alertwarning']= System::getWarnMsg();
+        if (strlen(System::getSuccesMsg()) > 0)
+            $this->_tvars['alertsuccess']= System::getSuccesMsg();
+        if (strlen(System::getInfoMsg()) > 0)
+            $this->_tvars['alertinfo']= System::getInfoMsg();
+
     }
 
     protected function afterRender() {
