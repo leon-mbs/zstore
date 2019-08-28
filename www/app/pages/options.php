@@ -76,7 +76,7 @@ class Options extends \App\Pages\Base {
         $this->common->useset->setChecked($common['useset']);
         $this->common->usesnumber->setChecked($common['usesnumber']);
         $this->common->useval->setChecked($common['useval']);
-        $this->common->useval->setChecked($common['usescanner']);
+        $this->common->usescanner->setChecked($common['usescanner']);
         // $this->common->closeddate->setDate($common['closeddate']);
 
 

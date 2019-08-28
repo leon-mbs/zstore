@@ -38,6 +38,14 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-10 xol-xl-8">
+                   {{#usescanner}} 
+                    <div class="navbar nav justify-content-start">
+                        Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
+                          &nbsp; &nbsp;<a zippy="addcode"   ></a>
+      
+                    </div>
+                     {{/usescanner}}
+                    <a zippy="addrow">Добавить товар</a>
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
@@ -60,9 +68,11 @@
                             <td zippy="quantity"  class="text-right" ></td>
                             <td zippy="price"  class="text-right" ></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i> <a zippy="delete"><i class="fa fa-trash"></i></a></td>
+                        
+                        
                         </tr>
                     </table>
-                    <a zippy="addrow">Добавить товар</a>
+                  
 
                 </div>
             </div>
@@ -109,7 +119,20 @@
         </div>
 
     </form>
+       <script>
+           $(document).ready(function () {
+  
+                $('#barcode').focus();
+           });
 
+        function onBarCode(ele) {
+               
+            if(event.key === 'Enter' || event.keyCode == 13) {
+               // alert($('#barcode').val()); 
+                $('#addcode').click()       
+            }
+        }
+        </script>
 
 </body>
 
