@@ -173,6 +173,27 @@ class Item extends \ZCL\DB\Entity {
         }
         return 0;
     }
+    
+    /**
+     * возвращает сумму на складах
+     * 
+     * @param mixed $item_id
+     * @param mixed $store_id
+     */
+    public static function getAmount($item_id, $store_id = 0) {
+        if ($item_id > 0) {
+            $conn = \ZDB\DB::getConnect();
+            $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   item_id = {$item_id} ";
+            if ($store_id > 0)
+                $sql .= " and store_id = " . $store_id;
+            $amount = $conn->GetOne($sql);
+            return $amount;
+        }
+        return 0;
+    }
+    
+   
+    
 
     /**
     * генерирует новый артикул

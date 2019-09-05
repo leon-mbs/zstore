@@ -61,6 +61,7 @@ class StockList extends \App\Pages\Base {
 
 
         $row->add(new Label('qty', H::fqty(Item::getQuantity($item->item_id,  $this->filter->searchstore->getValue()))));
+        $row->add(new Label('amount', round(Item::getAmount($item->item_id,  $this->filter->searchstore->getValue()))));
 
 
         $row->add(new Label('cat_name', $item->cat_name));
