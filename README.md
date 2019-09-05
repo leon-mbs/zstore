@@ -19,6 +19,6 @@ Zippy Store
 * модуль онлайн каталога
 * API для  обмена  с другими информационными системами
 
-Домашняя страница:  [http://zippy.com.ua/zstore](http://http://zippy.com.ua/zstore)  
+Домашняя страница:  [http://zippy.com.ua/zstore](https://zippy.com.ua/zstore)  
 
 Требования: PHP7.1+    Mysql 5,0+ 
