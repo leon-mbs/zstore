@@ -118,6 +118,11 @@ class Base extends \Zippy\Html\WebPage {
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         
+        $this->_tvars['alerterror']= "";
+        $this->_tvars['alertwarning']= "";
+        $this->_tvars['alertsuccess']= "";
+        $this->_tvars['alertinfo']=  "";     
+        
         if (strlen(System::getErrorMsg()) > 0)
             $this->_tvars['alerterror']= System::getErrorMsg();
         if (strlen(System::getWarnMsg()) > 0)
@@ -130,22 +135,16 @@ class Base extends \Zippy\Html\WebPage {
     }
 
     protected function afterRender() {
-        if (strlen(System::getErrorMsg()) > 0)
-            App::$app->getResponse()->addJavaScript("toastr.error('" . System::getErrorMsg() . "')        ", true);
-        if (strlen(System::getWarnMsg()) > 0)
-            App::$app->getResponse()->addJavaScript("toastr.warning('" . System::getWarnMsg() . "')        ", true);
-        if (strlen(System::getSuccesMsg()) > 0)
-            App::$app->getResponse()->addJavaScript("toastr.success('" . System::getSuccesMsg() . "')        ", true);
-        if (strlen(System::getInfoMsg()) > 0)
-            App::$app->getResponse()->addJavaScript("toastr.info('" . System::getInfoMsg() . "')        ", true);
-
-
+ 
 
         $this->setError('');
         $this->setSuccess('');
 
         $this->setInfo('');
         $this->setWarn('');
+        
+        
+        
     }
 
     //Перезагрузить страницу  с  клиента
