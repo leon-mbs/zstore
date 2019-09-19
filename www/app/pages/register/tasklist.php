@@ -185,6 +185,8 @@ class TaskList extends \App\Pages\Base {
     }
 
     public function onStatus($sender) {
+        $this->_task = $this->_task->cast();
+        
         if ($sender->id == 'binprocess') {
             $this->_task->updateStatus(Document::STATE_INPROCESS);
         }
