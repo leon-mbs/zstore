@@ -40,7 +40,9 @@ class MoveItem extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('storeto', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new TextInput('notes'));
-
+        $this->docform->add(new TextInput('barcode'));
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick'); 
+ 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -93,6 +95,7 @@ class MoveItem extends \App\Pages\Base {
         $row->add(new Label('price', $item->partion));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+     
     }
 
     public function deleteOnClick($sender) {
@@ -109,7 +112,7 @@ class MoveItem extends \App\Pages\Base {
         if ($this->docform->storefrom->getValue() == 0) {
             $this->setError("Выберите склад источник");
             return;
-        }
+        }        
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->editdetail->edititem->setKey(0);
@@ -272,9 +275,36 @@ class MoveItem extends \App\Pages\Base {
         $text = trim($sender->getText());
         return Stock::findArrayAC($store_id, $text);
     }
-
-    public function beforeRender() {
-        parent::beforeRender();
+ 
+    public function addcodeOnClick($sender) {
+        $code =  trim($this->docform->barcode->getText()) ;
+        $this->docform->barcode->setText('');
+     
+         
+        $store = $this->docform->storefrom->getValue() ;
+        $code = Stock::qstr($code)  ;
+        $item = Stock::getFirst("store_id={$store} and qty > 0  and (item_code = {$code} or bar_code = {$code})","qty desc"  );
+        
+        if($item == null) {
+           $this->setError('Товар не  найден')     ;
+                   return; 
+        }
+  
+        if(!isset($this->_itemlist[$item->stock_id])){
+   
+            $this->_itemlist[$item->stock_id] = $item;
+            $item->quantity=0;
+            
+        }   
+        if($this->_itemlist[$item->stock_id]->quantity == (int)$item->qty) {
+             $this->setError('Больше  нет товаров по цене '. $item->partion)     ;
+                   return; 
+          
+        }
+        $this->_itemlist[$item->stock_id]->quantity  +=1;
+  
+        $this->docform->detail->Reload();
     }
+ }
 
-}
+ 

@@ -12,6 +12,7 @@ use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\SortLink;
 use \App\Entity\Doc\Document;
 use \App\Entity\Customer;
 use \Zippy\Html\Form\AutocompleteTextInput;
@@ -25,6 +26,7 @@ use \App\System;
  */
 class DocList extends \App\Pages\Base {
 
+  
     /**
      *
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
@@ -61,12 +63,22 @@ class DocList extends \App\Pages\Base {
         if (strlen($filter->docgroup) > 0)
             $this->filter->docgroup->setValue($filter->docgroup);
 
+            
+        $this->add(new SortLink("sortdoc","meta_desc",$this,"onSort"));    
+        $this->add(new SortLink("sortnum","document_number",$this,"onSort"));    
+        $this->add(new SortLink("sortdate","document_date",$this,"onSort"));    
+        $this->add(new SortLink("sortcust","customer_name",$this,"onSort"));    
+        $this->add(new SortLink("sortamount","amount",$this,"onSort"));    
+        $this->add(new SortLink("sortstatus","state",$this,"onSort"));    
+            
+            
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(25);
         $filter->page = $this->doclist->setCurrentPage($filter->page);
+        $this->doclist->setSorting('document_date','desc');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
@@ -79,7 +91,7 @@ class DocList extends \App\Pages\Base {
             $doclist->Reload();
         }
 
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->add(new ClickLink('csv', $this, 'oncsv'));  
     }
 
     public function onErase($sender) {
@@ -166,6 +178,27 @@ class DocList extends \App\Pages\Base {
         }
     }
 
+    public function onSort($sender){
+        $sortfield = $sender->fileld;
+        $sortdir = $sender->dir;
+        
+        $this->sortdoc->Reset();
+        $this->sortnum->Reset();
+        $this->sortdate->Reset();
+        $this->sortcust->Reset();
+        $this->sortamount->Reset();
+        $this->sortstatus->Reset();
+        
+        
+        $this->doclist->setSorting($sortfield,$sortdir);
+        
+        
+        $sender->fileld  = $sortfield;
+        $sender->dir  = $sortdir;
+        $this->doclist->Reload();
+        
+    }
+    
     //просмотр
 
     public function showOnClick($sender) {
@@ -262,7 +295,7 @@ class DocList extends \App\Pages\Base {
  *  Источник  данных  для   списка  документов
  */
 class DocDataSource implements \Zippy\Interfaces\DataSource {
-
+     
     private function getWhere() {
         $user = System::getUser();
 
@@ -299,7 +332,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
+        $docs = Document::find($this->getWhere(), $sortfield." " .$asc, $count, $start);
 
         //$l = Traversable::from($docs);
         //$l = $l->where(function ($doc) {return $doc->document_id == 169; }) ;
