@@ -49,22 +49,35 @@
                     <div class="form-check">
                         <input zippy="autoarticle" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="autoarticle">  Автоматически создавать артикулы</label>
+                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Автоматическая  генерация номеров  артикулов длЯ товаров"></i>
+                    </div>                               
+                    <div class="form-check">
+                        <input zippy="usepart" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="usepart">Партионный учет</label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Учет товаров на складе  отдельно по каждой входящей цене. Иначе используется последняя цена"></i>
                     </div>                               
                     <div class="form-check">
                         <input zippy="useset" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="useset">Использовать комплекты для продукции</label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Возможность задать для продукции перечень  комплектующих, из которых она состоит"></i>
                     </div>                               
                     <div class="form-check">
                         <input zippy="usesnumber" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="usesnumber">Использовать учет по  партиям производителя</label>
-                    </div>                               
+                        <label class="form-check-label" for="usesnumber">Использовать учет по сериям  производителя</label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Отдельный учет  по  каждой партии  производителя с  учетом  срока годности"></i>
+                    </div> 
+                    {{#hideblock}}                              
                    <div class="form-check">
                         <input zippy="usescanner" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="usescanner">Поддержка сканера  штрих кодов </label>
-                    </div>                               
+                          <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Использование  сканера  штрих кодов для ввода  товаров в расходной накладной"></i>
+                   </div>
+                   {{/hideblock}}                              
+                                                    
                     <div class="form-check">
                         <input zippy="useval" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="useval">Использовать валюту при закупке</label>
+                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Запоминается текущий курс валют при покупке для поправок отпускной цены при изменении курса"></i>
                     </div>                               
                     <div class="form-group">
                         <label data-label="cdoll" for="cdoll" >Курс доллара</label>

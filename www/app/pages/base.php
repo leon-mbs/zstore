@@ -45,8 +45,9 @@ class Base extends \Zippy\Html\WebPage {
 
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
+      
         $pi = $this->getPageInfo();
-
+        $this->_tvars["picontent"] = $pi;
         if (strlen($pi) == 0) {
             $this->pageinfo->setVisible(false);
         }
@@ -63,15 +64,16 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
 
         $this->_tvars["smart"] = Helper::generateSmartMenu();
-        $this->_tvars["picontent"] = $pi;
+        
  
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
-        //если  включен хоть один модуль
-       // $this->_tvars["modules"] = $this->_tvars["shop"] || $this->_tvars["issue"] || $this->_tvars["ocstore"] || $this->_tvars["note"];
-    }
+        
+        $this->_tvars["hideblock"] = false;
+        
+      }
 
     public function LogoutClick($sender) {
         setcookie("remember", '', 0);
