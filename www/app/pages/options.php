@@ -40,7 +40,7 @@ class Options extends \App\Pages\Base {
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
-        $this->common->add(new CheckBox('usepart'));
+     
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
@@ -75,7 +75,7 @@ class Options extends \App\Pages\Base {
        
         $this->common->autoarticle->setChecked($common['autoarticle']);
         $this->common->useset->setChecked($common['useset']);
-        $this->common->usepart->setChecked($common['usepart']);
+        
         $this->common->usesnumber->setChecked($common['usesnumber']);
         $this->common->useval->setChecked($common['useval']);
         $this->common->usescanner->setChecked($common['usescanner']);
@@ -139,7 +139,7 @@ class Options extends \App\Pages\Base {
        
         $common['autoarticle'] = $this->common->autoarticle->isChecked();
         $common['useset'] = $this->common->useset->isChecked();
-        $common['usepart'] = $this->common->usepart->isChecked();
+       
         $common['usesnumber'] = $this->common->usesnumber->isChecked();
         $common['useval'] = $this->common->useval->isChecked();
         $common['usescanner'] = $this->common->usescanner->isChecked();
