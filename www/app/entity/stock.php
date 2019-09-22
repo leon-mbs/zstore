@@ -28,7 +28,7 @@ class Stock extends \ZCL\DB\Entity {
      * @static
      */
     public static function findArrayAC($store, $partname = "") {
-        $usepart =\App\System::getOption('common' ,'usepart');
+       
         $criteria = "qty <> 0 and disabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $partname = self::qstr('%' . $partname . '%');
@@ -43,13 +43,10 @@ class Stock extends \ZCL\DB\Entity {
                 $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
             }
             
-            if($usepart ==true){
-               $list[$key] = $value->itemname . ', ' .  ($value->partion);
+       
+            $list[$key] = $value->itemname . ', ' .  ($value->partion);
              
-            }  else{
-               $list[$key] = $value->itemname  ;
-  
-            }
+           
         }
 
         return $list;
@@ -64,16 +61,12 @@ class Stock extends \ZCL\DB\Entity {
      * @param mixed $create Создать  если  не   существует
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
-        $usepart =\App\System::getOption('common' ,'usepart');
-  
+      
         $conn = \ZDB\DB::getConnect();
         
-        $where = "store_id = {$store_id} and item_id = {$item_id}   ";            
+        $where = "store_id = {$store_id} and item_id = {$item_id}  and partion = {$price}   ";            
         
-        if($usepart==true) {
-           $where .= "  and partion = {$price} ";    
-        }  
-        
+     
 
         if (strlen($snumber) > 0) {
 
@@ -95,10 +88,7 @@ class Stock extends \ZCL\DB\Entity {
 
             $stock->save();
         }
-        if($usepart == false) {
-                $stock->partion = $price;   //выставляем последнюю цену
-                $stock->save();
-        }  
+     
         return $stock;
     }
 

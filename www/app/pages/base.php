@@ -33,9 +33,7 @@ class Base extends \Zippy\Html\WebPage {
 
 
         $this->add(new ClickLink("pageinfo"));
-
-
-
+ 
 
         $this->_tvars["docmenu"] = Helper::generateMenu(1);
         $this->_tvars["repmenu"] = Helper::generateMenu(2);
