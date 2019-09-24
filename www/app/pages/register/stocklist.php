@@ -90,20 +90,8 @@ class StockList extends \App\Pages\Base {
             }
         }
         $row->add(new Label('partion', $stock->partion));
-        $stock->qty = $stock->qty - $stock->wqty + $stock->rqty;
-        $q = "<span>" . H::fqty($stock->qty) . "</span>";
-        $w = "";
-        if ($stock->wqty > 0) {
-            $w .= "<span class='text-success'>+" . H::fqty($stock->wqty) . "</span>";
-        }
-        if ($stock->rqty > 0) {
-            $w .= "&nbsp;<span class='text-danger'>-" . H::fqty($stock->rqty) . "</span>";
-        }
-        if (strlen($w) > 0) {
-            $q .= "&nbsp;(" . $w . ")";
-        }
-
-        $row->add(new Label('qty', $q, true));
+       
+        $row->add(new Label('qty', H::fqty($stock->qty)));
         $row->add(new Label('amount', round($stock->qty * $stock->partion)));
 
         $item = Item::load($stock->item_id);
@@ -233,7 +221,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource {
 
 
         $form = $this->page->filter;
-        $where = "item_id = {$this->page->_item->item_id} and  (qty <> 0 or rqty <> 0 or wqty <> 0) ";
+        $where = "item_id = {$this->page->_item->item_id} and   qty <> 0   ";
         $store = $form->searchstore->getValue();
         if ($store > 0) {
             $where  = $where . " and   store_id={$store}  "  ;

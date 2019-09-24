@@ -27,15 +27,15 @@ class WWaited extends \Zippy\Html\PageFragment {
         $data = array();
 
 
-        $sql = "select distinct sv.qty, sv.`item_id`,sv.`store_id`, sv.`itemname`,sv.`storename` from `store_stock_view`   sv 
-         where  sv.qty >0  and   
-                 sv.stock_id not  in(select sc.stock_id  
-               from  entrylist_view  sc
-               where sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  
-               and sc.quantity < 0 )  
+        $sql = "select sum( ev.quantity) as qty, sv.`item_id`, sv.`store_id`,  sv.`itemname`, sv.`storename` from
+        `store_stock_view` sv  join entrylist_view ev on ev.stock_id = sv.stock_id
+         where   ev.quantity < 0  and   ev.document_date > cast(now() as date)
+         group by sv.`item_id`, sv.`store_id`,  sv.`itemname`, sv.`storename`
+         order  by  sv.itemname";
+                
                  
                 
-                 ";
+                
 
         if ($visible) {
             $rs = $conn->Execute($sql);
