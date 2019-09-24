@@ -97,18 +97,18 @@ class Task extends Document {
                 $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
                 if ($row['item_id'] > 0) {
                     $sc->setStock($row['stock_id']);
-                    $sc->setCustomer($this->customer_id);
+                   // $sc->setCustomer($this->customer_id);
                 }
                 if ($row['service_id'] > 0) {
                     $sc->setService($row['service_id']);
 
-                    $sc->setCustomer($this->customer_id);
+                    //$sc->setCustomer($this->customer_id);
                 }
 
                 if ($row['employee_id'] > 0) {
-                    $sc = new Entry($this->document_id, $row['pay']);
+                    //$sc = new Entry($this->document_id, $row['pay']);
 
-                    $sc->setEmployee($row['employee_id']);
+                   // $sc->setEmployee($row['employee_id']);
                 }
 
 

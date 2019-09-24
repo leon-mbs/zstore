@@ -52,7 +52,7 @@ class ServiceAct extends Document {
             $sc->setExtCode($row['amount']); //Для АВС 
 
 
-            $sc->setCustomer($this->customer_id);
+            //$sc->setCustomer($this->customer_id);
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {

@@ -79,7 +79,7 @@ class GoodsIssue extends Document {
             $sc->setStock($row['stock_id']);
             $sc->setExtCode($row['price'] - $row['partion']); //Для АВС 
 
-            $sc->setCustomer($this->customer_id);
+          //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
