@@ -2,8 +2,11 @@
     <body>
 
          <div  class="card p-3 mb-3 bg-white  " > 
-            <h4 >Запланированные документы </h4>
-            <small>Документы с  флажком Запланирован ожидающие окончательного проведения</small>
+             <a   data-toggle="collapse" href="#collapsepldocs"   aria-expanded="false" aria-controls="collapseExample">
+           <h4 >Запланированные документы  <i style="font-size:smaller" class="fa fa-angle-down"></i></h4>
+             </a>
+           <small>Документы с  флажком Запланирован ожидающие окончательного проведения</small>
+           <div class="collapse" id="collapsepldocs">
             <table   class="table   table-sm">
                 <tr>
                     <th>Номер</th>
@@ -17,6 +20,6 @@
                 </tr>
             </table>
             <div zippy="plpag"></div>
-        </div>
+        </div>      </div>
     </body>
 </html>

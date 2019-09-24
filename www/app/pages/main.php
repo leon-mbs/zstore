@@ -21,11 +21,15 @@ class Main extends Base {
 
         $this->add(new \App\Widgets\WMinQty("wminqty"));
 
-        $this->add(new \App\Widgets\Wsdate("wsdate"))->setVisible($this->_tvars["usesnumber"]);
+        $this->add(new \App\Widgets\WSdate("wsdate"))->setVisible($this->_tvars["usesnumber"]);
 
-        $this->add(new \App\Widgets\WOpenDocs("wrdoc"));
+        $this->add(new \App\Widgets\WOpenDocs("wopendoc"));
         
-        $this->add(new \App\Widgets\WRDoc("wopendoc"));
+        $this->add(new \App\Widgets\WRDoc("wrdoc"));
+        
+        $this->add(new \App\Widgets\WReserved("wreserved"));
+        
+        $this->add(new \App\Widgets\WWaited("wwaited"));
     }
 
     public function getPageInfo() {

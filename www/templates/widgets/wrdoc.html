@@ -2,8 +2,11 @@
     <body>
 
         <div  class="card p-3 mb-3 bg-white  " >  
-            <h4 >Недавние документы </h4>
+             <a   data-toggle="collapse" href="#collapserdocs"   aria-expanded="false" aria-controls="collapseExample">
+           <h4 >Недавние документы  <i style="font-size:smaller" class="fa fa-angle-down"></i></h4>
             <small>Документы с недавно измененным статусом</small>
+             </a>
+          <div class="collapse" id="collapserdocs">
             <table   class="table   table-sm">
                 <tr>
                     <th>Номер</th>
@@ -20,6 +23,6 @@
                 </tr>
             </table>
 
-        </div>
+        </div>      </div>
     </body>
 </html>

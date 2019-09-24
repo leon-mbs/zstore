@@ -17,7 +17,7 @@ use \App\DataItem;
 /**
  * Виджет для просроченных товаров
  */
-class Wsdate extends \Zippy\Html\PageFragment {
+class WSdate extends \Zippy\Html\PageFragment {
 
     public function __construct($id) {
         parent::__construct($id);

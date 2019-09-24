@@ -2,10 +2,13 @@
     <body>
 
         <div  class="card p-3 mb-3 bg-white  " > 
-            <h4 >Документы к оплате </h4>
-            <small>Документы у которых сумма оплаты меньше суммы документаю Оплату можно
+             <a   data-toggle="collapse" href="#collapsedebitors"   aria-expanded="false" aria-controls="collapseExample">
+           <h4 >Документы к оплате  <i style="font-size:smaller" class="fa fa-angle-down"></i></h4>
+             </a>
+           <small>Документы у которых сумма оплаты меньше суммы документаю Оплату можно
                 добавить в журнале Расчеты с  контрагентами.</small>
-
+            <div class="collapse" id="collapsedebitors">
+ 
             <table   class="table   table-sm">
                 <tr>
                     <th>Номер</th>
@@ -21,6 +24,6 @@
                 </tr>
             </table>
             <div zippy="wdpag"></div>
-        </div>
+        </div>     </div>
     </body>
 </html>

@@ -48,6 +48,8 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editwsdate'));
         $this->editpan->editform->add(new CheckBox('editwrdoc'));
         $this->editpan->editform->add(new CheckBox('editwopendoc' ));
+        $this->editpan->editform->add(new CheckBox('editwwaited' ));
+        $this->editpan->editform->add(new CheckBox('editwreserved' ));
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
@@ -125,6 +127,10 @@ class Users extends \App\Pages\Base {
             $this->editpan->editform->editwrdoc->setChecked(true);
         if (strpos($this->user->widgets, 'wopendoc') !== false)
             $this->editpan->editform->editwopendoc->setChecked(true);
+        if (strpos($this->user->widgets, 'wwaited') !== false)
+            $this->editpan->editform->editwwaited->setChecked(true);
+        if (strpos($this->user->widgets, 'wreserved') !== false)
+            $this->editpan->editform->editwreserved->setChecked(true);
 
         if (strpos($this->user->modules, 'ocstore') !== false)
             $this->editpan->editform->editocstore->setChecked(true);
@@ -202,6 +208,10 @@ class Users extends \App\Pages\Base {
             $widgets = $widgets . ',wrdoc';
         if ($this->editpan->editform->editwopendoc->isChecked())
             $widgets = $widgets . ',wopendoc';
+       if ($this->editpan->editform->editwaited->isChecked())
+            $widgets = $widgets . ',wwaited';
+       if ($this->editpan->editform->editwreserved->isChecked())
+            $widgets = $widgets . ',wreserved';
 
 
         $this->user->widgets = trim($widgets, ',');
