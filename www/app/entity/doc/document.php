@@ -520,7 +520,8 @@ class Document extends \ZCL\DB\Entity {
      * 
      */
     protected function afterDelete() {
-
+        global $logger;
+                
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
         $conn->Execute("delete from paylist where document_id=" . $this->document_id);
@@ -528,6 +529,8 @@ class Document extends \ZCL\DB\Entity {
         $conn->Execute("delete from files where item_type=".\App\Entity\Message::TYPE_DOC ." and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)"  );
         
+        $logger->info("Документ {$this->document_number} удален пользователем ". System::getUser()->userlogin);
+       
     }
 
     /**
