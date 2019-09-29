@@ -208,7 +208,7 @@ class Users extends \App\Pages\Base {
             $widgets = $widgets . ',wrdoc';
         if ($this->editpan->editform->editwopendoc->isChecked())
             $widgets = $widgets . ',wopendoc';
-       if ($this->editpan->editform->editwaited->isChecked())
+       if ($this->editpan->editform->editwwaited->isChecked())
             $widgets = $widgets . ',wwaited';
        if ($this->editpan->editform->editwreserved->isChecked())
             $widgets = $widgets . ',wreserved';
