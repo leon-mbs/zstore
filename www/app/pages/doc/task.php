@@ -148,27 +148,19 @@ class Task extends \App\Pages\Base {
             $this->OnChangeCustomer($this->docform->customer);
 
             foreach ($this->_doc->detaildata as $item) {
-                if ($item["service_id"] > 0) {
-                    $service = new Service($item);
-                    $this->_servicelist[$service->service_id] = $service;
-                }
-                if ($item["item_id"] > 0 && strlen($item["item5_id"]) == 0) {
-                    $stock = new Stock($item);
-                    $this->_itemlist[$stock->stock_id] = $stock;
-                }
-                if ($item["item5_id"] > 0) {
-                    $stock = new Stock($item);
-                    $this->_itemlist5[$stock->stock_id] = $stock;
-                }
-                if ($item["employee_id"] > 0) {
-                    $emp = new Employee($item);
-                    $this->_emplist[$emp->employee_id] = $emp;
-                }
-                if ($item["eq_id"] > 0) {
-                    $eq = new Equipment($item);
-                    $this->_eqlist[$eq->eq_id] = $eq;
-                }
+       
+               $service = new Service($item);
+               $this->_servicelist[$service->service_id] = $service;
+                 
             }
+     
+ 
+            $this->_itemlist = unserialize(base64_decode($this->_doc->headerdata['parts']))  ;
+            $this->_itemlist5 = unserialize(base64_decode($this->_doc->headerdata['items']))   ;
+            $this->_eqlist = unserialize(base64_decode($this->_doc->headerdata['eq']))   ;
+            $this->_emplist = unserialize(base64_decode($this->_doc->headerdata['emp']) )  ;
+       
+        
         } else {
             $this->_doc = Document::create('Task');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -515,26 +507,24 @@ class Task extends \App\Pages\Base {
         foreach ($this->_servicelist as $item) {
             $this->_doc->detaildata[] = $item->getData();
         }
-        foreach ($this->_itemlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
-        foreach ($this->_itemlist5 as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
-        foreach ($this->_eqlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+        
+        $this->_doc->headerdata['parts']  = base64_encode(serialize($this->_itemlist)) ;
+        $this->_doc->headerdata['items']  = base64_encode( serialize($this->_itemlist5)) ;
+        $this->_doc->headerdata['eq']     = base64_encode( serialize($this->_eqlist)) ;
+ 
+   
 
         $total = $this->docform->total->getText();
         $cnt = count($this->_emplist);
-
+        $emplist = array();
         foreach ($this->_emplist as $item) {
             $item->pay = round($total / $cnt); //сумма поровну
-            $this->_doc->detaildata[] = $item->getData();
+            $emplist[] = $item->getData();
         }
+        $this->_doc->headerdata['emp']     =  base64_encode(serialize($emplist)) ;
 
         $isEdited = $this->_doc->document_id > 0;
-        $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->amount = $total;
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
