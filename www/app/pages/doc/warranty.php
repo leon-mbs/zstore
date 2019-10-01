@@ -289,8 +289,8 @@ class Warranty extends \App\Pages\Base {
 
         $item = Item::load($stock->item_id);
         $this->editdetail->editprice->setText($item->getPrice($this->docform->pricetype->getValue(), $stock->price));
-        $qty = $stock->qty - $stock->wqty + $stock->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty));
+         
+        $this->editdetail->qtystock->setText(H::fqty($stock->qty ));
 
 
 

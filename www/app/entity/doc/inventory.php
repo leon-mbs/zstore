@@ -8,10 +8,10 @@ use \App\Entity\Store;
 use \App\Helper as H;
 
 /**
- * Класс-сущность  документ перемещения товаров
+ * Класс-сущность  Инвентаризация    склада
  *
  */
-class MoveItem extends Document {
+class Inventory extends Document {
 
     public function Execute() {
 

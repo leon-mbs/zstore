@@ -257,8 +257,8 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editdetail->edittovar->setText($stock->itemname);
 
         $st = Stock::load($stock->stock_id);  //для актуального 
-        $qty = $st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty));
+         
+        $this->editdetail->qtystock->setText(H::fqty($st->qty));
 
         $this->_rowid = $stock->stock_id;
     }
@@ -456,9 +456,9 @@ class GoodsIssue extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $qty = $stock->qty - $stock->wqty + $stock->rqty;
+         
 
-        $this->editdetail->qtystock->setText(H::fqty($qty));
+        $this->editdetail->qtystock->setText(H::fqty($stock->qty));
 
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
