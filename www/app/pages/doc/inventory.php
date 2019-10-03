@@ -76,7 +76,7 @@ class Inventory extends \App\Pages\Base {
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        $this->OnChangeStore($this->docform->storeto);
+        
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
@@ -91,12 +91,26 @@ class Inventory extends \App\Pages\Base {
 
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', $item->partion));
-        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new Label('qfact', H::fqty($item->qfact)));
+ 
+        $row->add(new ClickLink('plus'))->onClick($this, 'plusOnClick');
+        $row->add(new ClickLink('minus'))->onClick($this, 'minusOnClick');
+  
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
      
     }
-
+    public function plusOnClick($sender) {
+        $item = $sender->owner->getDataItem();
+        $this->_itemlist[$item->item_id]->qfact  +=1;
+  
+        $this->docform->detail->Reload();
+    }
+    public function minusOnClick($sender) {
+        $item = $sender->owner->getDataItem();
+        $this->_itemlist[$item->item_id]->qfact  -=1;
+   
+        $this->docform->detail->Reload();
+    }
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
@@ -119,24 +133,7 @@ class Inventory extends \App\Pages\Base {
          
     }
 
-    public function editOnClick($sender) {
-        $stock = $sender->getOwner()->getDataItem();
-        $this->editdetail->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->editdetail->editquantity->setText($stock->quantity);
-
-
-        $this->editdetail->edititem->setKey($stock->stock_id);
-        $this->editdetail->edititem->setValue($stock->itemname);
-
-        $st = Stock::load($stock->stock_id);  //для актуального 
   
-        $this->editdetail->qtystock->setText(H::fqty($st->qty));
-
-        $this->_rowid = $stock->stock_id;
-    }
-
     public function saverowOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;

@@ -37,11 +37,12 @@
                    {{#usescanner}} 
                     <div class="navbar nav justify-content-start">
                         Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
-                          &nbsp; &nbsp;<a zippy="addcode"   ></a>
+                          &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
       
                     </div>
                      {{/usescanner}}
-                    <a zippy="addrow">Добавить товар</a>
+                   &nbsp; <a zippy="addrow">Добавить товар</a>
+                    
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
@@ -50,8 +51,10 @@
                             <th  >Серия</th>
                             <th  >Дата</th>
                             {{/usesnumber}} 
-                            <th width="40"  class="text-right" >Кол.</th>
-                            <th width="40"  class="text-right" >Цена</th>
+                            <th width="40"  class="text-right" >Кол. </th>
+                            <th width="40"  class="text-right" >Факт</th>
+                          
+                            
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail">
@@ -62,7 +65,12 @@
                             <td zippy="sdate"></td>
                             {{/usesnumber}} 
                             <td zippy="quantity"  class="text-right" ></td>
-                            <td zippy="price"  class="text-right" ></td>
+                            <td   class="text-right" > 
+                            <a zippy="minus"><i class="fa fa-minus"></i></a>
+                               &nbsp;<span zippy="qfact"></span>
+                            &nbsp;<a zippy="plus"><i class="fa fa-plus"></i></a>
+                            </td>
+                          
                             <td><a zippy="edit"><i class="fa fa-edit"></i> <a zippy="delete"><i class="fa fa-trash"></i></a></td>
                         
                         
@@ -93,13 +101,18 @@
                 <div class="form-group">
                     <label for="edititem" >Наименование</label>
                     <input class="form-control" zippy="edititem"  placeholder="Начните вводить  ">
-
-
-                     
-
-
+   
                 </div>
+                 {{#usesnumber}} 
                 <div class="form-group">
+                    <label for="editserial" >Партия поставщика</label>
+                    <div>
+                        <input   type="text" zippy="editserial" class="form-control"
+                                ></input>
+                    </div>
+                </div>
+              {{/usesnumber}} 
+              <div class="form-group">
                     <label for="editquantity" >Количество</label>
                     <div>
                         <input style="width:100px;" type="text" zippy="editquantity" class="form-control"
