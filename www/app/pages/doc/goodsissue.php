@@ -129,8 +129,8 @@ class GoodsIssue extends \App\Pages\Base {
 
 
             foreach ($this->_doc->detaildata as $item) {
-                $stock = new Stock($item);
-                $this->_tovarlist[$stock->stock_id] = $stock;
+                $item = new Item($item);
+                $this->_tovarlist[$item->item_id] = $item;
             }
         } else {
             $this->_doc = Document::create('GoodsIssue');
@@ -170,7 +170,12 @@ class GoodsIssue extends \App\Pages\Base {
                         if ($ttn) {
                             $this->setWarn('У заказа  уже  есть отправка');
                         }
-
+                        
+                        foreach ($order->detaildata as $item) {
+                            $item = new Item($item);
+                            $this->_tovarlist[$item->item_id] = $item;
+                        }
+                        /*
                         foreach ($order->detaildata as $item) {
                             $stlist = Stock::pickup($order->headerdata['store'], $item['item_id'], $item['quantity']);
                             if (count($stlist) == 0) {
@@ -187,6 +192,7 @@ class GoodsIssue extends \App\Pages\Base {
                         if (count($notfound) > 0) {
                             $this->setWarn('Не найдено достаточное количество для  ' . implode(',', $notfound));
                         }
+                        */
                     }
                 }
             }
@@ -220,7 +226,7 @@ class GoodsIssue extends \App\Pages\Base {
 
         $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+      //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
 
     public function deleteOnClick($sender) {
@@ -230,7 +236,7 @@ class GoodsIssue extends \App\Pages\Base {
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -253,14 +259,13 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editdetail->editprice->setText($stock->price);
 
 
-        $this->editdetail->edittovar->setKey($stock->stock_id);
+        $this->editdetail->edittovar->setKey($stock->item_id);
         $this->editdetail->edittovar->setText($stock->itemname);
 
-        $st = Stock::load($stock->stock_id);  //для актуального 
-         
+        
         $this->editdetail->qtystock->setText(H::fqty($st->qty));
 
-        $this->_rowid = $stock->stock_id;
+        $this->_rowid = $stock->item_id;
     }
 
     public function saverowOnClick($sender) {
@@ -271,17 +276,17 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         }
 
-        $stock = Stock::load($id);
+        
         $stock->quantity = $this->editdetail->editquantity->getText();
         $qstock = $this->editdetail->qtystock->getText();
-        if ($stock->quantity > $qstock) {
-            $this->setWarn('Недостаточное  количество на  складе');
-        }
+      //  if ($stock->quantity > $qstock) {
+      //      $this->setWarn('Недостаточное  количество на  складе');
+      //  }
         $stock->price = $this->editdetail->editprice->getText();
 
 
         unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$stock->stock_id] = $stock;
+        $this->_tovarlist[$stock->item_id] = $stock;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -475,6 +480,11 @@ class GoodsIssue extends \App\Pages\Base {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
     }
+    public function OnAutoItem($sender) {
+        $store_id = $this->docform->store->getValue();
+        $text = trim($sender->getText());
+        return Item::findArrayAC($store_id, $text);
+    }
 
     public function OnChangeCustomer($sender) {
         $this->_discount = 0;
@@ -492,12 +502,7 @@ class GoodsIssue extends \App\Pages\Base {
         }
     }
 
-    public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
-        $text = trim($sender->getText());
-        return Stock::findArrayAC($store_id, $text);
-    }
-
+  
     public function OnChangePriceType($sender) {
         foreach ($this->_tovarlist as $stock) {
             $item = Item::load($stock->item_id);

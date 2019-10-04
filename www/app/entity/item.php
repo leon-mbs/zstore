@@ -193,7 +193,39 @@ class Item extends \ZCL\DB\Entity {
     }
     
    
-    
+    /**
+     * Метод  для   получения  имени  ТМЦ   для выпадающих списков
+     *
+     * @param mixed $criteria
+     * @return []
+     * @static
+     */
+    public static function findArrayAC($store, $partname = "") {
+       
+        $criteria = "  disabled <> 1  and item_id in (select item_id from store_stock  where  store_id={$store})" ;
+        
+        if (strlen($partname) > 0) {
+            $partname = self::qstr('%' . $partname . '%');
+            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} or snumber like {$partname} or   bar_code like {$partname} )";
+        }
+
+        $entitylist = self::find($criteria);
+
+        $list = array();
+        foreach ($entitylist as $key => $value) {
+            if (strlen($value->snumber) > 0) {
+                $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
+            }
+            
+       
+            $list[$key] = $value->itemname . ', ' .  ($value->partion);
+             
+           
+        }
+
+        return $list;
+    }
+   
 
     /**
     * генерирует новый артикул
