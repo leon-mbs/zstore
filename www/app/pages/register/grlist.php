@@ -67,7 +67,7 @@ class GRList extends \App\Pages\Base {
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
    
-        $this->filterOnSubmit();
+        $this->filterOnSubmit(null);
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
@@ -86,7 +86,8 @@ class GRList extends \App\Pages\Base {
 
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('amount', $doc->amount));
+        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount>0? $doc->amount:""  )));
+
          $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));

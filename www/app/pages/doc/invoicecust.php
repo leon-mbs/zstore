@@ -306,12 +306,7 @@ class InvoiceCust extends \App\Pages\Base {
         }
           
         
-        $mf = $this->docform->payment->getValue();
-        if($mf==0)  {   //предоплата
-           $this->docform->payamount->setText(0); 
-           $this->docform->editpayamount->setText(0); 
-           $this->_payamount=0;
-        }
+       
         
     }
 

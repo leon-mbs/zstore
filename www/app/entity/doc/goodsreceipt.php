@@ -38,8 +38,9 @@ class GoodsReceipt extends Document {
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->amount
-        );
+            "total" => $this->amount ,
+            "payamount" => $this->payamount
+       );
 
 
         $report = new \App\Report('goodsreceipt.tpl');
@@ -75,9 +76,11 @@ class GoodsReceipt extends Document {
                 $it->save();
             }
         }
+        $this->payed = 0;
+ 
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,1,0-$this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
-            $this->payamount = $this->amount;
+            \App\Entity\Pay::addPayment($this->document_id,1,0-$this->payamount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            $this->payamount = $this->payamount;
         }
 
 

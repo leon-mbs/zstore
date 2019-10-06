@@ -47,8 +47,13 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
-   
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $pa = array('-1'=>'Предоплата','-2'=>'Оплата позже(в долг)');
+         
+        foreach(MoneyFund::getList() as $key=>$value)
+        {
+            $pa[$key]=$value;
+        }
+        $this->docform->add(new DropDownChoice('payment', $pa, H::getDefMF()))->onChange($this, "onMF");
         $this->docform->add(new TextInput('paynotes'));
 
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
@@ -146,7 +151,7 @@ class GoodsReceipt extends \App\Pages\Base {
                 }
             }
         }
-        $this->calcTotal();
+       
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -370,7 +375,7 @@ class GoodsReceipt extends \App\Pages\Base {
         }
         App::RedirectBack();
     }
-   public function onPayAmount() {
+    public function onPayAmount() {
         $mf = $this->docform->payment->getValue();
         if($mf==0)  {    
              $this->setWarn('Указана оплата позже');
@@ -403,13 +408,7 @@ class GoodsReceipt extends \App\Pages\Base {
            $this->docform->editpayamount->setText(round($total));  
         }
           
-        
-        $mf = $this->docform->payment->getValue();
-        if($mf<0)  {   //предоплата или долг
-           $this->docform->payamount->setText(0); 
-           $this->docform->editpayamount->setText(0); 
-           $this->_payamount=0;
-        }        
+             
     }
 
     /**
@@ -479,8 +478,10 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
     }
 
-    protected function getNumberTemplate(){
-         return  'ПН-000001';
-    }    
-    
+       
+    public function beforeRender() {
+        parent::beforeRender();
+
+        $this->calcTotal();
+    }   
 }

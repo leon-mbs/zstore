@@ -77,8 +77,8 @@ class PayCustList extends \App\Pages\Base {
     public function updateCust() {
       
     $sql = "select customer_name,fl,coalesce(sum(am),0) as sam from  (
-            select   customer_name,  ( amount - payamount)  as  am ,(case when meta_name in('GoodsReceipt') then -1 else 1 end) as fl
-            from `documents_view` where amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in('GoodsReceipt','GoodsIssue','Task','ServiceAct')
+            select   customer_name,  ( payamount - payed)  as  am ,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
+            from `documents_view` where payamount > 0 and payamount > payed  and state not in (1,2,3,17)   
 
             ) t   group by customer_name ,fl   order by  (sam) desc";
       $this->_custlist = \App\DataItem::query($sql);  
@@ -110,19 +110,15 @@ class PayCustList extends \App\Pages\Base {
     public function updateDocs() {
      
       if($this->_cust->fl == -1){
-          $docs="'GoodsReceipt','CustInvoice'";
+          $docs="'GoodsReceipt','InvoiceCust'";
       }
       if($this->_cust->fl == 1){
           $docs="'GoodsIssue','Task','ServiceAct','Invoice'";
       }
       
      
-      $sql = "select * from (
-            select d.* ,(amount - payamount) as am
-            from `documents_view` where amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in({$docs}) 
-              
-            ) t  order by am desc  ";  
-      $this->_doclist = \App\Entity\Doc\Document::find("amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in({$docs})","(amount - payamount) desc");  
+      
+      $this->_doclist = \App\Entity\Doc\Document::find("payamount > 0 and payamount  > payed  and state not in (1,2,3,17)  and meta_name in({$docs})","(payamount - payed) desc");  
                       
       $this->plist->doclist->Reload(); 
     } 
@@ -135,9 +131,10 @@ class PayCustList extends \App\Pages\Base {
         $row->add(new Label('date', date('d.m.Y',$doc->document_date)));
 
         
-        $row->add(new Label('amount', $doc->amount));
-        $row->add(new Label('payamount', $doc->amount - $doc->payamount));
+        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount>0? $doc->amount:""  )));
 
+        $row->add(new Label('payamount', $doc->payamount - $doc->payed));
+ 
    
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -182,7 +179,7 @@ class PayCustList extends \App\Pages\Base {
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText($this->_doc->amount - $this->_doc->payamount);
+        $this->paypan->payform->pamount->setText($this->_doc->payamount - $this->_doc->payed);
         ;
         $this->paypan->payform->pcomment->setText("");
         ;
@@ -211,15 +208,15 @@ class PayCustList extends \App\Pages\Base {
         if ($amount == 0)
             return;
        
-        if ($amount > $this->_doc->amount) {
+        if ($amount > $this->_doc->payamount - $this->_doc->payed ) {
             $this->setError('Сумма  больше  необходимой  оплаты');
             return;
         }
 
         $type=  \App\Entity\Pay::PAY_BASE_INCOME;
         //закупки  и возвраты
-        if($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'ReturnIssue'){
-            $amount  = 0 - $amount;
+        if($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'InvoiceCust' || $this->_doc->meta_name == 'ReturnIssue'){
+             $amount  = 0 - $amount;
              $type =  \App\Entity\Pay::PAY_BASE_OUTCOME;
         }
         
