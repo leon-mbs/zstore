@@ -15,7 +15,7 @@ class OutcomeMoney extends Document {
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['payment'],$this->headerdata['type'], $this->notes);
+        Pay::addPayment($this->document_id,1, 0 - $this->amount, $this->headerdata['payment'],$this->headerdata['type'], $this->notes);
 
 
         return true;

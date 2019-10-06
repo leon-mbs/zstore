@@ -4,7 +4,7 @@
 
 
         <form zippy="docform">
-            <h3>Списание на производство </h3>
+            <h3>Счет-фактура  </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -12,12 +12,32 @@
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="store" >Со склада</label>
-                        <select class="form-control" zippy="store">
-                        </select>
-                    </div>
-                
+                        <label for="customer" >Покупатель</label>
+                        <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
+                        <span zippy="discount" style="display:block;font-size:smaller"></span>
+                        <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
 
+                    </div>
+                    <div class="form-group  ">
+                        <label for="phone"  >Телефон</label>
+
+                        <input zippy="phone"   class="form-control" >
+
+                    </div>    
+                    <div class="form-group  ">
+                        <label for="email"  >Email</label>
+
+                        <input zippy="email"   class="form-control" >
+
+                    </div>  
+
+                    <div class="form-group  ">
+                        <label for="notes" >Комментарий </label>
+
+                        <textarea class="form-control"  zippy="notes"></textarea>
+
+
+                    </div> 
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -25,36 +45,40 @@
                         <input class="form-control" type="text" zippy="document_date" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="parea" >Производственный участок</label>
-                        <select class="form-control" zippy="parea">
-                            <option value="0">Не выбран</option>
+                        <label for="store" >Со склада</label>
+                        <select class="form-control" zippy="store">
                         </select>
-                    </div>                    
+                    </div>
+                    <div class="form-group  ">
+                        <label for="pricetype" >Тип  цены</label>
+                        <select class="form-control" zippy="pricetype">
+                        </select>
+                    </div> 
 
                     <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
+                        <label for="delivery"  >Доставка</label>
 
-                        <input class="form-control" type="text" zippy="notes">
+                        <select  class="form-control" zippy="delivery"><option value="0">Выбрать</option></select>
 
+                    </div>
+                    <div class="form-group  ">
+                        <label data-label="address" for="address"  >Адрес</label>
 
-                    </div>       
+                        <input zippy="address"    class="form-control" >
+
+                    </div>           
 
                 </div>
             </div>
             <div class="row">
                 <div class="col-10">
 
-                    <a zippy="addrow">Добавить ТМЦ</a>
-
+                    <a zippy="addrow">Добавить товар</a>
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
                             <th  >Код</th>
                             <th  >Ед.</th>
-                            {{#usesnumber}} 
-                            <th  >Серия</th>
-                            <th  >Дата</th>
-                            {{/usesnumber}} 
 
 
                             <th   class="text-right">Кол.</th>
@@ -68,10 +92,6 @@
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
 
-                            {{#usesnumber}} 
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}} 
 
                             <td zippy="quantity"  class="text-right"></td>
                             <td zippy="price"  class="text-right"></td>
@@ -81,14 +101,7 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-
-                            {{^usesnumber}} 
-                            <td colspan="5" class="text-right">Всего:</td>
-                            {{/usesnumber}} 
-                            {{#usesnumber}} 
-                            <td colspan="7" class="text-right">Всего:</td>
-                            {{/usesnumber}} 
-
+                            <td colspan="5"  class="text-right">Всего:</td>
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
@@ -100,8 +113,9 @@
             <div class="row">
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
-                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-light  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="На  выполнение" class="btn btn-outline-primary  ">
+
 
 
                 </div>
@@ -121,12 +135,12 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity" >Количество</label>
-                        <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"  style="width: 70px;">
+                        <input autocomplete="off" class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"  style="width: 70px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice" >Цена  </label>
-                        <input readonly="readonly" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9]+"
+                        <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9]+"
                                style="width: 70px;">
 
                     </div>
@@ -141,7 +155,28 @@
                 </div>
             </div>
         </form>
+        <form zippy="editcust">
+            <h3>&nbsp;Новый контрагент </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
 
+                    <div class="form-group">
+                        <label for="editcustname">Название </label>
+                        <input  class="form-control "   zippy="editcustname" required="required" />       
+                    </div>
+                    <div class="form-group">
+                        <label for="editcustphone">Телефон</label>
+                        <input class="form-control" type="text" zippy="editcustphone"  ></input>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                        <input type="button"   zippy="cancelcust"          value="Отменить"                                                                                                            class="btn btn-light ">
+                    </div>
+                </div>
+            </div>
+        </form>
 
     </body>
 </html>

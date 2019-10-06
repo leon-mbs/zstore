@@ -45,7 +45,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new Date('sent_date'));
         $this->docform->add(new Date('delivery_date'));
-        $this->docform->add(new CheckBox('planned'));
+     
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
         $this->docform->add(new TextInput('paynotes'));
 
@@ -105,8 +105,7 @@ class GoodsIssue extends \App\Pages\Base {
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-            $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
-
+       
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -334,7 +333,6 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->headerdata['ship_address'] = $this->docform->ship_address->getText();
         $this->_doc->headerdata['ship_number'] = $this->docform->ship_number->getText();
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
-        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();

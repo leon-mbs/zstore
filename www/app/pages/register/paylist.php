@@ -23,7 +23,7 @@ use \App\Application as App;
 use \App\System;
 
 /**
- * журнал расчет  с контрагшентами
+ * журнал платежей
  */
 class PayList extends \App\Pages\Base {
 

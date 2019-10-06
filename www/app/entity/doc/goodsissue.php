@@ -52,7 +52,8 @@ class GoodsIssue extends Document {
             "order" => $this->headerdata["order"],
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
-            "total" => $this->amount
+            "total" => $this->amount ,
+            "payamount" => $this->payamount
         );
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = date('d.m.Y', $this->headerdata["sent_date"]);
@@ -82,9 +83,10 @@ class GoodsIssue extends Document {
           //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }
-        if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_INCOME, $this->headerdata['paynotes']);
-            $this->payamount = $this->amount;
+        if ($this->payamount > 0) {
+            \App\Entity\Pay::addPayment($this->document_id,1,0-$this->payamount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+             
+            $this->payed = $this->payamount;
         }
 
         return true;

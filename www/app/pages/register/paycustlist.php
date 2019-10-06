@@ -110,10 +110,10 @@ class PayCustList extends \App\Pages\Base {
     public function updateDocs() {
      
       if($this->_cust->fl == -1){
-          $docs="'GoodsReceipt'";
+          $docs="'GoodsReceipt','CustInvoice'";
       }
       if($this->_cust->fl == 1){
-          $docs="'GoodsIssue','Task','ServiceAct'";
+          $docs="'GoodsIssue','Task','ServiceAct','Invoice'";
       }
       
      
@@ -223,11 +223,8 @@ class PayCustList extends \App\Pages\Base {
              $type =  \App\Entity\Pay::PAY_BASE_OUTCOME;
         }
         
-        \App\Entity\Pay::addPayment($this->_doc->document_id,   $amount, $form->payment->getValue(),$type, $form->pcomment->getText());
-        $this->_doc->payamount = abs(\App\Entity\Pay::getPaymentAmount($this->_doc->document_id));
-
-
-        $this->_doc->save();
+        \App\Entity\Pay::addPayment($this->_doc->document_id, 0,  $amount, $form->payment->getValue(),$type, $form->pcomment->getText());
+     
 
 
         $this->setSuccess('Оплата добавлена');

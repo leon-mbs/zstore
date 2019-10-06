@@ -67,7 +67,7 @@ class Document extends \ZCL\DB\Entity {
         $this->headerdata = array();
         $this->detaildata = array();
 
-        $this->headerdata['planned'] = 0; //запланированный
+         
     }
 
     /**
@@ -213,10 +213,10 @@ class Document extends \ZCL\DB\Entity {
 
             //удаляем оплату
             if ($this->headerdata['payment'] > 0) {
-                $conn->Execute("delete from paylist where document_id =" . $this->document_id);
-                $this->payamount = 0;
+                $conn->Execute("delete from paylist where indoc=1 and  document_id =" . $this->document_id);
+                $conn->Execute("update documents set payed=0 where   document_id =" . $this->document_id);
+                 
             }
-
             $conn->CompleteTrans();
         } catch (\Exception $ee) {
             global $logger;
@@ -493,7 +493,7 @@ class Document extends \ZCL\DB\Entity {
 
             return "У документа  есть записи в аналитике";
         }
-        $cnt = $conn->GetOne("select  count(*) from paylist where  document_id = {$this->document_id}  ");
+        $cnt = $conn->GetOne("select  count(*) from paylist where paytype=0 and  document_id = {$this->document_id}  ");
         if ($cnt > 0) {
 
             return "У документа  есть оплаты";
@@ -538,11 +538,19 @@ class Document extends \ZCL\DB\Entity {
      * 
      */
     public function canCanceled() {
+        $conn = \ZDB\DB::getConnect();
         $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
             System::setWarnMsg("У документа были отправки или доставки");
             return true;
         }
+        $cnt = $conn->GetOne("select  count(*) from paylist where paytype=0 and  document_id = {$this->document_id}  ");
+        if ($cnt > 0) {
+            System::setWarnMsg("У документа были оплаты");
+
+            return false;
+        }
+        
         return true;
     }
 

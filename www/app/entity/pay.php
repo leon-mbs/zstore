@@ -51,23 +51,18 @@ class Pay extends \ZCL\DB\Entity {
         return $list;
     }
 
-    //возвращает сумму  оплат по документу
-    public static function getPaymentAmount($document_id) {
-        $conn = \ZDB\DB::getConnect();
-
-        $sql = "select coalesce(sum(amount),0) from paylist where document_id=" . $document_id;
-        return $conn->GetOne($sql);
-    }
+  
 
     /**
      * Добавляет платеж
      * 
      * @param mixed $document_id  документ
+     * @param mixed $isdoc  оплата выполнена  документом
      * @param mixed $amount  сумма
      * @param mixed $mf      денежный счет
      * @param mixed $comment коментарий
      */
-    public static function addPayment($document_id, $amount, $mf, $type, $comment = '') {
+    public static function addPayment($document_id,$indoc, $amount, $mf, $type, $comment = '') {
         if (0 == (int) $amount || 0 == (int) $document_id || 0 == $mf)
             return;
         $pay = new \App\Entity\Pay();
@@ -76,10 +71,20 @@ class Pay extends \ZCL\DB\Entity {
         $pay->amount = $amount;
         $pay->paytype = $type;
         $pay->notes = $comment;
+        $pay->indoc = $indoc;
 
 
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
+        
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "select coalesce(sum(amount),0) from paylist where document_id=" . $document_id;
+        $payed= $conn->GetOne($sql);
+        $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
+      
+        
+        
     }
 
     /**

@@ -44,7 +44,7 @@ class GRList extends \App\Pages\Base {
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(1 => 'Не проведенные', 2 => 'Неоплаченые', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array( 0 => 'Все',1 => 'Не проведенные', 2 => 'Неоплаченые'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
@@ -67,7 +67,7 @@ class GRList extends \App\Pages\Base {
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
    
-        $this->doclist->Reload();
+        $this->filterOnSubmit();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
@@ -103,10 +103,7 @@ class GRList extends \App\Pages\Base {
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-
-
-
-
+  
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
@@ -141,8 +138,10 @@ class GRList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
-
-        App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
+        if($doc->meta_name=='GoodsReceipt')
+           App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
+        if($doc->meta_name=='InvoiceCust')
+           App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", $doc->document_id);
     }
 
  
@@ -190,20 +189,17 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and meta_name  = 'GoodsReceipt' ";
-
-
-
-
+        $where .= " and (meta_name  = 'GoodsReceipt' or meta_name  = 'InvoiceCust') ";
+   
         $status = $this->page->filter->status->getValue();
 
         if ($status == 1) {
             $where .= " and  state <>" . Document::STATE_EXECUTED;
         }
         if ($status == 2) {
-            $where .= " and  amount > payamount";
+            $where .= " and  (payamount > 0 and payamount > payed)";
         }
-        if ($status == 3) {
+        if ($status == 0) {
             
         }
 
@@ -211,12 +207,12 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and meta_name  = 'GoodsReceipt' and  content like {$st} ";
+            $where .= " and (meta_name  = 'GoodsReceipt' or meta_name  = 'InvoiceCust') and  content like {$st} ";
         }
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = " meta_name  = 'GoodsReceipt' and document_number like  {$sn} ";
+            $where = " (meta_name  = 'GoodsReceipt' or meta_name  = 'InvoiceCust') and document_number like  {$sn} ";
         }
         if ($user->acltype == 2) {
 

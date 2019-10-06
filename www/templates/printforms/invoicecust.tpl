@@ -1,16 +1,16 @@
-
+ 
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
 
     <tr>
         <td></td>
         <td>Поставщик</td>
-        <td colspan="4">{{customer_name}}</td>
+        <td colspan="5">{{customer_name}}</td>
     </tr>
 
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
-            <br> Накладная № {{document_number}} от {{date}} <br><br>
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
+            <br> Счет входящий № {{document_number}} от {{date}} <br><br>
         </td>
     </tr>
 
@@ -30,7 +30,6 @@
         <td  >{{itemname}}</td>
         <td  >{{itemcode}}</td>
         <td  >{{msr}}</td>
-
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
         <td align="right">{{amount}}</td>
@@ -40,10 +39,11 @@
         <td style="border-top:1px #000 solid;" colspan="6" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-     <tr style="font-weight: bolder;">
+    <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="6" align="right">К оплате:</td>
         <td style="border-top:1px #000 solid;" align="right">{{payamount}}</td>
     </tr>
+
 
 </table>
 

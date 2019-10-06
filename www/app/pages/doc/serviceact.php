@@ -46,7 +46,7 @@ class ServiceAct extends \App\Pages\Base {
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('gar'));
-        $this->docform->add(new CheckBox('planned'));
+ 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
         $this->docform->add(new TextInput('paynotes'));
 
@@ -84,8 +84,7 @@ class ServiceAct extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->headerdata['notes']);
             $this->docform->gar->setText($this->_doc->headerdata['gar']);
-            $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
-            $this->docform->order->setText($this->_doc->headerdata['order']);
+             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_order_id = $this->_doc->headerdata['order_id'];
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
@@ -254,8 +253,7 @@ class ServiceAct extends \App\Pages\Base {
 
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
-        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
-        $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
+         $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
 

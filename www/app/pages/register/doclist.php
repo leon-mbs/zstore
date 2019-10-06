@@ -66,7 +66,7 @@ class DocList extends \App\Pages\Base {
             
         $this->add(new SortLink("sortdoc","meta_desc",$this,"onSort"));    
         $this->add(new SortLink("sortnum","document_number",$this,"onSort"));    
-        $this->add(new SortLink("sortdate","document_date",$this,"onSort"));    
+        $this->add(new SortLink("sortdate","document_id",$this,"onSort"));    
         $this->add(new SortLink("sortcust","customer_name",$this,"onSort"));    
         $this->add(new SortLink("sortamount","amount",$this,"onSort"));    
         $this->add(new SortLink("sortstatus","state",$this,"onSort"));    
@@ -78,7 +78,7 @@ class DocList extends \App\Pages\Base {
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(25);
         $filter->page = $this->doclist->setCurrentPage($filter->page);
-        $this->doclist->setSorting('document_date','desc');
+        $this->doclist->setSorting('document_id','desc');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
@@ -142,12 +142,19 @@ class DocList extends \App\Pages\Base {
         $row->add(new Label('notes', $doc->notes));
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
-        $row->add(new Label('amount', ($doc->amount > 0) ? $doc->amount : ""));
+        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount>0? $doc->amount:""  )));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('hasmsg'     ))->setVisible($doc->mcnt > 0);
         $row->add(new Label('hasfiles'   ))->setVisible($doc->fcnt > 0 || $doc->dcnt > 0);
-        $row->add(new Label('isplanned'  ))->setVisible($doc->headerdata['planned'] == 1);
+        $row->add(new Label('waitpay'   ))->setVisible($doc->payamount >0 && $doc->payamount > $doc->payed);
+ 
+        $date = new \Carbon\Carbon();
+        $date = $date->addDay(1) ;
+        $start = $date->startOfDay()->timestamp;
+         
+ 
+        $row->add(new Label('isplanned'  ))->setVisible($doc->document_date >= $start);
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -158,6 +165,7 @@ class DocList extends \App\Pages\Base {
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
+            $row->waitpay->setVisible(false);
         } else {
             $row->edit->setVisible(false);
             $row->delete->setVisible(false);

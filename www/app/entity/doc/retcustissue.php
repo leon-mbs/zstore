@@ -72,7 +72,7 @@ class RetCustIssue extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,   $this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_INCOME, $this->headerdata['paynotes']);
+            \App\Entity\Pay::addPayment($this->document_id, 1,  $this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_INCOME, $this->headerdata['paynotes']);
             $this->payamount = $this->amount;
         }
 

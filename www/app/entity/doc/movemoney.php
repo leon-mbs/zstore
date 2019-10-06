@@ -16,7 +16,7 @@ class MoveMoney extends Document {
 
 
         Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['mffrom'],0, $this->notes);
-        Pay::addPayment($this->document_id, $this->amount, $this->headerdata['mfto'],0, notes);
+        Pay::addPayment($this->document_id, 1,$this->amount, 1,$this->headerdata['mfto'],0, notes);
 
 
         return true;
