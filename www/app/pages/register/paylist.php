@@ -95,6 +95,7 @@ class PayList extends \App\Pages\Base {
  
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
+        $row->add(new ClickLink('del'))->onClick($this, 'delOnClick');
     }
 
     //просмотр
@@ -108,6 +109,31 @@ class PayList extends \App\Pages\Base {
 
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
+    }
+    public function delOnClick($sender) {
+
+
+       $pl = $sender->getOwner()->getDataItem();
+       $conn = \ZDB\DB::getConnect();
+
+        $sql = "delete from paylist where pl_id=" . $pl->pl_id;
+        $conn->Execute($sql)  ;
+        $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
+        $payed= $conn->GetOne($sql);
+       
+        $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
+    
+        $this->doclist->Reload(true);
+        
+        
+        $n = new \App\Entity\Notify();
+        $n->user_id =  System::getUser()->user_id;
+        $n->message =  "Удален платеж  <br><br>";
+        $n->message .= "Платеж для документа {$pl->document_number} удален пользователем ". System::getUser()->userlogin  ;
+        
+        $n->save();   
+        
+        $this->resetURL();      
     }
 
     public function oncsv($sender) {

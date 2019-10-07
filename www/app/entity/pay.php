@@ -73,8 +73,8 @@ class Pay extends \ZCL\DB\Entity {
         $pay->notes = $comment;
         $pay->indoc = $indoc;
 
-
-        $pay->user_id = \App\System::getUser()->user_id;
+        $admin = \App\Entity\User::getByLogin('admin')  ;
+        $pay->user_id = $admin->user_id;
         $pay->save();
         
         $conn = \ZDB\DB::getConnect();

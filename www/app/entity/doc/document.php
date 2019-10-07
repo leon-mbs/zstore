@@ -534,9 +534,10 @@ class Document extends \ZCL\DB\Entity {
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)"  );
         
         if($hasExecuted){
-        
+            $admin = \App\Entity\User::getByLogin('admin')  ;
+   
             $n = new \App\Entity\Notify();
-            $n->user_id =  System::getUser()->user_id;
+            $n->user_id =  $admin->user_id;
             $n->message =  "Удален документ  <br><br>";
             $n->message .= "Документ {$this->document_number} удален пользователем ". System::getUser()->userlogin  ;
             
