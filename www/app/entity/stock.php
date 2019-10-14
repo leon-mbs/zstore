@@ -116,10 +116,13 @@ class Stock extends \ZCL\DB\Entity {
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item_id, $qty) {
+    public static function pickup($store_id, $item_id, $qty,$snumber="") {
         $res = array();
-        $where = "store_id = {$store_id} and item_id = {$item_id} and qty >0   ";
-        $stlist = self::find($where, 'sdate,stock_id');
+        $where = "store_id = {$store_id} and item_id = {$item_id} and qty > 0   ";
+        if(strlen($snumber)>0){
+              $where .= "snumber=". Stock::qstr($snumber);
+        }
+        $stlist = self::find($where, ' stock_id desc');
         foreach ($stlist as $st) {
             if ($st->qty >= $qty) {
                 $st->quantity = $qty;

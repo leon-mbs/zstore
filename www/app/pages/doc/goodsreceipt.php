@@ -33,7 +33,8 @@ class GoodsReceipt extends \App\Pages\Base {
     private $_basedocid = 0;
     private $_rowid = 0;
      
-    private $_payamount = 0;  // к  оплате
+    
+    private $_manualpay = false;  // если  выставили руками
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -47,13 +48,11 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
-        $pa = array('-1'=>'Предоплата','-2'=>'Оплата позже(в долг)');
-         
-        foreach(MoneyFund::getList() as $key=>$value)
-        {
-            $pa[$key]=$value;
-        }
-        $this->docform->add(new DropDownChoice('payment', $pa, H::getDefMF()))->onChange($this, "onMF");
+           
+        $this->docform->add(new TextInput('barcode'));
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick'); 
+   
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF())) ;
         $this->docform->add(new TextInput('paynotes'));
 
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
@@ -71,6 +70,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new Label('payamount',0));
       
         $this->docform->add(new Label('total'));
+        $this->docform->add(new \Zippy\Html\Form\File('scan'));
+         
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
@@ -86,6 +87,9 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
+        $this->editnewitem->add(new TextInput('editnewitembarcode'));
+        $this->editnewitem->add(new TextInput('editnewitemsnumber'));
+        $this->editnewitem->add(new TextInput('editnewitemsdate'));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
@@ -98,8 +102,7 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->payamount->setText($this->_doc->payamount);
-            $this->_payamount = $this->_doc->payamount;
- 
+       
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
@@ -137,8 +140,7 @@ class GoodsReceipt extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->docform->payamount->setText($basedoc->payamount);
-                        $this->_payamount = $basedoc->payamount;
-                       
+                         
                         $invoice = $basedoc->cast();
 
                       
@@ -159,9 +161,7 @@ class GoodsReceipt extends \App\Pages\Base {
          
     }
 
-    public function onMF($sender) {
-        
-    }
+     
 
     public function onVal($sender) {
         $val = $sender->getValue();
@@ -189,7 +189,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
-
+  
         $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->edit->setVisible($item->old != true);
@@ -225,7 +225,38 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->calcTotal();
         $this->docform->detail->Reload();
     }
-
+ 
+    public function addcodeOnClick($sender) {
+        $code =  trim($this->docform->barcode->getText()) ;
+        $this->docform->barcode->setText('');
+        if($code=='') return;
+        
+        foreach($this->_itemlist as $_item){
+             if($_item->bar_code==$code){
+                $this->_itemlist[$_item->item_id]->quantity += 1; 
+                $this->docform->detail->Reload();
+                $this->calcTotal();                
+                return;
+             }
+        }
+        
+        
+        $code = Item::qstr($code)  ;
+        $item = Item::getFirst("  (item_code = {$code} or bar_code = {$code})"  );
+   
+        $this->editdetail->setVisible(true);
+        $this->docform->setVisible(false);
+        $this->_rowid = 0;    
+        
+        if($item == null) {
+           $this->setWarn('Товар не  найден')     ;
+        } else {
+           $this->editdetail->edititem->setKey($item->item_id);
+           $this->editdetail->edititem->setText($item->itemname);
+        }       
+          
+    }    
+    
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
@@ -293,11 +324,19 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->payamount = $this->docform->payamount->getText();
-         if ($this->checkForm() == false) {
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+    
+        if ($this->checkForm() == false) {
             return;
         }
 
-        
+        $file = $this->docform->scan->getFile();
+        if ($file['size'] > 10000000) {
+            $this->setError("Файл больше 10М!");
+            return;
+        }         
 
         $common = System::getOptions("common");
         foreach ($this->_itemlist as $item) {
@@ -324,10 +363,7 @@ class GoodsReceipt extends \App\Pages\Base {
         }
 
 
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
-   
+    
   
 
         $this->_doc->detaildata = array();
@@ -363,7 +399,9 @@ class GoodsReceipt extends \App\Pages\Base {
                 $this->_doc->AddConnectedDoc($this->_basedocid);
                 $this->_basedocid = 0;
             }
-
+            if ($file['size'] > 0) {
+                H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+            }   
             $conn->CommitTrans();
         } catch (\Exception $ee) {
             global $logger;
@@ -375,14 +413,12 @@ class GoodsReceipt extends \App\Pages\Base {
         }
         App::RedirectBack();
     }
+    
     public function onPayAmount() {
-        $mf = $this->docform->payment->getValue();
-        if($mf==0)  {    
-             $this->setWarn('Указана оплата позже');
-             return ;
-        }
-        $this->_payamount = (int) $this->docform->editpayamount->getText(); 
-        $this->docform->payamount->setText($this->_payamount); 
+ 
+      $this->_manualpay = true;
+      $this->docform->payamount->setText($this->docform->editpayamount->getText());      
+       
     }
     /**
      * Расчет  итого
@@ -399,15 +435,11 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->total->setText(round($total));
         
         
-    ///если не менялось руками  то  берем  с таблицы
-        if($this->_payamount>0){
-           $this->docform->payamount->setText(round($this->_payamount)); 
-           $this->docform->editpayamount->setText(round($this->_payamount)); 
-        }   else{
-           $this->docform->payamount->setText(round($total)); 
-           $this->docform->editpayamount->setText(round($total));  
-        }
-          
+        ///если не менялось руками  то  берем  с таблицы
+        if($this->_manualpay == false){
+           $this->docform->editpayamount->setText(round($total));      
+           $this->docform->payamount->setText(round($total));      
+        } 
              
     }
 
@@ -428,7 +460,9 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран  поставщик");
         }
-
+        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payment'] == 0){
+            $this->setError("Не указан  способ  оплаты");
+        }
         return !$this->isError();
     }
 
@@ -452,8 +486,12 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
 
-        $this->editnewitem->editnewitemname->setText('');
-        $this->editnewitem->editnewitemcode->setText('');
+        $this->editnewitem->clean();
+         
+        
+        if(System::getOption("common","autoarticle")==1)  {
+            $this->editnewitem->editnewitemcode->setText(Item::getNextArticle()) ;
+        }        
     }
 
     public function savenewitemOnClick($sender) {

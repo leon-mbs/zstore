@@ -161,13 +161,16 @@ class Item extends \ZCL\DB\Entity {
      * 
      * @param mixed $item_id
      * @param mixed $store_id
+     * @param mixed $snumber   партия проиводителя
      */
-    public static function getQuantity($item_id, $store_id = 0) {
+    public static function getQuantity($item_id, $store_id = 0,$snumber="") {
         if ($item_id > 0) {
             $conn = \ZDB\DB::getConnect();
             $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock_view where   item_id = {$item_id} ";
             if ($store_id > 0)
                 $sql .= " and store_id = " . $store_id;
+           if (strlen($snumber) > 0)
+                $sql .= " and  snumber = " . $conn->qstr($snumber);
             $cnt = $conn->GetOne($sql);
             return $cnt;
         }
@@ -206,21 +209,16 @@ class Item extends \ZCL\DB\Entity {
         
         if (strlen($partname) > 0) {
             $partname = self::qstr('%' . $partname . '%');
-            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} or snumber like {$partname} or   bar_code like {$partname} )";
+            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname}   or   bar_code like {$partname} )";
         }
 
         $entitylist = self::find($criteria);
-
+ 
         $list = array();
         foreach ($entitylist as $key => $value) {
-            if (strlen($value->snumber) > 0) {
-                $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
-            }
+         
+            $list[$key] = $value->itemname  ;
             
-       
-            $list[$key] = $value->itemname . ', ' .  ($value->partion);
-             
-           
         }
 
         return $list;

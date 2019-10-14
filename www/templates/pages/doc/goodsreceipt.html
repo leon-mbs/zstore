@@ -5,7 +5,7 @@
     <body>
 
 
-        <form zippy="docform">
+        <form zippy="docform" enctype="multipart/form-data">
             <h3> Приходная накладная </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
@@ -13,7 +13,7 @@
                         <label for="document_number" >Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
-            <div class="form-group">
+                    <div class="form-group">
                         <label for="document_date" > Дата</label>
                         <input class="form-control" type="text" zippy="document_date" required="required">
                     </div>
@@ -23,10 +23,6 @@
                         <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
 
                     </div>
-
-                  
-
-                                    
 
                     <div class="form-group  ">
                         <label for="notes" >Примечание </label>
@@ -46,7 +42,9 @@
                     <div class="form-group  ">
                         <label for="payment" >Оплата</label>
                         <select class="form-control" zippy="payment">
-                        </select>
+                             <option value="0">Не выбрано</option>
+                        </select> 
+                        <small>При предлоплате сумма  к оплате должна быть 0</small>
                     </div> 
 
                     <div class="form-group">
@@ -65,7 +63,14 @@
             </div>
             <div class="row">
                 <div class="col-10  col-lg-8">
-                    <a zippy="addrow">Добавить позицию</a>
+                     {{#usescanner}} 
+                    <div class="navbar nav justify-content-start">
+                        Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
+                          &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
+      
+                    </div>
+                     {{/usescanner}}
+                   &nbsp;<a zippy="addrow">Добавить позицию</a>
                     <table class="table  table-sm">
                         <tr>
 
@@ -92,7 +97,8 @@
                             <td zippy="snumber"></td>
                             <td zippy="sdate"></td>
                             {{/usesnumber}} 
-                            <td zippy="quantity" class="text-right"></td>
+                            <td  class="text-right" zippy="quantity">  </td>
+ 
                             <td zippy="price" class="text-right"></td>
 
                             <td zippy="amount" class="text-right"></td>
@@ -121,6 +127,14 @@
 
                 </div>
             </div>
+              <div class="row">
+               <div class="col-12 col-md-4">
+                <div class="form-group">
+                    <label for="scan" > &nbsp; &nbsp;Скан документа</label>
+                    <input class="form-control" type="file" zippy="scan"  >
+                </div>
+               </div>
+            </div>           
             <div class="row">
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
@@ -216,8 +230,23 @@
                         <label for="editnewitemcode">Код</label>
                         <input class="form-control" type="text" zippy="editnewitemcode"  ></input>
                     </div>
+                    <div class="form-group">
+                        <label for="editnewitembarcode">Нтрих код</label>
+                        <input class="form-control" type="text" zippy="editnewitembarcode"  ></input>
+                    </div>
 
+                        {{#usesnumber}} 
+                    <div class="form-group">
+                        <label for="editnewitemsnumber">Серия производителя </label>
+                        <input   class="form-control "   zippy="editnewitemsnumber" />
 
+                    </div>
+                    <div class="form-group">
+                        <label for="editnewitemsdate">Дата выпуска серии </label>
+                        <input   class="form-control "   zippy="editnewitemsdate" />
+
+                    </div>
+                    {{/usesnumber}} 
                     <div class="form-group">
                         <input zippy="savenewitem" type="submit" value="Сохранить" class="btn btn-outline-primary">
                         <input type="button"   zippy="cancelnewitem"          value="Отменить"                                                                                                            class="btn btn-light ">
@@ -226,7 +255,20 @@
             </div>
         </form>
 
+     <script>
+           $(document).ready(function () {
+  
+                $('#barcode').focus();
+           });
 
+        function onBarCode(ele) {
+               
+            if(event.key === 'Enter' || event.keyCode == 13) {
+               // alert($('#barcode').val()); 
+                $('#addcode').click()       
+            }
+        }
+        </script>
 
     </body>
 </html>

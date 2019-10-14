@@ -222,10 +222,11 @@ class Helper {
     public static function addFile($file, $itemid, $comment, $itemtype = 0) {
         $conn = DB::getConnect();
         $filename = $file['name'];
-
+        $imagedata = getimagesize($file["tmp_name"]);
+        
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
-        $sql = "insert  into files (item_id,filename,description,item_type) values ({$itemid},{$filename},{$comment},{$itemtype}) ";
+        $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$imagedata['mime']}') ";
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 
@@ -250,6 +251,7 @@ class Helper {
             $item->file_id = $row['file_id'];
             $item->filename = $row['filename'];
             $item->description = $row['description'];
+            $item->mime = $row['mime'];
 
 
             $list[] = $item;
@@ -276,7 +278,7 @@ class Helper {
      */
     public static function loadFile($file_id) {
         $conn = \ZDB\DB::getConnect();
-        $rs = $conn->Execute("select filename,filedata from files join filesdata on files.file_id = filesdata.file_id  where files.file_id={$file_id}  ");
+        $rs = $conn->Execute("select filename,filedata,mime from files join filesdata on files.file_id = filesdata.file_id  where files.file_id={$file_id}  ");
         foreach ($rs as $row) {
             return $row;
         }

@@ -42,7 +42,6 @@ class ItemList extends \App\Pages\Base {
         $this->itemtable->itemlist->setPageSize(25);
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->itemlist));
 
-
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
         $this->itemdetail->add(new TextInput('editprice1'));

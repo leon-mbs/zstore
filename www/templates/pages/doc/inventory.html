@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-10 xol-xl-8">
+                <div class="col-12 col-md-8 col-xl-6">
                    {{#usescanner}} 
                     <div class="navbar nav justify-content-start">
                         Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
@@ -46,20 +46,22 @@
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
-                            <th>Ед.</th>
+                      
                             {{#usesnumber}} 
                             <th  >Серия</th>
                             <th  >Дата</th>
                             {{/usesnumber}} 
                             <th width="40"  class="text-right" >Кол. </th>
-                            <th width="40"  class="text-right" >Факт</th>
+                            <th   class="text-right" > </th>
+                            <th width="40"  class="text-center" >Факт</th>
+                            <th   class="text-left" > </th>
                           
                             
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
-                            <td zippy="msr"></td>
+                          
                             {{#usesnumber}} 
                             <td zippy="snumber"></td>
                             <td zippy="sdate"></td>
@@ -67,11 +69,15 @@
                             <td zippy="quantity"  class="text-right" ></td>
                             <td   class="text-right" > 
                             <a zippy="minus"><i class="fa fa-minus"></i></a>
-                               &nbsp;<span zippy="qfact"></span>
-                            &nbsp;<a zippy="plus"><i class="fa fa-plus"></i></a>
-                            </td>
+                              </td>
+                              <td   class="text-center" >
+                              <span zippy="qfact"></span>
+                              </td> 
+                            <td   class="text-left" > 
+                            <a zippy="plus"><i class="fa fa-plus"></i></a>
+                            &nbsp;</td>
                           
-                            <td><a zippy="edit"><i class="fa fa-edit"></i> <a zippy="delete"><i class="fa fa-trash"></i></a></td>
+                            <td>  <a zippy="delete"><i class="fa fa-trash"></i></a></td>
                         
                         
                         </tr>

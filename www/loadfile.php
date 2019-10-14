@@ -21,9 +21,15 @@ require_once 'init.php';
         }
         $size = strlen($file['filedata']);
         if ($size > 0) {
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename=' . $file['filename']);
-            header('Content-Transfer-Encoding: binary');
+            if(strlen($file['mime']) >0 && $_REQUEST['im']>0){
+                 header('Content-Type:  '.$file['mime']);    
+            }
+            else {
+              header('Content-Type: application/octet-stream');
+              header('Content-Disposition: attachment; filename=' . $file['filename']);
+              header('Content-Transfer-Encoding: binary');
+            }
+           
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Pragma: public');

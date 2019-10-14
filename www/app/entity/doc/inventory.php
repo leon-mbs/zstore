@@ -18,23 +18,38 @@ class Inventory extends Document {
 
 
         $conn = \ZDB\DB::getConnect();
-
-        foreach ($this->detaildata as $value) {
-
+        
+        
+        foreach ($this->detaildata as $item) {
+            if($item['quantity'] == $item['qfact'])
+            {
+                continue;
+            }
             //списываем  со склада
-            $stockfrom = $value['stock_id'];
-            $sc = new Entry($this->document_id, 0 - ($value['quantity'] * $value['partion']), 0 - $value['quantity']);
-            $sc->setStock($stockfrom);
-
-
-            $sc->save();
-
-            $stockto = Stock::getStock($this->headerdata['storeto'], $value['item_id'], $value['partion'], $value['snumber'], $value['sdate'], true);
-            $sc = new Entry($this->document_id, $value['quantity'] * $value['partion'], $value['quantity']);
-            $sc->setStock($stockto->stock_id);
-
-
-            $sc->save();
+            if($item['quantity'] > $item['qfact']){
+                $qty=  $item['quantity'] - $item['qfact'];
+                $listst = Stock::pickup($this->headerdata['store'],$item['item_id'],$qty,$item['snumber'])    ;
+                foreach($listst as $st){
+                      $sc = new Entry($this->document_id, 0-$st->quantity * $stock->partion, 0-$st->quantity );
+                      $sc->setStock($st->stock_id);
+                      $sc->save();                
+                }
+            }
+            //оприходуем
+            if($item['quantity'] < $item['qfact']){
+                 $qty=  $item['qfact'] - $item['quantity'];
+                 $where = "store_id=".$this->headerdata['store']." and item_id=".$item['item_id']; 
+                
+                 $stock = Stock::getFirst($where,"store_id desc") ;
+              
+                 $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
+                 $sc->setStock($stock->stock_id);
+                 $sc->save();                 
+                 
+                 
+            }
+            
+       
         }
 
 
@@ -52,25 +67,22 @@ class Inventory extends Document {
         $detail = array();
         foreach ($this->detaildata as $value) {
             $name = $value['itemname'];
-            if (strlen($value['snumber']) > 0) {
-                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
-            }
-
+ 
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
-                "price" => $value['partion'],
-                "msr" => $value['msr'],
+                "qfact" => $value['qfact'],
+                "snumber" => $value['snumber'],
                 "quantity" => H::fqty($value['quantity']));
         }
 
         $header = array(
             "_detail" => $detail,
             'date' => date('d.m.Y', $this->document_date),
-            "from" => $this->headerdata["storefromname"],
-            "to" => $this->headerdata["storetoname"],
+            "store" => $this->headerdata["storename"],
+            
             "document_number" => $this->document_number
         );
-        $report = new \App\Report('moveitem.tpl');
+        $report = new \App\Report('inventory.tpl');
 
         $html = $report->generate($header);
 
@@ -78,7 +90,7 @@ class Inventory extends Document {
     }
 
     protected function getNumberTemplate(){
-         return  'ДТ-000000';
+         return  'ИН-000000';
     }      
 
 }
