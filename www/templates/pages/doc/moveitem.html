@@ -37,11 +37,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-10 xol-xl-8">
+                <div class="col-12 col-md-8 xol-xl-6">
                    {{#usescanner}} 
                     <div class="navbar nav justify-content-start">
                         Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
-                          &nbsp; &nbsp;<a zippy="addcode"   ></a>
+                        &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
+      
       
                     </div>
                      {{/usescanner}}
@@ -52,10 +53,10 @@
                             <th>Ед.</th>
                             {{#usesnumber}} 
                             <th  >Серия</th>
-                            <th  >Дата</th>
+                      
                             {{/usesnumber}} 
                             <th width="40"  class="text-right" >Кол.</th>
-                            <th width="40"  class="text-right" >Цена</th>
+                          
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail">
@@ -63,7 +64,7 @@
                             <td zippy="msr"></td>
                             {{#usesnumber}} 
                             <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
+                          
                             {{/usesnumber}} 
                             <td zippy="quantity"  class="text-right" ></td>
                             <td zippy="price"  class="text-right" ></td>
@@ -98,11 +99,20 @@
                     <label for="edititem" >Наименование</label>
                     <input class="form-control" zippy="edititem"  placeholder="Начните вводить  ">
 
+               
+                      Наличие <span zippy="qtystock"></span>
+                   
 
-                    Наличие <span zippy="qtystock"></span>
-
-
+                </div> 
+              {{#usesnumber}} 
+                <div class="form-group">
+                    <label for="editsnumber" >Партия поставщика</label>
+                    <div>
+                        <input   type="text" zippy="editsnumber" class="form-control"
+                                ></input>
+                    </div>
                 </div>
+              {{/usesnumber}} 
                 <div class="form-group">
                     <label for="editquantity" >Количество</label>
                     <div>

@@ -30,7 +30,7 @@ class Inventory extends Document {
                 $qty=  $item['quantity'] - $item['qfact'];
                 $listst = Stock::pickup($this->headerdata['store'],$item['item_id'],$qty,$item['snumber'])    ;
                 foreach($listst as $st){
-                      $sc = new Entry($this->document_id, 0-$st->quantity * $stock->partion, 0-$st->quantity );
+                      $sc = new Entry($this->document_id, 0-$st->quantity * $st->partion, 0-$st->quantity );
                       $sc->setStock($st->stock_id);
                       $sc->save();                
                 }
@@ -40,7 +40,7 @@ class Inventory extends Document {
                  $qty=  $item['qfact'] - $item['quantity'];
                  $where = "store_id=".$this->headerdata['store']." and item_id=".$item['item_id']; 
                 
-                 $stock = Stock::getFirst($where,"store_id desc") ;
+                 $stock = Stock::getFirst($where,"store_id desc") ;  //последняя цена
               
                  $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
                  $sc->setStock($stock->stock_id);

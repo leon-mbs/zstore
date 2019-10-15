@@ -324,7 +324,10 @@ class Document extends \ZCL\DB\Entity {
             $this->Cancel();
         }
         if ($state == self::STATE_EXECUTED) {
-            $this->Execute();
+           if(false ==  $this->Execute()){
+               $this->Cancel();
+               return;
+           }
         }
 
         $this->state = $state;

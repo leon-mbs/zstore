@@ -123,9 +123,9 @@ class Inventory extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         $item = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$item->item_id]);
+        $id=$item->item_id . $item->snumber; 
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->stock_id => $this->_itemlist[$item->stock_id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
         $this->docform->detail->Reload();
     }
 
