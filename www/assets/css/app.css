@@ -18,12 +18,12 @@ body {
 }
 
 .ctable td {
-    padding: 2px;
+    padding: 4px;
     ;
 }
 
 .ctable th {
-    padding: 2px;
+    padding: 4px;
     text-align: center;
 }
 

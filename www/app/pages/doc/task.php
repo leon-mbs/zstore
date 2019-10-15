@@ -56,6 +56,7 @@ class Task extends \App\Pages\Base {
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
+        $this->docform->add(new DropDownChoice('storem', Store::getList(), \App\Helper::getDefStore()));
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
@@ -138,6 +139,7 @@ class Task extends \App\Pages\Base {
             $this->docform->start_date->setDate($this->_doc->headerdata['start_date']);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->storem->setValue($this->_doc->headerdata['storem']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
@@ -496,6 +498,7 @@ class Task extends \App\Pages\Base {
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['storem'] = $this->docform->storem->getValue();
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->headerdata['start_date'] = $this->docform->start_date->getDate();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -659,7 +662,7 @@ class Task extends \App\Pages\Base {
     }
 
     public function OnAutoItem5($sender) {
-        $store_id = $this->docform->store->getValue();
+        $store_id = $this->docform->storem->getValue();
         $text = trim($this->editdetail5->edititem5->getText());
         return Stock::findArrayAC($store_id, $text);
     }

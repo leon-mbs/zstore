@@ -57,7 +57,7 @@ class Pay extends \ZCL\DB\Entity {
      * Добавляет платеж
      * 
      * @param mixed $document_id  документ
-     * @param mixed $isdoc  оплата выполнена  документом
+     * @param mixed $isdoc  оплата выполнена  документом нужно отличать при отмене документа
      * @param mixed $amount  сумма
      * @param mixed $mf      денежный счет
      * @param mixed $comment коментарий
