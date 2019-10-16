@@ -59,25 +59,14 @@
                         </select>
                     </div> 
 
-                    <div class="form-group  ">
-                        <label for="delivery"  >Доставка</label>
-
-                        <select  class="form-control" zippy="delivery"><option value="0">Выбрать</option></select>
-
-                    </div>
-                    <div class="form-group  ">
-                        <label data-label="address" for="address"  >Адрес</label>
-
-                        <input zippy="address"    class="form-control" >
-
-                    </div>           
+                           
                    <div class="form-group  ">
                         <label for="notes" >Комментарий </label>
 
                         <textarea class="form-control"  zippy="notes"></textarea>
 
 
-                    </div> 
+                    </div>  
                 </div>
             </div>
             <div class="row">
@@ -115,11 +104,17 @@
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
-                     <tr style="font-weight: bolder;">
+                       <tr style="font-weight: bolder;" data-label="paydisc" >
+                            <td colspan="5" class="text-right"> <span>Скидка:</span></td>
+                            <td zippy="paydisc" class="text-right"></td>
+                            <td>   </td>
+                        </tr>  
+                        <tr style="font-weight: bolder;">
                             <td colspan="5" class="text-right">К оплате:</td>
                             <td zippy="payamount" class="text-right"></td>
                             <td><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i class="fa fa-edit"></i></a> </td>
                         </tr>
+                  
 
                     </table>
                 </div>

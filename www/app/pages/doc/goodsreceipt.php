@@ -98,10 +98,11 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
   
             $this->docform->notes->setText($this->_doc->notes);
-             $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->payamount->setText($this->_doc->payamount);
+            $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->_manualpay =   $this->_doc->payamount <> $this->_doc->amount;
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
@@ -124,11 +125,8 @@ class GoodsReceipt extends \App\Pages\Base {
                          
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-
                             
                         $order = $basedoc->cast();
-
-                      
 
                         foreach ($order->detaildata as $_item) {
                             $item = new Item($_item);

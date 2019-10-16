@@ -42,24 +42,15 @@ class Invoice extends \App\Entity\Doc\Document {
             "customername" => $this->customer_name,
             "phone" => $this->headerdata["phone"],
             "email" => $this->headerdata["email"],
-            "delivery" => $this->headerdata["delivery_name"],
             "notes" => $this->notes,
             "document_number" => $this->document_number,
-            "total" => $this->amount
+            "total" => $this->amount,
+            "payamount" => $this->payamount,
+            "paydisc" => $this->headerdata["paydisc"]
         );
-        if ($this->headerdata["delivery"] == 2 || $this->headerdata["delivery"] == 3) {
-            $header['delivery'] = $header['delivery'] . '. по адресу: ' . $this->headerdata["address"];
-        }
-
-        $list = $this->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
-                $header['ttn'] = $d->document_number;
-            }
-        }
-
-
-        $report = new \App\Report('order.tpl');
+        
+ 
+        $report = new \App\Report('invoice.tpl');
 
         $html = $report->generate($header);
 
@@ -74,8 +65,7 @@ class Invoice extends \App\Entity\Doc\Document {
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = 'Расходная накладная';
-
-
+ 
         return $list;
     }
 

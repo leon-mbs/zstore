@@ -51,29 +51,17 @@
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="8" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
+    </tr> 
+      {{#paydisc}}
+     <tr style="font-weight: bolder;">
+        <td   colspan="8" align="right">Скидка:</td>
+        <td   align="right">{{paydisc}}</td>
     </tr>
-
-    <tr>
-        <td  >  </td>
-        <td valign="top" > Доставка</td>
-        <td colspan="4">
-            <p>{{delivery}}</p>
-        </td>
-    </tr>
-    <tr>
-        <td  >  </td>
-        <td valign="top" > ТТН</td>
-        <td colspan="4">
-            <p>{{ttn}}</p>
-        </td>
-    </tr>
-
-    <tr>
-        <td  >  </td>
-        <td valign="top" > Коментарий</td>
-        <td colspan="4">
-            <p>{{notes}}</p>
-        </td>
-    </tr>
+     {{/paydisc}}
+    <tr style="font-weight: bolder;">
+        <td   colspan="8" align="right">К оплате:</td>
+        <td   align="right">{{payamount}}</td>
+    </tr>    
+ 
 </table>
 

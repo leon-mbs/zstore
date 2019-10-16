@@ -58,7 +58,7 @@ class InvoiceCust extends Document {
     public function getRelationBased() {
         $list = array();
 
-        $list['GoodsReceipt'] = 'Приходная накладная';
+       // $list['GoodsReceipt'] = 'Приходная накладная';
 
         return $list;
     }

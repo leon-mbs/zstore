@@ -84,7 +84,8 @@ class InvoiceCust extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payamount->setText($this->_doc->payamount);
-            
+            $this->docform->editpayamount->setText($this->_doc->payamount);
+           
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);

@@ -50,15 +50,15 @@ class Invoice extends \App\Pages\Base {
 
         $this->docform->add(new TextArea('notes'));
 
-
-        $this->docform->add(new Label('discount'))->setVisible(false);
+      
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
-        $this->docform->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта')))->onChange($this, 'OnDelivery');
-        $this->docform->add(new TextInput('email'));
+          $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
-        $this->docform->add(new TextInput('address'))->setVisible(false);
-
+         
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()))  ;
+        $this->docform->add(new TextInput('paynotes'));
+ 
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -72,7 +72,9 @@ class Invoice extends \App\Pages\Base {
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
-        $this->docform->add(new Label('total'));
+        $this->docform->add(new Label('total',0));
+        $this->docform->add(new Label('paydisc',0));
+        $this->docform->add(new Label('payamount',0));
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -100,18 +102,18 @@ class Invoice extends \App\Pages\Base {
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
 
-            $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
-            $this->OnDelivery($this->docform->delivery);
-            $this->docform->store->setValue($this->_doc->headerdata['store']);
+              $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payamount->setText($this->_doc->payamount);
-            $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-            $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
- 
+            $this->docform->editpayamount->setText($this->_doc->payamount);
+            $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);        
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            $this->_manualpay =   $this->_doc->payamount <> $this->_doc->amount;
+
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
-            $this->docform->address->setText($this->_doc->headerdata['address']);
-            $this->docform->customer->setKey($this->_doc->customer_id);
+             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
             foreach ($this->_doc->detaildata as $_item) {
@@ -119,7 +121,7 @@ class Invoice extends \App\Pages\Base {
                 $this->_tovarlist[$item->item_id] = $item;
             }
         } else {
-            $this->_doc = Document::create('Order');
+            $this->_doc = Document::create('Invoice');
             $this->docform->document_number->setText($this->_doc->nextNumber());
 
             if ($basedocid > 0) {  //создание на  основании
@@ -243,10 +245,9 @@ class Invoice extends \App\Pages\Base {
 
         $this->_doc->payamount = $this->docform->payamount->getText();
  
-        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
-        $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
-        $this->_doc->headerdata['address'] = $this->docform->address->getText();
+        $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
+        $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
@@ -300,8 +301,9 @@ class Invoice extends \App\Pages\Base {
    public function onPayAmount() {
     
         $this->_manualpay = true;
+             
         $this->docform->payamount->setText($this->docform->editpayamount->getText());      
-        
+        $this->calcTotal() ;
     }
 
     /**
@@ -318,11 +320,29 @@ class Invoice extends \App\Pages\Base {
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(round($total));
+        $disc = 0; 
+        $customer_id = $this->docform->customer->getKey();
+        if ($customer_id > 0) {
+            $customer = Customer::load($customer_id);
+            
+            if($customer->discount > 0) {
+                $disc =  round($total * ($customer->discount/100))  ;
+            }else if($customer->bonus > 0){
+                if($total >= $customer->bonus){
+                    $disc =  $customer->bonus;
+                } else {
+                    $disc = $total;
+                }
+            }  
+            $this->docform->paydisc->setText( $disc) ; 
+            $this->docform->paydisc->setVisible($disc>0); 
+        }
         
         ///если не менялось руками  то  берем  с таблицы
         if($this->_manualpay == false){
-           $this->docform->editpayamount->setText(round($total));      
-           $this->docform->payamount->setText(round($total));      
+                 
+           $this->docform->editpayamount->setText(round($total-$disc));      
+           $this->docform->payamount->setText(round($total-$disc));      
         }        
     }
 
@@ -365,22 +385,17 @@ class Invoice extends \App\Pages\Base {
     }
 
     public function OnChangeCustomer($sender) {
-        $this->_discount = 0;
+        
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-            $this->_discount = $customer->discount;
+             
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
-            $this->docform->address->setText($customer->address);
+            
         }
         $this->calcTotal();
-        if ($this->_discount > 0) {
-            $this->docform->discount->setVisible(true);
-            $this->docform->discount->setText('Скидка ' . $this->_discount . '%');
-        } else {
-            $this->docform->discount->setVisible(false);
-        }
+      
     }
 
     public function OnAutoItem($sender) {
@@ -422,14 +437,7 @@ class Invoice extends \App\Pages\Base {
         $this->docform->setVisible(true);
     }
 
-    public function OnDelivery($sender) {
-
-        if ($sender->getValue() == 2 || $sender->getValue() == 3) {
-            $this->docform->address->setVisible(true);
-        } else {
-            $this->docform->address->setVisible(false);
-        }
-    }
+    
 
     public function OnChangePriceType($sender) {
         foreach ($this->_tovarlist as $item) {

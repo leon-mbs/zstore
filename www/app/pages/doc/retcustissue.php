@@ -48,7 +48,7 @@ class RetCustIssue extends \App\Pages\Base {
 
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-       $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('paynotes'));
 
 
@@ -102,41 +102,16 @@ class RetCustIssue extends \App\Pages\Base {
             $this->_doc = Document::create('RetCustIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
 
-            if ($basedocid > 0) {  //создание на  основании
-                $basedoc = Document::load($basedocid);
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'GoodsReceipt') {
-
-                        $this->docform->customer->setKey($basedoc->customer_id);
-                        $this->docform->customer->setText($basedoc->customer_name);
-
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
-
-                        foreach ($basedoc->detaildata as $item) {
-
-                            $stock = \App\Entity\Stock::getStock($basedoc->headerdata['store'], $item['item_id'], $item['price'], $item['snumber']);
-                            $stock->quantity = $item['quantity'];
-                            $stock->price = $item['price'];
-                            $this->_tovarlist[$stock->stock_id] = $stock;
-                        }
-                    }
-                }
-            }
+            
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-        $this->calcTotal();
-        $this->onMF($this->docform->payment);        
+               
     }
 
-    public function onMF($sender) {
-        $mf = $sender->getValue();
-        $this->docform->paynotes->setVisible($mf > 0);
-    }
-    
+  
     
     public function detailOnRow($row) {
         $item = $row->getDataItem();

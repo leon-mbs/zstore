@@ -308,7 +308,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and (meta_name  = 'GoodsIssue' or meta_name  = 'ServiceAct' ) ";
+        $where .= " and (meta_name  = 'GoodsIssue' or meta_name  = 'ServiceAct' or meta_name  = 'Invoice' ) ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {

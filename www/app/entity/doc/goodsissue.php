@@ -95,8 +95,7 @@ class GoodsIssue extends Document {
     public function getRelationBased() {
         $list = array();
         $list['Warranty'] = 'Гарантийный талон';
-        $list['ReturnIssue'] = 'Возвратная накладная';
-
+ 
         return $list;
     }
 
