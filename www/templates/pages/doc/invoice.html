@@ -30,14 +30,18 @@
                         <input zippy="email"   class="form-control" >
 
                     </div>  
-
-                    <div class="form-group  ">
-                        <label for="notes" >Комментарий </label>
-
-                        <textarea class="form-control"  zippy="notes"></textarea>
-
-
+                       <div class="form-group  ">
+                        <label for="payment" >Оплата</label>
+                        <select class="form-control" zippy="payment">
+                            <option value="0">Не  выбрано</option>
+                        </select>
                     </div> 
+
+                    <div class="form-group">
+                        <label  data-label="paynotes" for="paynotes" > Комментарий к оплате</label>
+                        <input class="form-control" type="text" zippy="paynotes" >
+                    </div>
+                   
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -67,7 +71,13 @@
                         <input zippy="address"    class="form-control" >
 
                     </div>           
+                   <div class="form-group  ">
+                        <label for="notes" >Комментарий </label>
 
+                        <textarea class="form-control"  zippy="notes"></textarea>
+
+
+                    </div> 
                 </div>
             </div>
             <div class="row">
@@ -105,7 +115,11 @@
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
-
+                     <tr style="font-weight: bolder;">
+                            <td colspan="5" class="text-right">К оплате:</td>
+                            <td zippy="payamount" class="text-right"></td>
+                            <td><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i class="fa fa-edit"></i></a> </td>
+                        </tr>
 
                     </table>
                 </div>
@@ -120,6 +134,29 @@
 
                 </div>
             </div>
+            
+    <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title">К оплате</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <div class="input-group  ">  
+                    <input class="form-control" type="text" zippy="editpayamount" pattern="[0-9]+">
+                     <div class="input-group-append">
+                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+         
+                    </div>
+                  </div>
+              </div>
+             
+            </div>
+          </div>
+        </div>            
         </form>
         <form zippy="editdetail">
             <h4>Ввод товара </h4>

@@ -32,8 +32,9 @@ class Invoice extends \App\Pages\Base {
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-    private $_discount;
-
+ 
+    private $_manualpay = false;  // если  выставили руками
+  
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -59,6 +60,8 @@ class Invoice extends \App\Pages\Base {
         $this->docform->add(new TextInput('address'))->setVisible(false);
 
 
+        $this->docform->add(new TextInput('editpayamount'));
+        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -100,7 +103,10 @@ class Invoice extends \App\Pages\Base {
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->OnDelivery($this->docform->delivery);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-
+            $this->docform->payamount->setText($this->_doc->payamount);
+            $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+            $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+ 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
@@ -227,13 +233,16 @@ class Invoice extends \App\Pages\Base {
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        if ($this->checkForm() == false) {
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+       if ($this->checkForm() == false) {
             return;
         }
 
         $this->calcTotal();
 
-
+        $this->_doc->payamount = $this->docform->payamount->getText();
+ 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['address'] = $this->docform->address->getText();
@@ -278,7 +287,7 @@ class Invoice extends \App\Pages\Base {
             if ($isEdited)
                 App::RedirectBack();
             else
-                App::Redirect("\\App\\Pages\\Register\\OrderList");
+                App::Redirect("\\App\\Pages\\Register\\GIList");
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -287,6 +296,12 @@ class Invoice extends \App\Pages\Base {
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
+    }
+   public function onPayAmount() {
+    
+        $this->_manualpay = true;
+        $this->docform->payamount->setText($this->docform->editpayamount->getText());      
+        
     }
 
     /**
@@ -303,6 +318,12 @@ class Invoice extends \App\Pages\Base {
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(round($total));
+        
+        ///если не менялось руками  то  берем  с таблицы
+        if($this->_manualpay == false){
+           $this->docform->editpayamount->setText(round($total));      
+           $this->docform->payamount->setText(round($total));      
+        }        
     }
 
     /**
@@ -316,7 +337,9 @@ class Invoice extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
-
+        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payment'] ==0){
+            $this->setError("Не указан  способ  оплаты");
+        }
         return !$this->isError();
     }
 
@@ -328,11 +351,10 @@ class Invoice extends \App\Pages\Base {
         $id = $sender->getKey();
         $item = Item::load($id);
         $price = $item->getPrice($this->docform->pricetype->getValue());
-        $price = round($price - $price / 100 * $this->_discount);
-
+   
 
         $this->editdetail->qtystock->setText(H::fqty(Item::getQuantity($id, $this->docform->store->getValue())));
-        $this->editdetail->editprice->setText($price);
+        $this->editdetail->editprice->setText(round($price));
 
         $this->updateAjax(array('qtystock', 'editprice'));
     }

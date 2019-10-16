@@ -80,6 +80,7 @@ class InvoiceCust extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            $this->_manualpay =   $this->_doc->payamount <> $this->_doc->amount;
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payamount->setText($this->_doc->payamount);
@@ -268,7 +269,7 @@ class InvoiceCust extends \App\Pages\Base {
             if ($isEdited)
                 App::RedirectBack();
             else
-                App::Redirect("\\App\\Pages\\Register\\OrderCustList");
+                App::Redirect("\\App\\Pages\\Register\\GRList");
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
