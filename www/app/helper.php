@@ -223,10 +223,15 @@ class Helper {
         $conn = DB::getConnect();
         $filename = $file['name'];
         $imagedata = getimagesize($file["tmp_name"]);
+        $mime = is_array($imagedata ) ? $imagedata['mime'] : "";
+        
+        if(strpos($filename,'.pdf') > 0){
+            $mime = "application/pdf"; 
+        }
         
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
-        $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$imagedata['mime']}') ";
+        $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}') ";
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 

@@ -21,8 +21,8 @@ require_once 'init.php';
         }
         $size = strlen($file['filedata']);
         if ($size > 0) {
-            if(strlen($file['mime']) >0 && $_REQUEST['im']>0){
-                 header('Content-Type:  '.$file['mime']);    
+            if(strlen($file['mime']) > 0 && $_REQUEST['im']>0){
+                 header('Content-Type: '.$file['mime']);    
             }
             else {
               header('Content-Type: application/octet-stream');
