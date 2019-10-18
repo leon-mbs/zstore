@@ -14,8 +14,9 @@
                     <div class="form-group  ">
                         <label for="customer" >Покупатель</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
-                        <span zippy="discount" style="display:block;font-size:smaller"></span>
-                        <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
+                        <span zippy="discount" style="font-size:smaller"></span> 
+                        <input type="checkbox" title="Использовать" zippy="usedisc">      
+                        <a style="display:block;font-size:smaller" zippy="addcust">Добавить нового</a>
 
                     </div>
                     <div class="form-group  ">
@@ -70,7 +71,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-10">
+                <div class="col-10 col-lg-8">
 
                     <a zippy="addrow">Добавить товар</a>
                     <table class="table table-sm">
@@ -104,8 +105,8 @@
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
-                       <tr style="font-weight: bolder;" data-label="paydisc" >
-                            <td colspan="5" class="text-right"> <span>Скидка:</span></td>
+                       <tr style="font-weight: bolder;" >
+                            <td colspan="5" class="text-right"> <span data-label="paydisc" >Скидка:</span></td>
                             <td zippy="paydisc" class="text-right"></td>
                             <td>   </td>
                         </tr>  

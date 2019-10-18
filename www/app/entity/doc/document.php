@@ -217,6 +217,20 @@ class Document extends \ZCL\DB\Entity {
                 $conn->Execute("update documents set payed=0 where   document_id =" . $this->document_id);
                  
             }
+            // возвращаем бонусы
+            if ($this->headerdata['usedisc'] > 0) {
+            $customer = \App\Entity\Customer::load($this->customer_id);
+            if($customer->discount > 0){
+                 return; //процент
+            }
+            else {
+                $customer->bonus = $customer->bonus + ($this->headerdata['paydisc'] >0 ? $this->headerdata['paydisc']  : 0 );
+                $customer->save();
+            }
+        }
+           
+            
+            
             $conn->CompleteTrans();
         } catch (\Exception $ee) {
             global $logger;

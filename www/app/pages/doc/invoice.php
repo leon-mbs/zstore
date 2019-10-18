@@ -62,7 +62,11 @@ class Invoice extends \App\Pages\Base {
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
-
+        $this->docform->add(new Label('discount'))->setVisible(false);
+         
+        $this->docform->add(new CheckBox('usedisc',$this, 'usediscOnClick'))->setVisible(false);
+        $this->docform->usedisc->onChange($this, 'usediscOnClick');
+        
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -107,6 +111,7 @@ class Invoice extends \App\Pages\Base {
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);        
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->usedisc->setChecked($this->_doc->headerdata['usedisc']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
             $this->_manualpay =   $this->_doc->payamount <> $this->_doc->amount;
 
@@ -237,7 +242,7 @@ class Invoice extends \App\Pages\Base {
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
-       if ($this->checkForm() == false) {
+        if ($this->checkForm() == false) {
             return;
         }
 
@@ -250,6 +255,7 @@ class Invoice extends \App\Pages\Base {
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['usedisc'] = $this->docform->usedisc->isChecked() ? 1:0;
 
 
 
@@ -322,7 +328,7 @@ class Invoice extends \App\Pages\Base {
         $this->docform->total->setText(round($total));
         $disc = 0; 
         $customer_id = $this->docform->customer->getKey();
-        if ($customer_id > 0) {
+        if ($customer_id > 0 && $this->docform->usedisc->isChecked()) {
             $customer = Customer::load($customer_id);
             
             if($customer->discount > 0) {
@@ -385,7 +391,12 @@ class Invoice extends \App\Pages\Base {
     }
 
     public function OnChangeCustomer($sender) {
-        
+            $this->docform->paydisc->setText( 0) ; 
+            $this->docform->paydisc->setVisible(false);        
+            $this->docform->discount->setVisible(false);        
+            $this->docform->usedisc->setVisible(false);  
+            $this->docform->usedisc->setChecked(false);  
+                  
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
@@ -393,11 +404,25 @@ class Invoice extends \App\Pages\Base {
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
             
+            
+            if($customer->discount > 0) {
+                $this->docform->discount->setText("Постоянная скидка ".$customer->discount. '%'); 
+                $this->docform->discount->setVisible(true); 
+                $this->docform->usedisc->setVisible(true); 
+                 
+            }else if($customer->bonus > 0){
+                $this->docform->discount->setText("Бонусы ".$customer->bonus ); 
+                $this->docform->discount->setVisible(true); 
+                $this->docform->usedisc->setVisible(true); 
+
+            }             
         }
+        
+        
         $this->calcTotal();
       
     }
-
+     
     public function OnAutoItem($sender) {
         $text = Item::qstr('%' . $sender->getText() . '%');
         return Item::findArray("itemname", "  (itemname like {$text} or item_code like {$text})  and disabled <> 1 ");
@@ -436,9 +461,18 @@ class Invoice extends \App\Pages\Base {
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
-    
-
+ 
+    public function usediscOnClick($sender) {
+          if($sender->isChecked())
+          {
+              
+          } else {
+            $this->docform->paydisc->setText(0);        
+            $this->docform->paydisc->setVisible(false);        
+             
+          }  
+          $this->calcTotal();
+    }
     public function OnChangePriceType($sender) {
         foreach ($this->_tovarlist as $item) {
             //$item = Item::load($item->item_id);
