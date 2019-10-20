@@ -213,7 +213,7 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-
+        $this->setInfo($json);
         $i = 0;
         foreach ($data['products'] as $product) {
 

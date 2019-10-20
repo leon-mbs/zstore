@@ -31,6 +31,7 @@ class Document extends \ZCL\DB\Entity {
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
     const EX_PDF = 3;    //  PDF
+    const EX_POS = 4;    //  POS терминал
 
     // const EX_XML_GNAU = 4;
 
@@ -190,6 +191,14 @@ class Document extends \ZCL\DB\Entity {
         return "";
     }
 
+   /**
+     * Генерация  печати для POS  терминала
+     *
+     */
+    public function generatePosReport() {
+        return "";
+    }
+
     /**
      * Выполнение документа - обновление склада, бухгалтерские проводки и  т.д.
      *
@@ -224,7 +233,7 @@ class Document extends \ZCL\DB\Entity {
                      return; //процент
                 }
                 else {
-                    $customer->bonus = $customer->bonus + ($this->headerdata['paydisc'] >0 ? $this->headerdata['paydisc']  : 0 );
+                    $customer->bonus = $customer->bonus + $this->headerdata['paydisc'] ;
                     $customer->save();
                 }
             }

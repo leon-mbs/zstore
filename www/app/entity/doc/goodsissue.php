@@ -53,7 +53,9 @@ class GoodsIssue extends Document {
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
             "total" => $this->amount ,
+            "payed" => $this->headerdata['payed'] ,
             "payamount" => $this->payamount
+            
         );
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = date('d.m.Y', $this->headerdata["sent_date"]);

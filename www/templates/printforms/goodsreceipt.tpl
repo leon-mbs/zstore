@@ -40,9 +40,13 @@
         <td style="border-top:1px #000 solid;" colspan="6" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-     <tr style="font-weight: bolder;">
+    <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="6" align="right">К оплате:</td>
         <td style="border-top:1px #000 solid;" align="right">{{payamount}}</td>
+    </tr>
+   <tr style="font-weight: bolder;">
+        <td style="border-top:1px #000 solid;" colspan="6" align="right">Оплата:</td>
+        <td style="border-top:1px #000 solid;" align="right">{{payed}}</td>
     </tr>
 
 </table>

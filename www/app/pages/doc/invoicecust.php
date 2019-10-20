@@ -32,7 +32,7 @@ class InvoiceCust extends \App\Pages\Base {
     private $_basedocid = 0;
     private $_rowid = 0;
   
-    private $_manualpay = false;  // если  выставили руками
+     
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -52,9 +52,12 @@ class InvoiceCust extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()))  ;
         $this->docform->add(new TextInput('paynotes'));
        
-        $this->docform->add(new TextInput('editpayamount'));
+        $this->docform->add(new TextInput('editpayamount',"0"));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
+        $this->docform->add(new TextInput('editpayed',"0"));
+        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
  
+        $this->docform->add(new Label('payed',0));
         $this->docform->add(new Label('payamount',0));
         $this->docform->add(new Label('total'));
         $this->docform->add(new \Zippy\Html\Form\File('scan'));
@@ -80,11 +83,12 @@ class InvoiceCust extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
-            $this->_manualpay =   $this->_doc->payamount <> $this->_doc->amount;
-
+  
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
+            $this->docform->payed->setText($this->_doc->headerdata['payed']);
+            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
            
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -95,6 +99,9 @@ class InvoiceCust extends \App\Pages\Base {
                 $item->old = true;
                 $this->_itemlist[$item->item_id] = $item;
             }
+            $this->calcTotal(); 
+               
+            
         } else {
             $this->_doc = Document::create('InvoiceCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -153,6 +160,8 @@ class InvoiceCust extends \App\Pages\Base {
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
         $this->docform->detail->Reload();
+        $this->calcTotal();      
+        $this->calcPay();          
     }
 
     public function addrowOnClick($sender) {
@@ -185,6 +194,9 @@ class InvoiceCust extends \App\Pages\Base {
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
 
+        
+        $this->calcTotal();      
+        $this->calcPay();      
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
@@ -209,6 +221,7 @@ class InvoiceCust extends \App\Pages\Base {
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
@@ -283,10 +296,11 @@ class InvoiceCust extends \App\Pages\Base {
     }
 
     public function onPayAmount() {
-    
-        $this->_manualpay = true;
         $this->docform->payamount->setText($this->docform->editpayamount->getText());      
-        
+    }
+    
+    public function onPayed() {
+        $this->docform->payed->setText($this->docform->editpayed->getText());      
     }
 
     /**
@@ -303,14 +317,18 @@ class InvoiceCust extends \App\Pages\Base {
         }
         $this->docform->total->setText(round($total));
        
-        ///если не менялось руками  то  берем  с таблицы
-        if($this->_manualpay == false){
-           $this->docform->editpayamount->setText(round($total));      
-           $this->docform->payamount->setText(round($total));      
-        }
-        
+ 
     }
 
+    private function CalcPay(){
+           $total = $this->docform->total->getText();
+           $this->docform->editpayamount->setText(round($total));      
+           $this->docform->payamount->setText(round($total));      
+           $this->docform->editpayed->setText(round($total));      
+           $this->docform->payed->setText(round($total));      
+    }
+    
+    
     /**
      * Валидация   формы
      *
@@ -326,17 +344,13 @@ class InvoiceCust extends \App\Pages\Base {
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран поставщик");
         }
-        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payment'] ==0){
+        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payment'] == 0){
             $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();
     }
 
-    public function beforeRender() {
-        parent::beforeRender();
-
-        $this->calcTotal();
-    }
+   
 
     public function backtolistOnClick($sender) {
         App::RedirectBack();

@@ -37,6 +37,7 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->add(new RedirectLink('word', ""));
         $this->add(new RedirectLink('excel', ""));
         $this->add(new RedirectLink('pdf', ""));
+        $this->add(new RedirectLink('pos', ""));
 
         $this->add(new Label('preview'));
 
@@ -71,8 +72,8 @@ class DocView extends \Zippy\Html\PageFragment {
         $exportlist = $doc->supportedExport();
         $this->word->setVisible(in_array(Document::EX_WORD, $exportlist));
         $this->excel->setVisible(in_array(Document::EX_EXCEL, $exportlist));
-        $this->pdf->setVisible(in_array(Document::EX_EXCEL, $exportlist));
         $this->pdf->setVisible(in_array(Document::EX_PDF, $exportlist));
+        $this->pos->setVisible(in_array(Document::EX_POS, $exportlist));
 
         $reportpage = "App/Pages/ShowDoc";
 

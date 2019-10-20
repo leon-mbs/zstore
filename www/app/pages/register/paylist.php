@@ -94,8 +94,8 @@ class PayList extends \App\Pages\Base {
         $row->add(new Label('paytype', $this->_ptlist[$doc->paytype] ));
  
 
-        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('del'))->onClick($this, 'delOnClick');
+        $row->add(new ClickLink('show',$this, 'showOnClick')) ;
+        $row->add(new ClickLink('del',$this, 'delOnClick'))->setVisible($doc->indoc==0);
     }
 
     //просмотр
@@ -223,7 +223,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource {
         if ($count > 0)
             $sql .= " limit {$start},{$count}";
 
-        $docs = Document::findBySql($sql);
+        $docs = \App\Entity\Pay::findBySql($sql);
 
         return $docs;
     }

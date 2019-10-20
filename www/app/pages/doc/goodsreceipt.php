@@ -34,7 +34,7 @@ class GoodsReceipt extends \App\Pages\Base {
     private $_rowid = 0;
      
     
-    private $_manualpay = false;  // если  выставили руками
+     
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -66,7 +66,11 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
+        $this->docform->add(new TextInput('editpayed',"0"));
+        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
  
+        $this->docform->add(new Label('payed',0));
+
         $this->docform->add(new Label('payamount',0));
       
         $this->docform->add(new Label('total'));
@@ -103,7 +107,8 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->_manualpay =   $this->_doc->payamount <> $this->_doc->amount;
+            $this->docform->payed->setText($this->_doc->headerdata['payed']);
+            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
@@ -113,6 +118,7 @@ class GoodsReceipt extends \App\Pages\Base {
                 $item->old = true;
                 $this->_itemlist[$item->item_id] = $item;
             }
+            $this->calcTotal(); 
         } else {
             $this->_doc = Document::create('GoodsReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -147,7 +153,9 @@ class GoodsReceipt extends \App\Pages\Base {
                             $item = new Item($_item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
+                        
                     }
+                    $this->calcTotal(); 
                 }
             }
         }
@@ -220,7 +228,9 @@ class GoodsReceipt extends \App\Pages\Base {
         // unset($this->_itemlist[$item->item_id]);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
-        $this->calcTotal();
+        $this->calcTotal();      
+        $this->calcPay();          
+
         $this->docform->detail->Reload();
     }
  
@@ -294,7 +304,9 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-        $this->calcTotal();
+        $this->calcTotal();      
+        $this->calcPay();          
+
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
@@ -325,7 +337,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
-    
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+   
         if ($this->checkForm() == false) {
             return;
         }
@@ -414,10 +427,14 @@ class GoodsReceipt extends \App\Pages\Base {
     
     public function onPayAmount() {
  
-      $this->_manualpay = true;
+       
       $this->docform->payamount->setText($this->docform->editpayamount->getText());      
        
     }
+    public function onPayed() {
+        $this->docform->payed->setText($this->docform->editpayed->getText());      
+    }
+    
     /**
      * Расчет  итого
      *
@@ -432,15 +449,18 @@ class GoodsReceipt extends \App\Pages\Base {
         }
         $this->docform->total->setText(round($total));
         
-        
-        ///если не менялось руками  то  берем  с таблицы
-        if($this->_manualpay == false){
-           $this->docform->editpayamount->setText(round($total));      
-           $this->docform->payamount->setText(round($total));      
-        } 
+          
              
     }
-
+ 
+    private function CalcPay(){
+           $total = $this->docform->total->getText();
+           $this->docform->editpayamount->setText(round($total));      
+           $this->docform->payamount->setText(round($total));      
+           $this->docform->editpayed->setText(round($total));      
+           $this->docform->payed->setText(round($total));      
+    }
+ 
     /**
      * Валидация   формы
      *
@@ -515,9 +535,5 @@ class GoodsReceipt extends \App\Pages\Base {
     }
 
        
-    public function beforeRender() {
-        parent::beforeRender();
-
-        $this->calcTotal();
-    }   
+       
 }

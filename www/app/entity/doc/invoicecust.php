@@ -33,6 +33,7 @@ class InvoiceCust extends Document {
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => $this->amount ,
+            "payed" => $this->headerdata['payed'] ,
             "payamount" => $this->payamount
         );
 
@@ -47,9 +48,9 @@ class InvoiceCust extends Document {
     public function Execute() {
         $this->payed = 0;
         if (  $this->headerdata['payment'] >0) {
-            \App\Entity\Pay::addPayment($this->document_id,1,0-$this->payamount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            \App\Entity\Pay::addPayment($this->document_id,1,0-$this->headerdata['payed'], $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            $this->payed = $this->headerdata['payed']; 
              
-            $this->payed = $this->payamount;
         }
 
         return true;
