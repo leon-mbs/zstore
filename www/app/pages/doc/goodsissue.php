@@ -46,9 +46,11 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new Date('sent_date'));
         $this->docform->add(new Date('delivery_date'));
      
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('paynotes'));
 
+        $this->docform->add(new TextInput('barcode'));
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick'); 
 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
@@ -202,13 +204,10 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         $this->calcTotal();
         $this->OnDelivery($this->docform->delivery);
-        $this->onMF($this->docform->payment);
+       
     }
 
-    public function onMF($sender) {
-        $mf = $sender->getValue();
-        $this->docform->paynotes->setVisible($mf > 0);
-    }
+  
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
@@ -425,6 +424,62 @@ class GoodsIssue extends \App\Pages\Base {
         }
         $this->docform->total->setText(round($total));
     }
+  
+    public function addcodeOnClick($sender) {
+        $code =  trim($this->docform->barcode->getText()) ;
+        $this->docform->barcode->setText('');
+        if($code=='') return;
+        
+        
+        $code_ = Item::qstr($code)  ;
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})"  );
+   
+         
+        
+        if($item == null) {
+           $this->setError("Товар с  кодом '{$code}' не  найден")     ;
+           return;
+        }
+        
+        if($this->_tvars["usesnumber"]==true) {
+            
+           $this->editdetail->setVisible(true);
+           $this->docform->setVisible(false);
+           $this->editdetail->edititem->setKey($item->item_id);
+           $this->editdetail->edititem->setText($item->itemname);
+           $this->editdetail->editserial->setText('');
+           $this->editdetail->editquantity->setText('1');
+           return;
+        }         
+        
+        
+        
+        $store = $this->docform->store->getValue() ;
+         
+        $qty = Item::getQuantity($item->item_id,$store);
+        if($qty<=0){
+           $this->setError("Товара {$item->itemname} нет на складе")     ; 
+        }
+        
+        
+        
+        
+        
+        if($this->_itemlist[$_item->item_id] instanceof Item){
+            $this->_itemlist[$_item->item_id]->quantity += 1; 
+        }else {
+            
+            $item->quantity = 1; 
+            $$item->price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
+
+            $this->_itemlist[$item->item_id] = $item;
+            
+        }
+  
+            
+           
+        $this->_rowid = 0;   
+    }    
 
     /**
      * Валидация   формы
@@ -465,9 +520,7 @@ class GoodsIssue extends \App\Pages\Base {
 
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
-        $price = $price - $price / 100 * $this->_discount;
-
-
+     
 
         $this->editdetail->editprice->setText($price);
 

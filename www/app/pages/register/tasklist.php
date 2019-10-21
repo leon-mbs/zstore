@@ -105,8 +105,10 @@ class TaskList extends \App\Pages\Base {
 
         $row->add(new Label('taskstatus'));
 
+        if ($task->state == Document::STATE_EXECUTED)
+            $row->taskstatus->setText('<span class="badge badge-success">Выполнен</span>', true);
         if ($task->state == Document::STATE_INPROCESS)
-            $row->taskstatus->setText('<span class="badge badge-success">Выполняется</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-info">Выполняется</span>', true);
         if ($task->state == Document::STATE_SHIFTED)
             $row->taskstatus->setText('<span class="badge badge-warning">Отложена</span>', true);
         if ($task->state == Document::STATE_CLOSED)
@@ -133,7 +135,7 @@ class TaskList extends \App\Pages\Base {
     
         $row->add(new ClickLink('taskshow'))->onClick($this, 'taskshowOnClick');
         $row->add(new ClickLink('taskedit'))->onClick($this, 'taskeditOnClick');
-         if ($task->state == Document::STATE_CLOSED) {
+        if ($task->state == Document::STATE_CLOSED || $task->state == Document::STATE_EXECUTED)   {
             $row->taskedit->setVisible(false);
         }
     }
@@ -195,7 +197,7 @@ class TaskList extends \App\Pages\Base {
         }
         if ($sender->id == 'bclosed') {
             $this->_task->updateStatus(Document::STATE_EXECUTED);
-            if ($this->_task->amount == $this->_task->payamount) { //если оплачен
+            if ($this->_task->payed == $this->_task->payamount) { //если оплачен
                 $this->_task->updateStatus(Document::STATE_CLOSED);
                 $this->setSuccess('Наряд закрыт');
             }

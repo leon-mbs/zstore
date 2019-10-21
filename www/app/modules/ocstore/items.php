@@ -56,6 +56,11 @@ class Items extends \App\Pages\Base {
         if ($json === false)
             return;
         $data = json_decode($json, true);
+        if(!isset($data)){
+            $this->setError("Неверный ответ.");
+            \App\Helper::log($json);
+            return;
+        }
         if ($data['error'] == "") {
 
             $items = Item::find("disabled <> 1", "itemname");

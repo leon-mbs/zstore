@@ -25,16 +25,10 @@ class Base extends \Zippy\Html\WebPage {
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
-
-
+  
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
-
-
-        $this->add(new ClickLink("pageinfo"));
  
-
         $this->_tvars["docmenu"] = Helper::generateMenu(1);
         $this->_tvars["repmenu"] = Helper::generateMenu(2);
         $this->_tvars["regmenu"] = Helper::generateMenu(3);
@@ -44,11 +38,9 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
       
-        $pi = $this->getPageInfo();
-        $this->_tvars["picontent"] = $pi;
-        if (strlen($pi) == 0) {
-            $this->pageinfo->setVisible(false);
-        }
+         
+        $this->_tvars["picontent"] = $this->getPageInfo();
+       
 
         $options = System::getOptions('common');
       
@@ -90,7 +82,10 @@ class Base extends \Zippy\Html\WebPage {
     public function getPageInfo() {
         $class = explode("\\", get_class($this));
         $classname = $class[count($class) - 1];
-        return \App\Helper::getMetaNotes($classname);
+        $desc =  \App\Helper::getMetaNotes($classname);
+        if(strlen($desc)==0)$desc="Для этой страницы нет описания";
+        return $desc;
+        
     }
 
     //вывод ошибки,  используется   в дочерних страницах

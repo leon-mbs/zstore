@@ -53,7 +53,7 @@ class ServiceOrder extends Document {
     }
 
     protected function getNumberTemplate(){
-         return  'СР-000000';
+         return  'ЗУ-000000';
     }      
 
 }

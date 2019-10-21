@@ -41,7 +41,7 @@ class IncomeMoney extends Document {
     }
 
     protected function getNumberTemplate(){
-         return  'ПО-000000';
+         return  'ПКО-000000';
     }      
 
 }

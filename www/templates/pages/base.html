@@ -45,12 +45,10 @@
 
                 <ul class="navbar-nav ml-auto">
                     <!-- Messages: style can be found in dropdown.less-->
-                    <li class="nav-item dropdown messages-menu">
-                        <a data-html="true" data-toggle="dropdown" data-placement="bottom" data-content="{{picontent}}" class="nav-link dropdown-toggle" style="cursor:pointer" zippy="pageinfo">
+                    <li class="nav-item    ">
+                        <a class="nav-link  "  title="Информация о странице"  data-toggle="popover" data-placement="bottom" data-content="{{picontent}}"   style="cursor:pointer"  >
                             <i class="fa fa-question-circle "></i>
-                            <ul class="dropdown-menu">
-                                <li class="header">{{picontent}}</li>
-                            </ul>
+                             
                         </a>
                     </li>
                     <li class="nav-item  ">
@@ -509,7 +507,7 @@ $(window).scroll(function () {
     if ($(this).scrollTop() > 600) {
         if ($('#upbutton').is(':hidden')) {
             $('#upbutton').css({
-                opacity: 1
+                opacity: 0.7
             }).fadeIn('slow');
         }
     } else {

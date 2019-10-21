@@ -41,7 +41,7 @@ class OutcomeMoney extends Document {
     }
 
     protected function getNumberTemplate(){
-         return  'РО-000000';
+         return  'РКО-000000';
     }      
 
 }

@@ -54,6 +54,7 @@ class GoodsReceipt extends \App\Pages\Base {
    
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF())) ;
         $this->docform->add(new TextInput('paynotes'));
+        $this->docform->add(new CheckBox('prepaid'))->onChange($this,'OnPrepaid');
 
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
         $this->docform->add(new Label('course', 'Курс 1'));
@@ -112,13 +113,17 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
-
+            $this->docform->prepaid->setChecked($this->_doc->headerdata['prepaid']);
+            $this->OnPrepaid($this->docform->prepaid) ;
+            
+            $this->docform->total->setText($this->_doc->amount);
+ 
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
                 $item->old = true;
                 $this->_itemlist[$item->item_id] = $item;
             }
-            $this->calcTotal(); 
+              
         } else {
             $this->_doc = Document::create('GoodsReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -244,6 +249,7 @@ class GoodsReceipt extends \App\Pages\Base {
                 $this->_itemlist[$_item->item_id]->quantity += 1; 
                 $this->docform->detail->Reload();
                 $this->calcTotal();                
+                $this->CalcPay();                
                 return;
              }
         }
@@ -327,8 +333,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
             
-        $this->calcTotal();            
-        
+         
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -338,7 +343,12 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
-   
+        $this->_doc->headerdata['prepaid'] = $this->docform->prepaid->isChecked();
+        if($this->_doc->headerdata['prepaid']==1){
+           $this->_doc->headerdata['payed'] = 0; 
+           $this->_doc->payamount = 0; 
+        }
+        
         if ($this->checkForm() == false) {
             return;
         }
@@ -425,14 +435,28 @@ class GoodsReceipt extends \App\Pages\Base {
         App::RedirectBack();
     }
     
-    public function onPayAmount() {
+    public function onPayAmount($sender) {
  
        
       $this->docform->payamount->setText($this->docform->editpayamount->getText());      
+      $this->docform->payed->setText($this->docform->editpayamount->getText());      
+      $this->docform->editpayed->setText($this->docform->editpayamount->getText());      
        
     }
-    public function onPayed() {
+    public function onPayed($sender) {
         $this->docform->payed->setText($this->docform->editpayed->getText());      
+    }
+    
+    public function OnPrepaid($sender) {
+        $b=$sender->isChecked();
+        if($b){
+            $this->docform->payed->setVisible(false);      
+            $this->docform->payamount->setVisible(false);      
+        }   else{
+            $this->docform->payed->setVisible(true);      
+            $this->docform->payamount->setVisible(true);      
+     
+        }
     }
     
     /**
@@ -478,7 +502,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран  поставщик");
         }
-        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payment'] == 0){
+        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] ==0){
             $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();

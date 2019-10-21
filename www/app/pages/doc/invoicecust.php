@@ -93,13 +93,14 @@ class InvoiceCust extends \App\Pages\Base {
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
+            $this->docform->total->setText($this->_doc->amount);
   
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
                 $item->old = true;
                 $this->_itemlist[$item->item_id] = $item;
             }
-            $this->calcTotal(); 
+             
                
             
         } else {
@@ -215,7 +216,7 @@ class InvoiceCust extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
             
-        $this->calcTotal();    
+            
             
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -295,11 +296,11 @@ class InvoiceCust extends \App\Pages\Base {
         App::RedirectBack();
     }
 
-    public function onPayAmount() {
+    public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());      
     }
     
-    public function onPayed() {
+    public function onPayed($sender) {
         $this->docform->payed->setText($this->docform->editpayed->getText());      
     }
 
@@ -344,7 +345,7 @@ class InvoiceCust extends \App\Pages\Base {
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран поставщик");
         }
-        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payment'] == 0){
+        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] ==0){
             $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();

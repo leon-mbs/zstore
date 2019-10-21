@@ -22,7 +22,7 @@
                         <label for="customer" >Заказчик</label>
 
                         <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
-                        <span zippy="discount" style="display:block;font-size:smaller"></span>
+                        
 
                         <a style="font-size:smaller"  zippy="addcust">Добавить нового</a>
                     </div>
@@ -62,7 +62,7 @@
                     <div class="form-group  ">
                         <label for="payment" >Оплата</label>
                         <select class="form-control" zippy="payment">
-                            <option value="0">Оплата позже</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div> 
 
@@ -154,15 +154,7 @@
                     </table>
 
 
-                    <table class="table  table-sm">  
-
-                        <tr style="font-weight: bolder;">
-                            <td    class="text-right">Всего работ и комплектующих к оплате:</td>
-                            <td  class="text-right" zippy="total"  style=" width:50px; "></td>
-                            <td   width="75px">  </td> 
-                        </tr>
-                    </table>
-
+ 
                     <a class="btn btn-outline-primary btn-sm" zippy="additem5">Добавить материал</a>                     
                     <h5>Расходные материалы</h5>
                     <table class="table  table-sm">
@@ -230,7 +222,27 @@
                                 <a zippy="delete4"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>                      
-                    </table>   
+                    </table>  
+                    
+                     <table class="table  table-sm">  
+
+                        <tr style="font-weight: bolder;">
+                            <td   class="text-right">Всего работ и комплектующих на сумму:</td>
+                            <td   class="text-right" zippy="total"  style=" width:50px; "></td>
+                            <td   width="75px">  </td> 
+                        </tr>
+                        <tr style="font-weight: bolder;">
+                            <td   class="text-right">К оплате:</td>
+                            <td   class="text-right" zippy="payamount"  style=" width:50px; "></td>
+                            <td   width="75px"> <a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i class="fa fa-edit"></i></a>  </td> 
+                        </tr>
+                        <tr style="font-weight: bolder;">
+                            <td   class="text-right">Внесена оплата:</td>
+                            <td   class="text-right" zippy="payed"  style=" width:50px; "></td>
+                            <td   width="75px"> <a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i class="fa fa-edit"></i></a> </td> 
+                        </tr>
+                    </table>
+
                 </div>
             </div>
             <div class="row">
@@ -241,7 +253,50 @@
 
                 </div>
             </div>
-
+  <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title">К оплате</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <div class="input-group  ">  
+                    <input class="form-control" type="text" zippy="editpayamount" pattern="[0-9]+">
+                     <div class="input-group-append">
+                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+         
+                    </div>
+                  </div>
+              </div>
+             
+            </div>
+          </div>
+        </div>            
+        <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title">Оплата</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <div class="input-group  ">  
+                    <input class="form-control" type="text" zippy="editpayed" pattern="[0-9]+">
+                     <div class="input-group-append">
+                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
+         
+                    </div>
+                  </div>
+              </div>
+             
+            </div>
+          </div>
+        </div>
         </form>
 
 

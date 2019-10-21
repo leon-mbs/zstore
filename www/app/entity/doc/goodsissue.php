@@ -85,11 +85,25 @@ class GoodsIssue extends Document {
           //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }
-        if ($this->payamount > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,1,0-$this->payamount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+        
+        //списываем бонусы
+        if ($this->headerdata['paydisc'] > 0) {
+            $customer = \App\Entity\Customer::load($this->customer_id);
+            if($customer->discount > 0){
+                 return; //процент
+            }
+            else {
+                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] >0 ? $this->headerdata['paydisc']  : 0 );
+                $customer->save();
+            }
+        }        
+        
+        $this->payed = 0;
+        if (  $this->headerdata['payment'] >0 && $this->headerdata['payed']) {
+            \App\Entity\Pay::addPayment($this->document_id,1, $this->headerdata['payed'], $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            $this->payed = $this->headerdata['payed']; 
              
-            $this->payed = $this->payamount;
-        }
+        }        
 
         return true;
     }

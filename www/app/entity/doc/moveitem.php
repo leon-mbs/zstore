@@ -81,7 +81,7 @@ class MoveItem extends Document {
     }
 
     protected function getNumberTemplate(){
-         return  'ДТ-000000';
+         return  'ПТ-000000';
     }      
 
 }

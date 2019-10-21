@@ -41,6 +41,6 @@ class MoveMoney extends Document {
 
 
     protected function getNumberTemplate(){
-         return  'ДД-000000';
+         return  'ПД-000000';
     }      
 }
