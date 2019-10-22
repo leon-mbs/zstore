@@ -194,7 +194,7 @@ class ProductList extends \App\Pages\Base {
 
     //выбран товар 
     public function onChangeItem($sender) {
-
+        //todo      проверить
         $item = Item::load($sender->getKey());
         $this->product->productname = $item->itemname;
         $this->product->item_code = $item->item_code;

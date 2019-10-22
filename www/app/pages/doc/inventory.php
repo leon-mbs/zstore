@@ -154,7 +154,7 @@ class Inventory extends \App\Pages\Base {
         $store = $this->docform->store->getValue() ;
         $sn = trim($this->editdetail->editserial->getText());
     
-        $item->quantity = Item::getQuantity($id,$store,$sn);
+        $item->quantity = $item->getQuantity( $store,$sn);
         $item->qfact =  $this->editdetail->editquantity->getText() ;
         $item->snumber = $sn;
 
@@ -257,7 +257,7 @@ class Inventory extends \App\Pages\Base {
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        return Item::findArrayAC($store_id, $text);
+        return Item::findArrayAC($text,$store_id );
     }
  
     public function addcodeOnClick($sender) {
@@ -288,7 +288,7 @@ class Inventory extends \App\Pages\Base {
         
         if(!isset($this->_itemlist[$item->item_id])){
             $item->qfact=0;
-            $item->quantity = Item::getQuantity($item->item_id,$store);
+            $item->quantity = $item->getQuantity($store);
             $this->_itemlist[$item->item_id] = $item;
  
         }   

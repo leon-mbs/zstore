@@ -689,8 +689,8 @@ class Task extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $this->editdetail2->qty->setText(Stock::getQuantity($id));
-
+        $this->editdetail2->qty->setText($stock->qty);
+        //todo
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
         
@@ -703,8 +703,8 @@ class Task extends \App\Pages\Base {
     public function OnChangeItem5($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $this->editdetail5->qty5->setText(Stock::getQuantity($id));
-
+        $this->editdetail5->qty5->setText($stock->qty);
+        //todo
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
         

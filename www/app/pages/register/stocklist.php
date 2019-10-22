@@ -60,8 +60,8 @@ class StockList extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
 
 
-        $row->add(new Label('qty', H::fqty(Item::getQuantity($item->item_id,  $this->filter->searchstore->getValue()))));
-        $row->add(new Label('amount', round(Item::getAmount($item->item_id,  $this->filter->searchstore->getValue()))));
+        $row->add(new Label('qty', H::fqty($item->getQuantity( $this->filter->searchstore->getValue()))));
+        $row->add(new Label('amount', round($item->getAmount(  $this->filter->searchstore->getValue()))));
 
 
         $row->add(new Label('cat_name', $item->cat_name));
@@ -99,15 +99,15 @@ class StockList extends \App\Pages\Base {
 
         $plist = array();
         if ($item->price1 > 0)
-            $plist[] = $item->getPrice('price1', $stock->partion);
+            $plist[] = $item->getPrice('price1', 0,$stock->partion);
         if ($item->price2 > 0)
-            $plist[] = $item->getPrice('price2', $stock->partion);
+            $plist[] = $item->getPrice('price2', 0,$stock->partion);
         if ($item->price3 > 0)
-            $plist[] = $item->getPrice('price3', $stock->partion);
+            $plist[] = $item->getPrice('price3', 0,$stock->partion);
         if ($item->price4 > 0)
-            $plist[] = $item->getPrice('price4', $stock->partion);
+            $plist[] = $item->getPrice('price4', 0,$stock->partion);
         if ($item->price5 > 0)
-            $plist[] = $item->getPrice('price5', $stock->partion);
+            $plist[] = $item->getPrice('price5', 0,$stock->partion);
 
         $row->add(new Label('price', implode(',', $plist)));
     }
@@ -167,7 +167,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
-        $where = " qty>0  and disabled <> 1 ";
+        $where = "   disabled <> 1 ";
 
 
 
@@ -179,7 +179,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
             $where = $where . " and cat_id=" . $cat;
         }
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where  store_id={$store}) "  ;
+            $where = $where . " and item_id in (select item_id from store_stock where qty > 0 and store_id={$store}) "  ;
+        }    else {
+            $where = $where . " and item_id in (select item_id from store_stock where qty > 0) "  ;
         }
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {

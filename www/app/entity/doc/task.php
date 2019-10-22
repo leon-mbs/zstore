@@ -148,8 +148,16 @@ class Task extends Document {
            }           
 
        }
+      
        protected function getNumberTemplate(){
          return  'НР-000000';
     }      
+      
+        public function getRelationBased() {
+        $list = array();
+        $list['Warranty'] = 'Гарантийный талон';
+ 
+        return $list;
+    }
 
 }

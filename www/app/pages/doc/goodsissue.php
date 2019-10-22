@@ -17,7 +17,7 @@ use \Zippy\Html\Link\SubmitLink;
 use \App\Entity\Customer;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
-use \App\Entity\Stock;
+ 
 use \App\Entity\Store;
 use \App\Entity\MoneyFund;
 use \App\Helper as H;
@@ -29,12 +29,13 @@ use \App\Application as App;
  */
 class GoodsIssue extends \App\Pages\Base {
 
-    public $_tovarlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
     private $_order_id = 0;
-    private $_discount;
+   private $_prevcust =  0;   // преыдущий контрагент
+ 
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -48,6 +49,18 @@ class GoodsIssue extends \App\Pages\Base {
      
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('paynotes'));
+        $this->docform->add(new Label('discount'))->setVisible(false);
+        $this->docform->add(new TextInput('editpaydisc'));
+        $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
+        $this->docform->add(new Label('paydisc',0));
+        $this->docform->add(new CheckBox('prepaid'))->onChange($this,'OnPrepaid');
+
+        $this->docform->add(new TextInput('editpayamount'));
+        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
+        $this->docform->add(new TextInput('editpayed',"0"));
+        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+        $this->docform->add(new Label('payed',0));
+        $this->docform->add(new Label('payamount',0));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick'); 
@@ -55,12 +68,11 @@ class GoodsIssue extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
 
-        $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
-        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
+        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
         $this->docform->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта'), 1))->onChange($this, 'OnDelivery');
@@ -86,6 +98,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('editserial'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
@@ -109,6 +122,7 @@ class GoodsIssue extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
        
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
+            $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->sent_date->setDate($this->_doc->headerdata['sent_date']);
@@ -119,6 +133,15 @@ class GoodsIssue extends \App\Pages\Base {
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            $this->docform->payamount->setText($this->_doc->payamount);
+            $this->docform->editpayamount->setText($this->_doc->payamount);
+            $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);        
+            $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);        
+            $this->docform->payed->setText($this->_doc->headerdata['payed']);
+            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            $this->docform->prepaid->setChecked($this->_doc->headerdata['prepaid']);
+            $this->OnPrepaid($this->docform->prepaid) ;
+      
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -127,11 +150,13 @@ class GoodsIssue extends \App\Pages\Base {
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_order_id = $this->_doc->headerdata['order_id'];
-
-
+            $this->_prevcust = $this->_doc->customer_id;
+ 
+            $this->OnChangeCustomer($this->docform->customer);
+ 
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
-                $this->_tovarlist[$item->item_id] = $item;
+                $this->_itemlist[$item->item_id] = $item;
             }
         } else {
             $this->_doc = Document::create('GoodsIssue');
@@ -174,46 +199,28 @@ class GoodsIssue extends \App\Pages\Base {
                         
                         foreach ($order->detaildata as $item) {
                             $item = new Item($item);
-                            $this->_tovarlist[$item->item_id] = $item;
+                            $this->_itemlist[$item->item_id] = $item;
                         }
-                        /*
-                        foreach ($order->detaildata as $item) {
-                            $stlist = Stock::pickup($order->headerdata['store'], $item['item_id'], $item['quantity']);
-                            if (count($stlist) == 0) {
-                                $notfound[] = $item['itemname'] . "({$item['quantity']}шт) ";
-                                ;
-                            } else {
-                                foreach ($stlist as $st) {
-                                    $st->price = $item['price'];
-                                    $this->_tovarlist[$st->stock_id] = $st;
-                                }
-                            }
-                        }
-                        //если  не  все  партии найдены
-                        if (count($notfound) > 0) {
-                            $this->setWarn('Не найдено достаточное количество для  ' . implode(',', $notfound));
-                        }
-                        */
+                  
                     }
                 }
             }
         }
-        $this->calcTotal();
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+         
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-        $this->calcTotal();
+        
         $this->OnDelivery($this->docform->delivery);
        
     }
-
-  
-
+ 
+ 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('tovar', $item->itemname));
-        $row->add(new Label('partion', $item->partion));
+ 
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
@@ -232,11 +239,13 @@ class GoodsIssue extends \App\Pages\Base {
             return;
 
         $tovar = $sender->owner->getDataItem();
-        // unset($this->_tovarlist[$tovar->tovar_id]);
+        // unset($this->_itemlist[$tovar->tovar_id]);
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
         $this->docform->detail->Reload();
-        $this->calcTotal();
+        $this->calcTotal();      
+        $this->calcPay();      
+
     }
 
     public function addrowOnClick($sender) {
@@ -249,21 +258,21 @@ class GoodsIssue extends \App\Pages\Base {
     }
 
     public function editOnClick($sender) {
-        $stock = $sender->getOwner()->getDataItem();
+        $item = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-        $this->editdetail->editquantity->setText($stock->quantity);
-        $this->editdetail->editprice->setText($stock->price);
+        $this->editdetail->editquantity->setText($item->quantity);
+        $this->editdetail->editprice->setText($item->price);
 
 
-        $this->editdetail->edittovar->setKey($stock->item_id);
-        $this->editdetail->edittovar->setText($stock->itemname);
+        $this->editdetail->edittovar->setKey($item->item_id);
+        $this->editdetail->edittovar->setText($item->itemname);
 
         
-        $this->editdetail->qtystock->setText(H::fqty($st->qty));
+        $this->editdetail->qtystock->setText(H::fqty($item->qty));
 
-        $this->_rowid = $stock->item_id;
+        $this->_rowid = $item->item_id;
     }
 
     public function saverowOnClick($sender) {
@@ -273,18 +282,18 @@ class GoodsIssue extends \App\Pages\Base {
             $this->setError("Не выбран товар");
             return;
         }
-
+        $item = Item::load($id) ;
         
-        $stock->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getText();
         $qstock = $this->editdetail->qtystock->getText();
-      //  if ($stock->quantity > $qstock) {
+      //  if ($item->quantity > $qstock) {
       //      $this->setWarn('Недостаточное  количество на  складе');
       //  }
-        $stock->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getText();
 
 
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$stock->item_id] = $stock;
+        unset($this->_itemlist[$this->_rowid]);
+        $this->_itemlist[$stock->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -296,7 +305,9 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
-        $this->calcTotal();
+        $this->calcTotal();      
+        $this->calcPay();      
+
     }
 
     public function cancelrowOnClick($sender) {
@@ -320,12 +331,24 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->order = $this->docform->order->getText();
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->payamount = $this->docform->payamount->getText();
+         
+        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
+        $this->_doc->headerdata['prepaid'] = $this->docform->prepaid->isChecked();
+        if($this->_doc->headerdata['prepaid']==1){
+           $this->_doc->headerdata['paydisc'] = 0; 
+           $this->_doc->headerdata['payed'] = 0; 
+           $this->_doc->payamount = 0; 
+        }
+       
+       
         if ($this->checkForm() == false) {
             return;
         }
         $order = Document::load($this->_order_id);
 
-        $this->calcTotal();
+ 
 
 
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
@@ -345,7 +368,7 @@ class GoodsIssue extends \App\Pages\Base {
 
 
         $this->_doc->detaildata = array();
-        foreach ($this->_tovarlist as $tovar) {
+        foreach ($this->_itemlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
         }
 
@@ -408,7 +431,21 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         }
     }
-
+    public function onPayAmount($sender) {
+        $this->docform->payamount->setText($this->docform->editpayamount->getText());      
+    }
+    
+    public function onPayed($sender) {
+        $this->docform->payed->setText($this->docform->editpayed->getText());      
+    }
+    public function onPayDisc() {
+    
+               
+        $this->docform->paydisc->setText($this->docform->editpaydisc->getText());      
+        
+         
+        $this->calcPay() ;
+    }
     /**
      * Расчет  итого
      *
@@ -417,14 +454,60 @@ class GoodsIssue extends \App\Pages\Base {
 
         $total = 0;
 
-        foreach ($this->_tovarlist as $item) {
+        foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(round($total));
+        
+        
+        $disc = 0; 
+     
+            $customer_id = $this->docform->customer->getKey();
+            if ($customer_id > 0) {
+                $customer = Customer::load($customer_id);
+                
+                if($customer->discount > 0) {
+                    $disc =  round($total * ($customer->discount/100))  ;
+                }else if($customer->bonus > 0){
+                    if($total >= $customer->bonus){
+                        $disc =  $customer->bonus;
+                    } else {
+                        $disc = $total;
+                    }
+                }  
+            }
+        
+        
+        $this->docform->paydisc->setText( $disc) ; 
+        $this->docform->editpaydisc->setText($disc);        
     }
-  
+   
+    private function calcPay(){
+           $total = $this->docform->total->getText();
+           $disc = $this->docform->paydisc->getText();
+
+           $this->docform->editpayamount->setText(round($total-$disc));      
+           $this->docform->payamount->setText(round($total-$disc));      
+           $this->docform->editpayed->setText(round($total-$disc));      
+           $this->docform->payed->setText(round($total-$disc));      
+    } 
+    
+    public function OnPrepaid($sender) {
+        $b=$sender->isChecked();
+        if($b){
+            $this->docform->payed->setVisible(false);      
+            $this->docform->payamount->setVisible(false);      
+            $this->docform->paydisc->setVisible(false);      
+        }   else{
+            $this->docform->payed->setVisible(true);      
+            $this->docform->payamount->setVisible(true);      
+            $this->docform->paydisc->setVisible(true);      
+     
+        }
+    }
+        
     public function addcodeOnClick($sender) {
         $code =  trim($this->docform->barcode->getText()) ;
         $this->docform->barcode->setText('');
@@ -449,6 +532,10 @@ class GoodsIssue extends \App\Pages\Base {
            $this->editdetail->edititem->setText($item->itemname);
            $this->editdetail->editserial->setText('');
            $this->editdetail->editquantity->setText('1');
+           
+           $this->OnChangeItem($this->editdetail->edititem);
+           
+           
            return;
         }         
         
@@ -456,21 +543,18 @@ class GoodsIssue extends \App\Pages\Base {
         
         $store = $this->docform->store->getValue() ;
          
-        $qty = Item::getQuantity($item->item_id,$store);
+        $qty = $item->getQuantity($store);
         if($qty<=0){
            $this->setError("Товара {$item->itemname} нет на складе")     ; 
         }
-        
-        
-        
-        
+         
         
         if($this->_itemlist[$_item->item_id] instanceof Item){
             $this->_itemlist[$_item->item_id]->quantity += 1; 
         }else {
-            
+            //todo
             $item->quantity = 1; 
-            $$item->price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
+            $item->price = $item->getPrice($this->docform->pricetype->getValue(), $store);
 
             $this->_itemlist[$item->item_id] = $item;
             
@@ -489,14 +573,14 @@ class GoodsIssue extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if (count($this->_tovarlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
         if ($this->docform->store->getValue() == 0) {
             $this->setError("Не выбран  склад");
         }
-        if ($this->docform->customer->getKey() == 0 && trim($this->docform->customer->getText()) == '') {
-            //$this->setError("Неверно введен  покупатель");
+        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] ==0){
+            $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();
     }
@@ -507,19 +591,19 @@ class GoodsIssue extends \App\Pages\Base {
 
     public function OnChangeStore($sender) {
         //очистка  списка  товаров
-        $this->_tovarlist = array();
+        $this->_itemlist = array();
         $this->docform->detail->Reload();
     }
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
-        $stock = Stock::load($id);
-         
+        $item = Item::load($id);
+        $store_id = $this->docform->store->getValue();
+        
+        $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+        $qty = $item->getQuantity($store_id);
 
-        $this->editdetail->qtystock->setText(H::fqty($stock->qty));
-
-        $item = Item::load($stock->item_id);
-        $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
+        $this->editdetail->qtystock->setText(H::fqty($qty));
      
 
         $this->editdetail->editprice->setText($price);
@@ -527,42 +611,44 @@ class GoodsIssue extends \App\Pages\Base {
         $this->updateAjax(array('qtystock', 'editprice'));
     }
 
+  
+    public function OnAutoItem($sender) {
+        $store_id = $this->docform->store->getValue();
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text,$store_id );
+    }
+
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
     }
-    public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
-        $text = trim($sender->getText());
-        return Item::findArrayAC($store_id, $text);
-    }
 
     public function OnChangeCustomer($sender) {
-        $this->_discount = 0;
+        $this->docform->discount->setVisible(false);        
+ 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-            $this->_discount = $customer->discount;
+            if($customer->discount > 0) {
+                $this->docform->discount->setText("Постоянная скидка ".$customer->discount. '%'); 
+                $this->docform->discount->setVisible(true); 
+            }else if($customer->bonus > 0){
+                $this->docform->discount->setText("Бонусы ".$customer->bonus ); 
+                $this->docform->discount->setVisible(true); 
+            }             
             $this->docform->ship_address->setText($customer->address);
         }
-        if ($this->_discount > 0) {
-            $this->docform->discount->setVisible(true);
-            $this->docform->discount->setText('Скидка ' . $this->_discount . '%');
-        } else {
-            $this->docform->discount->setVisible(false);
+        if($this->_prevcust != $customer_id) {//сменился контрагент
+           
+        
+           $this->_prevcust  = $customer_id  ;
+           $this->calcTotal();
+      
+           $this->calcPay();             
         }
+              
     }
-
-  
-    public function OnChangePriceType($sender) {
-        foreach ($this->_tovarlist as $stock) {
-            $item = Item::load($stock->item_id);
-            $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
-        }
-        $this->calcTotal();
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-    }
+    
 
     //добавление нового контрагента
     public function addcustOnClick($sender) {

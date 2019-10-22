@@ -54,7 +54,9 @@ class GoodsIssue extends Document {
             "document_number" => $this->document_number,
             "total" => $this->amount ,
             "payed" => $this->headerdata['payed'] ,
-            "payamount" => $this->payamount
+            "paydisc" => $this->headerdata["paydisc"] ,
+             "prepaid" => $this->headerdata['prepaid'] == 1,
+           "payamount" => $this->payamount
             
         );
         if ($this->headerdata["sent_date"] > 0) {
@@ -73,17 +75,18 @@ class GoodsIssue extends Document {
     }
 
     public function Execute() {
-        $conn = \ZDB\DB::getConnect();
+        //$conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->detaildata as $row) {
-
-            $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
-            $sc->setStock($row['stock_id']);
-            $sc->setExtCode($row['price'] - $row['partion']); //Для АВС 
-
-          //  $sc->setCustomer($this->customer_id);
-            $sc->save();
+        foreach ($this->detaildata as $item) {
+               $listst = \App\Entity\Stock::pickup($this->headerdata['store'],$item['item_id'],$item['quantity'],$item['snumber'])    ;
+                        foreach($listst as $st){
+                              $sc = new Entry($this->document_id, 0-$item['quantity'] * $st->partion, 0-$item['quantity'] );
+                              $sc->setStock($st->stock_id);
+                              $sc->setExtCode($item['price'] - $st->partion); //Для АВС 
+                              $sc->save();                
+                        }
+            
         }
         
         //списываем бонусы

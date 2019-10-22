@@ -145,7 +145,7 @@ class Order extends Base {
 
             //todo  покупатель по умолчанию
             //todo  отослаnь нотификацию
-            //todo  отослаnь писмо
+            //todo  отослаnь письмо
         } catch (Exception $ee) {
             $this->setError($ee->getMessage());
         }

@@ -29,7 +29,6 @@ class Warranty extends Document {
 
         $firm = \App\System::getOptions("firmdetail");
 
-
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $firm['name'],

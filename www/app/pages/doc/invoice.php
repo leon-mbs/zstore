@@ -32,9 +32,9 @@ class Invoice extends \App\Pages\Base {
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
- 
     private $_prevcust =  0;   // преыдущий контрагент
-  
+ 
+   
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -108,13 +108,14 @@ class Invoice extends \App\Pages\Base {
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);        
-            $this->docform->editpaydisc->setText($this->_doc->headerdata['editpaydisc']);        
-            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);        
             $this->docform->payed->setText($this->_doc->headerdata['payed']);
             $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
            
@@ -329,8 +330,8 @@ class Invoice extends \App\Pages\Base {
                
         $this->docform->paydisc->setText($this->docform->editpaydisc->getText());      
         
-        $this->calcTotal() ;
-        $this->CalcPay() ;
+        
+        $this->calcPay() ;
     }
 
     /**
@@ -348,9 +349,7 @@ class Invoice extends \App\Pages\Base {
         }
         $this->docform->total->setText(round($total));
         $disc = 0; 
-        if($this->_manualdisc >=0){
-           $disc = $this->_manualdisc;    
-        }  else {
+     
             $customer_id = $this->docform->customer->getKey();
             if ($customer_id > 0) {
                 $customer = Customer::load($customer_id);
@@ -365,14 +364,14 @@ class Invoice extends \App\Pages\Base {
                     }
                 }  
             }
-        }
+        
         
         $this->docform->paydisc->setText( $disc) ; 
         $this->docform->editpaydisc->setText($disc);
         
             
     }
-    private function CalcPay(){
+    private function calcPay(){
            $total = $this->docform->total->getText();
            $disc = $this->docform->paydisc->getText();
 
@@ -410,7 +409,7 @@ class Invoice extends \App\Pages\Base {
         $price = $item->getPrice($this->docform->pricetype->getValue());
    
 
-        $this->editdetail->qtystock->setText(H::fqty(Item::getQuantity($id, $this->docform->store->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity( $this->docform->store->getValue())));
         $this->editdetail->editprice->setText(round($price));
 
         $this->updateAjax(array('qtystock', 'editprice'));
@@ -450,6 +449,7 @@ class Invoice extends \App\Pages\Base {
            $this->_prevcust  = $customer_id  ;
         }
         
+        $this->calcTotal();
         $this->calcPay();
       
     }

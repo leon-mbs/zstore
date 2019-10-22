@@ -73,13 +73,13 @@ class Item extends \ZCL\DB\Entity {
 
     //Вычисляет  отпускную цену
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
-    //$partionprice - учетная цена
-    public function getPrice($_price_, $partionprice = 0) {
+    //$store - склад
+    //$partion - партия
+    public function getPrice($_price_, $store = 0,$partion=0) {
+        $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
-        if ($_price_ > 0) {
-            
-        } else {
+ 
             if ($_price_ == 'price1')
                 $_price = $this->price1;
             else if ($_price_ == 'price2')
@@ -90,35 +90,40 @@ class Item extends \ZCL\DB\Entity {
                 $_price = $this->price4;
             else if ($_price_ == 'price5')
                 $_price = $this->price5;
-        }
-        if (strlen($_price) == 0)
-            return 0;
-
-        $price = 0;
-        if ($partionprice > 0) {
-            if (strpos($_price, '%') > 0) {
-                $ret = doubleval(str_replace('%', '', $_price));
-                $price = $partionprice + (int) $partionprice / 100 * $ret;
-            } else {
-                $price = $_price;
-            }
-            /* } else
-              if ($this->lastpart > 0) {
-              if (strpos($_price, '%') > 0) {
-              $ret = doubleval(str_replace('%', '', $_price));
-              $price = $this->lastpart + (int) $this->lastpart / 100 * $ret;
-              } else {
-              $price = $_price;
-              } */
-        } else {
-            if (strpos($_price, '%') > 0) {
-
-                return 0;
-            } else {
-                $price = $_price;
-            }
-        }
-
+      
+          
+        //если процент    
+        if (strpos($_price, '%') > 0) {
+                  
+             $ret = doubleval(str_replace('%', '', $_price));
+             if($ret>0){
+                
+                 if($partion>0){
+                     
+                 }
+                 else {  //ищем последнюю закупочную  цену 
+                    $conn = \ZDB\DB::getConnect();
+                    
+                    $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}";
+                    if($store>0){
+                       $sql = $sql ." and store_id=" . $store;    
+                    }   
+                    $sql = $sql ." order  by  stock_id desc limit 0,1";  
+                    $partion = $conn->GetOne($sql);
+                 }
+                
+                 
+                 $price = $partion + (int) $partion / 100 * $ret;   
+             }
+             
+             
+                  
+         } else if($_price > 0){
+             $price = $_price; //задана  просто  цифра
+         }
+          
+            
+        //поправка  по  валюте
 
         if ($common['useval'] == true) {
             $k = 1;
@@ -163,18 +168,17 @@ class Item extends \ZCL\DB\Entity {
      * @param mixed $store_id
      * @param mixed $snumber   партия проиводителя
      */
-    public static function getQuantity($item_id, $store_id = 0,$snumber="") {
-        if ($item_id > 0) {
+    public function   getQuantity(   $store_id = 0,$snumber="") {
+        
             $conn = \ZDB\DB::getConnect();
-            $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock_view where   item_id = {$item_id} ";
+            $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock_view where   item_id = {$this->item_id} ";
             if ($store_id > 0)
                 $sql .= " and store_id = " . $store_id;
            if (strlen($snumber) > 0)
                 $sql .= " and  snumber = " . $conn->qstr($snumber);
             $cnt = $conn->GetOne($sql);
             return $cnt;
-        }
-        return 0;
+        
     }
     
     /**
@@ -183,16 +187,15 @@ class Item extends \ZCL\DB\Entity {
      * @param mixed $item_id
      * @param mixed $store_id
      */
-    public static function getAmount($item_id, $store_id = 0) {
-        if ($item_id > 0) {
+    public   function getAmount(  $store_id = 0) {
+       
             $conn = \ZDB\DB::getConnect();
-            $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   item_id = {$item_id} ";
+            $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   item_id = {$this->item_id} ";
             if ($store_id > 0)
                 $sql .= " and store_id = " . $store_id;
             $amount = $conn->GetOne($sql);
             return $amount;
-        }
-        return 0;
+       
     }
     
    
@@ -203,9 +206,12 @@ class Item extends \ZCL\DB\Entity {
      * @return []
      * @static
      */
-    public static function findArrayAC($store, $partname = "") {
+    public static function findArrayAC( $partname,$store=0  ) {
        
-        $criteria = "  disabled <> 1  and item_id in (select item_id from store_stock  where  store_id={$store})" ;
+        $criteria = "  disabled <> 1 ";
+        if($store>0){
+            $criteria .= "     and item_id in (select item_id from store_stock  where  store_id={$store})" ;
+        }
         
         if (strlen($partname) > 0) {
             $partname = self::qstr('%' . $partname . '%');

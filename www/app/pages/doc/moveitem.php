@@ -133,7 +133,7 @@ class MoveItem extends \App\Pages\Base {
         $this->editdetail->edititem->setValue($item->itemname);
         $this->editdetail->editsnumber->setValue($item->snumber);
 
-        $this->editdetail->qtystock->setText(H::fqty(Item::getQuantity($item->item_id,$this->docform->storefrom->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->storefrom->getValue())));
   
         $this->_rowid = $item->item_id. $item->snumber;
     }
@@ -246,8 +246,8 @@ class MoveItem extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         
         $item_id = $sender->getKey();
-  
-        $this->editdetail->qtystock->setText(H::fqty(Item::getQuantity($item_id,$this->docform->storefrom->getValue())));
+        $item = Item::load($item_id);
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->storefrom->getValue())));
         
         $this->updateAjax(array('qtystock'));
     }
@@ -270,7 +270,7 @@ class MoveItem extends \App\Pages\Base {
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->storefrom->getValue();
         $text = trim($sender->getText());
-        return Item::findArrayAC($store_id, $text);
+        return Item::findArrayAC($text,$store_id );
     }
  
     public function addcodeOnClick($sender) {

@@ -293,10 +293,7 @@ class ProdIssue extends \App\Pages\Base {
         $stock = Stock::load($id);
          
         $this->editdetail->qtystock->setText(H::fqty($stock->qty));
-
-        // $item = Item::load($stock->item_id);
-
-
+     
         $this->editdetail->editprice->setText($stock->partion);
 
         $this->updateAjax(array('qtystock', 'editprice'));

@@ -27,9 +27,10 @@ class WMinQty extends \Zippy\Html\PageFragment {
         $data = array();
 
 
-        $sql = "select item_id, itemname,qty,minqty from items_view where  qty <  minqty   
-                 
-                
+        $sql = "select * from (select item_id, itemname,
+                 (select  coalesce(sum(s.qty) ,0) from `store_stock_view` s where  s.item_id=i.item_id and s.qty >0    ) as iqty,
+                 i.`minqty`
+                 from items i where minqty>0 )t where   iqty <  minqty   
                  ";
 
         if ($visible) {
