@@ -22,24 +22,22 @@ class MoveItem extends Document {
         foreach ($this->detaildata as $item) {
 
             //списываем  со склада
-                
-                $listst = Stock::pickup($this->headerdata['storefrom'],$item['item_id'],$item['quantity'] ,$item['snumber'])    ;
-                if(count($listst)==0){
-                     \App\System::setErrorMsg('Недостаточно товара '.$item['itemname']);
-                     return false;
-                }
-                foreach($listst as $st){
-                      $sc = new Entry($this->document_id, 0-$st->quantity * $st->partion, 0-$st->quantity );
-                      $sc->setStock($st->stock_id);
-                      $sc->save();
-                      
-                      $stockto = Stock::getStock($this->headerdata['storeto'], $item['item_id'], $st->partion, $item['snumber'], 0, true);
-                      $sc = new Entry($this->document_id, $st->quantity * $st->partion, $st->quantity);
-                      $sc->setStock($stockto->stock_id);
-                      $sc->save();
-                  
-                }
-          
+
+            $listst = Stock::pickup($this->headerdata['storefrom'], $item['item_id'], $item['quantity'], $item['snumber']);
+            if (count($listst) == 0) {
+                \App\System::setErrorMsg('Недостаточно товара ' . $item['itemname']);
+                return false;
+            }
+            foreach ($listst as $st) {
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+                $sc->save();
+
+                $stockto = Stock::getStock($this->headerdata['storeto'], $item['item_id'], $st->partion, $item['snumber'], 0, true);
+                $sc = new Entry($this->document_id, $st->quantity * $st->partion, $st->quantity);
+                $sc->setStock($stockto->stock_id);
+                $sc->save();
+            }
         }
 
 
@@ -57,7 +55,7 @@ class MoveItem extends Document {
         $detail = array();
         foreach ($this->detaildata as $value) {
             $name = $value['itemname'];
-   
+
 
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
@@ -80,8 +78,8 @@ class MoveItem extends Document {
         return $html;
     }
 
-    protected function getNumberTemplate(){
-         return  'ПТ-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'ПТ-000000';
+    }
 
 }

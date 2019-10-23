@@ -26,7 +26,6 @@ use \App\System;
 class GRList extends \App\Pages\Base {
 
     private $_doc = null;
- 
 
     /**
      *
@@ -44,7 +43,7 @@ class GRList extends \App\Pages\Base {
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array( 0 => 'Все',1 => 'Не проведенные', 2 => 'Неоплаченые'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Все', 1 => 'Не проведенные', 2 => 'Неоплаченые'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
@@ -66,14 +65,14 @@ class GRList extends \App\Pages\Base {
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
-   
+
         $this->filterOnSubmit(null);
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function filterOnSubmit($sender) {
 
-    
+
         $this->statuspan->setVisible(false);
 
         $this->doclist->Reload(false);
@@ -86,9 +85,9 @@ class GRList extends \App\Pages\Base {
 
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount>0? $doc->amount:""  )));
+        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" )));
 
-         $row->add(new Label('customer', $doc->customer_name));
+        $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
@@ -99,12 +98,12 @@ class GRList extends \App\Pages\Base {
         } else {
             $row->edit->setVisible(false);
         }
-      }
+    }
 
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-  
+
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
@@ -125,7 +124,7 @@ class GRList extends \App\Pages\Base {
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true))
             return;
-        
+
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
@@ -139,13 +138,12 @@ class GRList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
-        if($doc->meta_name=='GoodsReceipt')
-           App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
-        if($doc->meta_name=='InvoiceCust')
-           App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", $doc->document_id);
+        if ($doc->meta_name == 'GoodsReceipt')
+            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
+        if ($doc->meta_name == 'InvoiceCust')
+            App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", $doc->document_id);
     }
 
- 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";
@@ -191,7 +189,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
         $where .= " and (meta_name  = 'GoodsReceipt' or meta_name  = 'InvoiceCust') ";
-   
+
         $status = $this->page->filter->status->getValue();
 
         if ($status == 1) {

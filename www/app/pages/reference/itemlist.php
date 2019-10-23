@@ -188,11 +188,10 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->clean();
         $this->itemdetail->editmsr->setText('шт');
         $this->_item = new Item();
-        
-        if(System::getOption("common","autoarticle")==1)  {
-            $this->itemdetail->editcode->setText(Item::getNextArticle()) ;
+
+        if (System::getOption("common", "autoarticle") == 1) {
+            $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
-        
     }
 
     public function cancelOnClick($sender) {
@@ -228,28 +227,28 @@ class ItemList extends \App\Pages\Base {
 
         $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
 
-        
-        
-        
+
+
+
         //проверка  уникальности артикула
         if (strlen($this->_item->item_code) > 0) {
             $code = Item::qstr($this->_item->item_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
             if ($cnt > 0) {
-               //пытаемся гtнерить еще раз 
-               if($this->_item->item_id==0 && System::getOption("common","autoarticle")==1)  {
-                   $this->_item->item_code =  Item::getNextArticle();
-                   $this->itemdetail->editcode->setText($this->_item->item_code) ;
-                   
-                   $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
-                   if ($cnt > 0) {
-                      $this->setError('Такой  артикул уже существует');
-                      return;                    
-                   }
-               } else {
-                   $this->setError('Такой  артикул уже существует');
-                   return;
-               }
+                //пытаемся гtнерить еще раз 
+                if ($this->_item->item_id == 0 && System::getOption("common", "autoarticle") == 1) {
+                    $this->_item->item_code = Item::getNextArticle();
+                    $this->itemdetail->editcode->setText($this->_item->item_code);
+
+                    $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
+                    if ($cnt > 0) {
+                        $this->setError('Такой  артикул уже существует');
+                        return;
+                    }
+                } else {
+                    $this->setError('Такой  артикул уже существует');
+                    return;
+                }
             }
         }
         $this->_item->Save();

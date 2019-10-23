@@ -27,17 +27,17 @@
 
 
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кол.</th>
-        
+
     </tr>
     {{#_detail}}
     <tr>
         <td>{{no}}</td>
         <td>{{item_name}}</td>
-        
+
         <td align="right">{{snumber}}</td>
         <td>{{msr}}</td>
         <td align="right">{{quantity}}</td>
-        
+
     </tr>
     {{/_detail}}
 </table>

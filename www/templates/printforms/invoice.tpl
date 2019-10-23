@@ -52,12 +52,12 @@
         <td style="border-top:1px #000 solid;" colspan="8" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr> 
-      {{#paydisc}}
-     <tr style="font-weight: bolder;">
+    {{#paydisc}}
+    <tr style="font-weight: bolder;">
         <td   colspan="8" align="right">Скидка:</td>
         <td   align="right">{{paydisc}}</td>
     </tr>
-     {{/paydisc}}
+    {{/paydisc}}
     <tr style="font-weight: bolder;">
         <td   colspan="8" align="right">К оплате:</td>
         <td   align="right">{{payamount}}</td>
@@ -66,6 +66,6 @@
         <td   colspan="8" align="right">Оплата:</td>
         <td   align="right">{{payed}}</td>
     </tr>
- 
+
 </table>
 

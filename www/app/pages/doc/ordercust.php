@@ -104,7 +104,7 @@ class OrderCust extends \App\Pages\Base {
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
- 
+
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 

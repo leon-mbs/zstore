@@ -32,9 +32,6 @@ class GoodsReceipt extends \App\Pages\Base {
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-     
-    
-     
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -48,13 +45,13 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
-           
+
         $this->docform->add(new TextInput('barcode'));
-        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick'); 
-   
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF())) ;
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
+
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('paynotes'));
-        $this->docform->add(new CheckBox('prepaid'))->onChange($this,'OnPrepaid');
+        $this->docform->add(new CheckBox('prepaid'))->onChange($this, 'OnPrepaid');
 
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
         $this->docform->add(new Label('course', 'Курс 1'));
@@ -67,16 +64,16 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
-        $this->docform->add(new TextInput('editpayed',"0"));
+        $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
- 
-        $this->docform->add(new Label('payed',0));
 
-        $this->docform->add(new Label('payamount',0));
-      
+        $this->docform->add(new Label('payed', 0));
+
+        $this->docform->add(new Label('payamount', 0));
+
         $this->docform->add(new Label('total'));
         $this->docform->add(new \Zippy\Html\Form\File('scan'));
-         
+
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
@@ -101,7 +98,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-  
+
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -114,16 +111,15 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
             $this->docform->prepaid->setChecked($this->_doc->headerdata['prepaid']);
-            $this->OnPrepaid($this->docform->prepaid) ;
-            
+            $this->OnPrepaid($this->docform->prepaid);
+
             $this->docform->total->setText($this->_doc->amount);
- 
+
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
                 $item->old = true;
                 $this->_itemlist[$item->item_id] = $item;
             }
-              
         } else {
             $this->_doc = Document::create('GoodsReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -133,10 +129,10 @@ class GoodsReceipt extends \App\Pages\Base {
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'OrderCust') {
-                         
+
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-                            
+
                         $order = $basedoc->cast();
 
                         foreach ($order->detaildata as $_item) {
@@ -145,34 +141,29 @@ class GoodsReceipt extends \App\Pages\Base {
                         }
                     }
                     if ($basedoc->meta_name == 'InvoiceCust') {
-                         
+
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->docform->payamount->setText($basedoc->payamount);
-                         
+
                         $invoice = $basedoc->cast();
 
-                      
+
 
                         foreach ($invoice->detaildata as $_item) {
                             $item = new Item($_item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
-                        
                     }
-                    $this->calcTotal(); 
+                    $this->calcTotal();
                 }
             }
         }
-       
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-
-         
     }
-
-     
 
     public function onVal($sender) {
         $val = $sender->getValue();
@@ -200,7 +191,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
-  
+
         $row->add(new Label('amount', round($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->edit->setVisible($item->old != true);
@@ -233,44 +224,44 @@ class GoodsReceipt extends \App\Pages\Base {
         // unset($this->_itemlist[$item->item_id]);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
-        $this->calcTotal();      
-        $this->calcPay();          
+        $this->calcTotal();
+        $this->calcPay();
 
         $this->docform->detail->Reload();
     }
- 
+
     public function addcodeOnClick($sender) {
-        $code =  trim($this->docform->barcode->getText()) ;
+        $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-        if($code=='') return;
-        
-        foreach($this->_itemlist as $_item){
-             if($_item->bar_code==$code){
-                $this->_itemlist[$_item->item_id]->quantity += 1; 
+        if ($code == '')
+            return;
+
+        foreach ($this->_itemlist as $_item) {
+            if ($_item->bar_code == $code) {
+                $this->_itemlist[$_item->item_id]->quantity += 1;
                 $this->docform->detail->Reload();
-                $this->calcTotal();                
-                $this->CalcPay();                
+                $this->calcTotal();
+                $this->CalcPay();
                 return;
-             }
+            }
         }
-        
-        
-        $code = Item::qstr($code)  ;
-        $item = Item::getFirst("  (item_code = {$code} or bar_code = {$code})"  );
-   
+
+
+        $code = Item::qstr($code);
+        $item = Item::getFirst("  (item_code = {$code} or bar_code = {$code})");
+
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;    
-        
-        if($item == null) {
-           $this->setWarn('Товар не  найден')     ;
+        $this->_rowid = 0;
+
+        if ($item == null) {
+            $this->setWarn('Товар не  найден');
         } else {
-           $this->editdetail->edititem->setKey($item->item_id);
-           $this->editdetail->edititem->setText($item->itemname);
-        }       
-          
-    }    
-    
+            $this->editdetail->edititem->setKey($item->item_id);
+            $this->editdetail->edititem->setText($item->itemname);
+        }
+    }
+
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
@@ -310,8 +301,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-        $this->calcTotal();      
-        $this->calcPay();          
+        $this->calcTotal();
+        $this->calcPay();
 
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
@@ -332,8 +323,8 @@ class GoodsReceipt extends \App\Pages\Base {
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
-            
-         
+
+
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -344,11 +335,11 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         $this->_doc->headerdata['prepaid'] = $this->docform->prepaid->isChecked();
-        if($this->_doc->headerdata['prepaid']==1){
-           $this->_doc->headerdata['payed'] = 0; 
-           $this->_doc->payamount = 0; 
+        if ($this->_doc->headerdata['prepaid'] == 1) {
+            $this->_doc->headerdata['payed'] = 0;
+            $this->_doc->payamount = 0;
         }
-        
+
         if ($this->checkForm() == false) {
             return;
         }
@@ -357,7 +348,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($file['size'] > 10000000) {
             $this->setError("Файл больше 10М!");
             return;
-        }         
+        }
 
         $common = System::getOptions("common");
         foreach ($this->_itemlist as $item) {
@@ -384,8 +375,8 @@ class GoodsReceipt extends \App\Pages\Base {
         }
 
 
-    
-  
+
+
 
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
@@ -422,7 +413,7 @@ class GoodsReceipt extends \App\Pages\Base {
             }
             if ($file['size'] > 0) {
                 H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
-            }   
+            }
             $conn->CommitTrans();
         } catch (\Exception $ee) {
             global $logger;
@@ -434,31 +425,30 @@ class GoodsReceipt extends \App\Pages\Base {
         }
         App::RedirectBack();
     }
-    
+
     public function onPayAmount($sender) {
- 
-       
-      $this->docform->payamount->setText($this->docform->editpayamount->getText());      
-      $this->docform->payed->setText($this->docform->editpayamount->getText());      
-      $this->docform->editpayed->setText($this->docform->editpayamount->getText());      
-       
+
+
+        $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->docform->payed->setText($this->docform->editpayamount->getText());
+        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
     }
+
     public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());      
+        $this->docform->payed->setText($this->docform->editpayed->getText());
     }
-    
+
     public function OnPrepaid($sender) {
-        $b=$sender->isChecked();
-        if($b){
-            $this->docform->payed->setVisible(false);      
-            $this->docform->payamount->setVisible(false);      
-        }   else{
-            $this->docform->payed->setVisible(true);      
-            $this->docform->payamount->setVisible(true);      
-     
+        $b = $sender->isChecked();
+        if ($b) {
+            $this->docform->payed->setVisible(false);
+            $this->docform->payamount->setVisible(false);
+        } else {
+            $this->docform->payed->setVisible(true);
+            $this->docform->payamount->setVisible(true);
         }
     }
-    
+
     /**
      * Расчет  итого
      *
@@ -472,19 +462,16 @@ class GoodsReceipt extends \App\Pages\Base {
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(round($total));
-        
-          
-             
     }
- 
-    private function CalcPay(){
-           $total = $this->docform->total->getText();
-           $this->docform->editpayamount->setText(round($total));      
-           $this->docform->payamount->setText(round($total));      
-           $this->docform->editpayed->setText(round($total));      
-           $this->docform->payed->setText(round($total));      
+
+    private function CalcPay() {
+        $total = $this->docform->total->getText();
+        $this->docform->editpayamount->setText(round($total));
+        $this->docform->payamount->setText(round($total));
+        $this->docform->editpayed->setText(round($total));
+        $this->docform->payed->setText(round($total));
     }
- 
+
     /**
      * Валидация   формы
      *
@@ -502,7 +489,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран  поставщик");
         }
-        if($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] ==0){
+        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();
@@ -529,11 +516,11 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->setVisible(false);
 
         $this->editnewitem->clean();
-         
-        
-        if(System::getOption("common","autoarticle")==1)  {
-            $this->editnewitem->editnewitemcode->setText(Item::getNextArticle()) ;
-        }        
+
+
+        if (System::getOption("common", "autoarticle") == 1) {
+            $this->editnewitem->editnewitemcode->setText(Item::getNextArticle());
+        }
     }
 
     public function savenewitemOnClick($sender) {
@@ -558,6 +545,4 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
     }
 
-       
-       
 }

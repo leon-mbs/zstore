@@ -211,9 +211,9 @@ class DocView extends \Zippy\Html\PageFragment {
     //вывод строки  прикрепленного файла
     public function filelistOnRow($row) {
         $item = $row->getDataItem();
-        $url=_BASEURL . 'loadfile.php?id=' . $item->file_id;
-        if(strlen($item->mime) > 0){
-             $url = $url.'&im=1'  ;
+        $url = _BASEURL . 'loadfile.php?id=' . $item->file_id;
+        if (strlen($item->mime) > 0) {
+            $url = $url . '&im=1';
         }
         $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", $url));
         $file->setValue($item->filename);

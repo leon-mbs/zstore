@@ -21,7 +21,7 @@ class Base extends \Zippy\Html\WebPage {
         if (!is_array($shop))
             $shop = array();
 
-        
+
         $user = System::getUser();
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["currencyname"] = $shop["currencyname"];

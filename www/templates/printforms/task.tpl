@@ -9,18 +9,18 @@
         <td colspan="6">
             Заказчик:   {{customer}}
         </td>
-      
+
     </tr>
     <tr>
         <td  colspan="6">
             Произв. участок:   {{pareaname}}
         </td>
-       
+
     </tr>
 
 
 
- 
+
     <tr style="font-weight: bolder;">
 
         <th colspan="6" style="text-align: left;">Работы и комплектующие </th>
@@ -104,11 +104,11 @@
 
         <td colspan="6">{{emp_name}}</td>
 
-        
+
 
     </tr>
     {{/_detail3}}
-    
+
     <tr style="font-weight: bolder;">
         <td   colspan="5" align="right">К оплате:</td>
         <td   align="right">{{payamount}}</td>

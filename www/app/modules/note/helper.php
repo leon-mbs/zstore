@@ -8,13 +8,13 @@ use \ZCL\DB\DB as DB;
 /**
  * Вспомагательный  класс  для  работы  с  бизнес-данными
  */
-class Helper
-{
-    public static function addFile($file, $itemid ) {
+class Helper {
+
+    public static function addFile($file, $itemid) {
         $conn = DB::getConnect();
         $filename = $file['name'];
 
-   
+
         $filename = $conn->qstr($filename);
         $sql = "insert  into files (item_id,filename,description,item_type) values ({$itemid},{$filename},'',4) ";
         $conn->Execute($sql);
@@ -25,16 +25,16 @@ class Helper
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
         $conn->Execute($sql);
     }
- 
+
     public static function deleteFile($file_id) {
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete  from  files  where  file_id={$file_id}");
         $conn->Execute("delete  from  filesdata  where  file_id={$file_id}");
     }
- 
+
     public static function findFileByTopic($topic_id) {
         //return File::findBySql("select file_id,topic_id,details from files where  topic_id=" . $topic_id);
-        
+
         $conn = \ZDB\DB::getConnect();
         $rs = $conn->Execute("select * from files where item_id={$topic_id} and item_type=4");
         $list = array();
@@ -47,9 +47,7 @@ class Helper
             $list[] = $item;
         }
 
-        return $list;        
-        
+        return $list;
     }
-    
-    
+
 }

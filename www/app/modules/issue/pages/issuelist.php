@@ -87,40 +87,39 @@ class IssueList extends \App\Pages\Base {
 
         $this->editpan->editform->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
         $this->editpan->editform->add(new ClickLink('editcancel', $this, 'onCancel'));
- 
+
         $this->add(new Panel("msgpan"))->setVisible(false);
         $this->msgpan->add(new ClickLink('back', $this, 'onCancel'));
         $this->msgpan->add(new Label('mtitle'));
         $this->msgpan->add(new Label('mdesc'));
         $stform = $this->msgpan->add(new Form('stform'));
-         
+
         $stform->add(new DropDownChoice('ststatus', $stlist, -1));
         $stform->add(new DropDownChoice('stpr', array(0 => 'Нормальный', 1 => 'Высокий', -1 => 'Низкий'), 0));
-        $stform->add(new DropDownChoice('stuser', User::findArray('username', 'employee_id > 0', 'username'),   0 ));
+        $stform->add(new DropDownChoice('stuser', User::findArray('username', 'employee_id > 0', 'username'), 0));
         $stform->add(new TextInput('sthours'));
-        $stform->add(new SubmitButton('ststatusok'))->onClick($this,"onStatus");
-        $stform->add(new SubmitButton('stuserok'))->onClick($this,"onStatus");
-        $stform->add(new SubmitButton('stprok'))->onClick($this,"onStatus");
-        $stform->add(new SubmitButton('sthoursok'))->onClick($this,"onStatus");
-    
-        $this->msgpan->add(new DataView('stlist', new ArrayDataSource($this,'_stlist'), $this, 'stlistOnRow'));
-         
-        $this->msgpan->add(new Form('addmsgform'))->onSubmit($this,'onAddMsg');
+        $stform->add(new SubmitButton('ststatusok'))->onClick($this, "onStatus");
+        $stform->add(new SubmitButton('stuserok'))->onClick($this, "onStatus");
+        $stform->add(new SubmitButton('stprok'))->onClick($this, "onStatus");
+        $stform->add(new SubmitButton('sthoursok'))->onClick($this, "onStatus");
+
+        $this->msgpan->add(new DataView('stlist', new ArrayDataSource($this, '_stlist'), $this, 'stlistOnRow'));
+
+        $this->msgpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
         $this->msgpan->addmsgform->add(new TextArea('msgdata'));
         $this->msgpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
-       
+
         $this->msgpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $this->msgpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
         $this->msgpan->add(new DataView('filelist', new ArrayDataSource($this, '_fileslist'), $this, 'fileListOnRow'));
-        
-         
+
+
         $this->listpan->list->Reload();
-        
+
         $issue = Issue::load($id);
-        if($issue instanceof Issue) {
+        if ($issue instanceof Issue) {
             $this->openIssue($issue);
         }
-        
     }
 
     public function onNew($sender) {
@@ -155,10 +154,12 @@ class IssueList extends \App\Pages\Base {
         $row->add(new Label('prup'))->setVisible($issue->priority == 1);
         $row->add(new Label('prdown'))->setVisible($issue->priority == -1);
         $st = Issue::getStatusList();
-        $status=$st[$issue->status] ;
-        if($issue->status==Issue::STATUS_NEW) $status='<span class="badge badge-info">'.$status.'</span>';
-        if($issue->status==Issue::STATUS_CLOSED) $status='<span class="badge badge-secondary">'.$status.'</span>';
-        $row->add(new Label('status',$status,true ));
+        $status = $st[$issue->status];
+        if ($issue->status == Issue::STATUS_NEW)
+            $status = '<span class="badge badge-info">' . $status . '</span>';
+        if ($issue->status == Issue::STATUS_CLOSED)
+            $status = '<span class="badge badge-secondary">' . $status . '</span>';
+        $row->add(new Label('status', $status, true));
         $row->add(new Label('ptime', $issue->hours));
         $row->add(new Label('ftime', $issue->totaltime));
 
@@ -170,12 +171,12 @@ class IssueList extends \App\Pages\Base {
     public function editOnClick($sender) {
 
         $this->_issue = $sender->getOwner()->getDataItem();
-        if($this->_issue->status ==Issue::STATUS_CLOSED){
-            $this->setError('Задача  закрыта') ;
+        if ($this->_issue->status == Issue::STATUS_CLOSED) {
+            $this->setError('Задача  закрыта');
             return;
         }
 
-         
+
         if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
             $this->setError('Редактировать  может  только  автор или  администатор');
             return;
@@ -203,7 +204,7 @@ class IssueList extends \App\Pages\Base {
         $this->_issue->hours = $sender->edithours->getText();
         $this->_issue->price = $sender->editprice->getText();
         if ($this->_issue->issue_id == 0) {
-             
+
             $this->_issue->createdby = $this->_user->user_id;
             $this->_issue->createdbyname = $this->_user->username;
         }
@@ -215,7 +216,7 @@ class IssueList extends \App\Pages\Base {
     }
 
     public function openIssue($issue) {
-        $this->_issue = $issue; 
+        $this->_issue = $issue;
         $this->listpan->setVisible(false);
         $this->msgpan->setVisible(true);
 
@@ -225,33 +226,31 @@ class IssueList extends \App\Pages\Base {
         $this->msgpan->stform->stpr->setValue($this->_issue->priority);
         $this->msgpan->stform->stuser->setValue($this->_issue->user_id);
         $this->msgpan->stform->sthours->setText('0');
-        $this->updateStList();       
-        $this->updateMessages();   
+        $this->updateStList();
+        $this->updateMessages();
     }
-    
+
     public function commentOnClick($sender) {
 
         $this->openIssue($sender->getOwner()->getDataItem());
-        
     }
 
-     
     public function deleteOnClick($sender) {
 
         $issue = $sender->getOwner()->getDataItem();
-        
-        if($issue->status ==Issue::STATUS_CLOSED){
-            $this->setError('Задача  закрыта') ;
+
+        if ($issue->status == Issue::STATUS_CLOSED) {
+            $this->setError('Задача  закрыта');
             return;
         }
 
-         
+
         if ($this->_user->username != 'admin' && $this->_user->user_id != $issue->createdby) {
             $this->setError('Удалить  может  только  автор или  администатор');
             return;
-        }        
-        
-        
+        }
+
+
         $msg = Issue::delete($issue->issue_id);
         if (strlen(msg) > 0) {
             $this->setError($msg);
@@ -259,8 +258,7 @@ class IssueList extends \App\Pages\Base {
         }
         $this->listpan->list->Reload();
     }
-    
- 
+
     public function onAddMsg($sender) {
         $msg = new \App\Entity\Message();
         $msg->message = $this->msgpan->addmsgform->msgdata->getText();
@@ -273,25 +271,23 @@ class IssueList extends \App\Pages\Base {
         $msg->save();
 
         $this->msgpan->addmsgform->msgdata->setText('');
-        $this->updateMessages();      
-        
-        
-        $this->goAnkor('msgankor'); 
+        $this->updateMessages();
+
+
+        $this->goAnkor('msgankor');
     }
-     //список   комментариев
+
+    //список   комментариев
     private function updateMessages() {
         $this->_msglist = \App\Entity\Message::find('item_type =5 and item_id=' . $this->_issue->issue_id);
         $this->msgpan->msglist->Reload();
-        $this->_fileslist =  \App\Helper::getFileList($this->_issue->issue_id,5 );
-        $this->msgpan->filelist->Reload();  
-            
-        
-          
-    } 
-      
+        $this->_fileslist = \App\Helper::getFileList($this->_issue->issue_id, 5);
+        $this->msgpan->filelist->Reload();
+    }
+
     public function msgListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('msgdate', date("Y-m-d H:i", $item->created)  ));
+        $row->add(new Label('msgdate', date("Y-m-d H:i", $item->created)));
         $row->add(new Label('msguser', $item->username));
         $row->add(new Label('msgdata', $item->message));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
@@ -300,15 +296,13 @@ class IssueList extends \App\Pages\Base {
         } else {
             $row->delmsg->setVisible(false);
         }
-          
-         
-    }    
-    
+    }
+
     public function deleteMmsOnClick($sender) {
-        $msg = $sender->getOwner()->getDataItem();  
-        
+        $msg = $sender->getOwner()->getDataItem();
+
         \App\Entity\Message::delete($msg->message_id);
-        $this->updateMessages();  
+        $this->updateMessages();
     }
 
     public function OnFileSubmit($sender) {
@@ -319,16 +313,17 @@ class IssueList extends \App\Pages\Base {
             return;
         }
 
-        \App\Helper::addFile($file, $this->_issue->issue_id ,'',5);
-  
+        \App\Helper::addFile($file, $this->_issue->issue_id, '', 5);
+
         $this->updateMessages();
     }
-   public function filelistOnRow($row) {
+
+    public function filelistOnRow($row) {
         $item = $row->getDataItem();
 
         $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'loadfile.php?id=' . $item->file_id));
         $file->setValue($item->filename);
-       // $file->setAttribute('title', $item->description);
+        // $file->setAttribute('title', $item->description);
 
         $row->add(new ClickLink('delfile'))->onClick($this, 'deleteFileOnClick');
 
@@ -337,97 +332,89 @@ class IssueList extends \App\Pages\Base {
         } else {
             $row->delfile->setVisible(false);
         }
-   
-   
-   }
-     public function deleteFileOnClick($sender) {
-        $file = $sender->owner->getDataItem();
-         \App\Helper::deleteFile($file->file_id);
-        $this->updateMessages(); 
     }
-   
-    public function onStatus($sender) {
-         
-        if($sender->id=='ststatusok'){
-             $status = $this->msgpan->stform->ststatus->getValue();
-             if($status==$this->_issue->status)  return;
-             $this->_issue->status = $status;
-             $this->_issue->lastupdate = time();
-             $this->_issue->save();
-             Helper::addHistory($this->_issue->issue_id,$status,null,'Статус '.$this->msgpan->stform->ststatus->getValueName());
-             $this->updateStList();
-             return;
-        } 
-        if($this->_issue->status ==Issue::STATUS_CLOSED){
-            $this->setError('Задача  закрыта') ;
-            return;
-        }        
-        if($sender->id=='stprok'){
-             $priority = $this->msgpan->stform->stpr->getValue();
-             if($priority==$this->_issue->priority)  return;
-             $this->_issue->priority = $priority;
-             $this->_issue->lastupdate = time();
-             $this->_issue->save();
-             Helper::addHistory($this->_issue->issue_id,null,null,'Приоритет '.$this->msgpan->stform->stpr->getValueName());
-             
-        } 
-        
 
-        
-        if($sender->id=='stuserok'){
-             $user_id = $this->msgpan->stform->stuser->getValue();
-             if($user_id==0){
-                 return;
-             }
-             if($user_id==$this->_issue->user_id)  return;
-             
-             $this->_issue->user_id = $user_id;
-             $this->_issue->lastupdate = time();
-             $this->_issue->save();
-             Helper::addHistory($this->_issue->issue_id,null,null,'Переназначена на  '.$this->msgpan->stform->stuser->getValueName());
-             
+    public function deleteFileOnClick($sender) {
+        $file = $sender->owner->getDataItem();
+        \App\Helper::deleteFile($file->file_id);
+        $this->updateMessages();
+    }
+
+    public function onStatus($sender) {
+
+        if ($sender->id == 'ststatusok') {
+            $status = $this->msgpan->stform->ststatus->getValue();
+            if ($status == $this->_issue->status)
+                return;
+            $this->_issue->status = $status;
+            $this->_issue->lastupdate = time();
+            $this->_issue->save();
+            Helper::addHistory($this->_issue->issue_id, $status, null, 'Статус ' . $this->msgpan->stform->ststatus->getValueName());
+            $this->updateStList();
+            return;
+        }
+        if ($this->_issue->status == Issue::STATUS_CLOSED) {
+            $this->setError('Задача  закрыта');
+            return;
+        }
+        if ($sender->id == 'stprok') {
+            $priority = $this->msgpan->stform->stpr->getValue();
+            if ($priority == $this->_issue->priority)
+                return;
+            $this->_issue->priority = $priority;
+            $this->_issue->lastupdate = time();
+            $this->_issue->save();
+            Helper::addHistory($this->_issue->issue_id, null, null, 'Приоритет ' . $this->msgpan->stform->stpr->getValueName());
+        }
+
+
+
+        if ($sender->id == 'stuserok') {
+            $user_id = $this->msgpan->stform->stuser->getValue();
+            if ($user_id == 0) {
+                return;
+            }
+            if ($user_id == $this->_issue->user_id)
+                return;
+
+            $this->_issue->user_id = $user_id;
+            $this->_issue->lastupdate = time();
+            $this->_issue->save();
+            Helper::addHistory($this->_issue->issue_id, null, null, 'Переназначена на  ' . $this->msgpan->stform->stuser->getValueName());
+
             $n = new \App\Entity\Notify();
             $n->user_id = $user_id;
             $n->message = " На  вас переведена задача <a href=\"/index.php?p=App/Modules/Issue/Pages/IssueList&arg={$this->_issue->issue_id}\">{$this->_issue->issue_name}</a> ";
-            $n->save();             
-             
-             
-        } 
-       if($sender->id=='sthoursok'){
-             $hours = $this->msgpan->stform->sthours->getText();
-             if($hours > 0 )  {
-                 Helper::addHistory($this->_issue->issue_id,null,$hours,"Добавлено время {$hours} ");
-                                  
-             }
-             $this->msgpan->stform->sthours->setText('');
-        } 
-        
+            $n->save();
+        }
+        if ($sender->id == 'sthoursok') {
+            $hours = $this->msgpan->stform->sthours->getText();
+            if ($hours > 0) {
+                Helper::addHistory($this->_issue->issue_id, null, $hours, "Добавлено время {$hours} ");
+            }
+            $this->msgpan->stform->sthours->setText('');
+        }
+
         $this->updateStList();
-        
     }
-    
+
     public function stlistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('sttime', date('Y-m-d',$item->createdon)  ));
+        $row->add(new Label('sttime', date('Y-m-d', $item->createdon)));
         $row->add(new Label('stuser', $item->username));
         $row->add(new Label('stnotes', $item->notes));
-        
     }
-    
-    public function updateStList(){
+
+    public function updateStList() {
         $this->_stlist = Helper::getHistoryList($this->_issue->issue_id);
         $this->msgpan->stlist->Reload();
     }
 
-       
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
     }
 
-    
-    
-    
 }
 
 class IssueDS implements \Zippy\Interfaces\DataSource {

@@ -26,7 +26,6 @@ use \App\System;
  */
 class DocList extends \App\Pages\Base {
 
-  
     /**
      *
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
@@ -63,22 +62,22 @@ class DocList extends \App\Pages\Base {
         if (strlen($filter->docgroup) > 0)
             $this->filter->docgroup->setValue($filter->docgroup);
 
-            
-        $this->add(new SortLink("sortdoc","meta_desc",$this,"onSort"));    
-        $this->add(new SortLink("sortnum","document_number",$this,"onSort"));    
-        $this->add(new SortLink("sortdate","document_id",$this,"onSort"));    
-        $this->add(new SortLink("sortcust","customer_name",$this,"onSort"));    
-        $this->add(new SortLink("sortamount","amount",$this,"onSort"));    
-        $this->add(new SortLink("sortstatus","state",$this,"onSort"));    
-            
-            
+
+        $this->add(new SortLink("sortdoc", "meta_desc", $this, "onSort"));
+        $this->add(new SortLink("sortnum", "document_number", $this, "onSort"));
+        $this->add(new SortLink("sortdate", "document_id", $this, "onSort"));
+        $this->add(new SortLink("sortcust", "customer_name", $this, "onSort"));
+        $this->add(new SortLink("sortamount", "amount", $this, "onSort"));
+        $this->add(new SortLink("sortstatus", "state", $this, "onSort"));
+
+
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(25);
         $filter->page = $this->doclist->setCurrentPage($filter->page);
-        $this->doclist->setSorting('document_id','desc');
+        $this->doclist->setSorting('document_id', 'desc');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
@@ -91,7 +90,7 @@ class DocList extends \App\Pages\Base {
             $doclist->Reload();
         }
 
-        $this->add(new ClickLink('csv', $this, 'oncsv'));  
+        $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function onErase($sender) {
@@ -142,19 +141,19 @@ class DocList extends \App\Pages\Base {
         $row->add(new Label('notes', $doc->notes));
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
-        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount>0? $doc->amount:""  )));
+        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" )));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('hasmsg'     ))->setVisible($doc->mcnt > 0);
-        $row->add(new Label('hasfiles'   ))->setVisible($doc->fcnt > 0 || $doc->dcnt > 0);
-        $row->add(new Label('waitpay'   ))->setVisible($doc->payamount >0 && $doc->payamount > $doc->payed);
- 
+        $row->add(new Label('hasmsg'))->setVisible($doc->mcnt > 0);
+        $row->add(new Label('hasfiles'))->setVisible($doc->fcnt > 0 || $doc->dcnt > 0);
+        $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
+
         $date = new \Carbon\Carbon();
-        $date = $date->addDay(1) ;
+        $date = $date->addDay(1);
         $start = $date->startOfDay()->timestamp;
-         
- 
-        $row->add(new Label('isplanned'  ))->setVisible($doc->document_date >= $start);
+
+
+        $row->add(new Label('isplanned'))->setVisible($doc->document_date >= $start);
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -186,27 +185,26 @@ class DocList extends \App\Pages\Base {
         }
     }
 
-    public function onSort($sender){
+    public function onSort($sender) {
         $sortfield = $sender->fileld;
         $sortdir = $sender->dir;
-        
+
         $this->sortdoc->Reset();
         $this->sortnum->Reset();
         $this->sortdate->Reset();
         $this->sortcust->Reset();
         $this->sortamount->Reset();
         $this->sortstatus->Reset();
-        
-        
-        $this->doclist->setSorting($sortfield,$sortdir);
-        
-        
-        $sender->fileld  = $sortfield;
-        $sender->dir  = $sortdir;
+
+
+        $this->doclist->setSorting($sortfield, $sortdir);
+
+
+        $sender->fileld = $sortfield;
+        $sender->dir = $sortdir;
         $this->doclist->Reload();
-        
     }
-    
+
     //просмотр
 
     public function showOnClick($sender) {
@@ -303,7 +301,7 @@ class DocList extends \App\Pages\Base {
  *  Источник  данных  для   списка  документов
  */
 class DocDataSource implements \Zippy\Interfaces\DataSource {
-     
+
     private function getWhere() {
         $user = System::getUser();
 
@@ -340,7 +338,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $docs = Document::find($this->getWhere(), $sortfield." " .$asc, $count, $start);
+        $docs = Document::find($this->getWhere(), $sortfield . " " . $asc, $count, $start);
 
         //$l = Traversable::from($docs);
         //$l = $l->where(function ($doc) {return $doc->document_id == 169; }) ;

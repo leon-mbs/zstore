@@ -25,9 +25,9 @@ class ServiceList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchkey'));
-        
+
         $this->add(new Panel('servicetable'))->setVisible(true);
-        $this->servicetable->add(new DataView('servicelist',  new ServiceDataSource($this), $this, 'servicelistOnRow'))->Reload();
+        $this->servicetable->add(new DataView('servicelist', new ServiceDataSource($this), $this, 'servicelistOnRow'))->Reload();
         $this->servicetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->servicetable->servicelist->setPageSize(25);
         $this->servicetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->servicetable->servicelist));
@@ -37,7 +37,7 @@ class ServiceList extends \App\Pages\Base {
         $this->servicedetail->add(new TextInput('editprice'));
         $this->servicedetail->add(new TextInput('edithours'));
         $this->servicedetail->add(new CheckBox('editdisabled'));
-        
+
         $this->servicedetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->servicedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -74,7 +74,6 @@ class ServiceList extends \App\Pages\Base {
         $this->servicedetail->editprice->setText($this->_service->price);
         $this->servicedetail->edithours->setText($this->_service->hours);
         $this->servicedetail->editdisabled->setChecked($this->_service->disabled);
-        
     }
 
     public function addOnClick($sender) {
@@ -113,8 +112,9 @@ class ServiceList extends \App\Pages\Base {
     public function OnFilter($sender) {
         $this->servicetable->servicelist->Reload();
     }
-    
+
 }
+
 class ServiceDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
@@ -128,9 +128,9 @@ class ServiceDataSource implements \Zippy\Interfaces\DataSource {
         $form = $this->page->filter;
         $where = "1=1";
         $text = trim($form->searchkey->getText());
-          $showdis = $form->showdis->isChecked();
+        $showdis = $form->showdis->isChecked();
 
-  
+
         if ($showdis > 0) {
             
         } else {

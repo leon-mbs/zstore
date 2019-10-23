@@ -37,7 +37,7 @@ class Warranty extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new TextInput('customer'));
-   
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -46,14 +46,14 @@ class Warranty extends \App\Pages\Base {
 
         $this->add(new Form('editdetail'))->setVisible(false);
 
-         
+
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsn'));
         $this->editdetail->add(new TextInput('editwarranty'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-    
+
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -66,7 +66,7 @@ class Warranty extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->notes->setText($this->_doc->notes);
-   
+
 
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
@@ -80,24 +80,22 @@ class Warranty extends \App\Pages\Base {
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     $this->docform->customer->setText($basedoc->customer_name);
-                    
+
                     if ($basedoc->meta_name == 'GoodsIssue') {
-  
+
                         foreach ($basedoc->detaildata as $item) {
                             $item = new Item($item);
                             $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
                     if ($basedoc->meta_name == 'Task') {
-                        $parts = unserialize(base64_decode($basedoc->headerdata['parts']))  ;
+                        $parts = unserialize(base64_decode($basedoc->headerdata['parts']));
 
                         foreach ($parts as $_item) {
                             $item = new Item($_item->getData());
                             $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
-                     
-
                 }
             }
         }
@@ -269,16 +267,10 @@ class Warranty extends \App\Pages\Base {
         App::RedirectBack();
     }
 
-   
-
     public function OnAutoItem($sender) {
-       
+
         $text = trim($sender->getText());
-        return Item::findArrayAC(   $text);
+        return Item::findArrayAC($text);
     }
-
- 
-
-   
 
 }

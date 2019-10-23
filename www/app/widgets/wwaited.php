@@ -32,10 +32,10 @@ class WWaited extends \Zippy\Html\PageFragment {
          where   ev.quantity < 0  and   ev.document_date > cast(now() as date)
          group by sv.`item_id`, sv.`store_id`,  sv.`itemname`, sv.`storename`
          order  by  sv.itemname";
-                
-                 
-                
-                
+
+
+
+
 
         if ($visible) {
             $rs = $conn->Execute($sql);

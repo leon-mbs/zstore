@@ -42,7 +42,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new TextInput('notes'));
-   
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -68,7 +68,7 @@ class ProdIssue extends \App\Pages\Base {
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-    
+
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -139,7 +139,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->editdetail->edittovar->setText($stock->itemname);
 
         $st = Stock::load($stock->stock_id);  //для актуального 
-       
+
         $this->editdetail->qtystock->setText(H::fqty($st->qty));
         $this->_rowid = $stock->stock_id;
     }
@@ -205,7 +205,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-   
+
 
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
@@ -291,9 +291,9 @@ class ProdIssue extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-         
+
         $this->editdetail->qtystock->setText(H::fqty($stock->qty));
-     
+
         $this->editdetail->editprice->setText($stock->partion);
 
         $this->updateAjax(array('qtystock', 'editprice'));

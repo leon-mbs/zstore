@@ -16,7 +16,7 @@ class Application extends \Zippy\WebApplication {
         $path = '';
         $name = ltrim($name, '\\');
         $arr = explode('\\', $name);
-        $templatepath =  'templates/';
+        $templatepath = 'templates/';
 
         $className = str_replace("\\", "/", ltrim($name, '\\'));
 
@@ -24,10 +24,10 @@ class Application extends \Zippy\WebApplication {
             $path = $templatepath . (str_replace("App/", "", $className)) . ".html";
         }
 
-        $path  = _ROOT.   strtolower($path);
+        $path = _ROOT . strtolower($path);
 
         if (file_exists($path) == false) {
-            throw new \Exception('Invalid template path: ' .  $path);
+            throw new \Exception('Invalid template path: ' . $path);
         }
         $template = @file_get_contents($path);
 
@@ -104,7 +104,7 @@ class Application extends \Zippy\WebApplication {
             "aboutus" => "\\App\\Modules\\Shop\\Pages\\AboutUs",
             "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
             "contact" => "\\App\\Modules\\Shop\\Pages\\Contact",
-         //  "simage" => "\\App\\Pages\\LoadImage",
+            //  "simage" => "\\App\\Pages\\LoadImage",
             "scat" => "\\App\\Modules\\Shop\\Pages\\Main",
             "pcat" => "\\App\\Modules\\Shop\\Pages\\Catalog"
         );

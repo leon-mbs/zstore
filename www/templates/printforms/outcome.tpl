@@ -20,7 +20,7 @@
 
         <th align="right" style="border: solid black 1px">Кол.</th>
         <th align="right" style="border: solid black 1px">На сумму</th>
-        
+
 
     </tr>
     {{#_detail}}
@@ -32,7 +32,7 @@
 
         <td align="right">{{qty}}</td>
         <td align="right">{{summa}} </td>
-     
+
 
     </tr>
     {{/_detail}}

@@ -12,8 +12,6 @@ use \Zippy\Html\Label;
 
 class UserLogin extends \Zippy\Html\WebPage {
 
-    
-
     public function __construct() {
         parent::__construct();
 
@@ -24,7 +22,7 @@ class UserLogin extends \Zippy\Html\WebPage {
         $form->onSubmit($this, 'onsubmit');
 
         $this->add($form);
-             $this->setError('');
+        $this->setError('');
     }
 
     public function onsubmit($sender) {
@@ -56,7 +54,7 @@ class UserLogin extends \Zippy\Html\WebPage {
                     setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
                 }
                 //$logger->info('Logined ' . $user->userlogin . ', ' . $_SERVER["REMOTE_ADDR"]);
-                if($_config['modules']['shop'] == 1){  
+                if ($_config['modules']['shop'] == 1) {
                     App::Redirect('\App\Pages\Main');
                 } else {
                     App::RedirectHome();
@@ -79,12 +77,11 @@ class UserLogin extends \Zippy\Html\WebPage {
     }
 
     public function setError($msg) {
-     
-     
-        $this->_tvars['alerterror']= $msg;        
+
+
+        $this->_tvars['alerterror'] = $msg;
     }
 
-    
     protected function afterRender() {
 
         //  $this->_tvars['alerterror'] = ''; 

@@ -6,12 +6,13 @@ namespace App\Modules\OCStore;
  * Вспомагательный  класс
  */
 class Helper {
-      /**
-    * Функция для  работы  с  API опенкарта
-    * 
-    * @param mixed $url      адрес  API  например <youropencartsite>/index.php?route=api/login'
-    * @param mixed $params   параметры например array('username' => $apiname,'key' => $key );
-    */
+
+    /**
+     * Функция для  работы  с  API опенкарта
+     * 
+     * @param mixed $url      адрес  API  например <youropencartsite>/index.php?route=api/login'
+     * @param mixed $params   параметры например array('username' => $apiname,'key' => $key );
+     */
     public static function do_curl_request($url, $params = array()) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

@@ -56,7 +56,7 @@ class Items extends \App\Pages\Base {
         if ($json === false)
             return;
         $data = json_decode($json, true);
-        if(!isset($data)){
+        if (!isset($data)) {
             $this->setError("Неверный ответ.");
             \App\Helper::log($json);
             return;

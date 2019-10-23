@@ -38,7 +38,6 @@ class Task extends \App\Pages\Base {
     public $_emplist = array();
     public $_eqlist = array();
     private $_doc;
-   
 
     public function __construct($docid = 0) {
         parent::__construct();
@@ -48,13 +47,13 @@ class Task extends \App\Pages\Base {
         $this->docform->add(new \ZCL\BT\DateTimePicker('start_date'))->setDate(time());
         $this->docform->add(new \ZCL\BT\DateTimePicker('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        
+
 
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('taskhours', "0"));
 
-         
+
         $this->docform->add(new DropDownChoice('store', Store::getList(), \App\Helper::getDefStore()));
         $this->docform->add(new DropDownChoice('storem', Store::getList(), \App\Helper::getDefStore()));
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
@@ -63,10 +62,10 @@ class Task extends \App\Pages\Base {
         $this->docform->add(new TextInput('paynotes'));
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
-        $this->docform->add(new TextInput('editpayed',"0"));
+        $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
-        $this->docform->add(new Label('payed',0));
-        $this->docform->add(new Label('payamount',0));
+        $this->docform->add(new Label('payed', 0));
+        $this->docform->add(new Label('payamount', 0));
 
         $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
         $this->docform->add(new SubmitLink('additem'))->onClick($this, 'additemOnClick');
@@ -157,27 +156,23 @@ class Task extends \App\Pages\Base {
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-            
+
             $this->docform->total->setText($this->_doc->amount);
- 
+
             foreach ($this->_doc->detaildata as $item) {
-       
-               $service = new Service($item);
-               $this->_servicelist[$service->service_id] = $service;
-                 
+
+                $service = new Service($item);
+                $this->_servicelist[$service->service_id] = $service;
             }
-     
- 
-            $this->_itemlist = unserialize(base64_decode($this->_doc->headerdata['parts']))  ;
-            $this->_itemlist5 = unserialize(base64_decode($this->_doc->headerdata['items']))   ;
-            $this->_eqlist = unserialize(base64_decode($this->_doc->headerdata['eq']))   ;
-            $this->_emplist = unserialize(base64_decode($this->_doc->headerdata['emp']) )  ;
-       
-        
+
+
+            $this->_itemlist = unserialize(base64_decode($this->_doc->headerdata['parts']));
+            $this->_itemlist5 = unserialize(base64_decode($this->_doc->headerdata['items']));
+            $this->_eqlist = unserialize(base64_decode($this->_doc->headerdata['eq']));
+            $this->_emplist = unserialize(base64_decode($this->_doc->headerdata['emp']));
         } else {
             $this->_doc = Document::create('Task');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
@@ -271,8 +266,8 @@ class Task extends \App\Pages\Base {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->calcTotal();
-          $this->calcPay();
-      $this->docform->detail->Reload();
+        $this->calcPay();
+        $this->docform->detail->Reload();
 
         //очищаем  форму
         $this->editdetail->editservice->setKey(0);
@@ -336,8 +331,8 @@ class Task extends \App\Pages\Base {
         $this->docform->setVisible(true);
         $this->docform->detail2->Reload();
         $this->calcTotal();
-         $this->calcPay();
-       //очищаем  форму
+        $this->calcPay();
+        //очищаем  форму
         $this->editdetail2->edititem->setKey(0);
         $this->editdetail2->edititem->setText('');
         $this->editdetail2->editquantity2->setText("1");
@@ -350,8 +345,8 @@ class Task extends \App\Pages\Base {
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->stock_id => $this->_itemlist[$item->stock_id]));
         $this->docform->detail2->Reload();
         $this->calcTotal();
-         $this->calcPay();
-   }
+        $this->calcPay();
+    }
 
     public function detail5OnRow($row) {
         $item = $row->getDataItem();
@@ -500,8 +495,8 @@ class Task extends \App\Pages\Base {
         $this->_doc->customer_id = $this->docform->customer->getKey();
 
 
- 
-  
+
+
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
@@ -519,17 +514,17 @@ class Task extends \App\Pages\Base {
         if ($this->checkForm() == false) {
             return;
         }
- 
+
         $this->_doc->detaildata = array();
         foreach ($this->_servicelist as $item) {
             $this->_doc->detaildata[] = $item->getData();
         }
-        
-        $this->_doc->headerdata['parts']  = base64_encode(serialize($this->_itemlist)) ;
-        $this->_doc->headerdata['items']  = base64_encode( serialize($this->_itemlist5)) ;
-        $this->_doc->headerdata['eq']     = base64_encode( serialize($this->_eqlist)) ;
- 
-   
+
+        $this->_doc->headerdata['parts'] = base64_encode(serialize($this->_itemlist));
+        $this->_doc->headerdata['items'] = base64_encode(serialize($this->_itemlist5));
+        $this->_doc->headerdata['eq'] = base64_encode(serialize($this->_eqlist));
+
+
 
         $total = $this->docform->total->getText();
         $cnt = count($this->_emplist);
@@ -538,7 +533,7 @@ class Task extends \App\Pages\Base {
             $item->pay = round($total / $cnt); //сумма поровну
             $emplist[] = $item->getData();
         }
-        $this->_doc->headerdata['emp']     =  base64_encode(serialize($emplist)) ;
+        $this->_doc->headerdata['emp'] = base64_encode(serialize($emplist));
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $total;
@@ -616,7 +611,7 @@ class Task extends \App\Pages\Base {
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна работа");
         }
-         if($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] ==0){
+        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
 
@@ -626,23 +621,24 @@ class Task extends \App\Pages\Base {
 
         $this->docform->detail->Reload();
     }
-    private function calcPay(){
-           $total = $this->docform->total->getText();
-  
-           $this->docform->editpayamount->setText(round($total ));      
-           $this->docform->payamount->setText(round($total ));      
-           $this->docform->editpayed->setText(round($total ));      
-           $this->docform->payed->setText(round($total ));      
+
+    private function calcPay() {
+        $total = $this->docform->total->getText();
+
+        $this->docform->editpayamount->setText(round($total));
+        $this->docform->payamount->setText(round($total));
+        $this->docform->editpayed->setText(round($total));
+        $this->docform->payed->setText(round($total));
     }
-     
+
     public function onPayAmount($sender) {
-        $this->docform->payamount->setText($this->docform->editpayamount->getText());      
-        $this->docform->payed->setText($this->docform->editpayamount->getText());      
-        $this->docform->editpayed->setText($this->docform->editpayamount->getText());      
+        $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->docform->payed->setText($this->docform->editpayamount->getText());
+        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
     }
-    
+
     public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());      
+        $this->docform->payed->setText($this->docform->editpayed->getText());
     }
 
     public function backtolistOnClick($sender) {
@@ -653,8 +649,6 @@ class Task extends \App\Pages\Base {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
     }
-
- 
 
     public function OnAutoServive($sender) {
 
@@ -667,11 +661,11 @@ class Task extends \App\Pages\Base {
 
         $item = Service::load($id);
         $price = $item->price;
-    
+
 
         $this->editdetail->editprice->setText($price);
         $this->editdetail->edithours->setText($item->hours);
-        $this->updateAjax(array('editprice','edithours'));
+        $this->updateAjax(array('editprice', 'edithours'));
     }
 
     public function OnAutoItem($sender) {
@@ -693,7 +687,7 @@ class Task extends \App\Pages\Base {
         //todo
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
-        
+
 
         $this->editdetail2->editprice2->setText($price);
 
@@ -707,7 +701,7 @@ class Task extends \App\Pages\Base {
         //todo
         $item = Item::load($stock->item_id);
         $price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
-        
+
 
 
         $this->editdetail5->editprice5->setText($price);

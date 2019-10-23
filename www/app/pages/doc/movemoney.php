@@ -122,7 +122,7 @@ class MoveMoney extends \App\Pages\Base {
 
         return !$this->isError();
     }
-   
+
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }

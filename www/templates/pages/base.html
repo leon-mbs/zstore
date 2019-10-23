@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="/assets/css/adminlte.css">
         <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.min.css">
-   
+
         <link rel="stylesheet" href="/assets/css/select2.css">
         <link rel="stylesheet" href="/assets/css/select2-bootstrap.css">
         <link rel="stylesheet" href="/assets/css/app.css">
@@ -18,7 +18,7 @@
         <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle.min.js" type="text/javascript"></script>
         <script src="/assets/js/select2.js" type="text/javascript"></script>
         <script src="/assets/js/app.js" type="text/javascript"></script>
-  
+
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
 
         <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
         <![endif]-->
         <!-- Google Font -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-   
+
     </head>
     <body class="hold-transition sidebar-mini sidebar-collapse">
 
@@ -48,7 +48,7 @@
                     <li class="nav-item    ">
                         <a class="nav-link  "  title="Информация о странице"  data-toggle="popover" data-placement="bottom" data-content="{{picontent}}"   style="cursor:pointer"  >
                             <i class="fa fa-question-circle "></i>
-                             
+
                         </a>
                     </li>
                     <li class="nav-item  ">
@@ -87,15 +87,15 @@
                 <div class="sidebar">    
                     <nav class="mt-2">
                         <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                                    <li class="nav-item  ">
+                            <li class="nav-item  ">
                                 <a href="/index.php" class="nav-link">
                                     <i class="nav-icon fa fa-home"></i>
                                     <p>
                                         Главная
-                                         
+
                                     </p>
                                 </a>
-                                </li>
+                            </li>
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-file"></i>
@@ -105,10 +105,10 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                   
-                                     {{#docmenu}} 
+
+                                    {{#docmenu}} 
                                     {{#groups}}
-                                     <li class="nav-item has-treeview">
+                                    <li class="nav-item has-treeview">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>  
                                             <p>{{grname}} 
@@ -118,27 +118,27 @@
                                         </a>  
                                         <ul class="nav nav-treeview"> 
                                             {{#items}}
-                                         <li class="nav-item  has-treeview">
-                                            <a href='{{link}}' class="nav-link" >
-                                                <i class="fa    nav-icon"></i> 
-                                                <p>&nbsp;&nbsp;{{name}}</p>
-                                            </a>
-                                        </li>     
-                                     {{/items}}
+                                            <li class="nav-item  has-treeview">
+                                                <a href='{{link}}' class="nav-link" >
+                                                    <i class="fa    nav-icon"></i> 
+                                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                                </a>
+                                            </li>     
+                                            {{/items}}
                                         </ul>
-                                        
+
                                         </il>
-                                     {{/groups}}                                    
-                                    
-                                     {{#items}}
-                                         <li class="nav-item  has-treeview">
-                                            <a href='{{link}}' class="nav-link" >
-                                                <i class="fa    nav-icon"></i> 
-                                                <p>&nbsp;&nbsp;{{name}}</p>
-                                            </a>
-                                        </li>     
-                                     {{/items}}                                     
-                                     {{/docmenu}} 
+                                        {{/groups}}                                    
+
+                                        {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link" >
+                                            <i class="fa    nav-icon"></i> 
+                                            <p>&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>     
+                                    {{/items}}                                     
+                                    {{/docmenu}} 
                                 </ul>           
 
                             </li>
@@ -151,10 +151,10 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    
-                                     {{#repmenu}} 
+
+                                    {{#repmenu}} 
                                     {{#groups}}
-                                     <li class="nav-item has-treeview">
+                                    <li class="nav-item has-treeview">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>  
                                             <p>{{grname}} 
@@ -164,28 +164,28 @@
                                         </a>  
                                         <ul class="nav nav-treeview"> 
                                             {{#items}}
-                                         <li class="nav-item  has-treeview">
-                                            <a href='{{link}}' class="nav-link" >
-                                                <i class="fa    nav-icon"></i> 
-                                                <p>&nbsp;&nbsp;{{name}}</p>
-                                            </a>
-                                        </li>     
-                                     {{/items}}
+                                            <li class="nav-item  has-treeview">
+                                                <a href='{{link}}' class="nav-link" >
+                                                    <i class="fa    nav-icon"></i> 
+                                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                                </a>
+                                            </li>     
+                                            {{/items}}
                                         </ul>
-                                        
+
                                         </il>
-                                     {{/groups}}                                    
-                                    
-                                     {{#items}}
-                                         <li class="nav-item  has-treeview">
-                                            <a href='{{link}}' class="nav-link" >
-                                                <i class="fa    nav-icon"></i> 
-                                                <p>&nbsp;&nbsp;{{name}}</p>
-                                            </a>
-                                        </li>     
-                                     {{/items}}                                     
-                                     {{/repmenu}} 
-  
+                                        {{/groups}}                                    
+
+                                        {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link" >
+                                            <i class="fa    nav-icon"></i> 
+                                            <p>&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>     
+                                    {{/items}}                                     
+                                    {{/repmenu}} 
+
                                 </ul>           
 
                             </li>
@@ -198,9 +198,9 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                     {{#regmenu}} 
-                                                                        {{#groups}}
-                                     <li class="nav-item has-treeview">
+                                    {{#regmenu}} 
+                                    {{#groups}}
+                                    <li class="nav-item has-treeview">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>  
                                             <p>{{grname}} 
@@ -210,27 +210,27 @@
                                         </a>  
                                         <ul class="nav nav-treeview"> 
                                             {{#items}}
-                                         <li class="nav-item  has-treeview">
-                                            <a href='{{link}}' class="nav-link" >
-                                                <i class="fa    nav-icon"></i> 
-                                                <p>&nbsp;&nbsp;{{name}}</p>
-                                            </a>
-                                        </li>     
-                                     {{/items}}
+                                            <li class="nav-item  has-treeview">
+                                                <a href='{{link}}' class="nav-link" >
+                                                    <i class="fa    nav-icon"></i> 
+                                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                                </a>
+                                            </li>     
+                                            {{/items}}
                                         </ul>
-                                        
+
                                         </il>
-                                     {{/groups}}                                    
-                                    
-                                     {{#items}}
-                                         <li class="nav-item  has-treeview">
-                                            <a href='{{link}}' class="nav-link" >
-                                                <i class="fa    nav-icon"></i> 
-                                                <p>&nbsp;&nbsp;{{name}}</p>
-                                            </a>
-                                        </li>     
-                                     {{/items}}
-                                     {{/regmenu}} 
+                                        {{/groups}}                                    
+
+                                        {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link" >
+                                            <i class="fa    nav-icon"></i> 
+                                            <p>&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>     
+                                    {{/items}}
+                                    {{/regmenu}} 
                                 </ul>           
 
                             </li>
@@ -245,7 +245,7 @@
                                 <ul class="nav nav-treeview">
                                     {{#refmenu}}
                                     {{#groups}}
-                                     <li class="nav-item has-treeview">
+                                    <li class="nav-item has-treeview">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>  
                                             <p>{{grname}} 
@@ -255,30 +255,30 @@
                                         </a>  
                                         <ul class="nav nav-treeview"> 
                                             {{#items}}
-                                         <li class="nav-item  has-treeview">
-                                            <a href='{{link}}' class="nav-link" >
-                                                <i class="fa    nav-icon"></i> 
-                                                <p>&nbsp;&nbsp;{{name}}</p>
-                                            </a>
-                                        </li>     
-                                     {{/items}}
+                                            <li class="nav-item  has-treeview">
+                                                <a href='{{link}}' class="nav-link" >
+                                                    <i class="fa    nav-icon"></i> 
+                                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                                </a>
+                                            </li>     
+                                            {{/items}}
                                         </ul>
-                                        
+
                                         </il>
-                                     {{/groups}}                                    
-                                    
-                                     {{#items}}
-                                         <li class="nav-item  has-treeview">
-                                            <a href='{{link}}' class="nav-link" >
-                                                <i class="fa    nav-icon"></i> 
-                                                <p>&nbsp;&nbsp;{{name}}</p>
-                                            </a>
-                                        </li>     
-                                     {{/items}}
-                                  
-                                        
+                                        {{/groups}}                                    
+
+                                        {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link" >
+                                            <i class="fa    nav-icon"></i> 
+                                            <p>&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>     
+                                    {{/items}}
+
+
                                     {{/refmenu}}
-                                    
+
                                 </ul>           
 
                             </li>
@@ -397,7 +397,7 @@
 
                                     </li>  
                                     {{/issue}}            
-                                            
+
                                 </ul>  
 
                             </li>           
@@ -445,32 +445,32 @@
                 <section class="content">
                     <div class="row justify-content-center mt-2 mb-1">
                         <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
-             
+
                             {{#alerterror}}
                             <div class="alert alert-danger" role="alert">
-                               {{{alerterror}}}
+                                {{{alerterror}}}
                             </div>
                             {{/alerterror}}
                             {{#alertwarning}}
                             <div class="alert alert-warning" role="alert">
-                               {{{alertwarning}}}
+                                {{{alertwarning}}}
                             </div>
                             {{/alertwarning}}
                             {{#alertinfo}}
                             <div class="alert alert-info" role="alert">
-                               {{{alertinfo}}}
+                                {{{alertinfo}}}
                             </div>
                             {{/alertinfo}}
                             {{#alertsuccess}}
                             <div class="alert alert-success" role="alert">
-                               {{{alertsuccess}}}
+                                {{{alertsuccess}}}
                             </div>
                             {{/alertsuccess}}
+                        </div>
                     </div>
-               </div>
-               <div class="row"   >
+                    <div class="row"   >
                         <div class="col-12    ">
-                       
+
                             {{#smart}}
 
                             <div class=" card navbar nav justify-content-start d-none d-md-block">
@@ -478,8 +478,8 @@
                             </div>
 
                             {{/smart}}
-                            
-                            
+
+
                             <childpage/>
                         </div>
                     </div>
@@ -493,7 +493,7 @@
 
 
 
-<script>  
+        <script>
 
 $(function () {
     $('[data-toggle="popover"]').popover()

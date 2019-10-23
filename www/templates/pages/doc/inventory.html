@@ -22,7 +22,7 @@
                         <select class="form-control" zippy="store">
                         </select>
                     </div>
-                
+
                     <div class="form-group  ">
                         <label for="notes" >Примечание </label>
 
@@ -34,19 +34,19 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 col-xl-6">
-                   {{#usescanner}} 
+                    {{#usescanner}} 
                     <div class="navbar nav justify-content-start">
                         Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
-                          &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
-      
+                        &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
+
                     </div>
-                     {{/usescanner}}
-                   &nbsp; <a zippy="addrow">Добавить товар</a>
-                    
+                    {{/usescanner}}
+                    &nbsp; <a zippy="addrow">Добавить товар</a>
+
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
-                      
+
                             {{#usesnumber}} 
                             <th  >Серия</th>
                             <th  >Дата</th>
@@ -55,34 +55,34 @@
                             <th   class="text-right" > </th>
                             <th width="40"  class="text-center" >Факт</th>
                             <th   class="text-left" > </th>
-                          
-                            
+
+
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
-                          
+
                             {{#usesnumber}} 
                             <td zippy="snumber"></td>
                             <td zippy="sdate"></td>
                             {{/usesnumber}} 
                             <td zippy="quantity"  class="text-right" ></td>
                             <td   class="text-right" > 
-                            <a zippy="minus"><i class="fa fa-minus"></i></a>
-                              </td>
-                              <td   class="text-center" >
-                              <span zippy="qfact"></span>
-                              </td> 
+                                <a zippy="minus"><i class="fa fa-minus"></i></a>
+                            </td>
+                            <td   class="text-center" >
+                                <span zippy="qfact"></span>
+                            </td> 
                             <td   class="text-left" > 
-                            <a zippy="plus"><i class="fa fa-plus"></i></a>
-                            &nbsp;</td>
-                          
+                                <a zippy="plus"><i class="fa fa-plus"></i></a>
+                                &nbsp;</td>
+
                             <td>  <a zippy="delete"><i class="fa fa-trash"></i></a></td>
-                        
-                        
+
+
                         </tr>
                     </table>
-                  
+
 
                 </div>
             </div>
@@ -107,18 +107,18 @@
                 <div class="form-group">
                     <label for="edititem" >Наименование</label>
                     <input class="form-control" zippy="edititem"  placeholder="Начните вводить  ">
-   
+
                 </div>
-                 {{#usesnumber}} 
+                {{#usesnumber}} 
                 <div class="form-group">
                     <label for="editserial" >Партия поставщика</label>
                     <div>
                         <input   type="text" zippy="editserial" class="form-control"
-                                ></input>
+                                 ></input>
                     </div>
                 </div>
-              {{/usesnumber}} 
-              <div class="form-group">
+                {{/usesnumber}} 
+                <div class="form-group">
                     <label for="editquantity" >Количество</label>
                     <div>
                         <input style="width:100px;" type="text" zippy="editquantity" class="form-control"
@@ -134,20 +134,20 @@
         </div>
 
     </form>
-       <script>
-           $(document).ready(function () {
-  
-                $('#barcode').focus();
-           });
+    <script>
+        $(document).ready(function () {
+
+            $('#barcode').focus();
+        });
 
         function onBarCode(ele) {
-               
-            if(event.key === 'Enter' || event.keyCode == 13) {
-               // alert($('#barcode').val()); 
-                $('#addcode').click()       
+
+            if (event.key === 'Enter' || event.keyCode == 13) {
+                // alert($('#barcode').val()); 
+                $('#addcode').click()
             }
         }
-        </script>
+    </script>
 
 </body>
 

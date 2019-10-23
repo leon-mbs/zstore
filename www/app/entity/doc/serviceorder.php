@@ -52,8 +52,8 @@ class ServiceOrder extends Document {
         return $list;
     }
 
-    protected function getNumberTemplate(){
-         return  'ЗУ-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'ЗУ-000000';
+    }
 
 }

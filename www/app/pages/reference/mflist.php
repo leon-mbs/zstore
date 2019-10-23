@@ -26,8 +26,8 @@ class MFList extends \App\Pages\Base {
         if (false == \App\ACL::checkShowRef('MFList'))
             return;
         $this->_balance = MoneyFund::Balance();
-        
-        
+
+
         $this->add(new Panel('mftable'))->setVisible(true);
         $this->mftable->add(new DataView('mflist', new \ZCL\DB\EntityDataSource('\App\Entity\MoneyFund'), $this, 'mflistOnRow'))->Reload();
         $this->mftable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -37,8 +37,6 @@ class MFList extends \App\Pages\Base {
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-
-        
     }
 
     public function mflistOnRow($row) {

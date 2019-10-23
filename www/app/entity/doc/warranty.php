@@ -48,8 +48,8 @@ class Warranty extends Document {
         return true;
     }
 
-    protected function getNumberTemplate(){
-         return  'ГТ-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'ГТ-000000';
+    }
 
 }

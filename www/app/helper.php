@@ -57,9 +57,9 @@ class Helper {
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
         $groups = array();
-   
-        $arraymenu = array("groups"=>array(),"items"=> array());
-        
+
+        $arraymenu = array("groups" => array(), "items" => array());
+
         $aclview = explode(',', System::getUser()->aclview);
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
@@ -93,25 +93,24 @@ class Helper {
                 $dir = "Pages/Reference";
                 break;
         }
- 
+
 
         foreach ($menu as $item) {
-             
-            $arraymenu['items'][]=array('name'=>$item['description'],'link'=>"/index.php?p=App/{$dir}/{$item['meta_name']}");
-            
+
+            $arraymenu['items'][] = array('name' => $item['description'], 'link' => "/index.php?p=App/{$dir}/{$item['meta_name']}");
         }
         $i = 1;
         foreach ($groups as $gname => $group) {
-              
+
             $items = array();
-            
+
             foreach ($group as $item) {
- 
-                $items[] = array('name'=>$item['description'],'link'=>"/index.php?p=App/{$dir}/{$item['meta_name']}");
+
+                $items[] = array('name' => $item['description'], 'link' => "/index.php?p=App/{$dir}/{$item['meta_name']}");
             }
             $textmenu .= "</ul></li>";
-            
-            $arraymenu['groups'][] = array('grname'=>$gname,'items'=>$items) ;
+
+            $arraymenu['groups'][] = array('grname' => $gname, 'items' => $items);
         }
 
         return $arraymenu;
@@ -154,17 +153,17 @@ class Helper {
     public static function loadEmail($template, $keys = array()) {
         global $logger;
 
-        $templatepath = _ROOT . 'templates/email/' .   $template  . '.tpl';
-        if (file_exists(  $templatepath ) == false) {
+        $templatepath = _ROOT . 'templates/email/' . $template . '.tpl';
+        if (file_exists($templatepath) == false) {
 
             $logger->error($templatepath . " is wrong");
             return "";
         }
-        
-       
-        
-        $template = @file_get_contents(  $templatepath );
-                                            
+
+
+
+        $template = @file_get_contents($templatepath);
+
         $m = new \Mustache_Engine();
         $template = $m->render($template, $keys);
 
@@ -223,12 +222,12 @@ class Helper {
         $conn = DB::getConnect();
         $filename = $file['name'];
         $imagedata = getimagesize($file["tmp_name"]);
-        $mime = is_array($imagedata ) ? $imagedata['mime'] : "";
-        
-        if(strpos($filename,'.pdf') > 0){
-            $mime = "application/pdf"; 
+        $mime = is_array($imagedata) ? $imagedata['mime'] : "";
+
+        if (strpos($filename, '.pdf') > 0) {
+            $mime = "application/pdf";
         }
-        
+
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
         $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}') ";

@@ -28,7 +28,7 @@ class Stock extends \ZCL\DB\Entity {
      * @static
      */
     public static function findArrayAC($store, $partname = "") {
-       
+
         $criteria = "qty <> 0 and disabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $partname = self::qstr('%' . $partname . '%');
@@ -42,11 +42,9 @@ class Stock extends \ZCL\DB\Entity {
             if (strlen($value->snumber) > 0) {
                 $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
             }
-            
-       
-            $list[$key] = $value->itemname . ', ' .  ($value->partion);
-             
-           
+
+
+            $list[$key] = $value->itemname . ', ' . ($value->partion);
         }
 
         return $list;
@@ -61,12 +59,12 @@ class Stock extends \ZCL\DB\Entity {
      * @param mixed $create Создать  если  не   существует
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
-      
+
         $conn = \ZDB\DB::getConnect();
-        
-        $where = "store_id = {$store_id} and item_id = {$item_id}  and partion = {$price}   ";            
-        
-     
+
+        $where = "store_id = {$store_id} and item_id = {$item_id}  and partion = {$price}   ";
+
+
 
         if (strlen($snumber) > 0) {
 
@@ -88,7 +86,7 @@ class Stock extends \ZCL\DB\Entity {
 
             $stock->save();
         }
-     
+
         return $stock;
     }
 
@@ -116,11 +114,11 @@ class Stock extends \ZCL\DB\Entity {
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item_id, $qty,$snumber="") {
+    public static function pickup($store_id, $item_id, $qty, $snumber = "") {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item_id} and qty > 0   ";
-        if(strlen($snumber)>0){
-              $where .= "snumber=". Stock::qstr($snumber);
+        if (strlen($snumber) > 0) {
+            $where .= "snumber=" . Stock::qstr($snumber);
         }
         $stlist = self::find($where, ' stock_id desc');
         foreach ($stlist as $st) {

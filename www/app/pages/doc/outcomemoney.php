@@ -33,7 +33,7 @@ class OutcomeMoney extends \App\Pages\Base {
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(2) ));
+        $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(2)));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('amount'));
 

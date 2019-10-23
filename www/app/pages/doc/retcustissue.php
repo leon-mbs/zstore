@@ -88,7 +88,7 @@ class RetCustIssue extends \App\Pages\Base {
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-           $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -101,18 +101,13 @@ class RetCustIssue extends \App\Pages\Base {
         } else {
             $this->_doc = Document::create('RetCustIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-
-            
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-               
     }
 
-  
-    
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
@@ -164,7 +159,7 @@ class RetCustIssue extends \App\Pages\Base {
         $this->editdetail->edittovar->setText($stock->itemname);
         $st = Stock::load($stock->stock_id);  //для актуального 
         $qty = $st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($st->qty ));
+        $this->editdetail->qtystock->setText(H::fqty($st->qty));
 
 
         $this->_rowid = $stock->stock_id;
@@ -326,8 +321,8 @@ class RetCustIssue extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-         
-        $this->editdetail->qtystock->setText(H::fqty($stock->qty ));
+
+        $this->editdetail->qtystock->setText(H::fqty($stock->qty));
 
 
 

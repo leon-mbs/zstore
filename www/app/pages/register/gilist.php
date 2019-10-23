@@ -26,7 +26,6 @@ use \App\System;
 class GIList extends \App\Pages\Base {
 
     private $_doc = null;
- 
 
     /**
      *
@@ -70,14 +69,14 @@ class GIList extends \App\Pages\Base {
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
- 
+
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function filterOnSubmit($sender) {
 
-    
+
         $this->statuspan->setVisible(false);
 
         $this->doclist->Reload(false);
@@ -93,7 +92,7 @@ class GIList extends \App\Pages\Base {
         $row->add(new Label('amount', $doc->amount));
         $row->add(new Label('order', $doc->headerdata['order']));
         $row->add(new Label('customer', $doc->customer_name));
-     
+
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -103,8 +102,7 @@ class GIList extends \App\Pages\Base {
         } else {
             $row->edit->setVisible(false);
         }
-
-      }
+    }
 
     public function statusOnSubmit($sender) {
 
@@ -243,7 +241,7 @@ class GIList extends \App\Pages\Base {
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true))
             return;
-      
+
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
@@ -262,7 +260,7 @@ class GIList extends \App\Pages\Base {
     }
 
     //оплаты
- 
+
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";

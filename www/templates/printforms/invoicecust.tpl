@@ -43,7 +43,7 @@
         <td   colspan="6" align="right">К оплате:</td>
         <td   align="right">{{payamount}}</td>
     </tr>
-   <tr style="font-weight: bolder;">
+    <tr style="font-weight: bolder;">
         <td   colspan="6" align="right">Оплата:</td>
         <td   align="right">{{payed}}</td>
     </tr>

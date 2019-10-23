@@ -137,7 +137,7 @@ class EqList extends \App\Pages\Base {
 
         $this->itemdetail->editemp->setValue($this->_item->emp_id);
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
- 
+
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->code);
         $this->itemdetail->editserial->setText($this->_item->serial);
@@ -208,7 +208,7 @@ class EQDS implements \Zippy\Interfaces\DataSource {
             
         } else {
             $where = $where . " and disabled <> 1";
-        }        
+        }
         if (strlen($text) > 0) {
             $text = Equipment::qstr('%' . $text . '%');
             $where = $where . " and (eq_name like {$text} or detail like {$text} )  ";

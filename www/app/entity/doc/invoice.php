@@ -46,11 +46,11 @@ class Invoice extends \App\Entity\Doc\Document {
             "document_number" => $this->document_number,
             "total" => $this->amount,
             "payamount" => $this->payamount,
-            "payed" => $this->headerdata['payed'] ,
+            "payed" => $this->headerdata['payed'],
             "paydisc" => $this->headerdata["paydisc"]
         );
-        
- 
+
+
         $report = new \App\Report('invoice.tpl');
 
         $html = $report->generate($header);
@@ -62,32 +62,30 @@ class Invoice extends \App\Entity\Doc\Document {
         //списываем бонусы
         if ($this->headerdata['paydisc'] > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
-            if($customer->discount > 0){
-                 return; //процент
-            }
-            else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] >0 ? $this->headerdata['paydisc']  : 0 );
+            if ($customer->discount > 0) {
+                return; //процент
+            } else {
+                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0 );
                 $customer->save();
             }
         }
         $this->payed = 0;
-        if (  $this->headerdata['payment'] >0 && $this->headerdata['payed']) {
-            \App\Entity\Pay::addPayment($this->document_id,1, $this->headerdata['payed'], $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
-            $this->payed = $this->headerdata['payed']; 
-             
-        }        
+        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
+            \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            $this->payed = $this->headerdata['payed'];
+        }
         return true;
     }
 
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = 'Расходная накладная';
- 
+
         return $list;
     }
 
-    protected function getNumberTemplate(){
-         return  'СФ-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'СФ-000000';
+    }
 
 }

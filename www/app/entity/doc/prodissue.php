@@ -81,9 +81,8 @@ class ProdIssue extends Document {
         return $list;
     }
 
+    protected function getNumberTemplate() {
+        return 'СП-000000';
+    }
 
-    protected function getNumberTemplate(){
-         return  'СП-000000';
-    }      
-    
 }

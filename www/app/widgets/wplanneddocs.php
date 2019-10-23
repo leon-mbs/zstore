@@ -28,9 +28,9 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
 
         // список  запланированных документов
         $where = "state not in( " . Document::STATE_CANCELED . "," . Document::STATE_EDITED . "," . Document::STATE_NEW . ") ";
-        $where = $where . " and  date(document_date) > date(now()) "  ;
+        $where = $where . " and  date(document_date) > date(now()) ";
         //   $where = $where . " and  meta_name in ('ServiceAct','GoodsIssue','GoodsReceipt') ";
-         
+
         if ($visible) {
             $data = Document::find($where, "document_date desc");
         }
@@ -53,8 +53,6 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
 
         $row->add(new Label('date', $dt));
         $row->add(new Label('type', $item->meta_desc));
-
-    
     }
 
 }

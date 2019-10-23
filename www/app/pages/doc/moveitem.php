@@ -17,7 +17,6 @@ use \Zippy\Html\Link\SubmitLink;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
 use \App\Entity\Stock;
-
 use \App\Entity\Store;
 use \App\Application as App;
 use \App\Helper as H;
@@ -42,8 +41,8 @@ class MoveItem extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('storeto', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
-        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick'); 
- 
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -71,7 +70,7 @@ class MoveItem extends \App\Pages\Base {
 
             foreach ($this->_doc->detaildata as $_item) {
                 $item = new Item($_item);
-                $this->_itemlist[$item->item_id. $item->snumber] = $item;
+                $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
         } else {
             $this->_doc = Document::create('MoveItem');
@@ -90,20 +89,19 @@ class MoveItem extends \App\Pages\Base {
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-      
+
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-     
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-     
     }
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         $item = $sender->owner->getDataItem();
-        $id=$item->item_id . $item->snumber; 
+        $id = $item->item_id . $item->snumber;
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
         $this->docform->detail->Reload();
@@ -113,7 +111,7 @@ class MoveItem extends \App\Pages\Base {
         if ($this->docform->storefrom->getValue() == 0) {
             $this->setError("Выберите склад источник");
             return;
-        }        
+        }
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->editdetail->edititem->setKey(0);
@@ -134,8 +132,8 @@ class MoveItem extends \App\Pages\Base {
         $this->editdetail->editsnumber->setValue($item->snumber);
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->storefrom->getValue())));
-  
-        $this->_rowid = $item->item_id. $item->snumber;
+
+        $this->_rowid = $item->item_id . $item->snumber;
     }
 
     public function saverowOnClick($sender) {
@@ -146,12 +144,12 @@ class MoveItem extends \App\Pages\Base {
             $this->setError("Не выбран товар");
             return;
         }
-  
+
         $item = Item::load($id);
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
-        
-        $this->_itemlist[$id.$item->snumber] = $item;
+
+        $this->_itemlist[$id . $item->snumber] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -244,11 +242,11 @@ class MoveItem extends \App\Pages\Base {
     }
 
     public function OnChangeItem($sender) {
-        
+
         $item_id = $sender->getKey();
         $item = Item::load($item_id);
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->storefrom->getValue())));
-        
+
         $this->updateAjax(array('qtystock'));
     }
 
@@ -270,43 +268,41 @@ class MoveItem extends \App\Pages\Base {
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->storefrom->getValue();
         $text = trim($sender->getText());
-        return Item::findArrayAC($text,$store_id );
+        return Item::findArrayAC($text, $store_id);
     }
- 
+
     public function addcodeOnClick($sender) {
-        $code =  trim($this->docform->barcode->getText()) ;
+        $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-     
-    
-        $code = Item::qstr($code)  ;
-        
-        $item = Item::getFirst("    (item_code = {$code} or bar_code = {$code})"  );
-        if($item == null) {
-           $this->setError('Товар не  найден')     ;
-                   return; 
+
+
+        $code = Item::qstr($code);
+
+        $item = Item::getFirst("    (item_code = {$code} or bar_code = {$code})");
+        if ($item == null) {
+            $this->setError('Товар не  найден');
+            return;
         }
-  
-         if($this->_tvars["usesnumber"]==true) {
-            
-           $this->editdetail->setVisible(true);
-           $this->docform->setVisible(false);
-           $this->editdetail->edititem->setKey($item->item_id);
-           $this->editdetail->edititem->setText($item->itemname);
-           $this->editdetail->editsnumber->setText('');
-           $this->editdetail->editquantity->setText('1');
-           return;
-        } 
-        if(!isset($this->_itemlist[$item->item_id])){
-   
+
+        if ($this->_tvars["usesnumber"] == true) {
+
+            $this->editdetail->setVisible(true);
+            $this->docform->setVisible(false);
+            $this->editdetail->edititem->setKey($item->item_id);
+            $this->editdetail->edititem->setText($item->itemname);
+            $this->editdetail->editsnumber->setText('');
+            $this->editdetail->editquantity->setText('1');
+            return;
+        }
+        if (!isset($this->_itemlist[$item->item_id])) {
+
             $this->_itemlist[$item->item_id] = $item;
-            $item->quantity=0;
-            
-        }   
-      
-        $this->_itemlist[$item->item_id]->quantity  +=1;
-  
+            $item->quantity = 0;
+        }
+
+        $this->_itemlist[$item->item_id]->quantity += 1;
+
         $this->docform->detail->Reload();
     }
- }
 
- 
+}

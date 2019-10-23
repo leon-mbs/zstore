@@ -15,7 +15,7 @@
                         <label for="customer" >Покупатель</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
                         <span zippy="discount" style="font-size:smaller"></span> 
-                              
+
                         <a style="display:block;font-size:smaller" zippy="addcust">Добавить нового</a>
 
                     </div>
@@ -31,7 +31,7 @@
                         <input zippy="email"   class="form-control" >
 
                     </div>  
-                       <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="payment" >Оплата</label>
                         <select class="form-control" zippy="payment">
                             <option value="0">Не  выбрано</option>
@@ -42,7 +42,7 @@
                         <label  data-label="paynotes" for="paynotes" > Комментарий к оплате</label>
                         <input class="form-control" type="text" zippy="paynotes" >
                     </div>
-                   
+
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -60,12 +60,12 @@
                         </select>
                     </div> 
 
-                           
+
                     <div class="form-group  ">
                         <label for="notes" >Комментарий </label>
 
                         <textarea class="form-control"  zippy="notes"></textarea>
- 
+
                     </div>  
                 </div>
             </div>
@@ -104,7 +104,7 @@
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
-                       <tr style="font-weight: bolder;" >
+                        <tr style="font-weight: bolder;" >
                             <td colspan="5" class="text-right"> <span data-label="paydisc" >Скидка:</span></td>
                             <td zippy="paydisc" class="text-right"></td>
                             <td> <a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i class="fa fa-edit"></i></a>   </td>
@@ -119,7 +119,7 @@
                             <td zippy="payed" class="text-right"></td>
                             <td><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i class="fa fa-edit"></i></a> </td>
                         </tr>
-                 
+
 
                     </table>
                 </div>
@@ -129,77 +129,77 @@
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     &nbsp;<input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
-   
+
                 </div>
             </div>
-    <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-             <div class="modal-header">
-                <h5 class="modal-title">Скидка</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  <div class="input-group  ">  
-                    <input class="form-control" type="text" zippy="editpaydisc" pattern="[0-9]+">
-                     <div class="input-group-append">
-                    <input type="submit" value="OK" zippy="bpaydisc" class="ml-2 btn btn-info  ">
-         
+            <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Скидка</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editpaydisc" pattern="[0-9]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bpaydisc" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                  </div>
-              </div>
-             
-            </div>
-          </div>
-        </div>            
-            
-    <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-             <div class="modal-header">
-                <h5 class="modal-title">К оплате</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  <div class="input-group  ">  
-                    <input class="form-control" type="text" zippy="editpayamount" pattern="[0-9]+">
-                     <div class="input-group-append">
-                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
-         
+                </div>
+            </div>            
+
+            <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">К оплате</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editpayamount" pattern="[0-9]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                  </div>
-              </div>
-             
-            </div>
-          </div>
-        </div>            
-        <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-             <div class="modal-header">
-                <h5 class="modal-title">Оплата</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  <div class="input-group  ">  
-                    <input class="form-control" type="text" zippy="editpayed" pattern="[0-9]+">
-                     <div class="input-group-append">
-                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
-         
+                </div>
+            </div>            
+            <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Оплата</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editpayed" pattern="[0-9]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                  </div>
-              </div>
-             
+                </div>
             </div>
-          </div>
-        </div>
-         </form>
+        </form>
         <form zippy="editdetail">
             <h4>Ввод товара </h4>
             <div class="row">

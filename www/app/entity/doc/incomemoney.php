@@ -15,7 +15,7 @@ class IncomeMoney extends Document {
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, 1,$this->amount, $this->headerdata['payment'],$this->headerdata['type'], $this->notes);
+        Pay::addPayment($this->document_id, 1, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
 
 
         return true;
@@ -29,7 +29,7 @@ class IncomeMoney extends Document {
             'amount' => $this->amount,
             'date' => date('d.m.Y', $this->document_date),
             "notes" => $this->notes,
-            "type" => $pt[$this->headerdata["type"]] ,
+            "type" => $pt[$this->headerdata["type"]],
             "to" => $this->headerdata["paymentname"],
             "document_number" => $this->document_number
         );
@@ -40,8 +40,8 @@ class IncomeMoney extends Document {
         return $html;
     }
 
-    protected function getNumberTemplate(){
-         return  'ПКО-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'ПКО-000000';
+    }
 
 }

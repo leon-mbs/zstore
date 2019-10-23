@@ -68,11 +68,11 @@ class ReturnIssue extends Document {
             $sc->setStock($row['stock_id']);
 
 
-          //  $sc->setCustomer($this->customer_id);
+            //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, 1,0 - $this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            \App\Entity\Pay::addPayment($this->document_id, 1, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
             $this->payamount = $this->amount;
         }
 
@@ -85,8 +85,8 @@ class ReturnIssue extends Document {
         return $list;
     }
 
-    protected function getNumberTemplate(){
-         return  'ВК-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'ВК-000000';
+    }
 
 }

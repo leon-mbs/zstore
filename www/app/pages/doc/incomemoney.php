@@ -31,8 +31,8 @@ class IncomeMoney extends \App\Pages\Base {
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
-       
-        $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(1),Pay::PAY_BASE_INCOME ));
+
+        $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(1), Pay::PAY_BASE_INCOME));
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
@@ -50,7 +50,7 @@ class IncomeMoney extends \App\Pages\Base {
             $this->docform->mtype->setValue($this->_doc->headerdata['type']);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            
+
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->amount->setText($this->_doc->amount);
         } else {
@@ -70,7 +70,7 @@ class IncomeMoney extends \App\Pages\Base {
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paymentname'] = $this->docform->payment->getValueName();
         $this->_doc->headerdata['type'] = $this->docform->mtype->getValue();
-       
+
         $this->_doc->amount = $this->docform->amount->getText();
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());

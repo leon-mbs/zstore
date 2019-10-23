@@ -32,13 +32,12 @@ use \App\Modules\Note\Entity\TopicNode;
 /**
  * Главная страница
  */
-class Main extends \App\Pages\Base 
-{
+class Main extends \App\Pages\Base {
 
     private $_edited = 0;
     private $clipboard = array();
-    public $_tarr= array();
-    public $_sarr= array();
+    public $_tarr = array();
+    public $_sarr = array();
     public $_farr = array();
 
     public function __construct() {
@@ -89,7 +88,7 @@ class Main extends \App\Pages\Base
         $this->editform->add(new ClickLink("editcancel", $this, "onTopicCancel"));
         $this->editform->add(new SubmitLink("editsave"))->onClick($this, "onTopicSave");
         $this->editform->add(new CheckBox("editispublic"));
- 
+
 
         //аплоад файла
         $this->add(new Form("fileform"))->onSubmit($this, "OnFile");
@@ -132,10 +131,10 @@ class Main extends \App\Pages\Base
     //редактировать  топик
     public function onTopicEdit($sender) {
         $topic = Topic::load($this->topiclist->getSelectedRow()->getDataItem()->topic_id);
-        
+
         $this->_edited = $topic->topic_id;
         \App\Session::getSession()->topic_id = $topic->topic_id;
-        
+
         $this->editform->edittitle->setText($topic->title);
         $this->editform->edittags->setTags($topic->getTags());
         $this->editform->edittags->setSuggestions($topic->getSuggestionTags());
@@ -152,7 +151,7 @@ class Main extends \App\Pages\Base
         $topic->title = $this->editform->edittitle->getText();
         $topic->content = $this->editform->editcontent->getText();
         $topic->ispublic = $this->editform->editispublic->isChecked();
-        if(strlen($topic->title)==0){
+        if (strlen($topic->title) == 0) {
             $this->setError('не введен заголовое');
             return;
         }
@@ -165,7 +164,7 @@ class Main extends \App\Pages\Base
         if ($this->_edited == 0) {
             $topic->addToNode($nodeid);
         }
-         $this->ReloadTopic($nodeid);
+        $this->ReloadTopic($nodeid);
 
 
         $this->_tvars['editor'] = false;
@@ -299,23 +298,22 @@ class Main extends \App\Pages\Base
         //$row->add(new ClickLink('title', $this,'onTopic'));
         $fav = $row->add(new Label('fav'));
         $fav->setVisible($topic->favorites > 0);
-   
     }
 
     //клик по топику
     public function onTopic($row) {
 
-       $topic = $row->getDataItem(); 
-       $this->_farr = Helper::findFileByTopic($topic->topic_id);
-       $this->filelist->Reload();
-       $this->topiclist->setSelectedRow($row);
-       $this->topiclist->Reload();
+        $topic = $row->getDataItem();
+        $this->_farr = Helper::findFileByTopic($topic->topic_id);
+        $this->filelist->Reload();
+        $this->topiclist->setSelectedRow($row);
+        $this->topiclist->Reload();
     }
 
     //избранное
     public function onFav($sender) {
         $topic = Topic::load($this->topiclist->getSelectedRow()->getDataItem()->topic_id);
- 
+
         $topic->favorites = $topic->favorites == 1 ? 0 : 1;
         $topic->save();
         //$this->ReloadTopic($this->tree->selectedNodeId());
@@ -348,13 +346,13 @@ class Main extends \App\Pages\Base
 
     //удалить топик
     public function onTopicDelete($sender) {
-        $topic=$this->topiclist->getSelectedRow()->getDataItem() ;
-        
+        $topic = $this->topiclist->getSelectedRow()->getDataItem();
+
         $topic->removeFromNode($this->tree->selectedNodeId());
-        
+
         $nodes = $topic->getNodesCnt();
-        if($nodes==0){ //если ни в одном  узле
-           Topic::delete($topic->topic_id);   
+        if ($nodes == 0) { //если ни в одном  узле
+            Topic::delete($topic->topic_id);
         }
         $this->topiclist->setSelectedRow();
         $this->ReloadTopic($this->tree->selectedNodeId());
@@ -406,8 +404,8 @@ class Main extends \App\Pages\Base
             return;
 
         $topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
-           
-        Helper::addFile($file,$topic_id)   ; 
+
+        Helper::addFile($file, $topic_id);
 
         $this->_farr = Helper::findFileByTopic($topic_id);
         $this->filelist->Reload();
@@ -423,7 +421,7 @@ class Main extends \App\Pages\Base
         $file = $sender->getOwner()->getDataItem();
         Helper::deleteFile($file->file_id);
         $topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
- 
+
         $this->_farr = Helper::findFileByTopic($topic_id);
         $this->filelist->Reload();
     }
@@ -470,7 +468,7 @@ class Main extends \App\Pages\Base
         $topic = TopicNode::load($tn_id);
         $this->tree->selectedNodeId($topic->node_id);
 
-      //  $this->topiclist->setSelectedRow($topic->topic_id);
+        //  $this->topiclist->setSelectedRow($topic->topic_id);
         $this->ReloadTopic($topic->node_id);
     }
 
@@ -483,16 +481,16 @@ class Main extends \App\Pages\Base
 
         $nodeid = $this->tree->selectedNodeId();
         $node = Node::load($nodeid);
-        $topicid=0;
-        $row =$this->topiclist->getSelectedRow();
-        
-        if($row instanceof \Zippy\Html\DataList\DataRow){
-           $topicid = $row->getDataItem()->topic_id; 
+        $topicid = 0;
+        $row = $this->topiclist->getSelectedRow();
+
+        if ($row instanceof \Zippy\Html\DataList\DataRow) {
+            $topicid = $row->getDataItem()->topic_id;
         }
-        
+
         $topic = Topic::load($topicid);
-        if($topic == false){
-            $topicid =0;
+        if ($topic == false) {
+            $topicid = 0;
         }
 
         $nodecp = $this->clipboard[1] == 'node' ? $this->clipboard[0] : 0;
@@ -545,10 +543,10 @@ class Main extends \App\Pages\Base
             $this->topiccopy->setVisible(true);
             $this->topictag->setVisible(true);
             $this->topicdelete->setVisible(true);
-              if ($topic->ispublic > 0) {
-            $this->topiclink->setVisible(true);
-            $this->topiclink->setLink("/topic/" . $topicid);
-              }
+            if ($topic->ispublic > 0) {
+                $this->topiclink->setVisible(true);
+                $this->topiclink->setLink("/topic/" . $topicid);
+            }
             $this->tpanel->addfile->setVisible(true);
             ;
             $this->tpanel->setfav->setVisible(true);

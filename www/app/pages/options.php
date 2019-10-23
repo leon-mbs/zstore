@@ -35,12 +35,12 @@ class Options extends \App\Pages\Base {
         $this->common->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList()));
         $this->common->add(new DropDownChoice('qtydigits'));
 
- 
+
 
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
-     
+
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
@@ -72,10 +72,10 @@ class Options extends \App\Pages\Base {
         $this->common->price3->setText($common['price3']);
         $this->common->price4->setText($common['price4']);
         $this->common->price5->setText($common['price5']);
-       
+
         $this->common->autoarticle->setChecked($common['autoarticle']);
         $this->common->useset->setChecked($common['useset']);
-        
+
         $this->common->usesnumber->setChecked($common['usesnumber']);
         $this->common->useval->setChecked($common['useval']);
         $this->common->usescanner->setChecked($common['usescanner']);
@@ -136,10 +136,10 @@ class Options extends \App\Pages\Base {
         $common['price3'] = $this->common->price3->getText();
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
-       
+
         $common['autoarticle'] = $this->common->autoarticle->isChecked();
         $common['useset'] = $this->common->useset->isChecked();
-       
+
         $common['usesnumber'] = $this->common->usesnumber->isChecked();
         $common['useval'] = $this->common->useval->isChecked();
         $common['usescanner'] = $this->common->usescanner->isChecked();

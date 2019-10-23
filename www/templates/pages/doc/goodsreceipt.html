@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-3">
-                   
+
                     <div class="form-group  ">
                         <label for="store" >На склад</label>
                         <select class="form-control" zippy="store">
@@ -42,9 +42,9 @@
                     <div class="form-group  ">
                         <label for="payment" >Оплата</label>
                         <select class="form-control" zippy="payment">
-                             <option value="0">Не выбрано</option>
+                            <option value="0">Не выбрано</option>
                         </select> 
-                        
+
                     </div> 
 
                     <div class="form-group">
@@ -54,7 +54,7 @@
                     <div class="form-check">
                         <input zippy="prepaid" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="useset">Была предоплата</label>
-                        
+
                     </div>
                     <div class="form-group">
                         <label data-label="val" for="val">Валюта</label>
@@ -67,14 +67,14 @@
             </div>
             <div class="row">
                 <div class="col-10  col-lg-8">
-                     {{#usescanner}} 
+                    {{#usescanner}} 
                     <div class="navbar nav justify-content-start">
                         Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
-                          &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
-      
+                        &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
+
                     </div>
-                     {{/usescanner}}
-                   &nbsp;<a zippy="addrow">Добавить позицию</a>
+                    {{/usescanner}}
+                    &nbsp;<a zippy="addrow">Добавить позицию</a>
                     <table class="table  table-sm">
                         <tr>
 
@@ -102,7 +102,7 @@
                             <td zippy="sdate"></td>
                             {{/usesnumber}} 
                             <td  class="text-right" zippy="quantity">  </td>
- 
+
                             <td zippy="price" class="text-right"></td>
 
                             <td zippy="amount" class="text-right"></td>
@@ -128,8 +128,8 @@
                             {{#usesnumber}} 
                             <td data-label="payamount" colspan="7" class="text-right">К оплате:</td>
                             {{/usesnumber}} 
-                        
-                            
+
+
                             <td zippy="payamount" class="text-right"></td>
                             <td data-label="payamount"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i class="fa fa-edit"></i></a> </td>
                         </tr>
@@ -140,7 +140,7 @@
                             {{#usesnumber}} 
                             <td data-label="payed" colspan="7" class="text-right">Внесена оплата:</td>
                             {{/usesnumber}} 
-                            
+
                             <td zippy="payed" class="text-right"></td>
                             <td data-label="payed"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i class="fa fa-edit"></i></a> </td>
                         </tr>
@@ -149,13 +149,13 @@
 
                 </div>
             </div>
-              <div class="row">
-               <div class="col-12 col-md-4">
-                <div class="form-group">
-                    <label for="scan" > &nbsp; &nbsp;Скан документа</label>
-                    <input class="form-control" type="file" zippy="scan"  >
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label for="scan" > &nbsp; &nbsp;Скан документа</label>
+                        <input class="form-control" type="file" zippy="scan"  >
+                    </div>
                 </div>
-               </div>
             </div>           
             <div class="row">
                 <div class="col-6">
@@ -167,51 +167,51 @@
                 </div>
             </div>
 
-    <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-             <div class="modal-header">
-                <h5 class="modal-title">К оплате</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  <div class="input-group  ">  
-                    <input class="form-control" type="text" zippy="editpayamount" pattern="[0-9]+">
-                     <div class="input-group-append">
-                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
-         
+            <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">К оплате</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editpayamount" pattern="[0-9]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                  </div>
-              </div>
-             
+                </div>
             </div>
-          </div>
-        </div>
-         <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-             <div class="modal-header">
-                <h5 class="modal-title">Оплата</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  <div class="input-group  ">  
-                    <input class="form-control" type="text" zippy="editpayed" pattern="[0-9]+">
-                     <div class="input-group-append">
-                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
-         
+            <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Оплата</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editpayed" pattern="[0-9]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                  </div>
-              </div>
-             
+                </div>
             </div>
-          </div>
-        </div>
- 
+
         </form>
 
 
@@ -258,7 +258,7 @@
                 </div>
             </div>
 
-    
+
         </form>
 
         <form zippy="editnewitem">
@@ -279,7 +279,7 @@
                         <input class="form-control" type="text" zippy="editnewitembarcode"  ></input>
                     </div>
 
-                        {{#usesnumber}} 
+                    {{#usesnumber}} 
                     <div class="form-group">
                         <label for="editnewitemsnumber">Серия производителя </label>
                         <input   class="form-control "   zippy="editnewitemsnumber" />
@@ -299,19 +299,19 @@
             </div>
         </form>
 
-     <script>
-           $(document).ready(function () {
-  
-                $('#barcode').focus();
-           });
+        <script>
+            $(document).ready(function () {
 
-        function onBarCode(ele) {
-               
-            if(event.key === 'Enter' || event.keyCode == 13) {
-               // alert($('#barcode').val()); 
-                $('#addcode').click()       
+                $('#barcode').focus();
+            });
+
+            function onBarCode(ele) {
+
+                if (event.key === 'Enter' || event.keyCode == 13) {
+                    // alert($('#barcode').val()); 
+                    $('#addcode').click()
+                }
             }
-        }
         </script>
 
     </body>

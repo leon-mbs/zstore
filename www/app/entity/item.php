@@ -75,54 +75,50 @@ class Item extends \ZCL\DB\Entity {
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад
     //$partion - партия
-    public function getPrice($_price_, $store = 0,$partion=0) {
+    public function getPrice($_price_, $store = 0, $partion = 0) {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
- 
-            if ($_price_ == 'price1')
-                $_price = $this->price1;
-            else if ($_price_ == 'price2')
-                $_price = $this->price2;
-            else if ($_price_ == 'price3')
-                $_price = $this->price3;
-            else if ($_price_ == 'price4')
-                $_price = $this->price4;
-            else if ($_price_ == 'price5')
-                $_price = $this->price5;
-      
-          
+
+        if ($_price_ == 'price1')
+            $_price = $this->price1;
+        else if ($_price_ == 'price2')
+            $_price = $this->price2;
+        else if ($_price_ == 'price3')
+            $_price = $this->price3;
+        else if ($_price_ == 'price4')
+            $_price = $this->price4;
+        else if ($_price_ == 'price5')
+            $_price = $this->price5;
+
+
         //если процент    
         if (strpos($_price, '%') > 0) {
-                  
-             $ret = doubleval(str_replace('%', '', $_price));
-             if($ret>0){
-                
-                 if($partion>0){
-                     
-                 }
-                 else {  //ищем последнюю закупочную  цену 
-                    $conn = \ZDB\DB::getConnect();
+
+            $ret = doubleval(str_replace('%', '', $_price));
+            if ($ret > 0) {
+
+                if ($partion > 0) {
                     
+                } else {  //ищем последнюю закупочную  цену 
+                    $conn = \ZDB\DB::getConnect();
+
                     $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}";
-                    if($store>0){
-                       $sql = $sql ." and store_id=" . $store;    
-                    }   
-                    $sql = $sql ." order  by  stock_id desc limit 0,1";  
+                    if ($store > 0) {
+                        $sql = $sql . " and store_id=" . $store;
+                    }
+                    $sql = $sql . " order  by  stock_id desc limit 0,1";
                     $partion = $conn->GetOne($sql);
-                 }
-                
-                 
-                 $price = $partion + (int) $partion / 100 * $ret;   
-             }
-             
-             
-                  
-         } else if($_price > 0){
-             $price = $_price; //задана  просто  цифра
-         }
-          
-            
+                }
+
+
+                $price = $partion + (int) $partion / 100 * $ret;
+            }
+        } else if ($_price > 0) {
+            $price = $_price; //задана  просто  цифра
+        }
+
+
         //поправка  по  валюте
 
         if ($common['useval'] == true) {
@@ -168,37 +164,34 @@ class Item extends \ZCL\DB\Entity {
      * @param mixed $store_id
      * @param mixed $snumber   партия проиводителя
      */
-    public function   getQuantity(   $store_id = 0,$snumber="") {
-        
-            $conn = \ZDB\DB::getConnect();
-            $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock_view where   item_id = {$this->item_id} ";
-            if ($store_id > 0)
-                $sql .= " and store_id = " . $store_id;
-           if (strlen($snumber) > 0)
-                $sql .= " and  snumber = " . $conn->qstr($snumber);
-            $cnt = $conn->GetOne($sql);
-            return $cnt;
-        
+    public function getQuantity($store_id = 0, $snumber = "") {
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock_view where   item_id = {$this->item_id} ";
+        if ($store_id > 0)
+            $sql .= " and store_id = " . $store_id;
+        if (strlen($snumber) > 0)
+            $sql .= " and  snumber = " . $conn->qstr($snumber);
+        $cnt = $conn->GetOne($sql);
+        return $cnt;
     }
-    
+
     /**
      * возвращает сумму на складах
      * 
      * @param mixed $item_id
      * @param mixed $store_id
      */
-    public   function getAmount(  $store_id = 0) {
-       
-            $conn = \ZDB\DB::getConnect();
-            $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   item_id = {$this->item_id} ";
-            if ($store_id > 0)
-                $sql .= " and store_id = " . $store_id;
-            $amount = $conn->GetOne($sql);
-            return $amount;
-       
+    public function getAmount($store_id = 0) {
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   item_id = {$this->item_id} ";
+        if ($store_id > 0)
+            $sql .= " and store_id = " . $store_id;
+        $amount = $conn->GetOne($sql);
+        return $amount;
     }
-    
-   
+
     /**
      * Метод  для   получения  имени  ТМЦ   для выпадающих списков
      *
@@ -206,41 +199,40 @@ class Item extends \ZCL\DB\Entity {
      * @return []
      * @static
      */
-    public static function findArrayAC( $partname,$store=0  ) {
-       
+    public static function findArrayAC($partname, $store = 0) {
+
         $criteria = "  disabled <> 1 ";
-        if($store>0){
-            $criteria .= "     and item_id in (select item_id from store_stock  where  store_id={$store})" ;
+        if ($store > 0) {
+            $criteria .= "     and item_id in (select item_id from store_stock  where  store_id={$store})";
         }
-        
+
         if (strlen($partname) > 0) {
             $partname = self::qstr('%' . $partname . '%');
             $criteria .= "  and  (itemname like {$partname} or item_code like {$partname}   or   bar_code like {$partname} )";
         }
 
         $entitylist = self::find($criteria);
- 
+
         $list = array();
         foreach ($entitylist as $key => $value) {
-         
-            $list[$key] = $value->itemname  ;
-            
+
+            $list[$key] = $value->itemname;
         }
 
         return $list;
     }
-   
 
     /**
-    * генерирует новый артикул
-    * 
-    */
-    public static function getNextArticle(){
+     * генерирует новый артикул
+     * 
+     */
+    public static function getNextArticle() {
         $conn = \ZDB\DB::getConnect();
-        
+
         $sql = "  select max(item_id)  from  items ";
         $id = $conn->GetOne($sql);
-       
+
         return "ID" . sprintf("%04d", ++$id);
     }
+
 }

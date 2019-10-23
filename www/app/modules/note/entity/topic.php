@@ -8,8 +8,7 @@ namespace App\Modules\Note\Entity;
  * @view=note_topicsview
  * @keyfield=topic_id
  */
-class Topic extends \ZCL\DB\Entity
-{
+class Topic extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->topic_id = 0;
@@ -50,8 +49,7 @@ class Topic extends \ZCL\DB\Entity
         $conn->Execute("insert into note_topicnode(topic_id,node_id)values({$this->topic_id},{$node_id})");
     }
 
-   
-   /**
+    /**
      * удалить с  узла
      * 
      * @param mixed $node_id
@@ -72,16 +70,15 @@ class Topic extends \ZCL\DB\Entity
 
         return "";
     }
- 
+
     /**
-    * возвращает количество  узлов  в  которых упоминается
-    * 
-    */
+     * возвращает количество  узлов  в  которых упоминается
+     * 
+     */
     public function getNodesCnt() {
         $conn = \ZCL\DB\DB::getConnect();
-        
+
         return $conn->GetOne("select count(*) from note_topicnode where topic_id=" . $this->topic_id);
-        
     }
 
     /**
@@ -106,8 +103,9 @@ class Topic extends \ZCL\DB\Entity
         $tl = array();
         $conn = \ZCL\DB\DB::getConnect();
         $rc = $conn->GetCol("select distinct tagvalue from note_tags where topic_id=" . $this->topic_id);
-        foreach($rc as $k=>$v){
-           if(strlen($v))$tl[$k] = $v;
+        foreach ($rc as $k => $v) {
+            if (strlen($v))
+                $tl[$k] = $v;
         }
         return $tl;
     }

@@ -74,24 +74,21 @@ class UserProfile extends \App\Pages\Base {
             $this->setSuccess('Пароль сохранен');
         }
 
-        if($this->user->username !='admin'){
-            $admin = \App\Entity\User::getFirst("username='admin'"); 
+        if ($this->user->username != 'admin') {
+            $admin = \App\Entity\User::getFirst("username='admin'");
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;
             $n->dateshow = time();
             $n->message = "Пользователь <b>{$this->user->username}</b> сменил пароль на  <b>{$pass}</b>";
-            
-            $n->save();            
+
+            $n->save();
         }
-        
-        
-        
-        
+
+
+
+
         $sender->userpassword->setText('');
         $sender->confirmpassword->setText('');
     }
 
 }
-
- 
- 
