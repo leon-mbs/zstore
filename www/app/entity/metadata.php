@@ -14,6 +14,7 @@ class MetaData extends \ZCL\DB\Entity {
     const METATYPE_REP = 2;
     const METATYPE_REF = 3;
     const METATYPE_REG = 4;
+    const METATYPE_SER = 5;
 
     public static function getNames() {
         $list = array();
@@ -21,7 +22,7 @@ class MetaData extends \ZCL\DB\Entity {
         $list[2] = "Отчет";
         $list[3] = "Журнал";
         $list[4] = "Справочник";
-        $list[5] = "Онлайн каталог";
+        $list[5] = "Cервисная страницв";
 
 
         return $list;

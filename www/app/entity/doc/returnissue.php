@@ -67,7 +67,8 @@ class ReturnIssue extends Document {
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($row['stock_id']);
 
-
+            $sc->setExtCode(0-($item['price'] - $st->partion)); //Для АВС 
+  
             //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }

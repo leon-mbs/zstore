@@ -32,11 +32,10 @@ class Item extends \ZCL\DB\Entity {
         $this->curname = (string) ($xml->curname[0]);
         $this->currate = doubleval($xml->currate[0]);
         $this->pricelist = (int) $xml->pricelist[0];
-        $this->term = (int) $xml->term[0];
+        $this->useserial = (int) $xml->useserial[0];
+        
         $this->cell = (string) $xml->cell[0];
-
-
-
+  
 
         parent::afterLoad();
     }
@@ -46,7 +45,8 @@ class Item extends \ZCL\DB\Entity {
         $this->detail = "<detail>";
         //упаковываем  данные в detail
         $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
-        $this->detail .= "<term>{$this->term}</term>";
+        $this->detail .= "<useserial>{$this->useserial}</useserial>";
+      
         $this->detail .= "<cell>{$this->cell}</cell>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
@@ -174,6 +174,29 @@ class Item extends \ZCL\DB\Entity {
             $sql .= " and  snumber = " . $conn->qstr($snumber);
         $cnt = $conn->GetOne($sql);
         return $cnt;
+    }
+  
+    /**
+    * возвращает список скенрий производителя
+    * 
+    * @param mixed $store_id
+    */
+    public function getSerials($store_id = 0) {
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select snumber  from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null ";
+        if ($store_id > 0)
+            $sql .= " and store_id = " . $store_id;
+        
+            
+        $res = $conn->Execute($sql);
+        $list = array();
+        foreach($res as $row){
+            if(strlen($row['snumber'])>0) {
+               $list[] = $row['snumber']  ;     
+            }
+        }
+        return $list;
     }
 
     /**

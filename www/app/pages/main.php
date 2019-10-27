@@ -32,8 +32,6 @@ class Main extends Base {
         $this->add(new \App\Widgets\WWaited("wwaited"));
     }
 
-    public function getPageInfo() {
-        return "Статистика на  начало дня";
-    }
+   
 
 }

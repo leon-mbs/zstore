@@ -66,8 +66,8 @@ class RetCustIssue extends Document {
 
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setStock($row['stock_id']);
-            // $sc->setExtCode(0 - $row['amount'])); //Для АВС 
-            //  $sc->setCustomer($this->customer_id);
+            $sc->setExtCode(0 - $row['amount']) ; //Для АВС 
+           
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
@@ -81,9 +81,7 @@ class RetCustIssue extends Document {
 
     public function getRelationBased() {
         $list = array();
-        $list['Warranty'] = 'Гарантийный талон';
-        $list['ReturnIssue'] = 'Возвратная накладная';
-
+     
         return $list;
     }
 

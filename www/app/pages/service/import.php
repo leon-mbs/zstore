@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pages;
+namespace App\Pages\Service;
 
 use \Zippy\Html\DataList\DataView;
 use \App\Entity\User;
@@ -24,9 +24,8 @@ class Import extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (System::getUser()->acltype == 2) {
-            App::Redirect('\App\Pages\Error', 'У вас нет права  импорта');
-        }
+        if (false == \App\ACL::checkShowSer('Import'))
+            return;
 
         $form = $this->add(new Form("iform"));
 
@@ -198,12 +197,6 @@ class Import extends \App\Pages\Base {
         $this->iform->clean();
     }
 
-    public function getPageInfo() {
-
-        return "Страница предназначена для  импорта данных из  CSV файла
-                <br>Для указания расположения данных необходимо  указать номера  соответствующих столбцов.
-                Может  быть  выполнен  импорт номенклатьуры  в справочник или  если  указано количество  оприходование на  склад. 
-                <br>Также  есть  возможность предварительного просмотра данных.";
-    }
+   
 
 }

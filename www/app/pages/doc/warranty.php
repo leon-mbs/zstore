@@ -131,7 +131,7 @@ class Warranty extends \App\Pages\Base {
 
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
-        $this->editdetail->edittovar->setKey($item->stock_id);
+        $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
 
@@ -144,7 +144,7 @@ class Warranty extends \App\Pages\Base {
         $this->editdetail->editsn->setText($item->sn);
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = $item->stock_id;
+        $this->_rowid = $item->item_id;
     }
 
     public function addrowOnClick($sender) {
@@ -163,14 +163,14 @@ class Warranty extends \App\Pages\Base {
             $this->setError("Не выбран товар");
             return;
         }
-        $stock = Stock::load($id);
-        $stock->quantity = $this->editdetail->editquantity->getText();
-        $stock->price = $this->editdetail->editprice->getText();
-        $stock->sn = $this->editdetail->editsn->getText();
-        $stock->warranty = $this->editdetail->editwarranty->getText();
+        $item = Item::load($id);
+        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->price = $this->editdetail->editprice->getText();
+        $item->sn = $this->editdetail->editsn->getText();
+        $item->warranty = $this->editdetail->editwarranty->getText();
 
 
-        $this->_tovarlist[$stock->stock_id] = $stock;
+        $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -209,11 +209,7 @@ class Warranty extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getText();
 
-
-
-        $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
-        $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
-
+     
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();

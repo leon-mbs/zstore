@@ -167,4 +167,25 @@ class ACL {
         return false;
     }
 
+   //проверка  на  доступ  к  сервисным станицам
+    public static function checkShowSer($ser) {
+        if (System::getUser()->acltype != 2)
+            return true;
+
+        self::load();
+
+        $meta_id = self::$_metas['5_' . $ser];
+        $aclview = explode(',', System::getUser()->aclview);
+
+
+
+        if (in_array($meta_id, $aclview)) {
+            return true;
+        }
+
+        System::setErrorMsg('Нет права  просмотра страницы');
+        App::RedirectHome();
+        return false;
+    }
+    
 }

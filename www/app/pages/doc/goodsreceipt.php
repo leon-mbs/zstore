@@ -259,6 +259,7 @@ class GoodsReceipt extends \App\Pages\Base {
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
+            $this->editdetail->editprice->setText('');
         }
     }
 
@@ -289,11 +290,18 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->setWarn("Не указана цена");
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
+        
+        if(strlen($item->snumber)==0 && $item->useserial==1){
+            $this->setError("Товар требует ввода партии производителя");
+            return;
+        }
+        
+        
         $item->sdate = $this->editdetail->editsdate->getDate();
         if ($item->sdate == false)
             $item->sdate = '';
         if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0) {
-            $this->setError("К серии должна быть введена дата");
+            $this->setError("К серии должна быть введена дата срока годности");
             return;
         }
         unset($this->_itemlist[$this->_rowid]);

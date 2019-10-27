@@ -29,7 +29,7 @@ class Stock extends \ZCL\DB\Entity {
      */
     public static function findArrayAC($store, $partname = "") {
 
-        $criteria = "qty <> 0 and disabled <> 1 and store_id=" . $store;
+        $criteria = "qty <> 0 and itemdisabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $partname = self::qstr('%' . $partname . '%');
             $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} or snumber like {$partname} or   bar_code like {$partname} )";
@@ -118,7 +118,7 @@ class Stock extends \ZCL\DB\Entity {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item_id} and qty > 0   ";
         if (strlen($snumber) > 0) {
-            $where .= "snumber=" . Stock::qstr($snumber);
+            $where .= " and snumber=" . Stock::qstr($snumber);
         }
         $stlist = self::find($where, ' stock_id desc');
         foreach ($stlist as $st) {

@@ -194,11 +194,16 @@ class GoodsIssue extends \App\Pages\Base {
                         if ($ttn) {
                             $this->setWarn('У заказа  уже  есть отправка');
                         }
+                        $this->docform->total->setText($order->amount);
 
+                        $this->OnChangeCustomer($this->docform->customer);
+                        $this->calcPay() ;
+                        
                         foreach ($order->detaildata as $item) {
                             $item = new Item($item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
+                        
                     }
                 }
             }
@@ -256,16 +261,16 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-        $this->editdetail->editquantity->setText($item->quantity);
-        $this->editdetail->editprice->setText($item->price);
-
 
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
-
-        $this->editdetail->qtystock->setText(H::fqty($item->qty));
-
+        $this->OnChangeItem($this->editdetail->edittovar);
+        
+        $this->editdetail->editprice->setText($item->price);
+        $this->editdetail->editquantity->setText($item->quantity);
+        $this->editdetail->editserial->setText($item->serial);
+        
         $this->_rowid = $item->item_id;
     }
 
@@ -279,15 +284,26 @@ class GoodsIssue extends \App\Pages\Base {
         $item = Item::load($id);
 
         $item->quantity = $this->editdetail->editquantity->getText();
+        $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
-        //  if ($item->quantity > $qstock) {
-        //      $this->setWarn('Недостаточное  количество на  складе');
-        //  }
+ 
         $item->price = $this->editdetail->editprice->getText();
 
-
+        if(strlen($item->snumber)==0 && $item->useserial==1){
+            $this->setError("Товар требует ввода партии производителя");
+            return;
+        }
+       
+        if ($this->_tvars["usesnumber"] == true && $item->useserial ==1) {
+            $slist=  $item->getSerials($store_id);
+            
+            if(in_array($item->snumber,$slist) == false){
+                $this->setWarn('Неверный номер серии');
+            }
+        }
+           
         unset($this->_itemlist[$this->_rowid]);
-        $this->_itemlist[$stock->item_id] = $item;
+        $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -299,6 +315,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->calcPay();
     }
@@ -520,20 +537,7 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         }
 
-        if ($this->_tvars["usesnumber"] == true) {
 
-            $this->editdetail->setVisible(true);
-            $this->docform->setVisible(false);
-            $this->editdetail->edititem->setKey($item->item_id);
-            $this->editdetail->edititem->setText($item->itemname);
-            $this->editdetail->editserial->setText('');
-            $this->editdetail->editquantity->setText('1');
-
-            $this->OnChangeItem($this->editdetail->edititem);
-
-
-            return;
-        }
 
 
 
@@ -543,19 +547,55 @@ class GoodsIssue extends \App\Pages\Base {
         if ($qty <= 0) {
             $this->setError("Товара {$item->itemname} нет на складе");
         }
+ 
 
-
-        if ($this->_itemlist[$_item->item_id] instanceof Item) {
-            $this->_itemlist[$_item->item_id]->quantity += 1;
+        if ($this->_itemlist[$item->item_id] instanceof Item) {
+            $this->_itemlist[$item->item_id]->quantity += 1;
         } else {
-            //todo
-            $item->quantity = 1;
-            $item->price = $item->getPrice($this->docform->pricetype->getValue(), $store);
+            
 
+             $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+             $item->price = $price;
+             $item->quantity =1;
+            
+             if ($this->_tvars["usesnumber"] == true && $item->useserial ==1) {
+
+                $serial='';
+                $slist=  $item->getSerials($store_id);
+                if(count($slist) == 1){
+                   $serial = array_pop($slist) ;
+                     
+                }
+                 
+                 
+
+                if(strlen($serial)==0){
+                   $this->setWarn('Нужно ввести  номер партии производителя'); 
+                   $this->editdetail->setVisible(true);
+                   $this->docform->setVisible(false);
+                   
+                   
+                   $this->editdetail->edittovar->setKey($item->item_id);
+                   $this->editdetail->edittovar->setText($item->itemname);
+                   $this->editdetail->editserial->setText('');
+                   $this->editdetail->editquantity->setText('1');
+                   $this->editdetail->editprice->setText($item->price);
+
+ 
+                   
+                   return;
+                }
+                else {
+                    $item->snumber= $serial;
+ 
+                }
+                
+            }
             $this->_itemlist[$item->item_id] = $item;
         }
-
-
+        $this->docform->detail->Reload();
+        $this->calcTotal() ;
+        $this->calcPay() ;
 
         $this->_rowid = 0;
     }
@@ -599,11 +639,20 @@ class GoodsIssue extends \App\Pages\Base {
         $qty = $item->getQuantity($store_id);
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
-
-
         $this->editdetail->editprice->setText($price);
+        if ($this->_tvars["usesnumber"] == true && $item->useserial ==1) {
 
-        $this->updateAjax(array('qtystock', 'editprice'));
+            $serial='';
+            $slist=  $item->getSerials($store_id);
+            if(count($slist) == 1){
+               $serial = array_pop($slist) ;
+                 
+            }
+            $this->editdetail->editserial->setText($serial);
+        }
+        
+
+        $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
     }
 
     public function OnAutoItem($sender) {

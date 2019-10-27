@@ -26,26 +26,18 @@ class WSdate extends \Zippy\Html\PageFragment {
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
-
-
-
-
-
+  
         if ($visible) {
-            $items = Item::find("item_id in(select item_id from store_stock where  sdate is not null)");
-
-            $stock = Stock::find("sdate is not null");
+   
+            $stock = Stock::find("qty > 0 and sdate is not null  and sdate < now()");
 
 
             foreach ($stock as $st) {
+                
+                $data[$st->stock_id] = $st;
+                
                 $item = $items[$st->item_id];
-                if ($item->term > 0) {
-                    $edate = strtotime("+{$item->term} month", $st->sdate);
-                    if ($edate < time()) {
-                        $st->edate = $edate;
-                        $data[$row['item_id']] = $st;
-                    }
-                }
+ 
             }
         }
 
@@ -54,8 +46,7 @@ class WSdate extends \Zippy\Html\PageFragment {
         $this->add(new \Zippy\Html\DataList\Paginator("sdpag", $sdlist));
         $sdlist->Reload();
 
-        unset($items);
-        unset($stock);
+ 
 
         if (count($data) == 0 || $visible == false) {
             $this->setVisible(false);
@@ -68,7 +59,7 @@ class WSdate extends \Zippy\Html\PageFragment {
         $row->add(new Label('storename', $stock->storename));
         $row->add(new Label('itemname', $stock->itemname));
         $row->add(new Label('snumber', $stock->snumber));
-        $row->add(new Label('edate', date('Y-m-d', $stock->edate)));
+        $row->add(new Label('edate', date('Y-m-d', $stock->sdate)));
         $row->add(new Label('qty', Helper::fqty($stock->qty)));
     }
 

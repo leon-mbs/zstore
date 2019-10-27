@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pages\Register;
+namespace App\Pages\Service;
 
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\DataList\Paginator;
@@ -37,7 +37,7 @@ class PayCustList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('PayCustList'))
+        if (false == \App\ACL::checkShowSer('PayCustList'))
             return;
 
         $this->add(new Panel("clist"));

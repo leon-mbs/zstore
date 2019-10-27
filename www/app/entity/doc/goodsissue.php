@@ -7,7 +7,7 @@ use \App\Helper as H;
 use \App\Util;
 
 /**
- * Класс-сущность  документ расходная  накладая
+ * Класс-сущность  документ расходная  накладная
  *
  */
 class GoodsIssue extends Document {
@@ -110,6 +110,7 @@ class GoodsIssue extends Document {
     public function getRelationBased() {
         $list = array();
         $list['Warranty'] = 'Гарантийный талон';
+        $list['ReturnIssue'] = 'Возврат';
 
         return $list;
     }

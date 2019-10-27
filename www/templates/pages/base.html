@@ -45,12 +45,7 @@
 
                 <ul class="navbar-nav ml-auto">
                     <!-- Messages: style can be found in dropdown.less-->
-                    <li class="nav-item    ">
-                        <a class="nav-link  "  title="Информация о странице"  data-toggle="popover" data-placement="bottom" data-content="{{picontent}}"   style="cursor:pointer"  >
-                            <i class="fa fa-question-circle "></i>
-
-                        </a>
-                    </li>
+                
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
                             <i class="fa fa-bell "></i>
@@ -121,7 +116,7 @@
                                             <li class="nav-item  has-treeview">
                                                 <a href='{{link}}' class="nav-link" >
                                                     <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
                                             </li>     
                                             {{/items}}
@@ -167,7 +162,7 @@
                                             <li class="nav-item  has-treeview">
                                                 <a href='{{link}}' class="nav-link" >
                                                     <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
                                             </li>     
                                             {{/items}}
@@ -193,7 +188,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-list"></i>
                                     <p>
-                                        Журналы и списки
+                                        Журналы  документов
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -213,7 +208,7 @@
                                             <li class="nav-item  has-treeview">
                                                 <a href='{{link}}' class="nav-link" >
                                                     <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
                                             </li>     
                                             {{/items}}
@@ -258,7 +253,7 @@
                                             <li class="nav-item  has-treeview">
                                                 <a href='{{link}}' class="nav-link" >
                                                     <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
                                             </li>     
                                             {{/items}}
@@ -282,12 +277,57 @@
                                 </ul>           
 
                             </li>
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-project-diagram"></i>
+                                    <p>
+                                        Сервисные страницы
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    {{#sermenu}} 
+                                    {{#groups}}
+                                    <li class="nav-item has-treeview">
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>  
+                                            <p>{{grname}} 
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
 
+                                        </a>  
+                                        <ul class="nav nav-treeview"> 
+                                            {{#items}}
+                                            <li class="nav-item  has-treeview">
+                                                <a href='{{link}}' class="nav-link" >
+                                                    <i class="fa    nav-icon"></i> 
+                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
+                                                </a>
+                                            </li>     
+                                            {{/items}}
+                                        </ul>
+
+                                        </il>
+                                        {{/groups}}                                    
+
+                                        {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link" >
+                                            <i class="fa    nav-icon"></i> 
+                                            <p>&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>     
+                                    {{/items}}
+                                    {{/sermenu}} 
+                                </ul>           
+
+                            </li>
+ 
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-puzzle-piece"></i>
                                     <p>
-                                        Дополнения   
+                                        Модули   
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>   
@@ -406,7 +446,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-cog"></i>
                                     <p>
-                                        Сервис
+                                        Система
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -416,15 +456,8 @@
                                             <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Пользователи</p>
                                         </a>
                                     </li> 
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Import" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Импорт номенклатуры</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <h6 class="text-center text-white-50">______________</h6>
-
-                                    </li>
+                                
+                          
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Options" class="nav-link">
                                             <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Настройки</p>

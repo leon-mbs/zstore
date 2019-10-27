@@ -101,6 +101,28 @@ class RetCustIssue extends \App\Pages\Base {
         } else {
             $this->_doc = Document::create('RetCustIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+            if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+
+                    if ($basedoc->meta_name == 'GoodsReceipt') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $elist = \App\Entity\Entry::find('document_id='.$basedoc->document_id) ;
+                        foreach ($elist as $entry) {
+                            $stock = Stock::load($entry->stock_id);
+                            $stock->quantity=abs($entry->quantity);
+                            $stock->price=$stock->partion;
+                            
+                            $this->_tovarlist[$stock->stock_id] = $stock;
+                        }
+                    }
+                }
+            } 
+        
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();

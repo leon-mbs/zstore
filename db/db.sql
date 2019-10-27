@@ -61,7 +61,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=314 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=342 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -99,7 +99,7 @@ CREATE TABLE `documents` (
   KEY `document_date` (`document_date`),
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -152,7 +152,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=102 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=113 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -188,7 +188,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -464,11 +464,10 @@ CREATE TABLE `metadata` (
   `description` varchar(255) DEFAULT NULL,
   `meta_name` varchar(255) NOT NULL,
   `menugroup` varchar(255) DEFAULT NULL,
-  `notes` text NOT NULL,
   `disabled` tinyint(4) NOT NULL,
   `smartmenu` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`meta_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `mfund`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -609,7 +608,7 @@ CREATE TABLE `paylist` (
   `indoc` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=113 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -796,7 +795,7 @@ CREATE TABLE `store_stock` (
   `sdate` date DEFAULT NULL,
   PRIMARY KEY (`stock_id`),
   KEY `item_id` (`item_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `store_stock_view`;
 /*!50001 DROP VIEW IF EXISTS `store_stock_view`*/;
@@ -813,7 +812,7 @@ SET character_set_client = utf8;
  1 AS `msr`,
  1 AS `bar_code`,
  1 AS `cat_name`,
- 1 AS `disabled`,
+ 1 AS `itemdisabled`,
  1 AS `storename`,
  1 AS `qty`,
  1 AS `snumber`,
@@ -1092,7 +1091,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `store_stock_view` AS select `st`.`stock_id` AS `stock_id`,`st`.`item_id` AS `item_id`,`st`.`partion` AS `partion`,`st`.`store_id` AS `store_id`,`i`.`itemname` AS `itemname`,`i`.`item_code` AS `item_code`,`i`.`cat_id` AS `cat_id`,`i`.`msr` AS `msr`,`i`.`bar_code` AS `bar_code`,`i`.`cat_name` AS `cat_name`,`i`.`disabled` AS `disabled`,`stores`.`storename` AS `storename`,`st`.`qty` AS `qty`,`st`.`snumber` AS `snumber`,`st`.`sdate` AS `sdate` from ((`store_stock` `st` join `items_view` `i` on(((`i`.`item_id` = `st`.`item_id`) and (`i`.`disabled` <> 1)))) join `stores` on((`stores`.`store_id` = `st`.`store_id`))) */;
+/*!50001 VIEW `store_stock_view` AS select `st`.`stock_id` AS `stock_id`,`st`.`item_id` AS `item_id`,`st`.`partion` AS `partion`,`st`.`store_id` AS `store_id`,`i`.`itemname` AS `itemname`,`i`.`item_code` AS `item_code`,`i`.`cat_id` AS `cat_id`,`i`.`msr` AS `msr`,`i`.`bar_code` AS `bar_code`,`i`.`cat_name` AS `cat_name`,`i`.`disabled` AS `itemdisabled`,`stores`.`storename` AS `storename`,`st`.`qty` AS `qty`,`st`.`snumber` AS `snumber`,`st`.`sdate` AS `sdate` from ((`store_stock` `st` join `items_view` `i` on(((`i`.`item_id` = `st`.`item_id`) and (`i`.`disabled` <> 1)))) join `stores` on((`stores`.`store_id` = `st`.`store_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

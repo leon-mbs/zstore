@@ -294,7 +294,7 @@ class Users extends \App\Pages\Base {
                 $title = "Справочник";
                 break;
             case 5:
-                $title = "Каталог";
+                $title = "Сервис";
                 break;
         }
         $earr = @explode(',', $this->user->acledit);

@@ -82,13 +82,14 @@ class ItemList extends \App\Pages\Base {
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editminqty'));
-        $this->itemdetail->add(new TextInput('editterm'));
+        
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
+        $this->itemdetail->add(new CheckBox('edituseserial'));
         $this->itemdetail->add(new CheckBox('editpricelist', true));
 
 
@@ -174,10 +175,11 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
-        $this->itemdetail->editterm->setText($this->_item->term);
+
         $this->itemdetail->editcell->setText($this->_item->cell);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
+        $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
     }
 
@@ -219,11 +221,12 @@ class ItemList extends \App\Pages\Base {
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
-        $this->_item->term = $this->itemdetail->editterm->getText();
+        
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
+        $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
 
         $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
 

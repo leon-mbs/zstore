@@ -1,113 +1,104 @@
 <html>
-    <head>
-    </head>
-
     <body>
         <div class="row">
+            <div class="col-12 col-xl-8  ">
 
-            <div class="col-12   col-xl-10" zippy="itempanel">
-                <h3>Товары на  складе </h3>
-                <form zippy="filter" class="form-inline">
+                <h3>Журнал движения  ТМЦ </h3>
+                <small>Движение  ТМЦ  с детализацией по  партиям. </small>
+
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline ">
+
+                        <label   for="from">С  </label>
+                        <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
 
 
-                    <input autocomplete="off" placeholder="Имя  или  код..." class="form-control mr-sm-2" type="text" zippy="searchkey">
+                        <label for="to">  по  </label>
+                        <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
 
-                    <label for="searchcat">категория</label>
+                        <label for="fstore"> склад </label>
+                        <select class="form-control mr-2" zippy="fstore">
+                            <option value="0">Не выбран</option>
+                        </select>
+                        <label for="fitem"> ТМЦ </label>
+                        <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="fitem" >
+                       
+            
+                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
-                    <select   class="form-control mr-sm-2" zippy="searchcat">
-                        <option value="0">Не задана</option>
-                    </select>         
-                    <label for="searchstore">Склад</label>
-                    <select class="form-control mr-sm-2" zippy="searchstore"> 
-                        <option value="0">По  всем</option></select>
+                    </form>
+                </div>
+                </div>
+                </div>
+         <div class="row">
+            <div class="col-12 col-lg-8 col-xl-6">
+        
 
-                    <input class="btn btn-outline-success  " type="submit" value="ОК">
-
-                </form>
-                <a zippy="csv"  >Скачать  CSV</a>  
-
-                <table class="table   table-responsive-sm   table-sm  table-hover ">
+                <table class="table   table-sm   ">
                     <tr>
 
-                        <th>Название</th>
+
+                        <th>Дата</th>
+                        <th>Документ</th>
+                   
+                        <th class="text-right">Уч. цена </th>
+                       {{#usesnumber}} 
+                             <th class="text-right">Серия </th>
+                      {{/usesnumber}} 
+                       <th class="text-right">Кол </th>
+                        <th class="text-right">Цена </th>
 
 
-                        <th>Артикул</th>
-                        <th>Категория</th>
-                        <th>Ед.</th>
 
-                        <th  class="text-right  " >Кол.   </th>
-                        <th  class="text-right  " >На сумму  </th>
-                        <th    > </th>
+                        <th></th>
 
 
+                    </tr>  
+                    <tr zippy="doclist">
 
+                        <td class="text-nowrap" zippy="date"></td>
+                        <td zippy="dnumber"    ></td>
+                        <td zippy="partion" class="text-right"  ></td>
+                         {{#usesnumber}} 
+                         <td zippy="snumber"></td>
+                       {{/usesnumber}}   
+                        <td zippy="qty" class="text-right"  ></td>
+                        
+                        <td zippy="price"  class="text-right"  ></td>
+
+     
+                        <td class="text-nowrap" >
+                            <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
+                            
+
+
+                        </td>
 
 
                     </tr>
-                    <tr zippy="itemlist">
 
-                        <td zippy="itemname"></td>
-
-                        <td zippy="code" class=" text-nowrap"></td>
-                        <td zippy="cat_name"></td>
-                        <td zippy="msr"></td>
-
-                        <td zippy="qty" class="text-right  "></td>
-                        <td zippy="amount" class="text-right  "></td>
-                        <td  >  <a zippy="show" title="Детальная информация"><i class="fa fa-eye"></i></a>   </td>
-
-
-
-                    </tr>
                 </table>
-                <div zippy="pag"></div>
+
+                <div zippy="pag"></div>                    
+
+
+
+                <div class="row" id="dankor" >    
+
+                </div>
 
             </div>
-            <div class="col-12   col-xl-10" zippy="detailpanel">
-                <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> К списку</a>
-                <h4 zippy="itemdetname"></h4>
-                <table class="table   table-responsive-sm   table-sm  table-hover ">
-                    <tr>
-                        <th>Склад</th>
-                        {{#usesnumber}} 
-                        <th  class="text-right text-nowrap">Серия</th>
-                        <th  class="text-right text-nowrap">Дата серии</th>
-                        <th  class="text-right text-nowrap">Годен до    </th>
-                        {{/usesnumber}} 
-                        <th  class="text-right text-nowrap">Зак. цена</th>
-                        <th  class="text-right text-nowrap" >Кол.  </th>
-                        <th  class="text-right text-nowrap">На сумму</th>
-                        <th  class="text-right text-nowrap ">Прод. цена</th>
 
+            <div class="col-12" >
+                <div zippy="docview"></div>
+            </div>   </div>
 
-
-                    </tr>
-                    <tr zippy="stocklist">
-                        <td zippy="storename"></td>
-                        {{#usesnumber}} 
-                        <td zippy="snumber" class="text-right  "></td>
-                        <td zippy="sdate"   class="text-right  "></td>
-                        <td zippy="sedate"  class="text-right  "></td>
-                        {{/usesnumber}} 
-                        <td zippy="partion" class="text-right  "></td>
-                        <td zippy="qty" class="text-right  "></td>
-                        <td zippy="amount" class="text-right  "></td>
-                        <td zippy="price" class="text-right  "></td>
-
-
-                    </tr>
-                </table>              
-            </div>
-
-
-
-        </div>
         <script>
-            function check_delete() {
-                return confirm("Удалить  партию?")
+            function check_del() {
+                return confirm("Удалить  платеж?")
             }
         </script>
+
 
     </body>
 </html>

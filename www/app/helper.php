@@ -92,6 +92,9 @@ class Helper {
             case 4 :
                 $dir = "Pages/Reference";
                 break;
+            case 5 :
+                $dir = "Pages/Service";
+                break;
         }
 
 
@@ -142,6 +145,9 @@ class Helper {
                 case 4 :
                     $dir = "Pages/Reference";
                     break;
+                case 5 :
+                    $dir = "Pages/Service";
+                    break;
             }
 
             $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
@@ -171,16 +177,7 @@ class Helper {
         return $template;
     }
 
-    /**
-     * возвращает описание  мета-обьекта
-     *
-     * @param mixed $metaname
-     */
-    public static function getMetaNotes($metaname) {
-        $conn = DB::getConnect();
-        $sql = "select notes from  metadata where meta_name = '{$metaname}' ";
-        return $conn->GetOne($sql);
-    }
+   
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
 
@@ -368,16 +365,26 @@ class Helper {
     public static function fqty($qty) {
         if (strlen($qty) == 0)
             return '';
-        $digit = 0;
+
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
-            $digit = $common['qtydigits'];
-        }
-        if ($digit == 0) {
-            return round($qty);
+            return number_format($qty, $common['qtydigits']  , '.', '');
         } else {
-            return number_format($qty, $digit, '.', '');
+            return round($qty);
         }
+    }
+  
+    /**
+    * форматирование  сумм    с копейками
+    * 
+    * @param mixed $am
+    * @return mixed
+    */
+    public static function fa($am) {
+        if (strlen($am) == 0)     return '';
+   
+        return number_format($am, $common['amdigits'] , '.', '');
+      
     }
 
 }

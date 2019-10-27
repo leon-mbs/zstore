@@ -33,15 +33,12 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["repmenu"] = Helper::generateMenu(2);
         $this->_tvars["regmenu"] = Helper::generateMenu(3);
         $this->_tvars["refmenu"] = Helper::generateMenu(4);
-        $this->_tvars["shopmenu"] = Helper::generateMenu(5);
+        $this->_tvars["sermenu"] = Helper::generateMenu(5);
 
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
 
-
-        $this->_tvars["picontent"] = $this->getPageInfo();
-
-
+      
         $options = System::getOptions('common');
 
         if (($options['defstore'] > 0 && $options['defmf'] > 0 ) == false) {
@@ -77,14 +74,7 @@ class Base extends \Zippy\Html\WebPage {
         //    App::$app->getresponse()->toBack();
     }
 
-    public function getPageInfo() {
-        $class = explode("\\", get_class($this));
-        $classname = $class[count($class) - 1];
-        $desc = \App\Helper::getMetaNotes($classname);
-        if (strlen($desc) == 0)
-            $desc = "Для этой страницы нет описания";
-        return $desc;
-    }
+ 
 
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg) {
