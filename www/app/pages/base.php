@@ -26,51 +26,38 @@ class Base extends \Zippy\Html\WebPage {
             return;
         }
 
-
-
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
-
-
-        $this->add(new ClickLink("pageinfo"));
-
-
-
 
         $this->_tvars["docmenu"] = Helper::generateMenu(1);
         $this->_tvars["repmenu"] = Helper::generateMenu(2);
         $this->_tvars["regmenu"] = Helper::generateMenu(3);
         $this->_tvars["refmenu"] = Helper::generateMenu(4);
-        $this->_tvars["shopmenu"] = Helper::generateMenu(5);
+        $this->_tvars["sermenu"] = Helper::generateMenu(5);
 
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
-        $pi = $this->getPageInfo();
 
-        if (strlen($pi) == 0) {
-            $this->pageinfo->setVisible(false);
-        }
-
-        $options = System::getOptions('common');
       
-        if(($options['defstore'] > 0 && $options['defmf'] > 0 )  == false)
-        {
-           $this->setError("Не заданы в <a href=\"/index.php?p=App/Pages/Options\">настройках</a> склад или  касса.");
+        $options = System::getOptions('common');
+
+        if (($options['defstore'] > 0 && $options['defmf'] > 0 ) == false) {
+            $this->setError("Не заданы в <a href=\"/index.php?p=App/Pages/Options\">настройках</a> склад или  касса.");
         }
-        
+
         $this->_tvars["useset"] = $options['useset'] == 1;
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
 
         $this->_tvars["smart"] = Helper::generateSmartMenu();
-        $this->_tvars["picontent"] = $pi;
- 
+
+
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
-        //если  включен хоть один модуль
-       // $this->_tvars["modules"] = $this->_tvars["shop"] || $this->_tvars["issue"] || $this->_tvars["ocstore"] || $this->_tvars["note"];
+
+        $this->_tvars["hideblock"] = false;
     }
 
     public function LogoutClick($sender) {
@@ -87,11 +74,7 @@ class Base extends \Zippy\Html\WebPage {
         //    App::$app->getresponse()->toBack();
     }
 
-    public function getPageInfo() {
-        $class = explode("\\", get_class($this));
-        $classname = $class[count($class) - 1];
-        return \App\Helper::getMetaNotes($classname);
-    }
+ 
 
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg) {
@@ -117,34 +100,30 @@ class Base extends \Zippy\Html\WebPage {
     public function beforeRender() {
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
-        
-        $this->_tvars['alerterror']= "";
-        $this->_tvars['alertwarning']= "";
-        $this->_tvars['alertsuccess']= "";
-        $this->_tvars['alertinfo']=  "";     
-        
-        if (strlen(System::getErrorMsg()) > 0)
-            $this->_tvars['alerterror']= System::getErrorMsg();
-        if (strlen(System::getWarnMsg()) > 0)
-            $this->_tvars['alertwarning']= System::getWarnMsg();
-        if (strlen(System::getSuccesMsg()) > 0)
-            $this->_tvars['alertsuccess']= System::getSuccesMsg();
-        if (strlen(System::getInfoMsg()) > 0)
-            $this->_tvars['alertinfo']= System::getInfoMsg();
 
+        $this->_tvars['alerterror'] = "";
+        $this->_tvars['alertwarning'] = "";
+        $this->_tvars['alertsuccess'] = "";
+        $this->_tvars['alertinfo'] = "";
+
+        if (strlen(System::getErrorMsg()) > 0)
+            $this->_tvars['alerterror'] = System::getErrorMsg();
+        if (strlen(System::getWarnMsg()) > 0)
+            $this->_tvars['alertwarning'] = System::getWarnMsg();
+        if (strlen(System::getSuccesMsg()) > 0)
+            $this->_tvars['alertsuccess'] = System::getSuccesMsg();
+        if (strlen(System::getInfoMsg()) > 0)
+            $this->_tvars['alertinfo'] = System::getInfoMsg();
     }
 
     protected function afterRender() {
- 
+
 
         $this->setError('');
         $this->setSuccess('');
 
         $this->setInfo('');
         $this->setWarn('');
-        
-        
-        
     }
 
     //Перезагрузить страницу  с  клиента
