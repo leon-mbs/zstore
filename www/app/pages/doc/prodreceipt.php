@@ -44,9 +44,6 @@ class ProdReceipt extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new CheckBox('planned'));
-
-
 
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -71,7 +68,6 @@ class ProdReceipt extends \App\Pages\Base {
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-            $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -221,7 +217,6 @@ class ProdReceipt extends \App\Pages\Base {
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
 
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {

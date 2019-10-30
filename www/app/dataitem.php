@@ -28,19 +28,19 @@ class DataItem implements \Zippy\Interfaces\DataItem {
     }
 
     /**
-    * возвращает  список DataItem заполненый с запроса
-    * 
-    * @param mixed $sql
-    */
-    public static function  query($sql){
-       $conn = \ZDB\DB::getConnect();
-       $list = array();
-       
-       $rc = $conn->Execute($sql);
-       foreach($rc as $row){
-          $list[] = new DataItem($row); 
-       }
-       return $list;
+     * возвращает  список DataItem заполненый с запроса
+     * 
+     * @param mixed $sql
+     */
+    public static function query($sql) {
+        $conn = \ZDB\DB::getConnect();
+        $list = array();
+
+        $rc = $conn->Execute($sql);
+        foreach ($rc as $row) {
+            $list[] = new DataItem($row);
+        }
+        return $list;
     }
-    
+
 }

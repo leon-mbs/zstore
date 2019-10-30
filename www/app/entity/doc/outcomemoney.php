@@ -15,7 +15,7 @@ class OutcomeMoney extends Document {
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['payment'],$this->headerdata['type'], $this->notes);
+        Pay::addPayment($this->document_id, 1, 0 - $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
 
 
         return true;
@@ -30,7 +30,7 @@ class OutcomeMoney extends Document {
             'date' => date('d.m.Y', $this->document_date),
             "notes" => $this->notes,
             "from" => $this->headerdata["paymentname"],
-            "type" => $pt[$this->headerdata["type"]] ,
+            "type" => $pt[$this->headerdata["type"]],
             "document_number" => $this->document_number
         );
         $report = new \App\Report('outcomemoney.tpl');
@@ -40,8 +40,8 @@ class OutcomeMoney extends Document {
         return $html;
     }
 
-    protected function getNumberTemplate(){
-         return  'РО-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'РКО-000000';
+    }
 
 }

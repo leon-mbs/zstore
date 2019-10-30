@@ -49,8 +49,8 @@ class WRDoc extends \Zippy\Html\PageFragment {
 
     public function doclistOnRow($row) {
         $item = $row->getDataItem();
-         
-   
+
+
         $row->add(new Label('date', date('Y.m.d', strtotime($item->document_date))));
         $row->add(new Label('type', $item->meta_desc));
         $row->add(new Label('amount', $item->amount));

@@ -28,13 +28,13 @@ class PayBalance extends \App\Pages\Base {
         $dt = new \Carbon\Carbon;
         $dt->subMonth();
         $from = $dt->startOfMonth()->timestamp;
-        $to = $dt->endOfMonth()->timestamp;            
-            
+        $to = $dt->endOfMonth()->timestamp;
+
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-        
+
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));
- 
+
 
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
@@ -81,7 +81,7 @@ class PayBalance extends \App\Pages\Base {
 
     private function generateReport() {
 
-   
+
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
@@ -89,10 +89,10 @@ class PayBalance extends \App\Pages\Base {
         $tout = 0;
         $detail = array();
         $detail2 = array();
-        
-        
-        $pl=\App\Entity\Pay::getPayTypeList();
-        
+
+
+        $pl = \App\Entity\Pay::getPayTypeList();
+
         $conn = \ZDB\DB::getConnect();
 
         $sql = " 
@@ -111,11 +111,11 @@ class PayBalance extends \App\Pages\Base {
         foreach ($rs as $row) {
             $detail[] = array(
                 "in" => $row['am'],
-                "type" =>  $pl[$row['paytype']] 
+                "type" => $pl[$row['paytype']]
             );
             $tin += $row['am'];
         }
- 
+
         $sql = " 
          SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
              WHERE   
@@ -131,23 +131,21 @@ class PayBalance extends \App\Pages\Base {
         foreach ($rs as $row) {
             $detail2[] = array(
                 "out" => 0 - $row['am'],
-                "type" =>  $pl[$row['paytype']] 
+                "type" => $pl[$row['paytype']]
             );
-            $tout +=  0 - $row['am'];
+            $tout += 0 - $row['am'];
         }
-        
-        $total =  $tin - $tout;
+
+        $total = $tin - $tout;
 
         $header = array(
             'datefrom' => date('d.m.Y', $from),
             'dateto' => date('d.m.Y', $to),
             "_detail" => $detail,
             "_detail2" => $detail2,
-      
             'tin' => $tin,
             'tout' => $tout,
             'total' => $total
-            
         );
         $report = new \App\Report('paybalance.tpl');
 

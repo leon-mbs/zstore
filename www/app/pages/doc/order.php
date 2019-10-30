@@ -331,7 +331,7 @@ class Order extends \App\Pages\Base {
         $price = round($price - $price / 100 * $this->_discount);
 
 
-        $this->editdetail->qtystock->setText(H::fqty(Item::getQuantity($id, $this->docform->store->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
         $this->editdetail->editprice->setText($price);
 
         $this->updateAjax(array('qtystock', 'editprice'));

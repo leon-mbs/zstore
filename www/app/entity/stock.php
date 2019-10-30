@@ -29,8 +29,7 @@ class Stock extends \ZCL\DB\Entity {
      */
     public static function findArrayAC($store, $partname = "") {
 
-
-        $criteria = "qty <> 0 and disabled <> 1 and store_id=" . $store;
+        $criteria = "qty <> 0 and itemdisabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $partname = self::qstr('%' . $partname . '%');
             $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} or snumber like {$partname} or   bar_code like {$partname} )";
@@ -43,7 +42,9 @@ class Stock extends \ZCL\DB\Entity {
             if (strlen($value->snumber) > 0) {
                 $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
             }
-            $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion);
+
+
+            $list[$key] = $value->itemname . ', ' . ($value->partion);
         }
 
         return $list;
@@ -58,9 +59,12 @@ class Stock extends \ZCL\DB\Entity {
      * @param mixed $create Создать  если  не   существует
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
+
         $conn = \ZDB\DB::getConnect();
 
-        $where = "store_id = {$store_id} and item_id = {$item_id} and partion = {$price} ";
+        $where = "store_id = {$store_id} and item_id = {$item_id}  and partion = {$price}   ";
+
+
 
         if (strlen($snumber) > 0) {
 
@@ -110,10 +114,13 @@ class Stock extends \ZCL\DB\Entity {
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item_id, $qty) {
+    public static function pickup($store_id, $item_id, $qty, $snumber = "") {
         $res = array();
-        $where = "store_id = {$store_id} and item_id = {$item_id} and qty >0   ";
-        $stlist = self::find($where, 'sdate,stock_id');
+        $where = "store_id = {$store_id} and item_id = {$item_id} and qty > 0   ";
+        if (strlen($snumber) > 0) {
+            $where .= " and snumber=" . Stock::qstr($snumber);
+        }
+        $stlist = self::find($where, ' stock_id desc');
         foreach ($stlist as $st) {
             if ($st->qty >= $qty) {
                 $st->quantity = $qty;

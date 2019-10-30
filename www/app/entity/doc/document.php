@@ -31,6 +31,7 @@ class Document extends \ZCL\DB\Entity {
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
     const EX_PDF = 3;    //  PDF
+    const EX_POS = 4;    //  POS терминал
 
     // const EX_XML_GNAU = 4;
 
@@ -66,8 +67,6 @@ class Document extends \ZCL\DB\Entity {
         $this->basedoc = '';
         $this->headerdata = array();
         $this->detaildata = array();
-
-        $this->headerdata['planned'] = 0; //запланированный
     }
 
     /**
@@ -94,7 +93,6 @@ class Document extends \ZCL\DB\Entity {
                 return false;
             }
         }
-        //todo  отслеживание  изменений
     }
 
     /**
@@ -191,6 +189,14 @@ class Document extends \ZCL\DB\Entity {
     }
 
     /**
+     * Генерация  печати для POS  терминала
+     *
+     */
+    public function generatePosReport() {
+        return "";
+    }
+
+    /**
      * Выполнение документа - обновление склада, бухгалтерские проводки и  т.д.
      *
      */
@@ -213,9 +219,21 @@ class Document extends \ZCL\DB\Entity {
 
             //удаляем оплату
             if ($this->headerdata['payment'] > 0) {
-                $conn->Execute("delete from paylist where document_id =" . $this->document_id);
-                $this->payamount = 0;
+                $conn->Execute("delete from paylist where indoc=1 and  document_id =" . $this->document_id);
+                $conn->Execute("update documents set payed=0 where   document_id =" . $this->document_id);
             }
+            // возвращаем бонусы
+            if ($this->headerdata['paydisc'] > 0) {
+                $customer = \App\Entity\Customer::load($this->customer_id);
+                if ($customer->discount > 0) {
+                    return; //процент
+                } else {
+                    $customer->bonus = $customer->bonus + $this->headerdata['paydisc'];
+                    $customer->save();
+                }
+            }
+
+
 
             $conn->CompleteTrans();
         } catch (\Exception $ee) {
@@ -324,7 +342,10 @@ class Document extends \ZCL\DB\Entity {
             $this->Cancel();
         }
         if ($state == self::STATE_EXECUTED) {
-            $this->Execute();
+            if (false === $this->Execute()) {
+                $this->Cancel();
+                return;
+            }
         }
 
         $this->state = $state;
@@ -364,7 +385,7 @@ class Document extends \ZCL\DB\Entity {
                 return "Утвержден";
             case Document::STATE_DELETED:
                 return "Удален";
-    
+
             case Document::STATE_WA:
                 return "Ожидает утверждения";
             case Document::STATE_INSHIPMENT:
@@ -399,12 +420,12 @@ class Document extends \ZCL\DB\Entity {
         $doc = Document::getFirst("meta_name='" . $metaname . "'", "document_id desc");
         if ($doc == null) {
             $prevnumber = $this->getNumberTemplate();
-        }  else {
-           $prevnumber = $doc->document_number; 
+        } else {
+            $prevnumber = $doc->document_number;
         }
 
 
-        
+
         if (strlen($prevnumber) == 0)
             return '';
         $number = preg_replace('/[^0-9]/', '', $prevnumber);
@@ -493,7 +514,7 @@ class Document extends \ZCL\DB\Entity {
 
             return "У документа  есть записи в аналитике";
         }
-        $cnt = $conn->GetOne("select  count(*) from paylist where  document_id = {$this->document_id}  ");
+        $cnt = $conn->GetOne("select  count(*) from paylist where paytype=0 and  document_id = {$this->document_id}  ");
         if ($cnt > 0) {
 
             return "У документа  есть оплаты";
@@ -520,14 +541,29 @@ class Document extends \ZCL\DB\Entity {
      * 
      */
     protected function afterDelete() {
+        global $logger;
 
         $conn = \ZDB\DB::getConnect();
+
+        $hasExecuted = $conn->GetOne("select count(*)  from docstatelog where docstate = " . Document::STATE_EXECUTED . " and  document_id=" . $this->document_id);
+
+
         $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
         $conn->Execute("delete from paylist where document_id=" . $this->document_id);
-        $conn->Execute("delete from messages where item_type=".\App\Entity\Message::TYPE_DOC ." and item_id=" . $this->document_id);
-        $conn->Execute("delete from files where item_type=".\App\Entity\Message::TYPE_DOC ." and item_id=" . $this->document_id);
-        $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)"  );
-        
+        $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
+        $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
+        $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
+
+        if ($hasExecuted) {
+            $admin = \App\Entity\User::getByLogin('admin');
+
+            $n = new \App\Entity\Notify();
+            $n->user_id = $admin->user_id;
+            $n->message = "Удален документ  <br><br>";
+            $n->message .= "Документ {$this->document_number} удален пользователем " . System::getUser()->userlogin;
+
+            $n->save();
+        }
     }
 
     /**
@@ -535,11 +571,19 @@ class Document extends \ZCL\DB\Entity {
      * 
      */
     public function canCanceled() {
+        $conn = \ZDB\DB::getConnect();
         $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
             System::setWarnMsg("У документа были отправки или доставки");
             return true;
         }
+        $cnt = $conn->GetOne("select  count(*) from paylist where paytype=0 and  document_id = {$this->document_id}  ");
+        if ($cnt > 0) {
+            System::setWarnMsg("У документа были оплаты");
+
+            return false;
+        }
+
         return true;
     }
 
@@ -589,11 +633,11 @@ class Document extends \ZCL\DB\Entity {
     }
 
     /**
-    * возвращает шаблон номераЮ перегружается дочерними классам
-    * типа ПР-000000.  Буквенный код должен  быть уникальным для типа документа
-    */
-    protected function getNumberTemplate(){
-         return  '';
+     * возвращает шаблон номераЮ перегружается дочерними классам
+     * типа ПР-000000.  Буквенный код должен  быть уникальным для типа документа
+     */
+    protected function getNumberTemplate() {
+        return '';
     }
-    
+
 }

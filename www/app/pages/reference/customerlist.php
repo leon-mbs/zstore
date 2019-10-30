@@ -39,7 +39,7 @@ class CustomerList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchtype', array(1 => 'Покупатели', 2 => 'Поставщики'), 0));
-        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется',Customer::STATUS_WAIT=>'Потенциальный'), Customer::STATUS_ACTUAL));
+        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется', Customer::STATUS_WAIT => 'Потенциальный'), Customer::STATUS_ACTUAL));
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
@@ -58,8 +58,9 @@ class CustomerList extends \App\Pages\Base {
         $this->customerdetail->add(new TextInput('editemail'));
         $this->customerdetail->add(new CheckBox('editjurid'));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => 'Покупатель', 2 => 'Поставщик'), 0));
-        $this->customerdetail->add(new DropDownChoice('editstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется',Customer::STATUS_WAIT=>'Потенциальный'), Customer::STATUS_ACTUAL));
+        $this->customerdetail->add(new DropDownChoice('editstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется', Customer::STATUS_WAIT => 'Потенциальный'), Customer::STATUS_ACTUAL));
         $this->customerdetail->add(new TextInput('discount'));
+        $this->customerdetail->add(new TextInput('bonus'));
         $this->customerdetail->add(new TextArea('editcomment'));
 
         $this->customerdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -90,7 +91,7 @@ class CustomerList extends \App\Pages\Base {
         $status = $this->filter->searchstatus->getValue();
         $type = $this->filter->searchtype->getValue();
         $search = trim($this->filter->searchkey->getText());
-        $where = "status=".$status;
+        $where = "status=" . $status;
 
         if (strlen($search) > 0) {
             $search = Customer::qstr('%' . $search . '%');
@@ -115,9 +116,9 @@ class CustomerList extends \App\Pages\Base {
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
         $row->add(new Label('customercomment', $item->comment));
-        $row->add(new Label('hasmsg'     ))->setVisible($item->mcnt > 0);
-        $row->add(new Label('hasfiles'   ))->setVisible($item->fcnt > 0  );
-        $row->add(new Label('isplanned'   ))->setVisible($item->ecnt > 0  );
+        $row->add(new Label('hasmsg'))->setVisible($item->mcnt > 0);
+        $row->add(new Label('hasfiles'))->setVisible($item->fcnt > 0);
+        $row->add(new Label('isplanned'))->setVisible($item->ecnt > 0);
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
@@ -137,6 +138,7 @@ class CustomerList extends \App\Pages\Base {
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->editcity->setText($this->_customer->city);
         $this->customerdetail->discount->setText($this->_customer->discount);
+        $this->customerdetail->bonus->setText($this->_customer->bonus);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
         $this->customerdetail->editstatus->setValue($this->_customer->status);
@@ -182,6 +184,7 @@ class CustomerList extends \App\Pages\Base {
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->city = $this->customerdetail->editcity->getText();
         $this->_customer->discount = $this->customerdetail->discount->getText();
+        $this->_customer->bonus = $this->customerdetail->bonus->getText();
         $this->_customer->comment = $this->customerdetail->editcomment->getText();
         $this->_customer->type = $this->customerdetail->edittype->getValue();
         $this->_customer->status = $this->customerdetail->editstatus->getValue();
@@ -225,8 +228,6 @@ class CustomerList extends \App\Pages\Base {
         $this->goAnkor('contentviewlink');
         $this->customertable->customerlist->Reload(false);
     }
-        
-   
 
     // обновление  списка  прикрепленных файлов
     private function updateFiles() {
@@ -252,8 +253,6 @@ class CustomerList extends \App\Pages\Base {
         $this->updateFiles();
         $this->customertable->customerlist->Reload(false);
     }
-        
-    
 
     /**
      * добавление коментария
@@ -301,8 +300,6 @@ class CustomerList extends \App\Pages\Base {
         $this->updateMessages();
         $this->customertable->customerlist->Reload(false);
     }
-        
-   
 
     public function OnEventSubmit($sender) {
         $event = new \App\Entity\Event();
@@ -330,7 +327,6 @@ class CustomerList extends \App\Pages\Base {
         $this->updateEvents();
         $this->goAnkor('contentviewlink');
         $this->customertable->customerlist->Reload(false);
-        
     }
 
     //список   событий
@@ -358,7 +354,6 @@ class CustomerList extends \App\Pages\Base {
         \App\Entity\Event::delete($event->event_id);
         $this->updateEvents();
         $this->customertable->customerlist->Reload(false);
-        
     }
 
 }

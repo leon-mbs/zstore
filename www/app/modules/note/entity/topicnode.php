@@ -8,8 +8,7 @@ namespace App\Modules\Note\Entity;
  * @view=note_topicnodeview
  * @keyfield=tn_id
  */
-class TopicNode extends \ZCL\DB\Entity
-{
+class TopicNode extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->tn_id = 0;

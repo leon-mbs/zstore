@@ -17,7 +17,6 @@ class Employee extends \ZCL\DB\Entity {
         $this->zmon = 0;
         $this->advance = 0;
         $this->zhour = 0;
-        
     }
 
     protected function beforeSave() {
@@ -27,10 +26,10 @@ class Employee extends \ZCL\DB\Entity {
         $this->detail .= "<balance>{$this->balance}</balance>";
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<comment>{$this->comment}</comment>";
-     //   $this->detail .= "<ztype>{$this->ztype}</ztype>";
-    //    $this->detail .= "<zhour>{$this->zhour}</zhour>";
-    //    $this->detail .= "<zmon>{$this->zmon}</zmon>";
-    //    $this->detail .= "<advance>{$this->advance}</advance>";
+        //   $this->detail .= "<ztype>{$this->ztype}</ztype>";
+        //    $this->detail .= "<zhour>{$this->zhour}</zhour>";
+        //    $this->detail .= "<zmon>{$this->zmon}</zmon>";
+        //    $this->detail .= "<advance>{$this->advance}</advance>";
         $this->detail .= "</detail>";
 
         return true;
@@ -40,13 +39,13 @@ class Employee extends \ZCL\DB\Entity {
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->detail);
         $this->balance = (int) ($xml->balance[0]);
-        $this->login   = (string) ($xml->login[0]);
-        $this->email   = (string) ($xml->email[0]);
+        $this->login = (string) ($xml->login[0]);
+        $this->email = (string) ($xml->email[0]);
         $this->comment = (string) ($xml->comment[0]);
-    //  $this->ztype   = (int) ($xml->ztype[0]);
-    //    $this->zmon    = (int) ($xml->zmon[0]);
-    //    $this->advance = (int) ($xml->advance[0]);
-    //    $this->zhour   = (int) ($xml->zhour[0]);
+        //  $this->ztype   = (int) ($xml->ztype[0]);
+        //    $this->zmon    = (int) ($xml->zmon[0]);
+        //    $this->advance = (int) ($xml->advance[0]);
+        //    $this->zhour   = (int) ($xml->zhour[0]);
 
         parent::afterLoad();
     }

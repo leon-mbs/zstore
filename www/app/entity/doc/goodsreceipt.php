@@ -38,7 +38,10 @@ class GoodsReceipt extends Document {
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->amount
+            "total" => $this->amount,
+            "payed" => $this->headerdata['payed'],
+            "prepaid" => $this->headerdata['prepaid'] == 1,
+            "payamount" => $this->payamount
         );
 
 
@@ -61,7 +64,7 @@ class GoodsReceipt extends Document {
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($stock->stock_id);
             $sc->setExtCode($row['amount']); //Для АВС 
-            $sc->setCustomer($this->customer_id);
+            // $sc->setCustomer($this->customer_id);
 
             $sc->save();
 
@@ -75,9 +78,11 @@ class GoodsReceipt extends Document {
                 $it->save();
             }
         }
-        if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,0-$this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
-            $this->payamount = $this->amount;
+        $this->payed = 0;
+
+        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
+            \App\Entity\Pay::addPayment($this->document_id, 1, 0 - $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            $this->payed = $this->headerdata['payed'];
         }
 
 
@@ -87,12 +92,13 @@ class GoodsReceipt extends Document {
     public function getRelationBased() {
         $list = array();
 
-        $list['RetCustIssue'] = 'Возврат  поставщику';
+        $list['RetCustIssue'] = 'Возврат  ';
 
         return $list;
     }
 
-    protected function getNumberTemplate(){
-         return  'ПН-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'ПН-000000';
+    }
+
 }

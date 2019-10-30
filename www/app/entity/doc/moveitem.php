@@ -8,7 +8,7 @@ use \App\Entity\Store;
 use \App\Helper as H;
 
 /**
- * Класс-сущность  локумент перемещения товаров
+ * Класс-сущность  документ перемещения товаров
  *
  */
 class MoveItem extends Document {
@@ -19,22 +19,25 @@ class MoveItem extends Document {
 
         $conn = \ZDB\DB::getConnect();
 
-        foreach ($this->detaildata as $value) {
+        foreach ($this->detaildata as $item) {
 
             //списываем  со склада
-            $stockfrom = $value['stock_id'];
-            $sc = new Entry($this->document_id, 0 - ($value['quantity'] * $value['partion']), 0 - $value['quantity']);
-            $sc->setStock($stockfrom);
 
+            $listst = Stock::pickup($this->headerdata['storefrom'], $item['item_id'], $item['quantity'], $item['snumber']);
+            if (count($listst) == 0) {
+                \App\System::setErrorMsg('Недостаточно товара ' . $item['itemname']);
+                return false;
+            }
+            foreach ($listst as $st) {
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+                $sc->save();
 
-            $sc->save();
-
-            $stockto = Stock::getStock($this->headerdata['storeto'], $value['item_id'], $value['partion'], $value['snumber'], $value['sdate'], true);
-            $sc = new Entry($this->document_id, $value['quantity'] * $value['partion'], $value['quantity']);
-            $sc->setStock($stockto->stock_id);
-
-
-            $sc->save();
+                $stockto = Stock::getStock($this->headerdata['storeto'], $item['item_id'], $st->partion, $item['snumber'], 0, true);
+                $sc = new Entry($this->document_id, $st->quantity * $st->partion, $st->quantity);
+                $sc->setStock($stockto->stock_id);
+                $sc->save();
+            }
         }
 
 
@@ -52,13 +55,11 @@ class MoveItem extends Document {
         $detail = array();
         foreach ($this->detaildata as $value) {
             $name = $value['itemname'];
-            if (strlen($value['snumber']) > 0) {
-                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
-            }
+
 
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
-                "price" => $value['partion'],
+                "snumber" => $value['snumber'],
                 "msr" => $value['msr'],
                 "quantity" => H::fqty($value['quantity']));
         }
@@ -77,8 +78,8 @@ class MoveItem extends Document {
         return $html;
     }
 
-    protected function getNumberTemplate(){
-         return  'ДТ-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'ПТ-000000';
+    }
 
 }

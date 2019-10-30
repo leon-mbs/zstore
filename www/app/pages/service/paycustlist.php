@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Pages\Register;
+namespace App\Pages\Service;
 
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\DataList\Paginator;
 use \Zippy\Html\DataList\ArrayDataSource;
- 
 use \Zippy\Html\Form\CheckBox;
 use \Zippy\Html\Form\Date;
 use \Zippy\Html\Form\DropDownChoice;
@@ -27,10 +26,10 @@ class PayCustList extends \App\Pages\Base {
 
     private $_doc = null;
     private $_cust = null;
-    public  $_custlist = array();
-    public  $_doclist = array();
+    public $_custlist = array();
+    public $_doclist = array();
     public $_pays = array();
-    
+
     /**
      *
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
@@ -38,24 +37,24 @@ class PayCustList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('PayCustList'))
+        if (false == \App\ACL::checkShowSer('PayCustList'))
             return;
 
-        $this->add(new Panel("clist")) ;    
-            
-        $this->clist->add(new DataView('custlist', new ArrayDataSource($this,'_custlist'), $this, 'custlistOnRow'));
- 
-        $this->clist->add(new ClickLink('csv', $this, 'oncsv'));
- 
-        $this->add(new Panel("plist"))->setVisible(false);
-        $this->plist->add(new Label("cname")) ;
-        $this->plist->add(new ClickLink("back",$this,"onBack")) ;
+        $this->add(new Panel("clist"));
 
-        $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this,'_doclist'), $this, 'doclistOnRow'));
+        $this->clist->add(new DataView('custlist', new ArrayDataSource($this, '_custlist'), $this, 'custlistOnRow'));
+
+        $this->clist->add(new ClickLink('csv', $this, 'oncsv'));
+
+        $this->add(new Panel("plist"))->setVisible(false);
+        $this->plist->add(new Label("cname"));
+        $this->plist->add(new ClickLink("back", $this, "onBack"));
+
+        $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
-  
+
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-  
+
 
         $this->add(new Panel("paypan"))->setVisible(false);
         $this->paypan->add(new Label("pname"));
@@ -70,82 +69,74 @@ class PayCustList extends \App\Pages\Base {
 
 
         $this->updateCust();
-        
     }
 
-   
     public function updateCust() {
-      
-    $sql = "select customer_name,fl,coalesce(sum(am),0) as sam from  (
-            select   customer_name,  ( amount - payamount)  as  am ,(case when meta_name in('GoodsReceipt') then -1 else 1 end) as fl
-            from `documents_view` where amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in('GoodsReceipt','GoodsIssue','Task','ServiceAct')
+
+        $sql = "select customer_name,fl,coalesce(sum(am),0) as sam from  (
+            select   customer_name,  ( payamount - payed)  as  am ,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
+            from `documents_view` where payamount > 0 and payamount > payed  and state not in (1,2,3,17)   
 
             ) t   group by customer_name ,fl   order by  (sam) desc";
-      $this->_custlist = \App\DataItem::query($sql);  
-      $this->clist->custlist->Reload();   
+        $this->_custlist = \App\DataItem::query($sql);
+        $this->clist->custlist->Reload();
     }
-    
+
     public function custlistOnRow($row) {
         $cust = $row->getDataItem();
-        $row->add(new Label('customer_name', $cust->customer_name)); 
-        $row->add(new Label('credit',$cust->fl==-1 ? $cust->sam : "")); 
-        $row->add(new Label('debet', $cust->fl==1 ? $cust->sam : "")); 
-        
+        $row->add(new Label('customer_name', $cust->customer_name));
+        $row->add(new Label('credit', $cust->fl == -1 ? $cust->sam : ""));
+        $row->add(new Label('debet', $cust->fl == 1 ? $cust->sam : ""));
+
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
-              
     }
-    
+
     //список документов
     public function showdocsOnClick($sender) {
 
         $this->_cust = $sender->owner->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
         $this->updateDocs();
-        
+
         $this->clist->setVisible(false);
         $this->plist->setVisible(true);
-        
     }
-    
+
     public function updateDocs() {
-     
-      if($this->_cust->fl == -1){
-          $docs="'GoodsReceipt'";
-      }
-      if($this->_cust->fl == 1){
-          $docs="'GoodsIssue','Task','ServiceAct'";
-      }
-      
-     
-      $sql = "select * from (
-            select d.* ,(amount - payamount) as am
-            from `documents_view` where amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in({$docs}) 
-              
-            ) t  order by am desc  ";  
-      $this->_doclist = \App\Entity\Doc\Document::find("amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in({$docs})","(amount - payamount) desc");  
-                      
-      $this->plist->doclist->Reload(); 
-    } 
- 
+
+        if ($this->_cust->fl == -1) {
+            $docs = "'GoodsReceipt','InvoiceCust'";
+        }
+        if ($this->_cust->fl == 1) {
+            $docs = "'GoodsIssue','Task','ServiceAct','Invoice'";
+        }
+
+
+
+        $this->_doclist = \App\Entity\Doc\Document::find("payamount > 0 and payamount  > payed  and state not in (1,2,3,17)  and meta_name in({$docs})", "(payamount - payed) desc");
+
+        $this->plist->doclist->Reload();
+    }
+
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
-        $row->add(new Label('date', date('d.m.Y',$doc->document_date)));
+        $row->add(new Label('date', date('d.m.Y', $doc->document_date)));
 
-        
-        $row->add(new Label('amount', $doc->amount));
-        $row->add(new Label('payamount', $doc->amount - $doc->payamount));
 
-   
+        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" )));
+
+        $row->add(new Label('payamount', $doc->payamount - $doc->payed));
+
+
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
-  
     }
 
-   //просмотр
+    //просмотр
     public function showOnClick($sender) {
 
         $this->_doc = $sender->owner->getDataItem();
@@ -166,7 +157,8 @@ class PayCustList extends \App\Pages\Base {
         $this->paypan->setVisible(false);
         $this->updateCust();
     }
-     //оплаты
+
+    //оплаты
     public function payOnClick($sender) {
         $this->docview->setVisible(false);
 
@@ -176,13 +168,13 @@ class PayCustList extends \App\Pages\Base {
 
         $this->paypan->setVisible(true);
 
-  
+
         $this->plist->doclist->setSelectedRow($sender->getOwner());
         $this->plist->doclist->Reload(false);
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText($this->_doc->amount - $this->_doc->payamount);
+        $this->paypan->payform->pamount->setText($this->_doc->payamount - $this->_doc->payed);
         ;
         $this->paypan->payform->pcomment->setText("");
         ;
@@ -210,28 +202,25 @@ class PayCustList extends \App\Pages\Base {
         $amount = $form->pamount->getText();
         if ($amount == 0)
             return;
-       
-        if ($amount > $this->_doc->amount) {
+
+        if ($amount > $this->_doc->payamount - $this->_doc->payed) {
             $this->setError('Сумма  больше  необходимой  оплаты');
             return;
         }
 
-        $type=  \App\Entity\Pay::PAY_BASE_INCOME;
+        $type = \App\Entity\Pay::PAY_BASE_INCOME;
         //закупки  и возвраты
-        if($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'ReturnIssue'){
-            $amount  = 0 - $amount;
-             $type =  \App\Entity\Pay::PAY_BASE_OUTCOME;
+        if ($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'InvoiceCust' || $this->_doc->meta_name == 'ReturnIssue') {
+            $amount = 0 - $amount;
+            $type = \App\Entity\Pay::PAY_BASE_OUTCOME;
         }
-        
-        \App\Entity\Pay::addPayment($this->_doc->document_id,   $amount, $form->payment->getValue(),$type, $form->pcomment->getText());
-        $this->_doc->payamount = abs(\App\Entity\Pay::getPaymentAmount($this->_doc->document_id));
 
+        \App\Entity\Pay::addPayment($this->_doc->document_id, 0, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
-        $this->_doc->save();
 
 
         $this->setSuccess('Оплата добавлена');
-   
+
 
         $this->updateDocs();
         $this->paypan->setVisible(false);
@@ -263,8 +252,6 @@ class PayCustList extends \App\Pages\Base {
 
 }
 
-
-
 class PayCustDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
@@ -273,19 +260,17 @@ class PayCustDataSource implements \Zippy\Interfaces\DataSource {
         $this->page = $page;
     }
 
-  
+    public function getItemCount() {
 
-    public function getItemCount() {                   
-        
         $conn = \ZDB\DB::getConnect();
-         
+
         return $conn->GetOne($sql);
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
 
-        
+
         return $docs;
     }
 
@@ -294,7 +279,7 @@ class PayCustDataSource implements \Zippy\Interfaces\DataSource {
     }
 
 }
- 
+
 class PayCustDocDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
@@ -337,7 +322,7 @@ class PayCustDocDataSource implements \Zippy\Interfaces\DataSource {
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
 
-          return $docs;
+        return $docs;
     }
 
     public function getItem($id) {

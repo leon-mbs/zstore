@@ -47,6 +47,14 @@
         <td colspan="5" style="border-top: 1px solid black;" align="right">Всего:</td>
         <td style="border-top: 1px solid black;" align="right">{{total}} </td>
     </tr>
+    <tr style="font-weight: bolder;">
+        <td   colspan="5" align="right">К оплате:</td>
+        <td   align="right">{{payamount}}</td>
+    </tr>    
+    <tr style="font-weight: bolder;">
+        <td   colspan="5" align="right">Оплата:</td>
+        <td  " align="right">{{payed}}</td>
+    </tr>
     <tr>
         <td colspan="6"><br>
             Гарантия: {{gar}}

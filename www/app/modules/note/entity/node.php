@@ -12,8 +12,7 @@ use \ZCL\DB\TreeEntity;
  * @parentfield=pid
  * @pathfield=mpath
  */
-class Node extends TreeEntity
-{
+class Node extends TreeEntity {
 
     protected function init() {
         $this->node_id = 0;

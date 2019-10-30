@@ -39,9 +39,7 @@ class TaskList extends \App\Pages\Base {
     public $_store_id = 0;
     public $_discount = 0;
     private $_taskscnt = array();
-   
     public $_tamount = 0;
-   
 
     public function __construct() {
 
@@ -69,9 +67,9 @@ class TaskList extends \App\Pages\Base {
 
 
         $this->add(new Label("tamount"));
-     
 
-  
+
+
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -105,8 +103,10 @@ class TaskList extends \App\Pages\Base {
 
         $row->add(new Label('taskstatus'));
 
+        if ($task->state == Document::STATE_EXECUTED)
+            $row->taskstatus->setText('<span class="badge badge-success">Выполнен</span>', true);
         if ($task->state == Document::STATE_INPROCESS)
-            $row->taskstatus->setText('<span class="badge badge-success">Выполняется</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-info">Выполняется</span>', true);
         if ($task->state == Document::STATE_SHIFTED)
             $row->taskstatus->setText('<span class="badge badge-warning">Отложена</span>', true);
         if ($task->state == Document::STATE_CLOSED)
@@ -128,12 +128,12 @@ class TaskList extends \App\Pages\Base {
         $row->add(new Label('taskemps', implode(', ', $emps)));
         $row->add(new Label('taskclient', $task->customer_name));
         $row->add(new Label('taskamount', $task->amount));
-   
+
         $this->_tamount = $this->_tamount + $task->amount;
-    
+
         $row->add(new ClickLink('taskshow'))->onClick($this, 'taskshowOnClick');
         $row->add(new ClickLink('taskedit'))->onClick($this, 'taskeditOnClick');
-         if ($task->state == Document::STATE_CLOSED) {
+        if ($task->state == Document::STATE_CLOSED || $task->state == Document::STATE_EXECUTED) {
             $row->taskedit->setVisible(false);
         }
     }
@@ -144,7 +144,7 @@ class TaskList extends \App\Pages\Base {
         if (false == \App\ACL::checkShowDoc($this->_task, true))
             return;
 
-       
+
         $this->statuspan->setVisible(true);
 
         // if ($this->_task->checkStates(array(Document::STATE_EXECUTED)) == false || $this->_task->status == Document::STATE_EDITED || $this->_task->status == Document::STATE_NEW) {
@@ -185,6 +185,8 @@ class TaskList extends \App\Pages\Base {
     }
 
     public function onStatus($sender) {
+        $this->_task = $this->_task->cast();
+
         if ($sender->id == 'binprocess') {
             $this->_task->updateStatus(Document::STATE_INPROCESS);
         }
@@ -193,7 +195,7 @@ class TaskList extends \App\Pages\Base {
         }
         if ($sender->id == 'bclosed') {
             $this->_task->updateStatus(Document::STATE_EXECUTED);
-            if ($this->_task->amount == $this->_task->payamount) { //если оплачен
+            if ($this->_task->payed == $this->_task->payamount) { //если оплачен
                 $this->_task->updateStatus(Document::STATE_CLOSED);
                 $this->setSuccess('Наряд закрыт');
             }
@@ -204,8 +206,6 @@ class TaskList extends \App\Pages\Base {
         $this->tasklist->Reload(false);
     }
 
- 
- 
     public function updateTasks() {
         $user = System::getUser();
 
@@ -233,17 +233,16 @@ class TaskList extends \App\Pages\Base {
             $sql .= " and meta_id in({$user->aclview}) ";
         }
         $this->_tamount = 0;
-      
+
 
         $this->_taskds->setWhere($sql);
         $this->tasklist->Reload();
         $this->tamount->setText($this->_tamount);
-        
+
 
         $this->updateCal();
 
         $this->statuspan->setVisible(false);
-         
     }
 
     //обновить календар

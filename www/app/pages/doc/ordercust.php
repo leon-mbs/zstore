@@ -105,22 +105,6 @@ class OrderCust extends \App\Pages\Base {
             return;
     }
 
-    public function onVal($sender) {
-        $val = $sender->getValue();
-        $common = System::getOptions("common");
-
-        if ($val == 1)
-            $this->docform->course->setText('Курс 1');
-        if ($val == 2)
-            $this->docform->course->setText('Курс  ' . $common['cdoll']);
-        if ($val == 3)
-            $this->docform->course->setText('Курс  ' . $common['ceuro']);
-        if ($val == 4)
-            $this->docform->course->setText('Курс  ' . $common['crub']);
-
-        $this->updateAjax(array('course'));
-    }
-
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 

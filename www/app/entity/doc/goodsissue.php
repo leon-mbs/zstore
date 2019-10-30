@@ -7,7 +7,7 @@ use \App\Helper as H;
 use \App\Util;
 
 /**
- * Класс-сущность  документ расходная  накладая
+ * Класс-сущность  документ расходная  накладная
  *
  */
 class GoodsIssue extends Document {
@@ -52,7 +52,11 @@ class GoodsIssue extends Document {
             "order" => $this->headerdata["order"],
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
-            "total" => $this->amount
+            "total" => $this->amount,
+            "payed" => $this->headerdata['payed'],
+            "paydisc" => $this->headerdata["paydisc"],
+            "prepaid" => $this->headerdata['prepaid'] == 1,
+            "payamount" => $this->payamount
         );
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = date('d.m.Y', $this->headerdata["sent_date"]);
@@ -70,21 +74,34 @@ class GoodsIssue extends Document {
     }
 
     public function Execute() {
-        $conn = \ZDB\DB::getConnect();
+        //$conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->detaildata as $row) {
-
-            $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
-            $sc->setStock($row['stock_id']);
-            $sc->setExtCode($row['price'] - $row['partion']); //Для АВС 
-
-            $sc->setCustomer($this->customer_id);
-            $sc->save();
+        foreach ($this->detaildata as $item) {
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
+            foreach ($listst as $st) {
+                $sc = new Entry($this->document_id, 0 - $item['quantity'] * $st->partion, 0 - $item['quantity']);
+                $sc->setStock($st->stock_id);
+                $sc->setExtCode($item['price'] - $st->partion); //Для АВС 
+                $sc->save();
+            }
         }
-        if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_INCOME, $this->headerdata['paynotes']);
-            $this->payamount = $this->amount;
+
+        //списываем бонусы
+        if ($this->headerdata['paydisc'] > 0) {
+            $customer = \App\Entity\Customer::load($this->customer_id);
+            if ($customer->discount > 0) {
+                return; //процент
+            } else {
+                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0 );
+                $customer->save();
+            }
+        }
+
+        $this->payed = 0;
+        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
+            \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            $this->payed = $this->headerdata['payed'];
         }
 
         return true;
@@ -93,12 +110,13 @@ class GoodsIssue extends Document {
     public function getRelationBased() {
         $list = array();
         $list['Warranty'] = 'Гарантийный талон';
-        $list['ReturnIssue'] = 'Возвратная накладная';
+        $list['ReturnIssue'] = 'Возврат';
 
         return $list;
     }
 
-    protected function getNumberTemplate(){
-         return  'РН-000000';
-    }      
+    protected function getNumberTemplate() {
+        return 'РН-000000';
+    }
+
 }

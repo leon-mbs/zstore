@@ -28,9 +28,9 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
 
         // список  запланированных документов
         $where = "state not in( " . Document::STATE_CANCELED . "," . Document::STATE_EDITED . "," . Document::STATE_NEW . ") ";
-        $where = $where . " and  document_date >= " . $conn->DBDate(strtotime('-5 days'));
+        $where = $where . " and  date(document_date) > date(now()) ";
         //   $where = $where . " and  meta_name in ('ServiceAct','GoodsIssue','GoodsReceipt') ";
-        $where = $where . " and  content like '%<planned>1</planned>%'";
+
         if ($visible) {
             $data = Document::find($where, "document_date desc");
         }
@@ -53,20 +53,6 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
 
         $row->add(new Label('date', $dt));
         $row->add(new Label('type', $item->meta_desc));
-
-        $date = new Carbon();
-        $date->setTimestamp($item->document_date);
-        $start = $date->startOfDay()->timestamp;
-        $end = $date->endOfDay()->timestamp;
-
-        if (time() < $start) {
-            $row->date->setAttribute('class', 'badge  ');
-        } else
-        if (time() > $end) {
-            $row->date->setAttribute('class', 'badge badge-danger');
-        } else {
-            $row->date->setAttribute('class', 'badge badge-warning');
-        }
     }
 
 }

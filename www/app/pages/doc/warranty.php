@@ -37,10 +37,6 @@ class Warranty extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new TextInput('customer'));
-        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
-
-
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -50,14 +46,13 @@ class Warranty extends \App\Pages\Base {
 
         $this->add(new Form('editdetail'))->setVisible(false);
 
-        $this->editdetail->add(new TextInput('qtystock'));
+
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsn'));
         $this->editdetail->add(new TextInput('editwarranty'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -71,8 +66,6 @@ class Warranty extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
-            $this->docform->store->setValue($this->_doc->headerdata['store']);
 
 
             foreach ($this->_doc->detaildata as $item) {
@@ -86,15 +79,20 @@ class Warranty extends \App\Pages\Base {
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+                    $this->docform->customer->setText($basedoc->customer_name);
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
-                        $this->docform->customer->setText($basedoc->headerdata['customer_name']);
-                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
-
 
                         foreach ($basedoc->detaildata as $item) {
                             $item = new Item($item);
+                            $this->_tovarlist[$item->item_id] = $item;
+                        }
+                    }
+                    if ($basedoc->meta_name == 'Task') {
+                        $parts = unserialize(base64_decode($basedoc->headerdata['parts']));
+
+                        foreach ($parts as $_item) {
+                            $item = new Item($_item->getData());
                             $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
@@ -133,7 +131,7 @@ class Warranty extends \App\Pages\Base {
 
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
-        $this->editdetail->edittovar->setKey($item->stock_id);
+        $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
 
@@ -146,7 +144,7 @@ class Warranty extends \App\Pages\Base {
         $this->editdetail->editsn->setText($item->sn);
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = $item->stock_id;
+        $this->_rowid = $item->item_id;
     }
 
     public function addrowOnClick($sender) {
@@ -165,14 +163,14 @@ class Warranty extends \App\Pages\Base {
             $this->setError("Не выбран товар");
             return;
         }
-        $stock = Stock::load($id);
-        $stock->quantity = $this->editdetail->editquantity->getText();
-        $stock->price = $this->editdetail->editprice->getText();
-        $stock->sn = $this->editdetail->editsn->getText();
-        $stock->warranty = $this->editdetail->editwarranty->getText();
+        $item = Item::load($id);
+        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->price = $this->editdetail->editprice->getText();
+        $item->sn = $this->editdetail->editsn->getText();
+        $item->warranty = $this->editdetail->editwarranty->getText();
 
 
-        $this->_tovarlist[$stock->stock_id] = $stock;
+        $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -211,11 +209,7 @@ class Warranty extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getText();
 
-
-
-        $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
-        $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
-
+     
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
@@ -269,41 +263,10 @@ class Warranty extends \App\Pages\Base {
         App::RedirectBack();
     }
 
-    public function OnChangeStore($sender) {
-        //очистка  списка  товаров
-        $this->_tovarlist = array();
-        $this->docform->detail->Reload();
-        $store_id = $this->docform->store->getValue();
-    }
-
     public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
+
         $text = trim($sender->getText());
-        return Stock::findArrayAC($store_id, $text);
-    }
-
-    public function OnChangeItem($sender) {
-        $id = $sender->getKey();
-        $stock = Stock::load($id);
-
-
-        $item = Item::load($stock->item_id);
-        $this->editdetail->editprice->setText($item->getPrice($this->docform->pricetype->getValue(), $stock->price));
-        $qty = $stock->qty - $stock->wqty + $stock->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty));
-
-
-
-        $this->updateAjax(array('editprice', 'qtystock'));
-    }
-
-    public function OnChangePriceType($sender) {
-        foreach ($this->_tovarlist as $stock) {
-            $item = Item::load($stock->item_id);
-            $stock->price = $item->getPrice($this->docform->pricetype->getValue(), $stock->partion > 0 ? $stock->partion : 0);
-        }
-
-        $this->docform->detail->Reload();
+        return Item::findArrayAC($text);
     }
 
 }

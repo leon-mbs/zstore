@@ -15,8 +15,8 @@ class MoveMoney extends Document {
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['mffrom'],0, $this->notes);
-        Pay::addPayment($this->document_id, $this->amount, $this->headerdata['mfto'],0, notes);
+        Pay::addPayment($this->document_id, 1, 0 - $this->amount, $this->headerdata['mffrom'], 0, $this->notes);
+        Pay::addPayment($this->document_id, 1, $this->amount, $this->headerdata['mfto'], 0, $this->notes);
 
 
         return true;
@@ -39,8 +39,8 @@ class MoveMoney extends Document {
         return $html;
     }
 
+    protected function getNumberTemplate() {
+        return 'ПД-000000';
+    }
 
-    protected function getNumberTemplate(){
-         return  'ДД-000000';
-    }      
 }

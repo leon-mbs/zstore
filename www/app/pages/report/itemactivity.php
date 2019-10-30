@@ -50,7 +50,7 @@ class ItemActivity extends \App\Pages\Base {
 
 
         $text = Item::qstr('%' . $sender->getText() . '%');
-        $list = Item::findArray('itemname', " (itemname like {$text} or item_code like {$text} ) ");
+        $list = Item::findArray('itemname', " (itemname like {$text} or item_code like {$text} or bar_code like {$text}  ) ");
         foreach ($list as $k => $v) {
             $r[$k] = $v;
         }

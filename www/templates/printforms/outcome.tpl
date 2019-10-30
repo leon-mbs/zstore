@@ -20,7 +20,7 @@
 
         <th align="right" style="border: solid black 1px">Кол.</th>
         <th align="right" style="border: solid black 1px">На сумму</th>
-        <th align="right" style="border: solid black 1px">Прибыль</th>
+
 
     </tr>
     {{#_detail}}
@@ -32,7 +32,7 @@
 
         <td align="right">{{qty}}</td>
         <td align="right">{{summa}} </td>
-        <td align="right">{{navar}} </td>
+
 
     </tr>
     {{/_detail}}

@@ -57,9 +57,9 @@ class Helper {
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
         $groups = array();
-   
-        $arraymenu = array("groups"=>array(),"items"=> array());
-        
+
+        $arraymenu = array("groups" => array(), "items" => array());
+
         $aclview = explode(',', System::getUser()->aclview);
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
@@ -92,26 +92,28 @@ class Helper {
             case 4 :
                 $dir = "Pages/Reference";
                 break;
+            case 5 :
+                $dir = "Pages/Service";
+                break;
         }
- 
+
 
         foreach ($menu as $item) {
-             
-            $arraymenu['items'][]=array('name'=>$item['description'],'link'=>"/index.php?p=App/{$dir}/{$item['meta_name']}");
-            
+
+            $arraymenu['items'][] = array('name' => $item['description'], 'link' => "/index.php?p=App/{$dir}/{$item['meta_name']}");
         }
         $i = 1;
         foreach ($groups as $gname => $group) {
-              
+
             $items = array();
-            
+
             foreach ($group as $item) {
- 
-                $items[] = array('name'=>$item['description'],'link'=>"/index.php?p=App/{$dir}/{$item['meta_name']}");
+
+                $items[] = array('name' => $item['description'], 'link' => "/index.php?p=App/{$dir}/{$item['meta_name']}");
             }
             $textmenu .= "</ul></li>";
-            
-            $arraymenu['groups'][] = array('grname'=>$gname,'items'=>$items) ;
+
+            $arraymenu['groups'][] = array('grname' => $gname, 'items' => $items);
         }
 
         return $arraymenu;
@@ -143,6 +145,9 @@ class Helper {
                 case 4 :
                     $dir = "Pages/Reference";
                     break;
+                case 5 :
+                    $dir = "Pages/Service";
+                    break;
             }
 
             $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
@@ -154,17 +159,17 @@ class Helper {
     public static function loadEmail($template, $keys = array()) {
         global $logger;
 
-        $templatepath = _ROOT . 'templates/email/' .   $template  . '.tpl';
-        if (file_exists(  $templatepath ) == false) {
+        $templatepath = _ROOT . 'templates/email/' . $template . '.tpl';
+        if (file_exists($templatepath) == false) {
 
             $logger->error($templatepath . " is wrong");
             return "";
         }
-        
-       
-        
-        $template = @file_get_contents(  $templatepath );
-                                            
+
+
+
+        $template = @file_get_contents($templatepath);
+
         $m = new \Mustache_Engine();
         $template = $m->render($template, $keys);
 
@@ -172,16 +177,7 @@ class Helper {
         return $template;
     }
 
-    /**
-     * возвращает описание  мета-обьекта
-     *
-     * @param mixed $metaname
-     */
-    public static function getMetaNotes($metaname) {
-        $conn = DB::getConnect();
-        $sql = "select notes from  metadata where meta_name = '{$metaname}' ";
-        return $conn->GetOne($sql);
-    }
+   
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
 
@@ -222,10 +218,16 @@ class Helper {
     public static function addFile($file, $itemid, $comment, $itemtype = 0) {
         $conn = DB::getConnect();
         $filename = $file['name'];
+        $imagedata = getimagesize($file["tmp_name"]);
+        $mime = is_array($imagedata) ? $imagedata['mime'] : "";
+
+        if (strpos($filename, '.pdf') > 0) {
+            $mime = "application/pdf";
+        }
 
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
-        $sql = "insert  into files (item_id,filename,description,item_type) values ({$itemid},{$filename},{$comment},{$itemtype}) ";
+        $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}') ";
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 
@@ -250,6 +252,7 @@ class Helper {
             $item->file_id = $row['file_id'];
             $item->filename = $row['filename'];
             $item->description = $row['description'];
+            $item->mime = $row['mime'];
 
 
             $list[] = $item;
@@ -276,7 +279,7 @@ class Helper {
      */
     public static function loadFile($file_id) {
         $conn = \ZDB\DB::getConnect();
-        $rs = $conn->Execute("select filename,filedata from files join filesdata on files.file_id = filesdata.file_id  where files.file_id={$file_id}  ");
+        $rs = $conn->Execute("select filename,filedata,mime from files join filesdata on files.file_id = filesdata.file_id  where files.file_id={$file_id}  ");
         foreach ($rs as $row) {
             return $row;
         }
@@ -362,16 +365,26 @@ class Helper {
     public static function fqty($qty) {
         if (strlen($qty) == 0)
             return '';
-        $digit = 0;
+
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
-            $digit = $common['qtydigits'];
-        }
-        if ($digit == 0) {
-            return round($qty);
+            return number_format($qty, $common['qtydigits']  , '.', '');
         } else {
-            return number_format($qty, $digit, '.', '');
+            return round($qty);
         }
+    }
+  
+    /**
+    * форматирование  сумм    с копейками
+    * 
+    * @param mixed $am
+    * @return mixed
+    */
+    public static function fa($am) {
+        if (strlen($am) == 0)     return '';
+   
+        return number_format($am, $common['amdigits'] , '.', '');
+      
     }
 
 }

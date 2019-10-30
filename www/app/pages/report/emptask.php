@@ -80,7 +80,7 @@ class EmpTask extends \App\Pages\Base {
               AND DATE( document_date) >= " . $conn->DBDate($from) . "
               AND DATE( document_date) <= " . $conn->DBDate($to) . "
                 
-        and state= " .Document::STATE_EXECUTED;
+        and state= " . Document::STATE_EXECUTED;
 
         $docs = Document::find($where);
 

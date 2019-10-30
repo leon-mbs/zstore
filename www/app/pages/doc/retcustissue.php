@@ -48,7 +48,7 @@ class RetCustIssue extends \App\Pages\Base {
 
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-       $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('paynotes'));
 
 
@@ -88,7 +88,7 @@ class RetCustIssue extends \App\Pages\Base {
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-           $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -101,43 +101,35 @@ class RetCustIssue extends \App\Pages\Base {
         } else {
             $this->_doc = Document::create('RetCustIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'GoodsReceipt') {
 
+                    if ($basedoc->meta_name == 'GoodsReceipt') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
-
-                        foreach ($basedoc->detaildata as $item) {
-
-                            $stock = \App\Entity\Stock::getStock($basedoc->headerdata['store'], $item['item_id'], $item['price'], $item['snumber']);
-                            $stock->quantity = $item['quantity'];
-                            $stock->price = $item['price'];
+                        $elist = \App\Entity\Entry::find('document_id='.$basedoc->document_id) ;
+                        foreach ($elist as $entry) {
+                            $stock = Stock::load($entry->stock_id);
+                            $stock->quantity=abs($entry->quantity);
+                            $stock->price=$stock->partion;
+                            
                             $this->_tovarlist[$stock->stock_id] = $stock;
                         }
                     }
                 }
-            }
+            } 
+        
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-        $this->calcTotal();
-        $this->onMF($this->docform->payment);        
     }
 
-    public function onMF($sender) {
-        $mf = $sender->getValue();
-        $this->docform->paynotes->setVisible($mf > 0);
-    }
-    
-    
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
@@ -189,7 +181,7 @@ class RetCustIssue extends \App\Pages\Base {
         $this->editdetail->edittovar->setText($stock->itemname);
         $st = Stock::load($stock->stock_id);  //для актуального 
         $qty = $st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty));
+        $this->editdetail->qtystock->setText(H::fqty($st->qty));
 
 
         $this->_rowid = $stock->stock_id;
@@ -351,8 +343,8 @@ class RetCustIssue extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $qty = $stock->qty - $stock->wqty + $stock->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty));
+
+        $this->editdetail->qtystock->setText(H::fqty($stock->qty));
 
 
 

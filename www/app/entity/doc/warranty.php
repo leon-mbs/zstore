@@ -29,7 +29,6 @@ class Warranty extends Document {
 
         $firm = \App\System::getOptions("firmdetail");
 
-
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $firm['name'],
@@ -47,6 +46,10 @@ class Warranty extends Document {
     public function Execute() {
 
         return true;
+    }
+
+    protected function getNumberTemplate() {
+        return 'ГТ-000000';
     }
 
 }

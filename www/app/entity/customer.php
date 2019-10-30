@@ -11,10 +11,10 @@ namespace App\Entity;
  */
 class Customer extends \ZCL\DB\Entity {
 
-    const   STATUS_ACTUAL = 0;  //актуальный
-    const   STATUS_DISABLED = 1; //не используется
-    const   STATUS_WAIT = 2 ;//потенциальный
-    
+    const STATUS_ACTUAL = 0;  //актуальный
+    const STATUS_DISABLED = 1; //не используется
+    const STATUS_WAIT = 2; //потенциальный
+
     protected function init() {
         $this->customer_id = 0;
         $this->status = 0;
@@ -25,6 +25,7 @@ class Customer extends \ZCL\DB\Entity {
         //упаковываем  данные в detail
         $this->detail = "<detail><code>{$this->code}</code>";
         $this->detail .= "<discount>{$this->discount}</discount>";
+        $this->detail .= "<bonus>{$this->bonus}</bonus>";
         $this->detail .= "<type>{$this->type}</type>";
         $this->detail .= "<jurid>{$this->jurid}</jurid>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
@@ -39,6 +40,7 @@ class Customer extends \ZCL\DB\Entity {
         $xml = simplexml_load_string($this->detail);
 
         $this->discount = doubleval($xml->discount[0]);
+        $this->bonus = (int) ($xml->bonus[0]);
         $this->type = (int) ($xml->type[0]);
         $this->jurid = (int) ($xml->jurid[0]);
         $this->address = (string) ($xml->address[0]);
@@ -66,10 +68,7 @@ class Customer extends \ZCL\DB\Entity {
      * 
      */
     public static function getList() {
-        return Customer::findArray("customer_name", "status=". Customer::STATUS_ACTUAL);
+        return Customer::findArray("customer_name", "status=" . Customer::STATUS_ACTUAL);
     }
 
-    
-  
-    
 }

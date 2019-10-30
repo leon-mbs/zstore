@@ -17,13 +17,13 @@ class Task extends Document {
         $i = 1;
 
         $detail = array();
+        $parts = unserialize(base64_decode($this->headerdata['parts']));
+        $items = unserialize(base64_decode($this->headerdata['items']));
+        $eqlist = unserialize(base64_decode($this->headerdata['eq']));
+        $emplist = unserialize(base64_decode($this->headerdata['emp']));
+
         foreach ($this->detaildata as $value) {
-            if ($value['eq_id'] > 0)
-                continue;
-            if ($value['employee_id'] > 0)
-                continue;
-            if ($value['item5_id'] > 0)
-                continue;
+
             $detail[] = array("no" => $i++,
                 "servicename" => $value['service_id'] > 0 ? $value['service_name'] : $value['itemname'],
                 "quantity" => H::fqty($value['quantity']),
@@ -32,34 +32,39 @@ class Task extends Document {
                 "amount" => round($value['quantity'] * $value['price'])
             );
         }
+        foreach ($parts as $value) {
+            $value = $value->getData();
+            $detail[] = array("no" => $i++,
+                "servicename" => $value['itemname'],
+                "quantity" => H::fqty($value['quantity']),
+                "price" => $value['price'],
+                "amount" => round($value['quantity'] * $value['price'])
+            );
+        }
         $detail2 = array();
-        foreach ($this->detaildata as $value) {
-            if ($value['eq_id'] > 0) {
-                $detail2[] = array(
-                    "eq_name" => $value['eq_name'],
-                    "code" => $value['code']
-                );
-            }
+        foreach ($eqlist as $value) {
+            $value = $value->getData();
+
+            $detail2[] = array(
+                "eq_name" => $value['eq_name'],
+                "code" => $value['code']
+            );
         }
         $detail3 = array();
-        foreach ($this->detaildata as $value) {
-            if ($value['employee_id'] > 0) {
-                $detail3[] = array(
-                    "emp_name" => $value['emp_name']
-                );
-            }
+        foreach ($emplist as $value) {
+            $value = $value->getData();
+
+            $detail3[] = array(
+                "emp_name" => $value['emp_name']
+            );
         }
 
         $i = 1;
 
         $detail5 = array();
-        foreach ($this->detaildata as $value) {
-            if ($value['eq_id'] > 0)
-                continue;
-            if ($value['employee_id'] > 0)
-                continue;
-            if (strlen($value['item5_id']) == 0)
-                continue;
+        foreach ($items as $value) {
+            $value = $value->getData();
+
             $detail5[] = array("no" => $i++,
                 "itemname" => $value['itemname'],
                 "quantity" => H::fqty($value['quantity']),
@@ -68,13 +73,15 @@ class Task extends Document {
             );
         }
 
+
         $header = array('date' => date('d.m.Y', $this->document_date),
             "pareaname" => $this->headerdata["pareaname"],
             "customer" => $this->customer_name,
             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
             "document_number" => $this->document_number,
-            "totaldisc" => $this->headerdata["totaldisc"],
             "total" => $this->amount,
+            "payamount" => $this->payamount,
+            "payed" => $this->headerdata['payed'],
             "_detail" => $detail,
             "_detail2" => $detail2,
             "_detail5" => $detail5,
@@ -90,49 +97,65 @@ class Task extends Document {
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
+        $parts = unserialize(base64_decode($this->headerdata['parts']));
+        $items = unserialize(base64_decode($this->headerdata['items']));
+        $eqlist = unserialize(base64_decode($this->headerdata['eq']));
+        $emplist = unserialize(base64_decode($this->headerdata['emp']));
 
         foreach ($this->detaildata as $row) {
-
-            if (strlen($row['item5_id']) == 0) {
-                $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
-                if ($row['item_id'] > 0) {
-                    $sc->setStock($row['stock_id']);
-                    $sc->setCustomer($this->customer_id);
-                }
-                if ($row['service_id'] > 0) {
-                    $sc->setService($row['service_id']);
-
-                    $sc->setCustomer($this->customer_id);
-                }
-
-                if ($row['employee_id'] > 0) {
-                    $sc = new Entry($this->document_id, $row['pay']);
-
-                    $sc->setEmployee($row['employee_id']);
-                }
-
-
-
-                $sc->save();
-            }
-            //материалы 
-            if ($row['item5_id'] > 0) {
-                $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
-                $sc->setStock($row['stock_id']);
-                $sc->save();
-            }
+            $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
+            $sc->setService($row['service_id']);
+            $sc->save();
+        }
+        foreach ($parts as $items) {
+            $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
+            $sc->setStock($row['stock_id']);
+            $sc->save();
+        }
+        foreach ($items as $row) {
+            $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
+            $sc->setStock($row['stock_id']);
+            $sc->save();
         }
 
-        if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'],\App\Entity\Pay::PAY_BASE_INCOME, $this->headerdata['paynotes']);
-            $this->payamount = $this->amount;
-        }
+
+
 
         return true;
     }
 
-    protected function getNumberTemplate(){
-         return  'НР-000000';
-    }      
+    public function updateStatus($state) {
+
+        parent::updateStatus($state);
+
+        if ($state != Document::STATE_EXECUTED && $state != Document::STATE_INPROCESS) {
+            return;
+        }
+
+        $conn = \ZDB\DB::getConnect();
+
+        //была  ли  оплата
+        $cnt = $conn->GetOne("select coalesce(count(*),0) from paylist where document_id={$this->document_id} and indoc=1");
+
+        if ($cnt > 0)
+            return;
+
+        $this->payed = 0;
+        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
+            \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            $this->payed = $this->headerdata['payed'];
+        }
+    }
+
+    protected function getNumberTemplate() {
+        return 'НР-000000';
+    }
+
+    public function getRelationBased() {
+        $list = array();
+        $list['Warranty'] = 'Гарантийный талон';
+
+        return $list;
+    }
 
 }

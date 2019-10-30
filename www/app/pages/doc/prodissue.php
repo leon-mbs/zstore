@@ -42,7 +42,6 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new CheckBox('planned'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
@@ -69,7 +68,6 @@ class ProdIssue extends \App\Pages\Base {
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-            $this->docform->planned->setChecked($this->_doc->headerdata['planned']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
@@ -141,8 +139,8 @@ class ProdIssue extends \App\Pages\Base {
         $this->editdetail->edittovar->setText($stock->itemname);
 
         $st = Stock::load($stock->stock_id);  //для актуального 
-        $qty = $st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty));
+
+        $this->editdetail->qtystock->setText(H::fqty($st->qty));
         $this->_rowid = $stock->stock_id;
     }
 
@@ -207,7 +205,6 @@ class ProdIssue extends \App\Pages\Base {
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['planned'] = $this->docform->planned->isChecked() ? 1 : 0;
 
 
         $this->_doc->detaildata = array();
@@ -294,11 +291,8 @@ class ProdIssue extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $stock = Stock::load($id);
-        $qty = $stock->qty - $stock->wqty + $stock->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($qty));
 
-        // $item = Item::load($stock->item_id);
-
+        $this->editdetail->qtystock->setText(H::fqty($stock->qty));
 
         $this->editdetail->editprice->setText($stock->partion);
 

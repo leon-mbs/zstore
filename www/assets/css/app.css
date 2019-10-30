@@ -18,17 +18,17 @@ body {
 }
 
 .ctable td {
-    padding: 2px;
+    padding: 4px;
     ;
 }
 
 .ctable th {
-    padding: 2px;
+    padding: 4px;
     text-align: center;
 }
 
 .icon20 {
-    height: 20px;
+    height: 24px; margin-left:4px;
 }
 
 
