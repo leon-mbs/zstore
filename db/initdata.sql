@@ -13,7 +13,7 @@ INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('modules', 'a:5:{s:6:"ocsite";s:9:"localhost";s:9:"ocapiname";s:3:"api";s:5:"ockey";s:5:"12345";s:13:"occustomer_id";s:1:"8";s:11:"ocpricetype";s:6:"price1";}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:17:{s:8:"firmname";s:20:"Наша  фирма";s:8:"defstore";s:2:"19";s:5:"defmf";s:1:"2";s:9:"qtydigits";s:1:"3";s:5:"cdoll";s:1:"2";s:5:"ceuro";s:1:"5";s:4:"crub";s:3:"0.4";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:11:"autoarticle";b:1;s:6:"useset";b:0;s:10:"usesnumber";b:0;s:6:"useval";b:0;s:10:"usescanner";b:0;}');
 
-IINSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(1, 4, 'Склады', 'StoreList', 'Товары', 0, 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(1, 4, 'Склады', 'StoreList', 'Товары', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(2, 4, 'Номенклатура', 'ItemList', 'Товары', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(3, 4, 'Сотрудники', 'EmployeeList', '', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(4, 4, 'Категории товаров', 'CategoryList', 'Товары', 0, 0);
