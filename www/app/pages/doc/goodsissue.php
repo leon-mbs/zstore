@@ -444,19 +444,18 @@ class GoodsIssue extends \App\Pages\Base {
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->goAnkor("tankor");
     }
 
     public function onPayed($sender) {
         $this->docform->payed->setText($this->docform->editpayed->getText());
-    }
+         $this->goAnkor("tankor");
+   }
 
     public function onPayDisc() {
-
-
         $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
-
-
         $this->calcPay();
+        $this->goAnkor("tankor");
     }
 
     /**
