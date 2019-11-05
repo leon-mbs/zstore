@@ -31,8 +31,10 @@ class Stock extends \ZCL\DB\Entity {
 
         $criteria = "qty <> 0 and itemdisabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
-            $partname = self::qstr('%' . $partname . '%');
-            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname} or snumber like {$partname} or   bar_code like {$partname} )";
+            $like = self::qstr('%' . $partname . '%');
+            $partname = self::qstr(  $partname  );
+
+            $criteria .= "  and  (itemname like {$like} or item_code = {$partname} or snumber = {$partname} or   bar_code = {$partname} )";
         }
 
         $entitylist = self::find($criteria, "sdate asc");

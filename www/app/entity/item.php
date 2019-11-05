@@ -230,8 +230,9 @@ class Item extends \ZCL\DB\Entity {
         }
 
         if (strlen($partname) > 0) {
-            $partname = self::qstr('%' . $partname . '%');
-            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname}   or   bar_code like {$partname} )";
+            $like = self::qstr('%' . $partname . '%');
+            $partname = self::qstr(  $partname  );
+            $criteria .= "  and  (itemname like {$like} or item_code = {$partname}   or   bar_code = {$partname} )";
         }
 
         $entitylist = self::find($criteria);
