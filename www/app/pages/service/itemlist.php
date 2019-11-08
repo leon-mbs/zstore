@@ -59,14 +59,17 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
 
-
-        $row->add(new Label('qty', H::fqty($item->getQuantity($this->filter->searchstore->getValue()))));
-        $row->add(new Label('amount', round($item->getAmount($this->filter->searchstore->getValue()))));
+        $qty = $item->getQuantity($this->filter->searchstore->getValue() );
+        $row->add(new Label('qty', H::fqty($qty)));
+        $row->add(new Label('amount', round(abs($item->getAmount($this->filter->searchstore->getValue())))));
 
 
         $row->add(new Label('cat_name', $item->cat_name));
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-    }
+        if($qty <0) {
+           $row->setAttribute('class','text-danger');   
+        }
+   }
 
     public function OnFilter($sender) {
         $this->itempanel->itemlist->Reload();
@@ -92,10 +95,13 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('partion', $stock->partion));
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
-        $row->add(new Label('amount', round($stock->qty * $stock->partion)));
+        $row->add(new Label('amount', round(abs($stock->qty * $stock->partion))));
 
         $item = Item::load($stock->item_id);
 
+        if($stock->qty <0) {
+           $row->setAttribute('class','text-danger');   
+        }
 
         $plist = array();
         if ($item->price1 > 0)
@@ -179,9 +185,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
             $where = $where . " and cat_id=" . $cat;
         }
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where qty > 0 and store_id={$store}) ";
+            $where = $where . " and item_id in (select item_id from store_stock where qty <> 0 and store_id={$store}) ";
         } else {
-            $where = $where . " and item_id in (select item_id from store_stock where qty > 0) ";
+            $where = $where . " and item_id in (select item_id from store_stock where qty <> 0) ";
         }
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {

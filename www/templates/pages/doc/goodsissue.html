@@ -107,7 +107,7 @@
                     {{/usescanner}}
 
                     <a class="btn btn-info btn-sm" zippy="addrow">Добавить позицию</a>
-                    <table class="table table-sm">
+                    <table class="table table-sm" id="tankor">
                         <tr>
                             <th>Название</th>
                             <th  >Код</th>
@@ -337,6 +337,9 @@
                 </div>
             </div>
         </form>
+        
+        
+            {{#usescanner}} 
            <script>
             $(document).ready(function () {
 
@@ -351,5 +354,6 @@
                 }
             }
         </script>
+            {{/usescanner}} 
     </body>
 </html>

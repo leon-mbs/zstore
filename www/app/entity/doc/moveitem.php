@@ -28,6 +28,7 @@ class MoveItem extends Document {
                 \App\System::setErrorMsg('Недостаточно товара ' . $item['itemname']);
                 return false;
             }
+            
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);

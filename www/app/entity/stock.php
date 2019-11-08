@@ -116,14 +116,16 @@ class Stock extends \ZCL\DB\Entity {
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item_id, $qty, $snumber = "") {
+    public static function pickup($store_id, $item_id, $qty, $snumber = "" ) {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item_id} and qty > 0   ";
         if (strlen($snumber) > 0) {
             $where .= " and snumber=" . Stock::qstr($snumber);
         }
-        $stlist = self::find($where, ' stock_id desc');
+        $stlist = self::find($where, ' stock_id  ');
+        $last = null;
         foreach ($stlist as $st) {
+            $last = $st;
             if ($st->qty >= $qty) {
                 $st->quantity = $qty;
                 $res[] = $st;
@@ -136,7 +138,15 @@ class Stock extends \ZCL\DB\Entity {
             }
         }
         if ($qty > 0) {  // если не  достаточно
-            return array();
+            $item = Item::load($item_id);
+            \App\System::setWarnMsg("Создано отрицательное  количество  товара {$item->itemname} на  складе");
+            if($last != null){
+                $last->quantity +=  $qty;//остаток  пишем  к  последней партии
+            } else {
+                
+               return array();
+            }
+              
         }
         return $res;
     }

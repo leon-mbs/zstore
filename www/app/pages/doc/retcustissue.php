@@ -36,22 +36,21 @@ class RetCustIssue extends \App\Pages\Base {
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
+        if($docid==0 && $basedocid==0){
+            $this->setWarn('Возврат следует создавать на  основании приходной накладной  ');
+        }
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
-
-
-
+ 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-
-
+  
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('paynotes'));
-
-
+  
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
@@ -61,28 +60,23 @@ class RetCustIssue extends \App\Pages\Base {
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-
-
+ 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
-
-
-
+ 
         $this->editdetail->add(new Label('qtystock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
-
-
+ 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-
-
+ 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -92,8 +86,7 @@ class RetCustIssue extends \App\Pages\Base {
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
 
             $this->docform->notes->setText($this->_doc->notes);
-
-
+ 
             foreach ($this->_doc->detaildata as $item) {
                 $stock = new Stock($item);
                 $this->_tovarlist[$stock->stock_id] = $stock;
@@ -114,8 +107,8 @@ class RetCustIssue extends \App\Pages\Base {
                         $elist = \App\Entity\Entry::find('document_id='.$basedoc->document_id) ;
                         foreach ($elist as $entry) {
                             $stock = Stock::load($entry->stock_id);
-                            $stock->quantity=abs($entry->quantity);
-                            $stock->price=$stock->partion;
+                            $stock->quantity = abs($entry->quantity);
+                            $stock->price = $stock->partion;
                             
                             $this->_tovarlist[$stock->stock_id] = $stock;
                         }

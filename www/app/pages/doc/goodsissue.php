@@ -318,6 +318,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->calcPay();
+        $this->goAnkor("tankor");
     }
 
     public function cancelrowOnClick($sender) {

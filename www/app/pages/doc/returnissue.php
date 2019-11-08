@@ -35,7 +35,9 @@ class ReturnIssue extends \App\Pages\Base {
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
-
+        if($docid==0 && $basedocid==0){
+            $this->setWarn('Возврат следует создавать на  основании расходной накладной или  чека');
+        }
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 

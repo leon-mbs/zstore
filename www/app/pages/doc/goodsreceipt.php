@@ -321,6 +321,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
+        $this->goAnkor("tankor");
     }
 
     public function cancelrowOnClick($sender) {

@@ -75,7 +75,7 @@
                     </div>
                     {{/usescanner}}
                     &nbsp;<a class="btn btn-info btn-sm" zippy="addrow">Добавить позицию</a>
-                    <table class="table  table-sm">
+                    <table class="table  table-sm" id="tankor">
                         <tr>
 
                             <th>Наименование</th>
@@ -248,7 +248,7 @@
 
                     <div class="form-group">
                         <label for="editprice">Цена  </label>
-                        <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9]+"
+                        <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
                                style="width: 100px;">
                     </div>
 
@@ -298,7 +298,7 @@
                 </div>
             </div>
         </form>
-
+             {{#usescanner}} 
         <script>
             $(document).ready(function () {
 
@@ -313,6 +313,6 @@
                 }
             }
         </script>
-
+             {{/usescanner}} 
     </body>
 </html>

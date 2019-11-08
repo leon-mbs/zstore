@@ -78,9 +78,13 @@ class GoodsIssue extends Document {
 
 
         foreach ($this->detaildata as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber'] );
+                 if (count($listst) == 0) {
+                \App\System::setErrorMsg('Недостаточно товара ' . $item['itemname']);
+                return false;
+            }
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $item['quantity'] * $st->partion, 0 - $item['quantity']);
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item['price'] - $st->partion); //Для АВС 
                 $sc->save();
