@@ -33,9 +33,9 @@ class ProdIssue extends Document {
                     "tovar_name" => $name,
                     "tovar_code" => $value['item_code'],
                     "quantity" => H::fqty($value['quantity']),
-                    "price" => $value['price'],
+                    "price" => H::fa($value['price']),
                     "msr" => $value['msr'],
-                    "amount" => round($value['quantity'] * $value['price'])
+                    "amount" => H::fa($value['quantity'] * $value['price'])
                 );
             }
         }
@@ -48,9 +48,9 @@ class ProdIssue extends Document {
             "firmname" => $firm['firmname'],
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,
-            "total" => amount,
-            "notes" => $this->notes,
-            "summa" => Util::ucfirst(Util::money2str(amount))
+            "total" => H::fa(amount),
+            "notes" => $this->notes 
+             
         );
 
         $report = new \App\Report('prodissue.tpl');

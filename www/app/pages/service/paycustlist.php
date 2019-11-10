@@ -85,8 +85,8 @@ class PayCustList extends \App\Pages\Base {
     public function custlistOnRow($row) {
         $cust = $row->getDataItem();
         $row->add(new Label('customer_name', $cust->customer_name));
-        $row->add(new Label('credit', $cust->fl == -1 ? $cust->sam : ""));
-        $row->add(new Label('debet', $cust->fl == 1 ? $cust->sam : ""));
+        $row->add(new Label('credit', H::fa($cust->fl == -1 ? $cust->sam : "")));
+        $row->add(new Label('debet', H::fa($cust->fl == 1 ? $cust->sam : "")));
 
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
     }
@@ -126,9 +126,9 @@ class PayCustList extends \App\Pages\Base {
         $row->add(new Label('date', date('d.m.Y', $doc->document_date)));
 
 
-        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" )));
+        $row->add(new Label('amount',H::fa( ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
 
-        $row->add(new Label('payamount', $doc->payamount - $doc->payed));
+        $row->add(new Label('payamount', H::fa($doc->payamount - $doc->payed)));
 
 
 
@@ -187,7 +187,7 @@ class PayCustList extends \App\Pages\Base {
 
     public function payOnRow($row) {
         $pay = $row->getDataItem();
-        $row->add(new Label('plamount', 0 - $pay->amount));
+        $row->add(new Label('plamount', H::fa(0 - $pay->amount)));
         $row->add(new Label('pluser', $pay->username));
         $row->add(new Label('pldate', date('Y-m-d', $pay->paydate)));
         $row->add(new Label('plmft', $pay->mf_name));

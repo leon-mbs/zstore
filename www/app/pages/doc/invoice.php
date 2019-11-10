@@ -158,9 +158,9 @@ class Invoice extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', $item->price));
+        $row->add(new Label('price', H::fa($item->price)));
 
-        $row->add(new Label('amount', round($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
@@ -316,17 +316,17 @@ class Invoice extends \App\Pages\Base {
     }
 
     public function onPayAmount($sender) {
-        $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
     }
 
     public function onPayDisc() {
 
 
-        $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
+        $this->docform->paydisc->setText(H::fa($this->docform->editpaydisc->getText()));
 
 
         $this->calcPay();
@@ -345,7 +345,7 @@ class Invoice extends \App\Pages\Base {
 
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText(H::fa($total));
         $disc = 0;
 
         $customer_id = $this->docform->customer->getKey();
@@ -364,18 +364,18 @@ class Invoice extends \App\Pages\Base {
         }
 
 
-        $this->docform->paydisc->setText($disc);
-        $this->docform->editpaydisc->setText($disc);
+        $this->docform->paydisc->setText(H::fa($disc));
+        $this->docform->editpaydisc->setText(H::fa($disc));
     }
 
     private function calcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
 
-        $this->docform->editpayamount->setText(round($total - $disc));
-        $this->docform->payamount->setText(round($total - $disc));
-        $this->docform->editpayed->setText(round($total - $disc));
-        $this->docform->payed->setText(round($total - $disc));
+        $this->docform->editpayamount->setText(H::fa($total - $disc));
+        $this->docform->payamount->setText(H::fa($total - $disc));
+        $this->docform->editpayed->setText(H::fa($total - $disc));
+        $this->docform->payed->setText(H::fa($total - $disc));
     }
 
     /**

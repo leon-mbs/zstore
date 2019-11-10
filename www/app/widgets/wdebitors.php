@@ -55,7 +55,7 @@ class WDebitors extends \Zippy\Html\PageFragment {
         $item = $row->getDataItem();
 
         $row->add(new Label('cust', $item->customer_name));
-        $row->add(new Label('amount', $item->am));
+        $row->add(new Label('amount', Helper::fa($item->am)));
         $row->add(new Label('type', $item->meta_desc));
         $row->add(new Label('number', $item->document_number));
     }

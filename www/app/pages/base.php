@@ -9,6 +9,7 @@ use \Zippy\Html\Link\ClickLink;
 use \App\Helper;
 use \App\Application as App;
 use \App\System;
+use \App\Session;
 use \App\Entity\User;
 
 class Base extends \Zippy\Html\WebPage {

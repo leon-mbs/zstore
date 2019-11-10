@@ -146,8 +146,8 @@ class DocView extends \Zippy\Html\PageFragment {
     public function payListOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('paydate', date('Y.m.d', $item->paydate)));
-        $row->add(new Label('payamountp', $item->amount > 0 ? $item->amount : ""));
-        $row->add(new Label('payamountm', $item->amount < 0 ? 0 - $item->amount : ""));
+        $row->add(new Label('payamountp', Helper::fa($item->amount > 0 ? $item->amount : "")));
+        $row->add(new Label('payamountm', Helper::fa($item->amount < 0 ? 0 - $item->amount : "")));
         $row->add(new Label('payuser', $item->username));
         $row->add(new Label('paycomment', $item->notes));
         $row->add(new Label('paymf', $item->mf_name));

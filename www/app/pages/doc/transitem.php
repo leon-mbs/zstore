@@ -97,7 +97,7 @@ class TransItem extends \App\Pages\Base {
 
         $fi = Stock::load($this->_doc->headerdata['fromitem']);
 
-        $this->_doc->amount = $fi->partion * $this->_doc->headerdata['fromquantity'];
+        $this->_doc->amount = H::fa($fi->partion * $this->_doc->headerdata['fromquantity']);
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $isEdited = $this->_doc->document_id > 0;

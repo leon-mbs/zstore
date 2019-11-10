@@ -121,10 +121,10 @@ class InvoiceCust extends \App\Pages\Base {
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', $item->price));
+        $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
 
-        $row->add(new Label('amount', round($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->edit->setVisible($item->old != true);
 
@@ -289,11 +289,11 @@ class InvoiceCust extends \App\Pages\Base {
     }
 
     public function onPayAmount($sender) {
-        $this->docform->payamount->setText($this->docform->editpayamount->getText());
+        $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
     }
 
     /**
@@ -308,15 +308,15 @@ class InvoiceCust extends \App\Pages\Base {
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText(H::fa($total));
     }
 
     private function CalcPay() {
         $total = $this->docform->total->getText();
-        $this->docform->editpayamount->setText(round($total));
-        $this->docform->payamount->setText(round($total));
-        $this->docform->editpayed->setText(round($total));
-        $this->docform->payed->setText(round($total));
+        $this->docform->editpayamount->setText(H::fa($total));
+        $this->docform->payamount->setText(H::fa($total));
+        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
     }
 
     /**

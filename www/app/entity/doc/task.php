@@ -27,9 +27,9 @@ class Task extends Document {
             $detail[] = array("no" => $i++,
                 "servicename" => $value['service_id'] > 0 ? $value['service_name'] : $value['itemname'],
                 "quantity" => H::fqty($value['quantity']),
-                "price" => $value['price'],
+                "price" => H::fa($value['price']),
                 "hours" => $value['hours'],
-                "amount" => round($value['quantity'] * $value['price'])
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
         foreach ($parts as $value) {
@@ -37,8 +37,8 @@ class Task extends Document {
             $detail[] = array("no" => $i++,
                 "servicename" => $value['itemname'],
                 "quantity" => H::fqty($value['quantity']),
-                "price" => $value['price'],
-                "amount" => round($value['quantity'] * $value['price'])
+                "price" => H::fa($value['price']),
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
         $detail2 = array();

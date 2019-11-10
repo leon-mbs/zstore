@@ -95,7 +95,7 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('partion', $stock->partion));
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
-        $row->add(new Label('amount', round(abs($stock->qty * $stock->partion))));
+        $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
 
         $item = Item::load($stock->item_id);
 

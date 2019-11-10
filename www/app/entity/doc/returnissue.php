@@ -31,9 +31,9 @@ class ReturnIssue extends Document {
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $name,
                     "quantity" => H::fqty($value['quantity']),
-                    "price" => $value['price'],
+                    "price" => H::fa($value['price']),
                     "msr" => $value['msr'],
-                    "amount" => round($value['quantity'] * $value['price'])
+                    "amount" => H::fa($value['quantity'] * $value['price'])
                 );
             }
         }
@@ -46,8 +46,8 @@ class ReturnIssue extends Document {
             "firmname" => $firm['firmname'],
             "customername" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->amount,
-            "summa" => Util::ucfirst(Util::money2str($this->amount))
+            "total" => H::fa($this->amount) 
+             
         );
 
         $report = new \App\Report('returnissue.tpl');

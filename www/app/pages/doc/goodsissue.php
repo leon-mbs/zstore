@@ -227,9 +227,9 @@ class GoodsIssue extends \App\Pages\Base {
         $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', $item->price));
+        $row->add(new Label('price', H::fa($item->price)));
 
-        $row->add(new Label('amount', round($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
@@ -289,7 +289,7 @@ class GoodsIssue extends \App\Pages\Base {
  
         $item->price = $this->editdetail->editprice->getText();
 
-        if(strlen($item->snumber)==0 && $item->useserial==1){
+        if(strlen($item->snumber)==0 && $item->useserial==1 && $this->_tvars["usesnumber"] == true ){
             $this->setError("Товар требует ввода партии производителя");
             return;
         }
@@ -318,7 +318,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->calcPay();
-        $this->goAnkor("tankor");
+        $this->goAnkor("lankor");
     }
 
     public function cancelrowOnClick($sender) {
@@ -449,7 +449,7 @@ class GoodsIssue extends \App\Pages\Base {
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
          $this->goAnkor("tankor");
    }
 
@@ -472,7 +472,7 @@ class GoodsIssue extends \App\Pages\Base {
 
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText(H::fa($total));
 
 
         $disc = 0;
@@ -501,10 +501,10 @@ class GoodsIssue extends \App\Pages\Base {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
 
-        $this->docform->editpayamount->setText(round($total - $disc));
-        $this->docform->payamount->setText(round($total - $disc));
-        $this->docform->editpayed->setText(round($total - $disc));
-        $this->docform->payed->setText(round($total - $disc));
+        $this->docform->editpayamount->setText(H::fa($total - $disc));
+        $this->docform->payamount->setText(H::fa($total - $disc));
+        $this->docform->editpayed->setText(H::fa($total - $disc));
+        $this->docform->payed->setText(H::fa($total - $disc));
     }
 
     public function OnPrepaid($sender) {

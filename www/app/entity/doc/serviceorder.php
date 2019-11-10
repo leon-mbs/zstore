@@ -21,8 +21,8 @@ class ServiceOrder extends Document {
                 "servicename" => $value['service_name'],
                 "desc" => $value['desc'],
                 "quantity" => $value['quantity'],
-                "price" => $value['price'],
-                "amount" => $value['quantity'] * $value['price']
+                "price" => H::fa($value['price']),
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
 
@@ -30,7 +30,7 @@ class ServiceOrder extends Document {
             "_detail" => $detail,
             "customer" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->amount
+            "total" =>H::fa( $this->amount )
         );
         $report = new \App\Report('serviceorder.tpl');
 

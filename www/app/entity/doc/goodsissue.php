@@ -34,8 +34,8 @@ class GoodsIssue extends Document {
                     "tovar_code" => $value['item_code'],
                     "quantity" => H::fqty($value['quantity']),
                     "msr" => $value['msr'],
-                    "price" => $value['price'],
-                    "amount" => round($value['quantity'] * $value['price'])
+                    "price" => H::fa($value['price']),
+                    "amount" => H::fa($value['quantity'] * $value['price'])
                 );
             }
         }
@@ -52,11 +52,11 @@ class GoodsIssue extends Document {
             "order" => $this->headerdata["order"],
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
-            "total" => $this->amount,
-            "payed" => $this->headerdata['payed'],
-            "paydisc" => $this->headerdata["paydisc"],
+            "total" => H::fa($this->amount),
+            "payed" => H::fa($this->headerdata['payed']),
+            "paydisc" => H::fa($this->headerdata["paydisc"]),
             "prepaid" => $this->headerdata['prepaid'] == 1,
-            "payamount" => $this->payamount
+            "payamount" => H::fa($this->payamount)
         );
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = date('d.m.Y', $this->headerdata["sent_date"]);
@@ -78,7 +78,7 @@ class GoodsIssue extends Document {
 
 
         foreach ($this->detaildata as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber'] );
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
                  if (count($listst) == 0) {
                 \App\System::setErrorMsg('Недостаточно товара ' . $item['itemname']);
                 return false;

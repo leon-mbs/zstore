@@ -22,9 +22,9 @@ class OrderCust extends Document {
                 "itemname" => $value['itemname'],
                 "itemcode" => $value['item_code'],
                 "quantity" => H::fqty($value['quantity']),
-                "price" => $value['price'],
+                "price" => H::fa($value['price']),
                 "msr" => $value['msr'],
-                "amount" => round($value['quantity'] * $value['price'])
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
 
@@ -32,7 +32,7 @@ class OrderCust extends Document {
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->amount
+            "total" => H::fa($this->amount)
         );
 
 

@@ -166,9 +166,9 @@ class ServiceAct extends \App\Pages\Base {
         $row->add(new Label('desc', $service->desc));
 
         $row->add(new Label('quantity', $service->quantity));
-        $row->add(new Label('price', $service->price));
+        $row->add(new Label('price', H::fa($service->price)));
 
-        $row->add(new Label('amount', $service->quantity * $service->price));
+        $row->add(new Label('amount', H::fa($service->quantity * $service->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -336,7 +336,7 @@ class ServiceAct extends \App\Pages\Base {
 
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText(H::fa($total));
     }
 
     public function onPayAmount($sender) {

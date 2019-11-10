@@ -53,7 +53,7 @@ class WRDoc extends \Zippy\Html\PageFragment {
 
         $row->add(new Label('date', date('Y.m.d', strtotime($item->document_date))));
         $row->add(new Label('type', $item->meta_desc));
-        $row->add(new Label('amount', $item->amount));
+        $row->add(new Label('amount', Helper::fa($item->amount)));
         $row->add(new \Zippy\Html\Link\RedirectLink("number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
     }
 
