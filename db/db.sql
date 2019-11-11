@@ -61,7 +61,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=342 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=345 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -88,13 +88,13 @@ CREATE TABLE `documents` (
   `document_date` date NOT NULL,
   `user_id` int(11) NOT NULL,
   `content` longtext,
-  `amount` int(11) DEFAULT NULL,
+  `amount` decimal(11,2) DEFAULT NULL,
   `meta_id` int(11) NOT NULL,
   `state` tinyint(4) NOT NULL,
   `notes` varchar(255) NOT NULL,
   `customer_id` int(11) DEFAULT '0',
-  `payamount` int(11) DEFAULT '0',
-  `payed` int(11) DEFAULT '0',
+  `payamount` decimal(11,2) DEFAULT '0.00',
+  `payed` decimal(11,2) DEFAULT '0.00',
   PRIMARY KEY (`document_id`),
   KEY `document_date` (`document_date`),
   KEY `customer_id` (`customer_id`),
@@ -144,7 +144,7 @@ DROP TABLE IF EXISTS `entrylist`;
 CREATE TABLE `entrylist` (
   `entry_id` int(11) NOT NULL AUTO_INCREMENT,
   `document_id` int(11) NOT NULL,
-  `amount` int(11) NOT NULL DEFAULT '0',
+  `amount` decimal(11,2) NOT NULL DEFAULT '0.00',
   `quantity` decimal(11,3) DEFAULT '0.000',
   `extcode` int(11) DEFAULT '0',
   `stock_id` int(11) DEFAULT '0',
@@ -152,7 +152,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=113 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -188,7 +188,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
+/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -599,7 +599,7 @@ DROP TABLE IF EXISTS `paylist`;
 CREATE TABLE `paylist` (
   `pl_id` int(11) NOT NULL AUTO_INCREMENT,
   `document_id` int(11) NOT NULL,
-  `amount` int(11) NOT NULL,
+  `amount` decimal(11,2) NOT NULL,
   `mf_id` int(11) NOT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `paydate` date DEFAULT NULL,
@@ -608,7 +608,7 @@ CREATE TABLE `paylist` (
   `indoc` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=113 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -788,7 +788,7 @@ DROP TABLE IF EXISTS `store_stock`;
 CREATE TABLE `store_stock` (
   `stock_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
-  `partion` int(11) DEFAULT NULL,
+  `partion` decimal(11,2) DEFAULT NULL,
   `store_id` int(11) NOT NULL,
   `qty` decimal(11,3) DEFAULT '0.000',
   `snumber` varchar(64) DEFAULT NULL,

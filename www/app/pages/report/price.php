@@ -88,11 +88,11 @@ class Price extends \App\Pages\Base {
                 "name" => $item->itemname,
                 "cat" => $item->cat_name,
                 "msr" => $item->msr,
-                "price1" =>H::fa( $isp1 ? round($this->checkPrice($item->item_id, $item->price1)) : ""},
-                "price2" =>H::fa( $isp2 ? round($this->checkPrice($item->item_id, $item->price2)) : ""},
-                "price3" =>H::fa( $isp3 ? round($this->checkPrice($item->item_id, $item->price3)) : ""},
-                "price4" =>H::fa( $isp4 ? round($this->checkPrice($item->item_id, $item->price4)) : ""},
-                "price5" =>H::fa( $isp5 ? round($this->checkPrice($item->item_id, $item->price5)) : ""}
+                "price1" =>H::fa( $isp1 ? round($this->checkPrice($item->item_id, $item->price1)) : ""),
+                "price2" =>H::fa( $isp2 ? round($this->checkPrice($item->item_id, $item->price2)) : ""),
+                "price3" =>H::fa( $isp3 ? round($this->checkPrice($item->item_id, $item->price3)) : ""),
+                "price4" =>H::fa( $isp4 ? round($this->checkPrice($item->item_id, $item->price4)) : ""),
+                "price5" =>H::fa( $isp5 ? round($this->checkPrice($item->item_id, $item->price5)) : "")
             );
         }
 
@@ -126,7 +126,7 @@ class Price extends \App\Pages\Base {
                 return 0;
             }
         } else {
-            return $price;
+            return H::fa($price);
         }
     }
 
