@@ -137,7 +137,7 @@ class GIList extends \App\Pages\Base {
 
             if ($order instanceof Document) {
                 $order = $order->cast();
-                if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->payamount) { //если  все  доставлено и оплачено закрываем  заказ
+                if ($order->state != Document::STATE_CLOSED   ) { //если  все  доставлено    заказ
                     $order->updateStatus(Document::STATE_CLOSED);
                     $msg .= " Заказ {$order->document_number} закрыт";
                 }

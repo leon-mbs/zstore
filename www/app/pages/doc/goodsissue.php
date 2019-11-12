@@ -289,6 +289,10 @@ class GoodsIssue extends \App\Pages\Base {
  
         $item->price = $this->editdetail->editprice->getText();
 
+        if($item->quantity > $qstock){
+            $this->setWarn('Введено  больше  товара  чем  в  наличии');
+        }
+          
         if(strlen($item->snumber)==0 && $item->useserial==1 && $this->_tvars["usesnumber"] == true ){
             $this->setError("Товар требует ввода партии производителя");
             return;
@@ -318,7 +322,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->calcPay();
-        $this->goAnkor("lankor");
+      
     }
 
     public function cancelrowOnClick($sender) {

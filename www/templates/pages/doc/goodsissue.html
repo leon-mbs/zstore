@@ -6,7 +6,7 @@
         <form zippy="docform">
             <h3>Расходная накладная </h3>
             <div class="row">
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number" >Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
@@ -30,6 +30,24 @@
 
                     </div>
 
+
+                    <div class="form-group  ">
+                        <label for="notes" >Примечание </label>
+
+                        <input class="form-control" type="text" zippy="notes">
+
+
+                    </div> 
+
+                </div>
+                <div class="col-12 col-md-4  col-xl-3">
+                    <div class="form-group">
+                        <label for="document_date" > Дата</label>
+                        <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
+                    </div>             <div class="form-group">                                         
+                        <label for="order" >Заказ</label>
+                        <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order"  >
+                    </div>
                     <div class="form-group  ">
                         <label for="payment" >Оплата</label>
                         <select class="form-control" zippy="payment">
@@ -46,24 +64,10 @@
                         <label class="form-check-label" for="useset">Была предоплата</label>
 
                     </div>
-                    <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
-
-                        <input class="form-control" type="text" zippy="notes">
-
-
-                    </div> 
 
                 </div>
-                <div class="col-12 col-md-4">
-                    <div class="form-group">
-                        <label for="document_date" > Дата</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
-                    </div>             <div class="form-group">                                         
-                        <label for="order" >Заказ</label>
-                        <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order"  >
-                    </div>
-                    <div class="form-group">                                         
+                <div class="col-12 col-md-4  col-xl-3">
+                      <div class="form-group">                                         
                         <label for="delivery" >Доставка</label>
                         <select  class="form-control" zippy="delivery">
 
@@ -92,8 +96,7 @@
                         <label data-label="delivery_date" for="delivery_date" > Дата доставки</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="delivery_date" required="required">
                     </div>                    
-
-
+                          
                 </div>
             </div>
             <div class="row">
@@ -107,7 +110,7 @@
                     {{/usescanner}}
 
                     <a class="btn btn-info btn-sm" zippy="addrow">Добавить позицию</a>
-                    <table class="table table-sm" id="lankor">
+                    <table class="table table-sm"  >
                         <tr>
                             <th>Название</th>
                             <th  >Код</th>
