@@ -162,6 +162,18 @@
                             <td zippy="payed" class="text-right"></td>
                             <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i class="fa fa-edit"></i></a> </td>
                         </tr>
+    
+                       <tr style="font-weight: bolder;">
+                            {{^usesnumber}} 
+                            <td colspan="5" class="text-right"><span data-label="exchange" >Сдача:</span></td>
+                            {{/usesnumber}} 
+                            {{#usesnumber}} 
+                            <td colspan="7" class="text-right"><span data-label="exchange" >Сдача:</span></td>
+                            {{/usesnumber}} 
+
+                            <td zippy="exchange" class="text-right"></td>
+                            <td> </td>
+                        </tr>
 
                     </table>
                 </div>
@@ -171,7 +183,7 @@
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
-                    &nbsp;<input zippy="senddoc" type="submit" value="Отправить" class="btn btn-primary  ">
+                    
 
 
                 </div>
@@ -225,7 +237,7 @@
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Оплата</h5>
+                            <h5 class="modal-title">Внесена оплата</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

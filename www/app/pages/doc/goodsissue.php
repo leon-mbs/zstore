@@ -455,7 +455,14 @@ class GoodsIssue extends \App\Pages\Base {
 
     public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
-         $this->goAnkor("tankor");
+        $payed   = $this->docform->payed->getText();
+        $payamount   = $this->docform->payamount->getText();
+        if($payed >$payamount){
+            $this->setWarn('Внесена  сумма  больше  необходимой');
+        }
+        else {
+            $this->goAnkor("tankor");    
+        }
    }
 
     public function onPayDisc() {

@@ -30,7 +30,6 @@ class Options extends \App\Pages\Base {
 
 
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
-        $this->common->add(new TextInput('firmname'));
         $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList()));
         $this->common->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList()));
         $this->common->add(new DropDownChoice('qtydigits'));
@@ -60,7 +59,6 @@ class Options extends \App\Pages\Base {
         if (!is_array($common))
             $common = array();
 
-        $this->common->firmname->setText($common['firmname']);
         $this->common->defstore->setValue($common['defstore']);
         $this->common->defmf->setValue($common['defmf']);
         $this->common->qtydigits->setValue($common['qtydigits']);
@@ -87,6 +85,20 @@ class Options extends \App\Pages\Base {
 
         $this->onVal($this->common->useval);
 
+        $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
+        $this->firm->add(new TextInput('firmname'));
+        
+        $firm = System::getOptions("firm");
+        if (!is_array($firm))
+            $firm = array();
+       
+        $this->firm->firmname->setText($common['firmname']);
+        $this->firm->phone->setText($common['phone']);
+        $this->firm->viber->setText($common['viber']);
+        $this->firm->address->setText($common['address']);
+        $this->firm->inn->setText($common['inn']);
+         
+        
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
         $this->add(new Panel('listpan'));
@@ -128,7 +140,7 @@ class Options extends \App\Pages\Base {
 
     public function saveCommonOnClick($sender) {
         $common = array();
-        $common['firmname'] = $this->common->firmname->getText();
+
         $common['defstore'] = $this->common->defstore->getValue();
         $common['defmf'] = $this->common->defmf->getValue();
         $common['qtydigits'] = $this->common->qtydigits->getValue();
@@ -155,11 +167,21 @@ class Options extends \App\Pages\Base {
 
         System::setOptions("common", $common);
 
-        System::setOptions("shop", $shop);
         $this->setSuccess('Сохранено');
         $this->_tvars["defoptions"] = false;
     }
-
+    
+    public function saveFirmOnClick($sender) {
+        $firm = array();
+        $firm['firmname'] = $this->firm->firmname->getText();
+        $firm['phone']    = $this->firm->phone->getText();
+        $firm['viber']    = $this->firm->viber->getText();
+        $firm['address']  = $this->firm->address->getText();
+        $firm['inn']  = $this->firm->inn->getText();
+        
+        System::setOptions("firm", $firm);
+        $this->setSuccess('Сохранено');
+    }
     public function filterOnSubmit($sender) {
 
         $where = "1<>1 ";

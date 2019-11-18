@@ -20,9 +20,7 @@ class GoodsIssue extends Document {
 
         foreach ($this->detaildata as $value) {
 
-            if (isset($detail[$value['item_id']])) {
-                $detail[$value['item_id']]['quantity'] += $value['quantity'];
-            } else {
+           
                 $name = $value['itemname'];
                 if (strlen($value['snumber']) > 0) {
                     $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
@@ -37,7 +35,7 @@ class GoodsIssue extends Document {
                     "price" => H::fa($value['price']),
                     "amount" => H::fa($value['quantity'] * $value['price'])
                 );
-            }
+            
         }
 
 
@@ -55,6 +53,7 @@ class GoodsIssue extends Document {
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->headerdata['payed']),
             "paydisc" => H::fa($this->headerdata["paydisc"]),
+            "isdisc" =>  $this->headerdata["paydisc"]>0,
             "prepaid" => $this->headerdata['prepaid'] == 1,
             "payamount" => H::fa($this->payamount)
         );

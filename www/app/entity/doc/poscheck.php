@@ -4,6 +4,7 @@ namespace App\Entity\Doc;
 
 use \App\Entity\Entry;
 use \App\Helper as H;
+use \App\System;
 use \App\Util;
 
 /**
@@ -12,12 +13,41 @@ use \App\Util;
  */
 class POSCheck extends Document {
 
-    public function generateReport() {
-
-
-        $i = 1;
-        $detail = array();
-
+    public function generateCheck( ) {
+        
+        $firm =System::getOptions('firm');
+          
+        $check = array();
+        $check[] .=  "Чек ". $this->document_number;
+        $check[] .=  "вiд ". date('Y-m-d H:i:s',$this->headerdata['time']);
+        $check[] .=  "IПН ". $firm['inn'];
+        $check[] .=  $firm['firmname'];
+        $check[] .=  "Тел.  ". $firm['phone'];
+        $check[] .=  "Viber ". $firm['viber'];
+        $check[] .=  str_repeat('-',30);
+      
+        foreach ($this->detaildata as $value) {
+      
+            $t =  $value['item_code']. ' ' .$value['itemname'];
+            foreach( Util::mb_split( $t,30) as $p){
+                 $check[] .=  $p;
+            }
+            $q =  ''.H::fqty($value['quantity']).$value['msr'].' по '.H::fa($value['price']);
+            $check[] .=  sprintf("%s%10s",$q.str_repeat(' ',20-mb_strlen($q)), H::fa($value['quantity'] * $value['price'])) ;
+         
+            
+        }
+         
+        $check[] .=  str_repeat('-',30);
+        $check[] .=  sprintf("%s%10s",'Всього'.str_repeat(' ',14), H::fa($this->amount)) ;
+        if($this->headerdata["paydisc"] >0){
+            $check[] .=  sprintf("%s%10s",'Знижка'.str_repeat(' ',14), H::fa($this->headerdata["paydisc"])) ;
+        }  
+        $check[] .=  sprintf("%s%10s",'До сплати'.str_repeat(' ',11), H::fa($this->payamount)) ;
+        $check[] .=  sprintf("%s%10s",'Внесена оплата'.str_repeat(' ',6), H::fa($this->headerdata["payed"])) ;
+        $check[] .=  sprintf("%s%10s",'Здача'.str_repeat(' ',15), H::fa($this->headerdata["exchange"])) ;
+        $check[] .=  "Дякуємо за довiру до нас!" ;       
+        /*
         foreach ($this->detaildata as $value) {
 
             if (isset($detail[$value['item_id']])) {
@@ -40,32 +70,26 @@ class POSCheck extends Document {
             }
         }
 
-
-        $customer = \App\Entity\Customer::load($this->customer_id);
-
-        $header = array('date' => date('d.m.Y', $this->document_date),
-            "_detail" => $detail,
-            "firmname" => $firm['firmname'],
-            "customername" => $this->customer_name . ', тел. ' . $customer->phone,
-
-            "order" => $this->headerdata["order"],
-         
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->headerdata['payed']),
-            "paydisc" => H::fa($this->headerdata["paydisc"]),
-            "prepaid" => $this->headerdata['prepaid'] == 1,
-            "payamount" => H::fa($this->payamount)
-        );
+        */
    
+        return $check;
+    }
+
+    public function generateReport() {
+        
+        $print = implode("<br>",$this->generateCheck()) ;
+        $print = str_replace(' ','&nbsp;',$print) ;
+        
+        $header = array('print' => $print);
 
         $report = new \App\Report('poscheck.tpl');
 
         $html = $report->generate($header);
 
         return $html;
+   
     }
-
+    
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
@@ -113,7 +137,7 @@ class POSCheck extends Document {
     }
 
     protected function getNumberTemplate() {
-        return 'РН-000000';
+        return 'К-000000';
     }
 
 }

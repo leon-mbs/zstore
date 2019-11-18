@@ -28,7 +28,7 @@ class WMinQty extends \Zippy\Html\PageFragment {
 
 
         $sql = "select * from (select item_id, itemname,
-                 (select  coalesce(sum(s.qty) ,0) from `store_stock_view` s where  s.item_id=i.item_id and s.qty >0    ) as iqty,
+                 (select  coalesce(sum(s.qty) ,0) from `store_stock_view` s where  s.item_id=i.item_id and s.qty <> 0    ) as iqty,
                  i.`minqty`
                  from items i where minqty>0 )t where   iqty <  minqty   
                  ";
@@ -57,7 +57,7 @@ class WMinQty extends \Zippy\Html\PageFragment {
         $item = $row->getDataItem();
 
         $row->add(new Label('itemname', $item->itemname));
-        $row->add(new Label('qty', Helper::fqty($item->qty)));
+        $row->add(new Label('qty', Helper::fqty($item->iqty)));
         $row->add(new Label('minqty', Helper::fqty($item->minqty)));
     }
   
@@ -68,7 +68,7 @@ class WMinQty extends \Zippy\Html\PageFragment {
         foreach ($this->data as $d) {
           
             $csv .= $d->itemname . ',';
-            $csv .= $d->qty . ',';
+            $csv .= $d->iqty . ',';
             $csv .= $d->minqty ; 
          
             $csv .= "\n";
