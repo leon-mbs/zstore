@@ -10,9 +10,9 @@ INSERT  INTO `stores` (  `storename`, `description`) VALUES(  'Основной 
 INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`) VALUES(2, 'Касса', 'Основная касса');
 
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('modules', 'a:5:{s:6:"ocsite";s:18:"mm2.crazydoser.com";s:9:"ocapiname";s:5:"ZIPPY";s:5:"ockey";s:256:"bBXZhXwmV5ZEJBBD8ZwCQybOmw00eebSZ4X7ilT1P3o6tXBNB7vBHTVQcXLWIhQmK3rQKJdx10lGclNFCFmySo38YSYGUk70alWlD6S4tAXyVGDmzrRgXnGSLG3B8cAjqzRFlybIELjrvAEIMxy5tZPJ7XaTfJEOisVsdGzQx2I8XZ0PwZ2IoyPh4pyCXuAXNGy2DZ3yMA56Fq4AHSLgPefUhoOhnud5Gp8WbaYklhRIVnmmrLHZ8vnWZ0y8wNR7";s:13:"occustomer_id";s:1:"8";s:11:"ocpricetype";s:6:"price1";}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:18:{s:8:"firmname";s:20:"Наша  фирма";s:8:"defstore";s:2:"19";s:5:"defmf";s:1:"2";s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:5:"cdoll";s:1:"2";s:5:"ceuro";s:1:"5";s:4:"crub";s:3:"0.4";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:11:"autoarticle";b:1;s:6:"useset";b:0;s:10:"usesnumber";b:0;s:6:"useval";b:0;s:10:"usescanner";b:0;}');
-`
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('firm', 'a:5:{s:8:"firmname";s:20:"Наша  фирма";s:5:"phone";s:0:"";s:5:"viber";s:0:"";s:7:"address";s:0:"";s:3:"inn";s:4:"1111";}');
+ 
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(1, 4, 'Склады', 'StoreList', 'Товары', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(2, 4, 'Номенклатура', 'ItemList', 'Товары', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(3, 4, 'Сотрудники', 'EmployeeList', '', 0, 0);
@@ -61,5 +61,6 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(57, 1, 'Инвентаризация', 'Inventory', 'Склад', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(58, 1, 'Счет входящий', 'InvoiceCust', 'Закупки', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(59, 1, 'Счет-фактура', 'Invoice', 'Продажи', 0, 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(60, 5, 'Импорт номенклатуры', 'Import', '', 0, 1);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(60, 5, 'Импорт номенклатуры', 'Import', '', 0, 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(61, 3, 'Движение  ТМЦ', 'StockList', '', 0, 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(62, 1, 'Кассовый чек', 'POSCheck', 'Продажи', 0, 0);

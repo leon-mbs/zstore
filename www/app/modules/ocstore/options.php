@@ -52,7 +52,10 @@ class Options extends \App\Pages\Base {
         if ($json === false)
             return;
         $data = json_decode($json, true);
-
+        if(is_array($data) && count($data)==0){
+            $this->setError('Нет данных ответа');
+            return;
+        }
 
         if (is_array($data['error'])) {
             $this->setError(implode(' ', $data['error']));

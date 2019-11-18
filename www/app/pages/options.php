@@ -87,16 +87,20 @@ class Options extends \App\Pages\Base {
 
         $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
         $this->firm->add(new TextInput('firmname'));
+        $this->firm->add(new TextInput('phone'));
+        $this->firm->add(new TextInput('viber'));
+        $this->firm->add(new TextInput('address'));
+        $this->firm->add(new TextInput('inn'));
         
         $firm = System::getOptions("firm");
         if (!is_array($firm))
             $firm = array();
        
-        $this->firm->firmname->setText($common['firmname']);
-        $this->firm->phone->setText($common['phone']);
-        $this->firm->viber->setText($common['viber']);
-        $this->firm->address->setText($common['address']);
-        $this->firm->inn->setText($common['inn']);
+        $this->firm->firmname->setText($firm['firmname']);
+        $this->firm->phone->setText($firm['phone']);
+        $this->firm->viber->setText($firm['viber']);
+        $this->firm->address->setText($firm['address']);
+        $this->firm->inn->setText($firm['inn']);
          
         
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
