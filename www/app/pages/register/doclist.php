@@ -141,7 +141,7 @@ class DocList extends \App\Pages\Base {
         $row->add(new Label('notes', $doc->notes));
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
-        $row->add(new Label('amount', ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" )));
+        $row->add(new Label('amount',H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('hasmsg'))->setVisible($doc->mcnt > 0);

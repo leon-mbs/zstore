@@ -33,8 +33,8 @@ class RetCustIssue extends Document {
                     "tovar_code" => $value['item_code'],
                     "quantity" => H::fqty($value['quantity']),
                     "msr" => $value['msr'],
-                    "price" => $value['price'],
-                    "amount" => round($value['quantity'] * $value['price'])
+                    "price" => H::fa($value['price']),
+                    "amount" => H::fa($value['quantity'] * $value['price'])
                 );
             }
         }

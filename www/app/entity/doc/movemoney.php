@@ -26,7 +26,7 @@ class MoveMoney extends Document {
 
 
         $header = array(
-            'amount' => $this->amount,
+            'amount' => H::fa($this->amount),
             'date' => date('d.m.Y', $this->document_date),
             "from" => $this->headerdata["mffromname"],
             "to" => $this->headerdata["mftoname"],

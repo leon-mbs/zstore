@@ -4,6 +4,7 @@ namespace App;
 
 use \App\Entity\User;
 use \App\System;
+use \App\Session;
 use \ZCL\DB\DB as DB;
 
 /**
@@ -382,8 +383,17 @@ class Helper {
     */
     public static function fa($am) {
         if (strlen($am) == 0)     return '';
-   
-        return number_format($am, $common['amdigits'] , '.', '');
+        
+        $common = System::getOptions("common");
+        if ($common['amdigits'] ==1) {
+            return number_format($am, 2  , '.', '');
+        }
+        if ($common['amdigits'] == 5) {
+            $am = round($am*20)/20;
+            return number_format($am, 2  , '.', '');
+        }
+    
+        return round($am);
       
     }
 

@@ -26,7 +26,7 @@ class IncomeMoney extends Document {
         $pt = Pay::getPayTypeList(1);
 
         $header = array(
-            'amount' => $this->amount,
+            'amount' => H::fa($this->amount),
             'date' => date('d.m.Y', $this->document_date),
             "notes" => $this->notes,
             "type" => $pt[$this->headerdata["type"]],

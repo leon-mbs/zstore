@@ -78,12 +78,12 @@
     </tr>
 
     {{^prepaid}}
-    {{#paydisc}}
+    {{#isdisc}}
     <tr style="font-weight: bolder;">
         <td   colspan="6" align="right">Скидка:</td>
         <td   align="right">{{paydisc}}</td>
     </tr>
-    {{/paydisc}}
+    {{/isdisc}}
     <tr style="font-weight: bolder;">
         <td   colspan="6" align="right">К оплате:</td>
         <td   align="right">{{payamount}}</td>

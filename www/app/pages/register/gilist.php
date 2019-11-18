@@ -89,7 +89,7 @@ class GIList extends \App\Pages\Base {
 
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('amount', $doc->amount));
+        $row->add(new Label('amount', H::fa($doc->amount)));
         $row->add(new Label('order', $doc->headerdata['order']));
         $row->add(new Label('customer', $doc->customer_name));
 
@@ -137,7 +137,7 @@ class GIList extends \App\Pages\Base {
 
             if ($order instanceof Document) {
                 $order = $order->cast();
-                if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->payamount) { //если  все  доставлено и оплачено закрываем  заказ
+                if ($order->state != Document::STATE_CLOSED   ) { //если  все  доставлено    заказ
                     $order->updateStatus(Document::STATE_CLOSED);
                     $msg .= " Заказ {$order->document_number} закрыт";
                 }
@@ -306,7 +306,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and (meta_name  = 'GoodsIssue' or meta_name  = 'ServiceAct' or meta_name  = 'Invoice' ) ";
+        $where .= " and meta_name  in('GoodsIssue','ServiceAct','Invoice','POSCheck' ) ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {

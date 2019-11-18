@@ -54,19 +54,38 @@ class ItemList extends \App\Pages\Base {
 
     public function itemlistOnRow($row) {
         $item = $row->getDataItem();
-
+        $store =  $this->filter->searchstore->getValue()   ;
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
 
-
-        $row->add(new Label('qty', H::fqty($item->getQuantity($this->filter->searchstore->getValue()))));
-        $row->add(new Label('amount', round($item->getAmount($this->filter->searchstore->getValue()))));
+        $qty = $item->getQuantity($store );
+        $row->add(new Label('iqty', H::fqty($qty)));
+        $row->add(new Label('iamount', H::fa(abs($item->getAmount($store)))));
 
 
         $row->add(new Label('cat_name', $item->cat_name));
+        
+        $plist = array();
+        if ($item->price1 > 0)
+            $plist[] = $item->getPrice('price1', $store );
+        if ($item->price2 > 0)
+            $plist[] = $item->getPrice('price2', $store );
+        if ($item->price3 > 0)
+            $plist[] = $item->getPrice('price3', $store );
+        if ($item->price4 > 0)
+            $plist[] = $item->getPrice('price4', $store );
+        if ($item->price5 > 0)
+            $plist[] = $item->getPrice('price5', $store );
+
+        $row->add(new Label('iprice', implode(',', $plist)));        
+        
+        
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-    }
+        if($qty <0) {
+           $row->setAttribute('class','text-danger');   
+        }
+   }
 
     public function OnFilter($sender) {
         $this->itempanel->itemlist->Reload();
@@ -92,10 +111,13 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('partion', $stock->partion));
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
-        $row->add(new Label('amount', round($stock->qty * $stock->partion)));
+        $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
 
         $item = Item::load($stock->item_id);
 
+        if($stock->qty <0) {
+           $row->setAttribute('class','text-danger');   
+        }
 
         $plist = array();
         if ($item->price1 > 0)
@@ -127,17 +149,35 @@ class ItemList extends \App\Pages\Base {
     }
 
     public function oncsv($sender) {
-        $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
+           $store =  $this->filter->searchstore->getValue()   ;
+         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
         $csv = "";
 
-        foreach ($list as $st) {
+        foreach ($list as $item) {
 
-            $csv .= $st->itemname . ';';
-            $csv .= $st->item_code . ';';
+            $csv .= $item->itemname . ',';
+            $csv .= $st->item_code . ',';
 
-            $csv .= $st->msr . ';';
-            $csv .= $st->cat_name . ';';
-            $csv .= H::fqty($st->qty) . ';';
+            $csv .= $item->msr . ',';
+            $csv .= $item->cat_name . ',';
+            $qty = $item->getQuantity($store );
+             
+            $csv .= H::fqty($qty) . ',';
+        $plist = array();
+        if ($item->price1 > 0)
+            $plist[] = $item->getPrice('price1', $store );
+        if ($item->price2 > 0)
+            $plist[] = $item->getPrice('price2', $store );
+        if ($item->price3 > 0)
+            $plist[] = $item->getPrice('price3', $store );
+        if ($item->price4 > 0)
+            $plist[] = $item->getPrice('price4', $store );
+        if ($item->price5 > 0)
+            $plist[] = $item->getPrice('price5', $store );
+              
+            
+            
+            $csv .=  implode(' ', $plist) . ',';
 
             $csv .= "\n";
         }
@@ -179,9 +219,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
             $where = $where . " and cat_id=" . $cat;
         }
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where qty > 0 and store_id={$store}) ";
+            $where = $where . " and item_id in (select item_id from store_stock where qty <> 0 and store_id={$store}) ";
         } else {
-            $where = $where . " and item_id in (select item_id from store_stock where qty > 0) ";
+            $where = $where . " and item_id in (select item_id from store_stock where qty <> 0) ";
         }
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {

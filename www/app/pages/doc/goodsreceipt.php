@@ -187,12 +187,12 @@ class GoodsReceipt extends \App\Pages\Base {
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', $item->price));
+        $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
-        $row->add(new Label('amount', round($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->edit->setVisible($item->old != true);
 
@@ -291,7 +291,7 @@ class GoodsReceipt extends \App\Pages\Base {
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
         
-        if(strlen($item->snumber)==0 && $item->useserial==1){
+        if(strlen($item->snumber)==0 && $item->useserial==1 && $this->_tvars["usesnumber"] == true ){
             $this->setError("Товар требует ввода партии производителя");
             return;
         }
@@ -321,6 +321,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
+        $this->goAnkor("lankor");
     }
 
     public function cancelrowOnClick($sender) {
@@ -440,10 +441,12 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->docform->payed->setText($this->docform->editpayamount->getText());
         $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+        $this->goAnkor("tankor");
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $this->goAnkor("tankor");
     }
 
     public function OnPrepaid($sender) {
@@ -509,8 +512,8 @@ class GoodsReceipt extends \App\Pages\Base {
 
     public function OnAutoItem($sender) {
 
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        return Item::findArray('itemname', "(itemname like {$text} or item_code like {$text}) and disabled <> 1");
+        $text = trim($sender->getText()) ;
+        return Item::findArrayAC( $text);
     }
 
     public function OnAutoCustomer($sender) {

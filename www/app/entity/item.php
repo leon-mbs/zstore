@@ -103,7 +103,7 @@ class Item extends \ZCL\DB\Entity {
                 } else {  //ищем последнюю закупочную  цену 
                     $conn = \ZDB\DB::getConnect();
 
-                    $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}";
+                    $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}   ";
                     if ($store > 0) {
                         $sql = $sql . " and store_id=" . $store;
                     }
@@ -136,7 +136,7 @@ class Item extends \ZCL\DB\Entity {
             $price = $price * $k;
         }
 
-        return round($price);
+        return \App\Helper::fa($price);
     }
 
     public static function getPriceTypeList() {
@@ -230,8 +230,9 @@ class Item extends \ZCL\DB\Entity {
         }
 
         if (strlen($partname) > 0) {
-            $partname = self::qstr('%' . $partname . '%');
-            $criteria .= "  and  (itemname like {$partname} or item_code like {$partname}   or   bar_code like {$partname} )";
+            $like = self::qstr('%' . $partname . '%');
+            $partname = self::qstr(  $partname  );
+            $criteria .= "  and  (itemname like {$like} or item_code = {$partname}   or   bar_code = {$partname} )";
         }
 
         $entitylist = self::find($criteria);

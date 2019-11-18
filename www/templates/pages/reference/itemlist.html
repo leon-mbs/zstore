@@ -124,6 +124,8 @@
                         <label class="col-5 col-form-label" for="editminqty">Мин. количество</label>
                         <div class="col-7"> 
                             <input pattern="[0-9\.]+"  style="width: 100px;" class="form-control" zippy="editminqty"/>
+                            <small>Если задано  то  при  уменьшении  количества  на  складе  меньше  заданного 
+                            товар  появится  в  соответствующем  виджете  на главной странице</small>
                         </div>
                     </div> 
                     {{#usesnumber}} 
@@ -142,7 +144,7 @@
                     </div>                     
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="editdisabled">Не используется</label>
+                        <label class="form-check-label" for="editdisabled">Больше  не  используется</label>
                     </div>                    
                     <div class="form-check">
                         <input zippy="editpricelist" type="checkbox" class="form-check-input"  >

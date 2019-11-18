@@ -132,10 +132,10 @@ class PayActivity extends \App\Pages\Base {
             $detail[] = array(
                 "date" => date("Y-m-d", strtotime($row['dt'])),
                 "documents" => $row['docs'],
-                "in" => strlen($row['begin_amount']) > 0 ? $row['begin_amount'] : 0,
-                "obin" => $row['obin'],
-                "obout" => $row['obout'],
-                "out" => $row['begin_amount'] + $row['obin'] - $row['obout']
+                "in" => H::fa(strlen($row['begin_amount']) > 0 ? $row['begin_amount'] : 0),
+                "obin" => H::fa($row['obin']),
+                "obout" => H::fa($row['obout']),
+                "out" => H::fa($row['begin_amount'] + $row['obin'] - $row['obout'] )
             );
             $tend = $row['begin_amount'] + $row['obin'] - $row['obout'];
             $tin += $row['obin'];
@@ -145,10 +145,10 @@ class PayActivity extends \App\Pages\Base {
 
         $header = array('datefrom' => date('d.m.Y', $from),
             "_detail" => $detail,
-            'tb' => $tb,
-            'tin' => $tin,
-            'tout' => $tout,
-            'tend' => $tend,
+            'tb' => H::fa($tb),
+            'tin' => H::fa($tin),
+            'tout' => H::fa($tout),
+            'tend' => H::fa($tend),
             'dateto' => date('d.m.Y', $to),
             "mf_name" => MoneyFund::load($mf_id)->mf_name
         );

@@ -27,9 +27,9 @@ class Order extends \App\Entity\Doc\Document {
                     "tovar_name" => $value['itemname'],
                     "tovar_code" => $value['item_code'],
                     "quantity" => H::fqty($value['quantity']),
-                    "price" => $value['price'],
+                    "price" => H::fa($value['price']),
                     "msr" => $value['msr'],
-                    "amount" => round($value['quantity'] * $value['price'])
+                    "amount" => H::fa($value['quantity'] * $value['price'])
                 );
             }
         }
@@ -45,7 +45,7 @@ class Order extends \App\Entity\Doc\Document {
             "delivery" => $this->headerdata["delivery_name"],
             "notes" => $this->notes,
             "document_number" => $this->document_number,
-            "total" => $this->amount
+            "total" => H::fa($this->amount)
         );
         if ($this->headerdata["delivery"] == 2 || $this->headerdata["delivery"] == 3) {
             $header['delivery'] = $header['delivery'] . '. по адресу: ' . $this->headerdata["address"];

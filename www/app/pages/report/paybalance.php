@@ -110,7 +110,7 @@ class PayBalance extends \App\Pages\Base {
 
         foreach ($rs as $row) {
             $detail[] = array(
-                "in" => $row['am'],
+                "in" => H::fa($row['am']),
                 "type" => $pl[$row['paytype']]
             );
             $tin += $row['am'];
@@ -130,7 +130,7 @@ class PayBalance extends \App\Pages\Base {
 
         foreach ($rs as $row) {
             $detail2[] = array(
-                "out" => 0 - $row['am'],
+                "out" => H::fa(0 - $row['am']),
                 "type" => $pl[$row['paytype']]
             );
             $tout += 0 - $row['am'];
@@ -143,9 +143,9 @@ class PayBalance extends \App\Pages\Base {
             'dateto' => date('d.m.Y', $to),
             "_detail" => $detail,
             "_detail2" => $detail2,
-            'tin' => $tin,
-            'tout' => $tout,
-            'total' => $total
+            'tin' => H::fa($tin),
+            'tout' => H::fa($tout),
+            'total' => H::fa($total )
         );
         $report = new \App\Report('paybalance.tpl');
 

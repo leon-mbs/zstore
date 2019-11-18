@@ -1,16 +1,13 @@
 <html>
     <body>
-        <h2>Настройки системы </h2>
+        <h2>Настройки   </h2>
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4     ">
-                <h4>Основные настройки</h4>
+                <h4>Настройки системы</h4>
 
                 <form   zippy="common"  >
 
-                    <div class="form-group">
-                        <label for="firmname" >Название фирмы</label>
-                        <input class="form-control" type="text" zippy="firmname" required="required"   >
-                    </div>   
+             
                     <div class="form-group  ">
                         <label for="defstore" >Склад по умолчанию</label>
 
@@ -45,6 +42,16 @@
                             <option value='3'>3</option>
                         </select>
                     </div> 
+                  <div class="form-group  ">
+                        <label for="amdigits" >Округление в  стоимости</label>
+
+                        <select   class="form-control" zippy="amdigits">
+                            <option value='0'>Без копеек</option>
+                            <option value='1'>До 1 копейки</option>
+                            <option value='5'>До 5 копеек</option>
+                            < 
+                        </select>
+                    </div> 
                   
                  
 
@@ -62,7 +69,7 @@
                     <div class="form-check">
                         <input zippy="usesnumber" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="usesnumber">Учет ТМЦ по сериям (партиям)   производителя</label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Отдельный учет  по  каждой партии  производителя с  учетом  срока годности"></i>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Отдельный учет  по  каждой партии  производителя с  учетом  срока годности. Использует  ли конкретный товар  учет  по  партиям  указывается в  карточке  товара."></i>
                     </div> 
 
                     <div class="form-check">
@@ -95,6 +102,41 @@
                     </div>
 
                 </form>
+                
+            <h4>Данные о компании</h4>   
+                 <form   zippy="firm"  >
+
+                  <div class="form-group">
+                        <label for="firmname" >Название  </label>
+                        <input class="form-control" type="text" zippy="firmname" required="required"   >
+                    </div>   
+                 <div class="form-group">
+                        <label for="inn" >ИНН  </label>
+                        <input class="form-control" type="text" zippy="inn" required="required"   >
+                    </div>   
+              
+                  <div class="form-group">
+                        <label for="phone" >Телефон  </label>
+                        <input class="form-control" type="text" zippy="phone"     >
+                    </div>   
+              
+
+                  <div class="form-group">
+                        <label for="viber" >Viber  </label>
+                        <input class="form-control" type="text" zippy="viber"     >
+                    </div>   
+          
+
+                  <div class="form-group">
+                        <label for="address" >Адрес  </label>
+                        <input class="form-control" type="text" zippy="address"     >
+                    </div>   
+                  <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit"  >Сохранить</button>
+                    </div>
+
+                </form>
+
             </div>        
             <div class="col-12 col-md-10 col-lg-8   ">
                 <h4>Настройка меню</h4>

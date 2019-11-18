@@ -105,7 +105,7 @@ class Prod extends \App\Pages\Base {
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
                 "qty" => H::fqty($row['qty']),
-                "summa" => $row['summa']
+                "summa" => H::fa($row['summa'])
             );
             $sum1 += $row['summa'];
         }
@@ -132,7 +132,7 @@ class Prod extends \App\Pages\Base {
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
                 "qty" => H::fqty($row['qty']),
-                "summa" => $row['summa']
+                "summa" => H::fa($row['summa'])
             );
             $sum2 += $row['summa'];
         }
@@ -142,8 +142,8 @@ class Prod extends \App\Pages\Base {
             "_detail2" => $detail2,
             'dateto' => date('d.m.Y', $to),
             'parea' => null,
-            'sum1' => $sum1,
-            'sum2' => $sum2
+            'sum1' => H::fa($sum1),
+            'sum2' => H::fa($sum2)
         );
         if ($parea > 0) {
             $header['parea'] = $this->filter->parea->getValueName();

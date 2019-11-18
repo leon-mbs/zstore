@@ -138,9 +138,9 @@ class Order extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', $item->price));
+        $row->add(new Label('price', H::fa($item->price)));
 
-        $row->add(new Label('amount', round($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
@@ -237,6 +237,7 @@ class Order extends \App\Pages\Base {
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['address'] = $this->docform->address->getText();
+        $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();

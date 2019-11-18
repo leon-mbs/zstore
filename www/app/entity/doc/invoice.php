@@ -27,9 +27,9 @@ class Invoice extends \App\Entity\Doc\Document {
                     "tovar_name" => $value['itemname'],
                     "tovar_code" => $value['item_code'],
                     "quantity" => H::fqty($value['quantity']),
-                    "price" => $value['price'],
+                    "price" => H::fa($value['price']),
                     "msr" => $value['msr'],
-                    "amount" => round($value['quantity'] * $value['price'])
+                    "amount" => H::fa($value['quantity'] * $value['price'])
                 );
             }
         }
@@ -45,9 +45,9 @@ class Invoice extends \App\Entity\Doc\Document {
             "notes" => $this->notes,
             "document_number" => $this->document_number,
             "total" => $this->amount,
-            "payamount" => $this->payamount,
-            "payed" => $this->headerdata['payed'],
-            "paydisc" => $this->headerdata["paydisc"]
+            "payamount" => H::fa($this->payamount),
+            "payed" => H::fa($this->headerdata['payed']),
+            "paydisc" => H::fa($this->headerdata["paydisc"] )
         );
 
 

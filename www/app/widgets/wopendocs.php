@@ -49,7 +49,7 @@ class WOpenDocs extends \Zippy\Html\PageFragment {
 
         $row->add(new Label('date', date('Y.m.d', $item->document_date)));
         $row->add(new Label('type', $item->meta_desc));
-        $row->add(new Label('amount', $item->amount));
+        $row->add(new Label('amount', Helper::fa($item->amount)));
     }
 
 }

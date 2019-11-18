@@ -17,18 +17,18 @@ use \App\DataItem;
  * Виджет для минимального количества на  складе
  */
 class WMinQty extends \Zippy\Html\PageFragment {
-
+    private $data = array();
     public function __construct($id) {
         parent::__construct($id);
-
+        $this->add(new \Zippy\Html\Link\ClickLink('csv', $this, 'oncsv'));
         $visible = (strpos(System::getUser()->widgets, 'wminqty') !== false || System::getUser()->userlogin == 'admin');
 
         $conn = $conn = \ZDB\DB::getConnect();
-        $data = array();
+        $this->data = array();
 
 
         $sql = "select * from (select item_id, itemname,
-                 (select  coalesce(sum(s.qty) ,0) from `store_stock_view` s where  s.item_id=i.item_id and s.qty >0    ) as iqty,
+                 (select  coalesce(sum(s.qty) ,0) from `store_stock_view` s where  s.item_id=i.item_id and s.qty <> 0    ) as iqty,
                  i.`minqty`
                  from items i where minqty>0 )t where   iqty <  minqty   
                  ";
@@ -38,17 +38,17 @@ class WMinQty extends \Zippy\Html\PageFragment {
 
             foreach ($rs as $row) {
 
-                $data[$row['item_id']] = new DataItem($row);
+                $this->data[$row['item_id']] = new DataItem($row);
             }
         }
 
-        $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'mqlistOnRow'));
+        $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($this->data), $this, 'mqlistOnRow'));
         $mqlist->setPageSize(10);
         $this->add(new \Zippy\Html\DataList\Paginator("mqpag", $mqlist));
         $mqlist->Reload();
 
 
-        if (count($data) == 0 || $visible == false) {
+        if (count($this->data) == 0 || $visible == false) {
             $this->setVisible(false);
         };
     }
@@ -57,8 +57,32 @@ class WMinQty extends \Zippy\Html\PageFragment {
         $item = $row->getDataItem();
 
         $row->add(new Label('itemname', $item->itemname));
-        $row->add(new Label('qty', Helper::fqty($item->qty)));
+        $row->add(new Label('qty', Helper::fqty($item->iqty)));
         $row->add(new Label('minqty', Helper::fqty($item->minqty)));
+    }
+  
+    public function oncsv($sender) {
+    
+        $csv = "";
+
+        foreach ($this->data as $d) {
+          
+            $csv .= $d->itemname . ',';
+            $csv .= $d->iqty . ',';
+            $csv .= $d->minqty ; 
+         
+            $csv .= "\n";
+        }
+        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+
+
+        header("Content-type: text/csv");
+        header("Content-Disposition: attachment;Filename=minqty.csv");
+        header("Content-Transfer-Encoding: binary");
+
+        echo $csv;
+        flush();
+        die;
     }
 
 }

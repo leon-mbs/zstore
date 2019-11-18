@@ -28,9 +28,9 @@ class GoodsReceipt extends Document {
                 "itemname" => $name,
                 "itemcode" => $value['item_code'],
                 "quantity" => H::fqty($value['quantity']),
-                "price" => $value['price'],
+                "price" => H::fa($value['price']),
                 "msr" => $value['msr'],
-                "amount" => round($value['quantity'] * $value['price'])
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
 
@@ -38,10 +38,10 @@ class GoodsReceipt extends Document {
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->amount,
-            "payed" => $this->headerdata['payed'],
+            "total" => H::fa($this->amount),
+            "payed" => H::fa($this->headerdata['payed']),
             "prepaid" => $this->headerdata['prepaid'] == 1,
-            "payamount" => $this->payamount
+            "payamount" => H::fa($this->payamount)
         );
 
 

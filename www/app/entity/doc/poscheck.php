@@ -4,23 +4,55 @@ namespace App\Entity\Doc;
 
 use \App\Entity\Entry;
 use \App\Helper as H;
+use \App\System;
 use \App\Util;
 
 /**
- * Класс-сущность  документ расходная  накладная
+ * Класс-сущность  документ  кассовый ек
  *
  */
-class GoodsIssue extends Document {
+class POSCheck extends Document {
 
-    public function generateReport() {
-
-
-        $i = 1;
-        $detail = array();
-
+    public function generateCheck( ) {
+        
+        $firm =System::getOptions('firm');
+          
+        $check = array();
+        $check[] .=  "Чек ". $this->document_number;
+        $check[] .=  "вiд ". date('Y-m-d H:i:s',$this->headerdata['time']);
+        $check[] .=  "IПН ". $firm['inn'];
+        $check[] .=  $firm['firmname'];
+        $check[] .=  "Тел.  ". $firm['phone'];
+        $check[] .=  "Viber ". $firm['viber'];
+        $check[] .=  str_repeat('-',30);
+      
+        foreach ($this->detaildata as $value) {
+      
+            $t =  $value['item_code']. ' ' .$value['itemname'];
+            foreach( Util::mb_split( $t,30) as $p){
+                 $check[] .=  $p;
+            }
+            $q =  ''.H::fqty($value['quantity']).$value['msr'].' по '.H::fa($value['price']);
+            $check[] .=  sprintf("%s%10s",$q.str_repeat(' ',20-mb_strlen($q)), H::fa($value['quantity'] * $value['price'])) ;
+         
+            
+        }
+         
+        $check[] .=  str_repeat('-',30);
+        $check[] .=  sprintf("%s%10s",'Всього'.str_repeat(' ',14), H::fa($this->amount)) ;
+        if($this->headerdata["paydisc"] >0){
+            $check[] .=  sprintf("%s%10s",'Знижка'.str_repeat(' ',14), H::fa($this->headerdata["paydisc"])) ;
+        }  
+        $check[] .=  sprintf("%s%10s",'До сплати'.str_repeat(' ',11), H::fa($this->payamount)) ;
+        $check[] .=  sprintf("%s%10s",'Внесена оплата'.str_repeat(' ',6), H::fa($this->headerdata["payed"])) ;
+        $check[] .=  sprintf("%s%10s",'Здача'.str_repeat(' ',15), H::fa($this->headerdata["exchange"])) ;
+        $check[] .=  "Дякуємо за довiру до нас!" ;       
+        /*
         foreach ($this->detaildata as $value) {
 
-           
+            if (isset($detail[$value['item_id']])) {
+                $detail[$value['item_id']]['quantity'] += $value['quantity'];
+            } else {
                 $name = $value['itemname'];
                 if (strlen($value['snumber']) > 0) {
                     $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
@@ -35,43 +67,29 @@ class GoodsIssue extends Document {
                     "price" => H::fa($value['price']),
                     "amount" => H::fa($value['quantity'] * $value['price'])
                 );
-            
+            }
         }
 
+        */
+   
+        return $check;
+    }
 
-        $customer = \App\Entity\Customer::load($this->customer_id);
+    public function generateReport() {
+        
+        $print = implode("<br>",$this->generateCheck()) ;
+        $print = str_replace(' ','&nbsp;',$print) ;
+        
+        $header = array('print' => $print);
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
-            "_detail" => $detail,
-            "firmname" => $firm['firmname'],
-            "customername" => $this->customer_name . ', тел. ' . $customer->phone,
-            "ship_address" => $this->headerdata["ship_address"],
-            "ship_number" => $this->headerdata["ship_number"],
-            "order" => $this->headerdata["order"],
-            "emp_name" => $this->headerdata["emp_name"],
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->headerdata['payed']),
-            "paydisc" => H::fa($this->headerdata["paydisc"]),
-            "isdisc" =>  $this->headerdata["paydisc"]>0,
-            "prepaid" => $this->headerdata['prepaid'] == 1,
-            "payamount" => H::fa($this->payamount)
-        );
-        if ($this->headerdata["sent_date"] > 0) {
-            $header['sent_date'] = date('d.m.Y', $this->headerdata["sent_date"]);
-        }
-        if ($this->headerdata["delivery_date"] > 0) {
-            $header['delivery_date'] = date('d.m.Y', $this->headerdata["delivery_date"]);
-        }
-        $header["isorder"] = $this->headerdata["delivery"] > 1;
-
-        $report = new \App\Report('goodsissue.tpl');
+        $report = new \App\Report('poscheck.tpl');
 
         $html = $report->generate($header);
 
         return $html;
+   
     }
-
+    
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
@@ -119,7 +137,7 @@ class GoodsIssue extends Document {
     }
 
     protected function getNumberTemplate() {
-        return 'РН-000000';
+        return 'К-000000';
     }
 
 }

@@ -185,7 +185,7 @@ class Import extends \App\Pages\Base {
                 $doc->detaildata[] = $item->getData();
                 $amount = $amount + ($item->quantity * $item->price);
             }
-            $doc->amount = $amount;
+            $doc->amount =H::fa( $amount);
             $doc->headerdata['store'] = $store;
 
             $doc->save();

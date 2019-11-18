@@ -132,7 +132,7 @@ class ABC extends \App\Pages\Base {
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']);
+            $row['value'] = round($row['value']/1000);
             $list[] = $row;
         }
 
@@ -156,7 +156,7 @@ class ABC extends \App\Pages\Base {
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']);
+            $row['value'] = round($row['value']/1000);
             $list[] = $row;
         }
 
@@ -180,7 +180,7 @@ class ABC extends \App\Pages\Base {
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']);
+            $row['value'] = round($row['value']/1000);
             $list[] = $row;
         }
 
@@ -206,7 +206,7 @@ class ABC extends \App\Pages\Base {
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']);
+            $row['value'] = round($row['value']/1000);
             $list[] = $row;
         }
 

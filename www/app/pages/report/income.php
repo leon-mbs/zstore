@@ -149,7 +149,7 @@ class Income extends \App\Pages\Base {
                 "name" => $row['itemname'],
                 "dt" => date('Y-m-d', strtotime($row['dt'])),
                 "qty" => H::fqty($row['qty']),
-                "summa" => $row['summa']
+                "summa" =>H::fa($row['summa'])
             );
         }
 

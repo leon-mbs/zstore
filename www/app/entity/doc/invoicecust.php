@@ -22,9 +22,9 @@ class InvoiceCust extends Document {
                 "itemname" => $value['itemname'],
                 "itemcode" => $value['item_code'],
                 "quantity" => H::fqty($value['quantity']),
-                "price" => $value['price'],
+                "price" => H::fa($value['price']),
                 "msr" => $value['msr'],
-                "amount" => round($value['quantity'] * $value['price'])
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
 
@@ -32,9 +32,9 @@ class InvoiceCust extends Document {
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => $this->amount,
-            "payed" => $this->headerdata['payed'],
-            "payamount" => $this->payamount
+            "total" => H::fa($this->amount),
+            "payed" => H::fa($this->headerdata['payed']),
+            "payamount" =>H::fa( $this->payamount)
         );
 
 

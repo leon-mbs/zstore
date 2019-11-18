@@ -21,8 +21,8 @@ class ServiceAct extends Document {
                 "servicename" => $value['service_name'],
                 "desc" => $value['desc'],
                 "quantity" => $value['quantity'],
-                "price" => $value['price'],
-                "amount" => $value['quantity'] * $value['price']
+                "price" => H::fa($value['price']),
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
 
@@ -32,9 +32,9 @@ class ServiceAct extends Document {
             "order" => $this->headerdata["order"],
             "gar" => $this->gar,
             "document_number" => $this->document_number,
-            "payamount" => $this->payamount,
-            "payed" => $this->headerdata['payed'],
-            "total" => $this->amount
+            "payamount" => H::fa($this->payamount),
+            "payed" => H::fa($this->headerdata['payed']),
+            "total" => H::fa($this->amount)
         );
         $report = new \App\Report('serviceact.tpl');
 

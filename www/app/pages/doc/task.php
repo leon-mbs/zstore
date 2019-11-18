@@ -208,10 +208,10 @@ class Task extends \App\Pages\Base {
         $row->add(new Label('service', $service->service_name));
 
         $row->add(new Label('quantity', $service->quantity));
-        $row->add(new Label('price', $service->price));
+        $row->add(new Label('price', H::fa($service->price)));
         $row->add(new Label('hours', $service->hours));
 
-        $row->add(new Label('amount', $service->quantity * $service->price));
+        $row->add(new Label('amount', H::fa($service->quantity * $service->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -285,9 +285,9 @@ class Task extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity2', H::fqty($item->quantity)));
-        $row->add(new Label('price2', $item->price));
+        $row->add(new Label('price2', H::fa($item->price)));
 
-        $row->add(new Label('amount2', round($item->quantity * $item->price)));
+        $row->add(new Label('amount2', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit2'))->onClick($this, 'edit2OnClick');
         $row->add(new ClickLink('delete2'))->onClick($this, 'delete2OnClick');
     }
@@ -356,9 +356,9 @@ class Task extends \App\Pages\Base {
         $row->add(new Label('msr5', $item->msr));
 
         $row->add(new Label('quantity5', H::fqty($item->quantity)));
-        $row->add(new Label('price5', $item->price));
+        $row->add(new Label('price5', H::fa($item->price)));
 
-        $row->add(new Label('amount5', round($item->amount)));
+        $row->add(new Label('amount5', H::fa($item->amount)));
         $row->add(new ClickLink('edit5'))->onClick($this, 'editOnClick5');
         $row->add(new ClickLink('delete5'))->onClick($this, 'deleteOnClick5');
     }
@@ -594,7 +594,7 @@ class Task extends \App\Pages\Base {
 
 
 
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText(H::fa($total));
     }
 
     /**
@@ -625,20 +625,20 @@ class Task extends \App\Pages\Base {
     private function calcPay() {
         $total = $this->docform->total->getText();
 
-        $this->docform->editpayamount->setText(round($total));
-        $this->docform->payamount->setText(round($total));
-        $this->docform->editpayed->setText(round($total));
-        $this->docform->payed->setText(round($total));
+        $this->docform->editpayamount->setText(H::fa($total));
+        $this->docform->payamount->setText(H::fa($total));
+        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
     }
 
     public function onPayAmount($sender) {
-        $this->docform->payamount->setText($this->docform->editpayamount->getText());
-        $this->docform->payed->setText($this->docform->editpayamount->getText());
-        $this->docform->editpayed->setText($this->docform->editpayamount->getText());
+        $this->docform->payamount->setText($H::fa($this->docform->editpayamount->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayamount->getText()));
+        $this->docform->editpayed->setText(H::fa($this->docform->editpayamount->getText()));
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText($this->docform->editpayed->getText());
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
     }
 
     public function backtolistOnClick($sender) {

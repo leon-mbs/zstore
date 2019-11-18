@@ -98,11 +98,11 @@ class ProdReceipt extends \App\Pages\Base {
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', $item->price));
+        $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
-        $row->add(new Label('amount', round($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->edit->setVisible($item->old != true);
 
@@ -175,7 +175,7 @@ class ProdReceipt extends \App\Pages\Base {
         $item->sdate = $this->editdetail->editsdate->getDate();
         if ($item->sdate == false)
             $item->sdate = '';
-        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0) {
+        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true ) {
             $this->setError("К серии должна быть введена дата");
             return;
         }
@@ -273,7 +273,7 @@ class ProdReceipt extends \App\Pages\Base {
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText(H::fa($total));
     }
 
     /**
