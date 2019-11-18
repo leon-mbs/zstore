@@ -20,7 +20,7 @@ class WNoliq extends \Zippy\Html\PageFragment {
       private $data = array();
     public function __construct($id) {
         parent::__construct($id);
-         $this->add(new \Zippy\Html\Link\ClickLink('csv', $this, 'oncsv'));
+         $this->add(new \Zippy\Html\Link\ClickLink('csvnoliq', $this, 'oncsv'));
         $visible = (strpos(System::getUser()->widgets, 'wnoliq') !== false || System::getUser()->userlogin == 'admin');
 
         $conn = $conn = \ZDB\DB::getConnect();
@@ -28,8 +28,10 @@ class WNoliq extends \Zippy\Html\PageFragment {
 
 
         $sql = "select distinct sv.qty, sv.`item_id`,sv.`store_id`, sv.`itemname`,sv.`storename` from `store_stock_view`   sv 
-         where  sv.qty >0  and   
-                 sv.stock_id not  in(select sc.stock_id  
+         where  sv.qty >0  
+               and sv.stock_id in (select sc2.stock_id  
+               from  entrylist  sc2 where sc2.quantity < 0 ) 
+               and  sv.stock_id not  in(select sc.stock_id  
                from  entrylist_view  sc
                where sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  
                and sc.quantity < 0 )  
