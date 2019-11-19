@@ -28,11 +28,11 @@ class WNoliq extends \Zippy\Html\PageFragment {
 
 
         $sql = "select i.itemname,i.item_id from `items`  i where  i.disabled  <> 1 
-               and   i.item_id not  in(select sc.item_id  
+               and   i.item_id not  in(select coalesce(sc.item_id,0)   
                from  entrylist_view  sc
                where sc.item_id >0  and sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  
                and sc.quantity < 0 )  
-                 
+               and  i.item_id    in (select coalesce(sc2.item_id,0) from entrylist_view sc2  ); 
                 
                  ";
 
@@ -40,8 +40,9 @@ class WNoliq extends \Zippy\Html\PageFragment {
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
-
-                $this->data[$row['item_id'] ] = new DataItem($row);
+                $item = Item::load($row['item_id']);
+                $item->qty = $item->getQuantity();
+                $this->data[$row['item_id'] ] = $item;
             }
         }
 

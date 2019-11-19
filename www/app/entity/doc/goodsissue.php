@@ -78,7 +78,7 @@ class GoodsIssue extends Document {
 
         foreach ($this->detaildata as $item) {
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
-      
+          
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
