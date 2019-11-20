@@ -650,7 +650,7 @@ class POSCheck extends \App\Pages\Base {
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        return Item::findArrayAC($text, $store_id);
+        return Item::findArrayAC($text );
     }
 
     public function OnAutoCustomer($sender) {

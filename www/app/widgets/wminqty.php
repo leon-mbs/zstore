@@ -20,7 +20,7 @@ class WMinQty extends \Zippy\Html\PageFragment {
     private $data = array();
     public function __construct($id) {
         parent::__construct($id);
-        $this->add(new \Zippy\Html\Link\ClickLink('csv', $this, 'oncsv'));
+        $this->add(new \Zippy\Html\Link\ClickLink('csvminqty', $this, 'oncsv'));
         $visible = (strpos(System::getUser()->widgets, 'wminqty') !== false || System::getUser()->userlogin == 'admin');
 
         $conn = $conn = \ZDB\DB::getConnect();
