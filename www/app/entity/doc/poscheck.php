@@ -136,5 +136,6 @@ class POSCheck extends Document {
     protected function getNumberTemplate() {
         return 'К-000000';
     }
-
+   
+ 
 }

@@ -46,7 +46,7 @@ class Stock extends \ZCL\DB\Entity {
             }
 
 
-            $list[$key] = $value->itemname . ', ' . ($value->partion);
+            $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion);
         }
 
         return $list;
