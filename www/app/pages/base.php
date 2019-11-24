@@ -107,14 +107,23 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars['alertsuccess'] = "";
         $this->_tvars['alertinfo'] = "";
 
-        if (strlen(System::getErrorMsg()) > 0)
+        if (strlen(System::getErrorMsg()) > 0)  {
             $this->_tvars['alerterror'] = System::getErrorMsg();
-        if (strlen(System::getWarnMsg()) > 0)
+            $this->goAnkor('');
+        }
+        if (strlen(System::getWarnMsg()) > 0) {
             $this->_tvars['alertwarning'] = System::getWarnMsg();
-        if (strlen(System::getSuccesMsg()) > 0)
+            $this->goAnkor('');
+        }
+        if (strlen(System::getSuccesMsg()) > 0) {
             $this->_tvars['alertsuccess'] = System::getSuccesMsg();
-        if (strlen(System::getInfoMsg()) > 0)
+            $this->goAnkor('');
+        }
+        if (strlen(System::getInfoMsg()) > 0) {
             $this->_tvars['alertinfo'] = System::getInfoMsg();
+            $this->goAnkor('');
+        }
+        
     }
 
     protected function afterRender() {
