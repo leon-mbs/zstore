@@ -3,7 +3,7 @@ SET NAMES 'utf8';
 
 
  
-INSERT INTO `users` ( `userlogin`, `userpass`, `createdon`, `email`, `acl`, `smartmenu`, `disabled`, `options`) VALUES(  'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', '<detail><acltype>0</acltype><onlymy>0</onlymy><aclview></aclview><acledit></acledit><widgets></widgets></detail>', NULL, 0, 'a:0:{}');
+INSERT INTO `users` ( `userlogin`, `userpass`, `createdon`, `email`, `acl`, `smartmenu`, `disabled`, `options`) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', '<detail><acltype>0</acltype><onlymy>0</onlymy><aclview></aclview><acledit></acledit><widgets></widgets><modules></modules></detail>', NULL, 0, 'a:0:{}');
 
  
 INSERT  INTO `stores` (  `storename`, `description`) VALUES(  'Основной склад', '');
