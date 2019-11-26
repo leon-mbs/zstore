@@ -144,14 +144,14 @@ class PayList extends \App\Pages\Base {
 
         foreach ($list as $doc) {
 
-            $csv .= date('Y.m.d', strtotime($doc->paydate)) . ';';
-            $csv .= $doc->mf_name . ';';
-            $csv .= ($doc->amount > 0 ? $doc->amount : "") . ';';
-            $csv .= ($doc->amount < 0 ? 0 - $doc->amount : "" ) . ';';
-            $csv .= $doc->document_number . ';';
-            $csv .= $doc->username . ';';
-            $csv .= $doc->customer_name . ';';
-            $csv .= $doc->notes . ';';
+            $csv .= date('Y.m.d', strtotime($doc->paydate)) . ',';
+            $csv .= $doc->mf_name . ',';
+            $csv .= ($doc->amount > 0 ? $doc->amount : "") . ',';
+            $csv .= ($doc->amount < 0 ? 0 - $doc->amount : "" ) . ',';
+            $csv .= $doc->document_number . ',';
+            $csv .= $doc->username . ',';
+            $csv .= $doc->customer_name . ',';
+            $csv .= str_replace(',','',$doc->notes) . ',';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");

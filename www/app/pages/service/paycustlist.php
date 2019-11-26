@@ -231,11 +231,11 @@ class PayCustList extends \App\Pages\Base {
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ';';
-            $csv .= $d->document_number . ';';
-            $csv .= $d->headerdata["pareaname"] . ';';
-            $csv .= $d->amount . ';';
-            $csv .= $d->notes . ';';
+            $csv .= date('Y.m.d', $d->document_date) . ',';
+            $csv .= $d->document_number . ',';
+            $csv .= $d->headerdata["pareaname"] . ',';
+            $csv .= $d->amount . ',';
+            $csv .=  str_replace(',','',$d->notes) . ',';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");

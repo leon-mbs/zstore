@@ -88,7 +88,7 @@ class GoodsIssue extends Document {
         }
 
         //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0) {
+        if ($this->headerdata['paydisc'] > 0 && $this->customer_id>0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
             if ($customer->discount > 0) {
                 return; //процент

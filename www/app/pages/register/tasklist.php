@@ -351,13 +351,13 @@ class TaskList extends \App\Pages\Base {
         $csv = "";
 
         foreach ($list as $task) {
-            $csv .= $task->document_number . ';';
-            $csv .= $task->customer_name . ';';
-            $csv .= $task->notes . ';';
-            $csv .= date('Y-m-d H:i', $task->headerdata['start_date']) . ';';
-            $csv .= $task->headerdata['taskhours'] . ';';
-            $csv .= Document::getStateName($task->state) . ';';
-            $csv .= $task->amount . ';';
+            $csv .= $task->document_number . ',';
+            $csv .= $task->customer_name . ',';
+            $csv .= str_replace(',','',$task->notes) . ',';
+            $csv .= date('Y-m-d H:i', $task->headerdata['start_date']) . ',';
+            $csv .= $task->headerdata['taskhours'] . ',';
+            $csv .= Document::getStateName($task->state) . ',';
+            $csv .= $task->amount . ',';
 
             $csv .= "\n";
         }
