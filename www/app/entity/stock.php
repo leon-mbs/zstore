@@ -28,7 +28,8 @@ class Stock extends \ZCL\DB\Entity {
      * @static
      */
     public static function findArrayAC($store, $partname = "") {
-
+        $partiontype = \App\System::getOption('common','partiontype');
+ 
         $criteria = "qty <> 0 and itemdisabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
@@ -44,9 +45,13 @@ class Stock extends \ZCL\DB\Entity {
             if (strlen($value->snumber) > 0) {
                 $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
             }
-
-
-            $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion);
+ 
+             if($partiontype == "1"){ //отдельно  по входным  ценам
+                 $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion); 
+             }else{
+                 $list[$key] = $value->itemname ; 
+             }
+   
         }
 
         return $list;
@@ -62,19 +67,24 @@ class Stock extends \ZCL\DB\Entity {
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
 
+        $partiontype = \App\System::getOption('common','partiontype');
+          
         $conn = \ZDB\DB::getConnect();
 
-        $where = "store_id = {$store_id} and item_id = {$item_id}  and partion = {$price}   ";
+        $where = "store_id = {$store_id} and item_id = {$item_id}   "; 
+ 
+        if($partiontype=='2'){    //учет  отдельно  по  каждой цене
+            $where .= " and partion = {$price}   ";
+        }
  
         if (strlen($snumber) > 0) {
-
-            $where .= "  and  snumber =  " . self::qstr($snumber);
+            $where .= "  and  snumber =  " . $conn->qstr($snumber);
         }
 
         //на  случай если удален
         //$conn->Execute("update store_stock set deleted=0 where " . $where);
 
-        $stock = self::findOne($where);
+        $stock = self::getFirst($where,'stock_id desc');
         if ($stock == null && $create == true) {
             $stock = new Stock();
             $stock->store_id = $store_id;
@@ -86,7 +96,10 @@ class Stock extends \ZCL\DB\Entity {
 
             $stock->save();
         }
-
+        if($partiontype=='1'){    //учет  по  последней цене
+            $stock->partion = $price;
+            $stock->save();
+        }
         return $stock;
     }
 
@@ -95,7 +108,6 @@ class Stock extends \ZCL\DB\Entity {
      *
      * @param mixed $stock_id
      * @param mixed $date
-     * @param mixed $acc Синтетический счет
      *
      */
     public static function getQuantity($stock_id, $date = null) {

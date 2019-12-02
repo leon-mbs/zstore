@@ -34,6 +34,11 @@ class Options extends \App\Pages\Base {
         $this->common->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList()));
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
+        $pt = array(
+          "1"=>"По последней закупочсной цене",
+          "2"=>"Отдельно  по каждой закупочной цене"
+        );
+        $this->common->add(new DropDownChoice('partiontype',$pt,"1"));
     
   
         $this->common->add(new CheckBox('autoarticle'));
@@ -63,6 +68,7 @@ class Options extends \App\Pages\Base {
         $this->common->defmf->setValue($common['defmf']);
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
+        $this->common->partiontype->setValue($common['partiontype']);
        
         $this->common->cdoll->setText($common['cdoll']);
         $this->common->ceuro->setText($common['ceuro']);
@@ -149,6 +155,7 @@ class Options extends \App\Pages\Base {
         $common['defmf'] = $this->common->defmf->getValue();
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
+        $common['partiontype'] = $this->common->partiontype->getValue();
  
         $common['cdoll'] = $this->common->cdoll->getText();
         $common['ceuro'] = $this->common->ceuro->getText();
