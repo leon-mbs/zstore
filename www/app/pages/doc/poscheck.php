@@ -63,6 +63,7 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::find('')));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -129,6 +130,7 @@ class POSCheck extends \App\Pages\Base {
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->pos->setValue($this->_doc->headerdata['pos']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
@@ -159,6 +161,7 @@ class POSCheck extends \App\Pages\Base {
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->pos->setValue($basedoc->headerdata['pos']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
     
@@ -281,7 +284,7 @@ class POSCheck extends \App\Pages\Base {
             return;
         }
        
-        if ($this->_tvars["usesnumber"] == true && $item->useserial ==1) {
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
             $slist=  $item->getSerials($store_id);
             
             if(in_array($item->snumber,$slist) == false){
@@ -505,10 +508,12 @@ class POSCheck extends \App\Pages\Base {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
             $this->docform->paydisc->setVisible(false);
+            $this->docform->exchange->setVisible(false);
         } else {
             $this->docform->payed->setVisible(true);
             $this->docform->payamount->setVisible(true);
             $this->docform->paydisc->setVisible(true);
+            $this->docform->exchange->setVisible(true);
         }
     }
 
@@ -671,7 +676,7 @@ class POSCheck extends \App\Pages\Base {
                 $this->docform->discount->setText("Бонусы " . $customer->bonus);
                 $this->docform->discount->setVisible(true);
             }
-            $this->docform->ship_address->setText($customer->address);
+             
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
             $this->_prevcust = $customer_id;

@@ -91,7 +91,7 @@ class Outcome extends \App\Pages\Base {
 
         if ($type == 1) {    //по товарам
             $sql = "
-          select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa
+          select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
@@ -107,7 +107,7 @@ class Outcome extends \App\Pages\Base {
         }
         if ($type == 2) {  //по покупателям
             $sql = "
-          select c.`customer_name` as itemname,c.`customer_id`,  sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+          select c.`customer_name` as itemname,c.`customer_id`,  sum(0-e.`amount`) as summa
           from `entrylist_view`  e
 
          join `customers`  c on c.`customer_id` = e.`customer_id`
@@ -158,6 +158,7 @@ class Outcome extends \App\Pages\Base {
                 "name" => $row['itemname'],
                 "dt" => date('Y-m-d', strtotime($row['dt'])),
                 "qty" => H::fqty($row['qty']),
+                "navar" => H::fa($row['navar']),
                 "summa" => H::fa($row['summa'])
             );
         }
