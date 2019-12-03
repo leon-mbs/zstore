@@ -9,8 +9,7 @@ INSERT INTO `users` ( `userlogin`, `userpass`, `createdon`, `email`, `acl`, `sma
 INSERT  INTO `stores` (  `storename`, `description`) VALUES(  'Основной склад', '');
 INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`) VALUES(2, 'Касса', 'Основная касса');
 
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:18:{s:8:"firmname";s:20:"Наша  фирма";s:8:"defstore";s:2:"19";s:5:"defmf";s:1:"2";s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:5:"cdoll";s:1:"2";s:5:"ceuro";s:1:"5";s:4:"crub";s:3:"0.4";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:11:"autoarticle";b:1;s:6:"useset";b:0;s:10:"usesnumber";b:0;s:6:"useval";b:0;s:10:"usescanner";b:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:18:{s:8:"defstore";s:2:"19";s:5:"defmf";s:1:"2";s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:11:"partiontype";s:1:"1";s:5:"cdoll";s:1:"2";s:5:"ceuro";s:1:"5";s:4:"crub";s:3:"0.4";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:11:"autoarticle";b:1;s:6:"useset";b:0;s:10:"usesnumber";b:0;s:6:"useval";b:0;s:10:"usescanner";b:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('firm', 'a:5:{s:8:"firmname";s:20:"Наша  фирма";s:5:"phone";s:0:"";s:5:"viber";s:0:"";s:7:"address";s:0:"";s:3:"inn";s:4:"1111";}');
  
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`, `smartmenu`) VALUES(1, 4, 'Склады', 'StoreList', 'Товары', 0, 0);
