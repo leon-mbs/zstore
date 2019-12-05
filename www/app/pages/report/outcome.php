@@ -107,7 +107,7 @@ class Outcome extends \App\Pages\Base {
         }
         if ($type == 2) {  //по покупателям
             $sql = "
-          select c.`customer_name` as itemname,c.`customer_id`,  sum(0-e.`amount`) as summa
+          select c.`customer_name` as itemname,c.`customer_id`,  sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
           from `entrylist_view`  e
 
          join `customers`  c on c.`customer_id` = e.`customer_id`
