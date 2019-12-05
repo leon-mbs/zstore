@@ -514,7 +514,7 @@ class Document extends \ZCL\DB\Entity {
 
             return "У документа  есть записи в аналитике";
         }
-        $cnt = $conn->GetOne("select  count(*) from paylist where paytype=0 and  document_id = {$this->document_id}  ");
+        $cnt = $conn->GetOne("select  count(*) from paylist where indoc=0 and  document_id = {$this->document_id}  ");
         if ($cnt > 0) {
 
             return "У документа  есть оплаты";
@@ -577,7 +577,7 @@ class Document extends \ZCL\DB\Entity {
             System::setWarnMsg("У документа были отправки или доставки");
             return true;
         }
-        $cnt = $conn->GetOne("select  count(*) from paylist where paytype=0 and  document_id = {$this->document_id}  ");
+        $cnt = $conn->GetOne("select  count(*) from paylist where indoc=0 and  document_id = {$this->document_id}  ");
         if ($cnt > 0) {
             System::setWarnMsg("У документа были оплаты");
 
