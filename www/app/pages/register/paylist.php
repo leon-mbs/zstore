@@ -82,7 +82,7 @@ class PayList extends \App\Pages\Base {
 
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('date', date('d-m-Y', strtotime($doc->paydate))));
+        $row->add(new Label('date', date('d-m-Y',  $doc->paydate )));
         $row->add(new Label('notes', $doc->notes));
         $row->add(new Label('amountp', H::fa($doc->amount > 0 ? $doc->amount : "")));
         $row->add(new Label('amountm', H::fa($doc->amount < 0 ? 0 - $doc->amount : "")));
