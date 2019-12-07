@@ -8,6 +8,7 @@ use \Zippy\Html\Form\Form;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\RedirectLink;
 use \Zippy\Html\Panel;
+use \App\Helper as H;
 
 /**
  * АВС анализ
@@ -128,8 +129,9 @@ class ABC extends \App\Pages\Base {
                      
                     GROUP BY name
                     )t
+                 
                     ORDER BY value DESC";
-
+        H::log($sql);
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
             $row['value'] = round($row['value']/1000);
@@ -151,7 +153,7 @@ class ABC extends \App\Pages\Base {
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     GROUP BY name
-                    )t
+                    )t    
                     ORDER BY value DESC";
 
         $rs = $conn->Execute($sql);
@@ -175,7 +177,7 @@ class ABC extends \App\Pages\Base {
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     GROUP BY name
-                    )t
+                    )t      
                     ORDER BY value DESC";
 
         $rs = $conn->Execute($sql);
@@ -201,7 +203,7 @@ class ABC extends \App\Pages\Base {
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                      
                     GROUP BY name
-                    )t
+                    )t  
                     ORDER BY value DESC";
 
         $rs = $conn->Execute($sql);
@@ -235,6 +237,7 @@ class ABC extends \App\Pages\Base {
         }
         $val = 0;
         for ($i = 0; $i < count($_detail); $i++) {
+            if($sum==0)  continue;
             $_detail[$i]['perc'] = $_detail[$i]['value'] / $sum * 100;
             $_detail[$i]['value'] = $_detail[$i]['value'];
             $_detail[$i]['percsum'] = $_detail[$i]['perc'] + $val;
