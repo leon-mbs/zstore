@@ -29,6 +29,7 @@ class GoodsIssue extends Document {
 
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $name,
+
                     "tovar_code" => $value['item_code'],
                     "quantity" => H::fqty($value['quantity']),
                     "msr" => $value['msr'],
@@ -47,7 +48,7 @@ class GoodsIssue extends Document {
             "customername" => $this->customer_name . ', тел. ' . $customer->phone,
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],
-            "order" => $this->headerdata["order"],
+            "order" =>    strlen($this->headerdata["order"]) >0 ? $this->headerdata["order"]  : false,
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
@@ -63,7 +64,7 @@ class GoodsIssue extends Document {
         if ($this->headerdata["delivery_date"] > 0) {
             $header['delivery_date'] = date('d.m.Y', $this->headerdata["delivery_date"]);
         }
-        $header["isorder"] = $this->headerdata["delivery"] > 1;
+        $header["isdelivery"] = $this->headerdata["delivery"] > 1;
 
         $report = new \App\Report('goodsissue.tpl');
 

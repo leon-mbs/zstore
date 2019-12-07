@@ -9,12 +9,14 @@
         <td colspan="5">{{customername}}</td>
     </tr>
 
-    {{#isorder}}   
+    {{#order}}   
     <tr>
         <td></td>
         <td><b>Заказ</b></td>
         <td colspan="5">{{order}}</td>
     </tr>
+     {{/order}}   
+    {{#isdelivery}}   
     <tr>
         <td></td>
         <td><b>Адрес</b></td>
@@ -43,7 +45,7 @@
         <td><b>Ответственный</b></td>
         <td colspan="5"> {{emp_name}}</td>
     </tr> 
-    {{/isorder}}           
+    {{/isdelivery}}           
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             Накладная № {{document_number}} от {{date}} <br> 

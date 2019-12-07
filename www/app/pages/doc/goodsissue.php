@@ -32,7 +32,7 @@ class GoodsIssue extends \App\Pages\Base {
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-    private $_order_id = 0;
+    private $_orderid = 0;
     private $_prevcust = 0;   // преыдущий контрагент
 
     public function __construct($docid = 0, $basedocid = 0) {
@@ -147,7 +147,7 @@ class GoodsIssue extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->order->setText($this->_doc->headerdata['order']);
-            $this->_order_id = $this->_doc->headerdata['order_id'];
+            $this->_orderid = $this->_doc->headerdata['order_id'];
             $this->_prevcust = $this->_doc->customer_id;
 
             $this->OnChangeCustomer($this->docform->customer);
@@ -343,7 +343,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
-        $this->_doc->order = $this->docform->order->getText();
+     //   $this->_doc->order = $this->docform->order->getText();
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->payamount = $this->docform->payamount->getText();
@@ -361,11 +361,12 @@ class GoodsIssue extends \App\Pages\Base {
         if ($this->checkForm() == false) {
             return;
         }
-        $order = Document::load($this->_order_id);
+        $order = Document::load($this->_orderid);
 
 
 
 
+        $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
         $this->_doc->headerdata['ship_address'] = $this->docform->ship_address->getText();
         $this->_doc->headerdata['ship_number'] = $this->docform->ship_number->getText();
@@ -377,7 +378,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['delivery_date'] = $this->docform->delivery_date->getDate();
         $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
-        $this->_doc->headerdata['order_id'] = $this->_order_id;
+        $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
 
