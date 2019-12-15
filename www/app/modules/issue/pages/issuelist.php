@@ -25,7 +25,7 @@ use \App\Application as App;
 use \App\System;
 use \App\Modules\Issue\Helper;
 use \App\Filter;
-use \ZCL\BT\Tags;
+ 
 use \App\Modules\Issue\Entity\Issue;
 use \App\Entity\Customer;
 use \App\Entity\User;
@@ -85,8 +85,7 @@ class IssueList extends \App\Pages\Base {
         $this->editpan->editform->add(new TextInput('editprice'));
         $this->editpan->editform->add(new TextInput('edithours'));
 
-        $this->editpan->editform->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
-        $this->editpan->editform->add(new ClickLink('editcancel', $this, 'onCancel'));
+         $this->editpan->editform->add(new ClickLink('editcancel', $this, 'onCancel'));
 
         $this->add(new Panel("msgpan"))->setVisible(false);
         $this->msgpan->add(new ClickLink('back', $this, 'onCancel'));
@@ -410,11 +409,7 @@ class IssueList extends \App\Pages\Base {
         $this->msgpan->stlist->Reload();
     }
 
-    public function OnAutoCustomer($sender) {
-        $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
-    }
-
+ 
 }
 
 class IssueDS implements \Zippy\Interfaces\DataSource {

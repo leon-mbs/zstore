@@ -1,0 +1,67 @@
+<html>
+    <head>
+
+    </head>
+
+    <body>
+
+
+        <div class="row"  zippy="projectpanel">
+            <div class="col-12 col-md-6">
+                <h2>Проекты</h2>
+                
+                 </div> 
+                 <a zippy="padd" class="btn btn-outline-primary  ">Добавить</a>  
+                <table class="table table-bordered  table-sm">
+                    <tr>
+                        <th>Название</th>
+                        <th>Заказчик</th>
+                        <th>Статус</th>
+            
+                        <th style="width: 80px"></th>
+                    </tr>
+                    <tr zippy="projectlist">
+                        <td zippy="project_name"></td>
+                        <td zippy="customer_name"></td>
+                        <td zippy="state_name"></td>
+                        <td align="center"> 
+                           <a zippy="opencomment"><i class="fa fa-comments"></a>
+                              &nbsp;&nbsp;
+                           <a zippy="edit"   title="Редактировать"><i class="fa fa-edit"></i></a> 
+                              &nbsp;&nbsp; 
+                           <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+
+                
+            </div>
+        </div>
+        <div class="row"   >
+            <form class="col-12 col-md-4" zippy="projectform" method="post">
+
+
+                <div class="form-group">
+                    <label for="editname" > Название</label>
+                    <input class="form-control" type="text" zippy="editname" required="required">
+                </div>
+                    <div class="form-group">
+                        <label for="editcust"> Заказчик  </label>
+                        <input style="width:300px" placeholder="Начните вводить..." class="form-control mr-2" type="text" zippy="editcust"  >
+                    </div>                
+                   <div class="form-group">
+                        <label for="editdesc"> Описание  </label>
+                        <textarea style="height:300px"   class="form-control mr-2"   zippy="editdesc"  ></textarea>   
+                   </div>                
+           
+                <div class="form-group">
+                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
+                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-light ">
+                </div>
+
+
+
+            </form>
+        </div>
+  
+    </body>
+</html>
