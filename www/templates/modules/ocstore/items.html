@@ -63,7 +63,7 @@
                     </div>
                 </form>           
             </div> 
-            <div class="col-12 col-md-8 col-xl-6">
+            <div class="col-12 col-md-8  ">
 
                 <h3>Обновление цен  и количеств</h3>
 
@@ -78,7 +78,7 @@
                 </div>              
             </div> 
 
-            <div class="col-12 col-md-8 col-xl-6">
+            <div class="col-12 col-md-8  ">
 
                 <h3>Загрузка  товаров с магазина </h3>
 
@@ -104,7 +104,10 @@
 
                 $('#loader6').removeAttr('style');
             }
-
+           function chclick() {
+                var ch = $("#chall").prop('checked')
+                $('.chc').prop('checked', ch)
+            }
         </script>  
     </body>
 </html>
