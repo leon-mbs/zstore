@@ -218,14 +218,14 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setInfo($json);
+      //  $this->setInfo($json);
         $i = 0;
         foreach ($data['products'] as $product) {
 
 
             $cnt = Item::findCnt("item_code=" . Item::qstr($product['sku']));
             if ($cnt > 0)
-                continue; //уже  есть с  таким  аритикулом
+                continue; //уже  есть с  таким  артикулом
 
             $item = new Item();
             $item->item_code = $product['sku'];
