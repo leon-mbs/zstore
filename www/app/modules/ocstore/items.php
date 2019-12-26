@@ -150,9 +150,9 @@ class Items extends \App\Pages\Base {
         foreach ($items as $item) {
             if (strlen($item->item_code) == 0)
                 continue;
-            if (strlen($item->qty) == 0)
-                $item->qty = 0;
-            $elist[$item->item_code] = $item->qty;
+ 
+            $qty = $item->getQuantity(  );    
+            $elist[$item->item_code] = $qty;
         }
 
         $data = json_encode($elist);
