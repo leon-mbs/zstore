@@ -26,8 +26,9 @@ use \App\System;
 use \App\Modules\Issue\Helper;
 use \App\Filter;
  
+use \App\Modules\Issue\Entity\Project;
 use \App\Modules\Issue\Entity\Issue;
-use \App\Entity\Customer;
+
 use \App\Entity\User;
 
 /**
@@ -56,7 +57,7 @@ class IssueList extends \App\Pages\Base {
         $this->add(new Panel("listpan"));
 
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'onFilter');
-        $this->listpan->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
+        $this->listpan->filter->add(new AutocompleteTextInput('searchproject'))->onText($this, 'OnAutoProject');
         $this->listpan->filter->add(new TextInput('searchnumber', $filter->searchnumber));
 
         //пользователи ассоциированные с сотрудниками
@@ -186,8 +187,6 @@ class IssueList extends \App\Pages\Base {
 
         $this->editpan->editform->edittitle->setText($this->_issue->issue_name);
         $this->editpan->editform->editcontent->setText($this->_issue->desc);
-        $this->editpan->editform->editcust->setKey($this->_issue->customer_id);
-        $this->editpan->editform->editcust->setText($this->_issue->customer_name);
         $this->editpan->editform->editpr->setValue($this->_issue->priority);
         $this->editpan->editform->edithours->setText($this->_issue->hours);
         $this->editpan->editform->editprice->setText($this->_issue->price);
@@ -198,7 +197,6 @@ class IssueList extends \App\Pages\Base {
 
         $this->_issue->issue_name = $sender->edittitle->getText();
         $this->_issue->desc = $sender->editcontent->getText();
-        $this->_issue->customer_id = $sender->editcust->getKey();
         $this->_issue->priority = $sender->editpr->getValue();
         $this->_issue->hours = $sender->edithours->getText();
         $this->_issue->price = $sender->editprice->getText();
@@ -256,6 +254,7 @@ class IssueList extends \App\Pages\Base {
             return;
         }
         $this->listpan->list->Reload();
+        
     }
 
     public function onAddMsg($sender) {
@@ -409,6 +408,10 @@ class IssueList extends \App\Pages\Base {
         $this->msgpan->stlist->Reload();
     }
 
+    public function OnAutoProject($sender) {
+        $text = Project::qstr('%' . $sender->getText() . '%');
+        return Project::findArray("project_name", " project_name like " . $text);
+    }
  
 }
 
@@ -424,17 +427,17 @@ class IssueDS implements \Zippy\Interfaces\DataSource {
         $status = $this->page->listpan->filter->searchstatus->getValue();
         $number = trim($this->page->listpan->filter->searchnumber->getText());
         $assignedto = $this->page->listpan->filter->searchassignedto->getValue();
-        $cust = $this->page->listpan->filter->searchcust->getKey();
+        $project = $this->page->listpan->filter->searchproject->getKey();
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "1=1 ";
+        $where = " 1=1 ";
         if ($status == -1)
             $where .= " and status <> " . Issue::STATUS_CLOSED;
         if ($status < 100 && $status >= 0)
             $where .= " and status = " . $status;
-        if ($cust > 0)
-            $where .= " and customer_id = " . $cust;
+        if ($project > 0)
+            $where .= " and project_id = " . $project;
         if ($assignedto > 0)
             $where .= " and user_id = " . $assignedto;
 

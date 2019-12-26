@@ -46,6 +46,7 @@ class Options extends \App\Pages\Base {
         $this->common->add(new CheckBox('useset'));
 
         $this->common->add(new CheckBox('usescanner'));
+        $this->common->add(new CheckBox('useimages'));
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
         $this->common->add(new TextInput('ceuro'));
@@ -86,6 +87,7 @@ class Options extends \App\Pages\Base {
         $this->common->usesnumber->setChecked($common['usesnumber']);
         $this->common->useval->setChecked($common['useval']);
         $this->common->usescanner->setChecked($common['usescanner']);
+        $this->common->useimages->setChecked($common['useimages']);
         // $this->common->closeddate->setDate($common['closeddate']);
 
 
@@ -173,6 +175,7 @@ class Options extends \App\Pages\Base {
         $common['usesnumber'] = $this->common->usesnumber->isChecked();
         $common['useval'] = $this->common->useval->isChecked();
         $common['usescanner'] = $this->common->usescanner->isChecked();
+        $common['useimages'] = $this->common->useimages->isChecked();
 
         // $common['closeddate'] = $this->common->closeddate->getDate();
 

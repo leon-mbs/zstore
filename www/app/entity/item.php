@@ -17,6 +17,7 @@ class Item extends \ZCL\DB\Entity {
         $this->curname = '';
         $this->currate = 0;
         $this->price = 0;
+        $this->image_id = 0;
     }
 
     protected function afterLoad() {
@@ -33,6 +34,7 @@ class Item extends \ZCL\DB\Entity {
         $this->currate = doubleval($xml->currate[0]);
         $this->pricelist = (int) $xml->pricelist[0];
         $this->useserial = (int) $xml->useserial[0];
+        $this->image_id = (int) $xml->image_id[0];
         
         $this->cell = (string) $xml->cell[0];
   
@@ -56,6 +58,7 @@ class Item extends \ZCL\DB\Entity {
         $this->detail .= "<price5>{$this->price5}</price5>";
         $this->detail .= "<curname>{$this->curname}</curname>";
         $this->detail .= "<currate>{$this->currate}</currate>";
+        $this->detail .= "<image_id>{$this->image_id}</image_id>";
 
         $this->detail .= "</detail>";
 

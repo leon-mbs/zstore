@@ -58,7 +58,7 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
 
-        $this->_tvars["hideblock"] = false;
+        $this->_tvars["hideblock"] = false; //для скрытия блока разметки  в  шаблоне страницы
     }
 
     public function LogoutClick($sender) {
