@@ -1,5 +1,8 @@
 <html>
     <head>
+        <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
+        <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
+        
     </head>
 
     <body>
@@ -31,6 +34,7 @@
                 <a zippy="addnew" class="btn btn-primary  ">Добавить</a>
                 <table class="table table-bordered  table-sm  ">
                     <tr>
+                           {{#useimages}}      <th> </th>         {{/useimages}} 
                         <th>Наименование</th>
 
                         <th>Артикул</th>
@@ -45,6 +49,11 @@
                         <th style="width:100px"> </th>
                     </tr>
                     <tr zippy="itemlist">
+                        {{#useimages}} <td> 
+                             <a zippy="imagelistitem" data-type="image"   data-toggle="lightbox" data-gallery="thumb">  <img  style="float:left; width:64px"     ></a>
+     
+                       </td> {{/useimages}} 
+ 
                         <td zippy="itemname"></td>
 
                         <td zippy="code"></td>
@@ -71,7 +80,7 @@
 
 
             <div class="col-12 col-md-8 col-xl-6"  >
-                <form   zippy="itemdetail"  >
+                <form   zippy="itemdetail" enctype="multipart/form-data" >
                     <h4>Редактирование товара </h4>
                     <div class="form-group row">
                         <label class="col-5 col-form-label" for="editname">Наименование</label>
@@ -143,13 +152,29 @@
                         </div>
                     </div>                     
                     <div class="form-check">
-                        <input zippy="editdisabled" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="editdisabled">Больше  не  используется</label>
-                    </div>                    
-                    <div class="form-check">
                         <input zippy="editpricelist" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="editpricelist">Показывать в прайсе</label>
                     </div>                    
+                    <div class="form-check">
+                        <input zippy="editdisabled" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="editdisabled">Больше  не  используется</label>
+                    </div>                    
+                     {{#useimages}} 
+                     <div class="form-group row">
+                        <label class="col-5 col-form-label"  >Изображение</label>
+        
+                        <div class="col-7"> 
+                        <img zippy="editimage" style="height:128px"><br> 
+                        <input type="file" class="form-control"   zippy="editaddfile">
+                        <div class="form-check">
+                            <input zippy="editdelimage" type="checkbox" class="form-check-input"  >
+                            <label class="form-check-label" data-label="editdelimage" for="editdelimage">Удалить избражение</label>
+                        </div>                    
+                      
+                        </div>
+                    </div> 
+                              
+                     {{/useimages}}         
                     <div class="form-group row">
                         <label class="col-5 col-form-label" for="editdescription">Описание</label>
                         <div class="col-7"> 
@@ -186,5 +211,24 @@
             </div>
 
         </div>
+     <script>
+            $(document).ready(function () {
+
+                $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+                    event.preventDefault();
+                    $(this).ekkoLightbox({'alwaysShowClose': true});
+                });
+
+
+
+
+            });
+
+
+
+
+
+        </script>
+          
     </body>
 </html>

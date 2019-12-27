@@ -49,6 +49,7 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["useset"] = $options['useset'] == 1;
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
+        $this->_tvars["useimages"] = $options['useimages'] == 1;
 
         $this->_tvars["smart"] = Helper::generateSmartMenu();
 

@@ -52,10 +52,7 @@ class Customer extends \ZCL\DB\Entity {
     public function beforeDelete() {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "  select count(*)  from  entrylist where   customer_id = {$this->customer_id}";
-        $cnt = $conn->GetOne($sql);
-        if ($cnt > 0)
-            return "На  контрагента есть  ссылки  в  документах";
+ 
         $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0)
@@ -71,4 +68,16 @@ class Customer extends \ZCL\DB\Entity {
         return Customer::findArray("customer_name", "status=" . Customer::STATUS_ACTUAL);
     }
 
+    protected function afterDelete() {
+    
+        $conn = \ZDB\DB::getConnect();
+
+     
+        $conn->Execute("delete from eventlist where   customer_id=" . $this->customer_id);
+        $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
+        $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
+        $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
+    }    
+    
+    
 }

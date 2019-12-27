@@ -73,7 +73,15 @@ class Item extends \ZCL\DB\Entity {
         $cnt = $conn->GetOne($sql);
         return ($cnt > 0) ? "ТМЦ уже  используется" : "";
     }
+    
+    protected function afterDelete() {
+    
+        
+        if($this->image_id>0) {
+           \App\Entity\Image::delete($this->image_id);
+        }
 
+    } 
     //Вычисляет  отпускную цену
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад

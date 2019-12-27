@@ -85,6 +85,12 @@ class ItemList extends \App\Pages\Base {
         if($qty <0) {
            $row->setAttribute('class','text-danger');   
         }
+        
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
+        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        if($item->image_id==0){
+              $row->imagelistitem->setVisible(false);
+        }        
    }
 
     public function OnFilter($sender) {
@@ -132,6 +138,9 @@ class ItemList extends \App\Pages\Base {
             $plist[] = $item->getPrice('price5', 0, $stock->partion);
 
         $row->add(new Label('price', implode(',', $plist)));
+        
+        
+        
     }
 
     public function backOnClick($sender) {

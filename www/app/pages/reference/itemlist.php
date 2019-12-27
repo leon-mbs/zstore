@@ -91,7 +91,9 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('edituseserial'));
         $this->itemdetail->add(new CheckBox('editpricelist', true));
-
+        $this->itemdetail->add(new \Zippy\Html\Image('editimage','/LoadImage.php?id=0' ));
+        $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile' ));
+        $this->itemdetail->add(new CheckBox('editdelimage'));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -140,6 +142,13 @@ class ItemList extends \App\Pages\Base {
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
+
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
+        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        if($item->image_id==0){
+              $row->imagelistitem->setVisible(false);
+        }
+        
     }
 
     public function deleteOnClick($sender) {
@@ -181,6 +190,20 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
+        if($this->_item->image_id>0){
+          $this->itemdetail->editdelimage->setChecked(false);    
+          $this->itemdetail->editdelimage->setVisible(true);  
+          $this->itemdetail->editimage->setVisible(true);  
+          $this->itemdetail->editimage->setUrl('/LoadImage.php?id=' . $this->_item->image_id);   
+        } else{
+          $this->itemdetail->editdelimage->setVisible(false);      
+          $this->itemdetail->editimage->setVisible(false);      
+               
+        }
+        
+        
+
+        
     }
 
     public function addOnClick($sender) {
@@ -189,6 +212,8 @@ class ItemList extends \App\Pages\Base {
         // Очищаем  форму
         $this->itemdetail->clean();
         $this->itemdetail->editmsr->setText('шт');
+        $this->itemdetail->editimage->setVisible(false);
+        $this->itemdetail->editdelimage->setVisible(false);
         $this->_item = new Item();
 
         if (System::getOption("common", "autoarticle") == 1) {
@@ -238,7 +263,7 @@ class ItemList extends \App\Pages\Base {
             $code = Item::qstr($this->_item->item_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
             if ($cnt > 0) {
-                //пытаемся гtнерить еще раз 
+                //пытаемся генерить еще раз 
                 if ($this->_item->item_id == 0 && System::getOption("common", "autoarticle") == 1) {
                     $this->_item->item_code = Item::getNextArticle();
                     $this->itemdetail->editcode->setText($this->_item->item_code);
@@ -254,7 +279,41 @@ class ItemList extends \App\Pages\Base {
                 }
             }
         }
+        //delete image
+        if($this->itemdetail->editdelimage->isChecked()){
+            if($this->_item->image_id>0){
+                \App\Entity\Image::delete($this->_item->image_id);
+            }
+            $this->_item->image_id=0;
+        } 
+        
+        
         $this->_item->Save();
+        
+        
+        $file = $this->itemdetail->editaddfile->getFile();
+        if (strlen($file["tmp_name"]) > 0) {
+            $imagedata = getimagesize($file["tmp_name"]);
+
+            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
+                $this->setError('Неверный формат изображения');
+                return;
+            }
+
+            if ($imagedata[0] * $imagedata[1] > 1000000) {
+                $this->setError('Слишком большой размер изображения');
+                return;
+            }
+
+            $image = new \App\Entity\Image();
+            $image->content = file_get_contents($file['tmp_name']);
+            $image->mime = $imagedata['mime'];
+
+            $image->save();
+            $this->_item->image_id = $image->image_id;
+            $this->_item->Save();
+        }
+        
 
         $this->itemtable->itemlist->Reload();
 
