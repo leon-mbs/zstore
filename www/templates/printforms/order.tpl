@@ -38,14 +38,14 @@
     </tr>
     {{#_detail}}
     <tr>
-        <td align="right">{{no}}</td>
-        <td colspan="2">{{tovar_name}}</td>
-        <td colspan="2">{{tovar_code}}</td>
-        <td  >{{msr}}</td>
+        <td align="right"  valign="top">{{no}}</td>
+        <td colspan="2">{{{tovar_name}}} </td>
+        <td colspan="2"  valign="top">{{tovar_code}}</td>
+        <td   valign="top">{{msr}}</td>
 
-        <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
-        <td align="right">{{amount}}</td>
+        <td align="right" valign="top">{{quantity}}</td>
+        <td align="right" valign="top">{{price}}</td>
+        <td align="right" valign="top">{{amount}}</td>
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">

@@ -222,11 +222,12 @@ class Items extends \App\Pages\Base {
         $i = 0;
         foreach ($data['products'] as $product) {
 
-
+            if(strlen($product['sku'])==0)  continue;
             $cnt = Item::findCnt("item_code=" . Item::qstr($product['sku']));
             if ($cnt > 0)
                 continue; //уже  есть с  таким  артикулом
-
+                              
+            $product['name'] =  str_replace('&quot;','"',$product['name'] ) ;                
             $item = new Item();
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];

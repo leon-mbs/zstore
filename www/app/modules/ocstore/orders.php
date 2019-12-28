@@ -141,6 +141,7 @@ class Orders extends \App\Pages\Base {
                 }
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = round($product['price']);
+                $tovar->octoreoptions =  serialize($product['_options_']);
                 $neworder->detaildata[] = $tovar->getData();
             }
 

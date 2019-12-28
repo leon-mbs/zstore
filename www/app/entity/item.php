@@ -37,6 +37,7 @@ class Item extends \ZCL\DB\Entity {
         $this->image_id = (int) $xml->image_id[0];
         
         $this->cell = (string) $xml->cell[0];
+        $this->octoreoptions = (string) $xml->octoreoptions[0];
   
 
         parent::afterLoad();
@@ -50,6 +51,7 @@ class Item extends \ZCL\DB\Entity {
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
       
         $this->detail .= "<cell>{$this->cell}</cell>";
+        $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
