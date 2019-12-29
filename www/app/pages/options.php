@@ -35,7 +35,7 @@ class Options extends \App\Pages\Base {
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $pt = array(
-          "1"=>"По последней закупочсной цене",
+          "1"=>"По последней закупочной цене",
           "2"=>"Отдельно  по каждой закупочной цене"
         );
         $this->common->add(new DropDownChoice('partiontype',$pt,"1"));
@@ -256,7 +256,7 @@ class Options extends \App\Pages\Base {
                 $title = "Справочник";
                 break;
             case 5:
-                $title = "Каталог";
+                $title = "Сервис";
                 break;
         }
 

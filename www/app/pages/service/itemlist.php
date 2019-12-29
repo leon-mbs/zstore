@@ -22,6 +22,7 @@ use \App\Helper as H;
 class ItemList extends \App\Pages\Base {
 
     public $_item;
+     
 
     public function __construct() {
         parent::__construct();
@@ -34,22 +35,25 @@ class ItemList extends \App\Pages\Base {
         $this->filter->add(new DropDownChoice('searchstore', Store::getList(), 0));
 
 
-        $this->add(new Panel('itempanel'));
+        $this->add(new Panel('itempanel'));   
+     
+        
         $this->itempanel->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
 
         $this->itempanel->itemlist->setPageSize(25);
         $this->itempanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->itempanel->itemlist));
 
-
-
-        $this->itempanel->itemlist->Reload();
+ 
         $this->itempanel->add(new ClickLink('csv', $this, 'oncsv'));
-
+        $this->itempanel->add(new Label('totamount'));
 
         $this->add(new Panel('detailpanel'))->setVisible(false);
         $this->detailpanel->add(new ClickLink('back'))->onClick($this, 'backOnClick');
         $this->detailpanel->add(new Label('itemdetname'));
+        
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
+        
+        $this->OnFilter(null);        
     }
 
     public function itemlistOnRow($row) {
@@ -95,8 +99,32 @@ class ItemList extends \App\Pages\Base {
 
     public function OnFilter($sender) {
         $this->itempanel->itemlist->Reload();
+       
+        $am = $this->getTotalAmount();
+        $this->itempanel->totamount->setText((H::fa($am)))  ;
     }
+    public function getTotalAmount() {
+        
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where item_id in (select item_id from items where disabled<>1 ) " ;
+        $cat = $this->filter->searchcat->getValue();
+        $store = $this->filter->searchstore->getValue();
+        if ($store > 0) {
+            $sql = $sql . " and  store_id={$store}  ";
+        }  
 
+        if ($cat > 0) {
+            $sql = $sql . " and cat_id=" . $cat;
+        }        
+        
+        $text = trim($this->filter->searchkey->getText());
+        if (strlen($text) > 0) {
+             
+            $text = Stock::qstr('%' . $text . '%');
+            $sql = $sql . "  and (itemname like {$text} or item_code like {$text}    )  ";
+        }        
+        return $conn->GetOne($sql);
+    }
     public function detailistOnRow($row) {
         $stock = $row->getDataItem();
         $row->add(new Label('storename', $stock->storename));
@@ -217,9 +245,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
 
         $form = $this->page->filter;
         $where = "   disabled <> 1 ";
-
-
-
+  
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
 
@@ -234,7 +260,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         }
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
-            $form->searchcat->setValue(0); //поиск независимо от категории
+            
             $text = Stock::qstr('%' . $text . '%');
             $where = "   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }
@@ -243,6 +269,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
 
         return $where;
     }
+
 
     public function getItemCount() {
         return Item::findCnt($this->getWhere());
@@ -281,7 +308,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource {
 
         return $where;
     }
-
+ 
     public function getItemCount() {
         return Stock::findCnt($this->getWhere());
     }
