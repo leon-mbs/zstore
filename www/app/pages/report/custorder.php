@@ -91,7 +91,7 @@ class CustOrder extends \App\Pages\Base {
         };
   
         $names = array_keys($items);
-          sort($names);
+        sort($names);  //соартируем по  алфавиту
   
         foreach($names as $name){
             $item = $items[$name];

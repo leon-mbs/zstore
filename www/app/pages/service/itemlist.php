@@ -65,6 +65,7 @@ class ItemList extends \App\Pages\Base {
 
         $qty = $item->getQuantity($store );
         $row->add(new Label('iqty', H::fqty($qty)));
+        $row->add(new Label('minqty', H::fqty($item->minqty)));
         $row->add(new Label('iamount', H::fa(abs($item->getAmount($store)))));
 
 
