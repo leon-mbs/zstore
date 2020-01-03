@@ -432,10 +432,16 @@
                                                     <i class="fa    nav-icon"></i>    
                                                     <p>Задачи</p>
                                                 </a>
+                                                <a href="/index.php?p=App/Modules/Issue/Pages/Calendar" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>    
+                                                    <p>Календарь</p>
+                                                </a>
+                                                {{#isadmin}}
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/Stat" class="nav-link">
                                                     <i class="fa    nav-icon"></i>    
                                                     <p>Статистика</p>
                                                 </a>
+                                                {{/isadmin}}
                                             </li>
                                         </ul>                  
 

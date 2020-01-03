@@ -6,10 +6,10 @@
 
     <body>
 
-        <div class="row" zippy="listpan">
-            <div class="col-12 col-xl-10">
+        <div class="row" >
+            <div class="col-12  ">
                 <div class="navbar nav">
-                    <h3>Менеджер задач </h3>
+                    <h3>Список задач </h3>
 
                     <form zippy="filter" class="form-inline ">
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"  >
@@ -23,100 +23,44 @@
                             <option value="0">Не выбран</option>
                         </select>
                         <label for="searchproject"> проект  </label>
-                        <input zippy="searchproject"  placeholder="Начните вводить..." class="form-control mr-2" type="text"  >
-
+                            <select class="form-control mr-sm-2  " zippy="searchproject">
+                            <option value="0">Не выбран</option>
+                        </select>
 
                         <input type="submit" class="mr-2  btn btn-outline-success  " value="ОК">
                     </form>
                 </div>          
-                <div class="navbar nav">
-                    <form zippy="sort" class="form-inline ">
-
-                        <label for="sorttype">Сортировать  </label>
-                        <select class="form-control mr-sm-2  " zippy="sorttype">
-
-                        </select>
-
-                        <input type="submit" class="mr-2  btn btn-outline-success  " value="ОК">
-                    </form>
-                </div>       
+                 
                 <a zippy="addnew" class="btn btn-sm btn-outline-success">Новая задача</a>   
-                <table class="table   table-sm  table-hover   ">
-                    <tr>
-                        <th> </th>
-                        <th style="width:40px">#</th>
-                        <th>Название</th>
-                        <th>Исполнитель</th>
-                        <th>Статус  </th>
-                        <th class="text-right">План, час.</th>
-                        <th class="text-right">Факт, час.  </th>
-                        <th>  </th>
-                    </tr>   <tbody>
-                        <tr zippy="list">
-                            <td class="text-right"><i zippy="prup" class="fa fa-arrow-up text-danger" title="Высокий приоритет"></i><i zippy="prdown" class="fa fa-arrow-down text-success"  title="Низкий приоритет"></i></td>
-                            <td zippy="issue_id"> </td>
-                            <td zippy="title"></td>
-                            <td zippy="issignedto"></td>
-                            <td zippy="status"></td>
-                            <td zippy="ptime" class="text-right"></td>
-                            <td zippy="ftime" class="text-right"></td>
-                            <td  > 
-                                <a zippy="opencomment"><i class="fa fa-comments"></a>
-                                &nbsp;&nbsp;
-
-                                <a zippy="edit"><i class="fa fa-edit"></a>
-                                &nbsp;&nbsp;                            
-                                <a zippy="delete"><i class="fa fa-trash"></a>
-
-
-                            </td>
-
-                        </tr>   </tbody>
-                </table>
-
-                <div zippy="pag"></div>       
-
+      
             </div>
         </div>
-        <div class="row" zippy="editpan">
-            <div class="col-12 col-md-10 col-xl-6">
-                <form zippy="editform">
-                    <div class="form-group">
-                        <label for="edittitle">Название</label>
-                        <input type="text" required="required" class="form-control" zippy="edittitle">
-                    </div>
-                    <div class="form-group">
-                        <label for="editcontent">Описание</label>
-                        <textarea style="height:200px;" class="form-control" zippy="editcontent"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="editpr">Приоритет  </label>
-                        <select class="form-control    " zippy="editpr" style="width:200px">
-
-                        </select>
-                    </div>                  
-
-                    <div class="form-group">
-                        <label for="edithours">Планируемое время</label>
-
-                        <input style="width:60px" zippy="edithours" pattern="[0-9\.]+" type="text"   class="form-control"   >
-
-                    </div> 
+         <div class="row"  zippy="listpan">
+                    <div class="col-auto  ">
                          
+                        <table class="table   table-sm  table-hover   ">
+                            
+                                <tr zippy="list">
+                                    
+                                    <td >
+                                      <span zippy="issue_id"></span>
+                                      <i zippy="prup" class="fa fa-arrow-up text-danger" title="Высокий приоритет"></i><i zippy="prdown" class="fa fa-arrow-down text-success"  title="Низкий приоритет"></i>
+                                      <br><a><span zippy="title"></span></a>
+                                    </td>
+                                   
+                                     
+                                    
 
-                    <div class="form-group">
-                        <a zippy="editcancel" class="btn btn-light">Отмена</a>&nbsp;
-                        <input type="submit"   class="btn btn-outline-primary" value="Сохранить">
-                    </div> 
-                </form>            
+                                </tr>  
+                        </table>
 
+                        <div zippy="pag"></div>       
 
-            </div>
-        </div>
-
-        <div class="row" zippy="msgpan">
+                      </div>
+                   <div class="col-auto  "> 
+                  <div class="row" zippy="msgpan">
             <div class="col-12 col-md-8 col-xl-6">
-                <a  zippy="back" ><i class="fa fa-arrow-circle-left"></i> К списку</a>
+                
                 <h4 zippy="mtitle"></h4>   
                 <p zippy="mdesc"></p>   
                 <hr>
@@ -232,7 +176,52 @@
 
 
             </div>
+        </div>                  
+                  </div>     
+                   <div class="col-auto  "> 
+                   ddd     
+                  </div>     
+
+
+              </div>     
+      
+        <div class="row" zippy="editpan">
+            <div class="col-12 col-md-10 col-xl-6">
+                <form zippy="editform">
+                    <div class="form-group">
+                        <label for="edittitle">Название</label>
+                        <input type="text" required="required" class="form-control" zippy="edittitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="editcontent">Описание</label>
+                        <textarea style="height:200px;" class="form-control" zippy="editcontent"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editpr">Приоритет  </label>
+                        <select class="form-control    " zippy="editpr" style="width:200px">
+
+                        </select>
+                    </div>                  
+
+                    <div class="form-group">
+                        <label for="edithours">Планируемое время</label>
+
+                        <input style="width:60px" zippy="edithours" pattern="[0-9\.]+" type="text"   class="form-control"   >
+
+                    </div> 
+                         
+
+                    <div class="form-group">
+                        <a zippy="editcancel" class="btn btn-light">Отмена</a>&nbsp;
+                        <input type="submit"   class="btn btn-outline-primary" value="Сохранить">
+                    </div> 
+                </form>            
+
+
+            </div>
         </div>
+
+
 
 
         <script src="/assets/js/ckeditor/ckeditor.js" type="text/javascript"></script>

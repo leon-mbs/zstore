@@ -25,11 +25,11 @@ class Issue extends \ZCL\DB\Entity {
         $this->issue_id = 0;
         $this->project_id = 0;
 
+ 
         $this->user_id = 0;
         $this->status = 0;
         $this->priority = 0;
         $this->hours = 0;
-
  
         $this->createdon = time();
         $this->lastupdate = time();
