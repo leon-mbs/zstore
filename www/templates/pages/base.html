@@ -44,8 +44,18 @@
                 </ul>
 
                 <ul class="navbar-nav ml-auto">
-                    <!-- Messages: style can be found in dropdown.less-->
-                
+                   {{#usebranch}}
+                 <li class="nav-item">
+                   <form zippy="nbform" class="form-inline ">
+                         Филиал 
+                        <select zippy="nbbranch" class="form-control ml-1 "  >
+                           <option value="0">Все доступные</option>
+                        </select>
+                         
+                     
+                    </form>    
+                    </li>  
+                       {{/usebranch}}
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
                             <i class="fa fa-bell "></i>
@@ -451,7 +461,7 @@
                                 </ul>  
 
                             </li>           
-
+                           {{#isadmin}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-cog"></i>
@@ -466,7 +476,13 @@
                                             <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Пользователи</p>
                                         </a>
                                     </li> 
-                                
+                                    {{#usebranch}}
+                                   <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/BranchList" class="nav-link">
+                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Филиалы</p>
+                                        </a>
+                                    </li> 
+                                    {{/usebranch}}
                           
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Options" class="nav-link">
@@ -475,7 +491,8 @@
                                     </li>
                                 </ul>  
 
-                            </li>
+                            </li>  
+                             {{/isadmin}}
                         </ul>
                     </nav>
                 </div>

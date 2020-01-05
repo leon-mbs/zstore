@@ -274,6 +274,9 @@ class ProdIssue extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
+        if (($this->docform->store->getValue() > 0 ) ==false) {
+            $this->setError("Не выбран  склад");
+        }
 
         return !$this->isError();
     }

@@ -22,6 +22,8 @@ class User extends Entity {
     protected function init() {
         $this->userlogin = "Гость";
         $this->user_id = 0;
+        $this->defstore = 0;
+        $this->defmf = 0;
         $this->createdon = time();
     }
 
@@ -52,6 +54,8 @@ class User extends Entity {
         $xml = simplexml_load_string($this->acl);
         $this->acltype = (int) ($xml->acltype[0]);
         $this->onlymy = (int) ($xml->onlymy[0]);
+        $this->defstore = (int) ($xml->defstore[0]);
+        $this->defmf = (int) ($xml->defmf[0]);
         $this->aclview = (string) ($xml->aclview[0]);
         $this->acledit = (string) ($xml->acledit[0]);
         $this->widgets = (string) ($xml->widgets[0]);
@@ -78,6 +82,8 @@ class User extends Entity {
         $this->acl .= "<acledit>{$this->acledit}</acledit>";
         $this->acl .= "<widgets>{$this->widgets}</widgets>";
         $this->acl .= "<modules>{$this->modules}</modules>";
+        $this->acl .= "<defstore>{$this->defstore}</defstore>";
+        $this->acl .= "<defmf>{$this->defmf}</defmf>";
         $this->acl .= "</detail>";
 
         $this->options = serialize($this->_options);

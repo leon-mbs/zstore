@@ -232,6 +232,12 @@ class MoveItem extends \App\Pages\Base {
         if ($this->docform->storeto->getValue() == $this->docform->storefrom->getValue()) {
             $this->setError("Выбран тот  же склад получатель");
         }
+        if (($this->docform->storeto->getValue() > 0 ) ==false) {
+            $this->setError("Не выбран  склад");
+        }
+        if (($this->docform->storefrom->getValue() > 0 ) ==false) {
+            $this->setError("Не выбран  склад");
+        }
 
 
         return !$this->isError();

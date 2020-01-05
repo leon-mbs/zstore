@@ -614,6 +614,9 @@ class Task extends \App\Pages\Base {
         if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
+        if (($this->docform->store->getValue() > 0 ) ==false) {
+            $this->setError("Не выбран  склад");
+        }
 
         return !$this->isError();
 

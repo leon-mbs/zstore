@@ -3,6 +3,7 @@
 namespace App\Pages;
 
 use \Zippy\Binding\PropertyBinding as Bind;
+use \Zippy\Html\Form\TextArea;
 use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Form\CheckBox;
 use \Zippy\Html\Form\DropDownChoice;
@@ -28,8 +29,11 @@ class UserProfile extends \App\Pages\Base {
         $form->onSubmit($this, 'onsubmit');
         $form->add(new Label('userlogin', $this->user->userlogin));
         $form->add(new TextInput('email', $this->user->email));
+        $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(),$this->user->defstore));
+        $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(),$this->user->defmf));
+        
         $this->add($form);
-
+  
 
         //форма   пароля
 
@@ -38,11 +42,21 @@ class UserProfile extends \App\Pages\Base {
         $form->add(new TextInput('confirmpassword'));
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
+        
+        
+      
+        $this->add(new Form('msgform'))->onSubmit($this, 'OnSend');
+        $this->msgform->add(new TextArea('msgtext'));
+        $this->msgform->add(new DropDownChoice('users', \App\Entity\User::findArray('username','disabled <> 1 and user_id <>'.$this->user->user_id,'username'),0));
+           
+        
     }
 
     public function onsubmit($sender) {
 
         $this->user->email = $sender->email->getText();
+        $this->user->defstore = $sender->defstore->getValue();
+        $this->user->defmf = $sender->defmf->getValue();
 
         if (!$this->isError()) {
             $this->user->save();
@@ -89,6 +103,25 @@ class UserProfile extends \App\Pages\Base {
 
         $sender->userpassword->setText('');
         $sender->confirmpassword->setText('');
+    }
+  
+  
+    public function OnSend($sender) {
+        $msg = trim($sender->msgtext->getText());
+        if (strlen($msg) == 0)
+            return;
+
+        $from = System::getUser();
+
+        $n = new \App\Entity\Notify();
+        $n->user_id = $this->user->user_id;
+        $n->message = "Сообщение от пользователя <b>{$from->username}</b> <br><br>";
+        $n->message .= $msg;
+
+        $n->save();
+
+        $sender->msgtext->setText('') ;
+        $this->setInfo('Отправлено');
     }
 
 }

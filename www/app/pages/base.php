@@ -13,7 +13,7 @@ use \App\Session;
 use \App\Entity\User;
 
 class Base extends \Zippy\Html\WebPage {
-
+     public $branch_id=0; 
     public function __construct($params = null) {
         global $_config;
 
@@ -26,6 +26,17 @@ class Base extends \Zippy\Html\WebPage {
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
+        
+        $this->branch_id = Session::getSession()->branch_id;
+        $blist  = \App\Entity\Branch::getList();
+        if(count($blist)==1) {      //если  одна
+           $this->branch_id = array_pop(array_keys($blist)) ;
+           
+    
+           Session::getSession()->branch_id = $this->branch_id;
+        }        
+        $this->add(new \Zippy\Html\Form\Form('nbform'));
+        $this->nbform->add(new \Zippy\Html\Form\DropDownChoice('nbbranch',$blist,$this->branch_id))->onChange($this,'onnbFirm');
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
@@ -39,18 +50,17 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
 
-      
         $options = System::getOptions('common');
-
-        if (($options['defstore'] > 0 && $options['defmf'] > 0 ) == false) {
-            $this->setError("Не заданы в <a href=\"/index.php?p=App/Pages/Options\">настройках</a> склад или  касса.");
-        }
 
         $this->_tvars["useset"] = $options['useset'] == 1;
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
         $this->_tvars["useimages"] = $options['useimages'] == 1;
-
+        $this->_tvars["usebranch"] = $options['usebranch'] == 1;
+        if($this->_tvars["usebranch"]== false){
+             $this->branch_id = 0;
+             Session::getSession()->branch_id = 0;
+        }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
 
 
@@ -76,7 +86,12 @@ class Base extends \Zippy\Html\WebPage {
         //    App::$app->getresponse()->toBack();
     }
 
- 
+      public function onnbFirm($sender) {
+          $firm_id = $sender->getValue();
+          Session::getSession()->firm_id=$firm_id;
+          App::RedirectHome();              
+       }
+  
 
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg) {

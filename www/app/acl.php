@@ -6,7 +6,7 @@ use \App\System;
 use \App\Application as App;
 
 /**
- * Класс  для  упрвления доступом к метаобьектам
+ * Класс  для  управления доступом к метаобьектам
  */
 class ACL {
 
@@ -101,13 +101,13 @@ class ACL {
         return false;
     }
 
-    //проверка  на  доступ  к  документу 
+    //проверка  на  доступ  к просмотру документа
     public static function checkShowDoc($doc, $inreg = false) {
         $user = System::getUser();
         if ($user->acltype != 2)
             return true;
 
-        self::load();
+      //  self::load();
 
 
 
@@ -115,7 +115,7 @@ class ACL {
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg('Нет права  просмотра данного ; документа');
+                System::setErrorMsg('Нет права  просмотра данного  документа');
                 if ($inreg == false)
                     App::RedirectHome();
                 return false;
@@ -129,7 +129,7 @@ class ACL {
             return true;
         }
 
-        System::setErrorMsg('Нет права  просмотра данного ; документа');
+        System::setErrorMsg('Нет права  просмотра данного   документа');
         if ($inreg == false)
             App::RedirectHome();
         return false;
@@ -141,7 +141,7 @@ class ACL {
         if ($user->acltype != 2)
             return true;
 
-        self::load();
+       // self::load();
 
 
 
@@ -161,7 +161,7 @@ class ACL {
             return true;
         }
 
-        System::setErrorMsg('Нет права   изменения данного ; документа');
+        System::setErrorMsg('Нет права   изменения данного  документа');
         if ($inreg == false)
             App::RedirectHome();
         return false;

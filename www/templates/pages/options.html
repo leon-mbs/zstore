@@ -8,27 +8,16 @@
                 <form   zippy="common"  >
 
              
-                    <div class="form-group  ">
-                        <label for="defstore" >Склад по умолчанию</label>
-
-                        <select class="form-control" zippy="defstore">
-                            <option value='0'>Не выбран</option>
-                        </select>
-                    </div>  
-                    <div class="form-group  ">
+                 
+          
+                   <div class="form-group  ">
                         <label for="partiontype" >Тип партионного учета</label>
                         <select class="form-control" zippy="partiontype">                        </select>
                         <small>Учет отдельно  по каждой закупочной цене позволяет точно  учтитывать
                         прибыль но  осложняет  списание  партий</small>
                         
                     </div>  
-                    <div class="form-group  ">
-                        <label for="defmf" >Денежный счет по умолчанию</label>
-
-                        <select class="form-control" zippy="defmf">
-                            <option value='0'>Не выбран</option>
-                        </select>
-                    </div>  
+ 
                     <div class="form-group  ">
                         <label >Типы отпускных цен</label>
                         <input class="form-control" type="text" zippy="price1" required="required"   >
@@ -88,6 +77,11 @@
                         <input zippy="usescanner" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="usescanner">Поддержка сканера  штрих кодов </label>
                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Использование  сканера  штрих кодов для ввода  товаров в расходной накладной"></i>
+                    </div>
+                   <div class="form-check">
+                        <input zippy="usebranch" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="usebranch">Использование  филиалов </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Фиомиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала  "></i>
                     </div>
 
                     <div class="form-check">

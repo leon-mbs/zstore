@@ -494,7 +494,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-        if ($this->docform->store->getValue() == 0) {
+        if (($this->docform->store->getValue() > 0 ) ==false) {
             $this->setError("Не выбран  склад");
         }
         if ($this->docform->customer->getKey() == 0) {

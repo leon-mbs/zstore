@@ -24,7 +24,7 @@ use \App\System;
 use \App\Application as App;
 
 /**
- * Страница  ввода  кассовый ек
+ * Страница  ввода  кассовый чек
  */
 class POSCheck extends \App\Pages\Base {
 
@@ -608,7 +608,7 @@ class POSCheck extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
-        if ($this->docform->store->getValue() == 0) {
+        if (($this->docform->store->getValue() > 0 ) ==false) {
             $this->setError("Не выбран  склад");
         }
         if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {

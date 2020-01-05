@@ -23,15 +23,15 @@ class Options extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (System::getUser()->acltype == 2) {
+        if (System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('К странице имеет  доступ только администратор ');
             App::RedirectHome();
-            return;
+            return false;
         }
 
 
+
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
-        $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList()));
-        $this->common->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList()));
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $pt = array(
@@ -47,6 +47,7 @@ class Options extends \App\Pages\Base {
 
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('useimages'));
+        $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
         $this->common->add(new TextInput('ceuro'));
@@ -65,8 +66,6 @@ class Options extends \App\Pages\Base {
         if (!is_array($common))
             $common = array();
 
-        $this->common->defstore->setValue($common['defstore']);
-        $this->common->defmf->setValue($common['defmf']);
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
@@ -88,6 +87,7 @@ class Options extends \App\Pages\Base {
         $this->common->useval->setChecked($common['useval']);
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
+        $this->common->usebranch->setChecked($common['usebranch']);
         // $this->common->closeddate->setDate($common['closeddate']);
 
 
@@ -153,8 +153,6 @@ class Options extends \App\Pages\Base {
     public function saveCommonOnClick($sender) {
         $common = array();
 
-        $common['defstore'] = $this->common->defstore->getValue();
-        $common['defmf'] = $this->common->defmf->getValue();
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
@@ -176,6 +174,7 @@ class Options extends \App\Pages\Base {
         $common['useval'] = $this->common->useval->isChecked();
         $common['usescanner'] = $this->common->usescanner->isChecked();
         $common['useimages'] = $this->common->useimages->isChecked();
+        $common['usebranch'] = $this->common->usebranch->isChecked();
 
         // $common['closeddate'] = $this->common->closeddate->getDate();
 

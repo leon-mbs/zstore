@@ -35,6 +35,8 @@ class Document extends \ZCL\DB\Entity {
 
     // const EX_XML_GNAU = 4;
 
+ 
+    
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
      *
@@ -49,6 +51,16 @@ class Document extends \ZCL\DB\Entity {
      */
     public $detaildata = array();
 
+    /**
+    * документы должны создаватся методом create
+    * 
+    * @param mixed $row
+    */
+    protected function __construct($row = null)
+    {
+        parent::__construct($row);
+    }    
+    
     /**
      * начальная инициализация. Вызывается автоматически  в  конструкторе  Entity
      * 
@@ -640,4 +652,8 @@ class Document extends \ZCL\DB\Entity {
         return '';
     }
 
+    
+    public static function getConstraint(){
+          return '1=1';
+    }    
 }

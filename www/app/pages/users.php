@@ -23,6 +23,12 @@ class Users extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
+    
+        if (System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('К странице имеет  доступ только администратор');
+            App::RedirectHome();
+            return false;
+        }
 
 
         $this->add(new Panel("listpan"));
@@ -65,10 +71,6 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new Panel('metaaccess'))->setVisible(false);
         $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "meta_type"), $this, 'metarowOnRow'));
 
-        $this->add(new Panel("msgpan"))->setVisible(false);
-        $this->msgpan->add(new Form('msgform'))->onSubmit($this, 'OnSend');
-        $this->msgpan->msgform->add(new Button('cancelm'))->onClick($this, 'cancelOnClick');
-        $this->msgpan->msgform->add(new TextArea('msgtext'));
     }
 
     public function onAdd($sender) {
@@ -313,31 +315,9 @@ class Users extends \App\Pages\Base {
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
     }
 
-    public function OnMsg($sender) {
-        $this->user = $sender->getOwner()->getDataItem();
-        $this->listpan->setVisible(false);
-        $this->msgpan->setVisible(true);
-    }
+  
 
-    public function OnSend($sender) {
-        $msg = trim($sender->msgtext->getText());
-        if (strlen($msg) == 0)
-            return;
-
-        $from = System::getUser();
-
-        $n = new \App\Entity\Notify();
-        $n->user_id = $this->user->user_id;
-        $n->message = "Сообщение от пользователя <b>{$from->username}</b> <br><br>";
-        $n->message .= $msg;
-
-        $n->save();
-
-        $this->listpan->setVisible(true);
-        $this->msgpan->setVisible(false);
-        $this->setInfo('Отправлено');
-    }
-
+ 
 }
 
 class UserDataSource implements \Zippy\Interfaces\DataSource {

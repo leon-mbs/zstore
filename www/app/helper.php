@@ -334,13 +334,17 @@ class Helper {
      * 
      */
     public static function getDefStore() {
-        $common = System::getOptions("common");
-        if ($common['defstore'] > 0) {
-            return $common['defstore'];
+        $user = System::getUser();
+        if ($user->defstore > 0) {
+            $user->defstore;
         }
-
-        \App\System::setErrorMsg('Не задан склад  по  умолчанию');
-        \App\Application::Redirect("\\App\\Pages\\Options");
+        $st = \App\Entity\Store::getList();
+        if(count($st)==1){
+            $keys = array_keys($st) ;
+            return $keys[0];
+        }
+        return 0;
+ 
     }
 
     /**
@@ -348,13 +352,17 @@ class Helper {
      * 
      */
     public static function getDefMF() {
-        $common = System::getOptions("common");
-        if ($common['defmf'] > 0) {
-            return $common['defmf'];
+        $user = System::getUser();
+        if ($user->defmf > 0) {
+            $user->defmf;
         }
 
-        \App\System::setErrorMsg('Не задан денежный счет по  умолчанию');
-        \App\Application::Redirect("\\App\\Pages\\Options");
+        $st = \App\Entity\MoneyFund::getList();
+        if(count($st)==1){
+            $keys = array_keys($st) ;
+            return $keys[0];
+        }
+        return 0;
     }
 
     /**
