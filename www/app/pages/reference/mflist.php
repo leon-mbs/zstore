@@ -8,6 +8,7 @@ use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Form\TextArea;
+use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
@@ -20,12 +21,14 @@ class MFList extends \App\Pages\Base {
 
     private $_mf;
     private $_balance;
+        private $_blist;
 
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('MFList'))
             return;
         $this->_balance = MoneyFund::Balance();
+        $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
 
         $this->add(new Panel('mftable'))->setVisible(true);
@@ -33,7 +36,8 @@ class MFList extends \App\Pages\Base {
         $this->mftable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('mfdetail'))->setVisible(false);
         $this->mfdetail->add(new TextInput('editmf_name'));
-        $this->mfdetail->add(new TextInput('editmf_code'));
+        $this->mfdetail->add(new DropDownChoice('editbranch',$this->_blist,0));
+       
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -43,7 +47,8 @@ class MFList extends \App\Pages\Base {
         $item = $row->getDataItem();
 
         $row->add(new Label('mf_name', $item->mf_name));
-        $row->add(new Label('mf_code', $item->mf_code));
+       $row->add(new Label('branch', $this->_blist[$item->branch_id] ));
+         
         $row->add(new Label('description', $item->description));
         $row->add(new Label('amount', $this->_balance[$item->mf_id]));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -70,7 +75,8 @@ class MFList extends \App\Pages\Base {
         $this->mftable->setVisible(false);
         $this->mfdetail->setVisible(true);
         $this->mfdetail->editmf_name->setText($this->_mf->mf_name);
-        $this->mfdetail->editmf_code->setText($this->_mf->mf_code);
+        $this->mfdetail->editbranch->setValue($this->_mf->branch_id);
+         
         $this->mfdetail->editmf_description->setText($this->_mf->mf_description);
     }
 
@@ -88,13 +94,18 @@ class MFList extends \App\Pages\Base {
             return;
 
         $this->_mf->mf_name = $this->mfdetail->editmf_name->getText();
-        $this->_mf->mf_code = $this->mfdetail->editmf_code->getText();
+        
         $this->_mf->description = $this->mfdetail->editmf_description->getText();
         if ($this->_mf->mf_name == '') {
             $this->setError("Введите наименование");
             return;
         }
-
+        $this->_mf->branch_id = $this->mfdetail->editbranch->getValue() ;
+        if($this->_tvars['usebranch']==true && $this->_mf->branch_id==0) {
+             $this->setError('Не выбран  филиал') ;
+             return;
+        }
+ 
         $this->_mf->Save();
         $this->mfdetail->setVisible(false);
         $this->mftable->setVisible(true);

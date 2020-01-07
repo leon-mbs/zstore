@@ -320,10 +320,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource {
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name  = 'Order' and document_number like  {$sn} ";
         }
-        if ($user->acltype == 2) {
-
-            $where .= " and meta_id in({$user->aclview}) ";
-        }
+      
         return $where;
     }
 

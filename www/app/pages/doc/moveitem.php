@@ -38,7 +38,7 @@ class MoveItem extends \App\Pages\Base {
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('storeto', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('storeto', Store::getList(), 0))->onChange($this, 'OnChangeStore');
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');

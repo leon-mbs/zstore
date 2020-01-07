@@ -16,7 +16,7 @@
                             <th  >Дата рег.</th>
 
                             <th  >Email</th>
-                            <th width="24">&nbsp;</th>
+                            
                             <th width="24">&nbsp;</th>
                             <th width="24">&nbsp;</th>
                         </tr>
@@ -28,7 +28,7 @@
                             <td zippy="created" align="center" style="white-space:nowrap"></td>
 
                             <td zippy="email"  ></td>
-                            <td><a zippy="msg"><i class="fa fa-comment"></i></a></td>
+                            
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
                             <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
                         </tr>
@@ -140,7 +140,17 @@
                         {{/issue}}       
 
                     </div>
-
+                   {{#usebranch}}
+                       
+                   
+                     <div class="form-group">
+                        <label for="acl">Настройка доступа к филиалам</label>
+                         <table class="table table-sm table-striped">
+                           <tr zippy="brow"><td zippy="branch_name"> </td> <td><input zippy="editbr" class="acl" type="checkbox"></td></tr>
+                       
+                         </table>
+                     </div> 
+                       {{/usebranch}}
                     <div class="form-group">
                         <label for="acl">Права доступа к  страницам</label>
                         <select  style="width:200px"  class="form-control" zippy="editacl">
@@ -150,8 +160,11 @@
 
                         </select>
                     </div> 
+                     
+                    
+                    
                     <div class="form-group" zippy="metaaccess"> 
-                        <h5>Настройка доступа к страницам</h5>
+                        
                         &nbsp;&nbsp;<span style="cursor:pointer" onclick=" $('.acl').prop('checked', true);"><i class="far fa-check-square"></i> Выставить все</span> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <span  style="cursor:pointer" onclick=" $('.acl').prop('checked', false);"><i class="far fa-square"></i> Снять все</span>  
                         <table class="table table-sm table-striped">
                             <tr><th>Тип</th> <th>Страница</th><th style="width:30px" title="Просмотр"><i class="fa fa-search"></i> </th><th style="width:30px" title="Редактирование"><i class="fa fa-edit"></i> </th></tr>

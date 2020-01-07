@@ -69,7 +69,8 @@ class Document extends \ZCL\DB\Entity {
         $this->document_id = 0;
         $this->state = 0;
         $this->customer_id = 0;
-
+        $this->branch_id = 0;
+        
         $this->document_number = '';
         $this->notes = '';
 
@@ -79,6 +80,7 @@ class Document extends \ZCL\DB\Entity {
         $this->basedoc = '';
         $this->headerdata = array();
         $this->detaildata = array();
+        
     }
 
     /**
@@ -275,6 +277,8 @@ class Document extends \ZCL\DB\Entity {
 
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
+        
+        $doc->branch_id=\App\Acl::checkCurrentBranch() ;
         return $doc;
     }
 
@@ -654,6 +658,18 @@ class Document extends \ZCL\DB\Entity {
 
     
     public static function getConstraint(){
-          return '1=1';
+        $c = \App\ACL::getBranchConstraint() ;
+        $user = System::getUser() ;
+        if ($user->acltype == 2) {
+            if(strlen($c)==0) $c="1=1 ";
+            if ($user->onlymy == 1) {
+
+                $c .= " and user_id  = " . $user->user_id;
+            }
+
+            $c .= " and meta_id in({$user->aclview}) ";
+        }   
+        
+        return  $c;     
     }    
 }

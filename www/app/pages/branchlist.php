@@ -13,12 +13,13 @@ use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
-use \App\Entity\Firm;
+use \App\Entity\Branch;
+use \App\System;
 
 //Филиалы
 class BranchList extends \App\Pages\Base {
 
-    private $_firm;
+    private $_branch;
 
     public function __construct() {
         parent::__construct();
@@ -29,27 +30,26 @@ class BranchList extends \App\Pages\Base {
         }
 
 
-        $this->add(new Panel('firmtable'))->setVisible(true);
-        $this->firmtable->add(new DataView('firmlist', new \ZCL\DB\EntityDataSource('\App\Entity\Firm','','disabled asc,firm_name asc'), $this, 'firmlistOnRow'))->Reload();
-        $this->firmtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->add(new Form('firmdetail'))->setVisible(false);
-        $this->firmdetail->add(new TextInput('editfirm_name'));
+        $this->add(new Panel('branchtable'))->setVisible(true);
+        $this->branchtable->add(new DataView('branchlist', new \ZCL\DB\EntityDataSource('\App\Entity\Branch','','disabled asc,branch_name asc'), $this, 'branchlistOnRow'))->Reload();
+        $this->branchtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+        $this->add(new Form('branchdetail'))->setVisible(false);
+        $this->branchdetail->add(new TextInput('editbranch_name'));
        
-        $this->firmdetail->add(new TextInput('editaddress'));
-        $this->firmdetail->add(new TextArea('editcomment'));
-        $this->firmdetail->add(new CheckBox('editdisabled'));
-        $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-        $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-        $this->firmdetail->add(new DropDownChoice('editdefstore', \App\Entity\Store::getList()));
-        $this->firmdetail->add(new DropDownChoice('editdefmf', \App\Entity\MoneyFund::getList()));
-        $this->firmdetail->add(new DropDownChoice('editcompany', \App\Entity\Company::getList()));
+        $this->branchdetail->add(new TextInput('editaddress'));
+        $this->branchdetail->add(new TextInput('editphone'));
+        $this->branchdetail->add(new TextArea('editcomment'));
+        $this->branchdetail->add(new CheckBox('editdisabled'));
+        $this->branchdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
+        $this->branchdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
 
-    public function firmlistOnRow($row) {
+    public function branchlistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('firm_name', $item->firm_name));
-        $row->add(new Label('company', $item->getCompany()->company_name));
+        $row->add(new Label('branch_name', $item->branch_name));
+        $row->add(new Label('address', $item->address));
+        $row->add(new Label('phone', $item->phone));
    
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -58,70 +58,62 @@ class BranchList extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('FirmList'))
-            return;
-        $firm = $sender->owner->getDataItem();
+      
+        $branch = $sender->owner->getDataItem();
 
-        $del = Firm::delete($firm->firm_id);
+        $del = Branch::delete($branch->branch_id);
         if (strlen($del) > 0) {
             $this->setError($del);
             return;
         }
-        $this->firmtable->firmlist->Reload();
+        $this->branchtable->branchlist->Reload();
     }
 
     public function editOnClick($sender) {
-        $this->_firm = $sender->owner->getDataItem();
-        $this->firmtable->setVisible(false);
-        $this->firmdetail->setVisible(true);
-        $this->firmdetail->editfirm_name->setText($this->_firm->firm_name);
+        $this->_branch = $sender->owner->getDataItem();
+        $this->branchtable->setVisible(false);
+        $this->branchdetail->setVisible(true);
+        $this->branchdetail->editbranch_name->setText($this->_branch->branch_name);
      
-        $this->firmdetail->editaddress->setText($this->_firm->address);
-        $this->firmdetail->editdefstore->setValue($this->_firm->defstore);
-        $this->firmdetail->editcompany->setValue($this->_firm->company_id);
+        $this->branchdetail->editaddress->setText($this->_branch->address);
+        $this->branchdetail->editphone->setText($this->_branch->phone);
         
-        $this->firmdetail->editdefmf->setOptionList(\App\Entity\MoneyFund::getList($this->_firm->firm_id));
-        $this->firmdetail->editdefmf->setValue($this->_firm->defmf);
-        $this->firmdetail->editcomment->setText($this->_firm->comment);
-        $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
+        $this->branchdetail->editcomment->setText($this->_branch->comment);
+        $this->branchdetail->editdisabled->setChecked($this->_branch->disabled);
     }
 
     public function addOnClick($sender) {
-        $this->firmtable->setVisible(false);
-        $this->firmdetail->setVisible(true);
+        $this->branchtable->setVisible(false);
+        $this->branchdetail->setVisible(true);
         // Очищаем  форму
-        $this->firmdetail->clean();
+        $this->branchdetail->clean();
 
-        $this->_firm = new Firm();
+        $this->_branch = new Branch();
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('FirmList'))
-            return;
 
 
-        $this->_firm->firm_name = $this->firmdetail->editfirm_name->getText();
-        if ($this->_firm->firm_name == '') {
+        $this->_branch->branch_name = $this->branchdetail->editbranch_name->getText();
+        if ($this->_branch->branch_name == '') {
             $this->setError("Введите наименование");
             return;
         }
        
-        $this->_firm->address = $this->firmdetail->editaddress->getText();
-        $this->_firm->defstore = $this->firmdetail->editdefstore->getValue();
-        $this->_firm->defmf = $this->firmdetail->editdefmf->getValue();
-        $this->_firm->company_id = $this->firmdetail->editcompany->getValue();
-        $this->_firm->comment = $this->firmdetail->editcomment->getText();
-        $this->_firm->disabled = $this->firmdetail->editdisabled->isChecked() ?1:0;
+        $this->_branch->address = $this->branchdetail->editaddress->getText();
+        $this->_branch->phone = $this->branchdetail->editphone->getText();
+        $this->_branch->comment = $this->branchdetail->editcomment->getText();
+        $this->_branch->disabled = $this->branchdetail->editdisabled->isChecked() ?1:0;
 
-        $this->_firm->Save();
-        $this->firmdetail->setVisible(false);
-        $this->firmtable->setVisible(true);
-        $this->firmtable->firmlist->Reload();
+        $this->_branch->Save();
+        $this->branchdetail->setVisible(false);
+        $this->branchtable->setVisible(true);
+        $this->branchtable->branchlist->Reload();
     }
 
     public function cancelOnClick($sender) {
-        $this->firmtable->setVisible(true);
-        $this->firmdetail->setVisible(false);
+        $this->branchtable->setVisible(true);
+        $this->branchdetail->setVisible(false);
     }
 
 }

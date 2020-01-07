@@ -213,11 +213,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " (meta_name  = 'GoodsReceipt' or meta_name  = 'InvoiceCust') and document_number like  {$sn} ";
         }
-        if ($user->acltype == 2) {
-
-
-            $where .= " and meta_id in({$user->aclview}) ";
-        }
+       
         return $where;
     }
 

@@ -53,6 +53,12 @@ class ItemList extends \App\Pages\Base {
         
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
         
+        $this->detailpanel->add(new Form('moveform'))->onSubmit($this, 'OnMove');
+        $this->detailpanel->moveform->add(new DropDownChoice('frompart'));
+        $this->detailpanel->moveform->add(new DropDownChoice('topart'));
+        $this->detailpanel->moveform->add(new TextInput('mqty','0'));
+        
+        
         $this->OnFilter(null);        
     }
 
@@ -184,8 +190,76 @@ class ItemList extends \App\Pages\Base {
         $this->detailpanel->setVisible(true);
         $this->detailpanel->itemdetname->setText($this->_item->itemname);
         $this->detailpanel->stocklist->Reload();
+        
+        $rows = $this->detailpanel->stocklist->getDataRows()  ;
+        $st = array();
+        foreach($rows as $row){
+            $stock = $row->getDataItem();
+            $name= $stock->itemname  ;
+            if(strlen($stock->snumber)>0)$name= $name. " ({$stock->snumber})";
+            $name= $name.', '. H::fa($stock->partion) ;
+            $st[$stock->stock_id]=$name;
+            
+        }
+        $this->detailpanel->moveform->frompart->setOptionList($st);
+        $this->detailpanel->moveform->topart->setOptionList($st);
     }
 
+    public function OnMove($sender) {
+        $st1 = $sender->frompart->getValue();
+        $st2 = $sender->topart->getValue() ;
+        $qty = $sender->mqty->getText() ;
+        if($st1==0 || $st2==0) {
+            $this->setError('Не выбрана  партия');
+            
+            return;
+        }
+        if($st1 == $st2) {
+            $this->setError('Одинаковые партии');
+            
+            return;
+        }
+       if(($qty>0)==false) {
+            $this->setError('Неверное количество');
+            
+            return;
+        }
+        $st1 = Stock::load($st1);
+        $st2 = Stock::load($st2);
+        if($qty>$st1->qty) {
+            $this->setError('Превышено количество');
+            
+            return;
+        }   
+            $doc = \App\Entity\Doc\Document::create('MoveItem');
+            $doc->document_number = $doc->nextNumber();
+            if (strlen($doc->document_number) == 0)
+                $doc->document_number = "ПТ-000001";
+            $doc->document_date = time();
+
+            $item = Item::load($st1->item_id);
+            $item->snumber = $st1->snumber;
+            $item->quantity = $qty;
+            $item->st1 = $st1->stock_id;
+            $item->st2 = $st2->stock_id;
+         
+             
+            $doc->detaildata[] = $item->getData();
+            
+            $store = Store::load($st1->store_id);
+            $doc->headerdata['storefrom'] = $store->store_id;
+            $doc->headerdata['storefromname'] = $store->storename;
+            $doc->headerdata['storeto'] = $store->store_id;
+            $doc->headerdata['storetoname'] = $store->storename;
+            $doc->notes="Перемещение партий";
+            $doc->save();
+            $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
+            $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);       
+        
+        $this->setInfo('Товар перемещен');
+        $sender->clean();  
+        $this->detailpanel->stocklist->Reload();  
+    }
     public function oncsv($sender) {
            $store =  $this->filter->searchstore->getValue()   ;
          $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');

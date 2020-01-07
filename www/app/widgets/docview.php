@@ -235,10 +235,13 @@ class DocView extends \Zippy\Html\PageFragment {
      * @param mixed $sender
      */
     public function OnMsgSubmit($sender) {
+        
+        $user = System::getUser();
+        
         $msg = new \App\Entity\Message();
         $msg->message = $this->addmsgform->addmsg->getText();
         $msg->created = time();
-        $msg->user_id = System::getUser()->user_id;
+        $msg->user_id = $user->user_id;
         $msg->item_id = $this->_doc->document_id;
         $msg->item_type = \App\Entity\Message::TYPE_DOC;
         if (strlen($msg->message) == 0)
@@ -249,15 +252,16 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->updateMessages();
 
         // уведомления
-        $user = System::getUser();
-
+        
         $users = array();
-        $users[$this->_doc->user_id] = 0; //автор
-
-        foreach ($this->_msglist as $msg) {
-            $users[$msg->user_id] = 0;  //коментаторы  
+        foreach($this->_msglist as $msg){
+            $users[$msg->user_id]  = $msg->user_id;
         }
-        $users = array_keys($users);
+        $users[$this->_doc->user_id]  = $this->_doc->user_id;//автор дока
+        
+        unset($users[$user->user_id]);//себе не  нужно
+         
+  
         foreach ($users as $adr) {
             if ($adr == $user->user_id)
                 continue; //себе не  нужно
@@ -275,7 +279,7 @@ class DocView extends \Zippy\Html\PageFragment {
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type =1 and item_id=' . $this->_doc->document_id);
+        $this->_msglist = \App\Entity\Message::getMessages(1, $this->_doc->document_id);
         $this->dw_msglist->Reload();
     }
 

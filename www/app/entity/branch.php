@@ -57,12 +57,34 @@ class Branch extends \ZCL\DB\Entity {
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0)
             return "Филиал используется в денежных счетах"; 
+        $sql = "  select count(*)  from  employees where   branch_id = {$this->branch_id}";
+        $cnt = $conn->GetOne($sql);
+        if ($cnt > 0)
+            return "Филиал используется в сотрудниках"; 
             
         return "";    
     }
 
-    public static function getList() {
-        return Branch::findArray("branch_name", "disabled<>1","branch_name");
+    /**
+    * список  филиалов
+    * 
+    * @param mixed $user_id
+    */
+    public static function getList($user_id=0) {
+        $where ="disabled<>1";
+        if($user_id>0){
+           $user = \App\Entity\User::load($user_id);
+           if($user->username != 'admin') {
+               if(strlen($user->aclbranch)==0){
+                   return  array();
+               } else {
+                   $where .= " and branch_id in ({$user->aclbranch}) ";
+               }
+           }
+        }
+        
+        
+        return Branch::findArray("branch_name", $where,"branch_name");
     }
    
    

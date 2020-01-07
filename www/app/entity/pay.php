@@ -83,7 +83,7 @@ class Pay extends \ZCL\DB\Entity {
         if ($type != 2) {
             $list[PAY::PAY_BASE_INCOME] = "Доходы основной деятельности";
             $list[PAY::PAY_INVEST_INCOME] = "Инвестиции";
-            $list[PAY::PAY_OTHER_INCOME] = "Прочие расходы";
+            $list[PAY::PAY_OTHER_INCOME] = "Прочие доходы";
         }
         if ($type != 1) {
             $list[PAY::PAY_BASE_OUTCOME] = "Расходы основной деятельности";

@@ -161,11 +161,7 @@ class ProdDataSource implements \Zippy\Interfaces\DataSource {
 
 
 
-        if ($user->acltype == 2) {
-
-
-            $where .= " and meta_id in({$user->aclview}) ";
-        }
+        
         return $where;
     }
 

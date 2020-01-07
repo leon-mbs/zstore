@@ -142,9 +142,7 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and s.store_id=" . $store_id;
         }
      
-        if ($user->acltype == 2) {
-            $where .= " and d.meta_id in({$user->aclview}) ";
-        }
+        
         return $where;
     }
 

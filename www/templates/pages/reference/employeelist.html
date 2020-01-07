@@ -14,7 +14,9 @@
                         <th>ФИО</th>
 
                         <th>Логин</th>
-
+                       
+                      {{#usebranch}}  <th>Филиал</th>  {{/usebranch}}
+                      
 
                         <th></th>
                     </tr>
@@ -22,6 +24,7 @@
                         <td zippy="emp_name"></td>
 
                         <td zippy="login"></td>
+                             {{#usebranch}}<td zippy="branch"></td>    {{/usebranch}}
 
 
 
@@ -56,6 +59,14 @@
                                 <label for="editphone">Телефон</label>
                                 <input    class="form-control" zippy="editphone"/>
                             </div>
+                              {{#usebranch}}
+                           <div class="form-group">
+                                <label for="editbranch">Филиал</label>
+                                <select    class="form-control" zippy="editbranch">
+                                    <option value="0">Не выбран</option>                                                                                                          
+                                </select>
+                            </div>
+                             {{/usebranch}} 
                             <div class="form-group">
                                 <label for="editcomment">Коментарий</label>
                                 <textarea    class="form-control" zippy="editcomment" ></textarea>

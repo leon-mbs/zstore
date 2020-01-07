@@ -58,6 +58,7 @@ class User extends Entity {
         $this->defmf = (int) ($xml->defmf[0]);
         $this->aclview = (string) ($xml->aclview[0]);
         $this->acledit = (string) ($xml->acledit[0]);
+        $this->aclbranch = (string) ($xml->aclbranch[0]);
         $this->widgets = (string) ($xml->widgets[0]);
         $this->modules = (string) ($xml->modules[0]);
 
@@ -80,6 +81,7 @@ class User extends Entity {
         $this->acl .= "<onlymy>{$this->onlymy}</onlymy>";
         $this->acl .= "<aclview>{$this->aclview}</aclview>";
         $this->acl .= "<acledit>{$this->acledit}</acledit>";
+        $this->acl .= "<aclbranch>{$this->aclbranch}</aclbranch>";
         $this->acl .= "<widgets>{$this->widgets}</widgets>";
         $this->acl .= "<modules>{$this->modules}</modules>";
         $this->acl .= "<defstore>{$this->defstore}</defstore>";

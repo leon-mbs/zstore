@@ -22,13 +22,16 @@ class WMinQty extends \Zippy\Html\PageFragment {
         parent::__construct($id);
         $this->add(new \Zippy\Html\Link\ClickLink('csvminqty', $this, 'oncsv'));
         $visible = (strpos(System::getUser()->widgets, 'wminqty') !== false || System::getUser()->userlogin == 'admin');
+     
+        $cstr = \App\Acl::getStoreBranchConstraint() ;
+        if(strlen($cstr)>0) $cstr = "  s.store_id in ({$cstr}) and ";
 
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();
 
 
         $sql = "select * from (select item_id, itemname,
-                 (select  coalesce(sum(s.qty) ,0) from `store_stock_view` s where  s.item_id=i.item_id and s.qty <> 0    ) as iqty,
+                 (select  coalesce(sum(s.qty) ,0) from `store_stock_view` s where {$cstr} s.item_id=i.item_id and s.qty <> 0    ) as iqty,
                  i.`minqty`
                  from items i where minqty>0 )t where   iqty <  minqty   
                  ";

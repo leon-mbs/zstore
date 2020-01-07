@@ -108,19 +108,21 @@ class UserProfile extends \App\Pages\Base {
   
     public function OnSend($sender) {
         $msg = trim($sender->msgtext->getText());
+        $id =  $sender->users->getValue() ;
         if (strlen($msg) == 0)
             return;
 
-        $from = System::getUser();
+       
 
         $n = new \App\Entity\Notify();
-        $n->user_id = $this->user->user_id;
-        $n->message = "Сообщение от пользователя <b>{$from->username}</b> <br><br>";
+        $n->user_id = $id;
+        $n->message = "Сообщение от пользователя <b>{$this->user->username}</b> <br><br>";
         $n->message .= $msg;
 
         $n->save();
 
         $sender->msgtext->setText('') ;
+        $sender->users->setValue(0) ;
         $this->setInfo('Отправлено');
     }
 

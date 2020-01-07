@@ -23,13 +23,15 @@ class WSdate extends \Zippy\Html\PageFragment {
         parent::__construct($id);
 
         $visible = (strpos(System::getUser()->widgets, 'wsdate') !== false || System::getUser()->userlogin == 'admin');
+        $cstr = \App\Acl::getStoreBranchConstraint() ;
+        if(strlen($cstr)>0) $cstr = "   store_id in ({$cstr}) and  ";
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
   
         if ($visible) {
    
-            $stock = Stock::find("qty > 0 and sdate is not null  and sdate < now()");
+            $stock = Stock::find(" {$cstr} qty > 0 and sdate is not null  and sdate < now()");
 
 
             foreach ($stock as $st) {

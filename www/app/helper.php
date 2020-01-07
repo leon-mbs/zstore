@@ -336,7 +336,7 @@ class Helper {
     public static function getDefStore() {
         $user = System::getUser();
         if ($user->defstore > 0) {
-            $user->defstore;
+          return  $user->defstore;
         }
         $st = \App\Entity\Store::getList();
         if(count($st)==1){
@@ -354,7 +354,7 @@ class Helper {
     public static function getDefMF() {
         $user = System::getUser();
         if ($user->defmf > 0) {
-            $user->defmf;
+           return $user->defmf;
         }
 
         $st = \App\Entity\MoneyFund::getList();
@@ -405,4 +405,6 @@ class Helper {
       
     }
 
+    
+    
 }

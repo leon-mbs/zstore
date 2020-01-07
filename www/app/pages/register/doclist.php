@@ -140,6 +140,7 @@ class DocList extends \App\Pages\Base {
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('notes', $doc->notes));
         $row->add(new Label('cust', $doc->customer_name));
+        $row->add(new Label('branch', $doc->branch_name));
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('amount',H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
 
@@ -323,11 +324,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource {
             $sn = $conn->qstr('%' . $sn . '%');
             $where = "    document_number like  {$sn} ";
         }
-        if ($user->acltype == 2) {
-
-
-            $where .= " and meta_id in({$user->aclview}) ";
-        }
+      
 
 
         return $where;

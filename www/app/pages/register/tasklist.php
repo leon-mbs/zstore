@@ -224,13 +224,9 @@ class TaskList extends \App\Pages\Base {
         if ($this->filterform->filterpa->getValue() > 0) {
             $sql = $sql . " and  content  like '%<parea>" . $this->filterform->filterpa->getValue() . "</parea>%' ";
         }
-        if ($user->acltype == 2) {
-            if ($user->onlymy == 1) {
-
-                $sql .= " and user_id  = " . $user->user_id;
-            }
-
-            $sql .= " and meta_id in({$user->aclview}) ";
+        $c = Document::getConstraint() ;
+        if(strlen($c)>0) {
+               $sql = $sql . " and ({$c})";
         }
         $this->_tamount = 0;
 

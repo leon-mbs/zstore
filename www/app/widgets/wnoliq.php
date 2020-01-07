@@ -22,6 +22,8 @@ class WNoliq extends \Zippy\Html\PageFragment {
         parent::__construct($id);
         $this->add(new \Zippy\Html\Link\ClickLink('csvnoliq', $this, 'oncsv'));
         $visible = (strpos(System::getUser()->widgets, 'wnoliq') !== false || System::getUser()->userlogin == 'admin');
+        $cstr = \App\Acl::getStoreBranchConstraint() ;
+        if(strlen($cstr)>0) $cstr = " where sc2.stock_id in (select stock_id from store_stock st11 where st11.store_id in ({$cstr}) )  ";
 
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();
@@ -32,7 +34,7 @@ class WNoliq extends \Zippy\Html\PageFragment {
                from  entrylist_view  sc
                where sc.item_id >0  and sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  
                and sc.quantity < 0 )  
-               and  i.item_id    in (select coalesce(sc2.item_id,0) from entrylist_view sc2  ); 
+               and  i.item_id    in (select coalesce(sc2.item_id,0) from entrylist_view sc2   {$cstr} ); 
                 
                  ";
 

@@ -12,6 +12,7 @@ class MoneyFund extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->mf_id = 0;
+        $this->branch_id = 0;
     }
 
     protected function beforeDelete() {
@@ -48,9 +49,10 @@ class MoneyFund extends \ZCL\DB\Entity {
         return MoneyFund::findArray("mf_name", "");
     }
 
-    public static function getByCode($code) {
+ 
 
-        return MoneyFund::findOne("mf_code=" . MoneyFund::qstr($code));
-    }
-
+    
+    public static function getConstraint(){
+          return \App\ACL::getBranchConstraint() ;
+    }     
 }

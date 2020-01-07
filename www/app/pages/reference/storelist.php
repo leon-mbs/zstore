@@ -19,18 +19,22 @@ use \App\Helper as H;
 class StoreList extends \App\Pages\Base {
 
     public $_store = null;
-
+    private $_blist;
+    
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('StoreList'))
             return;
-
+        $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
+ 
         $storepanel = $this->add(new Panel('storetable'));
         $storepanel->add(new DataView('storelist', new \ZCL\DB\EntityDataSource('\App\Entity\Store'), $this, 'storelistOnRow'));
         $storepanel->add(new ClickLink('storeadd'))->onClick($this, 'storeaddOnClick');
         $this->add(new Form('storeform'))->setVisible(false);
         $this->storeform->add(new TextInput('storeeditname'));
         $this->storeform->add(new TextArea('storeeditdesc'));
+        $this->storeform->add(new DropDownChoice('editbranch',$this->_blist,0));
+        
         $this->storeform->add(new SubmitButton('storesave'))->onClick($this, 'storesaveOnClick');
         $this->storeform->add(new Button('storecancel'))->onClick($this, 'storecancelOnClick');
         $this->storetable->storelist->Reload();
@@ -40,6 +44,7 @@ class StoreList extends \App\Pages\Base {
         $item = $row->getDataItem();
 
         $row->add(new Label('storename', $item->storename));
+        $row->add(new Label('branch', $this->_blist[$item->branch_id] ));
         $row->add(new Label('storedesc', $item->description));
         $row->add(new ClickLink('storeedit'))->onClick($this, 'storeeditOnClick');
         $row->add(new ClickLink('storedelete'))->onClick($this, 'storedeleteOnClick');
@@ -51,7 +56,8 @@ class StoreList extends \App\Pages\Base {
         $this->storeform->setVisible(true);
         $this->storeform->storeeditname->setText($this->_store->storename);
         $this->storeform->storeeditdesc->setText($this->_store->description);
-    }
+        $this->storeform->editbranch->setValue($this->_store->branch_id);
+     }
 
     public function storedeleteOnClick($sender) {
         if (false == \App\ACL::checkEditRef('StoreList'))
@@ -72,6 +78,7 @@ class StoreList extends \App\Pages\Base {
         $this->storeform->storeeditname->setText('');
         $this->storeform->storeeditdesc->setText('');
         $this->_store = new Store();
+        
     }
 
     public function storesaveOnClick($sender) {
@@ -83,6 +90,11 @@ class StoreList extends \App\Pages\Base {
         if ($this->_store->storename == '') {
             $this->setError("Введите наименование");
             return;
+        }
+        $this->_store->branch_id = $this->storeform->editbranch->getValue() ;
+        if($this->_tvars['usebranch']==true && $this->_store->branch_id==0) {
+             $this->setError('Не выбран  филиал') ;
+             return;
         }
 
         $this->_store->Save();
