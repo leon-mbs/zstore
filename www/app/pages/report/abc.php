@@ -76,12 +76,7 @@ class ABC extends \App\Pages\Base {
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-//$image = 'z:/home/local.zstore/www/assets/images/noimage.jpg';
-//$imageData = base64_encode(file_get_contents($image));
-//$fi=getimagesize($image);
-//$src = 'data:'.$fi['mime'].';base64,'.$imageData;
-
-
+ 
 
 
         $detail = array();
@@ -104,7 +99,7 @@ class ABC extends \App\Pages\Base {
         $header = array('from' => date('d.m.Y', $from),
             "_detail" => $detail,
             'to' => date('d.m.Y', $to),
-            // 'img'=>  '<img src="'.$src.'">' ,
+         
             "type" => $this->typelist[$type]
         );
         $report = new \App\Report('abc.tpl');
