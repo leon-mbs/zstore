@@ -26,6 +26,7 @@ class GoodsReceipt extends Document {
 
             $detail[] = array("no" => $i++,
                 "itemname" => $name,
+                "snumber" => $value['snumber'],
                 "itemcode" => $value['item_code'],
                 "quantity" => H::fqty($value['quantity']),
                 "price" => H::fa($value['price']),

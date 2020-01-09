@@ -65,12 +65,8 @@ class TaskList extends \App\Pages\Base {
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
 
-
         $this->add(new Label("tamount"));
-
-
-
-
+ 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));

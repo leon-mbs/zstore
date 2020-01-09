@@ -5,7 +5,7 @@
     <tr>
         <td></td>
         <td>Поставщик</td>
-        <td colspan="4">{{customer_name}}</td>
+        <td colspan="6">{{customer_name}}</td>
     </tr>
 
     <tr>
@@ -17,6 +17,7 @@
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
+        <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;"> </th>
         <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
         <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
@@ -29,6 +30,7 @@
         <td align="right">{{no}}</td>
         <td  >{{itemname}}</td>
         <td  >{{itemcode}}</td>
+        <td align="right">{{snumber}}</td>        
         <td  >{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
