@@ -9,7 +9,10 @@ namespace App\Entity;
  * @keyfield=mf_id
  */
 class MoneyFund extends \ZCL\DB\Entity {
-
+    
+    const BEZNAL=10000;
+    const PREPAID=10001;
+    
     protected function init() {
         $this->mf_id = 0;
         $this->branch_id = 0;
@@ -45,8 +48,15 @@ class MoneyFund extends \ZCL\DB\Entity {
      * список счетов для комбо
      * 
      */
-    public static function getList() {
-        return MoneyFund::findArray("mf_name", "");
+    public static function getList($beznal=false,$prepaid=false) {
+        $ml = array();
+        if($beznal)  $ml[self::BEZNAL] ='Безналичный расчет';
+        if($prepaid)  $ml[self::PREPAID] ='Предоплата';
+        foreach(MoneyFund::findArray("mf_name", "") as $k=>$v){
+            $ml[$k] = $v;
+        }
+         
+        return $ml; 
     }
 
  

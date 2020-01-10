@@ -14,6 +14,7 @@ use \App\Entity\MoneyFund;
 use \App\Entity\Pay;
 use \App\Helper as H;
 use \App\Application as App;
+use \App\System as System;
 
 /**
  * Движение по денежным счетам
@@ -28,7 +29,9 @@ class PayActivity extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(), H::getDefMF()));
+ 
+  
+        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(System::getUser()->username=='admin'), H::getDefMF()));
 
 
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
@@ -77,7 +80,7 @@ class PayActivity extends \App\Pages\Base {
     private function generateReport() {
 
         $mf_id = $this->filter->mf->getValue();
-
+        if($mf_id== \App\Entity\MoneyFund::BEZNAL) $mf_id=0;// безнал
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();

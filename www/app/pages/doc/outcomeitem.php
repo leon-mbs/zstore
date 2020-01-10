@@ -170,7 +170,9 @@ class OutcomeItem extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if ($this->checkForm() == false) {
+         if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
+         if ($this->checkForm() == false) {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();

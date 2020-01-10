@@ -54,6 +54,8 @@ class Pay extends \ZCL\DB\Entity {
     public static function addPayment($document_id, $indoc, $amount, $mf, $type, $comment = '') {
         if (0 == (int) $amount || 0 == (int) $document_id || 0 == $mf)
             return;
+            
+        if($mf== MoneyFund::BEZNAL) $mf=0; //безнал
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf;
         $pay->document_id = $document_id;
@@ -62,8 +64,8 @@ class Pay extends \ZCL\DB\Entity {
         $pay->notes = $comment;
         $pay->indoc = $indoc;
 
-        $admin = \App\Entity\User::getByLogin('admin');
-        $pay->user_id = $admin->user_id;
+     //   $admin = \App\Entity\User::getByLogin('admin');
+        $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
 
         $conn = \ZDB\DB::getConnect();

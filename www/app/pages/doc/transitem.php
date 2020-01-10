@@ -80,6 +80,8 @@ class TransItem extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
 
         $this->_doc->notes = $this->docform->notes->getText();
 

@@ -170,6 +170,8 @@ class MoveItem extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         if ($this->checkForm() == false) {
             return;
         }
