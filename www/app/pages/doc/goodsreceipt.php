@@ -49,9 +49,9 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
-        $this->docform->add(new CheckBox('prepaid'))->onChange($this, 'OnPrepaid');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true), H::getDefMF()))->onChange($this, 'OnPayment');
+        
+        
 
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
         $this->docform->add(new Label('course', 'Курс 1'));
@@ -109,9 +109,9 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
-            $this->docform->prepaid->setChecked($this->_doc->headerdata['prepaid']);
-            $this->OnPrepaid($this->docform->prepaid);
+            
+            
+            $this->OnPayment($this->docform->payment);
 
             $this->docform->total->setText($this->_doc->amount);
 
@@ -341,10 +341,10 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+        
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
-        $this->_doc->headerdata['prepaid'] = $this->docform->prepaid->isChecked();
-        if ($this->_doc->headerdata['prepaid'] == 1) {
+        
+        if ($this->_doc->headerdata['payment'] ==  \App\Entity\MoneyFund::PREPAID) {
             $this->_doc->headerdata['payed'] = 0;
             $this->_doc->payamount = 0;
         }
@@ -449,9 +449,9 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->goAnkor("tankor");
     }
 
-    public function OnPrepaid($sender) {
-        $b = $sender->isChecked();
-        if ($b) {
+    public function OnPayment($sender) {
+        $b = $sender->getValue();
+        if ($b== \App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
         } else {

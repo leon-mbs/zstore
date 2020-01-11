@@ -45,9 +45,11 @@ class MoneyFund extends \ZCL\DB\Entity {
     }
 
     /**
-     * список счетов для комбо
-     * 
-     */
+    * список счетов для комбо
+    * 
+    * @param mixed $beznal   добавить пункт  Безналичный расчет
+    * @param mixed $prepaid  добавить пункт  Была предоплата
+    */
     public static function getList($beznal=false,$prepaid=false) {
         $ml = array();
         if($beznal)  $ml[self::BEZNAL] ='Безналичный расчет';

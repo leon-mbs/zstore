@@ -43,13 +43,13 @@ class POSCheck extends \App\Pages\Base {
 
         $this->docform->add(new Date('document_date'))->setDate(time());
  
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true), H::getDefMF()))->onChange($this, 'OnPayment');
+        
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
-        $this->docform->add(new CheckBox('prepaid'))->onChange($this, 'OnPrepaid');
+        
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -63,7 +63,7 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::find('')));
+      //  $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::find('')));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -116,7 +116,7 @@ class POSCheck extends \App\Pages\Base {
             $this->docform->document_date->setDate($this->_doc->document_date);
        
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            
             $this->docform->exchange->setText($this->_doc->exchange);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -125,8 +125,8 @@ class POSCheck extends \App\Pages\Base {
             $this->docform->payed->setText($this->_doc->headerdata['payed']);
             $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
             $this->docform->exchange->setText($this->_doc->headerdata['exchange']);
-            $this->docform->prepaid->setChecked($this->_doc->headerdata['prepaid']);
-            $this->OnPrepaid($this->docform->prepaid);
+            
+            $this->OnPayment($this->docform->payment);
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -161,7 +161,7 @@ class POSCheck extends \App\Pages\Base {
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                        $this->docform->pos->setValue($basedoc->headerdata['pos']);
+                      //  $this->docform->pos->setValue($basedoc->headerdata['pos']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
     
@@ -338,8 +338,8 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
-        $this->_doc->headerdata['prepaid'] = $this->docform->prepaid->isChecked();
-        if ($this->_doc->headerdata['prepaid'] == 1) {
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        if ($this->_doc->headerdata['payment'] == \App\entity\MoneyFund::PREPAID) {
             $this->_doc->headerdata['paydisc'] = 0;
             $this->_doc->headerdata['payed'] = 0;
             $this->_doc->payamount = 0;
@@ -350,18 +350,14 @@ class POSCheck extends \App\Pages\Base {
             return;
         }
         $order = Document::load($this->_order_id);
-
-
-
-
+ 
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
-        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
-
+        
+  
 
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $tovar) {
@@ -371,9 +367,7 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->amount = $this->docform->total->getText();
 
         $isEdited = $this->_doc->document_id > 0;
-
-
-
+ 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -502,9 +496,9 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->exchange->setText(H::fa(0));
     }
 
-    public function OnPrepaid($sender) {
-        $b = $sender->isChecked();
-        if ($b) {
+    public function OnPayment($sender) {
+        $b = $sender->getValue();
+        if ($b==\App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
             $this->docform->paydisc->setVisible(false);
@@ -718,7 +712,5 @@ class POSCheck extends \App\Pages\Base {
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
-   
-
+ 
 }

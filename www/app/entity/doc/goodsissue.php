@@ -55,7 +55,7 @@ class GoodsIssue extends Document {
             "payed" => H::fa($this->headerdata['payed']),
             "paydisc" => H::fa($this->headerdata["paydisc"]),
             "isdisc" =>  $this->headerdata["paydisc"]>0,
-            "prepaid" => $this->headerdata['prepaid'] == 1,
+            "prepaid" => $this->headerdata['payment']==\App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
         if ($this->headerdata["sent_date"] > 0) {
@@ -101,7 +101,7 @@ class GoodsIssue extends Document {
 
         $this->payed = 0;
         if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
+            \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
             $this->payed = $this->headerdata['payed'];
         }
 

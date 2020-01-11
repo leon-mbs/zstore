@@ -48,7 +48,7 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()));
         $this->docform->add(new TextInput('paynotes'));
 
 

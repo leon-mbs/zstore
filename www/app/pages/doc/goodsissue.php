@@ -45,13 +45,13 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new Date('sent_date'));
         $this->docform->add(new Date('delivery_date'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true), H::getDefMF()))->onChange($this, 'OnPayment');
+       
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
-        $this->docform->add(new CheckBox('prepaid'))->onChange($this, 'OnPrepaid');
+        
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -130,15 +130,15 @@ class GoodsIssue extends \App\Pages\Base {
             $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->payed->setText($this->_doc->headerdata['payed']);
             $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
-            $this->docform->prepaid->setChecked($this->_doc->headerdata['prepaid']);
-            $this->OnPrepaid($this->docform->prepaid);
+            
+            $this->OnPayment($this->docform->payment);
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -350,8 +350,9 @@ class GoodsIssue extends \App\Pages\Base {
 
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
-        $this->_doc->headerdata['prepaid'] = $this->docform->prepaid->isChecked();
-        if ($this->_doc->headerdata['prepaid'] == 1) {
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
             $this->_doc->headerdata['paydisc'] = 0;
             $this->_doc->headerdata['payed'] = 0;
             $this->_doc->payamount = 0;
@@ -376,8 +377,8 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->headerdata['delivery_date'] = $this->docform->delivery_date->getDate();
         $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
         $this->_doc->headerdata['order_id'] = $this->_orderid;
-        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+        
+        
 
 
         $this->_doc->detaildata = array();
@@ -517,9 +518,9 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->payed->setText(H::fa($total - $disc));
     }
 
-    public function OnPrepaid($sender) {
-        $b = $sender->isChecked();
-        if ($b) {
+    public function OnPayment($sender) {
+        $b = $sender->getValue();
+        if ($b==\App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
             $this->docform->paydisc->setVisible(false);

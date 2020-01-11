@@ -44,7 +44,7 @@ class PayList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
-        $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
+        $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(System::getUser()->username=='admin'), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
@@ -199,6 +199,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and d.customer_id=" . $cust;
         }
         if ($mf > 0) {
+            if($mf==\App\Entity\MoneyFund::BEZNAL) $mf=0;
             $where .= " and p.mf_id=" . $mf;
         }
         if ($author > 0) {

@@ -58,8 +58,8 @@ class Task extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('storem', Store::getList(), \App\Helper::getDefStore()));
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()))->onChange($this, "onMF");
-        $this->docform->add(new TextInput('paynotes'));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()));
+   
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
@@ -146,7 +146,7 @@ class Task extends \App\Pages\Base {
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->storem->setValue($this->_doc->headerdata['storem']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+         
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payed->setText($this->_doc->headerdata['payed']);
@@ -188,10 +188,7 @@ class Task extends \App\Pages\Base {
         $this->onMF($this->docform->payment);
     }
 
-    public function onMF($sender) {
-        $mf = $sender->getValue();
-        $this->docform->paynotes->setVisible($mf > 0);
-    }
+    
 
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
@@ -507,7 +504,7 @@ class Task extends \App\Pages\Base {
         $this->_doc->headerdata['start_date'] = $this->docform->start_date->getDate();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+        
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
