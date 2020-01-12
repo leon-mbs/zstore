@@ -344,8 +344,11 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
      //   $this->_doc->order = $this->docform->order->getText();
+        $firm = \App\System::getOptions("firm");            
+        $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
@@ -377,9 +380,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->headerdata['delivery_date'] = $this->docform->delivery_date->getDate();
         $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
         $this->_doc->headerdata['order_id'] = $this->_orderid;
-        
-        
-
+ 
 
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $tovar) {

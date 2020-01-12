@@ -2,7 +2,7 @@
 <table class="ctable"   border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td colspan="6" >
-            Заказчик:  {{customer}}
+            Заказчик:  {{customer_name}}
         </td>
 
 

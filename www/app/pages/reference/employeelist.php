@@ -26,7 +26,8 @@ class EmployeeList extends \App\Pages\Base {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('EmployeeList'))
             return;
-        $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
+        $this->_blist = \App\Entity\(\App\System::getUser()->user_id);
+    
         $this->add(new Panel('employeetable'))->setVisible(true);
         $this->employeetable->add(new DataView('employeelist', new EDS('\App\Entity\Employee', '', 'disabled, emp_name'), $this, 'employeelistOnRow'))->Reload();
         $this->employeetable->employeelist->setPageSize(25);
@@ -39,7 +40,7 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         $this->employeedetail->add(new TextInput('editlogin'));
         $this->employeedetail->add(new TextInput('editemp_name'));
-        $this->employeedetail->add(new DropDownChoice('editbranch',$this->_blist,0));
+        $this->employeedetail->add(new DropDownChoice('editbranch',$this->_blist,   0));
 
         $this->employeedetail->add(new TextInput('editemail'));
         $this->employeedetail->add(new TextArea('editcomment'));
@@ -91,6 +92,8 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->setVisible(true);
         // Очищаем  форму
         $this->employeedetail->clean();
+         $b = \App\Session::getSession()->branch_id;
+        $this->employeedetail->editbranch->setValue($b>0?$b:0) ;
 
 
         $this->_employee = new Employee();

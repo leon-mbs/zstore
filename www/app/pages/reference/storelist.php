@@ -26,7 +26,7 @@ class StoreList extends \App\Pages\Base {
         if (false == \App\ACL::checkShowRef('StoreList'))
             return;
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
- 
+  
         $storepanel = $this->add(new Panel('storetable'));
         $storepanel->add(new DataView('storelist', new \ZCL\DB\EntityDataSource('\App\Entity\Store'), $this, 'storelistOnRow'));
         $storepanel->add(new ClickLink('storeadd'))->onClick($this, 'storeaddOnClick');
@@ -77,6 +77,10 @@ class StoreList extends \App\Pages\Base {
         $this->storeform->setVisible(true);
         $this->storeform->storeeditname->setText('');
         $this->storeform->storeeditdesc->setText('');
+        $b = \App\Session::getSession()->branch_id;
+        $this->storeform->editbranch->setValue($b>0?$b:0) ;
+       
+        
         $this->_store = new Store();
         
     }

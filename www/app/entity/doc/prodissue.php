@@ -40,12 +40,11 @@ class ProdIssue extends Document {
             }
         }
 
-        $firm = \App\System::getOptions("common");
-
+    
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "firmname" => $firm['firmname'],
+           
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,
             "total" => H::fa(amount),

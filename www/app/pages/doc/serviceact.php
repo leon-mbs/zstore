@@ -249,9 +249,8 @@ class ServiceAct extends \App\Pages\Base {
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-
-
-
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+  
         $this->calcTotal();
 
 

@@ -38,13 +38,11 @@ class ReturnIssue extends Document {
             }
         }
 
-        $firm = \App\System::getOptions("common");
-
-
+   
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "firmname" => $firm['firmname'],
-            "customername" => $this->customer_name,
+            "firmname" => $this->headerdata["firmname"],
+            "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount) 
              

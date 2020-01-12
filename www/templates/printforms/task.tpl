@@ -7,7 +7,7 @@
     </tr>   
     <tr>
         <td colspan="6">
-            Заказчик:   {{customer}}
+            Заказчик:   {{customer_name}}
         </td>
 
     </tr>

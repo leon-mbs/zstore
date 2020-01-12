@@ -226,12 +226,15 @@ class ReturnIssue extends \App\Pages\Base {
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         if ($this->checkForm() == false) {
             return;
         }
 
         $this->calcTotal();
 
+        $firm = \App\System::getOptions("firm");            
+        $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
 
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();

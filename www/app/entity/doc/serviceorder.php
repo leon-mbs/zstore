@@ -28,7 +28,7 @@ class ServiceOrder extends Document {
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "customer" => $this->customer_name,
+            "customer" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
             "total" =>H::fa( $this->amount )
         );

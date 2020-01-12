@@ -27,12 +27,11 @@ class Warranty extends Document {
             $total += $value['quantity'] * $value['price'];
         }
 
-        $firm = \App\System::getOptions("firmdetail");
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "firmname" => $firm['name'],
-            "customer" => $this->customer_name,
+            "firmname" => $this->headerdata["firmname"],
+            "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number
         );
 

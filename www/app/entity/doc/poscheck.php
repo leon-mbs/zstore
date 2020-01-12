@@ -15,17 +15,24 @@ class POSCheck extends Document {
 
     public function generateCheck( ) {
         
-        $firm =System::getOptions('firm');
+     
           
         $check = array();
         $check[] .=  $this->f30("Чек ". $this->document_number);
         $check[] .=  $this->f30("вiд ". date('Y-m-d H:i:s',$this->headerdata['time']));
-        $check[] .=  $this->f30("IПН ". $firm['inn']);
-        $check[] .=  $this->f30($firm['firmname']);
-        $check[] .=  $this->f30("Тел.  ". $firm['phone']);
-        $check[] .=  $this->f30("Viber ". $firm['viber']);
+        $check[] .=  $this->f30("IПН ". $this->headerdata["inn"]);
+        $check[] .=  $this->f30($this->headerdata["firmname"]);
+      //  $check[] .=  $this->f30("Тел.  ". $firm['phone']);
+        foreach( explode(',',$this->headerdata["phone"]) as $p){
+                 $check[] .= $this->f30("Тел.  ". $p);
+        }        
+        $check[] .=  $this->f30("Viber ". $this->headerdata["viber"]);
         $check[] .=  str_repeat('-',30);
-      
+        $a = "Адрес ". $this->headerdata["address"];
+            foreach( Util::mb_split($a ,30) as $p){
+                 $check[] .=  $this->f30($p);
+            }        
+        $check[] .=  str_repeat('-',30);     
         foreach ($this->detaildata as $value) {
       
             $t =  $value['item_code']. ' ' .$value['itemname'];
@@ -52,7 +59,7 @@ class POSCheck extends Document {
    
         return $check;
     }
-     private function f30($s){
+    private function f30($s){
           return $s  .  str_repeat(' ',30 - mb_strlen($s))  ;
     }
     public function generateReport() {
@@ -97,7 +104,7 @@ class POSCheck extends Document {
         }
 
         $this->payed = 0;
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
+        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']>0) {
             \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
             $this->payed = $this->headerdata['payed'];
         }

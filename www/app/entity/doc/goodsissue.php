@@ -40,12 +40,11 @@ class GoodsIssue extends Document {
         }
 
 
-        $customer = \App\Entity\Customer::load($this->customer_id);
-
+  
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "firmname" => $firm['firmname'],
-            "customername" => $this->customer_name . ', тел. ' . $customer->phone,
+            "firmname" => $this->headerdata["firmname"],
+            "customername" => $this->headerdata["customer_name"],
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],
             "order" =>    strlen($this->headerdata["order"]) >0 ? $this->headerdata["order"]  : false,
@@ -100,7 +99,7 @@ class GoodsIssue extends Document {
         }
 
         $this->payed = 0;
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
+        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']>0) {
             \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
             $this->payed = $this->headerdata['payed'];
         }

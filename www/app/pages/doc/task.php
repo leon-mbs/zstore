@@ -491,9 +491,7 @@ class Task extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
 
-
-
-
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getValueName();
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();

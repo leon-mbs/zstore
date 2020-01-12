@@ -102,7 +102,7 @@ class User extends Entity {
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Нельзя удалять пользователя с документами" : true;
+        return ($cnt > 0) ? "Нельзя удалять пользователя с документами" : '';
     }
 
     /**

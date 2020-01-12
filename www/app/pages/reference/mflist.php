@@ -29,8 +29,7 @@ class MFList extends \App\Pages\Base {
             return;
         $this->_balance = MoneyFund::Balance();
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
-
-
+ 
         $this->add(new Panel('mftable'))->setVisible(true);
         $this->mftable->add(new DataView('mflist', new \ZCL\DB\EntityDataSource('\App\Entity\MoneyFund'), $this, 'mflistOnRow'))->Reload();
         $this->mftable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -85,6 +84,8 @@ class MFList extends \App\Pages\Base {
         $this->mfdetail->setVisible(true);
         // Очищаем  форму
         $this->mfdetail->clean();
+        $b = \App\Session::getSession()->branch_id;
+        $this->mfdetail->editbranch->setValue($b>0?$b:0) ;
 
         $this->_mf = new MoneyFund();
     }

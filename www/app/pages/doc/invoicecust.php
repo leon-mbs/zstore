@@ -215,6 +215,7 @@ class InvoiceCust extends \App\Pages\Base {
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
    
         if ($this->checkForm() == false) {

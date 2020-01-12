@@ -332,6 +332,7 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->order = $this->docform->order->getText();
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->headerdata['time'] = time();
@@ -356,6 +357,16 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
+
+        $firm = \App\System::getOptions("firm");            
+        $branch = \App\Entity\Branch::load($this->_doc->branch_id);
+        $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
+        
+        $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
+        $this->_doc->headerdata["inn"] = $firm['firmname'] ;
+        $this->_doc->headerdata["address"] = $branch['address'] ;
+        $this->_doc->headerdata["phones"] = $pos['phones'] ;
+        $this->_doc->headerdata["viber"] = $pos['viber'] ;
         
   
 

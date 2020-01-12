@@ -180,6 +180,7 @@ class GIList extends \App\Pages\Base {
     public function updateStatusButtons() {
 
         $this->statuspan->statusform->bclose->setVisible(true);
+        $this->statuspan->statusform->bsend->setVisible(true);
 
         $state = $this->_doc->state;
 
@@ -227,12 +228,27 @@ class GIList extends \App\Pages\Base {
             $this->statuspan->statusform->bcloseact->setVisible(false);
             $this->statuspan->statusform->inprocact->setVisible(false);
         }
+        if ($this->_doc->meta_name == 'POSCheck') {
+
+            $this->statuspan->statusform->bcloseact->setVisible(false);
+            $this->statuspan->statusform->inprocact->setVisible(false);
+            $this->statuspan->statusform->bsend->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(false);
+        }
+        if ($this->_doc->meta_name == 'Invoice') {
+
+            $this->statuspan->statusform->bcloseact->setVisible(false);
+            $this->statuspan->statusform->inprocact->setVisible(false);
+            $this->statuspan->statusform->bsend->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(false);
+        }
         if ($this->_doc->meta_name == 'ServiceAct') {
 
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
+        
     }
 
     //просмотр

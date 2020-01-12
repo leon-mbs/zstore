@@ -34,12 +34,10 @@ class Invoice extends \App\Entity\Doc\Document {
             }
         }
 
-        //$firm = \App\System::getOptions("common");
-
-
+  
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "customername" => $this->customer_name,
+            "customername" => $this->headerdata["customer_name"],
             "phone" => $this->headerdata["phone"],
             "email" => $this->headerdata["email"],
             "notes" => $this->notes,

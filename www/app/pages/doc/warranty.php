@@ -207,8 +207,9 @@ class Warranty extends \App\Pages\Base {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
-        $this->_doc->customer_id = $this->docform->customer->getText();
-
+        $this->_doc->headerdata["customer_name"] = $this->docform->customer->getText();
+        $firm = \App\System::getOptions("firm");            
+        $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
      
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {

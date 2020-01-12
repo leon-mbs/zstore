@@ -204,7 +204,8 @@ class OrderCust extends \App\Pages\Base {
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        if ($this->checkForm() == false) {
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+       if ($this->checkForm() == false) {
             return;
         }
 

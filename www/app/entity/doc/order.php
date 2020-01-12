@@ -44,12 +44,11 @@ class Order extends \App\Entity\Doc\Document {
             }
         }
 
-        //$firm = \App\System::getOptions("common");
-
+   
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "customername" => $this->customer_name,
+            "customer_name" => $this->headerdata["customer_name"],
             "phone" => $this->headerdata["phone"],
             "email" => $this->headerdata["email"],
             "delivery" => $this->headerdata["delivery_name"],

@@ -233,11 +233,14 @@ class RetCustIssue extends \App\Pages\Base {
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         if ($this->checkForm() == false) {
             return;
         }
 
         $this->calcTotal();
+        $firm = \App\System::getOptions("firm");            
+        $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
 
 
 
