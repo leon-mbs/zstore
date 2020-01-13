@@ -405,6 +405,17 @@ class Helper {
       
     }
 
+    /**
+    * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
+    */
+    public  static function getFirmData(){
+        $data = array();
+        $firm = \App\System::getOptions("firm");  
+        
+        $branch = \App\Entity\Branch::load();
+        
+        return $data;
+    }
     
     
 }

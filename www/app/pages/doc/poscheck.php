@@ -366,7 +366,7 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
         $this->_doc->headerdata["inn"] = $firm['firmname'] ;
         $this->_doc->headerdata["address"] = $branch->address ;
-        $this->_doc->headerdata["phones"] = $po->phone ;
+        $this->_doc->headerdata["phones"] = $pos->phone ;
         $this->_doc->headerdata["viber"] = $pos->viber ;
         
   

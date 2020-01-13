@@ -89,7 +89,7 @@ class PosList extends \App\Pages\Base {
         $this->posdetail->editip->setText($this->_pos->ip);
         $this->posdetail->editsip->setText($this->_pos->sip);
         $this->posdetail->editemail->setText($this->_pos->email);
-        $this->posdetail->editphons->setText($this->_pos->phone);
+        $this->posdetail->editphone->setText($this->_pos->phone);
         $this->posdetail->editviber->setText($this->_pos->viber);
         $this->posdetail->edittele->setText($this->_pos->tele);
         $this->posdetail->editsup->setText($this->_pos->sup);
