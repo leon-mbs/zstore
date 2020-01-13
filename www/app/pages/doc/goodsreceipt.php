@@ -105,8 +105,8 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->docform->payed->setText($this->_doc->headerdata['payed']);
-            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            $this->docform->payed->setText($this->_doc->payed);
+            $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             
@@ -345,10 +345,10 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         
         if ($this->_doc->headerdata['payment'] ==  \App\Entity\MoneyFund::PREPAID) {
-            $this->_doc->headerdata['payed'] = 0;
+            $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
 
@@ -503,7 +503,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран  поставщик");
         }
-        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
+        if ($this->docform->payment->getValue()==0) {
             $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();

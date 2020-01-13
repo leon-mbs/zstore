@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use \App\Entity\Entry;
+use \App\Helper as H;
 
 /**
  * Класс-сущность  заказ  на  услуги

@@ -149,8 +149,8 @@ class Task extends \App\Pages\Base {
          
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->docform->payed->setText($this->_doc->headerdata['payed']);
-            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            $this->docform->payed->setText($this->_doc->payed);
+            $this->docform->editpayed->setText($this->_doc->payed);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
@@ -504,7 +504,7 @@ class Task extends \App\Pages\Base {
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         
         $this->_doc->payamount = $this->docform->payamount->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
 
         if ($this->checkForm() == false) {
             return;
@@ -606,7 +606,7 @@ class Task extends \App\Pages\Base {
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна работа");
         }
-        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
+        if ($this->docform->payment->getValue()==0) {
             $this->setError("Не указан  способ  оплаты");
         }
         if (($this->docform->store->getValue() > 0 ) ==false) {

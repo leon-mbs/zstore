@@ -40,7 +40,7 @@ class GoodsReceipt extends Document {
             "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
-            "payed" => H::fa($this->headerdata['payed']),
+            "payed" => H::fa($this->payed),
             "prepaid" => $this->headerdata['payment']==\App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
@@ -79,11 +79,11 @@ class GoodsReceipt extends Document {
                 $it->save();
             }
         }
-        $this->payed = 0;
+       
 
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']>0) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, 0 - $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
-            $this->payed = $this->headerdata['payed'];
+        if ($this->headerdata['payment'] > 0 && $this->payed>0) {
+            \App\Entity\Pay::addPayment($this->document_id, 1, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
+            
         }
 
 

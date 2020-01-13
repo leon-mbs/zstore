@@ -9,6 +9,17 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `branches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `branches` (
+  `branch_id` int(11) NOT NULL AUTO_INCREMENT,
+  `branch_name` varchar(255) NOT NULL,
+  `details` longtext NOT NULL,
+  `disabled` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`branch_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `customers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -21,7 +32,7 @@ CREATE TABLE `customers` (
   `status` smallint(4) NOT NULL DEFAULT '0',
   `city` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
-)  AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `customers_view`;
 /*!50001 DROP VIEW IF EXISTS `customers_view`*/;
@@ -47,7 +58,7 @@ CREATE TABLE `docrel` (
   `doc2` int(11) DEFAULT NULL,
   KEY `doc1` (`doc1`),
   KEY `doc2` (`doc2`)
-)  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -61,7 +72,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=351 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=468 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -83,7 +94,7 @@ DROP TABLE IF EXISTS `documents`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `documents` (
-  `document_id` int(11) NOT NULL AUTO_INCREMENT,
+  `document_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `document_number` varchar(45) NOT NULL,
   `document_date` date NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -95,11 +106,13 @@ CREATE TABLE `documents` (
   `customer_id` int(11) DEFAULT '0',
   `payamount` decimal(11,2) DEFAULT '0.00',
   `payed` decimal(11,2) DEFAULT '0.00',
+  `branch_id` int(11) DEFAULT '0',
   PRIMARY KEY (`document_id`),
   KEY `document_date` (`document_date`),
   KEY `customer_id` (`customer_id`),
-  KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
+  KEY `user_id` (`user_id`),
+  KEY `branch_id` (`branch_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -120,6 +133,8 @@ SET character_set_client = utf8;
  1 AS `notes`,
  1 AS `payamount`,
  1 AS `payed`,
+ 1 AS `branch_id`,
+ 1 AS `branch_name`,
  1 AS `meta_name`,
  1 AS `meta_desc`,
  1 AS `mcnt`,
@@ -135,14 +150,15 @@ CREATE TABLE `employees` (
   `detail` mediumtext,
   `disabled` tinyint(1) DEFAULT '0',
   `emp_name` varchar(64) NOT NULL,
+  `branch_id` int(11) DEFAULT '0',
   PRIMARY KEY (`employee_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `entrylist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `entrylist` (
-  `entry_id` int(11) NOT NULL AUTO_INCREMENT,
+  `entry_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `document_id` int(11) NOT NULL,
   `amount` decimal(11,2) NOT NULL DEFAULT '0.00',
   `quantity` decimal(11,3) DEFAULT '0.000',
@@ -152,7 +168,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-)  AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=153 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -188,7 +204,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
+/*!50003 CREATE*/ /*!50017  */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -229,7 +245,7 @@ CREATE TABLE `equipments` (
   `disabled` tinyint(1) DEFAULT '0',
   `description` text,
   PRIMARY KEY (`eq_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `eventlist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -245,7 +261,7 @@ CREATE TABLE `eventlist` (
   PRIMARY KEY (`event_id`),
   KEY `user_id` (`user_id`),
   KEY `customer_id` (`customer_id`)
-)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `eventlist_view`;
 /*!50001 DROP VIEW IF EXISTS `eventlist_view`*/;
@@ -273,7 +289,7 @@ CREATE TABLE `files` (
   `mime` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`file_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `filesdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -282,7 +298,7 @@ CREATE TABLE `filesdata` (
   `file_id` int(11) DEFAULT NULL,
   `filedata` longblob,
   UNIQUE KEY `file_id` (`file_id`)
-)  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `images`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -293,7 +309,7 @@ CREATE TABLE `images` (
   `mime` varchar(16) DEFAULT NULL,
   `thumb` longblob,
   PRIMARY KEY (`image_id`)
-)  AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `issue_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -308,7 +324,7 @@ CREATE TABLE `issue_history` (
   `status` smallint(6) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `issue_id` (`issue_id`)
-)  AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `issue_history_view`;
 /*!50001 DROP VIEW IF EXISTS `issue_history_view`*/;
@@ -331,15 +347,16 @@ DROP TABLE IF EXISTS `issue_issuelist`;
 CREATE TABLE `issue_issuelist` (
   `issue_id` int(11) NOT NULL AUTO_INCREMENT,
   `issue_name` varchar(255) NOT NULL,
-  `content` longtext NOT NULL,
+  `details` longtext NOT NULL,
   `customer_id` int(11) NOT NULL,
   `status` smallint(6) NOT NULL,
   `priority` tinyint(4) NOT NULL,
   `user_id` int(11) NOT NULL,
   `lastupdate` datetime DEFAULT NULL,
-  `price` int(11) DEFAULT '0',
-  PRIMARY KEY (`issue_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  `project_id` int(11) NOT NULL,
+  PRIMARY KEY (`issue_id`),
+  KEY `project_id` (`project_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `issue_issuelist_view`;
 /*!50001 DROP VIEW IF EXISTS `issue_issuelist_view`*/;
@@ -348,16 +365,41 @@ SET character_set_client = utf8;
 /*!50001 CREATE VIEW `issue_issuelist_view` AS SELECT 
  1 AS `issue_id`,
  1 AS `issue_name`,
- 1 AS `content`,
- 1 AS `customer_id`,
+ 1 AS `details`,
+ 1 AS `project_id`,
  1 AS `status`,
  1 AS `priority`,
  1 AS `user_id`,
  1 AS `lastupdate`,
  1 AS `username`,
- 1 AS `price`,
+ 1 AS `project_name`*/;
+SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `issue_projectlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `issue_projectlist` (
+  `project_id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_name` varchar(255) NOT NULL,
+  `details` longtext NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `archived` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`project_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `issue_projectlist_view`;
+/*!50001 DROP VIEW IF EXISTS `issue_projectlist_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `issue_projectlist_view` AS SELECT 
+ 1 AS `project_id`,
+ 1 AS `project_name`,
+ 1 AS `details`,
+ 1 AS `customer_id`,
+ 1 AS `archived`,
  1 AS `customer_name`,
- 1 AS `totaltime`*/;
+ 1 AS `inew`,
+ 1 AS `iproc`,
+ 1 AS `iclose`*/;
 SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `item_cat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -366,7 +408,7 @@ CREATE TABLE `item_cat` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(255) NOT NULL,
   PRIMARY KEY (`cat_id`)
-)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -377,7 +419,7 @@ CREATE TABLE `item_set` (
   `pitem_id` int(11) DEFAULT '0',
   `qty` int(11) DEFAULT '0',
   PRIMARY KEY (`set_id`)
-)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set_view`;
 /*!50001 DROP VIEW IF EXISTS `item_set_view`*/;
@@ -409,7 +451,7 @@ CREATE TABLE `items` (
   KEY `item_code` (`item_code`),
   KEY `itemname` (`itemname`),
   KEY `cat_id` (`cat_id`)
-)  AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `items_view`;
 /*!50001 DROP VIEW IF EXISTS `items_view`*/;
@@ -432,7 +474,7 @@ DROP TABLE IF EXISTS `messages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `messages` (
-  `message_id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `message` text,
@@ -440,7 +482,7 @@ CREATE TABLE `messages` (
   `item_type` int(11) DEFAULT NULL,
   PRIMARY KEY (`message_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `messages_view`;
 /*!50001 DROP VIEW IF EXISTS `messages_view`*/;
@@ -467,7 +509,7 @@ CREATE TABLE `metadata` (
   `disabled` tinyint(4) NOT NULL,
   `smartmenu` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`meta_id`)
-)  AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `mfund`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -476,8 +518,9 @@ CREATE TABLE `mfund` (
   `mf_id` int(11) NOT NULL AUTO_INCREMENT,
   `mf_name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `branch_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`mf_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_nodes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -490,7 +533,7 @@ CREATE TABLE `note_nodes` (
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`node_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_nodesview`;
 /*!50001 DROP VIEW IF EXISTS `note_nodesview`*/;
@@ -513,7 +556,7 @@ CREATE TABLE `note_tags` (
   `tagvalue` varchar(255) NOT NULL,
   PRIMARY KEY (`tag_id`),
   KEY `topic_id` (`topic_id`)
-)  AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_topicnode`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -525,7 +568,7 @@ CREATE TABLE `note_topicnode` (
   PRIMARY KEY (`tn_id`),
   KEY `topic_id` (`topic_id`),
   KEY `node_id` (`node_id`)
-)  AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_topicnodeview`;
 /*!50001 DROP VIEW IF EXISTS `note_topicnodeview`*/;
@@ -549,7 +592,7 @@ CREATE TABLE `note_topics` (
   `favorites` tinyint(1) NOT NULL DEFAULT '0',
   `ispublic` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`topic_id`)
-)  AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_topicsview`;
 /*!50001 DROP VIEW IF EXISTS `note_topicsview`*/;
@@ -573,7 +616,7 @@ CREATE TABLE `notifies` (
   `message` text NOT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -582,7 +625,7 @@ CREATE TABLE `options` (
   `optname` varchar(64) NOT NULL,
   `optvalue` longtext NOT NULL,
   UNIQUE KEY `optname` (`optname`)
-)  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `parealist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -591,13 +634,13 @@ CREATE TABLE `parealist` (
   `pa_id` int(11) NOT NULL AUTO_INCREMENT,
   `pa_name` varchar(255) NOT NULL,
   PRIMARY KEY (`pa_id`)
-)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `paylist` (
-  `pl_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pl_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `document_id` int(11) NOT NULL,
   `amount` decimal(11,2) NOT NULL,
   `mf_id` int(11) NOT NULL,
@@ -608,7 +651,7 @@ CREATE TABLE `paylist` (
   `indoc` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=151 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -628,6 +671,17 @@ SET character_set_client = utf8;
  1 AS `username`,
  1 AS `mf_name`*/;
 SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `poslist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `poslist` (
+  `pos_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pos_name` varchar(255) NOT NULL,
+  `details` longtext NOT NULL,
+  `branch_id` int(11) DEFAULT '0',
+  PRIMARY KEY (`pos_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -637,7 +691,7 @@ CREATE TABLE `services` (
   `detail` text,
   `disabled` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`service_id`)
-)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -650,7 +704,7 @@ CREATE TABLE `shop_attributes` (
   `valueslist` varchar(255) DEFAULT NULL,
   `showinlist` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`attribute_id`)
-)  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -661,7 +715,7 @@ CREATE TABLE `shop_attributes_order` (
   `pg_id` int(11) NOT NULL,
   `ordern` int(11) NOT NULL,
   PRIMARY KEY (`order_id`)
-)  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_attributes_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_attributes_view`*/;
@@ -686,7 +740,7 @@ CREATE TABLE `shop_attributevalues` (
   `attributevalue` varchar(255) NOT NULL,
   PRIMARY KEY (`attributevalue_id`),
   KEY `attribute_id` (`attribute_id`)
-)  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_manufacturers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -696,7 +750,7 @@ CREATE TABLE `shop_manufacturers` (
   `manufacturername` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
   PRIMARY KEY (`manufacturer_id`)
-)  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_prod_comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -711,7 +765,7 @@ CREATE TABLE `shop_prod_comments` (
   `moderated` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`comment_id`),
   KEY `product_id` (`product_id`)
-)  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_productgroups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -723,7 +777,7 @@ CREATE TABLE `shop_productgroups` (
   `mpath` varchar(1024) DEFAULT NULL,
   `image_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`)
-)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_productgroups_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_productgroups_view`*/;
@@ -757,7 +811,7 @@ CREATE TABLE `shop_products` (
   `comments` int(11) DEFAULT '0',
   PRIMARY KEY (`product_id`),
   KEY `group_id` (`group_id`)
-)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_products_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_products_view`*/;
@@ -795,7 +849,7 @@ CREATE TABLE `store_stock` (
   `sdate` date DEFAULT NULL,
   PRIMARY KEY (`stock_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `store_stock_view`;
 /*!50001 DROP VIEW IF EXISTS `store_stock_view`*/;
@@ -825,8 +879,9 @@ CREATE TABLE `stores` (
   `store_id` int(11) NOT NULL AUTO_INCREMENT,
   `storename` varchar(64) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `branch_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`store_id`)
-)  AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -843,7 +898,7 @@ CREATE TABLE `users` (
   `options` text,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `userlogin` (`userlogin`)
-)  AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `users_view`;
 /*!50001 DROP VIEW IF EXISTS `users_view`*/;
@@ -896,7 +951,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`payamount` AS `payamount`,`d`.`payed` AS `payed`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc`,(select count(0) from `messages` `m` where ((`m`.`item_id` = `d`.`document_id`) and (`m`.`item_type` = 1))) AS `mcnt`,(select count(0) from `files` `f` where ((`f`.`item_id` = `d`.`document_id`) and (`f`.`item_type` = 1))) AS `fcnt`,(select count(0) from `docrel` where ((`docrel`.`doc1` = `d`.`document_id`) or (`docrel`.`doc2` = `d`.`document_id`))) AS `dcnt` from (((`documents` `d` join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) */;
+/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`payamount` AS `payamount`,`d`.`payed` AS `payed`,`d`.`branch_id` AS `branch_id`,`b`.`branch_name` AS `branch_name`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc`,(select count(0) from `messages` `m` where ((`m`.`item_id` = `d`.`document_id`) and (`m`.`item_type` = 1))) AS `mcnt`,(select count(0) from `files` `f` where ((`f`.`item_id` = `d`.`document_id`) and (`f`.`item_type` = 1))) AS `fcnt`,(select count(0) from `docrel` where ((`docrel`.`doc1` = `d`.`document_id`) or (`docrel`.`doc2` = `d`.`document_id`))) AS `dcnt` from ((((`documents` `d` join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) left join `branches` `b` on((`d`.`branch_id` = `b`.`branch_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -948,7 +1003,20 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `issue_issuelist_view` AS select `i`.`issue_id` AS `issue_id`,`i`.`issue_name` AS `issue_name`,`i`.`content` AS `content`,`i`.`customer_id` AS `customer_id`,`i`.`status` AS `status`,`i`.`priority` AS `priority`,`i`.`user_id` AS `user_id`,`i`.`lastupdate` AS `lastupdate`,`u`.`username` AS `username`,`i`.`price` AS `price`,`c`.`customer_name` AS `customer_name`,coalesce((select sum(`issue_history`.`duration`) from `issue_history` where (`issue_history`.`issue_id` = `i`.`issue_id`)),0) AS `totaltime` from ((`issue_issuelist` `i` left join `users_view` `u` on((`i`.`user_id` = `u`.`user_id`))) left join `customers_view` `c` on((`i`.`customer_id` = `c`.`customer_id`))) */;
+/*!50001 VIEW `issue_issuelist_view` AS select `i`.`issue_id` AS `issue_id`,`i`.`issue_name` AS `issue_name`,`i`.`details` AS `details`,`i`.`project_id` AS `project_id`,`i`.`status` AS `status`,`i`.`priority` AS `priority`,`i`.`user_id` AS `user_id`,`i`.`lastupdate` AS `lastupdate`,`u`.`username` AS `username`,`p`.`project_name` AS `project_name` from ((`issue_issuelist` `i` left join `users_view` `u` on((`i`.`user_id` = `u`.`user_id`))) join `issue_projectlist` `p` on((`i`.`project_id` = `p`.`project_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `issue_projectlist_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 CREATE  */
+/*!50013  */
+/*!50001 VIEW `issue_projectlist_view` AS select `p`.`project_id` AS `project_id`,`p`.`project_name` AS `project_name`,`p`.`details` AS `details`,`p`.`customer_id` AS `customer_id`,`p`.`archived` AS `archived`,`c`.`customer_name` AS `customer_name`,(select coalesce(sum((case when (`i`.`status` = 0) then 1 else 0 end)),0) from `issue_issuelist` `i` where (`i`.`project_id` = `p`.`project_id`)) AS `inew`,(select coalesce(sum((case when (`i`.`status` > 1) then 1 else 0 end)),0) from `issue_issuelist` `i` where (`i`.`project_id` = `p`.`project_id`)) AS `iproc`,(select coalesce(sum((case when (`i`.`status` = 1) then 1 else 0 end)),0) from `issue_issuelist` `i` where (`i`.`project_id` = `p`.`project_id`)) AS `iclose` from (`issue_projectlist` `p` left join `customers` `c` on((`p`.`customer_id` = `c`.`customer_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1039,7 +1107,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `paylist_view` AS select `pl`.`pl_id` AS `pl_id`,`pl`.`document_id` AS `document_id`,`pl`.`amount` AS `amount`,`pl`.`mf_id` AS `mf_id`,`pl`.`notes` AS `notes`,`pl`.`user_id` AS `user_id`,`pl`.`paydate` AS `paydate`,`pl`.`paytype` AS `paytype`,`pl`.`indoc` AS `indoc`,`d`.`document_number` AS `document_number`,`u`.`username` AS `username`,`m`.`mf_name` AS `mf_name` from (((`paylist` `pl` join `documents_view` `d` on((`pl`.`document_id` = `d`.`document_id`))) join `users_view` `u` on((`pl`.`user_id` = `u`.`user_id`))) join `mfund` `m` on((`pl`.`mf_id` = `m`.`mf_id`))) */;
+/*!50001 VIEW `paylist_view` AS select `pl`.`pl_id` AS `pl_id`,`pl`.`document_id` AS `document_id`,`pl`.`amount` AS `amount`,`pl`.`mf_id` AS `mf_id`,`pl`.`notes` AS `notes`,`pl`.`user_id` AS `user_id`,`pl`.`paydate` AS `paydate`,`pl`.`paytype` AS `paytype`,`pl`.`indoc` AS `indoc`,`d`.`document_number` AS `document_number`,`u`.`username` AS `username`,`m`.`mf_name` AS `mf_name` from (((`paylist` `pl` join `documents_view` `d` on((`pl`.`document_id` = `d`.`document_id`))) join `users_view` `u` on((`pl`.`user_id` = `u`.`user_id`))) left join `mfund` `m` on((`pl`.`mf_id` = `m`.`mf_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

@@ -54,20 +54,17 @@ class PayCustList extends \App\Pages\Base {
         $doclist->setSelectedClass('table-success');
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-
-
+ 
         $this->add(new Panel("paypan"))->setVisible(false);
         $this->paypan->add(new Label("pname"));
         $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
         $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
-
-
-
+ 
         $this->updateCust();
     }
 
@@ -187,7 +184,7 @@ class PayCustList extends \App\Pages\Base {
 
     public function payOnRow($row) {
         $pay = $row->getDataItem();
-        $row->add(new Label('plamount', H::fa(0 - $pay->amount)));
+        $row->add(new Label('plamount', H::fa( $pay->amount)));
         $row->add(new Label('pluser', $pay->username));
         $row->add(new Label('pldate', date('Y-m-d', $pay->paydate)));
         $row->add(new Label('plmft', $pay->mf_name));

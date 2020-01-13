@@ -44,7 +44,7 @@ class Invoice extends \App\Entity\Doc\Document {
             "document_number" => $this->document_number,
             "total" => $this->amount,
             "payamount" => H::fa($this->payamount),
-            "payed" => H::fa($this->headerdata['payed']),
+            "payed" => H::fa($this->payed),
             "paydisc" => H::fa($this->headerdata["paydisc"] )
         );
 
@@ -67,10 +67,10 @@ class Invoice extends \App\Entity\Doc\Document {
                 $customer->save();
             }
         }
-        $this->payed = 0;
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
-            $this->payed = $this->headerdata['payed'];
+      
+        if ($this->headerdata['payment'] > 0 && $this->payed>0) {
+            \App\Entity\Pay::addPayment($this->document_id, 1, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
+         
         }
         return true;
     }

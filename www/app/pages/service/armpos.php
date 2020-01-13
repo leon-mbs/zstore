@@ -512,23 +512,30 @@ class ARMPos extends \App\Pages\Base {
         }        
         $this->doc->document_date = $this->form3->document_date->getDate();
         $this->doc->notes = $this->form3->notes->getText();
-        
 
         $this->doc->customer_id = $this->form3->customer->getKey();
         $this->doc->payamount = $this->form3->payamount->getText();
 
         $this->doc->headerdata['time'] = time();
-        $this->doc->headerdata['payed'] = $this->form3->payed->getText();
+        $this->doc->payed = $this->form3->payed->getText();
         $this->doc->headerdata['exchange'] = $this->form3->exchange->getText();
         $this->doc->headerdata['paydisc'] = $this->form3->paydisc->getText();
         $this->doc->headerdata['payment'] = $this->form3->payment->getValue();
         
         if ($this->doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
             $this->doc->headerdata['paydisc'] = 0;
-            $this->doc->headerdata['payed'] = 0;
+            $this->doc->payed = 0;
             $this->doc->payamount = 0;
         }
-     
+          
+        if ( $this->doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID && $this->doc->customer_id==0) {
+            $this->setError("Если предоплата  должен  быть  выбран  контрагент");
+            return;
+        }
+        if ( $this->doc->payamount > $this->doc->payed  && $this->doc->customer_id == 0) {
+            $this->setError("Если в долг должен  быть  выбран  контрагент");
+            return;
+        }    
       
         $this->doc->headerdata['pos'] = $this->pos->pos_id;
         $this->doc->headerdata['store'] = $this->pos->store;
@@ -543,9 +550,7 @@ class ARMPos extends \App\Pages\Base {
         $this->doc->headerdata["address"] = $branch->address ;
         $this->doc->headerdata["phone"] = $pos->phone ;
         $this->doc->headerdata["viber"] = $pos->viber ;
-        
-
-
+  
         $this->doc->detaildata = array();
         foreach ($this->_itemlist as $tovar) {
             $this->doc->detaildata[] = $tovar->getData();

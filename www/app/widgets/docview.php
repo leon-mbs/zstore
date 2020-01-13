@@ -13,7 +13,7 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\RedirectLink;
 use \App\Entity\Doc\Document;
-use \App\Helper;
+use \App\Helper as H;
 use \App\Application as App;
 use \App\System;
 
@@ -146,8 +146,8 @@ class DocView extends \Zippy\Html\PageFragment {
     public function payListOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('paydate', date('Y.m.d', $item->paydate)));
-        $row->add(new Label('payamountp', Helper::fa($item->amount > 0 ? $item->amount : "")));
-        $row->add(new Label('payamountm', Helper::fa($item->amount < 0 ? 0 - $item->amount : "")));
+        $row->add(new Label('payamountp', H::fa($item->amount > 0 ? $item->amount : "")));
+        $row->add(new Label('payamountm', H::fa($item->amount < 0 ? 0 - $item->amount : "")));
         $row->add(new Label('payuser', $item->username));
         $row->add(new Label('paycomment', $item->notes));
         $row->add(new Label('paymf', $item->mf_name));
@@ -197,14 +197,14 @@ class DocView extends \Zippy\Html\PageFragment {
             return;
         }
 
-        Helper::addFile($file, $this->_doc->document_id, $this->addfileform->adddescfile->getText(), \App\Entity\Message::TYPE_DOC);
+        H::addFile($file, $this->_doc->document_id, $this->addfileform->adddescfile->getText(), \App\Entity\Message::TYPE_DOC);
         $this->addfileform->adddescfile->setText('');
         $this->updateFiles();
     }
 
     // обновление  списка  прикрепленных файлов
     private function updateFiles() {
-        $this->_fileslist = Helper::getFileList($this->_doc->document_id, \App\Entity\Message::TYPE_DOC);
+        $this->_fileslist = H::getFileList($this->_doc->document_id, \App\Entity\Message::TYPE_DOC);
         $this->dw_files->Reload();
     }
 
@@ -225,7 +225,7 @@ class DocView extends \Zippy\Html\PageFragment {
     //удаление прикрепленного файла
     public function deleteFileOnClick($sender) {
         $file = $sender->owner->getDataItem();
-        Helper::deleteFile($file->file_id);
+        H::deleteFile($file->file_id);
         $this->updateFiles();
     }
 

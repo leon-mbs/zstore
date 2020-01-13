@@ -135,8 +135,8 @@ class GoodsIssue extends \App\Pages\Base {
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->payed->setText($this->_doc->headerdata['payed']);
-            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            $this->docform->payed->setText($this->_doc->payed);
+            $this->docform->editpayed->setText($this->_doc->payed);
             
             $this->OnPayment($this->docform->payment);
 
@@ -351,13 +351,13 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
 
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
             $this->_doc->headerdata['paydisc'] = 0;
-            $this->_doc->headerdata['payed'] = 0;
+            $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
 
@@ -624,10 +624,10 @@ class GoodsIssue extends \App\Pages\Base {
             $this->setError("Не веден ни один  товар");
         }
  
-        if (($this->docform->storefrom->getValue() > 0 ) ==false) {
+        if (($this->docform->store->getValue() > 0 ) ==false) {
             $this->setError("Не выбран  склад");
         }
-        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
+        if ($this->docform->payment->getValue()==0) {
             $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();

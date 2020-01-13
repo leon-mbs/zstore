@@ -94,8 +94,8 @@ class ServiceAct extends \App\Pages\Base {
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->payed->setText($this->_doc->headerdata['payed']);
-            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            $this->docform->payed->setText($this->_doc->payed);
+            $this->docform->editpayed->setText($this->_doc->payed);
 
             $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
             $this->docform->total->setText($this->_doc->amount);
@@ -260,7 +260,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
 
         if ($this->checkForm() == false) {
             return;
@@ -368,7 +368,7 @@ class ServiceAct extends \App\Pages\Base {
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна позиция");
         }
-        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
+        if ($this->docform->payment->getValue()==0) {
             $this->setError("Не указан  способ  оплаты");
         }
 

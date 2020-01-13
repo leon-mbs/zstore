@@ -122,15 +122,16 @@ class POSCheck extends \App\Pages\Base {
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->payed->setText($this->_doc->headerdata['payed']);
-            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            if($this->_doc->headerdata['exchange']>0) $this->_doc->payed += $this->_doc->headerdata['exchange'];//учитываем  со  здачей
+            $this->docform->payed->setText($this->_doc->payed);
+            $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->exchange->setText($this->_doc->headerdata['exchange']);
             
             $this->OnPayment($this->docform->payment);
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->pos->setValue($this->_doc->headerdata['pos']);
+          //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
@@ -336,13 +337,13 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->headerdata['time'] = time();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         if ($this->_doc->headerdata['payment'] == \App\entity\MoneyFund::PREPAID) {
             $this->_doc->headerdata['paydisc'] = 0;
-            $this->_doc->headerdata['payed'] = 0;
+            $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
 
@@ -364,9 +365,9 @@ class POSCheck extends \App\Pages\Base {
         
         $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
         $this->_doc->headerdata["inn"] = $firm['firmname'] ;
-        $this->_doc->headerdata["address"] = $branch['address'] ;
-        $this->_doc->headerdata["phones"] = $pos['phones'] ;
-        $this->_doc->headerdata["viber"] = $pos['viber'] ;
+        $this->_doc->headerdata["address"] = $branch->address ;
+        $this->_doc->headerdata["phones"] = $po->phone ;
+        $this->_doc->headerdata["viber"] = $pos->viber ;
         
   
 
@@ -616,9 +617,21 @@ class POSCheck extends \App\Pages\Base {
         if (($this->docform->store->getValue() > 0 ) ==false) {
             $this->setError("Не выбран  склад");
         }
-        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
+        $p = $this->docform->payment->getValue();
+        $c = $this->docform->customer->getKey();
+        if ( $p==0) {
             $this->setError("Не указан  способ  оплаты");
         }
+        if ( $p == \App\Entity\MoneyFund::PREPAID && $c==0) {
+            $this->setError("Если предоплата  должен  быть  выбран  контрагент");
+        }
+        if ( $this->_doc->payamount > $this->_doc->payed  && $c == 0) {
+            $this->setError("Если в долг должен  быть  выбран  контрагент");
+        }
+        
+        
+        
+        
         return !$this->isError();
     }
 

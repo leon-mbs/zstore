@@ -15,7 +15,8 @@ class POSCheck extends Document {
 
     public function generateCheck( ) {
         
-     
+        if($this->headerdata['exchange']>0) $this->payed += $this->headerdata['exchange'];//учитываем  со  здачей
+        
           
         $check = array();
         $check[] .=  $this->f30("Чек ". $this->document_number);
@@ -51,7 +52,7 @@ class POSCheck extends Document {
             $check[] .=  sprintf("%s%10s",'Знижка'.str_repeat(' ',14), H::fa($this->headerdata["paydisc"])) ;
         }  
         $check[] .=  sprintf("%s%10s",'До сплати'.str_repeat(' ',11), H::fa($this->payamount)) ;
-        $check[] .=  sprintf("%s%10s",'Внесена оплата'.str_repeat(' ',6), H::fa($this->headerdata["payed"])) ;
+        $check[] .=  sprintf("%s%10s",'Внесена оплата'.str_repeat(' ',6), H::fa($this->payed)) ;
         $check[] .=  sprintf("%s%10s",'Здача'.str_repeat(' ',15), H::fa($this->headerdata["exchange"])) ;
    
         $check[] .=  $this->f30("Дякуємо за довiру до нас!");          
@@ -102,11 +103,14 @@ class POSCheck extends Document {
                 $customer->save();
             }
         }
-
-        $this->payed = 0;
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']>0) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
-            $this->payed = $this->headerdata['payed'];
+        if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
+            
+              $this->payed  = $this->payed - $this->headerdata['exchange'];//без здачи
+        }
+       
+        if ($this->headerdata['payment'] > 0 && $this->payed>0) {
+            \App\Entity\Pay::addPayment($this->document_id, 1, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
+           
         }
 
         return true;

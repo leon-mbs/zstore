@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use \App\Entity\Entry;
+use \App\Helper as H;
 
 /**
  * Класс-сущность  локумент акт  о  выполненных работах
@@ -33,7 +34,7 @@ class ServiceAct extends Document {
             "gar" => $this->gar,
             "document_number" => $this->document_number,
             "payamount" => H::fa($this->payamount),
-            "payed" => H::fa($this->headerdata['payed']),
+            "payed" => H::fa($this->payed),
             "total" => H::fa($this->amount)
         );
         $report = new \App\Report('serviceact.tpl');
@@ -77,10 +78,10 @@ class ServiceAct extends Document {
         if ($cnt > 0)
             return;
 
-        $this->payed = 0;
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
-            $this->payed = $this->headerdata['payed'];
+        
+        if ($this->headerdata['payment'] > 0 && $this->payed>0) {
+            \App\Entity\Pay::addPayment($this->document_id, 1, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
+           
         }
     }
 
