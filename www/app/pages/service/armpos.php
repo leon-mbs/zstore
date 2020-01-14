@@ -541,15 +541,15 @@ class ARMPos extends \App\Pages\Base {
         $this->doc->headerdata['store'] = $this->pos->store;
         $this->doc->headerdata['pricetype'] = $this->pos->pricetype;
      //   $this->doc->headerdata['pricetypename'] = $this->form1->pricetype->getValueName();
-        $firm = \App\System::getOptions("firm");            
-        $branch = \App\Entity\Branch::load($this->doc->branch_id);
+        $firm = H::getFirmData($this->doc->branch_id);              
+ 
         $pos = \App\Entity\Pos::load($this->doc->headerdata['pos']);
         
         $this->doc->headerdata["firmname"] = $firm['firmname'] ;
         $this->doc->headerdata["inn"] = $firm['inn'] ;
-        $this->doc->headerdata["address"] = $branch->address ;
-        $this->doc->headerdata["phone"] = $pos->phone ;
-        $this->doc->headerdata["viber"] = $pos->viber ;
+        $this->doc->headerdata["address"] = $firm['address'];
+        $this->doc->headerdata["phone"] = strlen($pos->phone>0) ? $pos->phone :  $firm['phone'] ;
+        $this->doc->headerdata["viber"] = strlen($pos->viber>0) ? $pos->viber :  $firm['viber']  ;
   
         $this->doc->detaildata = array();
         foreach ($this->_itemlist as $tovar) {

@@ -233,7 +233,7 @@ class ReturnIssue extends \App\Pages\Base {
 
         $this->calcTotal();
 
-        $firm = \App\System::getOptions("firm");            
+        $firm = H::getFirmData($this->_doc->branch_id);            
         $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
 
 

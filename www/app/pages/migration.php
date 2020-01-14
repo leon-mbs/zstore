@@ -13,6 +13,8 @@ use \Zippy\Html\Form\CheckBox;
 use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\File;
+use \App\Entity\Customer;
+use \App\Entity\Employee;
 
 class Migration extends \App\Pages\Base {
 
@@ -28,24 +30,49 @@ class Migration extends \App\Pages\Base {
 
         $this->add(new Form('expform'))->onSubmit($this, 'onExport');
         $storelist = \App\Entity\Store::getList();
-        $storelist[10000]='По всем';
-        $this->common->add(new DropDownChoice('storeexp',0));
-        $this->common->add(new CheckBox('custexp'));
-        $this->common->add(new CheckBox('empexp'));
-        $this->common->add(new CheckBox('serexp'));
-        $this->common->add(new CheckBox('eqexp'));
-        $this->common->add(new CheckBox('storeexp'));
+        $storelist[10000]='По всем складам';
+        $this->expform->add(new DropDownChoice('storeexp',$storelist,0));
+        $this->expform->add(new CheckBox('custexp'));
+        $this->expform->add(new CheckBox('empexp'));
+        $this->expform->add(new CheckBox('serexp'));
+        $this->expform->add(new CheckBox('eqexp'));
+        $this->expform->add(new CheckBox('itemexp'));
         
         $this->add(new Form('impform'))->onSubmit($this, 'onImport');
  
-        $this->common->add(new DropDownChoice('storeimp',\App\Entity\Store::getList(),0));
-        $this->common->add(new CheckBox('custimp'));
-        $this->common->add(new CheckBox('empimp'));
-        $this->common->add(new CheckBox('serimp'));
-        $this->common->add(new CheckBox('eqimp'));
-        $this->common->add(new CheckBox('storeimp'));
+        $this->impform->add(new DropDownChoice('storeimp',\App\Entity\Store::getList(),0));
+        $this->impform->add(new CheckBox('custimp'));
+        $this->impform->add(new CheckBox('empimp'));
+        $this->impform->add(new CheckBox('serimp'));
+        $this->impform->add(new CheckBox('eqimp'));
+        $this->impform->add(new CheckBox('itemimp'));
         
     }
 
+    
+    public  function onExport($sender) {
+       $data = new MigrationData();
+       if($sender->custexp->isChecked())   {
+           $data->cust = Customer::find('status <> ' .Customer::STATUS_DISABLED);
+       }
+       if($sender->empexp->isChecked())   {
+           $data->emp = Employee::find('disabled <> 1'  );
+       }
+       
+         
+    }
+    public  function onImport($sender) {
+        
+    }
+    
+}
+
+class  MigrationData {
+    public $emp = array();
+    public $cust = array();
+    public $eq = array();
+    public $ser = array();
+    public $items= array();
+    
     
 }

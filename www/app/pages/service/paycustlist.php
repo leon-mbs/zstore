@@ -14,6 +14,7 @@ use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\RedirectLink;
 use \App\Entity\Doc\Document;
 use \App\Helper as H;
 use \App\Application as App;
@@ -69,21 +70,24 @@ class PayCustList extends \App\Pages\Base {
     }
 
     public function updateCust() {
+        $br="";
+        $blist =\App\ACL::getBranchListConstraint();
+        if(strlen($blist)>0){
+             $br =" branch_id in({$blist}) and ";
+        }
+        $sql = "select c.customer_name,c.phone, c.customer_id,sam,fl  from (select  customer_id,  coalesce(sum(payamount - payed),0) as sam,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
+            from `documents_view`
 
-        $sql = "select customer_name,phone,fl,coalesce(sum(am),0) as sam from  (
-            select   c.customer_name,c.phone,  ( payamount - payed)  as  am ,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
-            from `documents_view`   
-            join  customers c  on   documents_view.customer_id = c.customer_id
-            where payamount > 0 and payamount > payed  and state not in (1,2,3,17)   
-            
-            ) t   group by customer_name ,phone,fl   order by  customer_name  ";
+            where  {$br} payamount > 0 and payamount > payed  and state not in (1,2,3,17)
+
+              group by customer_id ,fl ) t join customers c  on t.customer_id = c.customer_id  ";
         $this->_custlist = \App\DataItem::query($sql);
         $this->clist->custlist->Reload();
     }
 
     public function custlistOnRow($row) {
         $cust = $row->getDataItem();
-        $row->add(new Label('customer_name', $cust->customer_name));
+        $row->add(new RedirectLink('customer_name',"\\App\\Pages\\Reference\\CustomerList",array($cust->customer_id) ))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
         $row->add(new Label('credit', H::fa($cust->fl == -1 ? $cust->sam : "")));
         $row->add(new Label('debet', H::fa($cust->fl == 1 ? $cust->sam : "")));
@@ -111,9 +115,14 @@ class PayCustList extends \App\Pages\Base {
             $docs = "'GoodsIssue','Task','ServiceAct','Invoice','POSCheck'";
         }
 
+        $br="";
+        $blist =\App\ACL::getBranchListConstraint();
+        if(strlen($blist)>0){
+             $br =" branch_id in({$blist}) and ";
+        }
 
 
-        $this->_doclist = \App\Entity\Doc\Document::find("payamount > 0 and payamount  > payed  and state not in (1,2,3,17)  and meta_name in({$docs})", "(payamount - payed) desc");
+        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  > payed  and state not in (1,2,3,17)  and meta_name in({$docs})", "(payamount - payed) desc");
 
         $this->plist->doclist->Reload();
     }

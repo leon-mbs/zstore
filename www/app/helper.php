@@ -408,13 +408,20 @@ class Helper {
     /**
     * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
     */
-    public  static function getFirmData(){
-        $data = array();
-        $firm = \App\System::getOptions("firm");  
-        
-        $branch = \App\Entity\Branch::load();
-        
-        return $data;
+    public  static function getFirmData($id=0){
+       
+        $data = \App\System::getOptions("firm");  
+        if($id>0) {
+            $branch = \App\Entity\Branch::load();
+            if(strlen($branch['firmname'])>0)  $data['firmname'] = $branch['firmname'];
+            if(strlen($branch['inn'])>0)  $data['inn'] = $branch['inn'];
+            if(strlen($branch['address'])>0)  $data['address'] = $branch['address'];
+            if(strlen($branch['phone'])>0)  $data['phone'] = $branch['phone'];
+            if(strlen($branch['viber'])>0)  $data['viber'] = $branch['viber'];
+            
+         }         
+         
+         return $data;
     }
     
     

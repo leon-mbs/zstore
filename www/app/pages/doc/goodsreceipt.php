@@ -333,7 +333,7 @@ class GoodsReceipt extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
 
-        $firm = \App\System::getOptions("firm");            
+        $firm = H::getFirmData($this->_doc->branch_id);            
         $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
 
         $this->_doc->document_number = $this->docform->document_number->getText();

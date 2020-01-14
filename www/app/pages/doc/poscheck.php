@@ -359,15 +359,15 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
 
-        $firm = \App\System::getOptions("firm");            
-        $branch = \App\Entity\Branch::load($this->_doc->branch_id);
+        $firm =   $firm = H::getFirmData($this->doc->branch_id);              
+   
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
         
         $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
-        $this->_doc->headerdata["inn"] = $firm['firmname'] ;
-        $this->_doc->headerdata["address"] = $branch->address ;
-        $this->_doc->headerdata["phones"] = $pos->phone ;
-        $this->_doc->headerdata["viber"] = $pos->viber ;
+        $this->_doc->headerdata["inn"] = $firm['inn'] ;
+        $this->_doc->headerdata["address"] = $firm['address'] ;
+        $this->_doc->headerdata["phones"] = strlen($pos->phone>0) ? $pos->phone :  $firm['phone']  ;
+        $this->_doc->headerdata["viber"] = strlen($pos->viber>0) ? $pos->phoviberne :  $firm['viber']  ;
         
   
 
