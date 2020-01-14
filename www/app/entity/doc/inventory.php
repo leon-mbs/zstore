@@ -54,20 +54,21 @@ class Inventory extends Document {
 
     public function generateReport() {
 
-
-
-
-
+        $user = \App\System::getUser();
+  
         $i = 1;
         $detail = array();
         foreach ($this->detaildata as $value) {
             $name = $value['itemname'];
-
+            $q =   H::fqty($value['quantity']);
+            if($user->userlogin != 'admin')  $q = '-';
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
                 "qfact" => $value['qfact'],
                 "snumber" => $value['snumber'],
-                "quantity" => H::fqty($value['quantity']));
+                "quantity" =>  $q
+                
+                );
         }
 
         $header = array(

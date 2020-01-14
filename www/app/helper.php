@@ -412,12 +412,12 @@ class Helper {
        
         $data = \App\System::getOptions("firm");  
         if($id>0) {
-            $branch = \App\Entity\Branch::load();
-            if(strlen($branch['firmname'])>0)  $data['firmname'] = $branch['firmname'];
-            if(strlen($branch['inn'])>0)  $data['inn'] = $branch['inn'];
-            if(strlen($branch['address'])>0)  $data['address'] = $branch['address'];
-            if(strlen($branch['phone'])>0)  $data['phone'] = $branch['phone'];
-            if(strlen($branch['viber'])>0)  $data['viber'] = $branch['viber'];
+            $branch = \App\Entity\Branch::load($id);;
+            if(strlen($branch->firmname)>0)  $data['firmname'] = $branch->firm;
+            if(strlen($branch->inn)>0)  $data['inn'] = $branch->inn;
+            if(strlen($branch->address)>0)  $data['address'] = $branch->address;
+            if(strlen($branch->phone)>0)  $data['phone'] = $branch->phone;
+            if(strlen($branch->viber)>0)  $data['viber'] = $branch->viber;
             
          }         
          

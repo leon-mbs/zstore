@@ -89,13 +89,13 @@ class Inventory extends \App\Pages\Base {
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
-        $row->add(new Label('quantity', H::fqty($item->quantity)));
+      //  $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('qfact', H::fqty($item->qfact)));
 
-        if ($item->quantity > $item->qfact)
-            $row->item->setAttribute('class', "text-danger");
-        if ($item->quantity < $item->qfact)
-            $row->item->setAttribute('class', "text-success");
+     //   if ($item->quantity > $item->qfact)
+     //       $row->item->setAttribute('class', "text-danger");
+     //   if ($item->quantity < $item->qfact)
+     //       $row->item->setAttribute('class', "text-success");
 
 
         $row->add(new ClickLink('plus'))->onClick($this, 'plusOnClick');

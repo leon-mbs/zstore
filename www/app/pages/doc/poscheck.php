@@ -359,7 +359,7 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
 
-        $firm =   $firm = H::getFirmData($this->doc->branch_id);              
+        $firm =   $firm = H::getFirmData($this->_doc->branch_id);              
    
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
         

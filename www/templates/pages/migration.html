@@ -4,13 +4,17 @@
         <div class="row">
             <div class="col-8">
                 <h3>Перенос данных</h3>
-                <small>Выгрузка  и  загрузка данных при  переходе  на  новые  версии</small>  
+                <small>Выгрузка  и  загрузка данных при  переходе  на  новые  версии. При импорте проверяется наличие  обьекта  по  его наименованию.</small>  
 
             </div>
         </div>
        <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
                   <form zippy="expform" > 
+                      <div class="form-check">
+                        <input zippy="userexp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="userexp">Пользователи</label>
+                    </div>                    
                       <div class="form-check">
                         <input zippy="custexp" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="custexp">Контрагенты</label>
@@ -47,8 +51,13 @@
             <div class="col-12 col-md-4 col-xl-3">
                   <form zippy="impform" enctype="multipart/form-data"  >
                       <div class="form-check">
-                        <input zippy="fileimp" class="form-control" >
+                      <label   for="fileimp">Файл импорта</label>
+                          <input required="required" type="file" zippy="fileimp" class="form-control" >
                     </div>
+                      <div class="form-check">
+                        <input zippy="userimp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="userimp">Пользователи</label>
+                    </div>                    
                     <div class="form-check">
                         <input zippy="custimp" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="custimp">Контрагенты</label>
@@ -76,6 +85,93 @@
                         </select>  <br>
                     </div>                    
   
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit"  >Импорт</button>
+                    </div>   
+                    </form>
+                
+            </div>
+        </div>
+       <div class="row">
+            <div class="col-12 col-md-4 col-xl-3">
+                  <form zippy="expform" > 
+                      <div class="form-check">
+                        <input zippy="userexp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="userexp">Пользователи</label>
+                    </div>                    
+                      <div class="form-check">
+                        <input zippy="custexp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="custexp">Контрагенты</label>
+                    </div>                    
+                      <div class="form-check">
+                        <input zippy="empexp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="empexp">Сотрудники</label>
+                    </div>                    
+                     <div class="form-check">
+                        <input zippy="serexp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="serexp">Услуги, работы</label>
+                    </div>                    
+                    <div class="form-check">
+                        <input zippy="eqexp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="eqexp">Оборудование</label>
+                    </div>                    
+                      <div class="form-check">
+                        <input zippy="itemexp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="itemexp">ТМЦ</label>
+                    </div>                    
+                     <div class="form-check">
+                        
+                        <label   for="storeexp">Состояние  складов</label>
+                        <select zippy="storeexp" class="form-control">
+                           <option value="0">Не выгружать</option>
+                        </select>  <br>
+                    </div>                    
+  
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit"  >Экспорт</button>
+                    </div>   
+                    </form>
+            </div>
+            <div class="col-12 col-md-4 col-xl-3">
+                  <form zippy="impform" enctype="multipart/form-data"  >
+                      <div class="form-check">
+                      <label   for="fileimp">Файл импорта</label>
+                          <input required="required" type="file" zippy="fileimp" class="form-control" >
+                    </div>
+                      <div class="form-check">
+                        <input zippy="userimp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="userimp">Пользователи</label>
+                    </div>                    
+                    <div class="form-check">
+                        <input zippy="custimp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="custimp">Контрагенты</label>
+                    </div>                    
+                      <div class="form-check">
+                        <input zippy="empimp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="empimp">Сотрудники</label>
+                    </div>                    
+                     <div class="form-check">
+                        <input zippy="serimp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="serimp">Услуги, работы</label>
+                    </div>                    
+                    <div class="form-check">
+                        <input zippy="eqimp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="eqimp">Оборудование</label>
+                    </div>                    
+                    <div class="form-check">
+                        <input zippy="itemimp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="itemimp">ТМЦ</label>
+                    </div>                    
+                     <div class="form-check">
+                        <label   for="storeimp">На какой склад</label>
+                        <select zippy="storeimp" class="form-control">
+                           <option value="0">Не выбран</option>
+                        </select>  <br>
+                    </div>                    
+                    <div class="form-check">
+                        <input zippy="delimp" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="delimp">Очистить существующие  ресурсы  перед  импортом</label>
+                    </div>    
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit"  >Импорт</button>
                     </div>   

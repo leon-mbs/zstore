@@ -46,7 +46,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->add(new TextInput('gar'));
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
+        
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
@@ -97,7 +97,7 @@ class ServiceAct extends \App\Pages\Base {
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
 
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -258,7 +258,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->_doc->headerdata['order_id'] = $this->_order_id;
         $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+        
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
 

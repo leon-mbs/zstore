@@ -49,7 +49,7 @@ class RetCustIssue extends \App\Pages\Base {
   
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
+        
   
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -83,7 +83,7 @@ class RetCustIssue extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            
 
             $this->docform->notes->setText($this->_doc->notes);
  
@@ -230,7 +230,7 @@ class RetCustIssue extends \App\Pages\Base {
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+        
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();

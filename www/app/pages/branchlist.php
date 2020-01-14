@@ -34,9 +34,9 @@ class BranchList extends \App\Pages\Base {
         $this->branchtable->add(new DataView('branchlist', new \ZCL\DB\EntityDataSource('\App\Entity\Branch','','disabled asc,branch_name asc'), $this, 'branchlistOnRow'))->Reload();
         $this->branchtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('branchdetail'))->setVisible(false);
-        $this->branchdetail->add(new TextInput('editbranch_name'));
-        $this->branchdetail->add(new TextInput('edit_firm'));
-        $this->branchdetail->add(new TextInput('edit_inn'));
+        $this->branchdetail->add(new TextInput('editbranchname'));
+        $this->branchdetail->add(new TextInput('editfirm'));
+        $this->branchdetail->add(new TextInput('editinn'));
        
         $this->branchdetail->add(new TextInput('editaddress'));
         $this->branchdetail->add(new TextInput('editphone'));
@@ -75,7 +75,7 @@ class BranchList extends \App\Pages\Base {
         $this->_branch = $sender->owner->getDataItem();
         $this->branchtable->setVisible(false);
         $this->branchdetail->setVisible(true);
-        $this->branchdetail->editbranch_name->setText($this->_branch->branch_name);
+        $this->branchdetail->editbranchname->setText($this->_branch->branch_name);
         $this->branchdetail->editfirm->setText($this->_branch->firm);
         $this->branchdetail->editinn->setText($this->_branch->inn);
      
@@ -98,7 +98,7 @@ class BranchList extends \App\Pages\Base {
     public function saveOnClick($sender) {
 
 
-        $this->_branch->branch_name = $this->branchdetail->editbranch_name->getText();
+        $this->_branch->branchname = $this->branchdetail->editbranchname->getText();
         if ($this->_branch->branch_name == '') {
             $this->setError("Введите наименование");
             return;

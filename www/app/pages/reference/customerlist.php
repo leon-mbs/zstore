@@ -31,7 +31,7 @@ class CustomerList extends \App\Pages\Base {
     public $_msglist = array();
     public $_eventlist = array();
 
-    public function __construct($id) {
+    public function __construct($id=0) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('CustomerList'))
             return;

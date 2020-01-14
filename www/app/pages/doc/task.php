@@ -185,7 +185,7 @@ class Task extends \App\Pages\Base {
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
 
-        $this->onMF($this->docform->payment);
+        
     }
 
     
@@ -491,7 +491,7 @@ class Task extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
 
-        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getValueName();
+        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
@@ -606,13 +606,21 @@ class Task extends \App\Pages\Base {
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна работа");
         }
-        if ($this->docform->payment->getValue()==0) {
-            $this->setError("Не указан  способ  оплаты");
-        }
+ 
         if (($this->docform->store->getValue() > 0 ) ==false) {
             $this->setError("Не выбран  склад");
         }
-
+         $p = $this->docform->payment->getValue();
+        $c = $this->docform->customer->getKey();
+        if ( $p==0) {
+            $this->setError("Не указан  способ  оплаты");
+        }
+        if ( $p == \App\Entity\MoneyFund::PREPAID && $c==0) {
+            $this->setError("Если предоплата  должен  быть  выбран  контрагент");
+        }
+        if ( $this->_doc->payamount > $this->_doc->payed  && $c == 0) {
+            $this->setError("Если в долг должен  быть  выбран  контрагент");
+        }
         return !$this->isError();
 
 

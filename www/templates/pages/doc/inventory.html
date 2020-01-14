@@ -7,6 +7,9 @@
 
         <form zippy="docform">
             <h3> Инвентаризация</h3>
+            <small>Документ  позволяет  ввести текущие количества  на складе  и внести  корективы
+              в зависимости от разницы  в ту или  иную  сторону. Фактическое  количество  может  
+              видеть аддминистратор  при  просмотре документа<small>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -52,9 +55,9 @@
                             <th  >Серия</th>
                             <th  >Дата</th>
                             {{/usesnumber}} 
-                            <th width="40"  class="text-right" >Кол. </th>
+                       <!--     <th width="40"  class="text-right" >Кол. </th> -->
                             <th   class="text-right" > </th>
-                            <th width="40"  class="text-center" >Факт</th>
+                            <th width="40"  class="text-center" >Кол.</th>
                             <th   class="text-left" > </th>
 
 
@@ -67,7 +70,7 @@
                             <td zippy="snumber"></td>
                             <td zippy="sdate"></td>
                             {{/usesnumber}} 
-                            <td zippy="quantity"  class="text-right" ></td>
+                        <!--    <td zippy="quantity"  class="text-right" ></td>-->
                             <td   class="text-right" > 
                                 <a zippy="minus"><i class="fa fa-minus"></i></a>
                             </td>

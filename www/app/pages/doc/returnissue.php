@@ -49,7 +49,7 @@ class ReturnIssue extends \App\Pages\Base {
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
+        
 
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -84,7 +84,7 @@ class ReturnIssue extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            
 
             foreach ($this->_doc->detaildata as $item) {
                 $it = new Stock($item);
@@ -239,7 +239,7 @@ class ReturnIssue extends \App\Pages\Base {
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+        
 
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
