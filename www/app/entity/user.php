@@ -24,6 +24,7 @@ class User extends Entity {
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
+        $this->pagesize = 25;
         $this->createdon = time();
     }
 
@@ -56,6 +57,7 @@ class User extends Entity {
         $this->onlymy = (int) ($xml->onlymy[0]);
         $this->defstore = (int) ($xml->defstore[0]);
         $this->defmf = (int) ($xml->defmf[0]);
+        $this->pagesize = (int) ($xml->pagesize[0]);
         $this->aclview = (string) ($xml->aclview[0]);
         $this->acledit = (string) ($xml->acledit[0]);
         $this->aclbranch = (string) ($xml->aclbranch[0]);
@@ -86,6 +88,7 @@ class User extends Entity {
         $this->acl .= "<modules>{$this->modules}</modules>";
         $this->acl .= "<defstore>{$this->defstore}</defstore>";
         $this->acl .= "<defmf>{$this->defmf}</defmf>";
+        $this->acl .= "<pagesize>{$this->pagesize}</pagesize>";
         $this->acl .= "</detail>";
 
         $this->options = serialize($this->_options);

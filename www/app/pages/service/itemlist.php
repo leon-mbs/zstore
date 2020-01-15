@@ -40,7 +40,7 @@ class ItemList extends \App\Pages\Base {
         
         $this->itempanel->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
 
-        $this->itempanel->itemlist->setPageSize(25);
+        $this->itempanel->itemlist->setPageSize(H::getPG());
         $this->itempanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->itempanel->itemlist));
 
  

@@ -18,6 +18,7 @@ use \App\Modules\Shop\Entity\ProductGroup;
 use \App\Modules\Shop\Entity\Product;
 use \App\Modules\Shop\Helper;
 use \App\Filter;
+use \App\Helper as H;
 
 class Catalog extends Base {
 

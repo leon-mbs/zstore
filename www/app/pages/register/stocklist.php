@@ -51,7 +51,7 @@ class StockList extends \App\Pages\Base {
 
 
         $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(25);
+        $doclist->setPageSize(H::getPG());
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);

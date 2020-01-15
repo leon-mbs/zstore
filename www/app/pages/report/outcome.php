@@ -27,6 +27,7 @@ class Outcome extends \App\Pages\Base {
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('type', array(1 => 'По товарам', 2 => 'По покупателм', 3 => 'По датам', 4 => 'Услуги, работы'), 1));
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username',"user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))",'username')  , 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('print', "outcome"));
@@ -78,13 +79,15 @@ class Outcome extends \App\Pages\Base {
     private function generateReport() {
 
         $type = $this->filter->type->getValue();
+        $user = $this->filter->emp->getValue();
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
 
+        $u = "";
 
-
+        if($user >0) $u = " and d.user_id={$user} ";
 
         $detail = array();
         $conn = \ZDB\DB::getConnect();
@@ -96,8 +99,8 @@ class Outcome extends \App\Pages\Base {
 
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` <0
-               and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order')
+               where e.`item_id` >0 {$u} and e.`quantity` <0
+               and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order','POSCheck')
  
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -112,8 +115,8 @@ class Outcome extends \App\Pages\Base {
 
          join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
-           where e.`customer_id` >0  and e.`quantity` <0
-             and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+           where e.`customer_id` >0 {$u} and e.`quantity` <0
+             and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order','POSCheck')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
   group by  c.`customer_name`,c.`customer_id`
   order  by c.`customer_name`
@@ -126,8 +129,8 @@ class Outcome extends \App\Pages\Base {
 
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` <0
-              and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order')           
+               where e.`item_id` >0 {$u} and e.`quantity` <0
+              and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order','POSCheck')           
                AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.`document_date`
@@ -142,8 +145,8 @@ class Outcome extends \App\Pages\Base {
 
               join `services` s on e.`service_id` = s.`service_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`service_id` >0  and e.`quantity` <0
-              and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order')
+               where e.`service_id` >0 {$u} and e.`quantity` <0
+              and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order','POSCheck')
                 AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.`service_name`

@@ -47,7 +47,7 @@ class OrderList extends \App\Pages\Base {
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(25);
+        $doclist->setPageSize(H::getPG());
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 

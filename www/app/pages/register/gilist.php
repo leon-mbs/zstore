@@ -50,7 +50,7 @@ class GIList extends \App\Pages\Base {
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(25);
+        $doclist->setPageSize(H::getPG());
 
 
 

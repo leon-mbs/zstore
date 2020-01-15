@@ -42,7 +42,7 @@ class EqList extends \App\Pages\Base {
         $this->itemtable->add(new DataView('eqlist', new EQDS($this), $this, 'eqlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
 
-        $this->itemtable->eqlist->setPageSize(25);
+        $this->itemtable->eqlist->setPageSize(Helper::getPG());
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->eqlist));
         $this->itemtable->eqlist->setSelectedClass('table-success');
         $this->itemtable->eqlist->Reload();

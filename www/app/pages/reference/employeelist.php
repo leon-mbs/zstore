@@ -16,6 +16,7 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Employee;
+use \App\Helper;
 
 class EmployeeList extends \App\Pages\Base {
 
@@ -30,7 +31,7 @@ class EmployeeList extends \App\Pages\Base {
     
         $this->add(new Panel('employeetable'))->setVisible(true);
         $this->employeetable->add(new DataView('employeelist', new EDS('\App\Entity\Employee', '', 'disabled, emp_name'), $this, 'employeelistOnRow'))->Reload();
-        $this->employeetable->employeelist->setPageSize(25);
+        $this->employeetable->employeelist->setPageSize(Helper::getPG());
         $this->employeetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->employeetable->employeelist));
   
         $this->employeetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');

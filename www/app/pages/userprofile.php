@@ -31,6 +31,7 @@ class UserProfile extends \App\Pages\Base {
         $form->add(new TextInput('email', $this->user->email));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(),$this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(),$this->user->defmf));
+        $form->add(new DropDownChoice('pagesize', array(15=>15,25=>25,50=>50,100=>100,200=>200),$this->user->pagesize));
         
         $this->add($form);
   
@@ -57,6 +58,7 @@ class UserProfile extends \App\Pages\Base {
         $this->user->email = $sender->email->getText();
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
+        $this->user->pagesize = $sender->pagesize->getValue();
 
         if (!$this->isError()) {
             $this->user->save();

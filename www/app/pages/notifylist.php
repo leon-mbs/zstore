@@ -26,7 +26,7 @@ class NotifyList extends \App\Pages\Base {
 
 
         $this->add(new DataView("nlist", new EntityDataSource("\\App\\Entity\\Notify", "dateshow <= now() and user_id=" . $user->user_id, " dateshow desc"), $this, 'OnRow'));
-        $this->nlist->setPageSize(25);
+        $this->nlist->setPageSize(H::getPG());
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->nlist));
         $this->nlist->Reload();
 

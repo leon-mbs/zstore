@@ -526,7 +526,7 @@ class Task extends \App\Pages\Base {
         $emplist = array();
         foreach ($this->_emplist as $item) {
             $item->pay = round($total / $cnt); //сумма поровну
-            $emplist[] = $item->getData();
+            $emplist[] = $item  ;
         }
         $this->_doc->headerdata['emp'] = base64_encode(serialize($emplist));
 
@@ -653,7 +653,7 @@ class Task extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
     public function OnAutoServive($sender) {

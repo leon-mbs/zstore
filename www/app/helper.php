@@ -425,4 +425,22 @@ class Helper {
     }
     
     
+    /**
+    * возвращает размер при пагинации
+    * 
+    * @param mixed $pagesize
+    * @return mixed
+    */
+    public static function  getPG($pagesize=0){
+        
+        
+        if($pagesize>0){
+            return  $pagesize  ; 
+        }
+        $user = \App\System::getUser() ;
+        if($user->pagesize > 0){
+            return  $user->pagesize;
+        }
+        return 25;    
+    }
 }

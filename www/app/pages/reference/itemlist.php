@@ -19,6 +19,7 @@ use \App\Entity\Item;
 use \App\Entity\ItemSet;
 use \App\Entity\Category;
 use \App\System;
+use \App\Helper as H;
 
 class ItemList extends \App\Pages\Base {
 
@@ -39,7 +40,7 @@ class ItemList extends \App\Pages\Base {
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->itemlist->setPageSize(25);
+        $this->itemtable->itemlist->setPageSize(H::getPG());
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->itemlist));
 
         $this->add(new Form('itemdetail'))->setVisible(false);

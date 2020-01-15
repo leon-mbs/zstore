@@ -75,7 +75,7 @@ class DocList extends \App\Pages\Base {
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(25);
+        $doclist->setPageSize(H::getPG());
         $filter->page = $this->doclist->setCurrentPage($filter->page);
         $this->doclist->setSorting('document_id', 'desc');
         $doclist->Reload();
@@ -268,7 +268,7 @@ class DocList extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
     public function oncsv($sender) {

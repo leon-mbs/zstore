@@ -54,7 +54,7 @@ class TaskList extends \App\Pages\Base {
         $this->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
         $this->tasklist->setSelectedClass('table-success');
 
-        $this->tasklist->setPageSize(15);
+        $this->tasklist->setPageSize(H::getPG(15));
         $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->tasklist));
 
         $this->add(new Form('filterform'))->onSubmit($this, 'OnFilter');
@@ -335,7 +335,7 @@ class TaskList extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
     public function oncsv($sender) {
