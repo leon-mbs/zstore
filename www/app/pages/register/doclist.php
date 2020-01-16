@@ -229,7 +229,8 @@ class DocList extends \App\Pages\Base {
         $doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
-
+              
+            
         $del = Document::delete($doc->document_id);
         if (strlen($del) > 0) {
             $this->setError($del);
@@ -246,9 +247,12 @@ class DocList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
-        if (false == $doc->canCanceled()) {
-            return;
-        }
+        
+        $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        if ($f) {
+            System::setWarnMsg("У документа были отправки или доставки");
+        }        
+        
         $doc->updateStatus(Document::STATE_CANCELED);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);

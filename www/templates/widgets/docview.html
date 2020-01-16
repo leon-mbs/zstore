@@ -46,8 +46,9 @@
                                     </tr>
                                 </table>
                                 <form zippy="addmsgform">
-                                    <label> Коментарий: </label>
+                                    
                                     <div class="form-group">
+                                        <label for="addmsg"> Коментарий: </label>
                                         <textarea class="form-control" required="required" zippy="addmsg" style="width:300px;height:120px;"></textarea>
                                     </div> 
                                     <input class="btn btn-light  " type="submit" value="Добавить">
@@ -73,8 +74,9 @@
                             <hr>
                             <form zippy="addrelform">
 
-                                <label>Добавить документ:</label>
+                                
                                 <div class="form-group">
+                                <label for="addrel">Добавить документ:</label>
                                     <input class="form-control" placeholder="Начните ввод номера " style="width:200px" type="text"
                                            required="required" zippy="addrel">
                                 </div>                                            
@@ -93,12 +95,14 @@
                             <hr>
                             <form zippy="addfileform" enctype="multipart/form-data">
                                 <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
-                                <label> Выбрать файл: </label>
+                               
                                 <div class="form-group">
+                                 <label for="addfile"> Выбрать файл: </label>
                                     <input class="form-control" type="file" required="required" zippy="addfile">
                                 </div>
-                                <label>  Коментарий </label> 
+                                
                                 <div class="form-group">
+                                <label for="adddescfile">  Коментарий </label> 
                                     <input class="form-control" type="text" zippy="adddescfile" style="width:200px">
                                 </div>
                                 <input class="btn btn-light  " type="submit" value="Добавить">

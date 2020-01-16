@@ -132,7 +132,7 @@ class Options extends \App\Pages\Base {
         $this->editpan->editform->add(new TextInput('edit_menugroup'));
      
         $this->editpan->editform->add(new CheckBox('edit_disabled'));
-        $this->editpan->editform->add(new CheckBox('edit_smart'));
+        
 
         $this->editpan->editform->add(new DropDownChoice('edit_meta_type', \App\Entity\MetaData::getNames()));
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
@@ -230,7 +230,7 @@ class Options extends \App\Pages\Base {
         $this->editpan->editform->edit_menugroup->setText('');
         
         $this->editpan->editform->edit_disabled->setChecked(0);
-        $this->editpan->editform->edit_smart->setChecked(0);
+        
     }
 
     public function mcancelOnClick($sender) {
@@ -277,7 +277,7 @@ class Options extends \App\Pages\Base {
         $form->edit_menugroup->setText($item->menugroup);
         $form->edit_meta_type->setValue($item->meta_type);
         $form->edit_disabled->setChecked($item->disabled == 1);
-        $form->edit_smart->setChecked($item->smartmenu == 1);
+        
 
 
         $this->listpan->setVisible(false);
@@ -305,9 +305,7 @@ class Options extends \App\Pages\Base {
         $item->meta_name = trim(ucfirst($this->editpan->editform->edit_meta_name->getText()));
         $item->meta_type = $this->editpan->editform->edit_meta_type->getValue();
         $item->disabled = $this->editpan->editform->edit_disabled->isChecked() ? 1 : 0;
-        $item->smartmenu = $this->editpan->editform->edit_smart->isChecked() ? 1 : 0;
-        if ($item->disabled == 1)
-            $item->smartmenu = 0;
+        
 
         $item->save();
 

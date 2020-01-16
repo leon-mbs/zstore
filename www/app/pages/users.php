@@ -69,7 +69,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->editpan->editform->add(new Panel('metaaccess'))->setVisible(false);
-        $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "meta_type"), $this, 'metarowOnRow'));
+        $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description"), $this, 'metarowOnRow'));
         
         $this->editpan->editform->add(new DataView('brow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Branch", "disabled<>1", "branch_name"), $this, 'branchOnRow'));
 

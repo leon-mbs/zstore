@@ -15,6 +15,9 @@ use \Zippy\Html\Panel;
 use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\TextArea;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\DropDownChoice;
 
 class NotifyList extends \App\Pages\Base {
 
@@ -29,7 +32,7 @@ class NotifyList extends \App\Pages\Base {
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new TextInput('searchtext'));
- 
+    
         $this->ds =  new EntityDataSource("\\App\\Entity\\Notify", "dateshow <= now() and user_id=" . $user->user_id, " dateshow desc");
 
         $this->add(new DataView("nlist",$this->ds , $this, 'OnRow'));
@@ -55,4 +58,5 @@ class NotifyList extends \App\Pages\Base {
         $this->ds->setWhere("(sender_name like {$text} or message like {$text}) and user_id=" . System::getUser()->user_id);
         $this->nlist->Reload();
     }
+    
 }

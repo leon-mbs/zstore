@@ -231,12 +231,19 @@ class Document extends \ZCL\DB\Entity {
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
             //удаляем освободившиеся стоки
             $conn->Execute("delete from store_stock where stock_id not in (select coalesce(stock_id,0) from entrylist) ");
-                 
-            //удаляем оплату
-            if ($this->headerdata['payment'] > 0) {
-                $conn->Execute("delete from paylist where indoc=1 and  document_id =" . $this->document_id);
-                $conn->Execute("update documents set payed=0 where   document_id =" . $this->document_id);
-            }
+  
+       
+        //отменяем оплаты  но  в  документе  оставляем
+        $sql = "select coalesce( sum(amount),0) from paylist where document_id=" . $this->document_id;
+        $payed = $conn->GetOne($sql);
+        if($payed!=0){
+          \App\Entity\Pay::addPayment($this->document_id,  0 - $payed, $this->headerdata['payment'],   \App\Entity\Pay::PAY_CANCEL   , 'Отмена  документа');
+         
+        }
+       // $this->payed=0;
+       // $this->save();
+        //$conn->Execute("update documents set payed=0 where   document_id =" . $this->document_id);
+             
             // возвращаем бонусы
             if ($this->headerdata['paydisc'] > 0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);
@@ -501,14 +508,7 @@ class Document extends \ZCL\DB\Entity {
 
         $conn = \ZDB\DB::getConnect();
 
-        $cnt = $conn->GetOne("select  count(*) from entrylist where  document_id = {$this->document_id}  ");
-        if ($cnt > 0) {
-
-            return "У документа  есть записи в аналитике";
-        }
-
-
-
+  
         $cnt = $conn->GetOne("select  count(*) from docrel where  doc1 = {$this->document_id}  or  doc2 = {$this->document_id}");
         if ($cnt > 0) {
 
@@ -519,6 +519,11 @@ class Document extends \ZCL\DB\Entity {
         if ($f) {
 
             return "У документа были отправки или доставки";
+        }
+        $user = System::getUser() ;
+        if($this->user_id != $user->user_id && $user->userlogin != 'admin'){
+            
+            return "Удалять документ  может  только  автор или администратор";
         }
 
         return "";
@@ -550,33 +555,14 @@ class Document extends \ZCL\DB\Entity {
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;
             $n->message = "Удален документ  <br><br>";
-            $n->message .= "Документ {$this->document_number} удален   "  ;
-            $n->sender_name =System::getUser()->username;
+            $n->message .= "Документ {$this->document_number} удален пользователем  " .System::getUser()->username ;
+            $n->sender_name ='Система';
         
             $n->save();
         }
     }
 
-    /**
-     * может быть отменен
-     * 
-     */
-    public function canCanceled() {
-        $conn = \ZDB\DB::getConnect();
-        $f = $this->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
-        if ($f) {
-            System::setWarnMsg("У документа были отправки или доставки");
-            return true;
-        }
-        $cnt = $conn->GetOne("select  count(*) from paylist where    document_id = {$this->document_id}  ");
-        if ($cnt > 0) {
-            System::setWarnMsg("У документа были оплаты");
-
-            return false;
-        }
-
-        return true;
-    }
+ 
 
     /**
      *

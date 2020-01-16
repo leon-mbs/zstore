@@ -268,11 +268,10 @@ class DocView extends \Zippy\Html\PageFragment {
 
             $n = new \App\Entity\Notify();
             $n->user_id = $adr;
-            $n->message = "<b>Новый  коментарий к документу</b>";
-            $n->message .= "<br><b> Документ: </b> {$this->_doc->meta_desc} {$this->_doc->document_number} ";
-            $n->message .= "<br><b> Пользователь: </b> {$user->username}: ";
+            $n->message = "<b>Новый  коментарий к документу:</b> {$this->_doc->meta_desc} {$this->_doc->document_number}  ";
             $n->message .= "<br> {$msg->message} ";
             $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">Ответить</a> ";
+            $n->sender_name=$user->username;
             $n->save();
         }
     }

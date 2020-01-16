@@ -16,6 +16,7 @@ use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\BookmarkableLink ;
 use \App\Entity\Doc\Document;
 use \App\Entity\Customer;
 use \App\Helper as H;
@@ -42,6 +43,7 @@ class PayList extends \App\Pages\Base {
 
         $this->_ptlist = \App\Entity\Pay::getPayTypeList();
 
+     
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
@@ -58,8 +60,10 @@ class PayList extends \App\Pages\Base {
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-
-
+        $this->add(new Form('fnotes'))->onSubmit($this, 'delOnClick');
+        $this->fnotes->add(new TextInput('pl_id'));
+        $this->fnotes->add(new TextInput('notes'));
+        
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
@@ -95,7 +99,9 @@ class PayList extends \App\Pages\Base {
 
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        $row->add(new ClickLink('del', $this, 'delOnClick'))->setVisible($doc->indoc == 0);
+        $row->add(new ClickLink('del' )) ;
+        $row->del->setAttribute('onclick',"delpay({$doc->pl_id})");
+        
     }
 
     //просмотр
@@ -113,15 +119,16 @@ class PayList extends \App\Pages\Base {
 
     public function delOnClick($sender) {
 
-
-        $pl = $sender->getOwner()->getDataItem();
+        $id = $sender->pl_id->getText();
+  
+        
+        $pl = Pay::load($id);
+        if($pl==null) return;
        
-        Pay::addPayment($pl->document_id,  0 - $pl->amount, $pl->mf_id, Pay::PAY_CANCEL_OUTCOME, $form->pcomment->getText());
+        Pay::addPayment($pl->document_id,  0 - $pl->amount, $pl->mf_id,   Pay::PAY_CANCEL   , $sender->notes->getText());
         
         $conn = \ZDB\DB::getConnect();
 
-      //  $sql = "delete from paylist where pl_id=" . $pl->pl_id;
-     //   $conn->Execute($sql);
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
         $payed = $conn->GetOne($sql);
 

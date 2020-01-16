@@ -123,7 +123,12 @@ class Helper {
     public static function generateSmartMenu() {
         $conn = \ZDB\DB::getConnect();
 
-        $rows = $conn->Execute("select *  from  metadata where smartmenu =1 ");
+        $smartmenu =   System::getUser()->smartmenu ;
+      
+        if(strlen($smartmenu)==0)   return "";
+         
+        $rows = $conn->Execute("select *  from  metadata  where meta_id in ({$smartmenu})   ");
+                                                           
         $textmenu = "";
         $aclview = explode(',', System::getUser()->aclview);
 
