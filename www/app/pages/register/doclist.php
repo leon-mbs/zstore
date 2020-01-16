@@ -172,18 +172,7 @@ class DocList extends \App\Pages\Base {
             $row->cancel->setVisible(true);
         }
 
-        //список документов   которые   могут  быть созданы  на  основании  текущего
-        $basedon = $row->add(new Label('basedon'));
-        $basedonlist = $doc->getRelationBased();
-        if (count($basedonlist) == 0) {
-            $basedon->setVisible(false);
-        } else {
-            $list = "";
-            foreach ($basedonlist as $doctype => $docname) {
-                $list .= "<a  class=\"dropdown-item\" href=\"/index.php?p=App/Pages/Doc/" . $doctype . "&arg=/0/{$doc->document_id}\">{$docname}</a>";
-            };
-            $basedon = $row->add(new Label('basedlist'))->setText($list, true);
-        }
+       
     }
 
     public function onSort($sender) {

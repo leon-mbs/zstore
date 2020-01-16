@@ -26,7 +26,7 @@ class Document extends \ZCL\DB\Entity {
     const STATE_REFUSED = 15; // отклонен
     const STATE_SHIFTED = 16; // отложен
     const STATE_FAIL = 17; // Аннулирован
-    const STATE_DONE = 18; // Закончен
+    const STATE_FINISHED = 18; // Закончен
     // типы  экспорта
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -70,6 +70,7 @@ class Document extends \ZCL\DB\Entity {
         $this->state = 0;
         $this->customer_id = 0;
         $this->branch_id = 0;
+        $this->parent_id = 0;
         
         $this->document_number = '';
         $this->notes = '';
@@ -77,7 +78,7 @@ class Document extends \ZCL\DB\Entity {
         $this->document_date = time();
         $this->user_id = \App\System::getUser()->user_id;
 
-        $this->basedoc = '';
+     
         $this->headerdata = array();
         $this->detaildata = array();
         
@@ -369,12 +370,7 @@ class Document extends \ZCL\DB\Entity {
 
         $this->save();
 
-        //  $conn = \ZDB\DB::getConnect();
-        //   $sql = "update documents set  state={$this->state}  where document_id = {$this->document_id}";
-        //   $conn->Execute($sql);
-
-
-
+   
         return true;
     }
 
@@ -406,7 +402,7 @@ class Document extends \ZCL\DB\Entity {
                 return "Ожидает утверждения";
             case Document::STATE_INSHIPMENT:
                 return "В доставке";
-            case Document::STATE_DONE:
+            case Document::STATE_FINISHED:
                 return "Выполнен";
             case Document::STATE_DELIVERED:
                 return "Доставлен";
@@ -453,28 +449,8 @@ class Document extends \ZCL\DB\Entity {
         return $letter . sprintf("%05d", ++$number);
     }
 
-    /**
-     *  Возвращает  списки  документов которые  могут быть  созданы  на  основании
-     *
-     */
-    public function getRelationBased() {
-        $list = array();
-
-        return $list;
-    }
-
-    /**
-     * Список  доступных сстояний в зависимости  от текузего
-     * может  переружатся  для  уточнения  в  зависимости  от типа  документа
-     */
-    /* public function getStatesList() {
-      $list = array();
-      if ($this->state == self::STATE_CANCELED || $this->state == self::STATE_EDITED || $this->state == self::STATE_NEW) {
-
-      }
-
-      return $list;
-      } */
+ 
+ 
 
     /**
      * Возвращает  список  типов экспорта
@@ -530,11 +506,7 @@ class Document extends \ZCL\DB\Entity {
 
             return "У документа  есть записи в аналитике";
         }
-        $cnt = $conn->GetOne("select  count(*) from paylist where indoc=0 and  document_id = {$this->document_id}  ");
-        if ($cnt > 0) {
 
-            return "У документа  есть оплаты";
-        }
 
 
         $cnt = $conn->GetOne("select  count(*) from docrel where  doc1 = {$this->document_id}  or  doc2 = {$this->document_id}");
@@ -562,7 +534,7 @@ class Document extends \ZCL\DB\Entity {
         $conn = \ZDB\DB::getConnect();
 
         $hasExecuted = $conn->GetOne("select count(*)  from docstatelog where docstate = " . Document::STATE_EXECUTED . " and  document_id=" . $this->document_id);
-
+        $hasPayment = $conn->GetOne("select count(*)  from paylist where   document_id=" . $this->document_id);
 
         $conn->Execute("delete from docstatelog where document_id=" . $this->document_id);
         $conn->Execute("delete from paylist where document_id=" . $this->document_id);
@@ -570,14 +542,17 @@ class Document extends \ZCL\DB\Entity {
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
 
-        if ($hasExecuted) {
+        
+     //   if(System::getUser()->userlogin =='admin') return;
+        if ($hasExecuted || $hasPayment) {
             $admin = \App\Entity\User::getByLogin('admin');
 
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;
             $n->message = "Удален документ  <br><br>";
-            $n->message .= "Документ {$this->document_number} удален пользователем " . System::getUser()->userlogin;
-
+            $n->message .= "Документ {$this->document_number} удален   "  ;
+            $n->sender_name =System::getUser()->username;
+        
             $n->save();
         }
     }
@@ -593,7 +568,7 @@ class Document extends \ZCL\DB\Entity {
             System::setWarnMsg("У документа были отправки или доставки");
             return true;
         }
-        $cnt = $conn->GetOne("select  count(*) from paylist where indoc=0 and  document_id = {$this->document_id}  ");
+        $cnt = $conn->GetOne("select  count(*) from paylist where    document_id = {$this->document_id}  ");
         if ($cnt > 0) {
             System::setWarnMsg("У документа были оплаты");
 
@@ -671,5 +646,28 @@ class Document extends \ZCL\DB\Entity {
         }   
         
         return  $c;     
+    }    
+    
+    
+    /**
+    * возвращает  сумму  оптлат
+    * 
+    */
+    public function getPayAmount()    {
+           $conn = \ZDB\DB::getConnect();
+
+           return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
+           
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    */
+    public function hasEntry()    {
+           $conn = \ZDB\DB::getConnect();
+
+           return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
+           
     }    
 }

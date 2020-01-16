@@ -23,6 +23,7 @@ class Pay extends \ZCL\DB\Entity {
     const PAY_TAX_OUTCOME = 55;    //уплата  налогов  и сборов
     const PAY_BILL_OUTCOME = 56;    //расходы на  аренду и комуналку  
     const PAY_DIVIDEND_OUTCOME = 57;    //распределение прибыли 
+    const PAY_CANCEL_OUTCOME = 58;    //отмена  платежа
     const PAY_COMMON_OUTCOME = 101;   //прочие расходы
 
     protected function init() {
@@ -51,7 +52,7 @@ class Pay extends \ZCL\DB\Entity {
      * @param mixed $mf      денежный счет
      * @param mixed $comment коментарий
      */
-    public static function addPayment($document_id, $indoc, $amount, $mf, $type, $comment = '') {
+    public static function addPayment($document_id,   $amount, $mf, $type, $comment = '') {
         if (0 == (int) $amount || 0 == (int) $document_id || 0 == $mf)
             return;
             
@@ -64,7 +65,7 @@ class Pay extends \ZCL\DB\Entity {
         $pay->amount = $amount;
         $pay->paytype = $type;
         $pay->notes = $comment;
-        $pay->indoc = $indoc;
+    
 
      //   $admin = \App\Entity\User::getByLogin('admin');
         $pay->user_id = \App\System::getUser()->user_id;
@@ -99,6 +100,7 @@ class Pay extends \ZCL\DB\Entity {
             $list[PAY::PAY_BILL_OUTCOME] = "Расходы на  аренду и комуналку";
             $list[PAY::PAY_DIVIDEND_OUTCOME] = "Распределение прибыли  ";
             $list[PAY::PAY_COMMON_OUTCOME] = "Прочие расходы";
+            $list[PAY::PAY_CANCEL_OUTCOME] = "Отмена  платежа";
         }
 
 

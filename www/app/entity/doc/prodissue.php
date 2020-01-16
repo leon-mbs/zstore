@@ -74,11 +74,7 @@ class ProdIssue extends Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-
-        return $list;
-    }
+   
 
     protected function getNumberTemplate() {
         return 'СП-000000';

@@ -16,6 +16,7 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\RedirectLink;
 use \App\Entity\Doc\Document;
+use \App\Entity\Pay;
 use \App\Helper as H;
 use \App\Application as App;
 use \App\System;
@@ -221,10 +222,10 @@ class PayCustList extends \App\Pages\Base {
         //закупки  и возвраты
         if ($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'InvoiceCust' || $this->_doc->meta_name == 'ReturnIssue') {
             $amount = 0 - $amount;
-            $type = \App\Entity\Pay::PAY_BASE_OUTCOME;
+            $type =  Pay::PAY_BASE_OUTCOME;
         }
 
-        \App\Entity\Pay::addPayment($this->_doc->document_id, 0, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
+        Pay::addPayment($this->_doc->document_id,   $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
 
 

@@ -69,7 +69,7 @@ class Invoice extends \App\Entity\Doc\Document {
         }
       
         if ($this->headerdata['payment'] > 0 && $this->payed>0) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
+            \App\Entity\Pay::addPayment($this->document_id,   $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
          
         }
         return true;

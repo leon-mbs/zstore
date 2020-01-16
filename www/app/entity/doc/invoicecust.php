@@ -48,7 +48,7 @@ class InvoiceCust extends Document {
     public function Execute() {
        
         if ($this->headerdata['payment'] > 0 && $this->payed) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
+            \App\Entity\Pay::addPayment($this->document_id,   0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
             
         }
 
@@ -58,7 +58,7 @@ class InvoiceCust extends Document {
     public function getRelationBased() {
         $list = array();
 
-        // $list['GoodsReceipt'] = 'Приходная накладная';
+       $list['GoodsReceipt'] = 'Приходная накладная';
 
         return $list;
     }

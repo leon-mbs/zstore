@@ -70,11 +70,7 @@ class ProdReceipt extends Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-
-        return $list;
-    }
+  
 
     protected function getNumberTemplate() {
         return 'ОП-000000';
