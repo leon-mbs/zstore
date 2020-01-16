@@ -21,6 +21,7 @@ use \App\Entity\Customer;
 use \App\Helper as H;
 use \App\Application as App;
 use \App\System;
+use \App\Entity\Pay;
 
 /**
  * журнал платежей
@@ -114,25 +115,22 @@ class PayList extends \App\Pages\Base {
 
 
         $pl = $sender->getOwner()->getDataItem();
+       
+        Pay::addPayment($pl->document_id,  0 - $pl->amount, $pl->mf_id, Pay::PAY_CANCEL_OUTCOME, $form->pcomment->getText());
+        
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "delete from paylist where pl_id=" . $pl->pl_id;
-        $conn->Execute($sql);
+      //  $sql = "delete from paylist where pl_id=" . $pl->pl_id;
+     //   $conn->Execute($sql);
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
         $payed = $conn->GetOne($sql);
 
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
 
         $this->doclist->Reload(true);
-
-
-        $n = new \App\Entity\Notify();
-        $n->user_id = System::getUser()->user_id;
-        $n->message = "Удален платеж  <br><br>";
-        $n->message .= "Платеж для документа {$pl->document_number} удален пользователем " . System::getUser()->userlogin;
-
-        $n->save();
-
+  
+                             
+        $this->setSuccess('Платеж отменен');
         $this->resetURL();
     }
 
