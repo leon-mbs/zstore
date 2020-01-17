@@ -107,13 +107,7 @@ class GoodsIssue extends Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-        $list['Warranty'] = 'Гарантийный талон';
-        $list['ReturnIssue'] = 'Возврат';
-
-        return $list;
-    }
+  
 
     protected function getNumberTemplate() {
         return 'РН-000000';

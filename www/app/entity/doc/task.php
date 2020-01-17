@@ -75,6 +75,7 @@ class Task extends Document {
 
 
         $header = array('date' => date('d.m.Y', $this->document_date),
+            "ispareaname" => strlen($this->headerdata["pareaname"])>0,
             "pareaname" => $this->headerdata["pareaname"],
             "customer_name" => $this->headerdata["customer_name"],
             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
@@ -82,6 +83,9 @@ class Task extends Document {
             "total" => $this->amount,
             "payamount" => $this->payamount,
             "payed" => $this->payed,
+            "isdevice" => strlen($this->device)>0,
+            "device" => $this->device,
+            "devsn" => $this->devsn,
             "_detail" => $detail,
             "_detail2" => $detail2,
             "_detail5" => $detail5,
@@ -151,11 +155,6 @@ class Task extends Document {
         return 'НР-000000';
     }
 
-    public function getRelationBased() {
-        $list = array();
-        $list['Warranty'] = 'Гарантийный талон';
-
-        return $list;
-    }
+ 
 
 }

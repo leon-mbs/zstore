@@ -5,6 +5,10 @@
 
         <form zippy="docform">
             <h3> Наряд на выполнение работ</h3>
+            <small>Документ,  фиксируюший выполнение  производственных заданий. 
+            Для услуг  сервисных центров, мастерских необходимо  указать заказчика  и оплату.
+            <br>Для списания  расходных материалов на  основании наряда  можно  создать документ  
+            Списание  на  производство.</small>
             <div class="row">
                 <div class="col-6 col-md-4 col-lg-3">
                     <div class="form-group">
@@ -42,6 +46,16 @@
                         <select class="form-control" zippy="pricetype">
                         </select>
                     </div>   
+                    <div class="form-group">
+                        <label for="device" > Изделие, принятое  у  пользователя</label>
+                        <input   class="form-control" type="text"  zippy="device"   />
+                        <small>Заполняется  в  мервисных центрах, мастерских, СТО...</small>
+                    </div>                 
+                    <div class="form-group">
+                        <label for="devsn" >Серийный номер изделия</label>
+                        <input   class="form-control" type="text"  zippy="devsn"   />
+
+                    </div>                 
 
 
                 </div>
@@ -119,6 +133,7 @@
                     </table>
                     <a class="btn btn-outline-primary btn-sm" zippy="additem">Добавить комплектующие</a>                     
                     <h5>Комплектующие</h5>
+                    <small>Комплектующие,  оплачиваемые  заказчиком и включаемые  в оплату</small>
                     <table class="table  table-sm">
                         <tr>
 

@@ -45,13 +45,7 @@ class ServiceOrder extends Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-        $list['ServiceAct'] = 'Акт выполненных работ';
-
-
-        return $list;
-    }
+  
 
     protected function getNumberTemplate() {
         return 'ЗУ-000000';

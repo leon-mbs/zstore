@@ -32,7 +32,18 @@ class UserProfile extends \App\Pages\Base {
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(),$this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(),$this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15=>15,25=>25,50=>50,100=>100,200=>200),$this->user->pagesize));
-        $form->add(new DataView('mlist', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "disabled<>1", "description"), $this, 'metarowOnRow'));
+        
+        $w="";
+        if($this->user->acltype == 2 )
+        {
+               if(strlen($this->user->aclview)>0){
+                   $w = " and meta_id in ({$this->user->aclview})";
+               }  else {
+                   $w = " and meta_id in (0)";    
+               }
+        }
+        
+        $form->add(new DataView('mlist', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "disabled<>1  {$w}", "description"), $this, 'metarowOnRow'));
         
         $this->add($form);
         $form->mlist->Reload();
@@ -45,15 +56,11 @@ class UserProfile extends \App\Pages\Base {
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
         
-        
-      
         $this->add(new Form('msgform'))->onSubmit($this, 'OnSend');
         $this->msgform->add(new TextArea('msgtext'));
         $this->msgform->add(new DropDownChoice('users', \App\Entity\User::findArray('username','disabled <> 1 and user_id <>'.$this->user->user_id,'username'),0));
         $this->msgform->add(new CheckBox('sendall'))->setVisible($this->user->username =='admin');
-           
-        
-        
+          
     }
 
     public function onsubmit($sender) {

@@ -48,13 +48,7 @@ class OrderCust extends Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-
-        $list['GoodsReceipt'] = 'Приходная накладная';
-
-        return $list;
-    }
+  
 
     protected function getNumberTemplate() {
         return 'ЗКП-000000';

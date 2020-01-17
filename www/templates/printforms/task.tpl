@@ -11,13 +11,22 @@
         </td>
 
     </tr>
+    {{#isdevice}}
+    <tr>
+        <td  colspan="6">
+            Изделие:   {{device}}   s/n {{devsn}}
+        </td>
+
+    </tr>
+    {{/isdevice}}
+    {{#ispareaname}}
     <tr>
         <td  colspan="6">
             Произв. участок:   {{pareaname}}
         </td>
 
     </tr>
-
+     {{/ispareaname}}
 
 
 

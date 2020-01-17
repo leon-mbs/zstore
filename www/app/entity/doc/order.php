@@ -80,13 +80,7 @@ class Order extends \App\Entity\Doc\Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-        $list['GoodsIssue'] = 'Расходная накладная';
-
-
-        return $list;
-    }
+ 
 
     protected function getNumberTemplate() {
         return 'ЗК-000000';

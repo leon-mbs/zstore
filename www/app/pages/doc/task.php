@@ -51,6 +51,8 @@ class Task extends \App\Pages\Base {
 
 
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextInput('device'));
+        $this->docform->add(new TextInput('devsn'));
         $this->docform->add(new TextInput('taskhours', "0"));
 
 
@@ -148,6 +150,8 @@ class Task extends \App\Pages\Base {
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
          
             $this->docform->payamount->setText($this->_doc->payamount);
+            $this->docform->device->setText($this->_doc->device);
+            $this->docform->devsn->setText($this->_doc->devsn);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
@@ -491,6 +495,8 @@ class Task extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
 
+        $this->_doc->headerdata['device'] = $this->docform->device->getText();
+        $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
         $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();

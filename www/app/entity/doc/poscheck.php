@@ -116,13 +116,7 @@ class POSCheck extends Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-        $list['Warranty'] = 'Гарантийный талон';
-        $list['ReturnIssue'] = 'Возврат';
-
-        return $list;
-    }
+ 
 
     protected function getNumberTemplate() {
         return 'К-000000';

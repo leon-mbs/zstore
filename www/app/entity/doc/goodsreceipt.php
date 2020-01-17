@@ -90,13 +90,7 @@ class GoodsReceipt extends Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-
-        $list['RetCustIssue'] = 'Возврат  ';
-
-        return $list;
-    }
+  
 
     protected function getNumberTemplate() {
         return 'ПН-000000';
