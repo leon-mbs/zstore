@@ -57,11 +57,10 @@ class Options extends \App\Pages\Base {
         $this->common->add(new TextInput('price3'));
         $this->common->add(new TextInput('price4'));
         $this->common->add(new TextInput('price5'));
-        //  $this->common->add(new Date('closeddate'));
+        $this->common->add(new TextInput('defprice'));
+        $this->common->add(new TextInput('pwidth'));
 
-
-
-
+        
         $common = System::getOptions("common");
         if (!is_array($common))
             $common = array();
@@ -78,6 +77,8 @@ class Options extends \App\Pages\Base {
         $this->common->price3->setText($common['price3']);
         $this->common->price4->setText($common['price4']);
         $this->common->price5->setText($common['price5']);
+        $this->common->defprice->setText($common['defprice']);
+        $this->common->pwidth->setText($common['pwidth']);
 
     
         $this->common->autoarticle->setChecked($common['autoarticle']);
@@ -165,7 +166,8 @@ class Options extends \App\Pages\Base {
         $common['price3'] = $this->common->price3->getText();
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
-
+        $common['defprice'] = $this->common->defprice->getText();
+        $common['pwidth'] = $this->common->pwidth->getText();
        
         $common['autoarticle'] = $this->common->autoarticle->isChecked();
         $common['useset'] = $this->common->useset->isChecked();
@@ -195,6 +197,7 @@ class Options extends \App\Pages\Base {
         System::setOptions("firm", $firm);
         $this->setSuccess('Сохранено');
     }
+
     public function filterOnSubmit($sender) {
 
         $where = "1<>1 ";

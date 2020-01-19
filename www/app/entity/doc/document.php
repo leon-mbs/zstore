@@ -316,40 +316,8 @@ class Document extends \ZCL\DB\Entity {
         //  }
     }
 
-    /**
-     * добавление связанного  документа
-     *
-     * @param mixed $id
-     */
-    public function AddConnectedDoc($id) {
-        if ($id > 0) {
-            $conn = \ZDB\DB::getConnect();
-            $conn->Execute("delete from docrel  where (doc1={$this->document_id} and doc2={$id} )  or (doc2={$this->document_id} and doc1={$id})");
-            $conn->Execute("insert  into docrel (doc1,doc2) values({$id},{$this->document_id})");
-        }
-    }
+ 
 
-    /**
-     * удаление  связанного  документа
-     *
-     * @param mixed $id
-     */
-    public function RemoveConnectedDoc($id) {
-        if ($id > 0) {
-            $conn = \ZDB\DB::getConnect();
-            $conn->Execute("delete from  docrel  where (doc1={$this->document_id} and doc2={$id} )  or (doc2={$this->document_id} and doc1={$id})");
-        }
-    }
-
-    /**
-     * список  связанных  документов
-     *
-     */
-    public function ConnectedDocList() {
-
-        $where = "document_id in (select doc1 from  docrel where doc2={$this->document_id}) or document_id in (select doc2 from  docrel where doc1={$this->document_id})";
-        return Document::find($where);
-    }
 
     /**
      * Обновляет состояние  документа
@@ -499,35 +467,7 @@ class Document extends \ZCL\DB\Entity {
 
         return Document::find($where);
     }
-
-    /**
-     * @see \ZDB\Entity
-     * 
-     */
-    protected function beforeDelete() {
-
-        $conn = \ZDB\DB::getConnect();
-
-  
-        $cnt = $conn->GetOne("select  count(*) from docrel where  doc1 = {$this->document_id}  or  doc2 = {$this->document_id}");
-        if ($cnt > 0) {
-
-            return "Есть связаные документы, удалите связи";
-        }
-
-        $f = $this->checkStates(array(Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
-        if ($f) {
-
-            return "У документа были отправки или доставки";
-        }
-        $user = System::getUser() ;
-        if($this->user_id != $user->user_id && $user->userlogin != 'admin'){
-            
-            return "Удалять документ  может  только  автор или администратор";
-        }
-
-        return "";
-    }
+ 
 
     /**
      * @see \ZDB\Entity
@@ -556,7 +496,7 @@ class Document extends \ZCL\DB\Entity {
             $n->user_id = $admin->user_id;
             $n->message = "Удален документ  <br><br>";
             $n->message .= "Документ {$this->document_number} удален пользователем  " .System::getUser()->username ;
-            $n->sender_name ='Система';
+        
         
             $n->save();
         }
@@ -656,4 +596,26 @@ class Document extends \ZCL\DB\Entity {
            return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
            
     }    
+   
+    /**
+    * список  дочерних
+    * 
+    * @param mixed $type    мета  тип
+    * @param mixed $executed  в  состоянии  выполнен и т.д.
+    */
+    public function getChildren($type="",$executed=false){
+        $where = "parent_id=" . $this->document_id;
+        if(strlen($type)>0)  $where .= " and meta_name='{$type}'" ; 
+        if($executed ) $where .= " and state not in(1,2,3,0) " ; 
+        return  Document::find($where) ;
+    } 
+    
+    
+    public function addChild($id){
+         if ($id > 0) {
+            $conn = \ZDB\DB::getConnect();      
+            $conn->Execute("update documents set parent_id={$this->document_id} where  document_id=".$id);
+         }
+    }
+    
 }

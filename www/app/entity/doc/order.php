@@ -60,11 +60,11 @@ class Order extends \App\Entity\Doc\Document {
             $header['delivery'] = $header['delivery'] . '. по адресу: ' . $this->headerdata["address"];
         }
 
-        $list = $this->ConnectedDocList();
+        $list = $this->getChildren('GoodsIssue');
         foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
-                $header['ttn'] = $d->document_number;
-            }
+           
+            $header['ttn'] = $d->document_number;
+            
         }
 
 

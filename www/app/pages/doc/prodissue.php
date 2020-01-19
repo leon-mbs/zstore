@@ -42,6 +42,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
@@ -83,6 +84,19 @@ class ProdIssue extends \App\Pages\Base {
         } else {
             $this->_doc = Document::create('ProdIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+            if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'Task') {
+
+                        $this->docform->notes->setText('Материалы  для наряда '.$basedoc->document_number);
+                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        
+                    }
+                }
+            }            
+            
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
@@ -215,13 +229,17 @@ class ProdIssue extends \App\Pages\Base {
         }
 
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->payamount = $this->_doc->amount;
+        
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-            $this->_doc->save();
+             if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }            
+           $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
@@ -231,12 +249,7 @@ class ProdIssue extends \App\Pages\Base {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+     
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {

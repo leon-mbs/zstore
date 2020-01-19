@@ -59,9 +59,9 @@ class GRList extends \App\Pages\Base {
 
         $this->statuspan->add(new Form('statusform'));
 
-        // $this->statuspan->statusform->add(new SubmitButton('bsend'))->onClick($this, 'statusOnSubmit');
-        //   $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
-
+        $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
+ 
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
@@ -103,7 +103,28 @@ class GRList extends \App\Pages\Base {
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-
+       
+        if ($sender->id == "bttn") {
+            $d =  $this->_doc->getChildren('GoodsReceipt');
+               
+                if(count($d)>0){
+                    $this->setWarn('Уже есть документ Приходная накладная');
+                }         
+                App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
+                return;
+           
+        }
+        if ($sender->id == "bret") {
+            $d =  $this->_doc->getChildren('RetCustIssue');
+          
+                
+                if(count($d)>0){
+                    $this->setWarn('Уже есть возврат');
+                }         
+                App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
+                return;
+            
+        }
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
@@ -114,8 +135,23 @@ class GRList extends \App\Pages\Base {
 
     public function updateStatusButtons() {
 
+     $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name=='InvoiceCust');
+     $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name=='GoodsReceipt');
 
-        $state = $this->_doc->state;
+        //новый     
+        if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bret->setVisible(false);
+             
+        } 
+        if ($this->_doc->meta_name=='RetCustIssue') {
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bret->setVisible(false);
+             
+        } 
+        
+        
+              
     }
 
     //просмотр
@@ -188,7 +224,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and (meta_name  = 'GoodsReceipt' or meta_name  = 'InvoiceCust') ";
+        $where .= " and meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  ";
 
         $status = $this->page->filter->status->getValue();
 
@@ -206,12 +242,12 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and (meta_name  = 'GoodsReceipt' or meta_name  = 'InvoiceCust') and  content like {$st} ";
+            $where .= "   and  content like {$st} ";
         }
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = " (meta_name  = 'GoodsReceipt' or meta_name  = 'InvoiceCust') and document_number like  {$sn} ";
+            $where = " meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  and document_number like  {$sn} ";
         }
        
         return $where;

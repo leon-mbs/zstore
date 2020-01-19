@@ -45,6 +45,7 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextInput('basedoc'));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -100,6 +101,7 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->notes->setText($this->_doc->notes);
+            $this->docform->basedoc->setText($this->_doc->basedoc);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
@@ -134,26 +136,33 @@ class GoodsReceipt extends \App\Pages\Base {
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $order = $basedoc->cast();
-
+                        $this->docform->basedoc->setText('Заказ '.$order->document_number);
                         foreach ($order->detaildata as $_item) {
                             $item = new Item($_item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
+                        $this->CalcTotal() ;
+                        $this->CalcPay() ;                        
+                                               
                     }
                     if ($basedoc->meta_name == 'InvoiceCust') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-                        $this->docform->payamount->setText($basedoc->payamount);
-
+      
                         $invoice = $basedoc->cast();
-
-
+                        $this->docform->basedoc->setText('Счет '.$invoice->document_number);
+                        $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
+  
 
                         foreach ($invoice->detaildata as $_item) {
                             $item = new Item($_item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
+                        $this->CalcTotal() ;
+                        $this->CalcPay() ;                        
+                         
+                        
                     }
                     $this->calcTotal();
                 }
@@ -340,16 +349,25 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+        if($this->_doc->customer_id>0){
+          $customer = Customer::load($this->_doc->customer_id);
+          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            
+        }
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
         
         $this->_doc->payed = $this->docform->payed->getText();
         
         if ($this->_doc->headerdata['payment'] ==  \App\Entity\MoneyFund::PREPAID) {
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
+        }
+       if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->_doc->payed = 0;
+
         }
 
         if ($this->checkForm() == false) {
@@ -402,6 +420,10 @@ class GoodsReceipt extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }            
             $this->_doc->save();
             $order = Document::load($this->_doc->headerdata['order_id']);
 
@@ -418,14 +440,25 @@ class GoodsReceipt extends \App\Pages\Base {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+ 
             if ($file['size'] > 0) {
                 H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
             }
+            
+            //если  выполнен и оплачен
+            if($this->_doc->state==Document::STATE_EXECUTED && $this->_doc->payment >0 && $this->_doc->payed == $this->_doc->payment) {
+              $orders =  $this->_doc->getChildren('OrderCust');
+              foreach($orders as $order){
+                  if($order->state == Document::STATE_INPROCESS) {
+                      //закрываем заявку
+                     $order->updateStatus(Document::STATE_CLOSED);
+            
+                  }
+              }  
+              
+            }
+            
+            
             $conn->CommitTrans();
         } catch (\Exception $ee) {
             global $logger;
@@ -453,14 +486,22 @@ class GoodsReceipt extends \App\Pages\Base {
     }
 
     public function OnPayment($sender) {
-        $b = $sender->getValue();
-        if ($b== \App\Entity\MoneyFund::PREPAID) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-        } else {
             $this->docform->payed->setVisible(true);
             $this->docform->payamount->setVisible(true);
-        }
+            
+        
+        $b = $sender->getValue();
+    
+    
+        if ($b==\App\Entity\MoneyFund::PREPAID) {
+            $this->docform->payed->setVisible(false);
+            $this->docform->payamount->setVisible(false);
+            
+        } 
+        if ($b==\App\Entity\MoneyFund::CREDIT) {
+            $this->docform->payed->setVisible(false);
+ 
+        } 
     }
 
     /**

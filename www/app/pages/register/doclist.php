@@ -146,8 +146,8 @@ class DocList extends \App\Pages\Base {
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('hasmsg'))->setVisible($doc->mcnt > 0);
-        $row->add(new Label('hasfiles'))->setVisible($doc->fcnt > 0 || $doc->dcnt > 0);
-        $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
+        $row->add(new Label('hasfiles'))->setVisible($doc->fcnt > 0  );
+        $row->add(new Label('waitpay'))->setVisible(  $doc->payamount > 0 && $doc->payamount > $doc->payed);
 
         $date = new \Carbon\Carbon();
         $date = $date->addDay(1);
@@ -229,8 +229,25 @@ class DocList extends \App\Pages\Base {
         $doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
-              
+     
+        $user = System::getUser() ;
+        if($doc->user_id != $user->user_id && $user->userlogin != 'admin'){
+            $this->setError("Удалять документ  может  только  автор или администратор");
+            return ;
             
+        }             
+        $f = $doc->checkStates(array(Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        if ($f) {
+             $this->setError("У документа были отправки или доставки");
+             return ;
+        }           
+        
+        $list =  $doc->getChildren();
+        if(count($list)>0){
+           $this->setError("У документа есть дочерние документы");
+           return;            
+        }
+        
         $del = Document::delete($doc->document_id);
         if (strlen($del) > 0) {
             $this->setError($del);
@@ -250,9 +267,13 @@ class DocList extends \App\Pages\Base {
         
         $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-            System::setWarnMsg("У документа были отправки или доставки");
+            System::setWarnMsg("У документа были отправки, доставки или документ был  закрыт");
         }        
-        
+        $list =  $doc->getChildren('',true);
+        if(count($list)>0){
+           $this->setError("У документа есть неотмененные дочерние документы");
+           return;            
+        }        
         $doc->updateStatus(Document::STATE_CANCELED);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);

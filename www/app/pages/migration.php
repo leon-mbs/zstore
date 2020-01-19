@@ -124,6 +124,9 @@ class Migration extends \App\Pages\Base {
             echo $file; die;
         }
     }
+  
+  
+  
     public  function onImport($sender) {
   
        $file = $sender->fileimp->getFile();
@@ -212,19 +215,7 @@ class Migration extends \App\Pages\Base {
            }  
            if($i>0)$message .= "{$i} сервисов и работ  "  ;
        }  
-       if($sender->serimp->isChecked() && count($data->ser)>0)   {
-           $i=0;
-           foreach($data->eq  as $ser){
-               $ser->service_id=0;
-                 
-               $cnt = Service::findCnt('service_name  = ' . Service::qstr($ser->service_name));
-               if($cnt >0) continue;
-               
-               $ser->save();
-               $i++;
-           }  
-           if($i>0)$message .= "{$i} сервисов и работ  "  ;
-       }  
+  
        if($sender->itemimp->isChecked() && count($data->items)>0)   {
            $i=0;
            foreach($data->items  as $d){

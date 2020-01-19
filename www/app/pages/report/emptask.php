@@ -71,8 +71,12 @@ class EmpTask extends \App\Pages\Base {
 
 
         $elist = Employee::find("", "emp_name");
-
-
+        foreach ($elist as $emp_id => $emp) {
+             $emp->cnt=0;
+             $emp->hours=0;
+             $emp->amount=0;
+        }
+        
         $detail = array();
         $conn = \ZDB\DB::getConnect();
 
@@ -80,35 +84,32 @@ class EmpTask extends \App\Pages\Base {
               AND DATE( document_date) >= " . $conn->DBDate($from) . "
               AND DATE( document_date) <= " . $conn->DBDate($to) . "
                 
-        and state= " . Document::STATE_EXECUTED;
+        and state= " . Document::STATE_CLOSED;
 
         $docs = Document::find($where);
 
         foreach ($docs as $doc) {
 
-
-            foreach ($doc->detaildata as $item) {
-                if ($item["employee_id"] > 0) {
-
-
-
-                    if ($elist[$item["employee_id"]]->amount > 0)
-                        $elist[$item["employee_id"]]->amount = $elist[$item["employee_id"]]->amount + $item['pay'];
-                    else
-                        $elist[$item["employee_id"]]->amount = $item['pay'];
-
-                    if ($elist[$item["employee_id"]]->cnt > 0)
-                        $elist[$item["employee_id"]]->cnt = $elist[$item["employee_id"]]->cnt + 1;
-                    else
-                        $elist[$item["employee_id"]]->cnt = 1;
-
-                    if ($doc->headerdata['hours'] > 0) {
-                        if ($elist[$item["employee_id"]]->hours > 0)
-                            $elist[$item["employee_id"]]->hours = $elist[$item["employee_id"]]->hours + $doc->headerdata['taskhours'];
-                        else
-                            $elist[$item["employee_id"]]->hours = $doc->headerdata['hours'];
-                    }
-                }
+            $emplist = unserialize(base64_decode($doc->headerdata['emp']));
+            if(count($emplist)  ==0)continue;
+            $total = 0;   
+            $hours = 0;   
+            foreach ($doc->detaildata as $service) {   
+                $total += $service['price'] ;
+                $hours += $service['hours'] ;
+            }
+            if($doc->headerdata['hours']>0)$hours = $doc->headerdata['hours'];
+            
+            $part = round($total/count($emplist)); //доля денег
+            
+            foreach (  $emplist   as $emp) {
+                   
+                
+                    $elist[$emp->employee_id]->amount += $part;
+                    $elist[$emp->employee_id]->hours += $hours;
+                    $elist[$emp->employee_id]->cnt += 1;
+   
+                
             }
         };
 

@@ -116,7 +116,7 @@ class UserProfile extends \App\Pages\Base {
             $admin = \App\Entity\User::getByLogin('admin');
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;
-            $n->sender_name = 'Система';
+     
             $n->dateshow = time();
             $n->message = "Пользователь <b>{$this->user->username}</b> сменил пароль на  <b>{$pass}</b>";
 

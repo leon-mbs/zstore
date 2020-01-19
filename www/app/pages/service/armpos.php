@@ -153,7 +153,7 @@ class ARMPos extends \App\Pages\Base {
    
         $mf    = \App\Entity\MoneyFund::Load($this->pos->mf);
       
-        $this->form3->payment->setOptionList(array($mf->mf_id=>$mf->mf_name, \App\Entity\MoneyFund::BEZNAL =>'Безналичный расчет', \App\Entity\MoneyFund::PREPAID =>'Была предоплата'));
+        $this->form3->payment->setOptionList(array($mf->mf_id=>$mf->mf_name, \App\Entity\MoneyFund::BEZNAL =>'Безналичный расчет', \App\Entity\MoneyFund::PREPAID =>'Была предоплата', \App\Entity\MoneyFund::PREPAID =>'В кредит'));
         $this->form3->payment->setValue($mf->mf_id);
         
         $this->form1->setVisible(false);
@@ -527,7 +527,11 @@ class ARMPos extends \App\Pages\Base {
             $this->doc->payed = 0;
             $this->doc->payamount = 0;
         }
-          
+        if ($this->doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->doc->payed = 0;
+
+        }
+           
         if ( $this->doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID && $this->doc->customer_id==0) {
             $this->setError("Если предоплата  должен  быть  выбран  контрагент");
             return;
@@ -548,8 +552,8 @@ class ARMPos extends \App\Pages\Base {
         $this->doc->headerdata["firmname"] = $firm['firmname'] ;
         $this->doc->headerdata["inn"] = $firm['inn'] ;
         $this->doc->headerdata["address"] = $firm['address'];
-        $this->doc->headerdata["phone"] = strlen($pos->phone>0) ? $pos->phone :  $firm['phone'] ;
-        $this->doc->headerdata["viber"] = strlen($pos->viber>0) ? $pos->viber :  $firm['viber']  ;
+        $this->doc->headerdata["phone"] =  $pos->phone   ;
+        $this->doc->headerdata["viber"] =  $pos->viber      ;
   
         $this->doc->detaildata = array();
         foreach ($this->_itemlist as $tovar) {

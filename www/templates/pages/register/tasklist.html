@@ -24,11 +24,7 @@
                     <form zippy="filterform" class="form-inline">
 
 
-                        <label for="filterclient"  >Клиент</label>
-
-                        <input class="form-control mr-sm-2 " zippy="filterclient"  placeholder="Начните вводить   ">
-
-
+                    
 
                         <label for="filterassignedto"  >Исполнитель</label>
 
@@ -84,7 +80,7 @@
                                         <th>Начало</th>
 
                                         <th style="text-align: right;">Час.</th>
-                                        <th>Клиент</th>
+                                       
                                         <th>Исполнители</th>
                                         <th>Статус</th>
                                         <th class="text-right">Сумма</th>
@@ -99,15 +95,11 @@
 
                                         <td zippy="taskstartdate" style="white-space:   nowrap" ></td>
                                         <td zippy="taskhours"  style="text-align: right;"></td>
-                                        <td zippy="taskclient"></td>
+                                       
                                         <td zippy="taskemps"></td>
                                         <td zippy="taskstatus" ></td>
                                         <td zippy="taskamount"  class="text-right"></td>
-
-
-
-
-
+  
 
                                         <td>
                                             <a zippy="taskshow" title="Просмотр"><i class="fa fa-eye"></i></a>
@@ -135,6 +127,7 @@
                                     <form zippy="statusform" class="form-inline ">
                                         <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 " ><i class="fas fa-wrench"></i> На  выполнение</button>
                                         <button zippy="bshifted" type="submit" class="  btn btn-warning  mr-2 " ><i class="fas fa-clock"></i> Отложить</button>
+                                        <button zippy="bitems" type="submit" class="  btn btn-secondary  mr-2 " ><i class="fa fa-cogs"></i> Расходные материалы</button>
                                         <button zippy="bclosed" type="submit" class="  btn btn-success  mr-2 " ><i class="fa fa-gavel"></i> Закончен</button>
 
 

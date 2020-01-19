@@ -21,10 +21,8 @@ class Branch extends \ZCL\DB\Entity {
         $this->details = "<details>";
   
         $this->details .= "<address><![CDATA[{$this->address}]]></address>";
-        $this->details .= "<inn><![CDATA[{$this->inn}]]></inn>";
-        $this->details .= "<firm><![CDATA[{$this->firm}]]></firm>";
         $this->details .= "<comment><![CDATA[{$this->comment}]]></comment>";
-        $this->details .= "<phone><![CDATA[{$this->phone}]]></phone>";
+        $this->details .= "<company_id>{$this->company_id}</company_id>";
 
         $this->details .= "</details>";
 
@@ -36,10 +34,10 @@ class Branch extends \ZCL\DB\Entity {
         $xml = simplexml_load_string($this->details);
    
         $this->address = (string) ($xml->address[0]);
-        $this->firm = (string) ($xml->firm[0]);
-        $this->inn = (string) ($xml->inn[0]);
+        
+        $this->company_id = (int) ($xml->company_id[0]);
         $this->comment = (string) ($xml->comment[0]);
-        $this->phone = (string) ($xml->phone[0]);
+        
 
         parent::afterLoad();
     }
@@ -90,5 +88,7 @@ class Branch extends \ZCL\DB\Entity {
         return Branch::findArray("branch_name", $where,"branch_name");
     }
    
-   
+    public   function getCompany() {
+        return Company::load($this->company_id);
+    }   
 }

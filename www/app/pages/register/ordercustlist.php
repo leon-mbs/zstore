@@ -59,12 +59,13 @@ class OrderCustList extends \App\Pages\Base {
 
 
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
+        
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -107,27 +108,36 @@ class OrderCustList extends \App\Pages\Base {
 
         $state = $this->_doc->state;
         $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
-        $ttn = false;
+        
         //проверяем  что есть ТТН
-        $list = $this->_doc->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsReceipt') {
-                $ttn = true;
-            }
-        }
-        if ($sender->id == "bcancel") {
-            $this->_doc->updateStatus(Document::STATE_CANCELED);
-            if ($ttn)
-                $this->setWarn('Для заказа уже создан приход');
-        }
+        $d =  $this->_doc->getChildren('GoodsReceipt');
+        $ttn = count($d)>0;
         if ($sender->id == "bttn") {
+          
+            if($ttn){
+                $this->setWarn('Уже есть документ Приходная накладная');
+            }         
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
+            return;
+        }
+         if ($sender->id == "binv") {
+          
+            if($ttn){
+                $this->setWarn('Уже есть документ Приходная накладная');
+            }
+            $d =  $this->_doc->getChildren('InvoiceCust');
+            if(count($d)>0){
+                $this->setWarn('Уже есть документ Cчет');
+            }
+                  
+            App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", 0, $this->_doc->document_id);
             return;
         }
 
 
         if ($sender->id == "bap") {
             $this->_doc->updateStatus(Document::STATE_APPROVED);
+              
         }
         if ($sender->id == "bref") {
             $this->_doc->updateStatus(Document::STATE_REFUSED);
@@ -142,8 +152,7 @@ class OrderCustList extends \App\Pages\Base {
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
-            if ($ttn)
-                $this->setWarn('Для заявки была создана приходная накладная');
+  
         }
 
 
@@ -161,33 +170,25 @@ class OrderCustList extends \App\Pages\Base {
         //доставлен
         $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
 
-        $ttn = false;
+        
         //проверяем  что есть ТТН
-        $list = $this->_doc->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
-                $ttn = true;
-            }
-        }
+        $d =  $this->_doc->getChildren('GoodsReceipt');
+        $ttn = count($d)>0;
+
         $this->statuspan->statusform->binp->setVisible(false);
-
-        $this->statuspan->statusform->bttn->setVisible(!$ttn);
-
-        //отмена   если  не было оплат и доставки
-        if ($this->_doc->payamount == 0) {
-            $this->statuspan->statusform->bcancel->setVisible(false);
-        } else {
-            $this->statuspan->statusform->bcancel->setVisible(true);
-        }
+  
+ 
 
         //новый     
         if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
             $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bcancel->setVisible(false);
+            
             $this->statuspan->statusform->binp->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
         } else {
 
-            $this->statuspan->statusform->bcancel->setVisible(true);
+            
             $this->statuspan->statusform->bclose->setVisible(true);
         }
         $this->statuspan->statusform->bap->setVisible(false);
@@ -196,26 +197,31 @@ class OrderCustList extends \App\Pages\Base {
             $this->statuspan->statusform->bap->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
         }
         if ($state == Document::STATE_APPROVED) {
+            $this->statuspan->statusform->binv->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(true);
         }
         if ($state == Document::STATE_INPROCESS) {
-
+            $this->statuspan->statusform->binv->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
         }
         if ($state == Document::STATE_REFUSED) {
 
             $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
         }
         //закрыт
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bcancel->setVisible(false);
+            
             $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bap->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }

@@ -47,7 +47,7 @@ class InvoiceCust extends \App\Pages\Base {
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true,true), H::getDefMF()));
       
 
         $this->docform->add(new TextInput('editpayamount', "0"));
@@ -105,6 +105,21 @@ class InvoiceCust extends \App\Pages\Base {
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'OrderCust') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $order = $basedoc->cast();
+                        
+                        foreach ($order->detaildata as $_item) {
+                            $item = new Item($_item);
+                            $this->_itemlist[$item->item_id] = $item;
+                        }
+                        $this->CalcTotal() ;
+                        $this->CalcPay() ;
+                         
+                    }                    
                 }
             }
         }
@@ -214,8 +229,16 @@ class InvoiceCust extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->_doc->payed = 0;
+
+        }
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+        if($this->_doc->customer_id>0){
+          $customer = Customer::load($this->_doc->customer_id);
+          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            
+        }
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
    
         if ($this->checkForm() == false) {
@@ -248,6 +271,10 @@ class InvoiceCust extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }            
             $this->_doc->save();
 
 
@@ -259,11 +286,7 @@ class InvoiceCust extends \App\Pages\Base {
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+ 
 
             if ($file['size'] > 0) {
                 H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
@@ -338,7 +361,7 @@ class InvoiceCust extends \App\Pages\Base {
         }
         return !$this->isError();
     }
-
+ 
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }

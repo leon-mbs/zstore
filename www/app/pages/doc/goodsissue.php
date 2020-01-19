@@ -45,7 +45,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new Date('sent_date'));
         $this->docform->add(new Date('delivery_date'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true,true), H::getDefMF()))->onChange($this, 'OnPayment');
        
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -182,16 +182,11 @@ class GoodsIssue extends \App\Pages\Base {
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        $ttn = false;
+                   
                         //проверяем  что уже есть отправка
-                        $list = $order->ConnectedDocList();
-                        foreach ($list as $d) {
-                            if ($d->meta_name == 'GoodsIssue') {
-                                $ttn = true;
-                            }
-                        }
+                        $list = $order->getChildren('GoodsIssue');
 
-                        if ($ttn) {
+                        if (count($list)>0) {
                             $this->setWarn('У заказа  уже  есть отправка');
                         }
                         $this->docform->total->setText($order->amount);
@@ -205,6 +200,13 @@ class GoodsIssue extends \App\Pages\Base {
                         }
                         
                     }
+                    if ($basedoc->meta_name == 'ServiceAct') {
+
+                        $this->docform->notes->setText('Комплектующие  для  '.$basedoc->document_number);
+                        $this->docform->customer->setValue($basedoc->customer_id);
+                        
+                    }
+                    
                 }
             }
         }
@@ -348,7 +350,11 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+        if($this->_doc->customer_id>0){
+          $customer = Customer::load($this->_doc->customer_id);
+          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            
+        }
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
@@ -360,13 +366,16 @@ class GoodsIssue extends \App\Pages\Base {
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->_doc->payed = 0;
+
+        }
 
 
         if ($this->checkForm() == false) {
             return;
         }
-        $order = Document::load($this->_orderid);
-   
+     
         $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
         $this->_doc->headerdata['ship_address'] = $this->docform->ship_address->getText();
@@ -396,6 +405,10 @@ class GoodsIssue extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }            
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
@@ -403,10 +416,18 @@ class GoodsIssue extends \App\Pages\Base {
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
-                $order = Document::load($this->_doc->headerdata['order_id']);
-                if ($order instanceof Document) {
-                    $order->updateStatus(Document::STATE_DELIVERED);
+                if($this->_doc->parent_id>0 )   //закрываем заказ
+                {
+                   if($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+                       
+                   }  else {
+                       $order = Document::load($this->_doc->parent_id);
+                       if($order->state==Document::STATE_INPROCESS) {
+                           $order->updateStatus(Document::STATE_CLOSED);
+                       }
+                   }
                 }
+                   
             } else
             if ($sender->id == 'senddoc') {
                 if (!$isEdited)
@@ -417,21 +438,13 @@ class GoodsIssue extends \App\Pages\Base {
                 $this->_doc->headerdata['sent_date'] = time();
                 $this->_doc->save();
 
-                $order = Document::load($this->_doc->headerdata['order_id']);
-                if ($order instanceof Document) {
-                    $order->updateStatus(Document::STATE_INSHIPMENT);
-                }
+ 
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-                if ($order instanceof Document) {
-                    $order->updateStatus(Document::STATE_INPROCESS);
-                }
+ 
             }
 
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+            
             $conn->CommitTrans();
             if ($isEdited)
                 App::RedirectBack();
@@ -520,16 +533,23 @@ class GoodsIssue extends \App\Pages\Base {
     }
 
     public function OnPayment($sender) {
+            $this->docform->payed->setVisible(true);
+            $this->docform->payamount->setVisible(true);
+            $this->docform->paydisc->setVisible(true);
+        
         $b = $sender->getValue();
+    
+    
         if ($b==\App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
             $this->docform->paydisc->setVisible(false);
-        } else {
-            $this->docform->payed->setVisible(true);
-            $this->docform->payamount->setVisible(true);
-            $this->docform->paydisc->setVisible(true);
-        }
+        } 
+        if ($b==\App\Entity\MoneyFund::CREDIT) {
+            $this->docform->payed->setVisible(false);
+            $this->docform->payed->setText(0); 
+            $this->docform->editpayed->setText(0); 
+        } 
     }
 
     public function addcodeOnClick($sender) {

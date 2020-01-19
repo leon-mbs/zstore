@@ -174,10 +174,10 @@ class Import extends \App\Pages\Base {
             }
         }
         if (count($newitems) > 0) {
-            $doc = \App\Entity\Doc\Document::create('GoodsReceipt');
+            $doc = \App\Entity\Doc\Document::create('IncomeItem');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0)
-                $doc->document_number = "ПН0001";
+                $doc->document_number = "ПТ00001";
             $doc->document_date = time();
 
             $amount = 0;

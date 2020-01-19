@@ -233,7 +233,11 @@ class RetCustIssue extends \App\Pages\Base {
         
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+        if($this->_doc->customer_id>0){
+          $customer = Customer::load($this->_doc->customer_id);
+          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -260,7 +264,11 @@ class RetCustIssue extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-            $this->_doc->save();
+             if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }            
+           $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
@@ -270,11 +278,7 @@ class RetCustIssue extends \App\Pages\Base {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+         
             $conn->CommitTrans();
             if ($isEdited)
                 App::RedirectBack();

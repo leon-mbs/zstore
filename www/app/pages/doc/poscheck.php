@@ -43,7 +43,7 @@ class POSCheck extends \App\Pages\Base {
 
         $this->docform->add(new Date('document_date'))->setDate(time());
  
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true,true), H::getDefMF()))->onChange($this, 'OnPayment');
         
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -169,16 +169,10 @@ class POSCheck extends \App\Pages\Base {
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        $ttn = false;
                         //проверяем  что уже есть продажа
-                        $list = $order->ConnectedDocList();
-                        foreach ($list as $d) {
-                            if ($d->meta_name == 'POSCheck') {
-                                $ttn = true;
-                            }
-                        }
+                        $list = $order->getChildren('POSCheck');
 
-                        if ($ttn) {
+                        if (count($listyt)>0) {
                             $this->setWarn('У заказа  уже  есть продажа');
                         }
                         $this->docform->total->setText($order->amount);
@@ -333,7 +327,11 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->order = $this->docform->order->getText();
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+        if($this->_doc->customer_id>0){
+          $customer = Customer::load($this->_doc->customer_id);
+          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            
+        }        
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->headerdata['time'] = time();
@@ -346,7 +344,10 @@ class POSCheck extends \App\Pages\Base {
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->_doc->payed = 0;
 
+        }
 
         if ($this->checkForm() == false) {
             return;
@@ -359,15 +360,15 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
 
-        $firm =   $firm = H::getFirmData($this->_doc->branch_id);              
+        $firm    = H::getFirmData($this->_doc->branch_id);              
    
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
         
         $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
         $this->_doc->headerdata["inn"] = $firm['inn'] ;
         $this->_doc->headerdata["address"] = $firm['address'] ;
-        $this->_doc->headerdata["phones"] = strlen($pos->phone>0) ? $pos->phone :  $firm['phone']  ;
-        $this->_doc->headerdata["viber"] = strlen($pos->viber>0) ? $pos->phoviberne :  $firm['viber']  ;
+        $this->_doc->headerdata["phones"] =$pos->phone;
+        $this->_doc->headerdata["viber"] = $pos->viber  ;
         
   
 
@@ -383,6 +384,10 @@ class POSCheck extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }            
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
@@ -415,10 +420,7 @@ class POSCheck extends \App\Pages\Base {
                 }
             }
 
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+ 
             $conn->CommitTrans();
             if ($isEdited)
                 App::RedirectBack();

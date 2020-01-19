@@ -11,6 +11,8 @@ namespace App\Entity;
  */
 class Item extends \ZCL\DB\Entity {
 
+    private  $brprice =  array(); //цены по  филиалам
+    
     protected function init() {
         $this->item_id = 0;
         $this->cat_id = 0;
@@ -38,8 +40,21 @@ class Item extends \ZCL\DB\Entity {
         
         $this->cell = (string) $xml->cell[0];
         $this->octoreoptions = (string) $xml->octoreoptions[0];
+        $brprice = (string) $xml-> brprice[0];
   
-
+        $this->brprice  =@unserialize($brprice);
+        if(!is_array($this->brprice)) $this->brprice = array();
+        
+        $id = \App\Session::getSession()->branch_id;
+        if($id > 0 && is_array($this->brprice[$id])){
+            $this->price1 = $this->brprice[$id]['price1'];
+            $this->price2 = $this->brprice[$id]['price2'];
+            $this->price3 = $this->brprice[$id]['price3'];
+            $this->price4 = $this->brprice[$id]['price4'];
+            $this->price5 = $this->brprice[$id]['price5'];
+        }
+       
+        
         parent::afterLoad();
     }
 
@@ -62,6 +77,17 @@ class Item extends \ZCL\DB\Entity {
         $this->detail .= "<currate>{$this->currate}</currate>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
 
+        $id = \App\Session::getSession()->branch_id;
+        if($id >0){
+           $this->brprice[$id] = array('price1'=>$this->price1,'price2'=>$this->price2,'price3'=>$this->price3,'price4'=>$this->price4,'price5'=>$this->price5);
+        }
+        //упаковываем  цены  по  филиалам
+        $brprice = serialize($this->brprice); 
+  
+  
+        $this->detail .= "<brprice><![CDATA[{$brprice}]]></brprice>";
+
+        
         $this->detail .= "</detail>";
 
         return true;
@@ -92,7 +118,9 @@ class Item extends \ZCL\DB\Entity {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
-
+           
+        
+        
         if ($_price_ == 'price1')
             $_price = $this->price1;
         else if ($_price_ == 'price2')
@@ -104,6 +132,11 @@ class Item extends \ZCL\DB\Entity {
         else if ($_price_ == 'price5')
             $_price = $this->price5;
 
+            $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}   ";
+            if ($store > 0) {
+                $sql = $sql . " and store_id=" . $store;
+            }
+            $sql = $sql . " order  by  stock_id desc limit 0,1";
 
         //если процент    
         if (strpos($_price, '%') > 0) {
@@ -116,11 +149,6 @@ class Item extends \ZCL\DB\Entity {
                 } else {  //ищем последнюю закупочную  цену 
                     $conn = \ZDB\DB::getConnect();
 
-                    $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}   ";
-                    if ($store > 0) {
-                        $sql = $sql . " and store_id=" . $store;
-                    }
-                    $sql = $sql . " order  by  stock_id desc limit 0,1";
                     $partion = $conn->GetOne($sql);
                 }
 
@@ -131,7 +159,21 @@ class Item extends \ZCL\DB\Entity {
             $price = $_price; //задана  просто  цифра
         }
 
+        //если не  задано используем глобальную наценку
+        if($common['defprice']>0 && $price==0){
 
+            if ($partion > 0) {
+                
+            } else {  //ищем последнюю закупочную  цену 
+                $conn = \ZDB\DB::getConnect();
+
+                $partion = $conn->GetOne($sql);
+            }
+
+            $price=  $partion + (int) $partion / 100 * $common['defprice'];
+
+        }
+  
         //поправка  по  валюте
 
         if ($common['useval'] == true) {
@@ -148,8 +190,14 @@ class Item extends \ZCL\DB\Entity {
 
             $price = $price * $k;
         }
-
-        return \App\Helper::fa($price);
+     
+        
+        return \App\Helper::fa($price);    
+        
+        
+        
+        
+        
     }
 
     public static function getPriceTypeList() {

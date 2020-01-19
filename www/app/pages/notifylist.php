@@ -47,6 +47,7 @@ class NotifyList extends \App\Pages\Base {
         $notify = $row->getDataItem();
 
         $row->add(new Label("sender"))->setText($notify->sender_name  );
+        
         $row->add(new Label("msg"))->setText($notify->message, true);
         $row->add(new Label("ndate", date("Y-m-d H:i", $notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);

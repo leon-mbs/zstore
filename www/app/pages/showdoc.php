@@ -18,9 +18,7 @@ class ShowDoc extends \Zippy\Html\WebPage {
         $doc = $doc->cast();
         $filename = $doc->meta_name;
 
-        //$html = \App\Session::getSession()->printform;
-        //$xml = \App\Session::getSession()->xmlform;
-
+   
         $html = $doc->generateReport();
 
         if (strlen($html) > 0) {

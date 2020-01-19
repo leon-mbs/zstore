@@ -398,11 +398,15 @@ class Helper {
         if (strlen($am) == 0)     return '';
         
         $common = System::getOptions("common");
-        if ($common['amdigits'] ==1) {
+        if ($common['amdigits'] == 1) {
             return number_format($am, 2  , '.', '');
         }
         if ($common['amdigits'] == 5) {
             $am = round($am*20)/20;
+            return number_format($am, 2  , '.', '');
+        }
+        if ($common['amdigits'] == 10) {
+            $am = round($am*10)/10;
             return number_format($am, 2  , '.', '');
         }
     
@@ -418,12 +422,11 @@ class Helper {
         $data = \App\System::getOptions("firm");  
         if($id>0) {
             $branch = \App\Entity\Branch::load($id);;
-            if(strlen($branch->firmname)>0)  $data['firmname'] = $branch->firm;
-            if(strlen($branch->inn)>0)  $data['inn'] = $branch->inn;
+            $company = $branch->getCompany();
+            if(strlen($company->company_name)>0)  $data['firmname'] = $company->company_name;
+            if(strlen($company->inn)>0)  $data['inn'] = $company->inn;
             if(strlen($branch->address)>0)  $data['address'] = $branch->address;
-            if(strlen($branch->phone)>0)  $data['phone'] = $branch->phone;
-            if(strlen($branch->viber)>0)  $data['viber'] = $branch->viber;
-            
+              
          }         
          
          return $data;

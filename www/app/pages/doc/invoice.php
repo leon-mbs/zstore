@@ -54,7 +54,7 @@ class Invoice extends \App\Pages\Base {
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
 
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true,true), H::getDefMF()))->onChange($this, 'OnPayment');
      
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -247,7 +247,11 @@ class Invoice extends \App\Pages\Base {
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+        if($this->_doc->customer_id>0){
+          $customer = Customer::load($this->_doc->customer_id);
+          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+            
+        } 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         
         if ($this->checkForm() == false) {
@@ -258,7 +262,10 @@ class Invoice extends \App\Pages\Base {
 
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->_doc->payed = 0;
+
+        }
 
 
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
@@ -279,6 +286,10 @@ class Invoice extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }            
             $this->_doc->save();
 
 
@@ -289,11 +300,7 @@ class Invoice extends \App\Pages\Base {
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             }
 
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+ 
             $conn->CommitTrans();
             if ($sender->id == 'execdoc') {
                 // App::Redirect("\\App\\Pages\\Register\\GList");
@@ -313,7 +320,24 @@ class Invoice extends \App\Pages\Base {
             return;
         }
     }
-
+    public function OnPayment($sender) {
+            $this->docform->payed->setVisible(true);
+            $this->docform->payamount->setVisible(true);
+            $this->docform->paydisc->setVisible(true);
+        
+        $b = $sender->getValue();
+    
+    
+ 
+        if ($b==\App\Entity\MoneyFund::CREDIT) {
+            $this->docform->payed->setVisible(false);
+            $this->docform->editpayed->setVisible(false);
+            $this->docform->payed->setText(0); 
+            $this->docform->editpayed->setText(0); 
+        } 
+        
+        
+    }
     public function onPayAmount($sender) {
         $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
     }

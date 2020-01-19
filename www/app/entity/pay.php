@@ -56,6 +56,7 @@ class Pay extends \ZCL\DB\Entity {
         if (0 == (int) $amount || 0 == (int) $document_id || 0 == $mf)
             return;
             
+        if($mf== MoneyFund::CREDIT) return; //в  долг
         if($mf== MoneyFund::PREPAID) return; //предоплата
         
         if($mf== MoneyFund::BEZNAL) $mf=0; //безнал

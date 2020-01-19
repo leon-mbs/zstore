@@ -6,11 +6,8 @@
                 <h4>Настройки системы</h4>
 
                 <form   zippy="common"  >
-
-             
-                 
-          
-                   <div class="form-group  ">
+            
+                    <div class="form-group  ">
                         <label for="partiontype" >Тип партионного учета</label>
                         <select class="form-control" zippy="partiontype">                        </select>
                         <small>Учет отдельно  по каждой закупочной цене позволяет точно  учтитывать
@@ -45,10 +42,19 @@
                             <option value='0'>Без копеек</option>
                             <option value='1'>До 1 копейки</option>
                             <option value='5'>До 5 копеек</option>
-                            < 
+                            <option value='10'>До 10 копеек</option>
+                          
                         </select>
                     </div> 
-                  
+                    <div class="form-group">
+                        <label for="defprice" >Наценка по  умолчению, в процентах</label>
+                        <input style="width:100px" pattern="[0-9]+" class="form-control" type="text" zippy="defprice"     >
+                        <small>Используется если  не  задана  цена или наценка  на  товаре</small>
+                    </div>                   
+                    <div class="form-group">
+                        <label for="pwidth" >Ширина печати в мм для чеков и этикеток.</label>
+                        <input style="width:60px" pattern="[0-9]+" class="form-control" type="text" zippy="pwidth"     >
+                    </div>                   
                  
 
                     <div class="form-check">
@@ -81,7 +87,7 @@
                    <div class="form-check">
                         <input zippy="usebranch" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="usebranch">Использование  филиалов </label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Фиомиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала  "></i>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Фиомиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиалаю. Отпучскные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
                     </div>
 
                     <div class="form-check">

@@ -12,14 +12,16 @@
                         <tr>
                             <th>Название</th>
                             <th>Адрес</th>
-                            <th>Телефон</th>
+                   
+                            <th>Владелец</th>
 
                             <th> </th>
                         </tr>
                         <tr zippy="branchlist">
                             <td zippy="branch_name"></td>
                             <td zippy="address"></td>
-                            <td zippy="phone"></td>
+                          
+                            <td zippy="company"></td>
 
 
                             <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
@@ -35,26 +37,18 @@
                         <label for="editbranchname">Название</label>
                         <input  required="required" class="form-control" zippy="editbranchname"/>
                   </div>
-                 <div class="form-group">
-                        <label for="editfirm">Название фирмы</label>
-                        <input    class="form-control" zippy="editfirm"/>
-                        <small>Если задано  перекрывает то что  в  настройках системы</small>
-                  </div>
-                 <div class="form-group">
-                        <label for="editinn">ИНН</label>
-                        <input    class="form-control" zippy="editinn"/>
-                        <small>Если задано  перекрывает то что  в  настройках системы</small>
-                  </div>
-            
+                   <div class="form-group">
+                        <label for="editcompany">Владелец</label>
+                        <select  class="form-control" zippy="editcompany">
+                          <option value="0">Выбрать</option>
+                        </select>
+                        
+                  </div>             
                   <div class="form-group">
                         <label for="editaddress">Адрес</label>
                         <input    class="form-control" zippy="editaddress"/>
                   </div>
-                  <div class="form-group">
-                        <label for="editphone">Телефон, Viber</label>
-                        <input    class="form-control" zippy="editphone"/>
-                        <small>Несколько телефонов - чере запятую</small>
-                  </div>
+              
                   
                                    
                   <div class="form-group">

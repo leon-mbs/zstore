@@ -233,6 +233,10 @@ class ProdReceipt extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }            
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {
@@ -244,12 +248,7 @@ class ProdReceipt extends \App\Pages\Base {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+ 
 
             $conn->CommitTrans();
         } catch (\Exception $ee) {

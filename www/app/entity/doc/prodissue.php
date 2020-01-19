@@ -47,7 +47,7 @@ class ProdIssue extends Document {
            
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,
-            "total" => H::fa(amount),
+            "total" => H::fa($this->amount),
             "notes" => $this->notes 
              
         );
