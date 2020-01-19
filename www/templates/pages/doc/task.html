@@ -6,11 +6,11 @@
         <form zippy="docform">
             <h3> Наряд на выполнение работ</h3>
             <small>Документ,  фиксируюший выполнение  производственных заданий. 
-            <br>Для списания  расходных материалов на  основании наряда  можно  создать документ  
-            Списание  на  производство.</small>
+                <br>Для списания  расходных материалов на  основании наряда  можно  создать документ  
+                Списание  на  производство.</small>
             <div class="row">
                 <div class="col-6 col-md-4 col-lg-3">
-                      <div class="form-group">
+                    <div class="form-group">
                         <label for="document_number" >Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>           
@@ -21,9 +21,9 @@
                             <option value="0">Не выбран</option>
                         </select>
                     </div>
-               
-                 
-                   <div class="form-group  ">
+
+
+                    <div class="form-group  ">
                         <label for="notes" >Примечание</label>
 
                         <textarea class="form-control" type="text" zippy="notes"  ></textarea>
@@ -32,8 +32,8 @@
 
                 </div>
                 <div class="col-6 col-md-4 col-lg-3">
-   
-                                          <div class="form-group">
+
+                    <div class="form-group">
                         <label for="start_date" > Дата начала</label>
                         <input minute-step="30" class="form-control" type="text" zippy="start_date" required="required">
                     </div>
@@ -47,15 +47,15 @@
                         <label for="taskhours" >Кол. часов</label>
                         <input   style="width:100px;" pattern[0-9\.]+ class="form-control" type="text" zippy="taskhours" >
                     </div>   
-                    
-     
+
+
 
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 col-xl-6">
-                 
-                      <a class="btn btn-outline-primary btn-sm" zippy="addservice">Добавить работу</a> 
+
+                    <a class="btn btn-outline-primary btn-sm" zippy="addservice">Добавить работу</a> 
 
                     <h5>Работы</h5>
                     <table class="table  table-sm">
@@ -63,22 +63,22 @@
                             <th  >Название</th>
 
 
-                          
+
                             <th  class="text-right"  >Стоимость</th>
                             <th  class="text-right"  >Часов</th>
 
-                           
+
 
                             <th width="75"></th>
                         </tr>
                         <tr zippy="detail">
                             <td   zippy="service"></td>
 
-                   
+
                             <td zippy="price"  class="text-right"></td>
                             <td zippy="hours"  class="text-right"></td>
 
-                          
+
 
                             <td  >
                                 <a zippy="edit"><i class="fa fa-edit"></i></a>
@@ -87,9 +87,9 @@
                             </td>
                         </tr>
 
-                 
+
                     </table>             
-  
+
                     <a class="btn btn-outline-primary btn-sm" zippy="addemp">Добавить исполнителя</a>                     
                     <h5>Исполнители</h5>
                     <table class="table  table-sm">
@@ -136,7 +136,7 @@
 
                 </div>
             </div>
-            
+
         </form>
 
 
@@ -150,7 +150,7 @@
                         <label for="editservice">Название работы </label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="editservice" />       
                     </div>
-           
+
                     <div class="form-group">
                         <label for="editprice">Стоимость </label>
                         <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"  value="0"                                 style="width: 100px;">
@@ -168,7 +168,7 @@
             </div>
         </form>    
 
-    
+
         <form zippy="editdetail3">
             <h3>Добавить исполнителя </h3>
             <div class="row">
@@ -209,6 +209,6 @@
                 </div>
             </div>
         </form> 
-  
+
     </body>
 </html>

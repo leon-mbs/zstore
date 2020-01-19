@@ -14,9 +14,9 @@
 
                     <div class="form-group  ">
                         <label for="store" >Со склада</label>
-                        
+
                         <select class="form-control" zippy="store">
-                         <option value="0">Не выбран</option>
+                            <option value="0">Не выбран</option>
                         </select>
                     </div>
                     <div class="form-group  ">
@@ -33,7 +33,7 @@
                     </div>
 
 
-                 
+
 
                 </div>
                 <div class="col-12 col-md-4  col-xl-3">
@@ -50,19 +50,19 @@
                             <option value="0">Не выбрано</option>
                         </select>
                     </div> 
-     <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="notes" >Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
 
                     </div> 
-                  
-                  
+
+
 
                 </div>
                 <div class="col-12 col-md-4  col-xl-3">
-                      <div class="form-group">                                         
+                    <div class="form-group">                                         
                         <label for="delivery" >Доставка</label>
                         <select  class="form-control" zippy="delivery">
 
@@ -91,7 +91,7 @@
                         <label data-label="delivery_date" for="delivery_date" > Дата доставки</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="delivery_date" required="required">
                     </div>                    
-                          
+
                 </div>
             </div>
             <div class="row">
@@ -198,8 +198,8 @@
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
                     &nbsp;<input zippy="senddoc" type="submit" value="Отправить" class="btn btn-primary  ">
-       
-                        
+
+
 
                 </div>
             </div>
@@ -336,10 +336,10 @@
                 </div>
             </div>
         </form>
-        
-        
-            {{#usescanner}} 
-           <script>
+
+
+        {{#usescanner}} 
+        <script>
             $(document).ready(function () {
 
                 $('#barcode').focus();
@@ -353,6 +353,6 @@
                 }
             }
         </script>
-            {{/usescanner}} 
+        {{/usescanner}} 
     </body>
 </html>

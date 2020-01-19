@@ -59,8 +59,8 @@ class Employee extends \ZCL\DB\Entity {
         return Employee::getFirst("login=" . $login);
     }
 
-    
-    public static function getConstraint(){
-          return \App\ACL::getBranchConstraint() ;
-    }     
+    public static function getConstraint() {
+        return \App\ACL::getBranchConstraint();
+    }
+
 }

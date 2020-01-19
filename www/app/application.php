@@ -98,19 +98,16 @@ class Application extends \Zippy\WebApplication {
 
         $pages = array(
             "store" => "\\App\\Pages\\Main",
-
-            "shop" =>     "\\App\\Modules\\Shop\\Pages\\Main",
-            "sp" =>       "\\App\\Modules\\Shop\\Pages\\ProductView",
-            "aboutus" =>  "\\App\\Modules\\Shop\\Pages\\AboutUs",
+            "shop" => "\\App\\Modules\\Shop\\Pages\\Main",
+            "sp" => "\\App\\Modules\\Shop\\Pages\\ProductView",
+            "aboutus" => "\\App\\Modules\\Shop\\Pages\\AboutUs",
             "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
-            "contact" =>  "\\App\\Modules\\Shop\\Pages\\Contact",
-            "scat" =>     "\\App\\Modules\\Shop\\Pages\\Main",
-            "pcat" =>     "\\App\\Modules\\Shop\\Pages\\Catalog",
-             
-            "project" =>  "\\App\\Modules\\Issue\\Pages\\ProjectList",
-            "issue" =>    "\\App\\Modules\\Issue\\Pages\\IssueList",
-            
-            "topic" =>    "\\App\\Modules\\Note\\Pages\\ShowTopic"
+            "contact" => "\\App\\Modules\\Shop\\Pages\\Contact",
+            "scat" => "\\App\\Modules\\Shop\\Pages\\Main",
+            "pcat" => "\\App\\Modules\\Shop\\Pages\\Catalog",
+            "project" => "\\App\\Modules\\Issue\\Pages\\ProjectList",
+            "issue" => "\\App\\Modules\\Issue\\Pages\\IssueList",
+            "topic" => "\\App\\Modules\\Note\\Pages\\ShowTopic"
         );
 
         if (strlen($pages[$arr[0]]) > 0) {

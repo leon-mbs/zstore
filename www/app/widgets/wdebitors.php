@@ -21,8 +21,9 @@ class WDebitors extends \Zippy\Html\PageFragment {
 
         $visible = (strpos(System::getUser()->widgets, 'wdebitors') !== false || System::getUser()->userlogin == 'admin');
 
-        $cstr = \App\Acl::getBranchListConstraint() ;
-        if(strlen($cstr)>0) $cstr = "  branch_id in({$cstr}) and ";
+        $cstr = \App\Acl::getBranchListConstraint();
+        if (strlen($cstr) > 0)
+            $cstr = "  branch_id in({$cstr}) and ";
 
         $data = array();
 

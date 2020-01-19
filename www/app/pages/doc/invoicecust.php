@@ -47,8 +47,8 @@ class InvoiceCust extends \App\Pages\Base {
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true,true), H::getDefMF()));
-      
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true, true), H::getDefMF()));
+
 
         $this->docform->add(new TextInput('editpayamount', "0"));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -80,7 +80,7 @@ class InvoiceCust extends \App\Pages\Base {
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-         
+
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -111,15 +111,14 @@ class InvoiceCust extends \App\Pages\Base {
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $order = $basedoc->cast();
-                        
+
                         foreach ($order->detaildata as $_item) {
                             $item = new Item($_item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
-                        $this->CalcTotal() ;
-                        $this->CalcPay() ;
-                         
-                    }                    
+                        $this->CalcTotal();
+                        $this->CalcPay();
+                    }
                 }
             }
         }
@@ -231,16 +230,14 @@ class InvoiceCust extends \App\Pages\Base {
         $this->_doc->payed = $this->docform->payed->getText();
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
-
         }
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        if($this->_doc->customer_id>0){
-          $customer = Customer::load($this->_doc->customer_id);
-          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
-            
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-   
+
         if ($this->checkForm() == false) {
             return;
         }
@@ -274,7 +271,7 @@ class InvoiceCust extends \App\Pages\Base {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }            
+            }
             $this->_doc->save();
 
 
@@ -286,7 +283,7 @@ class InvoiceCust extends \App\Pages\Base {
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
- 
+
 
             if ($file['size'] > 0) {
                 H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
@@ -356,12 +353,12 @@ class InvoiceCust extends \App\Pages\Base {
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран поставщик");
         }
-        if ($this->docform->payment->getValue()==0) {
+        if ($this->docform->payment->getValue() == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();
     }
- 
+
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }

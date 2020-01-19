@@ -19,18 +19,17 @@ class Task extends Document {
         $detail = array();
         $eqlist = unserialize(base64_decode($this->headerdata['eq']));
         $emplist = unserialize(base64_decode($this->headerdata['emp']));
-        
-        
+
+
         foreach ($this->detaildata as $value) {
 
             $detail[] = array("no" => $i++,
-                "servicename" =>   $value['service_name']  ,
+                "servicename" => $value['service_name'],
                 "price" => H::fa($value['price']),
-                "hours" => $value['hours'] 
-                 
+                "hours" => $value['hours']
             );
         }
-    
+
         $detail2 = array();
         foreach ($eqlist as $value) {
             $value = $value->getData();
@@ -49,16 +48,14 @@ class Task extends Document {
             );
         }
 
-      
+
 
         $header = array('date' => date('d.m.Y', $this->document_date),
-      
             "pareaname" => $this->headerdata["pareaname"],
-             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
+            "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
             "document_number" => $this->document_number,
             "_detail" => $detail,
             "_detail2" => $detail2,
-     
             "_detail3" => $detail3
         );
         $report = new \App\Report('task.tpl');
@@ -70,7 +67,7 @@ class Task extends Document {
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-   
+
         $eqlist = unserialize(base64_decode($this->headerdata['eq']));
         $emplist = unserialize(base64_decode($this->headerdata['emp']));
 
@@ -79,16 +76,12 @@ class Task extends Document {
             $sc->setService($row['service_id']);
             $sc->save();
         }
-  
+
         return true;
     }
-
- 
 
     protected function getNumberTemplate() {
         return 'НР-000000';
     }
-
- 
 
 }

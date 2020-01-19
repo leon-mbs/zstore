@@ -15,7 +15,6 @@ use \Zippy\Html\Form\TextArea;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\SubmitLink;
-
 use \App\Entity\Doc\Document;
 use \App\Entity\Service;
 use \App\Entity\Store;
@@ -26,7 +25,6 @@ use \App\Entity\Employee;
 use \App\Entity\Equipment;
 use \App\Application as App;
 use \App\Helper as H;
- 
 
 /**
  * Страница  ввода  наряда  на  работу
@@ -34,51 +32,49 @@ use \App\Helper as H;
 class Task extends \App\Pages\Base {
 
     public $_servicelist = array();
- 
-   
     public $_emplist = array();
     public $_eqlist = array();
     private $_doc;
 
-    public function __construct($docid = 0,$basedocid=0) {
+    public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new \ZCL\BT\DateTimePicker('start_date'))->setDate(time());
         $this->docform->add(new \ZCL\BT\DateTimePicker('document_date'))->setDate(time());
-        
-  
+
+
         $this->docform->add(new TextArea('notes'));
-         $this->docform->add(new TextInput('taskhours', "0"));
+        $this->docform->add(new TextInput('taskhours', "0"));
 
 
-        
+
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
-        
- 
+
+
 
         $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
-         
-          $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
+
+        $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
         $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
-        
+
 
         //service
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('editservice'))->onText($this, 'OnAutoServive');
         $this->editdetail->editservice->onChange($this, 'OnChangeServive', true);
-        
+
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('edithours'));
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
-  
- 
+
+
         //employer
         $this->add(new Form('editdetail3'))->setVisible(false);
         $this->editdetail3->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "disabled<>1", "emp_name")));
@@ -92,7 +88,7 @@ class Task extends \App\Pages\Base {
         $this->editdetail4->add(new Button('cancelrow4'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
- 
+
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
@@ -101,11 +97,11 @@ class Task extends \App\Pages\Base {
             $this->docform->taskhours->setText($this->_doc->headerdata['taskhours']);
 
             $this->docform->start_date->setDate($this->_doc->headerdata['start_date']);
-            
-            
+
+
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
-   
+
 
             foreach ($this->_doc->detaildata as $item) {
 
@@ -123,39 +119,34 @@ class Task extends \App\Pages\Base {
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'ServiceAct') {
-           
-                         
-                        $this->docform->notes->setText("Заказ ".$basedoc->document_number);
-  
+
+
+                        $this->docform->notes->setText("Заказ " . $basedoc->document_number);
+
                         foreach ($basedoc->detaildata as $item) {
                             $item = new Service($item);
                             $this->_servicelist[$item->service_id] = $item;
                         }
                     }
                 }
-            }            
-            
+            }
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->docform->add(new DataView('detail3', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emplist')), $this, 'detail3OnRow'))->Reload();
         $this->docform->add(new DataView('detail4', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_eqlist')), $this, 'detail4OnRow'))->Reload();
-      
+
 
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-
-        
     }
-
-    
 
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
-     
+
         $this->editdetail3->setVisible(false);
         $this->editdetail4->setVisible(false);
-     
+
         $this->docform->setVisible(true);
     }
 
@@ -164,11 +155,11 @@ class Task extends \App\Pages\Base {
 
         $row->add(new Label('service', $service->service_name));
 
-   
+
         $row->add(new Label('price', H::fa($service->price)));
         $row->add(new Label('hours', $service->hours));
 
-           $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
@@ -178,7 +169,7 @@ class Task extends \App\Pages\Base {
 
         $this->editdetail->editservice->setText('');
         $this->editdetail->editservice->setKey(0);
-     
+
         $this->editdetail->editprice->setText('');
         $this->editdetail->edithours->setText('');
     }
@@ -188,7 +179,7 @@ class Task extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-        
+
         $this->editdetail->editprice->setText($service->price);
         $this->editdetail->edithours->setText($service->hours);
 
@@ -203,7 +194,6 @@ class Task extends \App\Pages\Base {
 
         $this->_servicelist = array_diff_key($this->_servicelist, array($service->service_id => $this->_servicelist[$service->service_id]));
         $this->docform->detail->Reload();
-     
     }
 
     public function saverowOnClick($sender) {
@@ -213,7 +203,7 @@ class Task extends \App\Pages\Base {
             return;
         }
         $service = Service::load($id);
-        
+
         $service->price = $this->editdetail->editprice->getText();
         $service->hours = $this->editdetail->edithours->getText();
 
@@ -221,8 +211,8 @@ class Task extends \App\Pages\Base {
         $this->_servicelist[$service->service_id] = $service;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
-       
-   
+
+
         $this->docform->detail->Reload();
 
         //очищаем  форму
@@ -233,8 +223,6 @@ class Task extends \App\Pages\Base {
         $this->editdetail->editprice->setText("0");
     }
 
- 
-  
     //employee
     public function addempOnClick($sender) {
         $this->editdetail3->setVisible(true);
@@ -311,14 +299,14 @@ class Task extends \App\Pages\Base {
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
-   
-         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
+
+        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->headerdata['start_date'] = $this->docform->start_date->getDate();
         $this->_doc->document_date = $this->docform->document_date->getDate();
-           
-    
+
+
         if ($this->checkForm() == false) {
             return;
         }
@@ -328,15 +316,15 @@ class Task extends \App\Pages\Base {
             $this->_doc->detaildata[] = $item->getData();
         }
 
-         
+
         $this->_doc->headerdata['eq'] = base64_encode(serialize($this->_eqlist));
-   
-        
- 
+
+
+
         $this->_doc->headerdata['emp'] = base64_encode(serialize($this->_emplist));
 
         $isEdited = $this->_doc->document_id > 0;
-   
+
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -373,8 +361,6 @@ class Task extends \App\Pages\Base {
         }
     }
 
- 
-
     /**
      * Валидация   формы
      *
@@ -389,19 +375,17 @@ class Task extends \App\Pages\Base {
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна работа");
         }
- 
- 
+
+
         return !$this->isError();
- 
+
         $this->docform->detail->Reload();
     }
 
- 
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
 
-    
     public function OnAutoServive($sender) {
 
         $text = Service::qstr('%' . $sender->getText() . '%');
@@ -419,8 +403,5 @@ class Task extends \App\Pages\Base {
         $this->editdetail->edithours->setText($item->hours);
         $this->updateAjax(array('editprice', 'edithours'));
     }
-
- 
- 
 
 }

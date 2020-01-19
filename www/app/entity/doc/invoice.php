@@ -34,7 +34,7 @@ class Invoice extends \App\Entity\Doc\Document {
             }
         }
 
-  
+
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "customername" => $this->headerdata["customer_name"],
@@ -45,7 +45,7 @@ class Invoice extends \App\Entity\Doc\Document {
             "total" => $this->amount,
             "payamount" => H::fa($this->payamount),
             "payed" => H::fa($this->payed),
-            "paydisc" => H::fa($this->headerdata["paydisc"] )
+            "paydisc" => H::fa($this->headerdata["paydisc"])
         );
 
 
@@ -67,15 +67,12 @@ class Invoice extends \App\Entity\Doc\Document {
                 $customer->save();
             }
         }
-      
-        if ($this->headerdata['payment'] > 0 && $this->payed>0) {
-            \App\Entity\Pay::addPayment($this->document_id,   $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
-         
+
+        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
         return true;
     }
-
- 
 
     protected function getNumberTemplate() {
         return 'СФ-000000';

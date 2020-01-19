@@ -28,12 +28,12 @@ class Stock extends \ZCL\DB\Entity {
      * @static
      */
     public static function findArrayAC($store, $partname = "") {
-        $partiontype = \App\System::getOption('common','partiontype');
- 
+        $partiontype = \App\System::getOption('common', 'partiontype');
+
         $criteria = "qty <> 0 and itemdisabled <> 1 and store_id=" . $store;
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
-            $partname = self::qstr(  $partname  );
+            $partname = self::qstr($partname);
 
             $criteria .= "  and  (itemname like {$like} or item_code = {$partname} or snumber = {$partname} or   bar_code = {$partname} )";
         }
@@ -45,13 +45,12 @@ class Stock extends \ZCL\DB\Entity {
             if (strlen($value->snumber) > 0) {
                 $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
             }
- 
-             if($partiontype == "1"){ //отдельно  по входным  ценам
-                 $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion); 
-             }else{
-                 $list[$key] = $value->itemname ; 
-             }
-   
+
+            if ($partiontype == "1") { //отдельно  по входным  ценам
+                $list[$key] = $value->itemname . ', ' . \App\Helper::fqty($value->partion);
+            } else {
+                $list[$key] = $value->itemname;
+            }
         }
 
         return $list;
@@ -67,16 +66,16 @@ class Stock extends \ZCL\DB\Entity {
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = false) {
 
-        $partiontype = \App\System::getOption('common','partiontype');
-          
+        $partiontype = \App\System::getOption('common', 'partiontype');
+
         $conn = \ZDB\DB::getConnect();
 
-        $where = "store_id = {$store_id} and item_id = {$item_id}   "; 
- 
-        if($partiontype=='2'){    //учет  отдельно  по  каждой цене
+        $where = "store_id = {$store_id} and item_id = {$item_id}   ";
+
+        if ($partiontype == '2') {    //учет  отдельно  по  каждой цене
             $where .= " and partion = {$price}   ";
         }
- 
+
         if (strlen($snumber) > 0) {
             $where .= "  and  snumber =  " . $conn->qstr($snumber);
         }
@@ -84,7 +83,7 @@ class Stock extends \ZCL\DB\Entity {
         //на  случай если удален
         //$conn->Execute("update store_stock set deleted=0 where " . $where);
 
-        $stock = self::getFirst($where,'stock_id desc');
+        $stock = self::getFirst($where, 'stock_id desc');
         if ($stock == null && $create == true) {
             $stock = new Stock();
             $stock->store_id = $store_id;
@@ -96,7 +95,7 @@ class Stock extends \ZCL\DB\Entity {
 
             $stock->save();
         }
-        if($partiontype=='1'){    //учет  по  последней цене
+        if ($partiontype == '1') {    //учет  по  последней цене
             $stock->partion = $price;
             $stock->save();
         }
@@ -126,14 +125,14 @@ class Stock extends \ZCL\DB\Entity {
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item_id, $qty, $snumber = "" ) {
+    public static function pickup($store_id, $item_id, $qty, $snumber = "") {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item_id} and qty > 0   ";
         if (strlen($snumber) > 0) {
             $where .= " and snumber=" . Stock::qstr($snumber);
         }
         $stlist = self::find($where, ' stock_id  ');
-         
+
         $last = null;
         foreach ($stlist as $st) {
             $last = $st;
@@ -151,28 +150,27 @@ class Stock extends \ZCL\DB\Entity {
         if ($qty > 0) {  // если не  достаточно
             $item = Item::load($item_id);
             \App\System::setWarnMsg("Создано отрицательное  количество  товара {$item->itemname} на  складе");
-            if($last != null){
-                $last->quantity +=  $qty;//остаток  пишем  к  последней партии
+            if ($last != null) {
+                $last->quantity += $qty; //остаток  пишем  к  последней партии
             } else {
-               
+
                 $where = "store_id = {$store_id} and item_id = {$item_id}   ";
                 if (strlen($snumber) > 0) {
                     $where .= " and snumber = " . Stock::qstr($snumber);
                 }
                 $last = self::getFirst($where, ' stock_id desc ');
-                if($last == null){
+                if ($last == null) {
                     $last = new Stock();
                     $last->store_id = $store_id;
                     $last->item_id = $item_id;
                     $last->partion = 0;
                     $last->snumber = $snumber;
                     $last->sdate = time();
-                    $last->save();            
-                }    
-                $last->quantity  =  $qty;
-                return    array($last);
+                    $last->save();
+                }
+                $last->quantity = $qty;
+                return array($last);
             }
-              
         }
         return $res;
     }

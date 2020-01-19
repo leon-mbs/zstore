@@ -29,9 +29,9 @@ class PayActivity extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
- 
-  
-        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(System::getUser()->username=='admin'), H::getDefMF()));
+
+
+        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(System::getUser()->username == 'admin'), H::getDefMF()));
 
 
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
@@ -80,7 +80,8 @@ class PayActivity extends \App\Pages\Base {
     private function generateReport() {
 
         $mf_id = $this->filter->mf->getValue();
-        if($mf_id== \App\Entity\MoneyFund::BEZNAL) $mf_id=0;// безнал
+        if ($mf_id == \App\Entity\MoneyFund::BEZNAL)
+            $mf_id = 0; // безнал
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
@@ -138,7 +139,7 @@ class PayActivity extends \App\Pages\Base {
                 "in" => H::fa(strlen($row['begin_amount']) > 0 ? $row['begin_amount'] : 0),
                 "obin" => H::fa($row['obin']),
                 "obout" => H::fa($row['obout']),
-                "out" => H::fa($row['begin_amount'] + $row['obin'] - $row['obout'] )
+                "out" => H::fa($row['begin_amount'] + $row['obin'] - $row['obout'])
             );
             $tend = $row['begin_amount'] + $row['obin'] - $row['obout'];
             $tin += $row['obin'];

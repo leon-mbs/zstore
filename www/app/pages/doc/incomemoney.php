@@ -35,7 +35,7 @@ class IncomeMoney extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(1), Pay::PAY_BASE_INCOME));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(System::getUser()->username=='admin'), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(System::getUser()->username == 'admin'), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('amount'));
 
@@ -65,7 +65,7 @@ class IncomeMoney extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-          if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         $this->_doc->notes = $this->docform->notes->getText();
 
@@ -128,9 +128,8 @@ class IncomeMoney extends \App\Pages\Base {
         return !$this->isError();
     }
 
-    
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-    
+
 }

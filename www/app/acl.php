@@ -107,10 +107,7 @@ class ACL {
         if ($user->acltype != 2)
             return true;
 
-      //  self::load();
-
-
-
+        //  self::load();
         //для существующих документов
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
@@ -141,7 +138,7 @@ class ACL {
         if ($user->acltype != 2)
             return true;
 
-       // self::load();
+        // self::load();
 
 
 
@@ -167,7 +164,7 @@ class ACL {
         return false;
     }
 
-   //проверка  на  доступ  к  сервисным станицам
+    //проверка  на  доступ  к  сервисным станицам
     public static function checkShowSer($ser) {
         if (System::getUser()->acltype != 2)
             return true;
@@ -187,148 +184,160 @@ class ACL {
         App::RedirectHome();
         return false;
     }
-    
-    
-/**
-    * возвращает ограничение  для  ресурсов  по филиалам
-    * 
-    */
-    public static function getBranchConstraint(){
-         $options = \App\System::getOptions('common');
-         if($options['usebranch'] != 1)  return  '';
-         
-         $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
-         if($id>0)  return "branch_id in ({$id})";         
-         
-         $user = \App\System::getUser() ;
-         if($user->username=='admin')return '';
-         
-         if(strlen($user->aclbranch)==0) return  '1=2';//нет доступа  ни  к  одному филиалу
-         return "branch_id in ({$user->aclbranch})";
-    }    
-    
+
     /**
-    * проверяет  что  выбран  конкретный текущий филиал
-    * и возвраает его значение
-    * 
-    */
-    public static function checkCurrentBranch(){
-         $options = \App\System::getOptions('common');
-         if($options['usebranch'] != 1)  return  0;
-         $id = \App\Session::getSession()->branch_id;
-         if($id>0)  return  $id;
-         \App\System::setErrorMsg('Не выбран текущий филиал');
-         \App\Application::RedirectHome() ;
-         
-        
+     * возвращает ограничение  для  ресурсов  по филиалам
+     * 
+     */
+    public static function getBranchConstraint() {
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1)
+            return '';
+
+        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        if ($id > 0)
+            return "branch_id in ({$id})";
+
+        $user = \App\System::getUser();
+        if ($user->username == 'admin')
+            return '';
+
+        if (strlen($user->aclbranch) == 0)
+            return '1=2'; //нет доступа  ни  к  одному филиалу
+        return "branch_id in ({$user->aclbranch})";
     }
-    
-    
-    
+
     /**
-    * Возвращает  список складов для подстьановки  в запрос по текущим  филиалам
-    * 
-    */
-     public static function getStoreBranchConstraint(){
-         $options = \App\System::getOptions('common');
-         if($options['usebranch'] != 1)  return  '';
-         
-         $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
-         if($id>0) {
-             return  "select stacl.store_id  from stores stacl where stacl.branch_id={$id} " ;
-         }
-           
-         $user = \App\System::getUser() ;
-         if($user->username=='admin')return '';
-         
-         if(strlen($user->aclbranch)==0) return " (0)";//нет доступа  ни  к  одному филиалу
-          return  "select stacl.store_id  from stores stacl where branch_id in {$user->aclbranch} " ;
-  
-    }    
-   /**
-    * Возвращает  список касс для подстьановки  в запрос по текущим  филиалам
-    * 
-    */
-     public static function getMFBranchConstraint(){
-         $options = \App\System::getOptions('common');
-         if($options['usebranch'] != 1)  return  '';
-         
-         $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
-         if($id>0) {
-             return  "select stacl.mf_id  from mfund stacl where stacl.branch_id={$id} " ;
-         }
-           
-         $user = \App\System::getUser() ;
-         if($user->username=='admin')return '';
-         
-         if(strlen($user->aclbranch)==0) return " (0)";//нет доступа  ни  к  одному филиалу
-          return  "select stacl.mf_id  from mfund stacl where branch_id in {$user->aclbranch} " ;
-  
-    }    
+     * проверяет  что  выбран  конкретный текущий филиал
+     * и возвраает его значение
+     * 
+     */
+    public static function checkCurrentBranch() {
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1)
+            return 0;
+        $id = \App\Session::getSession()->branch_id;
+        if ($id > 0)
+            return $id;
+        \App\System::setErrorMsg('Не выбран текущий филиал');
+        \App\Application::RedirectHome();
+    }
+
     /**
-    * Возвращает  список сотрудников для подстьановки  в запрос по текущим  филиалам
-    * 
-    */
-     public static function getEmpBranchConstraint(){
-         $options = \App\System::getOptions('common');
-         if($options['usebranch'] != 1)  return  '';
-         
-         $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
-         if($id>0) {
-             return  "select stacl.employee_id  from employees stacl where stacl.branch_id={$id} " ;
-         }
-           
-         $user = \App\System::getUser() ;
-         if($user->username=='admin')return '';
-         
-         if(strlen($user->aclbranch)==0) return " (0)";//нет доступа  ни  к  одному филиалу
-          return  "select stacl.employee_id  from employees stacl where branch_id in {$user->aclbranch} " ;
-  
-    }    
+     * Возвращает  список складов для подстьановки  в запрос по текущим  филиалам
+     * 
+     */
+    public static function getStoreBranchConstraint() {
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1)
+            return '';
+
+        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        if ($id > 0) {
+            return "select stacl.store_id  from stores stacl where stacl.branch_id={$id} ";
+        }
+
+        $user = \App\System::getUser();
+        if ($user->username == 'admin')
+            return '';
+
+        if (strlen($user->aclbranch) == 0)
+            return " (0)"; //нет доступа  ни  к  одному филиалу
+        return "select stacl.store_id  from stores stacl where branch_id in {$user->aclbranch} ";
+    }
+
     /**
-    * Возвращает  список документы для подстьановки  в запрос по текущим  филиалам
-    * 
-    */
-     public static function getDocBranchConstraint(){
-         $options = \App\System::getOptions('common');
-         if($options['usebranch'] != 1)  return  '';
-         
-         $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
-         if($id>0) {
-             return  "select stacl.document_id  from documents stacl where stacl.branch_id={$id} " ;
-         }
-           
-         $user = \App\System::getUser() ;
-         if($user->username=='admin')return '';
-         
-         if(strlen($user->aclbranch)==0) return " (0)";//нет доступа  ни  к  одному филиалу
-          return  "select stacl.document_id  from documents stacl where branch_id in {$user->aclbranch} " ;
-  
-    }    
+     * Возвращает  список касс для подстьановки  в запрос по текущим  филиалам
+     * 
+     */
+    public static function getMFBranchConstraint() {
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1)
+            return '';
+
+        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        if ($id > 0) {
+            return "select stacl.mf_id  from mfund stacl where stacl.branch_id={$id} ";
+        }
+
+        $user = \App\System::getUser();
+        if ($user->username == 'admin')
+            return '';
+
+        if (strlen($user->aclbranch) == 0)
+            return " (0)"; //нет доступа  ни  к  одному филиалу
+        return "select stacl.mf_id  from mfund stacl where branch_id in {$user->aclbranch} ";
+    }
+
+    /**
+     * Возвращает  список сотрудников для подстьановки  в запрос по текущим  филиалам
+     * 
+     */
+    public static function getEmpBranchConstraint() {
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1)
+            return '';
+
+        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        if ($id > 0) {
+            return "select stacl.employee_id  from employees stacl where stacl.branch_id={$id} ";
+        }
+
+        $user = \App\System::getUser();
+        if ($user->username == 'admin')
+            return '';
+
+        if (strlen($user->aclbranch) == 0)
+            return " (0)"; //нет доступа  ни  к  одному филиалу
+        return "select stacl.employee_id  from employees stacl where branch_id in {$user->aclbranch} ";
+    }
+
+    /**
+     * Возвращает  список документы для подстьановки  в запрос по текущим  филиалам
+     * 
+     */
+    public static function getDocBranchConstraint() {
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1)
+            return '';
+
+        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        if ($id > 0) {
+            return "select stacl.document_id  from documents stacl where stacl.branch_id={$id} ";
+        }
+
+        $user = \App\System::getUser();
+        if ($user->username == 'admin')
+            return '';
+
+        if (strlen($user->aclbranch) == 0)
+            return " (0)"; //нет доступа  ни  к  одному филиалу
+        return "select stacl.document_id  from documents stacl where branch_id in {$user->aclbranch} ";
+    }
+
+    /**
+     * Возвращает  список филиалов для подстьановки  в запрос по текущим  филиалам
+     * 
+     */
+    public static function getBranchListConstraint() {
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1)
+            return '';
+
+        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        if ($id > 0) {
+            return "{$id}";
+        }
 
 
 
-    /**
-    * Возвращает  список филиалов для подстьановки  в запрос по текущим  филиалам
-    * 
-    */
-     public static function getBranchListConstraint(){
-         $options = \App\System::getOptions('common');
-         if($options['usebranch'] != 1)  return  '';
-         
-         $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
-         if($id>0) {
-             return  "{$id}" ;
-         }
-         
-                  
-         
-         $user = \App\System::getUser() ;
-         if($user->username=='admin')return '';
-         
-         if(strlen($user->aclbranch)==0) return " (0)";//нет доступа  ни  к  одному филиалу
-         return    "{$user->aclbranch}" ;
-  
-    }    
-       
+        $user = \App\System::getUser();
+        if ($user->username == 'admin')
+            return '';
+
+        if (strlen($user->aclbranch) == 0)
+            return " (0)"; //нет доступа  ни  к  одному филиалу
+        return "{$user->aclbranch}";
+    }
+
 }

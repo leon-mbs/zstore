@@ -229,11 +229,10 @@ class Order extends \App\Pages\Base {
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        if($this->_doc->customer_id>0){
-          $customer = Customer::load($this->_doc->customer_id);
-          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
-            
-        }        
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -266,8 +265,8 @@ class Order extends \App\Pages\Base {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }            
-           $this->_doc->save();
+            }
+            $this->_doc->save();
 
             $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
 
@@ -276,7 +275,7 @@ class Order extends \App\Pages\Base {
                 // $this->_doc->updateStatus(Document::STATE_INPROCESS);       
             }
 
- 
+
             $conn->CommitTrans();
             if ($sender->id == 'execdoc') {
                 App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
@@ -324,7 +323,7 @@ class Order extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
-        if (($this->docform->store->getValue() > 0 ) ==false) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
 

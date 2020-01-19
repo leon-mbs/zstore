@@ -38,14 +38,13 @@ class ReturnIssue extends Document {
             }
         }
 
-   
+
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $this->headerdata["firmname"],
             "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
-            "total" => H::fa($this->amount) 
-             
+            "total" => H::fa($this->amount)
         );
 
         $report = new \App\Report('returnissue.tpl');
@@ -65,20 +64,17 @@ class ReturnIssue extends Document {
             $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
             $sc->setStock($row['stock_id']);
 
-            $sc->setExtCode(0-($item['price'] - $st->partion)); //Для АВС 
-  
+            $sc->setExtCode(0 - ($item['price'] - $st->partion)); //Для АВС 
             //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,   0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
+            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
             $this->payamount = $this->amount;
         }
 
         return true;
     }
-
-  
 
     protected function getNumberTemplate() {
         return 'ВК-000000';

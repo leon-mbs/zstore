@@ -13,7 +13,9 @@ use \App\Session;
 use \App\Entity\User;
 
 class Base extends \Zippy\Html\WebPage {
-     public $branch_id=0; 
+
+    public $branch_id = 0;
+
     public function __construct($params = null) {
         global $_config;
 
@@ -26,16 +28,16 @@ class Base extends \Zippy\Html\WebPage {
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-        
+
         $this->branch_id = Session::getSession()->branch_id;
-        $blist  = \App\Entity\Branch::getList(System::getUser()->user_id);
-        if(count($blist)==1) {      //если  одна
-           $this->branch_id = array_pop(array_keys($blist)) ;
-           Session::getSession()->branch_id = $this->branch_id;
-        } 
+        $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
+        if (count($blist) == 1) {      //если  одна
+            $this->branch_id = array_pop(array_keys($blist));
+            Session::getSession()->branch_id = $this->branch_id;
+        }
         //форма  филиалов       
         $this->add(new \Zippy\Html\Form\Form('nbform'));
-        $this->nbform->add(new \Zippy\Html\Form\DropDownChoice('nbbranch',$blist,$this->branch_id))->onChange($this,'onnbFirm');
+        $this->nbform->add(new \Zippy\Html\Form\DropDownChoice('nbbranch', $blist, $this->branch_id))->onChange($this, 'onnbFirm');
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
@@ -47,18 +49,18 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["sermenu"] = Helper::generateMenu(5);
 
         $this->_tvars["islogined"] = $user->user_id > 0;
-        $this->_tvars["isadmin"]   = $user->userlogin == 'admin';
+        $this->_tvars["isadmin"] = $user->userlogin == 'admin';
 
         $options = System::getOptions('common');
 
         $this->_tvars["useset"] = $options['useset'] == 1;
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
-        $this->_tvars["useimages"]  = $options['useimages'] == 1;
-        $this->_tvars["usebranch"]  = $options['usebranch'] == 1;
-        if($this->_tvars["usebranch"] == false){
-             $this->branch_id = 0;
-             Session::getSession()->branch_id = 0;
+        $this->_tvars["useimages"] = $options['useimages'] == 1;
+        $this->_tvars["usebranch"] = $options['usebranch'] == 1;
+        if ($this->_tvars["usebranch"] == false) {
+            $this->branch_id = 0;
+            Session::getSession()->branch_id = 0;
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
 
@@ -68,19 +70,19 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
 
-       if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
-           $this->_tvars["shop"] = false;
-       }        
-      if (strpos(System::getUser()->modules, 'note') === false && System::getUser()->userlogin != 'admin') {
-           $this->_tvars["note"] = false;
-       }        
-      if (strpos(System::getUser()->modules, 'issue') === false && System::getUser()->userlogin != 'admin') {
-           $this->_tvars["issue"] = false;
-       }        
-      if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
-           $this->_tvars["ocstore"] = false;
-       }        
-        
+        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
+            $this->_tvars["shop"] = false;
+        }
+        if (strpos(System::getUser()->modules, 'note') === false && System::getUser()->userlogin != 'admin') {
+            $this->_tvars["note"] = false;
+        }
+        if (strpos(System::getUser()->modules, 'issue') === false && System::getUser()->userlogin != 'admin') {
+            $this->_tvars["issue"] = false;
+        }
+        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
+            $this->_tvars["ocstore"] = false;
+        }
+
         $this->_tvars["hideblock"] = false; //для скрытия блока разметки  в  шаблоне страницы
     }
 
@@ -98,12 +100,11 @@ class Base extends \Zippy\Html\WebPage {
         //    App::$app->getresponse()->toBack();
     }
 
-      public function onnbFirm($sender) {
-          $branch_id = $sender->getValue();
-          Session::getSession()->branch_id=$branch_id;
-          App::RedirectHome();              
-       }
-  
+    public function onnbFirm($sender) {
+        $branch_id = $sender->getValue();
+        Session::getSession()->branch_id = $branch_id;
+        App::RedirectHome();
+    }
 
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg) {
@@ -135,7 +136,7 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars['alertsuccess'] = "";
         $this->_tvars['alertinfo'] = "";
 
-        if (strlen(System::getErrorMsg()) > 0)  {
+        if (strlen(System::getErrorMsg()) > 0) {
             $this->_tvars['alerterror'] = System::getErrorMsg();
             $this->goAnkor('');
         }
@@ -151,7 +152,6 @@ class Base extends \Zippy\Html\WebPage {
             $this->_tvars['alertinfo'] = System::getInfoMsg();
             $this->goAnkor('');
         }
-        
     }
 
     protected function afterRender() {

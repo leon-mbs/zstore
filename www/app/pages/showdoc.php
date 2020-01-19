@@ -18,7 +18,7 @@ class ShowDoc extends \Zippy\Html\WebPage {
         $doc = $doc->cast();
         $filename = $doc->meta_name;
 
-   
+
         $html = $doc->generateReport();
 
         if (strlen($html) > 0) {

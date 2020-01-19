@@ -56,7 +56,7 @@ class PayCustList extends \App\Pages\Base {
         $doclist->setSelectedClass('table-success');
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
- 
+
         $this->add(new Panel("paypan"))->setVisible(false);
         $this->paypan->add(new Label("pname"));
         $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
@@ -66,15 +66,15 @@ class PayCustList extends \App\Pages\Base {
         $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
- 
+
         $this->updateCust();
     }
 
     public function updateCust() {
-        $br="";
-        $blist =\App\ACL::getBranchListConstraint();
-        if(strlen($blist)>0){
-             $br =" branch_id in({$blist}) and ";
+        $br = "";
+        $blist = \App\ACL::getBranchListConstraint();
+        if (strlen($blist) > 0) {
+            $br = " branch_id in({$blist}) and ";
         }
         $sql = "select c.customer_name,c.phone, c.customer_id,sam,fl  from (select  customer_id,  coalesce(sum(payamount - payed),0) as sam,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
             from `documents_view`
@@ -88,7 +88,7 @@ class PayCustList extends \App\Pages\Base {
 
     public function custlistOnRow($row) {
         $cust = $row->getDataItem();
-        $row->add(new RedirectLink('customer_name',"\\App\\Pages\\Reference\\CustomerList",array($cust->customer_id) ))->setValue($cust->customer_name);
+        $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
         $row->add(new Label('credit', H::fa($cust->fl == -1 ? $cust->sam : "")));
         $row->add(new Label('debet', H::fa($cust->fl == 1 ? $cust->sam : "")));
@@ -116,10 +116,10 @@ class PayCustList extends \App\Pages\Base {
             $docs = "'GoodsIssue','Task','ServiceAct','Invoice','POSCheck'";
         }
 
-        $br="";
-        $blist =\App\ACL::getBranchListConstraint();
-        if(strlen($blist)>0){
-             $br =" branch_id in({$blist}) and ";
+        $br = "";
+        $blist = \App\ACL::getBranchListConstraint();
+        if (strlen($blist) > 0) {
+            $br = " branch_id in({$blist}) and ";
         }
 
 
@@ -136,7 +136,7 @@ class PayCustList extends \App\Pages\Base {
         $row->add(new Label('date', date('d.m.Y', $doc->document_date)));
 
 
-        $row->add(new Label('amount',H::fa( ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
+        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
 
         $row->add(new Label('payamount', H::fa($doc->payamount - $doc->payed)));
 
@@ -197,7 +197,7 @@ class PayCustList extends \App\Pages\Base {
 
     public function payOnRow($row) {
         $pay = $row->getDataItem();
-        $row->add(new Label('plamount', H::fa( $pay->amount)));
+        $row->add(new Label('plamount', H::fa($pay->amount)));
         $row->add(new Label('pluser', $pay->username));
         $row->add(new Label('pldate', date('Y-m-d', $pay->paydate)));
         $row->add(new Label('plmft', $pay->mf_name));
@@ -222,10 +222,10 @@ class PayCustList extends \App\Pages\Base {
         //закупки  и возвраты
         if ($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'InvoiceCust' || $this->_doc->meta_name == 'ReturnIssue') {
             $amount = 0 - $amount;
-            $type =  Pay::PAY_BASE_OUTCOME;
+            $type = Pay::PAY_BASE_OUTCOME;
         }
 
-        Pay::addPayment($this->_doc->document_id,   $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
+        Pay::addPayment($this->_doc->document_id, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
 
 
@@ -245,7 +245,7 @@ class PayCustList extends \App\Pages\Base {
             $csv .= $d->document_number . ',';
             $csv .= $d->headerdata["pareaname"] . ',';
             $csv .= $d->amount . ',';
-            $csv .=  str_replace(',','',$d->notes) . ',';
+            $csv .= str_replace(',', '', $d->notes) . ',';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");

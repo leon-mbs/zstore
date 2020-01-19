@@ -48,14 +48,14 @@ class Invoice extends \App\Pages\Base {
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
- 
+
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
 
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true,true), H::getDefMF()))->onChange($this, 'OnPayment');
-     
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
@@ -67,7 +67,7 @@ class Invoice extends \App\Pages\Base {
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
- 
+
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -114,7 +114,7 @@ class Invoice extends \App\Pages\Base {
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
-            
+
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -243,17 +243,16 @@ class Invoice extends \App\Pages\Base {
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
-       $this->_doc->document_number = $this->docform->document_number->getText();
+        $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        if($this->_doc->customer_id>0){
-          $customer = Customer::load($this->_doc->customer_id);
-          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
-            
-        } 
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        
+
         if ($this->checkForm() == false) {
             return;
         }
@@ -264,7 +263,6 @@ class Invoice extends \App\Pages\Base {
         $this->_doc->payed = $this->docform->payed->getText();
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
-
         }
 
 
@@ -289,7 +287,7 @@ class Invoice extends \App\Pages\Base {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }            
+            }
             $this->_doc->save();
 
 
@@ -300,7 +298,7 @@ class Invoice extends \App\Pages\Base {
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             }
 
- 
+
             $conn->CommitTrans();
             if ($sender->id == 'execdoc') {
                 // App::Redirect("\\App\\Pages\\Register\\GList");
@@ -320,24 +318,24 @@ class Invoice extends \App\Pages\Base {
             return;
         }
     }
+
     public function OnPayment($sender) {
-            $this->docform->payed->setVisible(true);
-            $this->docform->payamount->setVisible(true);
-            $this->docform->paydisc->setVisible(true);
-        
+        $this->docform->payed->setVisible(true);
+        $this->docform->payamount->setVisible(true);
+        $this->docform->paydisc->setVisible(true);
+
         $b = $sender->getValue();
-    
-    
- 
-        if ($b==\App\Entity\MoneyFund::CREDIT) {
+
+
+
+        if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->docform->payed->setVisible(false);
             $this->docform->editpayed->setVisible(false);
-            $this->docform->payed->setText(0); 
-            $this->docform->editpayed->setText(0); 
-        } 
-        
-        
+            $this->docform->payed->setText(0);
+            $this->docform->editpayed->setText(0);
+        }
     }
+
     public function onPayAmount($sender) {
         $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
     }
@@ -412,13 +410,13 @@ class Invoice extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
-        if ($this->docform->payment->getValue()==0) {
+        if ($this->docform->payment->getValue() == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
-        if (($this->docform->store->getValue() > 0 ) ==false) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
-        
+
         return !$this->isError();
     }
 

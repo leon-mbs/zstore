@@ -43,7 +43,7 @@ class SerList extends \App\Pages\Base {
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые',   2 => 'На выполнении', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'На выполнении', 3 => 'Все'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
@@ -88,7 +88,7 @@ class SerList extends \App\Pages\Base {
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
-        
+
         $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
@@ -105,27 +105,25 @@ class SerList extends \App\Pages\Base {
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-                
-         $ttn =  count($this->_doc->getChildren('GoodsIssue'))>0; 
-         $task =  count($this->_doc->getChildren('Task'))>0; 
-   
- 
+
+        $ttn = count($this->_doc->getChildren('GoodsIssue')) > 0;
+        $task = count($this->_doc->getChildren('Task')) > 0;
+
+
         if ($sender->id == "btask") {
-            if($task){
+            if ($task) {
                 $this->setWarn('Уже есть документ Наряд');
             }
-            App::Redirect("\\App\\Pages\\Doc\\Task",0, $this->_doc->document_id);
-           
+            App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bttn") {
-             if($ttn){
+            if ($ttn) {
                 $this->setWarn('Уже есть документ Расходная накладная');
             }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue",0, $this->_doc->document_id);
-            
+            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bref") {
-            if($ttn || $task){
+            if ($ttn || $task) {
                 $this->setWarn('Были созданы докумнты  Наряд и/или  Расходная накладная');
             }
             $this->_doc->updateStatus(Document::STATE_REFUSED);
@@ -134,58 +132,53 @@ class SerList extends \App\Pages\Base {
         if ($sender->id == "binproc") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
         }
-        
+
         if ($sender->id == "bclose") {
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
             $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
 
-   
+
         $this->doclist->Reload(false);
-    
+
 
         $this->updateStatusButtons();
     }
 
     public function updateStatusButtons() {
- 
+
 
         $state = $this->_doc->state;
 
-          //новый     
+        //новый     
         if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
-           $this->statuspan->statusform->binproc->setVisible(true);
-           $this->statuspan->statusform->bclose->setVisible(false);
-           $this->statuspan->statusform->bttn->setVisible(false);
-           $this->statuspan->statusform->bref->setVisible(false);
-           $this->statuspan->statusform->btask->setVisible(false);            
-        } 
- 
-    
+            $this->statuspan->statusform->binproc->setVisible(true);
+            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+        }
+
+
         // в работе
         if ($state == Document::STATE_INPROCESS) {
 
-           $this->statuspan->statusform->binproc->setVisible(false);
-           $this->statuspan->statusform->bclose->setVisible(true);
-           $this->statuspan->statusform->bttn->setVisible(true);
-           $this->statuspan->statusform->bref->setVisible(true);
-           $this->statuspan->statusform->btask->setVisible(true);  
+            $this->statuspan->statusform->binproc->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->bref->setVisible(true);
+            $this->statuspan->statusform->btask->setVisible(true);
         }
 
         //закрыт
         if ($state == Document::STATE_CLOSED) {
-           $this->statuspan->statusform->binproc->setVisible(false);
-           $this->statuspan->statusform->bclose->setVisible(false);
-           $this->statuspan->statusform->bttn->setVisible(false);
-           $this->statuspan->statusform->bref->setVisible(false);
-           $this->statuspan->statusform->btask->setVisible(false);  
-           $this->statuspan->statusform->setVisible(false);
+            $this->statuspan->statusform->binproc->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->setVisible(false);
         }
-
-  
-
- 
-        
     }
 
     //просмотр
@@ -221,10 +214,10 @@ class SerList extends \App\Pages\Base {
         foreach ($list as $d) {
             $csv .= date('Y.m.d', $d->document_date) . ',';
             $csv .= $d->document_number . ',';
-            
+
             $csv .= $d->customer_name . ',';
             $csv .= $d->amount . ',';
-            $csv .= str_replace(',','',$d->notes) . ',';
+            $csv .= str_replace(',', '', $d->notes) . ',';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -271,7 +264,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
         if ($status == 2) {
             $where .= " and state = " . Document::STATE_INPROCESS;
         }
-     
+
         if ($status == 3) {
             
         }
@@ -287,7 +280,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name  in( 'ServiceAct'  )  and document_number like  {$sn} ";
         }
-     
+
         return $where;
     }
 
@@ -297,7 +290,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
- 
+
         return $docs;
     }
 

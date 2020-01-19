@@ -17,13 +17,16 @@ use \App\DataItem;
  * Виджет для  просмотра неликвидных товаров
  */
 class WNoliq extends \Zippy\Html\PageFragment {
-      private $data = array();
+
+    private $data = array();
+
     public function __construct($id) {
         parent::__construct($id);
         $this->add(new \Zippy\Html\Link\ClickLink('csvnoliq', $this, 'oncsv'));
         $visible = (strpos(System::getUser()->widgets, 'wnoliq') !== false || System::getUser()->userlogin == 'admin');
-        $cstr = \App\Acl::getStoreBranchConstraint() ;
-        if(strlen($cstr)>0) $cstr = " where sc2.stock_id in (select stock_id from store_stock st11 where st11.store_id in ({$cstr}) )  ";
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0)
+            $cstr = " where sc2.stock_id in (select stock_id from store_stock st11 where st11.store_id in ({$cstr}) )  ";
 
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();
@@ -44,7 +47,7 @@ class WNoliq extends \Zippy\Html\PageFragment {
             foreach ($rs as $row) {
                 $item = Item::load($row['item_id']);
                 $item->qty = $item->getQuantity();
-                $this->data[$row['item_id'] ] = $item;
+                $this->data[$row['item_id']] = $item;
             }
         }
 
@@ -62,22 +65,22 @@ class WNoliq extends \Zippy\Html\PageFragment {
     public function noliqlistOnRow($row) {
         $item = $row->getDataItem();
 
-     
+
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('qty', Helper::fqty($item->qty)));
     }
 
-   public function oncsv($sender) {
-    
+    public function oncsv($sender) {
+
         $csv = "";
 
         foreach ($this->data as $d) {
-          
-       
+
+
             $csv .= $d->itemname . ',';
-            $csv .= $d->qty  ;
-      
-         
+            $csv .= $d->qty;
+
+
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -91,4 +94,5 @@ class WNoliq extends \Zippy\Html\PageFragment {
         flush();
         die;
     }
+
 }

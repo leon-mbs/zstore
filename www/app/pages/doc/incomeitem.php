@@ -37,7 +37,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        
+
         $this->docform->add(new DropDownChoice('storeto', Store::getList(), 0))->onChange($this, 'OnChangeStore');
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
@@ -51,14 +51,14 @@ class IncomeItem extends \App\Pages\Base {
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
-        
+
 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
 
-        
+
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
 
@@ -66,16 +66,16 @@ class IncomeItem extends \App\Pages\Base {
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            
+
             $this->docform->storeto->setValue($this->_doc->headerdata['storeto']);
             $this->docform->notes->setText($this->_doc->notes);
 
             foreach ($this->_doc->detaildata as $_item) {
                 $item = new Item($_item);
-                $item->old = true;                
+                $item->old = true;
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
-            $this->calcTotal();            
+            $this->calcTotal();
         } else {
             $this->_doc = Document::create('IncomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -121,7 +121,6 @@ class IncomeItem extends \App\Pages\Base {
         $this->docform->setVisible(false);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
-        
     }
 
     public function editOnClick($sender) {
@@ -134,11 +133,11 @@ class IncomeItem extends \App\Pages\Base {
 
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setValue($item->itemname);
-       $this->editdetail->editprice->setText($item->price);
+        $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
- 
-        
+
+
 
         $this->_rowid = $item->item_id . $item->snumber;
     }
@@ -154,16 +153,16 @@ class IncomeItem extends \App\Pages\Base {
 
         $item = Item::load($id);
 
-     
+
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->price == 0) {
             $this->setWarn("Не указана цена");
         }
-        
+
         $item->snumber = trim($this->editdetail->editsnumber->getText());
-        if(strlen($item->snumber)==0 && $item->useserial==1 && $this->_tvars["usesnumber"] == true ){
+        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("Товар требует ввода партии производителя");
             return;
         }
@@ -178,14 +177,14 @@ class IncomeItem extends \App\Pages\Base {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-                $this->calcTotal();
+        $this->calcTotal();
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
-        $this->editdetail->editsdate->setText("");        
+        $this->editdetail->editsdate->setText("");
     }
 
     public function cancelrowOnClick($sender) {
@@ -199,13 +198,13 @@ class IncomeItem extends \App\Pages\Base {
 
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
-            return;      
+            return;
         if ($this->checkForm() == false) {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
 
-        
+
         $this->_doc->headerdata['storeto'] = $this->docform->storeto->getValue();
         $this->_doc->headerdata['storetoname'] = $this->docform->storeto->getValueName();
 
@@ -219,7 +218,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->amount = $this->docform->total->getText();
-        
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -246,7 +245,8 @@ class IncomeItem extends \App\Pages\Base {
             return;
         }
     }
-     private function calcTotal() {
+
+    private function calcTotal() {
 
         $total = 0;
 
@@ -256,6 +256,7 @@ class IncomeItem extends \App\Pages\Base {
         }
         $this->docform->total->setText(round($total));
     }
+
     /**
      * Валидация   формы
      *
@@ -268,11 +269,11 @@ class IncomeItem extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-        
-        if (($this->docform->storeto->getValue() > 0 ) ==false) {
+
+        if (($this->docform->storeto->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
-        
+
 
 
         return !$this->isError();
@@ -282,22 +283,17 @@ class IncomeItem extends \App\Pages\Base {
         App::RedirectBack();
     }
 
-  
-
     public function OnChangeStore($sender) {
- 
-            //очистка  списка  товаров
-            $this->_itemlist = array();
-            $this->docform->detail->Reload();
-         
+
+        //очистка  списка  товаров
+        $this->_itemlist = array();
+        $this->docform->detail->Reload();
     }
 
- 
-
     public function OnAutocompleteItem($sender) {
-       
+
         $text = trim($sender->getText());
-        return Item::findArrayAC($text );
+        return Item::findArrayAC($text);
     }
 
     public function addcodeOnClick($sender) {

@@ -5,8 +5,8 @@
 
         <form zippy="docform">
             <h3> Акт выполненых работ</h3>
-            
-           <div class="row">
+
+            <div class="row">
                 <div class="col-6 col-md-4 col-lg-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
@@ -16,10 +16,10 @@
                         <label for="customer">Заказчик</label>
 
                         <input placeholder="Начните вводить..." class="form-control " zippy="customer" />
-                         <span zippy="discount" style="display:block;font-size:smaller"></span>
+                        <span zippy="discount" style="display:block;font-size:smaller"></span>
                         <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
                     </div>
-                   <div class="form-group">
+                    <div class="form-group">
                         <label for="device" > Изделие,материалы принятые  от заказчика</label>
                         <input   class="form-control" type="text"  zippy="device"   />
                         <small>Заполняется  в  cервисных центрах, мастерских, СТО...</small>
@@ -30,17 +30,17 @@
 
                     </div>                      
 
-                       
 
-                   
+
+
                 </div>
-               <div class="col-6 col-md-4 col-lg-3">
-                     <div class="form-group">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="form-group">
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date" required="required">
                     </div>
-                   
-                       <div class="form-group  ">
+
+                    <div class="form-group  ">
                         <label for="gar">Гарантийный срок</label>
 
                         <input class="form-control" type="text" zippy="gar">
@@ -51,13 +51,13 @@
                             <option value="0">Не выбрано</option>
                         </select>
                     </div>  
-                       <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="notes">Примечание</label>
 
                         <input class="form-control" type="text" zippy="notes">
 
                     </div>
-               </div>
+                </div>
 
             </div>
             <div class="row">
@@ -68,10 +68,10 @@
                             <th>Название</th>
                             <th>Описание</th>
 
-                            
+
                             <th width="100" class="text-right">Стоимость</th>
 
-                            
+
 
                             <th width="50"></th>
                         </tr>
@@ -79,9 +79,9 @@
                             <td zippy="item"></td>
                             <td zippy="desc"></td>
 
-                              <td zippy="price" class="text-right"></td>
+                            <td zippy="price" class="text-right"></td>
 
-                          
+
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i
                                         class="fa fa-trash"></i></a>
                             </td>
@@ -96,7 +96,7 @@
                             <td zippy="paydisc" class="text-right"></td>
                             <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i class="fa fa-edit"></i></a> </td>
                         </tr>
-                       <tr style="font-weight: bolder;">
+                        <tr style="font-weight: bolder;">
                             <td colspan="3" class="text-right"><span data-label="payamount" >К оплате:</span></td>
                             <td zippy="payamount" class="text-right"></td>
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i class="fa fa-edit"></i></a> </td>
@@ -206,7 +206,7 @@
                         <label for="editdesc">Описание </label>
                         <textarea class="form-control " zippy="editdesc" />
                     </div>
-                 
+
                     <div class="form-group">
                         <label for="editprice">Стоимость </label>
                         <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"  value="0"                                 style="width: 100px;">

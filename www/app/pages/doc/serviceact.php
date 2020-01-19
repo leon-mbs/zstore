@@ -32,7 +32,6 @@ class ServiceAct extends \App\Pages\Base {
     private $_doc;
     private $_rowid = 0;
     private $_basedocid = 0;
-    
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -47,8 +46,8 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->add(new TextInput('device'));
         $this->docform->add(new TextInput('devsn'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true), H::getDefMF()))->onChange($this, 'OnPayment');
-        
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
@@ -61,7 +60,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
-        
+
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
@@ -75,7 +74,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->editdetail->add(new AutocompleteTextInput('editservice'))->onText($this, 'OnAutoServive');
         $this->editdetail->editservice->onChange($this, 'OnChangeServive', true);
 
-        
+
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextArea('editdesc'));
 
@@ -94,8 +93,8 @@ class ServiceAct extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->headerdata['notes']);
             $this->docform->gar->setText($this->_doc->headerdata['gar']);
-            
-            
+
+
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -106,7 +105,7 @@ class ServiceAct extends \App\Pages\Base {
             $this->docform->devsn->setText($this->_doc->devsn);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
- 
+
             $this->OnPayment($this->docform->payment);
 
             $this->docform->total->setText($this->_doc->amount);
@@ -122,8 +121,6 @@ class ServiceAct extends \App\Pages\Base {
         } else {
             $this->_doc = Document::create('ServiceAct');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-
-            
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
@@ -131,8 +128,6 @@ class ServiceAct extends \App\Pages\Base {
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
-
-        
     }
 
     public function detailOnRow($row) {
@@ -141,10 +136,10 @@ class ServiceAct extends \App\Pages\Base {
         $row->add(new Label('item', $service->service_name));
         $row->add(new Label('desc', $service->desc));
 
-        
+
         $row->add(new Label('price', H::fa($service->price)));
 
-        
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -181,7 +176,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->setVisible(false);
         $this->_rowid = 0;
         $this->editdetail->editdesc->setText('');
-        
+
         $this->editdetail->editprice->setText(0);
     }
 
@@ -192,7 +187,7 @@ class ServiceAct extends \App\Pages\Base {
             return;
         }
         $service = Service::load($id);
-        
+
         $service->price = $this->editdetail->editprice->getText();
         $service->desc = $this->editdetail->editdesc->getText();
 
@@ -206,7 +201,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->editdetail->editservice->setKey(0);
         $this->editdetail->editdesc->setText('');
         $this->editdetail->editservice->setText('');
-        
+
 
         $this->editdetail->editprice->setText("0");
     }
@@ -225,20 +220,19 @@ class ServiceAct extends \App\Pages\Base {
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        if($this->_doc->customer_id>0){
-          $customer = Customer::load($this->_doc->customer_id);
-          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
-            
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
         $this->_doc->headerdata['device'] = $this->docform->device->getText();
         $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
- 
+
         $this->calcTotal();
 
         $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
-        
+
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
@@ -248,7 +242,6 @@ class ServiceAct extends \App\Pages\Base {
         }
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
-
         }
         if ($this->checkForm() == false) {
             return;
@@ -269,7 +262,7 @@ class ServiceAct extends \App\Pages\Base {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }            
+            }
 
             $this->_doc->save();
 
@@ -281,8 +274,7 @@ class ServiceAct extends \App\Pages\Base {
                 if ($sender->id == 'execdoc') {
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
-
-             }
+                }
 
                 if ($sender->id == 'inprocdoc') {
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -290,7 +282,7 @@ class ServiceAct extends \App\Pages\Base {
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
- 
+
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
@@ -312,13 +304,13 @@ class ServiceAct extends \App\Pages\Base {
         $total = 0;
 
         foreach ($this->_servicelist as $item) {
-            $item->amount = $item->price  ;
+            $item->amount = $item->price;
 
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        
-        
+
+
         $disc = 0;
 
         $customer_id = $this->docform->customer->getKey();
@@ -338,33 +330,29 @@ class ServiceAct extends \App\Pages\Base {
 
 
         $this->docform->paydisc->setText($disc);
-        $this->docform->editpaydisc->setText($disc);        
+        $this->docform->editpaydisc->setText($disc);
     }
 
-    
     public function OnPayment($sender) {
-            $this->docform->payed->setVisible(true);
-            $this->docform->payamount->setVisible(true);
-            $this->docform->paydisc->setVisible(true);
-        
+        $this->docform->payed->setVisible(true);
+        $this->docform->payamount->setVisible(true);
+        $this->docform->paydisc->setVisible(true);
+
         $b = $sender->getValue();
-    
-    
-        if ($b==\App\Entity\MoneyFund::PREPAID) {
+
+
+        if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
             $this->docform->paydisc->setVisible(false);
-        } 
-        if ($b==\App\Entity\MoneyFund::CREDIT) {
+        }
+        if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->docform->payed->setVisible(false);
-            $this->docform->payed->setText(0); 
-            $this->docform->editpayed->setText(0); 
-        } 
-        
-        
+            $this->docform->payed->setText(0);
+            $this->docform->editpayed->setText(0);
+        }
     }
-    
-    
+
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->docform->payed->setText($this->docform->editpayamount->getText());
@@ -396,7 +384,7 @@ class ServiceAct extends \App\Pages\Base {
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна позиция");
         }
-        if ($this->docform->payment->getValue()==0) {
+        if ($this->docform->payment->getValue() == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
 

@@ -61,12 +61,12 @@ class TaskList extends \App\Pages\Base {
 
         $this->filterform->add(new DropDownChoice('filterassignedto', Employee::findArray('emp_name', '', 'emp_name'), 0));
         $this->filterform->add(new DropDownChoice('filterpa', ProdArea::findArray('pa_name', '', 'pa_name'), 0));
-        
+
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
 
         $this->add(new Label("tamount"));
- 
+
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
@@ -109,7 +109,7 @@ class TaskList extends \App\Pages\Base {
         if ($task->state == Document::STATE_CLOSED)
             $row->taskstatus->setText('<span class="badge badge-default">Закончено</span>', true);
 
-    
+
 
         $emps = array();
         foreach ($task->detaildata as $ser) {
@@ -120,7 +120,7 @@ class TaskList extends \App\Pages\Base {
 
 
         $row->add(new Label('taskemps', implode(', ', $emps)));
-       
+
         $row->add(new Label('taskamount', H::fa($task->amount)));
 
         $this->_tamount = H::fa($this->_tamount + $task->amount);
@@ -189,14 +189,13 @@ class TaskList extends \App\Pages\Base {
         if ($sender->id == 'bclosed') {
             $this->_task->updateStatus(Document::STATE_EXECUTED);
             $this->_task->updateStatus(Document::STATE_CLOSED);
-
-        }   
+        }
         if ($sender->id == 'bitems') {    //списание материалов
-            $d =  $this->_task->getChildren('ProdIssue'); 
-            if(count($d)>0){
+            $d = $this->_task->getChildren('ProdIssue');
+            if (count($d) > 0) {
                 $this->setWarn('Уже есть документ Списание на производство');
             }
-            Application::Redirect("\\App\\Pages\\Doc\\ProdIssue",0, $this->_task->document_id);
+            Application::Redirect("\\App\\Pages\\Doc\\ProdIssue", 0, $this->_task->document_id);
             return;
         }
 
@@ -208,22 +207,22 @@ class TaskList extends \App\Pages\Base {
     public function updateTasks() {
         $user = System::getUser();
 
-        
+
 
         $sql = "meta_name='Task' ";
         if ($this->filterform->filterfinished->isChecked() == false) {
             $sql = $sql . " and state<>9 ";
         }
-        
+
         if ($this->filterform->filterassignedto->getValue() > 0) {
             $sql = $sql . " and  content  like '%<employee_id>" . $this->filterform->filterassignedto->getValue() . "</employee_id>%' ";
         }
         if ($this->filterform->filterpa->getValue() > 0) {
             $sql = $sql . " and  content  like '%<parea>" . $this->filterform->filterpa->getValue() . "</parea>%' ";
         }
-        $c = Document::getConstraint() ;
-        if(strlen($c)>0) {
-               $sql = $sql . " and ({$c})";
+        $c = Document::getConstraint();
+        if (strlen($c) > 0) {
+            $sql = $sql . " and ({$c})";
         }
         $this->_tamount = 0;
 
@@ -334,15 +333,14 @@ class TaskList extends \App\Pages\Base {
         $this->updateTasks();
     }
 
-  
     public function oncsv($sender) {
         $list = $this->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";
 
         foreach ($list as $task) {
             $csv .= $task->document_number . ',';
-        
-            $csv .= str_replace(',','',$task->notes) . ',';
+
+            $csv .= str_replace(',', '', $task->notes) . ',';
             $csv .= date('Y-m-d H:i', $task->headerdata['start_date']) . ',';
             $csv .= $task->headerdata['taskhours'] . ',';
             $csv .= Document::getStateName($task->state) . ',';

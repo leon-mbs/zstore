@@ -40,16 +40,14 @@ class ProdIssue extends Document {
             }
         }
 
-    
+
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-           
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
-            "notes" => $this->notes 
-             
+            "notes" => $this->notes
         );
 
         $report = new \App\Report('prodissue.tpl');
@@ -73,8 +71,6 @@ class ProdIssue extends Document {
 
         return true;
     }
-
-   
 
     protected function getNumberTemplate() {
         return 'СП-000000';

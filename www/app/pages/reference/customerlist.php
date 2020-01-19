@@ -31,7 +31,7 @@ class CustomerList extends \App\Pages\Base {
     public $_msglist = array();
     public $_eventlist = array();
 
-    public function __construct($id=0) {
+    public function __construct($id = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('CustomerList'))
             return;
@@ -85,15 +85,13 @@ class CustomerList extends \App\Pages\Base {
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
         $this->contentview->dw_eventlist->setPageSize(10);
         $this->contentview->add(new \Zippy\Html\DataList\Paginator('eventpag', $this->contentview->dw_eventlist));
-        
-        if($id>0){
+
+        if ($id > 0) {
             $this->_customer = Customer::load($id);
-            if($this->_customer  instanceof  Customer) {
+            if ($this->_customer instanceof Customer) {
                 $this->show();
             }
         }
-        
-        
     }
 
     public function OnSearch($sender) {
@@ -134,15 +132,13 @@ class CustomerList extends \App\Pages\Base {
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
-    
-    
-    
     public function editOnClick($sender) {
-      $this->_customer = $sender->owner->getDataItem();
-      $this->show();      
+        $this->_customer = $sender->owner->getDataItem();
+        $this->show();
     }
+
     public function show() {
-       
+
         $this->customertable->setVisible(false);
         $this->customerdetail->setVisible(true);
         $this->contentview->setVisible(false);
@@ -337,7 +333,7 @@ class CustomerList extends \App\Pages\Base {
             $n->dateshow = $event->eventdate - ($nt * 3600);
             $n->message = "<b>" . $event->title . "</b>" . "<br>" . $event->description;
             $n->message .= "<br><br><b> Контрагент: </b> {$this->_customer->customer_name} &nbsp;&nbsp; {$this->_customer->phone} ";
-           
+
             $n->save();
         }
         $this->contentview->addeventform->clean();

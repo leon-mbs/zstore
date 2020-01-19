@@ -114,7 +114,7 @@ class ProdList extends \App\Pages\Base {
             $csv .= $d->document_number . ',';
             $csv .= $d->headerdata["pareaname"] . ',';
             $csv .= $d->amount . ',';
-            $csv .= str_replace(',','',$d->notes) . ',';
+            $csv .= str_replace(',', '', $d->notes) . ',';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -161,7 +161,7 @@ class ProdDataSource implements \Zippy\Interfaces\DataSource {
 
 
 
-        
+
         return $where;
     }
 

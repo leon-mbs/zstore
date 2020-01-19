@@ -42,7 +42,7 @@ class GoodsReceipt extends Document {
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),
-            "prepaid" => $this->headerdata['payment']==\App\Entity\MoneyFund::PREPAID,
+            "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
 
@@ -80,18 +80,15 @@ class GoodsReceipt extends Document {
                 $it->save();
             }
         }
-       
 
-        if ($this->headerdata['payment'] > 0 && $this->payed>0) {
-            \App\Entity\Pay::addPayment($this->document_id,   0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
-            
+
+        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
 
 
         return true;
     }
-
-  
 
     protected function getNumberTemplate() {
         return 'ПН-000000';

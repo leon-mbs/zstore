@@ -83,7 +83,7 @@ class ItemList extends \App\Pages\Base {
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editminqty'));
-        
+
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
@@ -92,8 +92,8 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('edituseserial'));
         $this->itemdetail->add(new CheckBox('editpricelist', true));
-        $this->itemdetail->add(new \Zippy\Html\Image('editimage','/LoadImage.php?id=0' ));
-        $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile' ));
+        $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
+        $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
@@ -137,7 +137,7 @@ class ItemList extends \App\Pages\Base {
         if ($item->price5 > 0)
             $plist[] = $item->price5;
         $row->add(new Label('price', implode(',', $plist)));
-        $row->add(new Label('desc', htmlspecialchars_decode($item->description),true));
+        $row->add(new Label('desc', htmlspecialchars_decode($item->description), true));
         $row->add(new Label('cell', $item->cell));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -146,10 +146,9 @@ class ItemList extends \App\Pages\Base {
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
-        if($item->image_id==0){
-              $row->imagelistitem->setVisible(false);
+        if ($item->image_id == 0) {
+            $row->imagelistitem->setVisible(false);
         }
-        
     }
 
     public function deleteOnClick($sender) {
@@ -191,20 +190,15 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
-        if($this->_item->image_id>0){
-          $this->itemdetail->editdelimage->setChecked(false);    
-          $this->itemdetail->editdelimage->setVisible(true);  
-          $this->itemdetail->editimage->setVisible(true);  
-          $this->itemdetail->editimage->setUrl('/LoadImage.php?id=' . $this->_item->image_id);   
-        } else{
-          $this->itemdetail->editdelimage->setVisible(false);      
-          $this->itemdetail->editimage->setVisible(false);      
-               
+        if ($this->_item->image_id > 0) {
+            $this->itemdetail->editdelimage->setChecked(false);
+            $this->itemdetail->editdelimage->setVisible(true);
+            $this->itemdetail->editimage->setVisible(true);
+            $this->itemdetail->editimage->setUrl('/LoadImage.php?id=' . $this->_item->image_id);
+        } else {
+            $this->itemdetail->editdelimage->setVisible(false);
+            $this->itemdetail->editimage->setVisible(false);
         }
-        
-        
-
-        
     }
 
     public function addOnClick($sender) {
@@ -247,7 +241,7 @@ class ItemList extends \App\Pages\Base {
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
-        
+
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
@@ -281,17 +275,17 @@ class ItemList extends \App\Pages\Base {
             }
         }
         //delete image
-        if($this->itemdetail->editdelimage->isChecked()){
-            if($this->_item->image_id>0){
+        if ($this->itemdetail->editdelimage->isChecked()) {
+            if ($this->_item->image_id > 0) {
                 \App\Entity\Image::delete($this->_item->image_id);
             }
-            $this->_item->image_id=0;
-        } 
-        
-        
+            $this->_item->image_id = 0;
+        }
+
+
         $this->_item->Save();
-        
-        
+
+
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
             $imagedata = getimagesize($file["tmp_name"]);
@@ -314,7 +308,7 @@ class ItemList extends \App\Pages\Base {
             $this->_item->image_id = $image->image_id;
             $this->_item->Save();
         }
-        
+
 
         $this->itemtable->itemlist->Reload();
 

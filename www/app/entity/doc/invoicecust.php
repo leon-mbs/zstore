@@ -34,7 +34,7 @@ class InvoiceCust extends Document {
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),
-            "payamount" =>H::fa( $this->payamount)
+            "payamount" => H::fa($this->payamount)
         );
 
 
@@ -46,16 +46,13 @@ class InvoiceCust extends Document {
     }
 
     public function Execute() {
-       
+
         if ($this->headerdata['payment'] > 0 && $this->payed) {
-            \App\Entity\Pay::addPayment($this->document_id,   0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME );
-            
+            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
 
         return true;
     }
-
-  
 
     protected function getNumberTemplate() {
         return 'СВ-000000';

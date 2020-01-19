@@ -42,10 +42,10 @@
     {{/_detail}}
     <tr>
         <td colspan="4">
-             {{notes}} 
+            {{notes}} 
         </td>
 
     </tr></table>
- 
+
 
 

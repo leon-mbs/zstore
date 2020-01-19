@@ -11,8 +11,8 @@
                     <table class="table    table-sm"  >
                         <tr>
                             <th>Название</th>
-                               {{#usebranch}}  <th>Филиал</th>  {{/usebranch}}
-                   
+                            {{#usebranch}}  <th>Филиал</th>  {{/usebranch}}
+
                             <th>Описание</th>
                             <th class="text-right">Баланс</th>
 
@@ -20,7 +20,7 @@
                         </tr>
                         <tr zippy="mflist">
                             <td zippy="mf_name"></td>
-                                 {{#usebranch}}<td zippy="branch"></td>    {{/usebranch}}
+                            {{#usebranch}}<td zippy="branch"></td>    {{/usebranch}}
 
                             <td zippy="description"></td>
                             <td class="text-right" zippy="amount"></td>
@@ -45,14 +45,14 @@
                         <label for="editmf_name">Название</label>
                         <input  required="required" class="form-control" zippy="editmf_name"/>
                     </div>
-                              {{#usebranch}}
-                           <div class="form-group">
-                                <label for="editbranch">Филиал</label>
-                                <select    class="form-control" zippy="editbranch">
-                                    <option value="0">Не выбран</option>                                                                                                          
-                                </select>
-                            </div>
-                             {{/usebranch}}                     
+                    {{#usebranch}}
+                    <div class="form-group">
+                        <label for="editbranch">Филиал</label>
+                        <select    class="form-control" zippy="editbranch">
+                            <option value="0">Не выбран</option>                                                                                                          
+                        </select>
+                    </div>
+                    {{/usebranch}}                     
                     <div class="form-group">
                         <label for="editmf_description">Описание</label>
                         <textarea    class="form-control" zippy="editmf_description" ></textarea>

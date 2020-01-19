@@ -90,13 +90,11 @@ class ProdIssue extends \App\Pages\Base {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Task') {
 
-                        $this->docform->notes->setText('Материалы  для наряда '.$basedoc->document_number);
+                        $this->docform->notes->setText('Материалы  для наряда ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-                        
                     }
                 }
-            }            
-            
+            }
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
@@ -229,17 +227,17 @@ class ProdIssue extends \App\Pages\Base {
         }
 
         $this->_doc->amount = $this->docform->total->getText();
-        
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-             if ($this->_basedocid > 0) {
+            if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }            
-           $this->_doc->save();
+            }
+            $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
@@ -249,7 +247,7 @@ class ProdIssue extends \App\Pages\Base {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-     
+
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
@@ -289,7 +287,7 @@ class ProdIssue extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
-        if (($this->docform->store->getValue() > 0 ) ==false) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
 

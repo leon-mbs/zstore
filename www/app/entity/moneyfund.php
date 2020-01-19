@@ -9,11 +9,11 @@ namespace App\Entity;
  * @keyfield=mf_id
  */
 class MoneyFund extends \ZCL\DB\Entity {
-    
-    const BEZNAL=10000;
-    const PREPAID=10001;
-    const CREDIT=10002;
-    
+
+    const BEZNAL = 10000;
+    const PREPAID = 10001;
+    const CREDIT = 10002;
+
     protected function init() {
         $this->mf_id = 0;
         $this->branch_id = 0;
@@ -46,27 +46,28 @@ class MoneyFund extends \ZCL\DB\Entity {
     }
 
     /**
-    * список счетов для комбо
-    * 
-    * @param mixed $beznal   добавить пункт  Безналичный расчет
-    * @param mixed $prepaid  добавить пункт  Была предоплата
-    */
-    public static function getList($beznal=false,$credit=false,$prepaid=false) {
+     * список счетов для комбо
+     * 
+     * @param mixed $beznal   добавить пункт  Безналичный расчет
+     * @param mixed $prepaid  добавить пункт  Была предоплата
+     */
+    public static function getList($beznal = false, $credit = false, $prepaid = false) {
         $ml = array();
-        if($credit)  $ml[self::CREDIT] ='В кредит';
-        if($beznal)  $ml[self::BEZNAL] ='Безналичный расчет';
-        if($prepaid)  $ml[self::PREPAID] ='Предоплата';
-        foreach(MoneyFund::findArray("mf_name", "") as $k=>$v){
+        if ($credit)
+            $ml[self::CREDIT] = 'В кредит';
+        if ($beznal)
+            $ml[self::BEZNAL] = 'Безналичный расчет';
+        if ($prepaid)
+            $ml[self::PREPAID] = 'Предоплата';
+        foreach (MoneyFund::findArray("mf_name", "") as $k => $v) {
             $ml[$k] = $v;
         }
-         
-        return $ml; 
+
+        return $ml;
     }
 
- 
+    public static function getConstraint() {
+        return \App\ACL::getBranchConstraint();
+    }
 
-    
-    public static function getConstraint(){
-          return \App\ACL::getBranchConstraint() ;
-    }     
 }

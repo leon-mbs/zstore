@@ -72,11 +72,11 @@ class EmpTask extends \App\Pages\Base {
 
         $elist = Employee::find("", "emp_name");
         foreach ($elist as $emp_id => $emp) {
-             $emp->cnt=0;
-             $emp->hours=0;
-             $emp->amount=0;
+            $emp->cnt = 0;
+            $emp->hours = 0;
+            $emp->amount = 0;
         }
-        
+
         $detail = array();
         $conn = \ZDB\DB::getConnect();
 
@@ -91,25 +91,25 @@ class EmpTask extends \App\Pages\Base {
         foreach ($docs as $doc) {
 
             $emplist = unserialize(base64_decode($doc->headerdata['emp']));
-            if(count($emplist)  ==0)continue;
-            $total = 0;   
-            $hours = 0;   
-            foreach ($doc->detaildata as $service) {   
-                $total += $service['price'] ;
-                $hours += $service['hours'] ;
+            if (count($emplist) == 0)
+                continue;
+            $total = 0;
+            $hours = 0;
+            foreach ($doc->detaildata as $service) {
+                $total += $service['price'];
+                $hours += $service['hours'];
             }
-            if($doc->headerdata['hours']>0)$hours = $doc->headerdata['hours'];
-            
-            $part = round($total/count($emplist)); //доля денег
-            
-            foreach (  $emplist   as $emp) {
-                   
-                
-                    $elist[$emp->employee_id]->amount += $part;
-                    $elist[$emp->employee_id]->hours += $hours;
-                    $elist[$emp->employee_id]->cnt += 1;
-   
-                
+            if ($doc->headerdata['hours'] > 0)
+                $hours = $doc->headerdata['hours'];
+
+            $part = round($total / count($emplist)); //доля денег
+
+            foreach ($emplist as $emp) {
+
+
+                $elist[$emp->employee_id]->amount += $part;
+                $elist[$emp->employee_id]->hours += $hours;
+                $elist[$emp->employee_id]->cnt += 1;
             }
         };
 

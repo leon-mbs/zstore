@@ -14,6 +14,4 @@ class ProdArea extends \ZCL\DB\Entity {
         $this->pa_id = 0;
     }
 
-    
-
 }

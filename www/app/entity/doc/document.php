@@ -35,8 +35,6 @@ class Document extends \ZCL\DB\Entity {
 
     // const EX_XML_GNAU = 4;
 
- 
-    
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
      *
@@ -52,15 +50,14 @@ class Document extends \ZCL\DB\Entity {
     public $detaildata = array();
 
     /**
-    * документы должны создаватся методом create
-    * 
-    * @param mixed $row
-    */
-    protected function __construct($row = null)
-    {
+     * документы должны создаватся методом create
+     * 
+     * @param mixed $row
+     */
+    protected function __construct($row = null) {
         parent::__construct($row);
-    }    
-    
+    }
+
     /**
      * начальная инициализация. Вызывается автоматически  в  конструкторе  Entity
      * 
@@ -71,17 +68,16 @@ class Document extends \ZCL\DB\Entity {
         $this->customer_id = 0;
         $this->branch_id = 0;
         $this->parent_id = 0;
-        
+
         $this->document_number = '';
         $this->notes = '';
 
         $this->document_date = time();
         $this->user_id = \App\System::getUser()->user_id;
 
-     
+
         $this->headerdata = array();
         $this->detaildata = array();
-        
     }
 
     /**
@@ -231,19 +227,17 @@ class Document extends \ZCL\DB\Entity {
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
             //удаляем освободившиеся стоки
             $conn->Execute("delete from store_stock where stock_id not in (select coalesce(stock_id,0) from entrylist) ");
-  
-       
-        //отменяем оплаты  но  в  документе  оставляем
-        $sql = "select coalesce( sum(amount),0) from paylist where document_id=" . $this->document_id;
-        $payed = $conn->GetOne($sql);
-        if($payed!=0){
-          \App\Entity\Pay::addPayment($this->document_id,  0 - $payed, $this->headerdata['payment'],   \App\Entity\Pay::PAY_CANCEL   , 'Отмена  документа');
-         
-        }
-       // $this->payed=0;
-       // $this->save();
-        //$conn->Execute("update documents set payed=0 where   document_id =" . $this->document_id);
-             
+
+
+            //отменяем оплаты  но  в  документе  оставляем
+            $sql = "select coalesce( sum(amount),0) from paylist where document_id=" . $this->document_id;
+            $payed = $conn->GetOne($sql);
+            if ($payed != 0) {
+                \App\Entity\Pay::addPayment($this->document_id, 0 - $payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL, 'Отмена  документа');
+            }
+            // $this->payed=0;
+            // $this->save();
+            //$conn->Execute("update documents set payed=0 where   document_id =" . $this->document_id);
             // возвращаем бонусы
             if ($this->headerdata['paydisc'] > 0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);
@@ -285,8 +279,8 @@ class Document extends \ZCL\DB\Entity {
 
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
-        
-        $doc->branch_id=\App\Acl::checkCurrentBranch() ;
+
+        $doc->branch_id = \App\Acl::checkCurrentBranch();
         return $doc;
     }
 
@@ -316,9 +310,6 @@ class Document extends \ZCL\DB\Entity {
         //  }
     }
 
- 
-
-
     /**
      * Обновляет состояние  документа
      *
@@ -345,7 +336,7 @@ class Document extends \ZCL\DB\Entity {
 
         $this->save();
 
-   
+
         return true;
     }
 
@@ -424,9 +415,6 @@ class Document extends \ZCL\DB\Entity {
         return $letter . sprintf("%05d", ++$number);
     }
 
- 
- 
-
     /**
      * Возвращает  список  типов экспорта
      * Перегружается  дочерними  для  добавление  специфических  типов
@@ -467,7 +455,6 @@ class Document extends \ZCL\DB\Entity {
 
         return Document::find($where);
     }
- 
 
     /**
      * @see \ZDB\Entity
@@ -487,22 +474,20 @@ class Document extends \ZCL\DB\Entity {
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
 
-        
-     //   if(System::getUser()->userlogin =='admin') return;
+
+        //   if(System::getUser()->userlogin =='admin') return;
         if ($hasExecuted || $hasPayment) {
             $admin = \App\Entity\User::getByLogin('admin');
 
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;
             $n->message = "Удален документ  <br><br>";
-            $n->message .= "Документ {$this->document_number} удален пользователем  " .System::getUser()->username ;
-        
-        
+            $n->message .= "Документ {$this->document_number} удален пользователем  " . System::getUser()->username;
+
+
             $n->save();
         }
     }
-
- 
 
     /**
      *
@@ -557,65 +542,63 @@ class Document extends \ZCL\DB\Entity {
         return '';
     }
 
-    
-    public static function getConstraint(){
-        $c = \App\ACL::getBranchConstraint() ;
-        $user = System::getUser() ;
+    public static function getConstraint() {
+        $c = \App\ACL::getBranchConstraint();
+        $user = System::getUser();
         if ($user->acltype == 2) {
-            if(strlen($c)==0) $c="1=1 ";
+            if (strlen($c) == 0)
+                $c = "1=1 ";
             if ($user->onlymy == 1) {
 
                 $c .= " and user_id  = " . $user->user_id;
             }
 
             $c .= " and meta_id in({$user->aclview}) ";
-        }   
-        
-        return  $c;     
-    }    
-    
-    
-    /**
-    * возвращает  сумму  оптлат
-    * 
-    */
-    public function getPayAmount()    {
-           $conn = \ZDB\DB::getConnect();
+        }
 
-           return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
-           
+        return $c;
     }
-    
-    /**
-    * put your comment there...
-    * 
-    */
-    public function hasEntry()    {
-           $conn = \ZDB\DB::getConnect();
 
-           return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
-           
-    }    
-   
     /**
-    * список  дочерних
-    * 
-    * @param mixed $type    мета  тип
-    * @param mixed $executed  в  состоянии  выполнен и т.д.
-    */
-    public function getChildren($type="",$executed=false){
+     * возвращает  сумму  оптлат
+     * 
+     */
+    public function getPayAmount() {
+        $conn = \ZDB\DB::getConnect();
+
+        return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
+    }
+
+    /**
+     * put your comment there...
+     * 
+     */
+    public function hasEntry() {
+        $conn = \ZDB\DB::getConnect();
+
+        return $conn->GetOne("select coalesce(sum(amount),0) from paylist where   document_id = {$this->document_id}  ");
+    }
+
+    /**
+     * список  дочерних
+     * 
+     * @param mixed $type    мета  тип
+     * @param mixed $executed  в  состоянии  выполнен и т.д.
+     */
+    public function getChildren($type = "", $executed = false) {
         $where = "parent_id=" . $this->document_id;
-        if(strlen($type)>0)  $where .= " and meta_name='{$type}'" ; 
-        if($executed ) $where .= " and state not in(1,2,3,0) " ; 
-        return  Document::find($where) ;
-    } 
-    
-    
-    public function addChild($id){
-         if ($id > 0) {
-            $conn = \ZDB\DB::getConnect();      
-            $conn->Execute("update documents set parent_id={$this->document_id} where  document_id=".$id);
-         }
+        if (strlen($type) > 0)
+            $where .= " and meta_name='{$type}'";
+        if ($executed)
+            $where .= " and state not in(1,2,3,0) ";
+        return Document::find($where);
     }
-    
+
+    public function addChild($id) {
+        if ($id > 0) {
+            $conn = \ZDB\DB::getConnect();
+            $conn->Execute("update documents set parent_id={$this->document_id} where  document_id=" . $id);
+        }
+    }
+
 }

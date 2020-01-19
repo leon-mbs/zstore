@@ -1,5 +1,5 @@
 <?php
-  
+
 namespace App\Modules\Issue\Entity;
 
 /**
@@ -8,20 +8,18 @@ namespace App\Modules\Issue\Entity;
  * @view=issue_projectlist_view
  * @keyfield=project_id
  */
- 
- class Project extends \ZCL\DB\Entity {
-   protected function init() {
-       $this->project_id = 0;
-       $this->archived = 0;
+class Project extends \ZCL\DB\Entity {
 
-   }
-   
-   protected function beforeDelete() {
+    protected function init() {
+        $this->project_id = 0;
+        $this->archived = 0;
+    }
+
+    protected function beforeDelete() {
 
         return '';
-   }  
-    
-  
+    }
+
     protected function afterDelete() {
 
         $conn = \ZDB\DB::getConnect();
@@ -29,30 +27,27 @@ namespace App\Modules\Issue\Entity;
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_PROJECT . " and item_id=" . $this->project_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_PROJECT . " and item_id=" . $this->project_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
+    }
 
-   }  
-   protected function beforeSave() {
+    protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные  
         $this->details = "<details>";
         $this->details .= "<desc><![CDATA[{$this->desc}]]></desc>";
-        
+
         $this->details .= "</details>";
 
         return true;
-        
-   } 
-    
-   protected function afterLoad() {
+    }
+
+    protected function afterLoad() {
 
         $this->lastupdate = strtotime($this->lastupdate);
 
         //распаковываем  данные из  
-        $xml = simplexml_load_string($this->details);  
-        $this->desc = (string) ($xml->desc[0]);      
+        $xml = simplexml_load_string($this->details);
+        $this->desc = (string) ($xml->desc[0]);
         parent::afterLoad();
     }
-    
-    
-   
+
 }

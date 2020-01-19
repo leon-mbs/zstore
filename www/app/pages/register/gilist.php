@@ -43,7 +43,7 @@ class GIList extends \App\Pages\Base {
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные',   3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные', 3 => 'Все'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
@@ -108,7 +108,7 @@ class GIList extends \App\Pages\Base {
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-   
+
         if ($sender->id == "bsend") {
             $dec = $this->statuspan->statusform->ship_number->getText();
             $this->_doc->headerdata['sentdate'] = date('Y-m-d', time());
@@ -132,43 +132,39 @@ class GIList extends \App\Pages\Base {
 
         if ($sender->id == "bdevivered") {
             $this->_doc->updateStatus(Document::STATE_DELIVERED);
-        
-                if($this->_doc->parent_id>0 )   //закрываем заказ
-                {
-                   if($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
-                       
-                   }  else {
-                       $order = Document::load($this->_doc->parent_id);
-                       if($order->state==Document::STATE_INPROCESS) {
-                           $order->updateStatus(Document::STATE_CLOSED);
-                           $this->setSuccess("Заказ {$order->document_number} закрыт")  ;
-                       }
-                   }
-                }
-          
 
-                $this->_doc->updateStatus(Document::STATE_CLOSED);
+            if ($this->_doc->parent_id > 0) {   //закрываем заказ
+                if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+                    
+                } else {
+                    $order = Document::load($this->_doc->parent_id);
+                    if ($order->state == Document::STATE_INPROCESS) {
+                        $order->updateStatus(Document::STATE_CLOSED);
+                        $this->setSuccess("Заказ {$order->document_number} закрыт");
+                    }
+                }
+            }
+
+
+            $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
 
         if ($sender->id == "bttn") {
-                $d =  $this->_doc->getChildren('GoodsReceipt');
-               
-                if(count($d)>0){
-                    $this->setWarn('Уже есть документ Приходная накладная');
-                }         
-                App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
-                       
+            $d = $this->_doc->getChildren('GoodsReceipt');
+
+            if (count($d) > 0) {
+                $this->setWarn('Уже есть документ Приходная накладная');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bgar") {
-                App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
-            
+            App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bret") {
-                App::Redirect("\\App\\Pages\\Doc\\ReturnIssue", 0, $this->_doc->document_id);
-           
+            App::Redirect("\\App\\Pages\\Doc\\ReturnIssue", 0, $this->_doc->document_id);
         }
-            
-     
+
+
 
 
         $this->doclist->Reload(false);
@@ -192,7 +188,7 @@ class GIList extends \App\Pages\Base {
         $state = $this->_doc->state;
 
 
-      
+
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
 
@@ -211,14 +207,13 @@ class GIList extends \App\Pages\Base {
         //прячем лишнее
         if ($this->_doc->meta_name == 'GoodsIssue') {
 
-           $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
         }
         if ($this->_doc->meta_name == 'POSCheck') {
-              $this->statuspan->statusform->bsend->setVisible(false);
-              $this->statuspan->statusform->bdevivered->setVisible(false);
-              $this->statuspan->statusform->bttn->setVisible(false);
-              $this->statuspan->statusform->ship_number->setVisible(false);
-        
+            $this->statuspan->statusform->bsend->setVisible(false);
+            $this->statuspan->statusform->bdevivered->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->ship_number->setVisible(false);
         }
         if ($this->_doc->meta_name == 'Invoice') {
 
@@ -227,11 +222,10 @@ class GIList extends \App\Pages\Base {
             $this->statuspan->statusform->bret->setVisible(false);
             $this->statuspan->statusform->bgar->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
-         
         }
         if ($this->_doc->meta_name == 'ReturnIssue') {
 
- 
+
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
@@ -239,8 +233,6 @@ class GIList extends \App\Pages\Base {
             $this->statuspan->statusform->bgar->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
-      
-        
     }
 
     //просмотр
@@ -279,7 +271,7 @@ class GIList extends \App\Pages\Base {
             $csv .= $d->headerdata['order'] . ',';
             $csv .= $d->customer_name . ',';
             $csv .= $d->amount . ',';
-            $csv .= str_replace(',','',$d->notes) . ',';
+            $csv .= str_replace(',', '', $d->notes) . ',';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -329,7 +321,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
         if ($status == 4) {
             $where .= " and  amount > payamount";
         }
- 
+
         if ($status == 3) {
             
         }
@@ -345,7 +337,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' )  and document_number like  {$sn} ";
         }
-     
+
         return $where;
     }
 

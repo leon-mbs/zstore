@@ -40,7 +40,7 @@ class StockList extends \App\Pages\Base {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('StockList'))
             return;
-    
+
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
@@ -55,16 +55,11 @@ class StockList extends \App\Pages\Base {
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-
-  
-        
-
-         
     }
 
     public function filterOnSubmit($sender) {
 
-        if($this->filter->fitem->getKey()==0){
+        if ($this->filter->fitem->getKey() == 0) {
             $this->setError('Не выбран ТМЦ');
             return;
         }
@@ -72,27 +67,25 @@ class StockList extends \App\Pages\Base {
         $this->doclist->Reload();
     }
 
-   
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
-  
-        $row->add(new Label('date', date('d-m-Y',  ($doc->document_date))));
-        
-        $row->add(new Label('partion',  H::fa($doc->partion   )));
-        $row->add(new Label('qty',     H::fqty($doc->quantity  )));
-        $row->add(new Label('price',  H::fa( $doc->quantity==0 ? '': round(abs($doc->amount/$doc->quantity)) )));
+
+        $row->add(new Label('date', date('d-m-Y', ($doc->document_date))));
+
+        $row->add(new Label('partion', H::fa($doc->partion)));
+        $row->add(new Label('qty', H::fqty($doc->quantity)));
+        $row->add(new Label('price', H::fa($doc->quantity == 0 ? '' : round(abs($doc->amount / $doc->quantity)) )));
 
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('snumber', $doc->snumber));
-   
+
         $row->add(new ClickLink('show', $this, 'showOnClick'));
- 
     }
-   
+
     public function OnAutoItem($sender) {
         $r = array();
- 
+
         $text = Item::qstr('%' . $sender->getText() . '%');
         $list = Item::findArray('itemname', " (itemname like {$text} or item_code like {$text} or bar_code like {$text}  ) ");
         foreach ($list as $k => $v) {
@@ -103,7 +96,7 @@ class StockList extends \App\Pages\Base {
 
     //просмотр
     public function showOnClick($sender) {
- 
+
         $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
 
         if (false == \App\ACL::checkShowDoc($this->_doc, true))
@@ -113,8 +106,6 @@ class StockList extends \App\Pages\Base {
         $this->docview->setDoc($this->_doc);
     }
 
-   
-   
 }
 
 /**
@@ -135,23 +126,23 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource {
 
         $store_id = $this->page->filter->fstore->getValue();
         $item_id = $this->page->filter->fitem->getKey();
-        
+
         $where = " s.item_id = {$item_id} and date(d.document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(d.document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-    
+
         if ($store_id > 0) {
             $where .= " and s.store_id=" . $store_id;
         }
-     
-        
+
+
         return $where;
     }
 
     public function getItemCount() {
         $conn = \ZDB\DB::getConnect();
         $sql = "select  count(*)  from documents   d ";
-        $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` " ;
-        $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` " ;
-        $sql .= " where " . $this->getWhere()  ;
+        $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
+        $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
+        $sql .= " where " . $this->getWhere();
         return $conn->GetOne($sql);
     }
 
@@ -159,8 +150,8 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource {
 
         $conn = \ZDB\DB::getConnect();
         $sql = "select e.entry_id, e.quantity,  e.amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber from documents   d ";
-        $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` " ;
-        $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` " ;
+        $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
+        $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id desc   ";
         if ($count > 0)
             $sql .= " limit {$start},{$count}";

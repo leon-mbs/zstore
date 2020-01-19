@@ -75,24 +75,20 @@ class Util {
         return mb_ucfirst($str);
     }
 
-    
- //многобайтовая версия   
+    //многобайтовая версия   
     public static function mb_split($str, $len = 1) {
 
-        $arr        = [];
-        $length     = mb_strlen($str, 'UTF-8');
+        $arr = [];
+        $length = mb_strlen($str, 'UTF-8');
 
         for ($i = 0; $i < $length; $i += $len) {
 
             $arr[] = mb_substr($str, $i, $len, 'UTF-8');
-
         }
 
         return $arr;
-
     }
-    
-    
+
 }
 
 // Convert digital Russian currency representation

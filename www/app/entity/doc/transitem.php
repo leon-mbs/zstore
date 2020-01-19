@@ -53,7 +53,7 @@ class TransItem extends Document {
             "fromitemname" => $fi->itemname . ', ' . $this->headerdata["fromquantity"] . $fi->msr,
             "toitemname" => $fi->itemname . ', ' . $this->headerdata["toquantity"] . $fi->msr,
             "document_number" => $this->document_number,
-            "amount" => H::fa($this->amount )
+            "amount" => H::fa($this->amount)
         );
         $report = new \App\Report('transitem.tpl');
 

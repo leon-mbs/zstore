@@ -175,7 +175,7 @@ class ProdReceipt extends \App\Pages\Base {
         $item->sdate = $this->editdetail->editsdate->getDate();
         if ($item->sdate == false)
             $item->sdate = '';
-        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true ) {
+        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true) {
             $this->setError("К серии должна быть введена дата");
             return;
         }
@@ -236,7 +236,7 @@ class ProdReceipt extends \App\Pages\Base {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }            
+            }
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {
@@ -248,7 +248,7 @@ class ProdReceipt extends \App\Pages\Base {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
- 
+
 
             $conn->CommitTrans();
         } catch (\Exception $ee) {
@@ -288,7 +288,7 @@ class ProdReceipt extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-        if (($this->docform->store->getValue() > 0 ) ==false) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
 

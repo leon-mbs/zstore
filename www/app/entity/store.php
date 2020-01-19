@@ -32,8 +32,8 @@ class Store extends \ZCL\DB\Entity {
         return Store::findArray("storename", "");
     }
 
-    
-    public static function getConstraint(){
-          return \App\ACL::getBranchConstraint() ;
-    }     
+    public static function getConstraint() {
+        return \App\ACL::getBranchConstraint();
+    }
+
 }

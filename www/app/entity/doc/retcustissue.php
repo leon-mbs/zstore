@@ -66,20 +66,18 @@ class RetCustIssue extends Document {
 
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setStock($row['stock_id']);
-            $sc->setExtCode(0 - $row['amount']) ; //Для АВС 
-           
+            $sc->setExtCode(0 - $row['amount']); //Для АВС 
+
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,   $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME );
+            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
             $this->payamount = $this->amount;
         }
 
 
         return true;
     }
-
-  
 
     protected function getNumberTemplate() {
         return 'ВП-000000';

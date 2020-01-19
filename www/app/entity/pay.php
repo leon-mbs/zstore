@@ -52,23 +52,26 @@ class Pay extends \ZCL\DB\Entity {
      * @param mixed $mf      денежный счет
      * @param mixed $comment коментарий
      */
-    public static function addPayment($document_id,   $amount, $mf, $type, $comment = '') {
+    public static function addPayment($document_id, $amount, $mf, $type, $comment = '') {
         if (0 == (int) $amount || 0 == (int) $document_id || 0 == $mf)
             return;
-            
-        if($mf== MoneyFund::CREDIT) return; //в  долг
-        if($mf== MoneyFund::PREPAID) return; //предоплата
-        
-        if($mf== MoneyFund::BEZNAL) $mf=0; //безнал
+
+        if ($mf == MoneyFund::CREDIT)
+            return; //в  долг
+        if ($mf == MoneyFund::PREPAID)
+            return; //предоплата
+
+        if ($mf == MoneyFund::BEZNAL)
+            $mf = 0; //безнал
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf;
         $pay->document_id = $document_id;
         $pay->amount = $amount;
         $pay->paytype = $type;
         $pay->notes = $comment;
-    
 
-     //   $admin = \App\Entity\User::getByLogin('admin');
+
+        //   $admin = \App\Entity\User::getByLogin('admin');
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
 

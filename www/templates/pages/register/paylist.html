@@ -99,37 +99,37 @@
             <div class="col-12" >
                 <div zippy="docview"></div>
             </div>  
-            
-           </div>
 
-   <div id="dform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm"  >
-          <div class="modal-content">
-          <div class="modal-body">
-             <form   zippy="fnotes"  >
-       
-                    <div class="form-group">
-                        <label for="notes">Причина  отмены</label>
-                        <input type="hidden"   zippy="pl_id"/>
-                        <input  required="required" class="form-control" zippy="notes"/>
-                    </div>
-                 <div class="form-group">
-       
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                  <input zippy="save" type="submit" value="Выполнить" class="btn btn-primary  ">
-             </div>
-            </form> 
-          </div>   
-          </div>   
-  </div>
-</div>        
-           
-           
+        </div>
+
+        <div id="dform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm"  >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form   zippy="fnotes"  >
+
+                            <div class="form-group">
+                                <label for="notes">Причина  отмены</label>
+                                <input type="hidden"   zippy="pl_id"/>
+                                <input  required="required" class="form-control" zippy="notes"/>
+                            </div>
+                            <div class="form-group">
+
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                <input zippy="save" type="submit" value="Выполнить" class="btn btn-primary  ">
+                            </div>
+                        </form> 
+                    </div>   
+                </div>   
+            </div>
+        </div>        
+
+
         <script>
             function delpay(id) {
-              $('#pl_id').val(id)
-              $('#dform').modal()
-            }       
+                $('#pl_id').val(id)
+                $('#dform').modal()
+            }
         </script>
 
 

@@ -35,12 +35,12 @@ class Options extends \App\Pages\Base {
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $pt = array(
-          "1"=>"По последней закупочной цене",
-          "2"=>"Отдельно  по каждой закупочной цене"
+            "1" => "По последней закупочной цене",
+            "2" => "Отдельно  по каждой закупочной цене"
         );
-        $this->common->add(new DropDownChoice('partiontype',$pt,"1"));
-    
-  
+        $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
+
+
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
@@ -60,7 +60,7 @@ class Options extends \App\Pages\Base {
         $this->common->add(new TextInput('defprice'));
         $this->common->add(new TextInput('pwidth'));
 
-        
+
         $common = System::getOptions("common");
         if (!is_array($common))
             $common = array();
@@ -68,7 +68,7 @@ class Options extends \App\Pages\Base {
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
-       
+
         $this->common->cdoll->setText($common['cdoll']);
         $this->common->ceuro->setText($common['ceuro']);
         $this->common->crub->setText($common['crub']);
@@ -80,7 +80,7 @@ class Options extends \App\Pages\Base {
         $this->common->defprice->setText($common['defprice']);
         $this->common->pwidth->setText($common['pwidth']);
 
-    
+
         $this->common->autoarticle->setChecked($common['autoarticle']);
         $this->common->useset->setChecked($common['useset']);
 
@@ -100,18 +100,18 @@ class Options extends \App\Pages\Base {
         $this->firm->add(new TextInput('viber'));
         $this->firm->add(new TextInput('address'));
         $this->firm->add(new TextInput('inn'));
-        
+
         $firm = System::getOptions("firm");
         if (!is_array($firm))
             $firm = array();
-       
+
         $this->firm->firmname->setText($firm['firmname']);
         $this->firm->phone->setText($firm['phone']);
         $this->firm->viber->setText($firm['viber']);
         $this->firm->address->setText($firm['address']);
         $this->firm->inn->setText($firm['inn']);
-         
-        
+
+
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
         $this->add(new Panel('listpan'));
@@ -131,9 +131,9 @@ class Options extends \App\Pages\Base {
         $this->editpan->editform->add(new TextInput('edit_description'));
         $this->editpan->editform->add(new TextInput('edit_meta_name'));
         $this->editpan->editform->add(new TextInput('edit_menugroup'));
-     
+
         $this->editpan->editform->add(new CheckBox('edit_disabled'));
-        
+
 
         $this->editpan->editform->add(new DropDownChoice('edit_meta_type', \App\Entity\MetaData::getNames()));
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
@@ -157,7 +157,7 @@ class Options extends \App\Pages\Base {
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
- 
+
         $common['cdoll'] = $this->common->cdoll->getText();
         $common['ceuro'] = $this->common->ceuro->getText();
         $common['crub'] = $this->common->crub->getText();
@@ -168,7 +168,7 @@ class Options extends \App\Pages\Base {
         $common['price5'] = $this->common->price5->getText();
         $common['defprice'] = $this->common->defprice->getText();
         $common['pwidth'] = $this->common->pwidth->getText();
-       
+
         $common['autoarticle'] = $this->common->autoarticle->isChecked();
         $common['useset'] = $this->common->useset->isChecked();
 
@@ -185,15 +185,15 @@ class Options extends \App\Pages\Base {
         $this->setSuccess('Сохранено');
         $this->_tvars["defoptions"] = false;
     }
-    
+
     public function saveFirmOnClick($sender) {
         $firm = array();
         $firm['firmname'] = $this->firm->firmname->getText();
-        $firm['phone']    = $this->firm->phone->getText();
-        $firm['viber']    = $this->firm->viber->getText();
-        $firm['address']  = $this->firm->address->getText();
-        $firm['inn']  = $this->firm->inn->getText();
-        
+        $firm['phone'] = $this->firm->phone->getText();
+        $firm['viber'] = $this->firm->viber->getText();
+        $firm['address'] = $this->firm->address->getText();
+        $firm['inn'] = $this->firm->inn->getText();
+
         System::setOptions("firm", $firm);
         $this->setSuccess('Сохранено');
     }
@@ -231,9 +231,8 @@ class Options extends \App\Pages\Base {
         $this->editpan->editform->meta_id->setText(0);
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
-        
+
         $this->editpan->editform->edit_disabled->setChecked(0);
-        
     }
 
     public function mcancelOnClick($sender) {
@@ -276,11 +275,11 @@ class Options extends \App\Pages\Base {
         $form = $this->editpan->editform;
         $form->meta_id->setText($item->meta_id);
         $form->edit_description->setText($item->description);
-          $form->edit_meta_name->setText($item->meta_name);
+        $form->edit_meta_name->setText($item->meta_name);
         $form->edit_menugroup->setText($item->menugroup);
         $form->edit_meta_type->setValue($item->meta_type);
         $form->edit_disabled->setChecked($item->disabled == 1);
-        
+
 
 
         $this->listpan->setVisible(false);
@@ -308,7 +307,7 @@ class Options extends \App\Pages\Base {
         $item->meta_name = trim(ucfirst($this->editpan->editform->edit_meta_name->getText()));
         $item->meta_type = $this->editpan->editform->edit_meta_type->getValue();
         $item->disabled = $this->editpan->editform->edit_disabled->isChecked() ? 1 : 0;
-        
+
 
         $item->save();
 
@@ -320,7 +319,6 @@ class Options extends \App\Pages\Base {
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_meta_name->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
-         
     }
 
 }

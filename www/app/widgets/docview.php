@@ -24,7 +24,7 @@ use \App\System;
 class DocView extends \Zippy\Html\PageFragment {
 
     private $_doc;
-    private $_p=null;
+    private $_p = null;
     public $_reldocs = array();
     public $_statelist = array();
     public $_fileslist = array();
@@ -44,17 +44,17 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->add(new Label('preview'));
         $this->add(new Label('previewpos'));
 
-       
+
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
 
         $this->add(new DataView('dw_paylist', new ArrayDataSource(new Prop($this, '_paylist')), $this, 'payListOnRow'));
 
         $this->add(new DataView('reldocs', new ArrayDataSource(new Prop($this, '_reldocs')), $this, 'relDoclistOnRow'));
-   
+
         $this->add(new ClickLink('pdoc'))->onClick($this, 'parentDocOnClick');
         $this->add(new Form('addrelform'))->onSubmit($this, 'OnReldocSubmit');
         $this->addrelform->add(new AutocompleteTextInput('addrel'))->onText($this, 'OnAddDoc');
-     
+
 
         $this->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $this->addfileform->add(new \Zippy\Html\Form\File('addfile'));
@@ -75,8 +75,8 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->preview->setText($html, true);
         $htmlpos = $doc->generatePosReport();
         $this->previewpos->setText($htmlpos, true);
-        
-        
+
+
         // проверяем  поддержку  экспорта
         $exportlist = $doc->supportedExport();
         $this->word->setVisible(in_array(Document::EX_WORD, $exportlist));
@@ -85,13 +85,13 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->pos->setVisible(in_array(Document::EX_POS, $exportlist));
         $this->previewpos->setVisible(in_array(Document::EX_POS, $exportlist));
 
-        
-        
+
+
         $reportpage = "App/Pages/ShowDoc";
 
 
-       // $this->print->pagename = $reportpage;
-      //  $this->print->params = array('print', $doc->document_id);
+        // $this->print->pagename = $reportpage;
+        //  $this->print->params = array('print', $doc->document_id);
         $this->html->pagename = $reportpage;
         $this->html->params = array('html', $doc->document_id);
         $this->word->pagename = $reportpage;
@@ -100,10 +100,8 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->excel->params = array('xls', $doc->document_id);
         $this->pdf->pagename = $reportpage;
         $this->pdf->params = array('pdf', $doc->document_id);
-    //    $this->pos->pagename = $reportpage;
-    //    $this->pos->params = array('pos', $doc->document_id);
-
-
+        //    $this->pos->pagename = $reportpage;
+        //    $this->pos->params = array('pos', $doc->document_id);
         //статусы
         $this->_statelist = $this->_doc->getLogList();
         $this->dw_statelist->Reload();
@@ -116,15 +114,11 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->updateFiles();
         $this->updateMessages();
         $this->updateDocs();
-        
+
         $this->_p = Document::load($doc->parent_id);
         $this->pdoc->setVisible($this->_p instanceof Document);
         $this->pdoc->setValue($this->_p->meta_desc . ' ' . $this->_p->document_number);
-       
-        
     }
-
-   
 
     //вывод строки  лога состояний
     public function stateListOnRow($row) {
@@ -145,9 +139,6 @@ class DocView extends \Zippy\Html\PageFragment {
         $row->add(new Label('paycomment', $item->notes));
         $row->add(new Label('paymf', $item->mf_name));
     }
-
-  
-   
 
     /**
      * добавление прикрепленного файла
@@ -200,9 +191,9 @@ class DocView extends \Zippy\Html\PageFragment {
      * @param mixed $sender
      */
     public function OnMsgSubmit($sender) {
-        
+
         $user = System::getUser();
-        
+
         $msg = new \App\Entity\Message();
         $msg->message = $this->addmsgform->addmsg->getText();
         $msg->created = time();
@@ -217,16 +208,16 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->updateMessages();
 
         // уведомления
-        
+
         $users = array();
-        foreach($this->_msglist as $msg){
-            $users[$msg->user_id]  = $msg->user_id;
+        foreach ($this->_msglist as $msg) {
+            $users[$msg->user_id] = $msg->user_id;
         }
-        $users[$this->_doc->user_id]  = $this->_doc->user_id;//автор дока
-        
-        unset($users[$user->user_id]);//себе не  нужно
-         
-  
+        $users[$this->_doc->user_id] = $this->_doc->user_id; //автор дока
+
+        unset($users[$user->user_id]); //себе не  нужно
+
+
         foreach ($users as $adr) {
             if ($adr == $user->user_id)
                 continue; //себе не  нужно
@@ -236,7 +227,7 @@ class DocView extends \Zippy\Html\PageFragment {
             $n->message = "<b>Новый  коментарий к документу:</b> {$this->_doc->meta_desc} {$this->_doc->document_number}  ";
             $n->message .= "<br> {$msg->message} ";
             $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">Ответить</a> ";
-            $n->sender_name=$user->username;
+            $n->sender_name = $user->username;
             $n->save();
         }
     }
@@ -265,9 +256,7 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->updateMessages();
     }
 
-    
-    
-   // обновление  списка  связанных  документов
+    // обновление  списка  связанных  документов
     private function updateDocs() {
         $this->_reldocs = $this->_doc->getChildren();
         $this->reldocs->Reload();
@@ -283,11 +272,10 @@ class DocView extends \Zippy\Html\PageFragment {
 
     //удаление дочернего  документа
     public function deleteDocOnClick($sender) {
-          $doc = $sender->owner->getDataItem();
-          $conn = \ZDB\DB::getConnect();      
-          $conn->Execute("update documents set parent_id=0 where  document_id=".$doc->document_id);
-          $this->updateDocs();
-
+        $doc = $sender->owner->getDataItem();
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("update documents set parent_id=0 where  document_id=" . $doc->document_id);
+        $this->updateDocs();
     }
 
     //открыть дочерний документ
@@ -296,11 +284,12 @@ class DocView extends \Zippy\Html\PageFragment {
         //App::Redirect('\App\Pages\Register\DocList', $id);
         $this->setDoc($sender->owner->getDataItem());
     }
-   //открыть родительский документ
+
+    //открыть родительский документ
     public function parentDocOnClick($sender) {
         $this->setDoc($this->_p);
     }
-  
+
     public function OnReldocSubmit($sender) {
 
         $id = $this->addrelform->addrel->getKey();
@@ -308,7 +297,6 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->updateDocs();
         $this->addrelform->addrel->setKey(0);
         $this->addrelform->addrel->setText('');
-
     }
 
     // автолоад списка  документов
@@ -323,6 +311,5 @@ class DocView extends \Zippy\Html\PageFragment {
         }
         return $answer;
     }
-    
-    
+
 }

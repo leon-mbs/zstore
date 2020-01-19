@@ -38,7 +38,7 @@ class OutcomeItem extends \App\Pages\Base {
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        
+
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -65,7 +65,7 @@ class OutcomeItem extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
-            
+
             $this->docform->notes->setText($this->_doc->notes);
 
             foreach ($this->_doc->detaildata as $_item) {
@@ -78,7 +78,7 @@ class OutcomeItem extends \App\Pages\Base {
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        
+
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
@@ -170,9 +170,9 @@ class OutcomeItem extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-         if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
-         if ($this->checkForm() == false) {
+        if ($this->checkForm() == false) {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
@@ -180,8 +180,8 @@ class OutcomeItem extends \App\Pages\Base {
 
         $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
         $this->_doc->headerdata['storefromname'] = $this->docform->storefrom->getValueName();
-        
-        
+
+
 
 
         $this->_doc->detaildata = array();
@@ -231,9 +231,9 @@ class OutcomeItem extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-        
-        
-        if (($this->docform->storefrom->getValue() > 0 ) ==false) {
+
+
+        if (($this->docform->storefrom->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
 

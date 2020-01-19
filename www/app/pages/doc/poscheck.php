@@ -28,7 +28,7 @@ use \App\Application as App;
  */
 class POSCheck extends \App\Pages\Base {
 
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
@@ -42,14 +42,14 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
- 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true,true,true), H::getDefMF()))->onChange($this, 'OnPayment');
-        
+
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
-        
+
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -63,22 +63,22 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-      //  $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::find('')));
+        //  $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::find('')));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
-     
+
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
-   
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-   
+
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
@@ -114,24 +114,25 @@ class POSCheck extends \App\Pages\Base {
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
-       
+
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            
+
             $this->docform->exchange->setText($this->_doc->exchange);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            if($this->_doc->headerdata['exchange']>0) $this->_doc->payed += $this->_doc->headerdata['exchange'];//учитываем  со  здачей
+            if ($this->_doc->headerdata['exchange'] > 0)
+                $this->_doc->payed += $this->_doc->headerdata['exchange']; //учитываем  со  здачей
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->exchange->setText($this->_doc->headerdata['exchange']);
-            
+
             $this->OnPayment($this->docform->payment);
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-          //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
+            //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
@@ -162,29 +163,28 @@ class POSCheck extends \App\Pages\Base {
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                      //  $this->docform->pos->setValue($basedoc->headerdata['pos']);
+                        //  $this->docform->pos->setValue($basedoc->headerdata['pos']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
-    
+
                         $notfound = array();
                         $order = $basedoc->cast();
 
                         //проверяем  что уже есть продажа
                         $list = $order->getChildren('POSCheck');
 
-                        if (count($listyt)>0) {
+                        if (count($listyt) > 0) {
                             $this->setWarn('У заказа  уже  есть продажа');
                         }
                         $this->docform->total->setText($order->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                        $this->calcPay() ;
-                        
+                        $this->calcPay();
+
                         foreach ($order->detaildata as $item) {
                             $item = new Item($item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
-                        
                     }
                 }
             }
@@ -193,8 +193,6 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-
-         
     }
 
     public function detailOnRow($row) {
@@ -247,11 +245,11 @@ class POSCheck extends \App\Pages\Base {
         $this->editdetail->edittovar->setText($item->itemname);
 
         $this->OnChangeItem($this->editdetail->edittovar);
-        
+
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editserial->setText($item->serial);
-        
+
         $this->_rowid = $item->item_id;
     }
 
@@ -267,26 +265,26 @@ class POSCheck extends \App\Pages\Base {
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
- 
+
         $item->price = $this->editdetail->editprice->getText();
 
-        if($item->quantity > $qstock){
+        if ($item->quantity > $qstock) {
             $this->setWarn('Введено  больше  товара  чем  в  наличии');
         }
-          
-        if(strlen($item->snumber)==0 && $item->useserial==1 && $this->_tvars["usesnumber"] == true ){
+
+        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("Товар требует ввода партии производителя");
             return;
         }
-       
+
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-            $slist=  $item->getSerials($store_id);
-            
-            if(in_array($item->snumber,$slist) == false){
+            $slist = $item->getSerials($store_id);
+
+            if (in_array($item->snumber, $slist) == false) {
                 $this->setWarn('Неверный номер серии');
             }
         }
-           
+
         unset($this->_itemlist[$this->_rowid]);
         $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
@@ -303,7 +301,6 @@ class POSCheck extends \App\Pages\Base {
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->calcPay();
-      
     }
 
     public function cancelrowOnClick($sender) {
@@ -327,11 +324,10 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->order = $this->docform->order->getText();
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        if($this->_doc->customer_id>0){
-          $customer = Customer::load($this->_doc->customer_id);
-          $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
-            
-        }        
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->headerdata['time'] = time();
@@ -346,31 +342,30 @@ class POSCheck extends \App\Pages\Base {
         }
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
-
         }
 
         if ($this->checkForm() == false) {
             return;
         }
         $order = Document::load($this->_order_id);
- 
+
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
 
-        $firm    = H::getFirmData($this->_doc->branch_id);              
-   
+        $firm = H::getFirmData($this->_doc->branch_id);
+
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
-        
-        $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
-        $this->_doc->headerdata["inn"] = $firm['inn'] ;
-        $this->_doc->headerdata["address"] = $firm['address'] ;
-        $this->_doc->headerdata["phones"] =$pos->phone;
-        $this->_doc->headerdata["viber"] = $pos->viber  ;
-        
-  
+
+        $this->_doc->headerdata["firmname"] = $firm['firmname'];
+        $this->_doc->headerdata["inn"] = $firm['inn'];
+        $this->_doc->headerdata["address"] = $firm['address'];
+        $this->_doc->headerdata["phones"] = $pos->phone;
+        $this->_doc->headerdata["viber"] = $pos->viber;
+
+
 
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $tovar) {
@@ -380,14 +375,14 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->amount = $this->docform->total->getText();
 
         $isEdited = $this->_doc->document_id > 0;
- 
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }            
+            }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
@@ -420,7 +415,7 @@ class POSCheck extends \App\Pages\Base {
                 }
             }
 
- 
+
             $conn->CommitTrans();
             if ($isEdited)
                 App::RedirectBack();
@@ -439,19 +434,18 @@ class POSCheck extends \App\Pages\Base {
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->goAnkor("tankor");
-        
     }
 
     public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
         $payed = $this->docform->payed->getText();
         $payamount = $this->docform->payamount->getText();
-        if($payed > $payamount){
-            $this->docform->exchange->setText(H::fa($payed - $payamount)); 
-        }   else {
-            $this->docform->exchange->setText(H::fa(0));     
+        if ($payed > $payamount) {
+            $this->docform->exchange->setText(H::fa($payed - $payamount));
+        } else {
+            $this->docform->exchange->setText(H::fa(0));
         }
-        
+
         $this->goAnkor("tankor");
     }
 
@@ -512,7 +506,7 @@ class POSCheck extends \App\Pages\Base {
 
     public function OnPayment($sender) {
         $b = $sender->getValue();
-        if ($b==\App\Entity\MoneyFund::PREPAID) {
+        if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
             $this->docform->paydisc->setVisible(false);
@@ -552,55 +546,51 @@ class POSCheck extends \App\Pages\Base {
         if ($qty <= 0) {
             $this->setError("Товара {$item->itemname} нет на складе");
         }
- 
+
 
         if ($this->_itemlist[$item->item_id] instanceof Item) {
             $this->_itemlist[$item->item_id]->quantity += 1;
         } else {
-            
 
-             $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
-             $item->price = $price;
-             $item->quantity =1;
-            
-             if ($this->_tvars["usesnumber"] == true && $item->useserial ==1) {
 
-                $serial='';
-                $slist=  $item->getSerials($store_id);
-                if(count($slist) == 1){
-                   $serial = array_pop($slist) ;
-                     
+            $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+            $item->price = $price;
+            $item->quantity = 1;
+
+            if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+
+                $serial = '';
+                $slist = $item->getSerials($store_id);
+                if (count($slist) == 1) {
+                    $serial = array_pop($slist);
                 }
-                 
-                 
 
-                if(strlen($serial)==0){
-                   $this->setWarn('Нужно ввести  номер партии производителя'); 
-                   $this->editdetail->setVisible(true);
-                   $this->docform->setVisible(false);
-                   
-                   
-                   $this->editdetail->edittovar->setKey($item->item_id);
-                   $this->editdetail->edittovar->setText($item->itemname);
-                   $this->editdetail->editserial->setText('');
-                   $this->editdetail->editquantity->setText('1');
-                   $this->editdetail->editprice->setText($item->price);
 
- 
-                   
-                   return;
+
+                if (strlen($serial) == 0) {
+                    $this->setWarn('Нужно ввести  номер партии производителя');
+                    $this->editdetail->setVisible(true);
+                    $this->docform->setVisible(false);
+
+
+                    $this->editdetail->edittovar->setKey($item->item_id);
+                    $this->editdetail->edittovar->setText($item->itemname);
+                    $this->editdetail->editserial->setText('');
+                    $this->editdetail->editquantity->setText('1');
+                    $this->editdetail->editprice->setText($item->price);
+
+
+
+                    return;
+                } else {
+                    $item->snumber = $serial;
                 }
-                else {
-                    $item->snumber= $serial;
- 
-                }
-                
             }
             $this->_itemlist[$item->item_id] = $item;
         }
         $this->docform->detail->Reload();
-        $this->calcTotal() ;
-        $this->calcPay() ;
+        $this->calcTotal();
+        $this->calcPay();
 
         $this->_rowid = 0;
     }
@@ -616,24 +606,24 @@ class POSCheck extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
-        if (($this->docform->store->getValue() > 0 ) ==false) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
-        if ( $p==0) {
+        if ($p == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
-        if ( $p == \App\Entity\MoneyFund::PREPAID && $c==0) {
+        if ($p == \App\Entity\MoneyFund::PREPAID && $c == 0) {
             $this->setError("Если предоплата  должен  быть  выбран  контрагент");
         }
-        if ( $this->_doc->payamount > $this->_doc->payed  && $c == 0) {
+        if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("Если в долг должен  быть  выбран  контрагент");
         }
-        
-        
-        
-        
+
+
+
+
         return !$this->isError();
     }
 
@@ -657,17 +647,16 @@ class POSCheck extends \App\Pages\Base {
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
         $this->editdetail->editprice->setText($price);
-        if ($this->_tvars["usesnumber"] == true && $item->useserial ==1) {
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
-            $serial='';
-            $slist=  $item->getSerials($store_id);
-            if(count($slist) == 1){
-               $serial = array_pop($slist) ;
-                 
+            $serial = '';
+            $slist = $item->getSerials($store_id);
+            if (count($slist) == 1) {
+                $serial = array_pop($slist);
             }
             $this->editdetail->editserial->setText($serial);
         }
-        
+
 
         $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
     }
@@ -675,7 +664,7 @@ class POSCheck extends \App\Pages\Base {
     public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        return Item::findArrayAC($text );
+        return Item::findArrayAC($text);
     }
 
     public function OnAutoCustomer($sender) {
@@ -696,7 +685,6 @@ class POSCheck extends \App\Pages\Base {
                 $this->docform->discount->setText("Бонусы " . $customer->bonus);
                 $this->docform->discount->setVisible(true);
             }
-             
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
             $this->_prevcust = $customer_id;
@@ -738,5 +726,5 @@ class POSCheck extends \App\Pages\Base {
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
- 
+
 }

@@ -18,7 +18,7 @@ class Pos extends \ZCL\DB\Entity {
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->details = "<details>";
-  
+
         $this->details .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->details .= "<address><![CDATA[{$this->address}]]></address>";
         $this->details .= "<phone><![CDATA[{$this->phone}]]></phone>";
@@ -39,7 +39,7 @@ class Pos extends \ZCL\DB\Entity {
     protected function afterLoad() {
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->details);
- 
+
         $this->mf = (int) ($xml->mf[0]);
         $this->pricetype = (int) ($xml->pricetype[0]);
         $this->store = (int) ($xml->store[0]);
@@ -56,7 +56,8 @@ class Pos extends \ZCL\DB\Entity {
         parent::afterLoad();
     }
 
-    public static function getConstraint(){
-          return \App\ACL::getBranchConstraint() ;
-    }       
+    public static function getConstraint() {
+        return \App\ACL::getBranchConstraint();
+    }
+
 }

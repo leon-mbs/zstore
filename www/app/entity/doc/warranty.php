@@ -18,7 +18,7 @@ class Warranty extends Document {
             $detail[] = array(
                 "tovar_name" => $value['itemname'],
                 "quantity" => H::fqty($value['quantity']),
-                "price" =>H::fa( $value['price']),
+                "price" => H::fa($value['price']),
                 "amount" => H::fa($value['quantity'] * $value['price']),
                 "sn" => $value['sn'],
                 "msr" => $value['msr'],

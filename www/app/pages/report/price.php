@@ -30,7 +30,7 @@ class Price extends \App\Pages\Base {
         $this->filter->add(new CheckBox('price3'))->setVisible(strlen($option['price3']) > 0);
         $this->filter->add(new CheckBox('price4'))->setVisible(strlen($option['price4']) > 0);
         $this->filter->add(new CheckBox('price5'))->setVisible(strlen($option['price5']) > 0);
-        $this->filter->add(new CheckBox('onstore')) ;
+        $this->filter->add(new CheckBox('onstore'));
 
         $this->_tvars['price1name'] = $option['price1'];
         $this->_tvars['price2name'] = $option['price2'];
@@ -80,8 +80,8 @@ class Price extends \App\Pages\Base {
 
         $detail = array();
         $qty = "";
-        if($onstore){
-           $qty =" and item_id in(select  item_id from store_stock where  qty >0 ) ";    
+        if ($onstore) {
+            $qty = " and item_id in(select  item_id from store_stock where  qty >0 ) ";
         }
         $items = Item::find("disabled <>1 {$qty} and detail like '%<pricelist>1</pricelist>%'", "cat_name,itemname");
 
@@ -93,11 +93,11 @@ class Price extends \App\Pages\Base {
                 "name" => $item->itemname,
                 "cat" => $item->cat_name,
                 "msr" => $item->msr,
-                "price1" => $isp1 ? $item->getPrice('price1'):"",
-                "price2" => $isp2 ? $item->getPrice('price2'):"",
-                "price3" => $isp3 ? $item->getPrice('price3'):"",
-                "price4" => $isp4 ? $item->getPrice('price4'):"",
-                "price5" => $isp5 ? $item->getPrice('price5'):""
+                "price1" => $isp1 ? $item->getPrice('price1') : "",
+                "price2" => $isp2 ? $item->getPrice('price2') : "",
+                "price3" => $isp3 ? $item->getPrice('price3') : "",
+                "price4" => $isp4 ? $item->getPrice('price4') : "",
+                "price5" => $isp5 ? $item->getPrice('price5') : ""
             );
         }
 
@@ -116,7 +116,5 @@ class Price extends \App\Pages\Base {
 
         return $html;
     }
-
-  
 
 }

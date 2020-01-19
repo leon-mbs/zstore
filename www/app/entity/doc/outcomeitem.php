@@ -20,7 +20,7 @@ class OutcomeItem extends Document {
         $conn = \ZDB\DB::getConnect();
 
         foreach ($this->detaildata as $item) {
-             
+
             //списываем  со склада
 
             $listst = Stock::pickup($this->headerdata['storefrom'], $item['item_id'], $item['quantity'], $item['snumber']);
@@ -32,16 +32,14 @@ class OutcomeItem extends Document {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->save();
-
-              
             }
         }
- 
+
         return true;
     }
 
     public function generateReport() {
-  
+
         $i = 1;
         $detail = array();
         foreach ($this->detaildata as $value) {
@@ -59,7 +57,6 @@ class OutcomeItem extends Document {
             "_detail" => $detail,
             'date' => date('d.m.Y', $this->document_date),
             "from" => $this->headerdata["storefromname"],
-           
             "notes" => $this->notes,
             "document_number" => $this->document_number
         );

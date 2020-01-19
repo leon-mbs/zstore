@@ -98,17 +98,16 @@ class OrderList extends \App\Pages\Base {
 
         $state = $this->_doc->state;
 
-      
+
         //проверяем  что есть ТТН
         $list = $this->_doc->getChildren('GoodsIssue');
-        $ttn = count($list)>0;
+        $ttn = count($list) > 0;
         $list = $this->_doc->getChildren('Invoice');
-        $invoice = count($list)>0;
-     
+        $invoice = count($list) > 0;
+
 
         if ($sender->id == "binp") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
-   
         }
         if ($sender->id == "bref") {
             $this->_doc->updateStatus(Document::STATE_REFUSED);
@@ -116,16 +115,18 @@ class OrderList extends \App\Pages\Base {
         }
 
         if ($sender->id == "bttn") {
-            if($ttn) $this->setWarn('Для закаа уже  создана отправка');
+            if ($ttn)
+                $this->setWarn('Для закаа уже  создана отправка');
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "binv") {
-            if($invoice) $this->setWarn('Для закаа уже  создан счет фактура');
+            if ($invoice)
+                $this->setWarn('Для закаа уже  создан счет фактура');
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
             return;
         }
-     
+
 
         if ($sender->id == "bclose") {
 
@@ -134,7 +135,6 @@ class OrderList extends \App\Pages\Base {
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
-         
         }
 
         $this->doclist->Reload(false);
@@ -154,39 +154,39 @@ class OrderList extends \App\Pages\Base {
         //аннулирован
         $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED));
 
-        
+
         //проверяем  что есть ТТН
         $list = $this->_doc->getChildren('GoodsIssue');
-        $ttn = count($list)>0;
+        $ttn = count($list) > 0;
         $list = $this->_doc->getChildren('Invoice');
-        $invoice = count($list)>0;
-  
+        $invoice = count($list) > 0;
+
         $this->statuspan->statusform->bttn->setVisible(!$sent);
         $this->statuspan->statusform->binv->setVisible(!$sent);
-   
+
         //новый
         if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
-            
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
         }
-        
-        if($ttn || $inv) $this->statuspan->statusform->bref->setVisible(false);
-        if($ref){
-             $this->statuspan->statusform->bclose->setVisible(false); 
-             $this->statuspan->statusform->bref->setVisible(false); 
-             $this->statuspan->statusform->bttn->setVisible(false); 
-             $this->statuspan->statusform->binv->setVisible(false); 
+
+        if ($ttn || $inv)
+            $this->statuspan->statusform->bref->setVisible(false);
+        if ($ref) {
+            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
         }
-        
-        
+
+
         //закрыт
         if ($state == Document::STATE_CLOSED) {
 
@@ -251,7 +251,7 @@ class OrderList extends \App\Pages\Base {
             $csv .= $d->customer_name . ',';
             $csv .= $d->amount . ',';
             $csv .= Document::getStateName($d->state) . ',';
-            $csv .= str_replace(',','',$d->notes) . ',';
+            $csv .= str_replace(',', '', $d->notes) . ',';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -312,7 +312,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource {
             $sn = $conn->qstr('%' . $sn . '%');
             $where = "  meta_name  = 'Order'   document_number like  {$sn} ";
         }
-      
+
         return $where;
     }
 

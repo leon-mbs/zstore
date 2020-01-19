@@ -123,12 +123,13 @@ class Helper {
     public static function generateSmartMenu() {
         $conn = \ZDB\DB::getConnect();
 
-        $smartmenu =   System::getUser()->smartmenu ;
-      
-        if(strlen($smartmenu)==0)   return "";
-         
+        $smartmenu = System::getUser()->smartmenu;
+
+        if (strlen($smartmenu) == 0)
+            return "";
+
         $rows = $conn->Execute("select *  from  metadata  where meta_id in ({$smartmenu})   ");
-                                                           
+
         $textmenu = "";
         $aclview = explode(',', System::getUser()->aclview);
 
@@ -182,8 +183,6 @@ class Helper {
 
         return $template;
     }
-
-   
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
 
@@ -341,15 +340,14 @@ class Helper {
     public static function getDefStore() {
         $user = System::getUser();
         if ($user->defstore > 0) {
-          return  $user->defstore;
+            return $user->defstore;
         }
         $st = \App\Entity\Store::getList();
-        if(count($st)==1){
-            $keys = array_keys($st) ;
+        if (count($st) == 1) {
+            $keys = array_keys($st);
             return $keys[0];
         }
         return 0;
- 
     }
 
     /**
@@ -359,12 +357,12 @@ class Helper {
     public static function getDefMF() {
         $user = System::getUser();
         if ($user->defmf > 0) {
-           return $user->defmf;
+            return $user->defmf;
         }
 
         $st = \App\Entity\MoneyFund::getList();
-        if(count($st)==1){
-            $keys = array_keys($st) ;
+        if (count($st) == 1) {
+            $keys = array_keys($st);
             return $keys[0];
         }
         return 0;
@@ -382,73 +380,76 @@ class Helper {
 
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
-            return number_format($qty, $common['qtydigits']  , '.', '');
+            return number_format($qty, $common['qtydigits'], '.', '');
         } else {
             return round($qty);
         }
     }
-  
+
     /**
-    * форматирование  сумм    с копейками
-    * 
-    * @param mixed $am
-    * @return mixed
-    */
+     * форматирование  сумм    с копейками
+     * 
+     * @param mixed $am
+     * @return mixed
+     */
     public static function fa($am) {
-        if (strlen($am) == 0)     return '';
-        
+        if (strlen($am) == 0)
+            return '';
+
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
-            return number_format($am, 2  , '.', '');
+            return number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 5) {
-            $am = round($am*20)/20;
-            return number_format($am, 2  , '.', '');
+            $am = round($am * 20) / 20;
+            return number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 10) {
-            $am = round($am*10)/10;
-            return number_format($am, 2  , '.', '');
+            $am = round($am * 10) / 10;
+            return number_format($am, 2, '.', '');
         }
-    
+
         return round($am);
-      
     }
 
     /**
-    * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
-    */
-    public  static function getFirmData($id=0){
-       
-        $data = \App\System::getOptions("firm");  
-        if($id>0) {
-            $branch = \App\Entity\Branch::load($id);;
+     * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
+     */
+    public static function getFirmData($id = 0) {
+
+        $data = \App\System::getOptions("firm");
+        if ($id > 0) {
+            $branch = \App\Entity\Branch::load($id);
+            ;
             $company = $branch->getCompany();
-            if(strlen($company->company_name)>0)  $data['firmname'] = $company->company_name;
-            if(strlen($company->inn)>0)  $data['inn'] = $company->inn;
-            if(strlen($branch->address)>0)  $data['address'] = $branch->address;
-              
-         }         
-         
-         return $data;
+            if (strlen($company->company_name) > 0)
+                $data['firmname'] = $company->company_name;
+            if (strlen($company->inn) > 0)
+                $data['inn'] = $company->inn;
+            if (strlen($branch->address) > 0)
+                $data['address'] = $branch->address;
+        }
+
+        return $data;
     }
-    
-    
+
     /**
-    * возвращает размер при пагинации
-    * 
-    * @param mixed $pagesize
-    * @return mixed
-    */
-    public static function  getPG($pagesize=0){
-        
-        
-        if($pagesize>0){
-            return  $pagesize  ; 
+     * возвращает размер при пагинации
+     * 
+     * @param mixed $pagesize
+     * @return mixed
+     */
+    public static function getPG($pagesize = 0) {
+
+
+        if ($pagesize > 0) {
+            return $pagesize;
         }
-        $user = \App\System::getUser() ;
-        if($user->pagesize > 0){
-            return  $user->pagesize;
+        $user = \App\System::getUser();
+        if ($user->pagesize > 0) {
+            return $user->pagesize;
         }
-        return 25;    
+        return 25;
     }
+
 }

@@ -26,7 +26,7 @@ class Stat extends \App\Pages\Base {
     public function __construct() {
 
         parent::__construct();
-          
+
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('К странице имеет  доступ только администратор ');
             App::RedirectHome();

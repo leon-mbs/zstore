@@ -11,11 +11,11 @@
         </td>
 
     </tr>
-   
+
 
 
     <tr style="font-weight: bolder;">
-        
+
         <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Название</th>
         <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;"> </th>
         <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
@@ -26,7 +26,7 @@
     </tr>
     {{#_detail}}
     <tr>
-      
+
         <td>{{item_name}}</td>
 
         <td align="right">{{snumber}}</td>
@@ -37,10 +37,10 @@
     {{/_detail}}
     <tr>
         <td colspan="4">
-             {{notes}} 
+            {{notes}} 
         </td>
 
     </tr></table>
- 
+
 
 

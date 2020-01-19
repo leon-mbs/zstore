@@ -61,7 +61,7 @@ class GRList extends \App\Pages\Base {
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
- 
+
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
@@ -85,7 +85,7 @@ class GRList extends \App\Pages\Base {
 
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('amount',H::fa( ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
+        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
 
         $row->add(new Label('customer', $doc->customer_name));
 
@@ -103,27 +103,25 @@ class GRList extends \App\Pages\Base {
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-       
+
         if ($sender->id == "bttn") {
-            $d =  $this->_doc->getChildren('GoodsReceipt');
-               
-                if(count($d)>0){
-                    $this->setWarn('Уже есть документ Приходная накладная');
-                }         
-                App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
-                return;
-           
+            $d = $this->_doc->getChildren('GoodsReceipt');
+
+            if (count($d) > 0) {
+                $this->setWarn('Уже есть документ Приходная накладная');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
+            return;
         }
         if ($sender->id == "bret") {
-            $d =  $this->_doc->getChildren('RetCustIssue');
-          
-                
-                if(count($d)>0){
-                    $this->setWarn('Уже есть возврат');
-                }         
-                App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
-                return;
-            
+            $d = $this->_doc->getChildren('RetCustIssue');
+
+
+            if (count($d) > 0) {
+                $this->setWarn('Уже есть возврат');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
+            return;
         }
         $this->doclist->Reload(false);
 
@@ -135,23 +133,18 @@ class GRList extends \App\Pages\Base {
 
     public function updateStatusButtons() {
 
-     $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name=='InvoiceCust');
-     $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name=='GoodsReceipt');
+        $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name == 'InvoiceCust');
+        $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name == 'GoodsReceipt');
 
         //новый     
         if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
-             
-        } 
-        if ($this->_doc->meta_name=='RetCustIssue') {
+        }
+        if ($this->_doc->meta_name == 'RetCustIssue') {
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
-             
-        } 
-        
-        
-              
+        }
     }
 
     //просмотр
@@ -189,7 +182,7 @@ class GRList extends \App\Pages\Base {
             $csv .= $d->document_number . ',';
             $csv .= $d->customer_name . ',';
             $csv .= $d->amount . ',';
-            $csv .= str_replace(',','',$d->notes) . ',';
+            $csv .= str_replace(',', '', $d->notes) . ',';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -249,7 +242,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  and document_number like  {$sn} ";
         }
-       
+
         return $where;
     }
 

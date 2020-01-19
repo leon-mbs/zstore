@@ -174,9 +174,9 @@ class ItemActivity extends \App\Pages\Base {
 
 
         $rs = $conn->Execute($sql);
-         $ba=0;
-        $bain=0;
-        $baout=0;
+        $ba = 0;
+        $bain = 0;
+        $baout = 0;
         foreach ($rs as $row) {
             $detail[] = array(
                 "code" => $row['item_code'],
@@ -188,21 +188,21 @@ class ItemActivity extends \App\Pages\Base {
                 "obout" => H::fqty($row['obout']),
                 "out" => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
-            $ba = $ba +  $row['begin_amount'] ;
-            $bain = $bain +  $row['obinamount'] ;
-            $baout = $baout +  $row['oboutamount'] ;
-       }
+            $ba = $ba + $row['begin_amount'];
+            $bain = $bain + $row['obinamount'];
+            $baout = $baout + $row['oboutamount'];
+        }
 
         $header = array('datefrom' => date('d.m.Y', $from),
             "_detail" => $detail,
             'dateto' => date('d.m.Y', $to),
             "store" => Store::load($storeid)->storename
         );
-        $header['ba']= H::fa($ba);
-        $header['bain']= H::fa($bain);
-        $header['baout']= H::fa($baout);
-        $header['baend']= H::fa($ba + $bain - $baout);
-        
+        $header['ba'] = H::fa($ba);
+        $header['bain'] = H::fa($bain);
+        $header['baout'] = H::fa($baout);
+        $header['baend'] = H::fa($ba + $bain - $baout);
+
         $report = new \App\Report('itemactivity.tpl');
 
         $html = $report->generate($header);

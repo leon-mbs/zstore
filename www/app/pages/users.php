@@ -23,7 +23,7 @@ class Users extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-    
+
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('К странице имеет  доступ только администратор');
             App::RedirectHome();
@@ -70,9 +70,8 @@ class Users extends \App\Pages\Base {
 
         $this->editpan->editform->add(new Panel('metaaccess'))->setVisible(false);
         $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description"), $this, 'metarowOnRow'));
-        
-        $this->editpan->editform->add(new DataView('brow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Branch", "disabled<>1", "branch_name"), $this, 'branchOnRow'));
 
+        $this->editpan->editform->add(new DataView('brow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Branch", "disabled<>1", "branch_name"), $this, 'branchOnRow'));
     }
 
     public function onAdd($sender) {
@@ -187,10 +186,10 @@ class Users extends \App\Pages\Base {
         foreach ($this->editpan->editform->brow->getDataRows() as $row) {
             $item = $row->getDataItem();
             if ($item->editbr == true)
-                $barr[] = $item->branch_id;          
+                $barr[] = $item->branch_id;
         }
         $this->user->aclbranch = implode(',', $barr);
-        
+
         $varr = array();
         $earr = array();
 
@@ -204,8 +203,8 @@ class Users extends \App\Pages\Base {
         $this->user->aclview = implode(',', $varr);
         $this->user->acledit = implode(',', $earr);
 
-        
-        
+
+
         $widgets = "";
 
         if ($this->editpan->editform->editwplanned->isChecked())
@@ -252,7 +251,6 @@ class Users extends \App\Pages\Base {
     public function cancelOnClick($sender) {
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
-        
     }
 
     public function onAcl($sender) {
@@ -290,19 +288,19 @@ class Users extends \App\Pages\Base {
         $datarow->add(new \Zippy\Html\Label("email", $item->email));
         $datarow->add(new \Zippy\Html\Link\ClickLink("edit", $this, "OnEdit"))->setVisible($item->userlogin != 'admin');
         $datarow->add(new \Zippy\Html\Link\ClickLink("remove", $this, "OnRemove"))->setVisible($item->userlogin != 'admin');
-        
     }
 
     public function branchOnRow($row) {
-         $item = $row->getDataItem();
-         $arr = @explode(',', $this->user->aclbranch);
-         if (is_array($arr)) {
-             $item->editbr = in_array($item->branch_id, $arr);
-         }         
-          
-         $row->add(new Label('branch_name', $item->branch_name));
-         $row->add(new CheckBox('editbr', new Bind($item, 'editbr'))) ;
+        $item = $row->getDataItem();
+        $arr = @explode(',', $this->user->aclbranch);
+        if (is_array($arr)) {
+            $item->editbr = in_array($item->branch_id, $arr);
+        }
+
+        $row->add(new Label('branch_name', $item->branch_name));
+        $row->add(new CheckBox('editbr', new Bind($item, 'editbr')));
     }
+
     public function metarowOnRow($row) {
         $item = $row->getDataItem();
         switch ($item->meta_type) {
@@ -338,9 +336,6 @@ class Users extends \App\Pages\Base {
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
     }
 
-  
-
- 
 }
 
 class UserDataSource implements \Zippy\Interfaces\DataSource {

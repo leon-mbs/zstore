@@ -15,7 +15,7 @@
         <td><b>Заказ</b></td>
         <td colspan="5">{{order}}</td>
     </tr>
-     {{/order}}   
+    {{/order}}   
     {{#isdelivery}}   
     <tr>
         <td></td>

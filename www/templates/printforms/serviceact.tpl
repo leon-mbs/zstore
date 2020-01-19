@@ -7,7 +7,7 @@
 
 
     </tr>
- 
+
     {{#isdevice}}
     <tr>
         <td  colspan="4">
@@ -37,9 +37,9 @@
         <td>{{servicename}}</td>
 
         <td  >{{desc}}</td>
-       
+
         <td align="right">{{price}}</td>
-        
+
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">

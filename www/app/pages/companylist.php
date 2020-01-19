@@ -15,6 +15,7 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Company;
 use \App\System;
+
 //владельцы
 class CompanyList extends \App\Pages\Base {
 
@@ -36,20 +37,18 @@ class CompanyList extends \App\Pages\Base {
         $this->firmdetail->add(new TextInput('editinn'));
         $this->firmdetail->add(new TextInput('editmfo'));
         $this->firmdetail->add(new TextInput('editaccount'));
-       
+
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-      }
+    }
 
     public function firmlistOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('company_name', $item->company_name));
-           
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-       
-        
     }
 
     public function deleteOnClick($sender) {
@@ -97,7 +96,7 @@ class CompanyList extends \App\Pages\Base {
         $this->_company->inn = $this->firmdetail->editinn->getText();
         $this->_company->mfo = $this->firmdetail->editmfo->getText();
         $this->_company->bankaccount = $this->firmdetail->editaccount->getText();
-        
+
 
         $this->_company->Save();
         $this->firmdetail->setVisible(false);

@@ -31,12 +31,12 @@ class BranchList extends \App\Pages\Base {
 
 
         $this->add(new Panel('branchtable'))->setVisible(true);
-        $this->branchtable->add(new DataView('branchlist', new \ZCL\DB\EntityDataSource('\App\Entity\Branch','','disabled asc,branch_name asc'), $this, 'branchlistOnRow'))->Reload();
+        $this->branchtable->add(new DataView('branchlist', new \ZCL\DB\EntityDataSource('\App\Entity\Branch', '', 'disabled asc,branch_name asc'), $this, 'branchlistOnRow'))->Reload();
         $this->branchtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('branchdetail'))->setVisible(false);
         $this->branchdetail->add(new TextInput('editbranchname'));
         $this->branchdetail->add(new DropDownChoice('editcompany', \App\Entity\Company::getList()));
-         
+
         $this->branchdetail->add(new TextInput('editaddress'));
         $this->branchdetail->add(new TextArea('editcomment'));
         $this->branchdetail->add(new CheckBox('editdisabled'));
@@ -49,16 +49,15 @@ class BranchList extends \App\Pages\Base {
 
         $row->add(new Label('branch_name', $item->branch_name));
         $row->add(new Label('address', $item->address));
-        $row->add(new Label('company', $item->getCompany()->company_name));      
-   
+        $row->add(new Label('company', $item->getCompany()->company_name));
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-        
     }
 
     public function deleteOnClick($sender) {
-      
+
         $branch = $sender->owner->getDataItem();
 
         $del = Branch::delete($branch->branch_id);
@@ -74,10 +73,10 @@ class BranchList extends \App\Pages\Base {
         $this->branchtable->setVisible(false);
         $this->branchdetail->setVisible(true);
         $this->branchdetail->editbranchname->setText($this->_branch->branch_name);
-     
+
         $this->branchdetail->editaddress->setText($this->_branch->address);
         $this->branchdetail->editcompany->setValue($this->_branch->company_id);
-        
+
         $this->branchdetail->editcomment->setText($this->_branch->comment);
         $this->branchdetail->editdisabled->setChecked($this->_branch->disabled);
     }
@@ -99,11 +98,11 @@ class BranchList extends \App\Pages\Base {
             $this->setError("Введите наименование");
             return;
         }
-       
+
         $this->_branch->address = $this->branchdetail->editaddress->getText();
         $this->_branch->company_id = $this->branchdetail->editcompany->getValue();
         $this->_branch->comment = $this->branchdetail->editcomment->getText();
-        $this->_branch->disabled = $this->branchdetail->editdisabled->isChecked() ?1:0;
+        $this->_branch->disabled = $this->branchdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_branch->Save();
         $this->branchdetail->setVisible(false);

@@ -48,8 +48,6 @@ class OrderCust extends Document {
         return true;
     }
 
-  
-
     protected function getNumberTemplate() {
         return 'ЗКП-000000';
     }

@@ -88,7 +88,6 @@ class Warranty extends \App\Pages\Base {
                             $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
-                   
                 }
             }
         }
@@ -201,10 +200,10 @@ class Warranty extends \App\Pages\Base {
         }
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata["customer_name"] = $this->docform->customer->getText();
-        
-        $firm = H::getFirmData($this->_doc->branch_id);            
-        $this->_doc->headerdata["firmname"] = $firm['firmname'] ;
-     
+
+        $firm = H::getFirmData($this->_doc->branch_id);
+        $this->_doc->headerdata["firmname"] = $firm['firmname'];
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
@@ -220,14 +219,14 @@ class Warranty extends \App\Pages\Base {
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
-            }            
+            }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-  
+
 
             $conn->CommitTrans();
             App::RedirectBack();

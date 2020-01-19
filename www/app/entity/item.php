@@ -11,8 +11,8 @@ namespace App\Entity;
  */
 class Item extends \ZCL\DB\Entity {
 
-    private  $brprice =  array(); //цены по  филиалам
-    
+    private $brprice = array(); //цены по  филиалам
+
     protected function init() {
         $this->item_id = 0;
         $this->cat_id = 0;
@@ -37,24 +37,25 @@ class Item extends \ZCL\DB\Entity {
         $this->pricelist = (int) $xml->pricelist[0];
         $this->useserial = (int) $xml->useserial[0];
         $this->image_id = (int) $xml->image_id[0];
-        
+
         $this->cell = (string) $xml->cell[0];
         $this->octoreoptions = (string) $xml->octoreoptions[0];
-        $brprice = (string) $xml-> brprice[0];
-  
-        $this->brprice  =@unserialize($brprice);
-        if(!is_array($this->brprice)) $this->brprice = array();
-        
+        $brprice = (string) $xml->brprice[0];
+
+        $this->brprice = @unserialize($brprice);
+        if (!is_array($this->brprice))
+            $this->brprice = array();
+
         $id = \App\Session::getSession()->branch_id;
-        if($id > 0 && is_array($this->brprice[$id])){
+        if ($id > 0 && is_array($this->brprice[$id])) {
             $this->price1 = $this->brprice[$id]['price1'];
             $this->price2 = $this->brprice[$id]['price2'];
             $this->price3 = $this->brprice[$id]['price3'];
             $this->price4 = $this->brprice[$id]['price4'];
             $this->price5 = $this->brprice[$id]['price5'];
         }
-       
-        
+
+
         parent::afterLoad();
     }
 
@@ -64,7 +65,7 @@ class Item extends \ZCL\DB\Entity {
         //упаковываем  данные в detail
         $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
-      
+
         $this->detail .= "<cell>{$this->cell}</cell>";
         $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
 
@@ -78,16 +79,16 @@ class Item extends \ZCL\DB\Entity {
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
 
         $id = \App\Session::getSession()->branch_id;
-        if($id >0){
-           $this->brprice[$id] = array('price1'=>$this->price1,'price2'=>$this->price2,'price3'=>$this->price3,'price4'=>$this->price4,'price5'=>$this->price5);
+        if ($id > 0) {
+            $this->brprice[$id] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
         }
         //упаковываем  цены  по  филиалам
-        $brprice = serialize($this->brprice); 
-  
-  
+        $brprice = serialize($this->brprice);
+
+
         $this->detail .= "<brprice><![CDATA[{$brprice}]]></brprice>";
 
-        
+
         $this->detail .= "</detail>";
 
         return true;
@@ -101,15 +102,15 @@ class Item extends \ZCL\DB\Entity {
         $cnt = $conn->GetOne($sql);
         return ($cnt > 0) ? "ТМЦ уже  используется" : "";
     }
-    
-    protected function afterDelete() {
-    
-        
-        if($this->image_id>0) {
-           \App\Entity\Image::delete($this->image_id);
-        }
 
-    } 
+    protected function afterDelete() {
+
+
+        if ($this->image_id > 0) {
+            \App\Entity\Image::delete($this->image_id);
+        }
+    }
+
     //Вычисляет  отпускную цену
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад
@@ -118,9 +119,9 @@ class Item extends \ZCL\DB\Entity {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
-           
-        
-        
+
+
+
         if ($_price_ == 'price1')
             $_price = $this->price1;
         else if ($_price_ == 'price2')
@@ -132,11 +133,11 @@ class Item extends \ZCL\DB\Entity {
         else if ($_price_ == 'price5')
             $_price = $this->price5;
 
-            $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}   ";
-            if ($store > 0) {
-                $sql = $sql . " and store_id=" . $store;
-            }
-            $sql = $sql . " order  by  stock_id desc limit 0,1";
+        $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}   ";
+        if ($store > 0) {
+            $sql = $sql . " and store_id=" . $store;
+        }
+        $sql = $sql . " order  by  stock_id desc limit 0,1";
 
         //если процент    
         if (strpos($_price, '%') > 0) {
@@ -160,7 +161,7 @@ class Item extends \ZCL\DB\Entity {
         }
 
         //если не  задано используем глобальную наценку
-        if($common['defprice']>0 && $price==0){
+        if ($common['defprice'] > 0 && $price == 0) {
 
             if ($partion > 0) {
                 
@@ -170,10 +171,9 @@ class Item extends \ZCL\DB\Entity {
                 $partion = $conn->GetOne($sql);
             }
 
-            $price=  $partion + (int) $partion / 100 * $common['defprice'];
-
+            $price = $partion + (int) $partion / 100 * $common['defprice'];
         }
-  
+
         //поправка  по  валюте
 
         if ($common['useval'] == true) {
@@ -190,14 +190,9 @@ class Item extends \ZCL\DB\Entity {
 
             $price = $price * $k;
         }
-     
-        
-        return \App\Helper::fa($price);    
-        
-        
-        
-        
-        
+
+
+        return \App\Helper::fa($price);
     }
 
     public static function getPriceTypeList() {
@@ -236,25 +231,25 @@ class Item extends \ZCL\DB\Entity {
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }
-  
+
     /**
-    * возвращает список скенрий производителя
-    * 
-    * @param mixed $store_id
-    */
+     * возвращает список скенрий производителя
+     * 
+     * @param mixed $store_id
+     */
     public function getSerials($store_id = 0) {
 
         $conn = \ZDB\DB::getConnect();
         $sql = "  select snumber  from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null ";
         if ($store_id > 0)
             $sql .= " and store_id = " . $store_id;
-        
-            
+
+
         $res = $conn->Execute($sql);
         $list = array();
-        foreach($res as $row){
-            if(strlen($row['snumber'])>0) {
-               $list[] = $row['snumber']  ;     
+        foreach ($res as $row) {
+            if (strlen($row['snumber']) > 0) {
+                $list[] = $row['snumber'];
             }
         }
         return $list;
@@ -292,7 +287,7 @@ class Item extends \ZCL\DB\Entity {
 
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
-            $partname = self::qstr(  $partname  );
+            $partname = self::qstr($partname);
             $criteria .= "  and  (itemname like {$like} or item_code = {$partname}   or   bar_code = {$partname} )";
         }
 

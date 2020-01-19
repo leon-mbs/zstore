@@ -16,25 +16,25 @@ use \Zippy\Html\Panel;
 use \App\Entity\Pos;
 use \App\Helper as H;
 
-
 //POS терминалы
 class PosList extends \App\Pages\Base {
 
     private $_pos;
-       private $_blist;
+    private $_blist;
+
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('PosList'))
             return;
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
- 
+
         $this->add(new Panel('postable'))->setVisible(true);
-        $this->postable->add(new DataView('poslist', new \ZCL\DB\EntityDataSource('\App\Entity\Pos','',' pos_name asc'), $this, 'poslistOnRow'))->Reload();
+        $this->postable->add(new DataView('poslist', new \ZCL\DB\EntityDataSource('\App\Entity\Pos', '', ' pos_name asc'), $this, 'poslistOnRow'))->Reload();
         $this->postable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-      
+
         $this->add(new Form('posdetail'))->setVisible(false);
-        $this->posdetail->add(new DropDownChoice('editbranch',$this->_blist, 0));
-      
+        $this->posdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
+
         $this->posdetail->add(new TextInput('editpos_name'));
         $this->posdetail->add(new TextInput('editaddress'));
         $this->posdetail->add(new TextInput('editip'));
@@ -44,14 +44,14 @@ class PosList extends \App\Pages\Base {
         $this->posdetail->add(new TextInput('editviber'));
         $this->posdetail->add(new TextInput('edittele'));
         $this->posdetail->add(new TextInput('editsup'));
-        $this->posdetail->add(new DropDownChoice('editstore', \App\Entity\Store::getList(), H::getDefStore() ));
-        $this->posdetail->add(new DropDownChoice('editmf',  \App\Entity\MoneyFund::getList(true)  ));
+        $this->posdetail->add(new DropDownChoice('editstore', \App\Entity\Store::getList(), H::getDefStore()));
+        $this->posdetail->add(new DropDownChoice('editmf', \App\Entity\MoneyFund::getList(true)));
         $this->posdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList()));
-      
-        
-         
+
+
+
         $this->posdetail->add(new TextArea('editcomment'));
-        
+
         $this->posdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->posdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -63,8 +63,6 @@ class PosList extends \App\Pages\Base {
         $row->add(new Label('branch_name', $this->_blist[$item->branch_id]));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-      
-        
     }
 
     public function deleteOnClick($sender) {
@@ -96,11 +94,10 @@ class PosList extends \App\Pages\Base {
         $this->posdetail->editbranch->setValue($this->_pos->branch_id);
         $this->posdetail->editstore->setValue($this->_pos->store);
         $this->posdetail->editmf->setValue($this->_pos->mf);
-        
+
         $this->posdetail->editpricetype->setValue($this->_pos->pricetype);
-         
+
         $this->posdetail->editcomment->setText($this->_pos->comment);
-         
     }
 
     public function addOnClick($sender) {
@@ -109,7 +106,7 @@ class PosList extends \App\Pages\Base {
         // Очищаем  форму
         $this->posdetail->clean();
         $b = \App\Session::getSession()->branch_id;
-        $this->posdetail->editbranch->setValue($b>0?$b:0) ;
+        $this->posdetail->editbranch->setValue($b > 0 ? $b : 0);
         $this->_pos = new Pos();
     }
 
@@ -127,52 +124,52 @@ class PosList extends \App\Pages\Base {
         $this->_pos->viber = $this->posdetail->editviber->getText();
         $this->_pos->tele = $this->posdetail->edittele->getText();
         $this->_pos->sup = $this->posdetail->editsup->getText();
-        
+
         $this->_pos->branch_id = $this->posdetail->editbranch->getValue();
-        
+
         $this->_pos->store = $this->posdetail->editstore->getValue();
         $this->_pos->mf = $this->posdetail->editmf->getValue();
-        
+
         $this->_pos->pricetype = $this->posdetail->editpricetype->getValue();
 
         if ($this->_pos->pos_name == '') {
             $this->setError("Введите наименование");
             return;
         }
-        if ($this->_tvars['usebranch']==true && $this->_pos->branch_id == 0) {
+        if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {
             $this->setError("Выберите  филиал");
             return;
         }
-       if ($this->_pos->mf == 0) {
+        if ($this->_pos->mf == 0) {
             $this->setError("Выберите  кассу");
             return;
         }
-     
-        if($this->_pos->store == 0){
-           $this->setError("Не выбран склад");
-           return; 
-        }          
-       
-        if($this->_pos->pricetype == "0"){     
-           $this->setError("Не выбран тип цены");
-           return; 
-        }    
-        
-        if($this->_pos->branch_id > 0){
-            $mf = \App\Entity\MoneyFund::load($this->_pos->mf) ;
-            $store = \App\Entity\Store::load($this->_pos->store) ;
-            if($this->_pos->branch_id != $mf->branch_id){
-                $this->setError("Касса  и терминал  должны быть  с  одного  филиала");    
+
+        if ($this->_pos->store == 0) {
+            $this->setError("Не выбран склад");
+            return;
+        }
+
+        if ($this->_pos->pricetype == "0") {
+            $this->setError("Не выбран тип цены");
+            return;
+        }
+
+        if ($this->_pos->branch_id > 0) {
+            $mf = \App\Entity\MoneyFund::load($this->_pos->mf);
+            $store = \App\Entity\Store::load($this->_pos->store);
+            if ($this->_pos->branch_id != $mf->branch_id) {
+                $this->setError("Касса  и терминал  должны быть  с  одного  филиала");
                 return;
             }
-            if($this->_pos->branch_id != $store->branch_id){
-                $this->setError("Склад  и терминал  должны быть  с  одного  филиала");    
+            if ($this->_pos->branch_id != $store->branch_id) {
+                $this->setError("Склад  и терминал  должны быть  с  одного  филиала");
                 return;
             }
         }
-        
+
         $this->_pos->comment = $this->posdetail->editcomment->getText();
- 
+
         $this->_pos->Save();
         $this->posdetail->setVisible(false);
         $this->postable->setVisible(true);

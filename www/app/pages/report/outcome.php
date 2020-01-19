@@ -27,7 +27,7 @@ class Outcome extends \App\Pages\Base {
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('type', array(1 => 'По товарам', 2 => 'По покупателм', 3 => 'По датам', 4 => 'Услуги, работы'), 1));
-        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username',"user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))",'username')  , 0));
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('print', "outcome"));
@@ -87,7 +87,8 @@ class Outcome extends \App\Pages\Base {
 
         $u = "";
 
-        if($user >0) $u = " and d.user_id={$user} ";
+        if ($user > 0)
+            $u = " and d.user_id={$user} ";
 
         $detail = array();
         $conn = \ZDB\DB::getConnect();
