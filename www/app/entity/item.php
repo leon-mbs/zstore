@@ -61,6 +61,16 @@ class Item extends \ZCL\DB\Entity {
 
     protected function beforeSave() {
         parent::beforeSave();
+        $fid = \App\Session::getSession()->branch_id;
+        if ($fid > 0) {
+            $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
+            $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
+            $this->price1 = $prev->price1;
+            $this->price2 = $prev->price2;
+            $this->price3 = $prev->price3;
+            $this->price4 = $prev->price4;
+            $this->price5 = $prev->price5;
+        }     
         $this->detail = "<detail>";
         //упаковываем  данные в detail
         $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
@@ -68,20 +78,18 @@ class Item extends \ZCL\DB\Entity {
 
         $this->detail .= "<cell>{$this->cell}</cell>";
         $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
-
+ 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
         $this->detail .= "<price3>{$this->price3}</price3>";
         $this->detail .= "<price4>{$this->price4}</price4>";
         $this->detail .= "<price5>{$this->price5}</price5>";
+     
         $this->detail .= "<curname>{$this->curname}</curname>";
         $this->detail .= "<currate>{$this->currate}</currate>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
 
-        $id = \App\Session::getSession()->branch_id;
-        if ($id > 0) {
-            $this->brprice[$id] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
-        }
+       
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
 

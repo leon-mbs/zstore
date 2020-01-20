@@ -28,8 +28,8 @@ class ServiceAct extends Document {
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->headerdata["customer_name"],
-            "order" => $this->headerdata["order"],
-            "gar" => $this->gar,
+      
+            "gar" => $this->headerdata['gar'],
             "isdevice" => strlen($this->headerdata["device"]) > 0,
             "device" => $this->headerdata["device"],
             "devsn" => $this->headerdata["devsn"],
@@ -57,7 +57,9 @@ class ServiceAct extends Document {
             //$sc->setCustomer($this->customer_id);
             $sc->save();
         }
-
+        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+             \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+        }
 
 
         return true;
@@ -73,11 +75,45 @@ class ServiceAct extends Document {
 
     public function generatePosReport() {
 
-
-        $header = array('printw' => 'style="width:80mm"', 'date' => date('d.m.Y', $this->document_date),
-            "document_number" => $this->document_number);
-
-
+        $common = \App\System::getOptions('common');
+        $firm = H::getFirmData(\App\Session::getSession()->branch_id);
+        $wp = 'style="width:40mm"';
+        if(strlen($common['pwidth'])>0) {
+           $wp = 'style="width:'.$common['pwidth'].'mm"';
+        }
+        
+        $header = array('printw' => $wp, 'date' => date('d.m.Y', time()),
+            "document_number" => $this->document_number,
+            "firmname" => $firm['firmname'],
+            "address" => $firm['address'],
+            "phone" => $firm['phone'],
+            "customer_name" => $this->headerdata['customer_name'] ,
+            "isdevice" => strlen($this->headerdata["device"]) > 0,
+            "device" => $this->headerdata["device"] .(strlen($this->headerdata["devsn"])>0 ? ', с/н ' .$this->headerdata["devsn"]  : '')  ,
+            "total" => H::fa($this->amount )
+            
+            );
+            if(strlen($this->headerdata['gar'])>0){
+               $header['gar']=  'Гарантия: ' .$this->headerdata['gar'];
+            }
+            $detail = array();
+            foreach ($this->detaildata as $value) {
+                $detail[] = array( 
+                    "service" => $value['service_name'],
+                    "price" => H::fa($value['price'])
+                );
+            }         
+            $header['slist']=   $detail;
+           
+            $pays = \App\Entity\Pay::getPayments($this->document_id); 
+            if(count($pays)>0) {
+                $header['plist']  = array();
+                foreach($pays as $pay){
+                   $header['plist'][] = array('pdate'=>date('d.m.Y', $pay->paydate),'ppay'=>H::fa($pay->amount))     ;
+                }
+            }  
+            $header['ispay']=   count($pays)>0;
+            
         $report = new \App\Report('serviceact_bill.tpl');
 
         $html = $report->generate($header);
