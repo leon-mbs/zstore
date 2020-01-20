@@ -75,11 +75,11 @@ class ServiceAct extends Document {
 
     public function generatePosReport() {
 
-        $common = \App\System::getOptions('common');
+        $printer = \App\System::getOptions('printer');
         $firm = H::getFirmData(\App\Session::getSession()->branch_id);
         $wp = 'style="width:40mm"';
-        if(strlen($common['pwidth'])>0) {
-           $wp = 'style="width:'.$common['pwidth'].'mm"';
+        if(strlen($printer['pwidth'])>0) {
+           $wp = 'style="width:'.$printer['pwidth'].'mm"';
         }
         
         $header = array('printw' => $wp, 'date' => date('d.m.Y', time()),

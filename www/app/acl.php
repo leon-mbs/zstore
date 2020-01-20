@@ -219,7 +219,7 @@ class ACL {
         $id = \App\Session::getSession()->branch_id;
         if ($id > 0)
             return $id;
-        \App\System::setErrorMsg('Не выбран текущий филиал');
+        \App\System::setErrorMsg('Для создания документов  нужно  выбрать конкретный филиал');
         \App\Application::RedirectHome();
     }
 

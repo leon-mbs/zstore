@@ -26,10 +26,10 @@ use \App\Application as App;
  */
 class ProdIssue extends \App\Pages\Base {
 
-    public $_tovarlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid = 0;
+ 
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -53,10 +53,13 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->docform->add(new Label('total'));
 
+        $this->docform->add(new TextInput('barcode'));
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('editserial'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
@@ -78,8 +81,8 @@ class ProdIssue extends \App\Pages\Base {
             $this->docform->notes->setText($this->_doc->notes);
 
             foreach ($this->_doc->detaildata as $item) {
-                $stock = new Stock($item);
-                $this->_tovarlist[$stock->stock_id] = $stock;
+                $item = new Item($item);
+                $this->_itemlist[$item->item_id] = $item;
             }
         } else {
             $this->_doc = Document::create('ProdIssue');
@@ -97,7 +100,7 @@ class ProdIssue extends \App\Pages\Base {
             }
         }
         $this->calcTotal();
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
@@ -123,9 +126,9 @@ class ProdIssue extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         $tovar = $sender->owner->getDataItem();
-        // unset($this->_tovarlist[$tovar->tovar_id]);
+        
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
         $this->calcTotal();
         $this->docform->detail->Reload();
     }
@@ -145,6 +148,7 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText($stock->quantity);
         $this->editdetail->editprice->setText($stock->price);
+       $this->editdetail->editserial->setText($item->serial);
 
 
         $this->editdetail->edittovar->setKey($stock->stock_id);
@@ -164,19 +168,31 @@ class ProdIssue extends \App\Pages\Base {
             $this->setError("Не выбран товар");
             return;
         }
+        $store_id = $this->docform->store->getValue();
 
-        $stock = Stock::load($id);
-        $stock->quantity = $this->editdetail->editquantity->getText();
+        $item = Item::load($id);
+        $item->quantity = $this->editdetail->editquantity->getText();
         $qstock = $this->editdetail->qtystock->getText();
-        if ($stock->quantity > $qstock) {
+        if ($item->quantity > $qstock) {
             $this->setWarn('Недостаточное  количество на  складе');
         }
 
-        $stock->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getText();
 
+        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
+            $this->setError("Товар требует ввода партии производителя");
+            return;
+        }
 
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$stock->stock_id] = $stock;
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+            $slist = $item->getSerials($store_id);
+
+            if (in_array($item->snumber, $slist) == false) {
+                $this->setWarn('Неверный номер серии');
+            }
+        }
+        
+        $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -186,7 +202,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->editdetail->edittovar->setText('');
 
         $this->editdetail->editquantity->setText("1");
-
+        $this->editdetail->editserial->setText("");
         $this->editdetail->editprice->setText("");
     }
 
@@ -222,7 +238,7 @@ class ProdIssue extends \App\Pages\Base {
 
 
         $this->_doc->detaildata = array();
-        foreach ($this->_tovarlist as $tovar) {
+        foreach ($this->_itemlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
         }
 
@@ -268,7 +284,7 @@ class ProdIssue extends \App\Pages\Base {
 
         $total = 0;
 
-        foreach ($this->_tovarlist as $item) {
+        foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
@@ -276,6 +292,83 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->total->setText(H::fa($total));
     }
 
+    
+   public function addcodeOnClick($sender) {
+        $code = trim($this->docform->barcode->getText());
+        $this->docform->barcode->setText('');
+        if ($code == '')
+            return;
+
+
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+
+
+
+        if ($item == null) {
+            $this->setError("Товар с  кодом '{$code}' не  найден");
+            return;
+        }
+
+
+
+
+
+        $store_id = $this->docform->store->getValue();
+
+        $qty = $item->getQuantity($store);
+        if ($qty <= 0) {
+            $this->setError("Товара {$item->itemname} нет на складе");
+        }
+
+
+        if ($this->_itemlist[$item->item_id] instanceof Item) {
+            $this->_itemlist[$item->item_id]->quantity += 1;
+        } else {
+
+
+            $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+            $item->price = $price;
+            $item->quantity = 1;
+
+            if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+
+                $serial = '';
+                $slist = $item->getSerials($store_id);
+                if (count($slist) == 1) {
+                    $serial = array_pop($slist);
+                }
+
+
+
+                if (strlen($serial) == 0) {
+                    $this->setWarn('Нужно ввести  номер партии производителя');
+                    $this->editdetail->setVisible(true);
+                    $this->docform->setVisible(false);
+
+
+                    $this->editdetail->edittovar->setKey($item->item_id);
+                    $this->editdetail->edittovar->setText($item->itemname);
+                    $this->editdetail->editserial->setText('');
+                    $this->editdetail->editquantity->setText('1');
+                    $this->editdetail->editprice->setText($item->price);
+
+
+
+                    return;
+                } else {
+                    $item->snumber = $serial;
+                }
+            }
+            $this->_itemlist[$item->item_id] = $item;
+        }
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+      
+          
+    }
+    
+    
     /**
      * Валидация   формы
      *
@@ -284,7 +377,7 @@ class ProdIssue extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if (count($this->_tovarlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
@@ -300,25 +393,40 @@ class ProdIssue extends \App\Pages\Base {
 
     public function OnChangeStore($sender) {
         //очистка  списка  товаров
-        $this->_tovarlist = array();
+        $this->_itemlist = array();
         $this->docform->detail->Reload();
     }
 
     public function OnChangeItem($sender) {
+ 
+        
         $id = $sender->getKey();
-        $stock = Stock::load($id);
+        $item = Item::load($id);
+        $store_id = $this->docform->store->getValue();
 
-        $this->editdetail->qtystock->setText(H::fqty($stock->qty));
+        $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+        $qty = $item->getQuantity($store_id);
 
-        $this->editdetail->editprice->setText($stock->partion);
+        $this->editdetail->qtystock->setText(H::fqty($qty));
+        $this->editdetail->editprice->setText($price);
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
-        $this->updateAjax(array('qtystock', 'editprice'));
+            $serial = '';
+            $slist = $item->getSerials($store_id);
+            if (count($slist) == 1) {
+                $serial = array_pop($slist);
+            }
+            $this->editdetail->editserial->setText($serial);
+        }
+
+
+        $this->updateAjax(array('qtystock', 'editprice', 'editserial'));        
     }
 
     public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
+        //$store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        return Stock::findArrayAC($store_id, $text);
+        return Item::findArrayAC($text);
     }
 
 }

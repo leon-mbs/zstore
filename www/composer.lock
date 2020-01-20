@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a400c8fc2f47f79eb74559197f4d9a9",
+    "hash": "7dd1a75a3772779094f3ad984ffc13da",
+    "content-hash": "3494665a3ac78ced306d158e1be0c6ce",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -58,7 +59,7 @@
                 "library",
                 "php"
             ],
-            "time": "2019-11-24T10:59:54+00:00"
+            "time": "2019-11-24 10:59:54"
         },
         {
             "name": "dompdf/dompdf",
@@ -124,7 +125,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2018-12-14T02:40:31+00:00"
+            "time": "2018-12-14 02:40:31"
         },
         {
             "name": "electrolinux/phpquery",
@@ -164,7 +165,7 @@
             ],
             "description": "phpQuery is a server-side, chainable, CSS3 selector driven Document Object Model (DOM) API based on jQuery JavaScript Library",
             "homepage": "http://code.google.com/p/phpquery/",
-            "time": "2013-03-21T12:39:33+00:00"
+            "time": "2013-03-21 12:39:33"
         },
         {
             "name": "firebase/php-jwt",
@@ -210,7 +211,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2017-06-27T22:17:23+00:00"
+            "time": "2017-06-27 22:17:23"
         },
         {
             "name": "jbzoo/data",
@@ -275,7 +276,7 @@
                 "params",
                 "yml"
             ],
-            "time": "2018-12-03T16:32:55+00:00"
+            "time": "2018-12-03 16:32:55"
         },
         {
             "name": "jbzoo/image",
@@ -345,7 +346,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2018-09-26T15:11:55+00:00"
+            "time": "2018-09-26 15:11:55"
         },
         {
             "name": "jbzoo/utils",
@@ -436,7 +437,7 @@
                 "utility",
                 "utils"
             ],
-            "time": "2019-11-21T09:34:54+00:00"
+            "time": "2019-11-21 09:34:54"
         },
         {
             "name": "kylekatarnls/update-helper",
@@ -481,7 +482,7 @@
                 }
             ],
             "description": "Update helper",
-            "time": "2019-07-29T11:03:54+00:00"
+            "time": "2019-07-29 11:03:54"
         },
         {
             "name": "leon-mbs/zdb",
@@ -523,7 +524,7 @@
                 "database",
                 "php"
             ],
-            "time": "2020-01-07T10:19:19+00:00"
+            "time": "2020-01-07 10:19:19"
         },
         {
             "name": "leon-mbs/zippy",
@@ -567,7 +568,7 @@
                 "framework",
                 "php"
             ],
-            "time": "2020-01-07T10:26:47+00:00"
+            "time": "2020-01-07 10:26:47"
         },
         {
             "name": "monolog/monolog",
@@ -645,7 +646,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2019-12-20T14:15:16+00:00"
+            "time": "2019-12-20 14:15:16"
         },
         {
             "name": "mustache/mustache",
@@ -691,7 +692,7 @@
                 "mustache",
                 "templating"
             ],
-            "time": "2019-11-23T21:40:31+00:00"
+            "time": "2019-11-23 21:40:31"
         },
         {
             "name": "nesbot/carbon",
@@ -752,7 +753,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2019-10-14T05:51:36+00:00"
+            "time": "2019-10-14 05:51:36"
         },
         {
             "name": "nikic/php-parser",
@@ -803,7 +804,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2018-02-28T20:30:58+00:00"
+            "time": "2018-02-28 20:30:58"
         },
         {
             "name": "phenx/php-font-lib",
@@ -840,7 +841,7 @@
             ],
             "description": "A library to read, parse, export and make subsets of different types of font files.",
             "homepage": "https://github.com/PhenX/php-font-lib",
-            "time": "2017-09-13T16:14:37+00:00"
+            "time": "2017-09-13 16:14:37"
         },
         {
             "name": "phenx/php-svg-lib",
@@ -880,7 +881,7 @@
             ],
             "description": "A library to read, parse and export to PDF SVG files.",
             "homepage": "https://github.com/PhenX/php-svg-lib",
-            "time": "2019-09-11T20:02:13+00:00"
+            "time": "2019-09-11 20:02:13"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -957,7 +958,76 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2018-11-15T22:32:31+00:00"
+            "time": "2018-11-15 22:32:31"
+        },
+        {
+            "name": "picqer/php-barcode-generator",
+            "version": "v0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/picqer/php-barcode-generator.git",
+                "reference": "2e4d5b1f7f04fdb348d0721ada65963dac6f0c0c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/2e4d5b1f7f04fdb348d0721ada65963dac6f0c0c",
+                "reference": "2e4d5b1f7f04fdb348d0721ada65963dac6f0c0c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Picqer\\Barcode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
+                },
+                {
+                    "name": "Casper Bakker",
+                    "email": "info@picqer.com"
+                }
+            ],
+            "description": "An easy to use, non-bloated, barcode generator in PHP. Creates SVG, PNG, JPG and HTML images from the most used 1D barcode standards.",
+            "homepage": "http://github.com/picqer/php-barcode-generator",
+            "keywords": [
+                "CODABAR",
+                "Code11",
+                "Code93",
+                "EAN13",
+                "KIX",
+                "KIXCODE",
+                "MSI",
+                "POSTNET",
+                "Pharma",
+                "Standard 2 of 5",
+                "barcode",
+                "barcode generator",
+                "code128",
+                "code39",
+                "ean",
+                "html",
+                "jpeg",
+                "jpg",
+                "php",
+                "png",
+                "svg",
+                "upc"
+            ],
+            "time": "2019-01-12 09:29:34"
         },
         {
             "name": "psr/log",
@@ -1004,7 +1074,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2019-11-01T11:05:21+00:00"
+            "time": "2019-11-01 11:05:21"
         },
         {
             "name": "roave/security-advisories",
@@ -1012,12 +1082,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "67ac6ea8f4a078c3c9b7aec5d7ae70f098c37389"
+                "reference": "5e2ebc8340c8b7dcdc3f938dcbb9e2b99b72fd8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/67ac6ea8f4a078c3c9b7aec5d7ae70f098c37389",
-                "reference": "67ac6ea8f4a078c3c9b7aec5d7ae70f098c37389",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5e2ebc8340c8b7dcdc3f938dcbb9e2b99b72fd8e",
+                "reference": "5e2ebc8340c8b7dcdc3f938dcbb9e2b99b72fd8e",
                 "shasum": ""
             },
             "conflict": {
@@ -1130,7 +1200,7 @@
                 "spoonity/tcpdf": "<6.2.22",
                 "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
                 "stormpath/sdk": ">=0,<9.9.99",
-                "studio-42/elfinder": "<2.1.48",
+                "studio-42/elfinder": "<2.1.49",
                 "swiftmailer/swiftmailer": ">=4,<5.4.5",
                 "sylius/admin-bundle": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
                 "sylius/grid": ">=1,<1.1.19|>=1.2,<1.2.18|>=1.3,<1.3.13|>=1.4,<1.4.5|>=1.5,<1.5.1",
@@ -1224,7 +1294,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2020-01-06T19:16:46+00:00"
+            "time": "2020-01-20 14:23:18"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -1269,7 +1339,7 @@
                 "parser",
                 "stylesheet"
             ],
-            "time": "2019-02-22T07:42:52+00:00"
+            "time": "2019-02-22 07:42:52"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1328,7 +1398,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-11-27T14:18:11+00:00"
+            "time": "2019-11-27 14:18:11"
         },
         {
             "name": "symfony/translation",
@@ -1404,7 +1474,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2019-12-12T12:53:52+00:00"
+            "time": "2019-12-12 12:53:52"
         },
         {
             "name": "symfony/translation-contracts",
@@ -1461,7 +1531,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-11-18T17:27:11+00:00"
+            "time": "2019-11-18 17:27:11"
         },
         {
             "name": "timetoogo/pinq",
@@ -1509,7 +1579,7 @@
                 "pinq",
                 "query"
             ],
-            "time": "2017-09-06T06:27:03+00:00"
+            "time": "2017-09-06 06:27:03"
         }
     ],
     "packages-dev": [],

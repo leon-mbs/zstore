@@ -48,7 +48,13 @@
             </div>
             <div class="row">
                 <div class="col-10">
+                    {{#usescanner}} 
+                    <div class="navbar nav justify-content-start">
+                        Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
+                        &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
 
+                    </div>
+                    {{/usescanner}}
                     <a zippy="addrow">Добавить ТМЦ</a>
 
                     <table class="table table-sm">
@@ -124,6 +130,14 @@
                         Наличие : <span zippy="qtystock"></span>
 
                     </div>
+                    {{#usesnumber}} 
+                    <div class="form-group">
+                        <label for="editserial">Серия производителя </label>
+                        <input   class="form-control "   zippy="editserial" />
+
+                    </div>
+
+                    {{/usesnumber}}                       
                     <div class="form-group">
                         <label for="editquantity" >Количество</label>
                         <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"  style="width: 70px;">
@@ -131,7 +145,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editprice" >Цена  </label>
-                        <input readonly="readonly" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
+                        <input   class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
                                style="width: 70px;">
 
                     </div>
@@ -146,7 +160,22 @@
                 </div>
             </div>
         </form>
+        {{#usescanner}} 
+        <script>
+            $(document).ready(function () {
 
+                $('#barcode').focus();
+            });
+
+            function onBarCode(ele) {
+
+                if (event.key === 'Enter' || event.keyCode == 13) {
+                    // alert($('#barcode').val()); 
+                    $('#addcode').click()
+                }
+            }
+        </script>
+        {{/usescanner}} 
 
     </body>
 </html>

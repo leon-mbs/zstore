@@ -93,7 +93,7 @@ class BranchList extends \App\Pages\Base {
     public function saveOnClick($sender) {
 
 
-        $this->_branch->branchname = $this->branchdetail->editbranchname->getText();
+        $this->_branch->branch_name = $this->branchdetail->editbranchname->getText();
         if ($this->_branch->branch_name == '') {
             $this->setError("Введите наименование");
             return;

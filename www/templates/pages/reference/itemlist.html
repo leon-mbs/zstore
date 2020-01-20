@@ -46,7 +46,7 @@
                         <th >Примечание</th>
 
 
-                        <th style="width:100px"> </th>
+                        <th style="width:150px"> </th>
                     </tr>
                     <tr zippy="itemlist">
                         {{#useimages}} <td> 
@@ -72,6 +72,7 @@
 
                             <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> &nbsp;
                             <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
+                            &nbsp;<a zippy="print" title="Печатать  этикетку"><i class="fa fa-print"></i></a>
                         </td>
                     </tr>
                 </table>
@@ -120,7 +121,7 @@
                     <div class="form-group row">
                         <label class="col-5 col-form-label" for="editbarcode">Штрих-код</label>
                         <div class="col-7"> 
-                            <input class="form-control" zippy="editbarcode"/>
+                            <input pattern="[0-9]+" class="form-control" zippy="editbarcode"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -211,6 +212,21 @@
             </div>
 
         </div>
+        
+     <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm"  >
+                <div class="modal-content">
+                    <div class="modal-body">
+                         <table>
+                         <tr><td align="center" id="tag"> </td><tr>
+                         <tr><td align="center"><a href="javascript:void(0)" onclick="$('#tag').printThis();$('#pform').modal('hide')" class="btn btn-success btn-sm">Печать</a></td><tr>
+                        </table> 
+                    </div>   
+                </div>   
+            </div>
+        </div>        
+        
+        
         <script>
 $(document).ready(function () {
 

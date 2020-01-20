@@ -281,6 +281,7 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         }
         $item = Item::load($id);
+          $store_id = $this->docform->store->getValue();
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
@@ -556,11 +557,10 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         }
 
+ 
 
 
-
-
-        $store = $this->docform->store->getValue();
+        $store_id = $this->docform->store->getValue();
 
         $qty = $item->getQuantity($store);
         if ($qty <= 0) {
@@ -671,7 +671,7 @@ class GoodsIssue extends \App\Pages\Base {
     }
 
     public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
+       .. $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }

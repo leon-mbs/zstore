@@ -192,24 +192,7 @@
                 $('#previewpos').attr('style', 'display:block');
                 $('#previewpos').printThis();
             }
-
-
-            $(function () {
-
-                $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                    $.cookie('tab_doc', $(e.target).attr('href'));
-                });
-
-                var lastTab = $.cookie('tab_doc');
-
-                if (lastTab) {
-                    $('ul.nav-tabs').children().removeClass('active');
-                    $('a[href=' + lastTab + ']').parents('li:first').addClass('active');
-                    $('div.tab-content').children().removeClass('active');
-                    $(lastTab).addClass('active');
-                }
-            });
-
+   
 
 
 

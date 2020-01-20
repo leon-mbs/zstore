@@ -559,7 +559,7 @@ class ARMPos extends \App\Pages\Base {
         $text = implode("", $this->doc->generateCheck());
 
         $text = addslashes($text);
-        $pos = \App\Entity\Pos::load($this->pos);
+         
         $this->form4->print->setAttribute("href", "javascript:void(0);return false;");
         $this->form4->print->setAttribute('onClick', "printpos('{$pos->ip}','{$text}')");
     }
