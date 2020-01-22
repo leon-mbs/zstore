@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pages\Service;
+namespace App\Pages\Register;
 
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\Form\DropDownChoice;
@@ -25,7 +25,7 @@ class ItemList extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowSer('ItemList'))
+        if (false == \App\ACL::checkShowReg('ItemList'))
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
@@ -265,14 +265,14 @@ class ItemList extends \App\Pages\Base {
 
         foreach ($list as $item) {
 
-            $csv .= $item->itemname . ',';
-            $csv .= $st->item_code . ',';
+            $csv .= $item->itemname . ';';
+            $csv .= $st->item_code . ';';
 
-            $csv .= $item->msr . ',';
-            $csv .= $item->cat_name . ',';
+            $csv .= $item->msr . ';';
+            $csv .= $item->cat_name . ';';
             $qty = $item->getQuantity($store);
 
-            $csv .= H::fqty($qty) . ',';
+            $csv .= H::fqty($qty) . ';';
             $plist = array();
             if ($item->price1 > 0)
                 $plist[] = $item->getPrice('price1', $store);
@@ -287,7 +287,7 @@ class ItemList extends \App\Pages\Base {
 
 
 
-            $csv .= implode(' ', $plist) . ',';
+            $csv .= implode(' ', $plist) . ';';
 
             $csv .= "\n";
         }

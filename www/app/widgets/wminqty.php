@@ -73,8 +73,8 @@ class WMinQty extends \Zippy\Html\PageFragment {
 
         foreach ($this->data as $d) {
 
-            $csv .= $d->itemname . ',';
-            $csv .= $d->iqty . ',';
+            $csv .= $d->itemname . ';';
+            $csv .= $d->iqty . ';';
             $csv .= $d->minqty;
 
             $csv .= "\n";

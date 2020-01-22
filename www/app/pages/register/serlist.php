@@ -212,12 +212,12 @@ class SerList extends \App\Pages\Base {
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ',';
-            $csv .= $d->document_number . ',';
+            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= $d->document_number . ';';
 
-            $csv .= $d->customer_name . ',';
-            $csv .= $d->amount . ',';
-            $csv .= str_replace(',', '', $d->notes) . ',';
+            $csv .= $d->customer_name . ';';
+            $csv .= $d->amount . ';';
+            $csv .= str_replace(';', '', $d->notes) . ';';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");

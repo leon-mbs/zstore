@@ -21,9 +21,9 @@ use \App\Application as App;
 use \App\System;
 
 /**
- * журнал  закупок
+ * журнал   складских документов
  */
-class ProdList extends \App\Pages\Base {
+class StoreDocList extends \App\Pages\Base {
 
     private $_doc = null;
 
@@ -34,7 +34,7 @@ class ProdList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('ProdList'))
+        if (false == \App\ACL::checkShowReg('StoreDocList'))
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');

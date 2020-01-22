@@ -21,9 +21,9 @@ use \App\Application as App;
 use \App\System;
 
 /**
- * журнал  закупок
+ * журнал  кассовых ордеров 
  */
-class ProdList extends \App\Pages\Base {
+class MFDocList extends \App\Pages\Base {
 
     private $_doc = null;
 
@@ -34,16 +34,14 @@ class ProdList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('ProdList'))
+        if (false == \App\ACL::checkShowReg('MFDocList'))
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
         $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
-
-
-
+ 
 
         $doclist = $this->add(new DataView('doclist', new ProdDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
