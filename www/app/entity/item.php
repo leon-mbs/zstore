@@ -127,7 +127,7 @@ class Item extends \ZCL\DB\Entity {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
-
+        if(strlen($common[$_price_])==0) return 0;
 
 
         if ($_price_ == 'price1')
@@ -157,7 +157,7 @@ class Item extends \ZCL\DB\Entity {
             $price = $_price; //задана  просто  цифра
         }
 
-        if($price == 0 && $this->cat_id > 0 && $partion > 0 ){
+        if($price == 0 && $this->cat_id > 0  ){
             $cat = \App\Entity\Category::load($this->cat_id);
             if($cat != null){
                 if ($partion == 0) {
@@ -180,13 +180,10 @@ class Item extends \ZCL\DB\Entity {
         //если не  задано используем глобальную наценку
         if ($common['defprice'] > 0 && $price == 0) {
 
-            if ($partion > 0) {
-                
-            } else {  //ищем последнюю закупочную  цену 
-                $conn = \ZDB\DB::getConnect();
-
-                $partion = $conn->GetOne($sql);
-            }
+            if ($partion == 0) {
+                //ищем последнюю закупочную  цену 
+                  $partion = $this->getLastPartion($store);
+            }   
 
             $price = $partion + (int) $partion / 100 * $common['defprice'];
         }
@@ -214,7 +211,7 @@ class Item extends \ZCL\DB\Entity {
    
     private  function getLastPartion($store){
            $conn = \ZDB\DB::getConnect();
-            $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}   ";
+            $sql = "  select coalesce(partion,0)  from  store_stock where    item_id = {$this->item_id}   ";
             if ($store > 0) {
                 $sql = $sql . " and store_id=" . $store;
             }

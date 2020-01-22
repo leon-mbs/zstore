@@ -145,15 +145,11 @@ class DocList extends \App\Pages\Base {
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('hasmsg'))->setVisible($doc->mcnt > 0);
-        $row->add(new Label('hasfiles'))->setVisible($doc->fcnt > 0);
         $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
 
         $date = new \Carbon\Carbon();
         $date = $date->addDay(1);
         $start = $date->startOfDay()->timestamp;
-
-
         $row->add(new Label('isplanned'))->setVisible($doc->document_date >= $start);
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -256,12 +252,17 @@ class DocList extends \App\Pages\Base {
 
     public function cancelOnClick($sender) {
         $this->docview->setVisible(false);
-
+         
         $doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
-
+        if(\App\ACL::checkExeDoc($doc) == false && $doc->state != Document::STATE_WA) {
+            $this->setError('Документ уже  утвержден или  выполнен') ;
+            return ;
+        }
+            
+            
         $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
             System::setWarnMsg("У документа были отправки, доставки или документ был  закрыт");
@@ -271,6 +272,7 @@ class DocList extends \App\Pages\Base {
             $this->setError("У документа есть неотмененные дочерние документы");
             return;
         }
+        
         $doc->updateStatus(Document::STATE_CANCELED);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);

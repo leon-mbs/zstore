@@ -21,11 +21,13 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Customer;
 use \App\Entity\Stock;
+ 
 use \App\Entity\Item;
 use \App\Entity\Service;
 use \App\Entity\Employee;
 use \App\Entity\ProdArea;
 use \App\Entity\Doc\Document;
+use \App\Entity\Doc\Task;
 use \App\Helper as H;
 use \App\System;
 use \App\Application;

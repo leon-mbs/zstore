@@ -73,23 +73,22 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('minqty', H::fqty($item->minqty)));
         $row->add(new Label('iamount', H::fa(abs($item->getAmount($store)))));
 
-
         $row->add(new Label('cat_name', $item->cat_name));
 
         $plist = array();
-        if ($item->price1 > 0)
-            $plist[] = $item->getPrice('price1', $store);
-        if ($item->price2 > 0)
-            $plist[] = $item->getPrice('price2', $store);
-        if ($item->price3 > 0)
-            $plist[] = $item->getPrice('price3', $store);
-        if ($item->price4 > 0)
-            $plist[] = $item->getPrice('price4', $store);
-        if ($item->price5 > 0)
-            $plist[] = $item->getPrice('price5', $store);
-
-        $row->add(new Label('iprice', implode(',', $plist)));
-
+        
+        $p1 = $item->getPrice('price1', $store);
+        $p2 = $item->getPrice('price2', $store);
+        $p3 = $item->getPrice('price3', $store);
+        $p4 = $item->getPrice('price4', $store);
+        $p5 = $item->getPrice('price5', $store);
+        if($p1 > 0)  $plist[] = $p1;
+        if($p2 > 0)  $plist[] = $p2;
+        if($p3 > 0)  $plist[] = $p3;
+        if($p4 > 0)  $plist[] = $p4;
+        if($p5 > 0)  $plist[] = $p5;
+        
+        $row->add(new Label('iprice', implode(', ', $plist)));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         if ($qty < 0) {

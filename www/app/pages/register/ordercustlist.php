@@ -223,11 +223,7 @@ class OrderCustList extends \App\Pages\Base {
             $this->statuspan->statusform->setVisible(false);
         }
 
-
-        $this->_tvars['askclose'] = false;
-        if ($payed == false || $sent == false) {
-            $this->_tvars['askclose'] = true;
-        }
+        
     }
 
     //просмотр

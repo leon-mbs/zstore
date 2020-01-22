@@ -164,6 +164,21 @@ class ACL {
             App::RedirectHome();
         return false;
     }
+  
+    //проверка  на  доступ  к   утверждению и выполнению документа.
+    public static function checkExeDoc($doc ) {
+        $user = System::getUser();
+        if ($user->acltype != 2)
+            return true;
+   
+        $aclexe = explode(',', $user->aclexe);
+
+        if (in_array($doc->meta_id, $aclexe)) {
+            return true;
+        }
+ 
+        return false;
+    }
 
     //проверка  на  доступ  к  сервисным станицам
     public static function checkShowSer($ser) {
