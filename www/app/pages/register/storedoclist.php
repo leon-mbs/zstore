@@ -16,6 +16,7 @@ use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \App\Entity\Doc\Document;
+use \App\Entity\Store;
 use \App\Helper as H;
 use \App\Application as App;
 use \App\System;
@@ -40,12 +41,12 @@ class StoreDocList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
-        $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
+        $this->filter->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
 
 
 
-        $doclist = $this->add(new DataView('doclist', new ProdDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new StorerDocDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
@@ -76,9 +77,7 @@ class StoreDocList extends \App\Pages\Base {
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
 
-        $row->add(new Label('pareaname', $doc->headerdata["pareaname"]));
-
-
+   
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -112,7 +111,7 @@ class StoreDocList extends \App\Pages\Base {
         foreach ($list as $d) {
             $csv .= date('Y.m.d', $d->document_date) . ';';
             $csv .= $d->document_number . ';';
-            $csv .= $d->headerdata["pareaname"] . ';';
+         
             $csv .= $d->amount . ';';
             $csv .= str_replace(';', '', $d->notes) . ';';
             $csv .= "\n";
@@ -134,7 +133,7 @@ class StoreDocList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class ProdDataSource implements \Zippy\Interfaces\DataSource {
+class StorerDocDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 
@@ -149,14 +148,14 @@ class ProdDataSource implements \Zippy\Interfaces\DataSource {
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and meta_name  in ('Task','ProdIssue','ProdReceipt')  ";
+        $where .= " and meta_name  in ( 'TransItem','OutcomeItem','IncomeItem','Inventory','MoveItem')  ";
 
 
 
 
-        $parea = $this->page->filter->parea->getValue();
-        if ($parea > 0) {
-            $where .= " and content like '%<parea>{$parea}</parea>%'  ";
+        $store = $this->page->filter->store->getValue();
+        if ($store > 0) {
+            $where .= " and (content like '%<store>{$store}</store>%' or content like '%<storefrom>{$store}</storefrom>%' or content like '%<storeto>{$store}</storeto>%'  ) ";
         }
 
 

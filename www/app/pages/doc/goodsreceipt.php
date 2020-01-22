@@ -420,16 +420,26 @@ class GoodsReceipt extends \App\Pages\Base {
                 $this->_basedocid = 0;
             }
             $this->_doc->save();
-            $order = Document::load($this->_doc->headerdata['order_id']);
-
+   
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if ($order instanceof Document) {
-                    $order->updateStatus(Document::STATE_CLOSED);
-                }
+            
+               if ($this->_doc->parent_id > 0) {   //закрываем заказ
+                    if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+                        
+                    } else {
+                        $order = Document::load($this->_doc->parent_id);
+                        if ($order->state == Document::STATE_INPROCESS) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                            $this->setSuccess("Заказ {$order->document_number} закрыт");
+                        }
+                    }
+                }                
+                
+                
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);

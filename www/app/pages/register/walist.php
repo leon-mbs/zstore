@@ -38,14 +38,18 @@ class WAList extends \App\Pages\Base {
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
-        $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
+        
 
-
-
-
-        $doclist = $this->add(new DataView('doclist', new ProdDataSource($this), $this, 'doclistOnRow'));
+        $conn = \Zdb\DB::getConnect() ;
+        $res = $conn->Execute("select distinct  meta_name,meta_desc  from documents_view where  state=". Document::STATE_WA  .' order  by  meta_desc ') ;
+        $tlist = array();
+        foreach($res as $row){
+           $tlist['meta_name'] = $row['meta_desc'];
+        }
+        
+        $this->filter->add(new DropDownChoice('doctype', $tlist, 0));
+        
+        $doclist = $this->add(new DataView('doclist', new WADataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
@@ -54,8 +58,13 @@ class WAList extends \App\Pages\Base {
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
+        $this->add(new Form('statusform'));
 
-
+        $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
+        $this->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statusform->add(new TextInput('comment')) ;
+        $this->statusform->setVisible(false);
+   
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
@@ -71,19 +80,64 @@ class WAList extends \App\Pages\Base {
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));
+        $row->add(new Label('desc', $doc->meta_desc));
 
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
-
-        $row->add(new Label('pareaname', $doc->headerdata["pareaname"]));
-
-
+            
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
 
+    public function statusOnSubmit($sender) {
+
+        $state = $this->_doc->state;
+ 
+
+        if ($sender->id == "bap") {
+            $this->_doc->updateStatus(Document::STATE_APPROVED);
+            
+        }
+        if ($sender->id == "bref") {
+            $this->_doc->updateStatus(Document::STATE_REFUSED);
+            $text = $sender->comment->getText();
+         
+            $user = System::getUser();
+
+            $n = new \App\Entity\Notify();
+            $n->user_id = $this->_doc->user_id;
+            $n->message = "Документ {$this->_doc->meta_desc} {$this->_doc->document_number} отклонен ";
+            $n->message .= "<br>" .$text;
+            $n->sender_name = $user->username;
+            $n->save();           
+            
+            $sender->comment->setText('');
+        }
+  
+        $this->doclist->Reload(false);
+        $this->statusform->setVisible(false);
+        $this->docview->setVisible(false);
+    }
+
+    public function updateStatusButtons() {
+
+     
+        $state = $this->_doc->state;
+   
+        if ($state == Document::STATE_WA) {
+            $this->statusform->bref->setVisible(true);
+            $this->statusform->bap->setVisible(true);
+            $this->statusform->comment->setVisible(true);
+        }  else {
+            $this->statusform->bref->setVisible(false);
+            $this->statusform->bap->setVisible(false);
+            $this->statusform->comment->setVisible(false);
+        }
+          
+    }
+
+    
     //просмотр
     public function showOnClick($sender) {
 
@@ -94,6 +148,9 @@ class WAList extends \App\Pages\Base {
         $this->doclist->Reload(false);
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
+        
+        $this->statusform->setVisible(true);
+        $this->updateStatusButtons();
     }
 
     public function editOnClick($sender) {
@@ -134,7 +191,7 @@ class WAList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class ProdDataSource implements \Zippy\Interfaces\DataSource {
+class WADataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 
@@ -146,22 +203,20 @@ class ProdDataSource implements \Zippy\Interfaces\DataSource {
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
+        
+        $where  = "   state= " . Document::STATE_WA   ;
+ 
 
-        $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
-        $where .= " and meta_name  in ('Task','ProdIssue','ProdReceipt')  ";
-
-
-
-
-        $parea = $this->page->filter->parea->getValue();
-        if ($parea > 0) {
-            $where .= " and content like '%<parea>{$parea}</parea>%'  ";
+        $doctype = $this->page->filter->doctype->getValue();
+        if ($doctype > 0) {
+            $where .= " and meta_name = '{doctype}'  ";
         }
-
-
-
-
+        $user = System::getUser();
+        if ($user->acltype == 2) {
+ 
+            $where .= " and meta_id in({$user->aclexe}) ";
+        }
+   
         return $where;
     }
 

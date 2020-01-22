@@ -26,7 +26,7 @@ class ACL {
     }
 
     //проверка  на  доступ  к  отчету
-    public static function checkShowReport($rep) {
+    public static function checkShowReport($rep, $showerror=true) {
     
         if (System::getUser()->acltype != 2)
            return true;
@@ -39,9 +39,11 @@ class ACL {
         if (in_array($meta_id, $aclview)) {
             return true;
         }
-
-        System::setErrorMsg('Нет права  просмотра   отчета '. self::$_metasdesc[$rep]);
-        App::RedirectHome();
+      
+        if($showerror==true) {
+           System::setErrorMsg('Нет права  просмотра   отчета '. self::$_metasdesc[$rep]);
+           App::RedirectHome();
+        }
         return false;
     }
 
@@ -65,7 +67,7 @@ class ACL {
     }
 
     //проверка  на  доступ  к   редактированю справочника
-    public static function checkEditRef($ref) {
+    public static function checkEditRef($ref, $showerror=true) {
         if (System::getUser()->acltype != 2)
             return true;
 
@@ -77,14 +79,15 @@ class ACL {
         if (in_array($meta_id, $acledit)) {
             return true;
         }
-
-        System::setErrorMsg('Нет права  изменения   справочника '. self::$_metasdesc[$ref]);
-        App::RedirectHome();
+        if($showerror==true) {
+          System::setErrorMsg('Нет права  изменения   справочника '. self::$_metasdesc[$ref]);
+          App::RedirectHome();
+        }
         return false;
     }
 
     //проверка  на  доступ  к  журналу 
-    public static function checkShowReg($reg) {
+    public static function checkShowReg($reg, $showerror=true) {
         if (System::getUser()->acltype != 2)
             return true;
 
@@ -97,13 +100,15 @@ class ACL {
             return true;
         }
 
-        System::setErrorMsg('Нет права  просмотра данного   журнала ' . self::$_metasdesc[$reg]);
-        App::RedirectHome();
+        if($showerror==true) {
+          System::setErrorMsg('Нет права  просмотра данного   журнала ' . self::$_metasdesc[$reg]);
+          App::RedirectHome();
+        }
         return false;
     }
 
     //проверка  на  доступ  к просмотру документа
-    public static function checkShowDoc($doc, $inreg = false) {
+    public static function checkShowDoc($doc, $inreg = false, $showerror=true) {
         $user = System::getUser();
         if ($user->acltype != 2)
             return true;
@@ -126,15 +131,17 @@ class ACL {
         if (in_array($doc->meta_id, $aclview)) {
             return true;
         }
-
-        System::setErrorMsg('Нет права  просмотра   документа '. self::$_metasdesc[$doc]);
-        if ($inreg == false)
-            App::RedirectHome();
+ 
+        if($showerror==true) {
+          System::setErrorMsg('Нет права  просмотра   документа '. self::$_metasdesc[$doc]);
+          if ($inreg == false)
+              App::RedirectHome();
+        }
         return false;
     }
 
     //проверка  на  доступ  к   редактированию документа
-    public static function checkEditDoc($doc, $inreg = false) {
+    public static function checkEditDoc($doc, $inreg = false, $showerror=true) {
         $user = System::getUser();
         if ($user->acltype != 2)
             return true;
@@ -158,15 +165,19 @@ class ACL {
         if (in_array($doc->meta_id, $acledit)) {
             return true;
         }
-
-        System::setErrorMsg('Нет права   изменения    документа '. self::$_metasdesc[$doc]);
-        if ($inreg == false)
-            App::RedirectHome();
+       
+        if($showerror==true) {
+ 
+          System::setErrorMsg('Нет права   изменения    документа '. self::$_metasdesc[$doc]);
+          if ($inreg == false)
+              App::RedirectHome();
+        }
+        
         return false;
     }
   
     //проверка  на  доступ  к   утверждению и выполнению документа.
-    public static function checkExeDoc($doc ) {
+    public static function checkExeDoc($doc, $inreg = false, $showerror=true ) {
         $user = System::getUser();
         if ($user->acltype != 2)
             return true;
@@ -176,12 +187,17 @@ class ACL {
         if (in_array($doc->meta_id, $aclexe)) {
             return true;
         }
+        if($showerror==true) {
+          System::setErrorMsg('Нет права  выполнения документа '. self::$_metasdesc[$doc]);
+          if ($inreg == false)
+            App::RedirectHome();  
+        }
  
         return false;
     }
 
     //проверка  на  доступ  к  сервисным станицам
-    public static function checkShowSer($ser) {
+    public static function checkShowSer($ser, $showerror=true) {
         if (System::getUser()->acltype != 2)
             return true;
 
@@ -195,10 +211,13 @@ class ACL {
         if (in_array($meta_id, $aclview)) {
             return true;
         }
+        if($showerror==true) {
 
-        System::setErrorMsg('Нет права  просмотра страницы '. self::$_metasdesc[$ser]);
-        App::RedirectHome();
+          System::setErrorMsg('Нет права  просмотра страницы '. self::$_metasdesc[$ser]);
+          App::RedirectHome();
+        }
         return false;
+       
     }
 
     /**

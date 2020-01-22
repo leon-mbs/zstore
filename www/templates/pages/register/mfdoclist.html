@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Производство </h3>
+                <h3>Кассовые документы </h3>
 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
@@ -15,9 +15,9 @@
                         <label for="to">  по  </label>
                         <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
 
-                        <label for="parea"> производственный участок </label>
-                        <select class="form-control mr-2" zippy="parea">
-                            <option value="0">Не выбран</option>
+                        <label for="mf"> касса </label>
+                        <select class="form-control mr-2" zippy="mf">
+                            <option value="0">Не выбрана</option>
                         </select>
 
 
@@ -34,7 +34,7 @@
                         <th>Номер</th>
                         <th>Дата</th>
 
-                        <th>Участок</th>
+                        <th>Касса</th>
                         <th class="text-right">Сумма </th>
 
 
@@ -49,7 +49,7 @@
                         <td zippy="number"></td>
                         <td class="text-nowrap" zippy="date"></td>
 
-                        <td zippy="pareaname"    ></td>
+                        <td zippy="paymentname"    ></td>
                         <td zippy="amount" class="text-right"  ></td>
 
                         <td   zippy="onotes"> </td>

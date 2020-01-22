@@ -16,6 +16,7 @@ use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \App\Entity\Doc\Document;
+use \App\Entity\MoneyFund;
 use \App\Helper as H;
 use \App\Application as App;
 use \App\System;
@@ -40,10 +41,10 @@ class MFDocList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
-        $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
+        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(true)  , H::getDefMF()));
  
 
-        $doclist = $this->add(new DataView('doclist', new ProdDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new MFDOcDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
@@ -74,7 +75,7 @@ class MFDocList extends \App\Pages\Base {
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
 
-        $row->add(new Label('pareaname', $doc->headerdata["pareaname"]));
+        $row->add(new Label('paymentname', $doc->headerdata["paymentname"]));
 
 
 
@@ -110,7 +111,7 @@ class MFDocList extends \App\Pages\Base {
         foreach ($list as $d) {
             $csv .= date('Y.m.d', $d->document_date) . ';';
             $csv .= $d->document_number . ';';
-            $csv .= $d->headerdata["pareaname"] . ';';
+            $csv .= $d->headerdata["paymentname"] . ';';
             $csv .= $d->amount . ';';
             $csv .= str_replace(';', '', $d->notes) . ';';
             $csv .= "\n";
@@ -132,7 +133,7 @@ class MFDocList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class ProdDataSource implements \Zippy\Interfaces\DataSource {
+class MFDOcDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 
@@ -147,14 +148,12 @@ class ProdDataSource implements \Zippy\Interfaces\DataSource {
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and meta_name  in ('Task','ProdIssue','ProdReceipt')  ";
+        $where .= " and meta_name  in ('OutcomeMoney','IncomeMoney')  ";
+  
 
-
-
-
-        $parea = $this->page->filter->parea->getValue();
-        if ($parea > 0) {
-            $where .= " and content like '%<parea>{$parea}</parea>%'  ";
+        $mf = $this->page->filter->mf->getValue();
+        if ($mf > 0) {
+            $where .= " and content like '%<payment>{$mf}</payment>%'  ";
         }
 
 

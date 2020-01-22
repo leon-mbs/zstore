@@ -62,10 +62,9 @@ class OrderCustList extends \App\Pages\Base {
 
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bcan'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -134,11 +133,8 @@ class OrderCustList extends \App\Pages\Base {
         }
 
 
-        if ($sender->id == "bap") {
-            $this->_doc->updateStatus(Document::STATE_APPROVED);
-        }
-        if ($sender->id == "bref") {
-            $this->_doc->updateStatus(Document::STATE_REFUSED);
+        if ($sender->id == "bcan") {
+            $this->_doc->updateStatus(Document::STATE_CANCEL);
         }
         if ($sender->id == "binp") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -188,20 +184,17 @@ class OrderCustList extends \App\Pages\Base {
 
             $this->statuspan->statusform->bclose->setVisible(true);
         }
-        $this->statuspan->statusform->bap->setVisible(false);
-        $this->statuspan->statusform->bref->setVisible(false);
+        $this->statuspan->statusform->bcan->setVisible(false);
+         
         if ($state == Document::STATE_WA) {
-            $this->statuspan->statusform->bap->setVisible(true);
-            $this->statuspan->statusform->bref->setVisible(true);
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bcan->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(false);
+            
         }
-        if ($state == Document::STATE_APPROVED) {
-            $this->statuspan->statusform->binv->setVisible(true);
-            $this->statuspan->statusform->bttn->setVisible(true);
-            $this->statuspan->statusform->binp->setVisible(true);
-        }
+       
         if ($state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->binv->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(true);
@@ -209,17 +202,18 @@ class OrderCustList extends \App\Pages\Base {
         }
         if ($state == Document::STATE_REFUSED) {
 
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bcan->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binp->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(false);
         }
         //закрыт
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
-
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
-            $this->statuspan->statusform->bap->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
 
