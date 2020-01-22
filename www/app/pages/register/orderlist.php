@@ -87,7 +87,7 @@ class OrderList extends \App\Pages\Base {
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
-        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW) {
+        if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
@@ -165,7 +165,7 @@ class OrderList extends \App\Pages\Base {
         $this->statuspan->statusform->binv->setVisible(!$sent);
 
         //новый
-        if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
+        if ($state < Document::STATE_EXECUTED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);

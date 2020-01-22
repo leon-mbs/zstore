@@ -17,9 +17,7 @@ class Document extends \ZCL\DB\Entity {
     const STATE_CANCELED = 3;      //Отменен
     const STATE_READYTOEXE = 4; // готов к выполнению
     
-    
     const STATE_EXECUTED = 5;      // Проведен 
-    
     const STATE_DELETED = 6;       //  Удален
     const STATE_INPROCESS = 7; // в  работе
     const STATE_WA = 8; // ждет подтверждения

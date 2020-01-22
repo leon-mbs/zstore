@@ -157,7 +157,7 @@ class DocList extends \App\Pages\Base {
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
-        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW || $doc->state == Document::STATE_REFUSED) {
+        if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
@@ -224,6 +224,7 @@ class DocList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
+            
         $user = System::getUser();
         if ($doc->user_id != $user->user_id && $user->userlogin != 'admin') {
             $this->setError("Удалять документ  может  только  автор или администратор");
@@ -254,11 +255,11 @@ class DocList extends \App\Pages\Base {
         $this->docview->setVisible(false);
          
         $doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkEditDoc($doc, true))
-            return;
+     //   if (false == \App\ACL::checkEditDoc($doc, true))
+       //     return;
 
-        if(\App\ACL::checkExeDoc($doc) == false && $doc->state != Document::STATE_WA) {
-            $this->setError('Документ уже  утвержден или  выполнен') ;
+        if(\App\ACL::checkExeDoc($doc,true,false) == false) {
+            $this->setError('Нет  права отменять документы') ;
             return ;
         }
             

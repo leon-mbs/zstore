@@ -149,7 +149,7 @@ class TaskList extends \App\Pages\Base {
         } else {
             $this->statuspan->statusform->bclosed->setVisible(false);
         }
-        if ($this->_task->state == Document::STATE_CANCELED || $this->_task->state == Document::STATE_EDITED || $this->_task->state == Document::STATE_NEW) {
+        if ($this->_task->state < Document::STATE_EXECUTED ) {
             $this->statuspan->statusform->binprocess->setVisible(true);
             $this->statuspan->statusform->bshifted->setVisible(true);
         } else {
