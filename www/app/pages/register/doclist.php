@@ -224,7 +224,7 @@ class DocList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
-            
+
         $user = System::getUser();
         if ($doc->user_id != $user->user_id && $user->userlogin != 'admin') {
             $this->setError("Удалять документ  может  только  автор или администратор");
@@ -253,17 +253,17 @@ class DocList extends \App\Pages\Base {
 
     public function cancelOnClick($sender) {
         $this->docview->setVisible(false);
-         
-        $doc = $sender->owner->getDataItem();
-     //   if (false == \App\ACL::checkEditDoc($doc, true))
-       //     return;
 
-        if(\App\ACL::checkExeDoc($doc,true,false) == false) {
-            $this->setError('Нет  права отменять документы') ;
-            return ;
+        $doc = $sender->owner->getDataItem();
+        //   if (false == \App\ACL::checkEditDoc($doc, true))
+        //     return;
+
+        if (\App\ACL::checkExeDoc($doc, true, false) == false) {
+            $this->setError('Нет  права отменять документы');
+            return;
         }
-            
-            
+
+
         $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
             System::setWarnMsg("У документа были отправки, доставки или документ был  закрыт");
@@ -273,7 +273,7 @@ class DocList extends \App\Pages\Base {
             $this->setError("У документа есть неотмененные дочерние документы");
             return;
         }
-        
+
         $doc->updateStatus(Document::STATE_CANCELED);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);

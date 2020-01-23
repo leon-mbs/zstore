@@ -205,8 +205,8 @@ class Users extends \App\Pages\Base {
         }
         $this->user->aclview = implode(',', $varr);
         $this->user->acledit = implode(',', $earr);
-        $this->user->aclexe  = implode(',', $xarr);
- 
+        $this->user->aclexe = implode(',', $xarr);
+
 
         $widgets = "";
 
@@ -341,7 +341,7 @@ class Users extends \App\Pages\Base {
 
         $row->add(new CheckBox('viewacc', new Bind($item, 'viewacc')));
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
-        $row->add(new CheckBox('exeacc',  new Bind($item, 'editacc')))->setVisible($item->meta_type == 1  );
+        $row->add(new CheckBox('exeacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1);
     }
 
 }

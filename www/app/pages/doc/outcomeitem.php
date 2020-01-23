@@ -180,7 +180,7 @@ class OutcomeItem extends \App\Pages\Base {
 
         $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
         $this->_doc->headerdata['storefromname'] = $this->docform->storefrom->getValueName();
- 
+
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
             $this->_doc->detaildata[] = $item->getData();

@@ -72,7 +72,7 @@
                             <a zippy="print" title="Печатать этикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
                             <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> &nbsp;
                             <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
-                            
+
                         </td>
                     </tr>
                 </table>
@@ -212,33 +212,33 @@
             </div>
 
         </div>
-        
-     <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+
+        <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm"  >
                 <div class="modal-content">
                     <div class="modal-body">
-                         <table>
-                         <tr><td align="center" id="tag"> </td><tr>
-                         <tr><td align="center"><a href="javascript:void(0)" onclick="$('#tag').printThis();$('#pform').modal('hide')" class="btn btn-success btn-sm">Печать</a></td><tr>
+                        <table>
+                            <tr><td align="center" id="tag"> </td><tr>
+                            <tr><td align="center"><a href="javascript:void(0)" onclick="$('#tag').printThis();$('#pform').modal('hide')" class="btn btn-success btn-sm">Печать</a></td><tr>
                         </table> 
                     </div>   
                 </div>   
             </div>
         </div>        
-        
-        
+
+
         <script>
-$(document).ready(function () {
+            $(document).ready(function () {
 
-    $(document).on('click', '[data-toggle="lightbox"]', function (event) {
-        event.preventDefault();
-        $(this).ekkoLightbox({'alwaysShowClose': true});
-    });
-
-
+                $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+                    event.preventDefault();
+                    $(this).ekkoLightbox({'alwaysShowClose': true});
+                });
 
 
-});
+
+
+            });
 
 
 

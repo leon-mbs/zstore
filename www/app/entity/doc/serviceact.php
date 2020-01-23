@@ -28,7 +28,6 @@ class ServiceAct extends Document {
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->headerdata["customer_name"],
-      
             "gar" => $this->headerdata['gar'],
             "isdevice" => strlen($this->headerdata["device"]) > 0,
             "device" => $this->headerdata["device"],
@@ -58,7 +57,7 @@ class ServiceAct extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-             \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
 
 
@@ -78,42 +77,41 @@ class ServiceAct extends Document {
         $printer = \App\System::getOptions('printer');
         $firm = H::getFirmData(\App\Session::getSession()->branch_id);
         $wp = 'style="width:40mm"';
-        if(strlen($printer['pwidth'])>0) {
-           $wp = 'style="width:'.$printer['pwidth'].'mm"';
+        if (strlen($printer['pwidth']) > 0) {
+            $wp = 'style="width:' . $printer['pwidth'] . 'mm"';
         }
-        
+
         $header = array('printw' => $wp, 'date' => date('d.m.Y', time()),
             "document_number" => $this->document_number,
             "firmname" => $firm['firmname'],
             "address" => $firm['address'],
             "phone" => $firm['phone'],
-            "customer_name" => $this->headerdata['customer_name'] ,
+            "customer_name" => $this->headerdata['customer_name'],
             "isdevice" => strlen($this->headerdata["device"]) > 0,
-            "device" => $this->headerdata["device"] .(strlen($this->headerdata["devsn"])>0 ? ', с/н ' .$this->headerdata["devsn"]  : '')  ,
-            "total" => H::fa($this->amount )
-            
+            "device" => $this->headerdata["device"] . (strlen($this->headerdata["devsn"]) > 0 ? ', с/н ' . $this->headerdata["devsn"] : ''),
+            "total" => H::fa($this->amount)
+        );
+        if (strlen($this->headerdata['gar']) > 0) {
+            $header['gar'] = 'Гарантия: ' . $this->headerdata['gar'];
+        }
+        $detail = array();
+        foreach ($this->detaildata as $value) {
+            $detail[] = array(
+                "service" => $value['service_name'],
+                "price" => H::fa($value['price'])
             );
-            if(strlen($this->headerdata['gar'])>0){
-               $header['gar']=  'Гарантия: ' .$this->headerdata['gar'];
+        }
+        $header['slist'] = $detail;
+
+        $pays = \App\Entity\Pay::getPayments($this->document_id);
+        if (count($pays) > 0) {
+            $header['plist'] = array();
+            foreach ($pays as $pay) {
+                $header['plist'][] = array('pdate' => date('d.m.Y', $pay->paydate), 'ppay' => H::fa($pay->amount));
             }
-            $detail = array();
-            foreach ($this->detaildata as $value) {
-                $detail[] = array( 
-                    "service" => $value['service_name'],
-                    "price" => H::fa($value['price'])
-                );
-            }         
-            $header['slist']=   $detail;
-           
-            $pays = \App\Entity\Pay::getPayments($this->document_id); 
-            if(count($pays)>0) {
-                $header['plist']  = array();
-                foreach($pays as $pay){
-                   $header['plist'][] = array('pdate'=>date('d.m.Y', $pay->paydate),'ppay'=>H::fa($pay->amount))     ;
-                }
-            }  
-            $header['ispay']=   count($pays)>0;
-            
+        }
+        $header['ispay'] = count($pays) > 0;
+
         $report = new \App\Report('serviceact_bill.tpl');
 
         $html = $report->generate($header);

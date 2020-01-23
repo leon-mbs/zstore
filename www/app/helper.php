@@ -420,7 +420,7 @@ class Helper {
         $data = \App\System::getOptions("firm");
         if ($id > 0) {
             $branch = \App\Entity\Branch::load($id);
-       
+
             $company = $branch->getCompany();
             if (strlen($company->company_name) > 0)
                 $data['firmname'] = $company->company_name;

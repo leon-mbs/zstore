@@ -76,18 +76,23 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('cat_name', $item->cat_name));
 
         $plist = array();
-        
+
         $p1 = $item->getPrice('price1', $store);
         $p2 = $item->getPrice('price2', $store);
         $p3 = $item->getPrice('price3', $store);
         $p4 = $item->getPrice('price4', $store);
         $p5 = $item->getPrice('price5', $store);
-        if($p1 > 0)  $plist[] = $p1;
-        if($p2 > 0)  $plist[] = $p2;
-        if($p3 > 0)  $plist[] = $p3;
-        if($p4 > 0)  $plist[] = $p4;
-        if($p5 > 0)  $plist[] = $p5;
-        
+        if ($p1 > 0)
+            $plist[] = $p1;
+        if ($p2 > 0)
+            $plist[] = $p2;
+        if ($p3 > 0)
+            $plist[] = $p3;
+        if ($p4 > 0)
+            $plist[] = $p4;
+        if ($p5 > 0)
+            $plist[] = $p5;
+
         $row->add(new Label('iprice', implode(', ', $plist)));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');

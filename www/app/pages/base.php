@@ -84,9 +84,6 @@ class Base extends \Zippy\Html\WebPage {
         }
 
         $this->_tvars["hideblock"] = false; //для скрытия блока разметки  в  шаблоне страницы
-        
-        
-        
     }
 
     public function LogoutClick($sender) {
@@ -106,8 +103,8 @@ class Base extends \Zippy\Html\WebPage {
     public function onnbFirm($sender) {
         $branch_id = $sender->getValue();
         Session::getSession()->branch_id = $branch_id;
-        
-        $page = get_class($this);  
+
+        $page = get_class($this);
         App::Redirect($page);
     }
 

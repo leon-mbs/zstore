@@ -43,11 +43,11 @@ class DocView extends \Zippy\Html\PageFragment {
 
         $this->add(new Label('preview'));
         $this->add(new Label('previewpos'));
-        
+
         $this->add(new Label('hmessages'));
         $this->add(new Label('hdocs'));
         $this->add(new Label('hfiles'));
-      
+
 
 
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
@@ -75,10 +75,10 @@ class DocView extends \Zippy\Html\PageFragment {
     public function setDoc(\App\Entity\Doc\Document $doc) {
         $this->_doc = $doc;
         $doc = $this->_doc->cast();
-       // if (false == \App\ACL::checkShowDoc($doc, false)) {
-         //   $this->setvisible(false);
-         //   return;
-       // }
+        // if (false == \App\ACL::checkShowDoc($doc, false)) {
+        //   $this->setvisible(false);
+        //   return;
+        // }
         $this->setvisible(true);
         $html = $doc->generateReport();
         $this->preview->setText($html, true);
@@ -127,10 +127,7 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->_p = Document::load($doc->parent_id);
         $this->pdoc->setVisible($this->_p instanceof Document);
         $this->pdoc->setValue($this->_p->meta_desc . ' ' . $this->_p->document_number);
-        
-        
-
-     }
+    }
 
     //вывод строки  лога состояний
     public function stateListOnRow($row) {
@@ -174,9 +171,8 @@ class DocView extends \Zippy\Html\PageFragment {
     private function updateFiles() {
         $this->_fileslist = H::getFileList($this->_doc->document_id, \App\Entity\Message::TYPE_DOC);
         $this->dw_files->Reload();
-        $this->hfiles->setText(count($this->_fileslist))  ;
-        $this->hfiles->setVisible(count($this->_fileslist)>0);
-
+        $this->hfiles->setText(count($this->_fileslist));
+        $this->hfiles->setVisible(count($this->_fileslist) > 0);
     }
 
     //вывод строки  прикрепленного файла
@@ -251,8 +247,8 @@ class DocView extends \Zippy\Html\PageFragment {
     private function updateMessages() {
         $this->_msglist = \App\Entity\Message::getMessages(1, $this->_doc->document_id);
         $this->dw_msglist->Reload();
-        $this->hmessages->setText(count($this->_msglist))  ;
-        $this->hmessages->setVisible(count($this->_msglist)>0);       
+        $this->hmessages->setText(count($this->_msglist));
+        $this->hmessages->setVisible(count($this->_msglist) > 0);
     }
 
     //вывод строки  коментария
@@ -277,12 +273,12 @@ class DocView extends \Zippy\Html\PageFragment {
     private function updateDocs() {
         $this->_reldocs = $this->_doc->getChildren();
         $this->reldocs->Reload();
-  
+
         $cnt = count($this->_reldocs);
-        if($this->_p != null)$cnt++;
-        $this->hdocs->setText($cnt)  ;
-        $this->hdocs->setVisible($cnt>0);
-    
+        if ($this->_p != null)
+            $cnt++;
+        $this->hdocs->setText($cnt);
+        $this->hdocs->setVisible($cnt > 0);
     }
 
     //вывод строки  дочернего  документа

@@ -70,7 +70,7 @@ class Item extends \ZCL\DB\Entity {
             $this->price3 = $prev->price3;
             $this->price4 = $prev->price4;
             $this->price5 = $prev->price5;
-        }     
+        }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
         $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
@@ -78,18 +78,18 @@ class Item extends \ZCL\DB\Entity {
 
         $this->detail .= "<cell>{$this->cell}</cell>";
         $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
- 
+
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
         $this->detail .= "<price3>{$this->price3}</price3>";
         $this->detail .= "<price4>{$this->price4}</price4>";
         $this->detail .= "<price5>{$this->price5}</price5>";
-     
+
         $this->detail .= "<curname>{$this->curname}</curname>";
         $this->detail .= "<currate>{$this->currate}</currate>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
 
-       
+
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
 
@@ -127,7 +127,8 @@ class Item extends \ZCL\DB\Entity {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
-        if(strlen($common[$_price_])==0) return 0;
+        if (strlen($common[$_price_]) == 0)
+            return 0;
 
 
         if ($_price_ == 'price1')
@@ -141,49 +142,53 @@ class Item extends \ZCL\DB\Entity {
         else if ($_price_ == 'price5')
             $_price = $this->price5;
 
-         
+
         //если процент    
         if (strpos($_price, '%') > 0) {
 
             $ret = doubleval(str_replace('%', '', $_price));
             if ($ret > 0) {
-               if ($partion == 0) {
-                //ищем последнюю закупочную  цену 
-                  $partion = $this->getLastPartion($store);
-               }  
-               $price = $partion + (int) $partion / 100 * $ret;
+                if ($partion == 0) {
+                    //ищем последнюю закупочную  цену 
+                    $partion = $this->getLastPartion($store);
+                }
+                $price = $partion + (int) $partion / 100 * $ret;
             }
         } else if ($_price > 0) {
             $price = $_price; //задана  просто  цифра
         }
 
-        if($price == 0 && $this->cat_id > 0  ){
+        if ($price == 0 && $this->cat_id > 0) {
             $cat = \App\Entity\Category::load($this->cat_id);
-            if($cat != null){
+            if ($cat != null) {
                 if ($partion == 0) {
                     //ищем последнюю закупочную  цену 
-                      $partion = $this->getLastPartion($store);
-                }                
-                if ($_price_ == 'price1' && $cat->price1>0)$price = $partion + (int) $partion / 100 * $cat->price1;
-                if ($_price_ == 'price2' && $cat->price2>0)$price = $partion + (int) $partion / 100 * $cat->price1;
-                if ($_price_ == 'price3' && $cat->price3>0)$price = $partion + (int) $partion / 100 * $cat->price1;
-                if ($_price_ == 'price4' && $cat->price4>0)$price = $partion + (int) $partion / 100 * $cat->price1;
-                if ($_price_ == 'price5' && $cat->price5>0)$price = $partion + (int) $partion / 100 * $cat->price1;
-                  
+                    $partion = $this->getLastPartion($store);
+                }
+                if ($_price_ == 'price1' && $cat->price1 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                if ($_price_ == 'price2' && $cat->price2 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                if ($_price_ == 'price3' && $cat->price3 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                if ($_price_ == 'price4' && $cat->price4 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                if ($_price_ == 'price5' && $cat->price5 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
             }
         }
-        
-        
 
-        
-        
+
+
+
+
         //если не  задано используем глобальную наценку
         if ($common['defprice'] > 0 && $price == 0) {
 
             if ($partion == 0) {
                 //ищем последнюю закупочную  цену 
-                  $partion = $this->getLastPartion($store);
-            }   
+                $partion = $this->getLastPartion($store);
+            }
 
             $price = $partion + (int) $partion / 100 * $common['defprice'];
         }
@@ -208,18 +213,18 @@ class Item extends \ZCL\DB\Entity {
 
         return \App\Helper::fa($price);
     }
-   
-    private  function getLastPartion($store){
-           $conn = \ZDB\DB::getConnect();
-            $sql = "  select coalesce(partion,0)  from  store_stock where    item_id = {$this->item_id}   ";
-            if ($store > 0) {
-                $sql = $sql . " and store_id=" . $store;
-            }
-            $sql = $sql . " order  by  stock_id desc limit 0,1";
-       
-            return $conn->GetOne($sql);            
-     }
-   
+
+    private function getLastPartion($store) {
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select coalesce(partion,0)  from  store_stock where    item_id = {$this->item_id}   ";
+        if ($store > 0) {
+            $sql = $sql . " and store_id=" . $store;
+        }
+        $sql = $sql . " order  by  stock_id desc limit 0,1";
+
+        return $conn->GetOne($sql);
+    }
+
     public static function getPriceTypeList() {
 
         $common = \App\System::getOptions("common");

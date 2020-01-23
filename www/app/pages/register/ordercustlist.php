@@ -96,7 +96,7 @@ class OrderCustList extends \App\Pages\Base {
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
-        if ($doc->state  < Document::STATE_EXECUTED) {
+        if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
@@ -173,7 +173,7 @@ class OrderCustList extends \App\Pages\Base {
 
 
         //новый     
-        if ($state  <  Document::STATE_EXECUTED) {
+        if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->bclose->setVisible(false);
 
             $this->statuspan->statusform->binp->setVisible(true);
@@ -185,16 +185,15 @@ class OrderCustList extends \App\Pages\Base {
             $this->statuspan->statusform->bclose->setVisible(true);
         }
         $this->statuspan->statusform->bcan->setVisible(false);
-         
+
         if ($state == Document::STATE_WA) {
             $this->statuspan->statusform->bcan->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bclose->setVisible(false);
-            
         }
-       
+
         if ($state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->binv->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(true);
@@ -216,8 +215,6 @@ class OrderCustList extends \App\Pages\Base {
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
-
-        
     }
 
     //просмотр

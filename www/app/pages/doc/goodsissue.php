@@ -281,7 +281,7 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         }
         $item = Item::load($id);
-          $store_id = $this->docform->store->getValue();
+        $store_id = $this->docform->store->getValue();
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
@@ -557,7 +557,7 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         }
 
- 
+
 
 
         $store_id = $this->docform->store->getValue();
@@ -668,10 +668,10 @@ class GoodsIssue extends \App\Pages\Base {
 
 
         $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
-    }
+        }
 
-    public function OnAutoItem($sender) {
-       .. $store_id = $this->docform->store->getValue();
+        public function OnAutoItem($sender) {
+        .. $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }

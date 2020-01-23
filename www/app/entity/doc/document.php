@@ -16,7 +16,6 @@ class Document extends \ZCL\DB\Entity {
     const STATE_EDITED = 2;  //Отредактирован
     const STATE_CANCELED = 3;      //Отменен
     const STATE_READYTOEXE = 4; // готов к выполнению
-    
     const STATE_EXECUTED = 5;      // Проведен 
     const STATE_DELETED = 6;       //  Удален
     const STATE_INPROCESS = 7; // в  работе
@@ -28,7 +27,6 @@ class Document extends \ZCL\DB\Entity {
     const STATE_SHIFTED = 16; // отложен
     const STATE_FAIL = 17; // Аннулирован
     const STATE_FINISHED = 18; // Закончен
-    
     const STATE_APPROVED = 19;      //  Утвержден
     // типы  экспорта
     const EX_WORD = 1; //  Word
@@ -383,7 +381,7 @@ class Document extends \ZCL\DB\Entity {
                 return "Аннулирован";
             case Document::STATE_INPROCESS:
                 return "Выполняется";
-           case Document::STATE_READYTOEXE:
+            case Document::STATE_READYTOEXE:
                 return "Готов к выполнению";
             default:
                 return "Неизвестный статус";

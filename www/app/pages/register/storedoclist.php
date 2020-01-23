@@ -77,7 +77,7 @@ class StoreDocList extends \App\Pages\Base {
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
 
-   
+
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -111,7 +111,7 @@ class StoreDocList extends \App\Pages\Base {
         foreach ($list as $d) {
             $csv .= date('Y.m.d', $d->document_date) . ';';
             $csv .= $d->document_number . ';';
-         
+
             $csv .= $d->amount . ';';
             $csv .= str_replace(';', '', $d->notes) . ';';
             $csv .= "\n";

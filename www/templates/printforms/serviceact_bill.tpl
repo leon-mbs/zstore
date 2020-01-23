@@ -6,12 +6,12 @@
 
         <td colspan="2">от {{date}}</td>
     </tr>
-     <tr>
+    <tr>
 
         <td colspan="2"> {{firmname}}</td>
     </tr>
-    
-     <tr>
+
+    <tr>
 
         <td colspan="2">  {{address}}</td>
     </tr>
@@ -21,18 +21,18 @@
     <tr>
         <td colspan="2"> {{customer_name}}</td>
     </tr>
-    
-    
-    
-     {{#isdevice}}
+
+
+
+    {{#isdevice}}
     <tr>
         <td colspan="2"> Принято от клиента</td>
     </tr>
-   <tr>
+    <tr>
         <td colspan="2"> {{device}}</td>
     </tr>
-     {{/isdevice}}
-     <tr>
+    {{/isdevice}}
+    <tr>
         <td colspan="2">Работы:</td>
     </tr>
     {{#slist}}
@@ -40,7 +40,7 @@
         <td  >{{service}}</td>
         <td align="right" >{{price}}</td>
     </tr>
-    
+
     {{/slist}}
     <tr>
         <td align="right">Всего:</td>
@@ -55,14 +55,14 @@
         <td  >{{pdate}}</td>
         <td align="right" >{{ppay}}</td>
     </tr>
-    
+
     {{/plist}}  
-       {{/ispay}} 
+    {{/ispay}} 
     <tr>
         <td colspan="2"> {{gar}}</td>
-       
+
     </tr>     
-   <tr>
+    <tr>
         <td  >Исполнитель</td>
         <td  >________</td>
     </tr>     

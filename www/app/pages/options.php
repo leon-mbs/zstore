@@ -58,7 +58,7 @@ class Options extends \App\Pages\Base {
         $this->common->add(new TextInput('price4'));
         $this->common->add(new TextInput('price5'));
         $this->common->add(new TextInput('defprice'));
- 
+
 
         $common = System::getOptions("common");
         if (!is_array($common))
@@ -77,7 +77,7 @@ class Options extends \App\Pages\Base {
         $this->common->price4->setText($common['price4']);
         $this->common->price5->setText($common['price5']);
         $this->common->defprice->setText($common['defprice']);
- 
+
 
         $this->common->autoarticle->setChecked($common['autoarticle']);
         $this->common->useset->setChecked($common['useset']);
@@ -109,20 +109,20 @@ class Options extends \App\Pages\Base {
         $this->firm->address->setText($firm['address']);
         $this->firm->inn->setText($firm['inn']);
 
-        
+
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
         $this->printer->add(new TextInput('pwidth'));
-        $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));         
-        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13'=>'EAN-13','EAN8'=>'EAN-8','C128'=>'Code128', 'C39'=>'Code39'),'EAN13'));         
+        $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
+        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'EAN13'));
         $this->printer->add(new CheckBox('pname'));
         $this->printer->add(new CheckBox('pcode'));
         $this->printer->add(new CheckBox('pbarcode'));
         $this->printer->add(new CheckBox('pprice'));
-       
+
         $printer = System::getOptions("printer");
         if (!is_array($printer))
             $printer = array();
-        
+
         $this->printer->pwidth->setText($printer['pwidth']);
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
@@ -186,7 +186,7 @@ class Options extends \App\Pages\Base {
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
         $common['defprice'] = $this->common->defprice->getText();
-   
+
         $common['autoarticle'] = $this->common->autoarticle->isChecked();
         $common['useset'] = $this->common->useset->isChecked();
 
@@ -216,23 +216,20 @@ class Options extends \App\Pages\Base {
         $this->setSuccess('Сохранено');
     }
 
-   public function savePrinterOnClick($sender) {
+    public function savePrinterOnClick($sender) {
         $printer = array();
-        $printer['pwidth'] = $this->printer->pwidth->getText();  
-        $printer['pricetype'] = $this->printer->pricetype->getValue();  
-        $printer['barcodetype'] = $this->printer->barcodetype->getValue();  
-        $printer['pname'] = $this->printer->pname->isChecked()? 1:0;  
-        $printer['pcode'] = $this->printer->pcode->isChecked()? 1:0;  
-        $printer['pbarcode'] = $this->printer->pbarcode->isChecked()? 1:0;  
-        $printer['pprice'] = $this->printer->pprice->isChecked()? 1:0;  
-  
+        $printer['pwidth'] = $this->printer->pwidth->getText();
+        $printer['pricetype'] = $this->printer->pricetype->getValue();
+        $printer['barcodetype'] = $this->printer->barcodetype->getValue();
+        $printer['pname'] = $this->printer->pname->isChecked() ? 1 : 0;
+        $printer['pcode'] = $this->printer->pcode->isChecked() ? 1 : 0;
+        $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;
+        $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
+
         System::setOptions("printer", $printer);
         $this->setSuccess('Сохранено');
     }
-    
-    
-    
-    
+
     public function filterOnSubmit($sender) {
 
         $where = "1<>1 ";

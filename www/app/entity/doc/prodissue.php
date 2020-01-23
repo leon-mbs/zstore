@@ -60,8 +60,8 @@ class ProdIssue extends Document {
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
-      
-         foreach ($this->detaildata as $item) {
+
+        foreach ($this->detaildata as $item) {
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
 
             foreach ($listst as $st) {

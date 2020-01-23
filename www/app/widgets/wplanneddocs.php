@@ -27,7 +27,7 @@ class WPlannedDocs extends \Zippy\Html\PageFragment {
         $data = array();
 
         // список  запланированных документов
-        $where = "state >= ". Document::STATE_EXECUTED;
+        $where = "state >= " . Document::STATE_EXECUTED;
         $where = $where . " and  date(document_date) > date(now()) ";
         //   $where = $where . " and  meta_name in ('ServiceAct','GoodsIssue','GoodsReceipt') ";
 

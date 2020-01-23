@@ -143,7 +143,7 @@ class ItemList extends \App\Pages\Base {
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        $row->add(new ClickLink('print'))->onClick($this, 'printOnClick',true);
+        $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
@@ -387,34 +387,38 @@ class ItemList extends \App\Pages\Base {
         $this->setpanel->setlist->Reload();
     }
 
-    public function printOnClick($sender){
+    public function printOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
         $printer = \App\System::getOptions('printer');
         $wp = 'style="width:40mm"';
-        if(strlen($printer['pwidth'])>0) {
-           $wp = 'style="width:'.$printer['pwidth'].'mm"';
-        }      
+        if (strlen($printer['pwidth']) > 0) {
+            $wp = 'style="width:' . $printer['pwidth'] . 'mm"';
+        }
         $report = new \App\Report('item_tag.tpl');
         $header = array('printw' => $wp);
-        if($printer['pname']==1)  $header['name'] = $item->itemname;
-        if($printer['pprice']==1)  $header['price'] =number_format($item->getPrice($printer['pricetype']), 2, '.', '') ;
-        if($printer['pcode']==1)  $header['article'] = $item->item_code;
-        
-        if($printer['pbarcode']==1){
-           $barcode =  $item->bar_code;
-           if(strlen($barcode)==0)$barcode =  $item->item_code;
-           
-           $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-           $img= '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
-           $header['img'] = $img;  
-           $header['barcode'] = \App\Util::addSpaces($barcode);  
-           
-        } 
-        
-        
-        $html = $report->generate($header);    
-        $this->updateAjax(array(),"  $('#tag').html('{$html}') ; $('#pform').modal()");
+        if ($printer['pname'] == 1)
+            $header['name'] = $item->itemname;
+        if ($printer['pprice'] == 1)
+            $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
+        if ($printer['pcode'] == 1)
+            $header['article'] = $item->item_code;
+
+        if ($printer['pbarcode'] == 1) {
+            $barcode = $item->bar_code;
+            if (strlen($barcode) == 0)
+                $barcode = $item->item_code;
+
+            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+            $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
+            $header['img'] = $img;
+            $header['barcode'] = \App\Util::addSpaces($barcode);
+        }
+
+
+        $html = $report->generate($header);
+        $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
     }
+
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource {

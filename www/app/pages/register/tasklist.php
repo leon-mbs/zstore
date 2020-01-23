@@ -21,7 +21,6 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Customer;
 use \App\Entity\Stock;
- 
 use \App\Entity\Item;
 use \App\Entity\Service;
 use \App\Entity\Employee;
@@ -149,7 +148,7 @@ class TaskList extends \App\Pages\Base {
         } else {
             $this->statuspan->statusform->bclosed->setVisible(false);
         }
-        if ($this->_task->state < Document::STATE_EXECUTED ) {
+        if ($this->_task->state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binprocess->setVisible(true);
             $this->statuspan->statusform->bshifted->setVisible(true);
         } else {

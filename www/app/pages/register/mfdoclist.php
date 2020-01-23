@@ -41,8 +41,8 @@ class MFDocList extends \App\Pages\Base {
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
-        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(true)  , H::getDefMF()));
- 
+        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(true), H::getDefMF()));
+
 
         $doclist = $this->add(new DataView('doclist', new MFDOcDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
@@ -149,7 +149,7 @@ class MFDOcDataSource implements \Zippy\Interfaces\DataSource {
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
         $where .= " and meta_name  in ('OutcomeMoney','IncomeMoney')  ";
-  
+
 
         $mf = $this->page->filter->mf->getValue();
         if ($mf > 0) {

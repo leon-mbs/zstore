@@ -29,7 +29,6 @@ class ProdIssue extends \App\Pages\Base {
     public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
- 
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -126,7 +125,7 @@ class ProdIssue extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         $tovar = $sender->owner->getDataItem();
-        
+
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
         $this->calcTotal();
@@ -148,7 +147,7 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText($stock->quantity);
         $this->editdetail->editprice->setText($stock->price);
-       $this->editdetail->editserial->setText($item->serial);
+        $this->editdetail->editserial->setText($item->serial);
 
 
         $this->editdetail->edittovar->setKey($stock->stock_id);
@@ -191,7 +190,7 @@ class ProdIssue extends \App\Pages\Base {
                 $this->setWarn('Неверный номер серии');
             }
         }
-        
+
         $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -292,8 +291,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->total->setText(H::fa($total));
     }
 
-    
-   public function addcodeOnClick($sender) {
+    public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
         if ($code == '')
@@ -364,11 +362,8 @@ class ProdIssue extends \App\Pages\Base {
         }
         $this->docform->detail->Reload();
         $this->calcTotal();
-      
-          
     }
-    
-    
+
     /**
      * Валидация   формы
      *
@@ -398,8 +393,8 @@ class ProdIssue extends \App\Pages\Base {
     }
 
     public function OnChangeItem($sender) {
- 
-        
+
+
         $id = $sender->getKey();
         $item = Item::load($id);
         $store_id = $this->docform->store->getValue();
@@ -420,7 +415,7 @@ class ProdIssue extends \App\Pages\Base {
         }
 
 
-        $this->updateAjax(array('qtystock', 'editprice', 'editserial'));        
+        $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
     }
 
     public function OnAutoItem($sender) {

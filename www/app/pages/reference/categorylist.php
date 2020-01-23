@@ -11,8 +11,9 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Category;
- use \App\System;
+use \App\System;
 use \App\Helper as H;
+
 /**
  * справочник категорийтоваров
  */
@@ -30,8 +31,8 @@ class CategoryList extends \App\Pages\Base {
         $this->categorytable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('categorydetail'))->setVisible(false);
         $this->categorydetail->add(new TextInput('editcat_name'));
-        
-        
+
+
         $this->categorydetail->add(new TextInput('editprice1'));
         $this->categorydetail->add(new TextInput('editprice2'));
         $this->categorydetail->add(new TextInput('editprice3'));
@@ -67,9 +68,9 @@ class CategoryList extends \App\Pages\Base {
             $this->categorydetail->editprice5->setAttribute('placeholder', $common['price5']);
         } else {
             $this->categorydetail->editprice5->setVisible(false);
-        }        
-        
-        
+        }
+
+
         $this->categorydetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->categorydetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -103,12 +104,12 @@ class CategoryList extends \App\Pages\Base {
         $this->categorytable->setVisible(false);
         $this->categorydetail->setVisible(true);
         $this->categorydetail->editcat_name->setText($this->_category->cat_name);
-        
+
         $this->categorydetail->editprice1->setText($this->_category->price1);
         $this->categorydetail->editprice2->setText($this->_category->price2);
         $this->categorydetail->editprice3->setText($this->_category->price3);
         $this->categorydetail->editprice4->setText($this->_category->price4);
-        $this->categorydetail->editprice5->setText($this->_category->price5);        
+        $this->categorydetail->editprice5->setText($this->_category->price5);
     }
 
     public function addOnClick($sender) {
@@ -129,7 +130,7 @@ class CategoryList extends \App\Pages\Base {
             $this->setError("Введите наименование");
             return;
         }
-        
+
         $this->_category->price1 = $this->categorydetail->editprice1->getText();
         $this->_category->price2 = $this->categorydetail->editprice2->getText();
         $this->_category->price3 = $this->categorydetail->editprice3->getText();
