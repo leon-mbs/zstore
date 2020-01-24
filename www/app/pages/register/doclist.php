@@ -157,16 +157,36 @@ class DocList extends \App\Pages\Base {
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
+        
+        
+        //список документов   которые   могут  быть созданы  на  основании  текущего
+        $row->add(new Panel('basedon'));
+        $basedonlist = $doc->getRelationBased();
+        if (count($basedonlist) == 0) {
+            $row->basedon->setVisible(false);
+        } else {
+            $list = "";
+            foreach ($basedonlist as $doctype => $docname) {
+                $list .= "<a  class=\"dropdown-item\" href=\"/index.php?p=App/Pages/Doc/" . $doctype . "&arg=/0/{$doc->document_id}\">{$docname}</a>";
+            };
+            $row->basedon->add(new Label('basedlist'))->setText($list, true);
+        }        
+        
+        
         if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
             $row->waitpay->setVisible(false);
+            $row->isplanned->setVisible(false);
+            $row->basedon->setVisible(false);
+                        
         } else {
             $row->edit->setVisible(false);
             $row->delete->setVisible(false);
             $row->cancel->setVisible(true);
         }
+        
     }
 
     public function onSort($sender) {
@@ -259,7 +279,7 @@ class DocList extends \App\Pages\Base {
         //     return;
 
         if (\App\ACL::checkExeDoc($doc, true, false) == false) {
-            $this->setError('Нет  права отменять документы');
+            $this->setError('Нет  права отменять документ '. $doc->meta_desc);
             return;
         }
 

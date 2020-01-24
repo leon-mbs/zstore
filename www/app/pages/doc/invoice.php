@@ -136,6 +136,29 @@ class Invoice extends \App\Pages\Base {
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+                        if ($basedoc->meta_name == 'Order') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+                        $this->OnChangeCustomer($this->docform->customer);
+
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->order->setText($basedoc->document_number);
+
+                        $order = $basedoc->cast();
+
+
+                        $this->docform->total->setText($order->amount);
+
+                         
+                        $this->calcPay();
+
+                        foreach ($order->detaildata as $item) {
+                            $item = new Item($item);
+                            $this->_itemlist[$item->item_id] = $item;
+                        }
+                    }
+                
                 }
             }
         }

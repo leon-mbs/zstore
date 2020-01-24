@@ -38,7 +38,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->docform->add(new Date('document_date', time()));
 
 
-        $this->docform->add(new DropDownChoice('storeto', Store::getList(), 0))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), 0))->onChange($this, 'OnChangeStore');
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -67,7 +67,7 @@ class IncomeItem extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->storeto->setValue($this->_doc->headerdata['storeto']);
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->notes->setText($this->_doc->notes);
 
             foreach ($this->_doc->detaildata as $_item) {
@@ -79,10 +79,26 @@ class IncomeItem extends \App\Pages\Base {
         } else {
             $this->_doc = Document::create('IncomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+              if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
+                if ($basedoc instanceof Document) {
+                   $this->_basedocid = $basedocid;
+                   if ($basedoc->meta_name == 'Invoice') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+           
+                        foreach ($order->detaildata as $item) {
+                            $item = new Item($item);
+                            $this->_itemlist[$item->item_id] = $item;
+                        }               
+                
+                   }
+                }
+              }
+        
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        $this->OnChangeStore($this->docform->storeto);
+        $this->OnChangeStore($this->docform->store);
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
@@ -205,8 +221,8 @@ class IncomeItem extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['storeto'] = $this->docform->storeto->getValue();
-        $this->_doc->headerdata['storetoname'] = $this->docform->storeto->getValueName();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
 
         $this->_doc->detaildata = array();
@@ -224,7 +240,10 @@ class IncomeItem extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
@@ -270,7 +289,7 @@ class IncomeItem extends \App\Pages\Base {
             $this->setError("Не введен ни один  товар");
         }
 
-        if (($this->docform->storeto->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
 

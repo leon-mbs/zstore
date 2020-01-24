@@ -205,6 +205,7 @@ class ItemList extends \App\Pages\Base {
         }
         $this->detailpanel->moveform->frompart->setOptionList($st);
         $this->detailpanel->moveform->topart->setOptionList($st);
+        $this->detailpanel->moveform->setVisible(count($st)>1);
     }
 
     public function OnMove($sender) {
@@ -233,10 +234,10 @@ class ItemList extends \App\Pages\Base {
 
             return;
         }
-        $doc = \App\Entity\Doc\Document::create('MoveItem');
+        $doc = \App\Entity\Doc\Document::create('TransItem');
         $doc->document_number = $doc->nextNumber();
         if (strlen($doc->document_number) == 0)
-            $doc->document_number = "ПТ-000001";
+            $doc->document_number = "ПК-000001";
         $doc->document_date = time();
 
         $item = Item::load($st1->item_id);
@@ -249,16 +250,14 @@ class ItemList extends \App\Pages\Base {
         $doc->detaildata[] = $item->getData();
 
         $store = Store::load($st1->store_id);
-        $doc->headerdata['storefrom'] = $store->store_id;
-        $doc->headerdata['storefromname'] = $store->storename;
-        $doc->headerdata['storeto'] = $store->store_id;
-        $doc->headerdata['storetoname'] = $store->storename;
+        $doc->headerdata['store'] = $store->store_id;
+        $doc->headerdata['storename'] = $store->storename;
         $doc->notes = "Перемещение партий";
         $doc->save();
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
 
-        $this->setInfo('Товар перемещен');
+        $this->setInfo("Партия перемещена ({$doc->document_number})");
         $sender->clean();
         $this->detailpanel->stocklist->Reload();
     }

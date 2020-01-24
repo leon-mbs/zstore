@@ -21,7 +21,7 @@ class IncomeItem extends Document {
 
         foreach ($this->detaildata as $item) {
 
-            $stockto = Stock::getStock($this->headerdata['storeto'], $item['item_id'], $item['price'], $item['snumber'], 0, true);
+            $stockto = Stock::getStock($this->headerdata['store'], $item['item_id'], $item['price'], $item['snumber'], 0, true);
             $sc = new Entry($this->document_id, $item['quantity'] * $item['price'], $item['price']);
             $sc->setStock($stockto->stock_id);
             $sc->save();
@@ -57,7 +57,7 @@ class IncomeItem extends Document {
             "_detail" => $detail,
             'date' => date('d.m.Y', $this->document_date),
             "total" => H::fa($this->amount),
-            "to" => $this->headerdata["storetoname"],
+            "to" => $this->headerdata["storename"],
             "notes" => $this->notes,
             "document_number" => $this->document_number
         );

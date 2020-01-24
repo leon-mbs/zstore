@@ -113,7 +113,7 @@ class ACL {
         if ($user->acltype != 2)
             return true;
 
-        //  self::load();
+         self::load();
         //для существующих документов
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
@@ -131,6 +131,7 @@ class ACL {
         if (in_array($doc->meta_id, $aclview)) {
             return true;
         }
+       
 
         if ($showerror == true) {
             System::setErrorMsg('Нет права  просмотра   документа ' . self::$_metasdesc[$doc]);
@@ -146,13 +147,12 @@ class ACL {
         if ($user->acltype != 2)
             return true;
 
-        // self::load();
-
+        self::load();
 
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg('Нет права  изменения   документа ' . self::$_metasdesc[$doc]);
+                System::setErrorMsg('Нет права  изменения   документа '  . self::$_metasdesc[$doc])  ;
                 if ($inreg == false)
                     App::RedirectHome();
                 return false;
@@ -168,7 +168,7 @@ class ACL {
 
         if ($showerror == true) {
 
-            System::setErrorMsg('Нет права   изменения    документа ' . self::$_metasdesc[$doc]);
+            System::setErrorMsg('Нет права   изменения    документа ' . self::$_metasdesc[$doc->meta_id]);
             if ($inreg == false)
                 App::RedirectHome();
         }
@@ -181,7 +181,9 @@ class ACL {
         $user = System::getUser();
         if ($user->acltype != 2)
             return true;
-
+      
+        self::load();
+          
         $aclexe = explode(',', $user->aclexe);
 
         if (in_array($doc->meta_id, $aclexe)) {

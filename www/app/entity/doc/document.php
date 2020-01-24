@@ -322,6 +322,11 @@ class Document extends \ZCL\DB\Entity {
         if ($this->document_id == 0)
             return false;
 
+        //если нет права  выполнять    
+        if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this,false,false)==false) {            
+            $state  = self::STATE_READYTOEXE;
+        }
+            
         if ($state == self::STATE_CANCELED) {
             $this->Cancel();
         }
@@ -604,4 +609,15 @@ class Document extends \ZCL\DB\Entity {
         }
     }
 
+   /**
+     *  Возвращает  списки  документов которые  могут быть  созданы  на  основании
+     *
+     */
+    public function getRelationBased() {
+        $list = array();
+
+        return $list;
+    }
+    
+    
 }

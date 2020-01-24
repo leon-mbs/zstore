@@ -168,8 +168,7 @@ class GoodsIssue extends \App\Pages\Base {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-                        $this->OnChangeCustomer($this->docform->customer);
-
+ 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
@@ -190,6 +189,33 @@ class GoodsIssue extends \App\Pages\Base {
                             $this->setWarn('У заказа  уже  есть отправка');
                         }
                         $this->docform->total->setText($order->amount);
+
+                        $this->OnChangeCustomer($this->docform->customer);
+                        $this->calcPay();
+
+                        foreach ($order->detaildata as $item) {
+                            $item = new Item($item);
+                            $this->_itemlist[$item->item_id] = $item;
+                        }
+                    }
+                    if ($basedoc->meta_name == 'Invoice') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+ 
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->_orderid = $basedocid;
+                        $this->docform->order->setText($basedoc->document_number);
+                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
+                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
+                        $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
+                        $this->docform->delivery_date->setDate($basedoc->headerdata['delivery']);
+
+                        $notfound = array();
+                        $invoice = $basedoc->cast();
+                    
+                        $this->docform->total->setText($invoice->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();

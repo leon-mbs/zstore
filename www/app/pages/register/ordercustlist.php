@@ -65,6 +65,9 @@ class OrderCustList extends \App\Pages\Base {
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bcan'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new TextInput('refcomment')) ;
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -133,11 +136,41 @@ class OrderCustList extends \App\Pages\Base {
         }
 
 
-        if ($sender->id == "bcan") {
-            $this->_doc->updateStatus(Document::STATE_CANCEL);
+        if ($sender->id == "bap") {
+            $this->_doc->updateStatus(Document::STATE_APPROVED);
+            
+           
+            $user = System::getUser();   
+
+            $n = new \App\Entity\Notify();
+            $n->user_id = $this->_doc->user_id;
+            $n->dateshow = time();
+            $n->message = "Пользователь <b>{$user->username}</b>  утвердил документ ".$this->_doc->document_number;
+            $n->save();             
+           
+            
+        }
+        if ($sender->id == "bref") {
+            $this->_doc->updateStatus(Document::STATE_REFUSED);
+             
+            $text = trim($this->statuspan->statusform->refcomment->getText());
+
+            $user = System::getUser() ;    
+
+            $n = new \App\Entity\Notify();
+            $n->user_id  = $this->_doc->user_id;
+            $n->dateshow = time();
+            $n->message  = "Пользователь <b>{$user->username}</b>  отклонил документ ".$this->_doc->document_number;
+            $n->message .= "<br> ".$text;
+            $n->save();             
+            
+            $this->statuspan->statusform->refcomment->setText('') ;
         }
         if ($sender->id == "binp") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
+        }
+        if ($sender->id == "bcan") {
+            $this->_doc->updateStatus(Document::STATE_CANCELED);
         }
         if ($sender->id == "bclose") {
 
@@ -147,10 +180,10 @@ class OrderCustList extends \App\Pages\Base {
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
         }
-
-
+    
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
+
     }
 
     public function updateStatusButtons() {
@@ -163,15 +196,12 @@ class OrderCustList extends \App\Pages\Base {
         //доставлен
         $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
 
-
         //проверяем  что есть ТТН
         $d = $this->_doc->getChildren('GoodsReceipt');
         $ttn = count($d) > 0;
 
         $this->statuspan->statusform->binp->setVisible(false);
-
-
-
+   
         //новый     
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->bclose->setVisible(false);
@@ -179,33 +209,46 @@ class OrderCustList extends \App\Pages\Base {
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bcan->setVisible(false);
         } else {
-
-
             $this->statuspan->statusform->bclose->setVisible(true);
+            $this->statuspan->statusform->bcan->setVisible(true);
         }
-        $this->statuspan->statusform->bcan->setVisible(false);
+        $this->statuspan->statusform->bap->setVisible(false);
+        $this->statuspan->statusform->bref->setVisible(false);
 
         if ($state == Document::STATE_WA) {
-            $this->statuspan->statusform->bcan->setVisible(true);
+            $this->statuspan->statusform->bap->setVisible(true);
+            $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bcan->setVisible(false);
+        }
+        if ($state == Document::STATE_APPROVED) {
+            $this->statuspan->statusform->bap->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->binp->setVisible(true);
+            $this->statuspan->statusform->bclose->setVisible(true);
+            $this->statuspan->statusform->bcan->setVisible(true);
         }
 
         if ($state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->binv->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
+            $this->statuspan->statusform->bcan->setVisible(false);
         }
         if ($state == Document::STATE_REFUSED) {
 
-            $this->statuspan->statusform->bcan->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bcan->setVisible(true);
         }
         //закрыт
         if ($state == Document::STATE_CLOSED) {
@@ -213,8 +256,13 @@ class OrderCustList extends \App\Pages\Base {
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bcan->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->bap->setVisible(false);
+            
             $this->statuspan->statusform->setVisible(false);
         }
+        $this->statuspan->statusform->refcomment->setVisible($this->statuspan->statusform->bref->isVisible());
     }
 
     //просмотр

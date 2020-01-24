@@ -8,7 +8,7 @@ use \App\Entity\Store;
 use \App\Helper as H;
 
 /**
- * Класс-сущность  документ с аписание товаров
+ * Класс-сущность  документ списание товаров
  *
  */
 class OutcomeItem extends Document {
@@ -23,7 +23,7 @@ class OutcomeItem extends Document {
 
             //списываем  со склада
 
-            $listst = Stock::pickup($this->headerdata['storefrom'], $item['item_id'], $item['quantity'], $item['snumber']);
+            $listst = Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
             if (count($listst) == 0) {
                 \App\System::setErrorMsg('Недостаточно товара ' . $item['itemname']);
                 return false;
@@ -56,7 +56,7 @@ class OutcomeItem extends Document {
         $header = array(
             "_detail" => $detail,
             'date' => date('d.m.Y', $this->document_date),
-            "from" => $this->headerdata["storefromname"],
+            "from" => $this->headerdata["storename"],
             "notes" => $this->notes,
             "document_number" => $this->document_number
         );
@@ -71,4 +71,11 @@ class OutcomeItem extends Document {
         return 'ОТ-000000';
     }
 
+    public function getRelationBased() {
+        $list = array();
+        $list['IncomeItem'] = 'Оприходование товаров';
+
+        return $list;
+    }    
+    
 }

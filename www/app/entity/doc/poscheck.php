@@ -119,4 +119,5 @@ class POSCheck extends Document {
         return 'К-000000';
     }
 
+ 
 }

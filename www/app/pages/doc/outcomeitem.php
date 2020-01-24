@@ -37,7 +37,7 @@ class OutcomeItem extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
@@ -64,7 +64,7 @@ class OutcomeItem extends \App\Pages\Base {
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -108,7 +108,7 @@ class OutcomeItem extends \App\Pages\Base {
     }
 
     public function addrowOnClick($sender) {
-        if ($this->docform->storefrom->getValue() == 0) {
+        if ($this->docform->store->getValue() == 0) {
             $this->setError("Выберите склад источник");
             return;
         }
@@ -131,7 +131,7 @@ class OutcomeItem extends \App\Pages\Base {
         $this->editdetail->edititem->setValue($item->itemname);
         $this->editdetail->editsnumber->setValue($item->snumber);
 
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->storefrom->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
         $this->_rowid = $item->item_id . $item->snumber;
     }
@@ -178,8 +178,8 @@ class OutcomeItem extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
-        $this->_doc->headerdata['storefromname'] = $this->docform->storefrom->getValueName();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
@@ -230,7 +230,7 @@ class OutcomeItem extends \App\Pages\Base {
         }
 
 
-        if (($this->docform->storefrom->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
 
@@ -246,13 +246,13 @@ class OutcomeItem extends \App\Pages\Base {
 
         $item_id = $sender->getKey();
         $item = Item::load($item_id);
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->storefrom->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
         $this->updateAjax(array('qtystock'));
     }
 
     public function OnChangeStore($sender) {
-        if ($sender->id == 'storefrom') {
+        if ($sender->id == 'store') {
             //очистка  списка  товаров
             $this->_itemlist = array();
             $this->docform->detail->Reload();
@@ -267,7 +267,7 @@ class OutcomeItem extends \App\Pages\Base {
     }
 
     public function OnAutocompleteItem($sender) {
-        $store_id = $this->docform->storefrom->getValue();
+        $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         return Item::findArrayAC($text, $store_id);
     }

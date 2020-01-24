@@ -82,5 +82,14 @@ class Order extends \App\Entity\Doc\Document {
     protected function getNumberTemplate() {
         return 'ЗК-000000';
     }
+  
+    public function getRelationBased() {
+        $list = array();
+        $list['GoodsIssue'] = 'Расходная накладная';
+        $list['Invoice'] = 'Счет-фактура';
+        $list['POSCheck'] = 'Чек';
 
+
+        return $list;
+    }
 }

@@ -37,7 +37,7 @@ class TransItem extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new AutocompleteTextInput('fromitem'))->onText($this, 'OnAutocompleteItem');
         $this->docform->add(new AutocompleteTextInput('toitem'))->onText($this, 'OnAutocompleteItem');
 
@@ -55,7 +55,7 @@ class TransItem extends \App\Pages\Base {
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->fromitem->setKey($this->_doc->headerdata['fromitem']);
             $fi = Stock::load($this->_doc->headerdata['fromitem']);
             $this->docform->fromitem->setText($fi->itemname . ', ' . $fi->partion);
@@ -86,7 +86,7 @@ class TransItem extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['fromitem'] = $this->docform->fromitem->getKey();
         $this->_doc->headerdata['toitem'] = $this->docform->toitem->getKey();
         $this->_doc->headerdata['fromquantity'] = $this->docform->fromquantity->getText();
@@ -165,7 +165,7 @@ class TransItem extends \App\Pages\Base {
     }
 
     public function OnAutocompleteItem($sender) {
-        $store_id = $this->docform->storefrom->getValue();
+        $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         if ($sender->id == 'fromitem') {
             return Stock::findArrayAC($store_id, $text);

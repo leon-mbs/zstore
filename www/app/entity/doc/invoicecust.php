@@ -57,5 +57,11 @@ class InvoiceCust extends Document {
     protected function getNumberTemplate() {
         return 'СВ-000000';
     }
+    public function getRelationBased() {
+        $list = array();
+        $list['GoodsReceipt'] = 'Приходная накладная';
+
+        return $list;
+    }    
 
 }

@@ -52,4 +52,11 @@ class OrderCust extends Document {
         return 'ЗКП-000000';
     }
 
+    public function getRelationBased() {
+        $list = array();
+        $list['GoodsReceipt'] = 'Приходная накладная';
+        $list['InvoiceCust']  = 'Счет от поставщика';
+
+        return $list;
+    }      
 }

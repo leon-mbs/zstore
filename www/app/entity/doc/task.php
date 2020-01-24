@@ -84,4 +84,10 @@ class Task extends Document {
         return 'НР-000000';
     }
 
+    public function getRelationBased() {
+        $list = array();
+        $list['ProdIssue'] = 'Cписание в  производство ';
+    
+        return $list;
+    }    
 }
