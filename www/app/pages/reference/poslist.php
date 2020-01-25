@@ -36,14 +36,6 @@ class PosList extends \App\Pages\Base {
         $this->posdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
         $this->posdetail->add(new TextInput('editpos_name'));
-        $this->posdetail->add(new TextInput('editaddress'));
-        $this->posdetail->add(new TextInput('editip'));
-        $this->posdetail->add(new TextInput('editsip'));
-        $this->posdetail->add(new TextInput('editemail'));
-        $this->posdetail->add(new TextInput('editphone'));
-        $this->posdetail->add(new TextInput('editviber'));
-        $this->posdetail->add(new TextInput('edittele'));
-        $this->posdetail->add(new TextInput('editsup'));
         $this->posdetail->add(new DropDownChoice('editstore', \App\Entity\Store::getList(), H::getDefStore()));
         $this->posdetail->add(new DropDownChoice('editmf', \App\Entity\MoneyFund::getList(true)));
         $this->posdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList()));
@@ -83,14 +75,6 @@ class PosList extends \App\Pages\Base {
         $this->postable->setVisible(false);
         $this->posdetail->setVisible(true);
         $this->posdetail->editpos_name->setText($this->_pos->pos_name);
-        $this->posdetail->editaddress->setText($this->_pos->address);
-        $this->posdetail->editip->setText($this->_pos->ip);
-        $this->posdetail->editsip->setText($this->_pos->sip);
-        $this->posdetail->editemail->setText($this->_pos->email);
-        $this->posdetail->editphone->setText($this->_pos->phone);
-        $this->posdetail->editviber->setText($this->_pos->viber);
-        $this->posdetail->edittele->setText($this->_pos->tele);
-        $this->posdetail->editsup->setText($this->_pos->sup);
         $this->posdetail->editbranch->setValue($this->_pos->branch_id);
         $this->posdetail->editstore->setValue($this->_pos->store);
         $this->posdetail->editmf->setValue($this->_pos->mf);
@@ -116,15 +100,7 @@ class PosList extends \App\Pages\Base {
 
 
         $this->_pos->pos_name = $this->posdetail->editpos_name->getText();
-        $this->_pos->address = $this->posdetail->editaddress->getText();
-        $this->_pos->phone = $this->posdetail->editphone->getText();
-        $this->_pos->ip = $this->posdetail->editip->getText();
-        $this->_pos->sip = $this->posdetail->editsip->getText();
-        $this->_pos->email = $this->posdetail->editemail->getText();
-        $this->_pos->viber = $this->posdetail->editviber->getText();
-        $this->_pos->tele = $this->posdetail->edittele->getText();
-        $this->_pos->sup = $this->posdetail->editsup->getText();
-
+ 
         $this->_pos->branch_id = $this->posdetail->editbranch->getValue();
 
         $this->_pos->store = $this->posdetail->editstore->getValue();
@@ -155,7 +131,7 @@ class PosList extends \App\Pages\Base {
             return;
         }
 
-        if ($this->_pos->branch_id > 0) {
+        if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id > 0) {
             $mf = \App\Entity\MoneyFund::load($this->_pos->mf);
             $store = \App\Entity\Store::load($this->_pos->store);
             if ($this->_pos->branch_id != $mf->branch_id) {

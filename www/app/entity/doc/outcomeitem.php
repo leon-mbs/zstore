@@ -74,7 +74,6 @@ class OutcomeItem extends Document {
     public function getRelationBased() {
         $list = array();
         $list['IncomeItem'] = 'Оприходование товаров';
-
         return $list;
     }    
     

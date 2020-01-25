@@ -10,7 +10,11 @@
 
         <td colspan="2"> {{firmname}}</td>
     </tr>
-
+    {{#shopname}}
+    <tr>
+        <td colspan="2"> {{shopname}}</td>
+    </tr>
+      {{/shopname}}
     <tr>
 
         <td colspan="2">  {{address}}</td>
@@ -18,10 +22,15 @@
     <tr>
         <td colspan="2"> {{phone}}</td>
     </tr>
+    {{#viber}}
+    <tr>
+        <td colspan="2"> {{viber}}</td>
+    </tr>
+     {{/viber}}    
     <tr>
         <td colspan="2"> {{customer_name}}</td>
     </tr>
-
+ 
 
 
     {{#isdevice}}

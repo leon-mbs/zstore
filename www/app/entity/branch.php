@@ -88,8 +88,6 @@ class Branch extends \ZCL\DB\Entity {
         return Branch::findArray("branch_name", $where, "branch_name");
     }
 
-    public function getCompany() {
-        return Company::load($this->company_id);
-    }
+    
 
 }

@@ -420,12 +420,8 @@ class Helper {
         $data = \App\System::getOptions("firm");
         if ($id > 0) {
             $branch = \App\Entity\Branch::load($id);
-
-            $company = $branch->getCompany();
-            if (strlen($company->company_name) > 0)
-                $data['firmname'] = $company->company_name;
-            if (strlen($company->inn) > 0)
-                $data['inn'] = $company->inn;
+            if (strlen($branch->shopname) > 0)
+                $data['shopname'] = $branch->shop_name;
             if (strlen($branch->address) > 0)
                 $data['address'] = $branch->address;
             if (strlen($branch->phone) > 0)

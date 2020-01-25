@@ -84,6 +84,7 @@ class ServiceAct extends Document {
         $header = array('printw' => $wp, 'date' => date('d.m.Y', time()),
             "document_number" => $this->document_number,
             "firmname" => $firm['firmname'],
+            "shopname" => strlen($firm['shopname'])>0 ? $firm['shopname'] : false ,
             "address" => $firm['address'],
             "phone" => $firm['phone'],
             "customer_name" => $this->headerdata['customer_name'],
@@ -118,6 +119,7 @@ class ServiceAct extends Document {
 
         return $html;
     }
+
     public function getRelationBased() {
         $list = array();
         $list['Task'] = 'Наряд';

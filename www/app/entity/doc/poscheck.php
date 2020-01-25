@@ -22,13 +22,12 @@ class POSCheck extends Document {
         $check = array();
         $check[] .= $this->f30("Чек " . $this->document_number);
         $check[] .= $this->f30("вiд " . date('Y-m-d H:i:s', $this->headerdata['time']));
-        $check[] .= $this->f30("IПН " . $this->headerdata["inn"]);
         $check[] .= $this->f30($this->headerdata["firmname"]);
+        $check[] .= $this->f30("IПН " . $this->headerdata["inn"]);
         //  $check[] .=  $this->f30("Тел.  ". $firm['phone']);
         foreach (explode(',', $this->headerdata["phone"]) as $p) {
             $check[] .= $this->f30("Тел.  " . $p);
         }
-        $check[] .= $this->f30("Viber " . $this->headerdata["viber"]);
         $check[] .= str_repeat('-', 30);
         $a = "Адрес " . $this->headerdata["address"];
         foreach (Util::mb_split($a, 30) as $p) {
@@ -64,6 +63,7 @@ class POSCheck extends Document {
         return $s . str_repeat(' ', 30 - mb_strlen($s));
     }
 
+
     public function generateReport() {
 
         $print = implode("<br>", $this->generateCheck());
@@ -77,6 +77,10 @@ class POSCheck extends Document {
 
         return $html;
     }
+    
+    public function generatePosReport() {
+        return $this->generateReport();   
+    }   
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
@@ -119,5 +123,7 @@ class POSCheck extends Document {
         return 'К-000000';
     }
 
- 
+    public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
+    } 
 }

@@ -49,9 +49,8 @@ class ARMPos extends \App\Pages\Base {
             $plist = \App\Entity\Pos::findArray('pos_name', 'pos_id=' . $cc);
         }
         $this->form1->add(new DropDownChoice('pos', $plist, $cc));
-
-
-
+  
+  
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
         $this->add(new Form('form2'))->setVisible(false);
@@ -174,7 +173,7 @@ class ARMPos extends \App\Pages\Base {
         $this->doc = \App\Entity\Doc\Document::create('POSCheck');
 
         $this->_itemlist = array();
-
+        $this->form2->detail->Reload();
         $this->calcTotal();
 
 
@@ -225,10 +224,10 @@ class ARMPos extends \App\Pages\Base {
         $this->form2->barcode->setText('');
         if ($code == '')
             return;
-
-
+     
+       
         $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$this->pos->store}) and  (item_code = {$code_} or bar_code = {$code_})");
 
 
 
@@ -524,8 +523,8 @@ class ARMPos extends \App\Pages\Base {
         $this->doc->headerdata["firmname"] = $firm['firmname'];
         $this->doc->headerdata["inn"] = $firm['inn'];
         $this->doc->headerdata["address"] = $firm['address'];
-        $this->doc->headerdata["phone"] = $pos->phone;
-        $this->doc->headerdata["viber"] = $pos->viber;
+        $this->doc->headerdata["phone"] = $firm['phone'];
+        
 
         $this->doc->detaildata = array();
         foreach ($this->_itemlist as $tovar) {

@@ -177,9 +177,10 @@ class DocList extends \App\Pages\Base {
             $row->basedon->add(new Label('basedlist'))->setText($list, true);
         }        
     
-        if ($doc->state < Document::STATE_WA) {  //ждем  подтвержения
+        if ($doc->state == Document::STATE_WA) {  //ждем  подтвержения
             $row->basedon->setVisible(false);
         }       
+            
         
         if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);

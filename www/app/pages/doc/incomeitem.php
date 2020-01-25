@@ -30,7 +30,7 @@ class IncomeItem extends \App\Pages\Base {
     private $_doc;
     private $_rowid = 0;
 
-    public function __construct($docid = 0) {
+    public function __construct($docid = 0,$basedocid=0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -38,7 +38,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->docform->add(new Date('document_date', time()));
 
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), 0))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), 0));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -59,6 +59,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->editdetail->add(new Date('editsdate'));
 
 
+        
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
 
@@ -75,32 +76,33 @@ class IncomeItem extends \App\Pages\Base {
                 $item->old = true;
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
-            $this->calcTotal();
-        } else {
+         } else {
             $this->_doc = Document::create('IncomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-              if ($basedocid > 0) {  //создание на  основании
-                $basedoc = Document::load($basedocid);
+             if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);  
                 if ($basedoc instanceof Document) {
-                   $this->_basedocid = $basedocid;
-                   if ($basedoc->meta_name == 'Invoice') {
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
-           
-                        foreach ($order->detaildata as $item) {
-                            $item = new Item($item);
-                            $this->_itemlist[$item->item_id] = $item;
-                        }               
-                
-                   }
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'OutcomeItem') {
+                        
+                            
+                        foreach ($basedoc->detaildata as $_item) {
+                            $item = new Item($_item);
+                            $item->old = false;
+                            $this->_itemlist[$item->item_id . $item->snumber] = $item;
+                        }                      
+                    }
                 }
-              }
-        
+             }       
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        $this->OnChangeStore($this->docform->store);
-        if (false == \App\ACL::checkShowDoc($this->_doc))
-            return;
+        if (false == \App\ACL::checkShowDoc($this->_doc))  return;
+            
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        
+                     
     }
 
     public function detailOnRow($row) {
@@ -117,7 +119,7 @@ class IncomeItem extends \App\Pages\Base {
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->edit->setVisible($item->old != true);
+        $row->edit->setVisible($item->old == false);
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
@@ -168,7 +170,7 @@ class IncomeItem extends \App\Pages\Base {
         }
 
         $item = Item::load($id);
-
+        $item->old = false;
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -212,7 +214,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->editdetail->editquantity->setText("1");
     }
 
-    public function savedocOnClick($sender) {
+      public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         if ($this->checkForm() == false) {
@@ -302,12 +304,7 @@ class IncomeItem extends \App\Pages\Base {
         App::RedirectBack();
     }
 
-    public function OnChangeStore($sender) {
-
-        //очистка  списка  товаров
-        $this->_itemlist = array();
-        $this->docform->detail->Reload();
-    }
+ 
 
     public function OnAutocompleteItem($sender) {
 
@@ -318,7 +315,7 @@ class IncomeItem extends \App\Pages\Base {
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-
+ 
 
         $code = Item::qstr($code);
 

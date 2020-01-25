@@ -193,7 +193,7 @@
                     </div> 
                     <br> 
                     <div class="form-group  ">
-                        <input zippy="print" type="button" value="Печать "   class="btn  btn-primary">
+                        <input onclick="$('#showcheck').printThis()" zippy="print" type="button" value="Печать "   class="btn  btn-primary">
                         &nbsp;&nbsp;<input type="button" value="Новый чек  " zippy="newdoc" class="btn  btn-info">
                     </div>
 
@@ -298,24 +298,10 @@
                 }
             }
 
+       
 
+                                                       
 
-            function printpos(url, data) {
-
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: data
-                }).success(function (data) {
-
-
-
-                }).fail(function (data) {
-
-                    console.log(JSON.stringify(data));
-                });
-            }
         </script>
 
     </body>

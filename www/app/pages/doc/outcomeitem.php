@@ -38,7 +38,7 @@ class OutcomeItem extends \App\Pages\Base {
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-
+  
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -70,6 +70,7 @@ class OutcomeItem extends \App\Pages\Base {
 
             foreach ($this->_doc->detaildata as $_item) {
                 $item = new Item($_item);
+                
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
         } else {
@@ -94,6 +95,7 @@ class OutcomeItem extends \App\Pages\Base {
         $row->add(new Label('quantity', H::fqty($item->quantity)));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->edit->setVisible($item->old == false);
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
@@ -146,9 +148,22 @@ class OutcomeItem extends \App\Pages\Base {
         }
 
         $item = Item::load($id);
+    
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
-
+        //ищем  последню цену
+        $store_id = $this->docform->store->getValue();
+         
+        $where = "store_id = {$store_id} and item_id = {$id}    ";
+        if (strlen($item->snumber) > 0) {
+            $where .= " and snumber=" . Stock::qstr($item->snumber);
+        }
+        $s = Stock::getFirst($where, ' stock_id  desc '); 
+        if($s instanceof Stock) {
+          $item->price = $s->partion;    
+        }
+        
+               
         $this->_itemlist[$id . $item->snumber] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -275,11 +290,15 @@ class OutcomeItem extends \App\Pages\Base {
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-
+        $store_id = $this->docform->store->getValue();
+        if($store_id==0){
+            $this->setError('Не указан склад');
+            return;
+        }
 
         $code = Item::qstr($code);
 
-        $item = Item::getFirst("    (item_code = {$code} or bar_code = {$code})");
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code})");
         if ($item == null) {
             $this->setError('Товар не  найден');
             return;
@@ -302,7 +321,14 @@ class OutcomeItem extends \App\Pages\Base {
         }
 
         $this->_itemlist[$item->item_id]->quantity += 1;
-
+         //ищем  последню цену
+          
+        $where = "store_id = {$store_id} and item_id = {$item->item_id}    ";
+   
+        $s = Stock::getFirst($where, ' stock_id  desc '); 
+        if($s instanceof Stock) {
+          $item->price = $s->partion;    
+        }
         $this->docform->detail->Reload();
     }
 

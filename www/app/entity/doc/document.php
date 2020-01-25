@@ -202,7 +202,7 @@ class Document extends \ZCL\DB\Entity {
     }
 
     /**
-     * Генерация  печати для POS  терминала
+     * Генерация  печати для POS  терминала  или  принтеров чеков
      *
      */
     public function generatePosReport() {

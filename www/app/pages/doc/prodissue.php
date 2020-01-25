@@ -297,9 +297,14 @@ class ProdIssue extends \App\Pages\Base {
         if ($code == '')
             return;
 
+        $store_id = $this->docform->store->getValue();
+        if($store_id==0){
+            $this->setError('Не указан склад');
+            return;
+        }
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_})");
 
 
 
