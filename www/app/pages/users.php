@@ -196,12 +196,15 @@ class Users extends \App\Pages\Base {
 
         foreach ($this->editpan->editform->metaaccess->metarow->getDataRows() as $row) {
             $item = $row->getDataItem();
-            if ($item->viewacc == true)
-                $varr[] = $item->meta_id;
-            if ($item->editacc == true)
-                $earr[] = $item->meta_id;
-            if ($item->exeacc == true)
-                $xarr[] = $item->meta_id;
+            if ($item->viewacc == true) {
+                $varr[] = $item->meta_id; 
+            }
+            if ($item->editacc == true) {
+                $earr[] = $item->meta_id; 
+            }
+            if ($item->exeacc == true) {
+                $xarr[] = $item->meta_id; 
+            }
         }
         $this->user->aclview = implode(',', $varr);
         $this->user->acledit = implode(',', $earr);
@@ -323,6 +326,9 @@ class Users extends \App\Pages\Base {
                 $title = "Сервис";
                 break;
         }
+        $item->editacc = false;
+        $item->viewacc = false;
+        $item->exeacc = false;
         $earr = @explode(',', $this->user->acledit);
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
@@ -341,7 +347,7 @@ class Users extends \App\Pages\Base {
 
         $row->add(new CheckBox('viewacc', new Bind($item, 'viewacc')));
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
-        $row->add(new CheckBox('exeacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1);
+        $row->add(new CheckBox('exeacc', new Bind($item, 'exeacc')))->setVisible($item->meta_type == 1);
     }
 
 }

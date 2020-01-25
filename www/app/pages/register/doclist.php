@@ -9,6 +9,7 @@ use \Zippy\Html\Form\Date;
 use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Form\Form;
 use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
@@ -26,6 +27,7 @@ use \App\System;
  */
 class DocList extends \App\Pages\Base {
 
+     public $_doc;
     /**
      *
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
@@ -89,6 +91,10 @@ class DocList extends \App\Pages\Base {
             $this->filter->searchnumber->setText($dc->document_number);
             $doclist->Reload();
         }
+        $this->add(new Form('statusform'))->SetVisible(false);;
+        $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
+        $this->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statusform->add(new TextInput('refcomment')) ;
 
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
@@ -146,6 +152,7 @@ class DocList extends \App\Pages\Base {
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
+        $row->add(new Label('waitapp'))->setVisible($doc->state == Document::STATE_WA);
 
         $date = new \Carbon\Carbon();
         $date = $date->addDay(1);
@@ -156,9 +163,7 @@ class DocList extends \App\Pages\Base {
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-
-        
-        
+          
         //список документов   которые   могут  быть созданы  на  основании  текущего
         $row->add(new Panel('basedon'));
         $basedonlist = $doc->getRelationBased();
@@ -171,13 +176,17 @@ class DocList extends \App\Pages\Base {
             };
             $row->basedon->add(new Label('basedlist'))->setText($list, true);
         }        
-        
+    
+        if ($doc->state < Document::STATE_WA) {  //ждем  подтвержения
+            $row->basedon->setVisible(false);
+        }       
         
         if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
             $row->waitpay->setVisible(false);
+            
             $row->isplanned->setVisible(false);
             $row->basedon->setVisible(false);
                         
@@ -186,7 +195,7 @@ class DocList extends \App\Pages\Base {
             $row->delete->setVisible(false);
             $row->cancel->setVisible(true);
         }
-        
+      
     }
 
     public function onSort($sender) {
@@ -212,14 +221,15 @@ class DocList extends \App\Pages\Base {
     //просмотр
 
     public function showOnClick($sender) {
-        $item = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkShowDoc($item, true))
+        $this->_doc = $sender->owner->getDataItem();
+        if (false == \App\ACL::checkShowDoc($this->_doc, true))
             return;
         $this->docview->setVisible(true);
-        $this->docview->setDoc($item);
+        $this->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
         $this->goAnkor('dankor');
+        $this->statusform->setVisible($this->_doc->state == Document::STATE_WA) ;
     }
 
     //редактирование
@@ -277,12 +287,18 @@ class DocList extends \App\Pages\Base {
         $doc = $sender->owner->getDataItem();
         //   if (false == \App\ACL::checkEditDoc($doc, true))
         //     return;
-
+        $user = System::getUser();
+        
         if (\App\ACL::checkExeDoc($doc, true, false) == false) {
-            $this->setError('Нет  права отменять документ '. $doc->meta_desc);
-            return;
+            if($doc->state== Document::STATE_WA && $doc->user_id == $user->user_id)
+            {
+                //свой может  отменить
+            } else {
+               $this->setError('Нет  права отменять документ '. $doc->meta_desc);
+               return;
+            }
         }
-
+   
 
         $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
@@ -305,6 +321,50 @@ class DocList extends \App\Pages\Base {
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
+    
+    public function statusOnSubmit($sender) {
+         if (\App\ACL::checkExeDoc($doc, true, false) == false) {
+               $this->setError('Нет  права выполнять документ ');
+               return;
+         }        
+         if ($sender->id == "bap") {
+            $this->_doc->updateStatus(Document::STATE_APPROVED);
+            
+           
+            $user = System::getUser();   
+
+            $n = new \App\Entity\Notify();
+            $n->user_id = $this->_doc->user_id;
+            $n->dateshow = time();
+            $n->message = "Пользователь <b>{$user->username}</b>  утвердил документ ".$this->_doc->document_number;
+            $n->save();             
+           
+            
+        }
+        if ($sender->id == "bref") {
+            $this->_doc->updateStatus(Document::STATE_REFUSED);
+             
+            $text = trim($this->statusform->refcomment->getText());
+
+            $user = System::getUser() ;    
+
+            $n = new \App\Entity\Notify();
+            $n->user_id  = $this->_doc->user_id;
+            $n->dateshow = time();
+            $n->message  = "Пользователь <b>{$user->username}</b>  отклонил документ ".$this->_doc->document_number;
+            $n->message .= "<br> ".$text;
+            $n->save();             
+            
+            $this->statusform->refcomment->setText('') ;
+         
+        }
+      
+        $this->statusform->setVisible(false) ;
+        $this->docview->setVisible(false);
+        $this->doclist->Reload(false);
+        
+   }  
+    
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";

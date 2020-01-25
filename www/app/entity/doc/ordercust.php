@@ -58,5 +58,10 @@ class OrderCust extends Document {
         $list['InvoiceCust']  = 'Счет от поставщика';
 
         return $list;
-    }      
+    } 
+    
+
+    protected function getDefExecuteStatus(){
+        return self::STATE_INPROCESS;
+    }
 }

@@ -15,7 +15,7 @@ class Document extends \ZCL\DB\Entity {
     const STATE_NEW = 1;     //Новый
     const STATE_EDITED = 2;  //Отредактирован
     const STATE_CANCELED = 3;      //Отменен
-    const STATE_READYTOEXE = 4; // готов к выполнению
+    
     const STATE_EXECUTED = 5;      // Проведен 
     const STATE_DELETED = 6;       //  Удален
     const STATE_INPROCESS = 7; // в  работе
@@ -28,6 +28,7 @@ class Document extends \ZCL\DB\Entity {
     const STATE_FAIL = 17; // Аннулирован
     const STATE_FINISHED = 18; // Закончен
     const STATE_APPROVED = 19;      //  Утвержден
+ //   const STATE_READYTOEXE = 20; // готов к выполнению    
     // типы  экспорта
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -324,7 +325,7 @@ class Document extends \ZCL\DB\Entity {
 
         //если нет права  выполнять    
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this,false,false)==false) {            
-            $state  = self::STATE_READYTOEXE;
+            $state  = self::STATE_WA;
         }
             
         if ($state == self::STATE_CANCELED) {
@@ -336,16 +337,28 @@ class Document extends \ZCL\DB\Entity {
                 return;
             }
         }
-
         $this->state = $state;
         $this->insertLog($state);
 
         $this->save();
 
-
+       if ($state == self::STATE_APPROVED) {
+          
+          $this-> updateStatus($this->cast()->getDefExecuteStatus()); 
+       }
+         
+       
         return true;
     }
 
+    /**
+    * возвращает  статус по  умолчанию  после  утверждения
+    * 
+    */
+    protected function getDefExecuteStatus(){
+        return self::STATE_EXECUTED ;
+    }
+    
     /**
      * Возвращает название  статуса  документа
      *
@@ -386,8 +399,8 @@ class Document extends \ZCL\DB\Entity {
                 return "Аннулирован";
             case Document::STATE_INPROCESS:
                 return "Выполняется";
-            case Document::STATE_READYTOEXE:
-                return "Готов к выполнению";
+          //  case Document::STATE_READYTOEXE:
+          //      return "Готов к исполнению";
             default:
                 return "Неизвестный статус";
         }
