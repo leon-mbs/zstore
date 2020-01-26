@@ -344,6 +344,14 @@
                                     </p>
                                 </a>   
                                 <ul class="nav nav-treeview">
+                                   {{#note}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
+                                            <i class="fa    nav-icon"></i> 
+                                            <p>База знаний</p>
+                                        </a>
+                                    </li>  
+                                    {{/note}}  
                                     {{#shop}}
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
@@ -417,15 +425,7 @@
 
                                     </li>  
                                     {{/ocstore}}            
-                                    {{#note}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
-                                            <i class="fa    nav-icon"></i> 
-                                            <p>База знаний</p>
-                                        </a>
-                                    </li>  
-                                    {{/note}}  
-                                    {{#issue}}
+                                     {{#issue}}
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>  
