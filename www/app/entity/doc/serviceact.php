@@ -75,7 +75,7 @@ class ServiceAct extends Document {
     public function generatePosReport() {
 
         $printer = \App\System::getOptions('printer');
-        $firm = H::getFirmData(\App\Session::getSession()->branch_id);
+        $firm = H::getFirmData($this->branch_id);
         $wp = 'style="width:40mm"';
         if (strlen($printer['pwidth']) > 0) {
             $wp = 'style="width:' . $printer['pwidth'] . 'mm"';

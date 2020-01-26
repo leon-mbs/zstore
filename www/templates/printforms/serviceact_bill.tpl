@@ -22,11 +22,7 @@
     <tr>
         <td colspan="2"> {{phone}}</td>
     </tr>
-    {{#viber}}
-    <tr>
-        <td colspan="2"> {{viber}}</td>
-    </tr>
-     {{/viber}}    
+     
     <tr>
         <td colspan="2"> {{customer_name}}</td>
     </tr>
