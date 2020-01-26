@@ -14,6 +14,7 @@ class Notify extends Entity {
 
     protected function init() {
 
+        $this->sender_id = 0;
         $this->notify_id = 0;
         $this->checked = 0;
         $this->user_id = 0;

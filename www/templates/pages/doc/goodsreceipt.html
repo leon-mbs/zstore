@@ -23,19 +23,20 @@
                         <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
 
                     </div>
-
                     <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
+                        <label for="basedoc" >Основание </label>
 
-                        <input class="form-control" type="text" zippy="notes">
+                        <input readonly class="form-control plaintext " type="text" zippy="basedoc">
 
-                    </div>
+                    </div
+
                 </div>
                 <div class="col-12 col-md-3">
 
                     <div class="form-group  ">
                         <label for="store" >На склад</label>
                         <select class="form-control" zippy="store">
+                            <option value="0">Не выбран</option>                        
                         </select>
                     </div>
 
@@ -47,15 +48,8 @@
 
                     </div> 
 
-                    <div class="form-group">
-                        <label  data-label="paynotes" for="paynotes" > Комментарий к оплате</label>
-                        <input class="form-control" type="text" zippy="paynotes" >
-                    </div>                   
-                    <div class="form-check">
-                        <input zippy="prepaid" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="useset">Была предоплата</label>
 
-                    </div>
+
                     <div class="form-group">
                         <label data-label="val" for="val">Валюта</label>
                         <select zippy="val" class="form-control">
@@ -63,6 +57,12 @@
                         </select>
                         <span zippy="course"></span>
                     </div>
+                    <div class="form-group  ">
+                        <label for="notes" >Примечание </label>
+
+                        <input class="form-control" type="text" zippy="notes">
+
+                    </div>                    
                 </div>
             </div>
             <div class="row">
@@ -298,7 +298,7 @@
                 </div>
             </div>
         </form>
-             {{#usescanner}} 
+        {{#usescanner}} 
         <script>
             $(document).ready(function () {
 
@@ -313,6 +313,6 @@
                 }
             }
         </script>
-             {{/usescanner}} 
+        {{/usescanner}} 
     </body>
 </html>

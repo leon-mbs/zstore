@@ -22,9 +22,9 @@ use \App\Application as App;
 use \App\Helper as H;
 
 /**
- * Страница  ввода перемещения товаров
+ * Страница  ввода списание товаров
  */
-class MoveItem extends \App\Pages\Base {
+class OutcomeItem extends \App\Pages\Base {
 
     public $_itemlist = array();
     private $_doc;
@@ -37,8 +37,8 @@ class MoveItem extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('storeto', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+  
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -64,21 +64,22 @@ class MoveItem extends \App\Pages\Base {
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
-            $this->docform->storeto->setValue($this->_doc->headerdata['storeto']);
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
+
             $this->docform->notes->setText($this->_doc->notes);
 
             foreach ($this->_doc->detaildata as $_item) {
                 $item = new Item($_item);
+                
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
         } else {
-            $this->_doc = Document::create('MoveItem');
+            $this->_doc = Document::create('OutcomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        $this->OnChangeStore($this->docform->storeto);
+
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
@@ -94,6 +95,7 @@ class MoveItem extends \App\Pages\Base {
         $row->add(new Label('quantity', H::fqty($item->quantity)));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->edit->setVisible($item->old == false);
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
@@ -108,7 +110,7 @@ class MoveItem extends \App\Pages\Base {
     }
 
     public function addrowOnClick($sender) {
-        if ($this->docform->storefrom->getValue() == 0) {
+        if ($this->docform->store->getValue() == 0) {
             $this->setError("Выберите склад источник");
             return;
         }
@@ -131,7 +133,7 @@ class MoveItem extends \App\Pages\Base {
         $this->editdetail->edititem->setValue($item->itemname);
         $this->editdetail->editsnumber->setValue($item->snumber);
 
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->storefrom->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
         $this->_rowid = $item->item_id . $item->snumber;
     }
@@ -146,9 +148,22 @@ class MoveItem extends \App\Pages\Base {
         }
 
         $item = Item::load($id);
+    
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
-
+        //ищем  последню цену
+        $store_id = $this->docform->store->getValue();
+         
+        $where = "store_id = {$store_id} and item_id = {$id}    ";
+        if (strlen($item->snumber) > 0) {
+            $where .= " and snumber=" . Stock::qstr($item->snumber);
+        }
+        $s = Stock::getFirst($where, ' stock_id  desc '); 
+        if($s instanceof Stock) {
+          $item->price = $s->partion;    
+        }
+        
+               
         $this->_itemlist[$id . $item->snumber] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -170,17 +185,16 @@ class MoveItem extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         if ($this->checkForm() == false) {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
-        $this->_doc->headerdata['storefromname'] = $this->docform->storefrom->getValueName();
-        $this->_doc->headerdata['storeto'] = $this->docform->storeto->getValue();
-        $this->_doc->headerdata['storetoname'] = $this->docform->storeto->getValueName();
-
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $item) {
@@ -229,8 +243,10 @@ class MoveItem extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-        if ($this->docform->storeto->getValue() == $this->docform->storefrom->getValue()) {
-            $this->setError("Выбран тот  же склад получатель");
+
+
+        if (($this->docform->store->getValue() > 0 ) == false) {
+            $this->setError("Не выбран  склад");
         }
 
 
@@ -245,13 +261,13 @@ class MoveItem extends \App\Pages\Base {
 
         $item_id = $sender->getKey();
         $item = Item::load($item_id);
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->storefrom->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
         $this->updateAjax(array('qtystock'));
     }
 
     public function OnChangeStore($sender) {
-        if ($sender->id == 'storefrom') {
+        if ($sender->id == 'store') {
             //очистка  списка  товаров
             $this->_itemlist = array();
             $this->docform->detail->Reload();
@@ -266,7 +282,7 @@ class MoveItem extends \App\Pages\Base {
     }
 
     public function OnAutocompleteItem($sender) {
-        $store_id = $this->docform->storefrom->getValue();
+        $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         return Item::findArrayAC($text, $store_id);
     }
@@ -274,11 +290,15 @@ class MoveItem extends \App\Pages\Base {
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-
+        $store_id = $this->docform->store->getValue();
+        if($store_id==0){
+            $this->setError('Не указан склад');
+            return;
+        }
 
         $code = Item::qstr($code);
 
-        $item = Item::getFirst("    (item_code = {$code} or bar_code = {$code})");
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code})");
         if ($item == null) {
             $this->setError('Товар не  найден');
             return;
@@ -301,7 +321,14 @@ class MoveItem extends \App\Pages\Base {
         }
 
         $this->_itemlist[$item->item_id]->quantity += 1;
-
+         //ищем  последню цену
+          
+        $where = "store_id = {$store_id} and item_id = {$item->item_id}    ";
+   
+        $s = Stock::getFirst($where, ' stock_id  desc '); 
+        if($s instanceof Stock) {
+          $item->price = $s->partion;    
+        }
         $this->docform->detail->Reload();
     }
 

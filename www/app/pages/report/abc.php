@@ -76,11 +76,6 @@ class ABC extends \App\Pages\Base {
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-//$image = 'z:/home/local.zstore/www/assets/images/noimage.jpg';
-//$imageData = base64_encode(file_get_contents($image));
-//$fi=getimagesize($image);
-//$src = 'data:'.$fi['mime'].';base64,'.$imageData;
-
 
 
 
@@ -104,7 +99,6 @@ class ABC extends \App\Pages\Base {
         $header = array('from' => date('d.m.Y', $from),
             "_detail" => $detail,
             'to' => date('d.m.Y', $to),
-            // 'img'=>  '<img src="'.$src.'">' ,
             "type" => $this->typelist[$type]
         );
         $report = new \App\Report('abc.tpl');
@@ -134,7 +128,7 @@ class ABC extends \App\Pages\Base {
         H::log($sql);
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']/1000);
+            $row['value'] = round($row['value'] / 1000);
             $list[] = $row;
         }
 
@@ -158,7 +152,7 @@ class ABC extends \App\Pages\Base {
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']/1000);
+            $row['value'] = round($row['value'] / 1000);
             $list[] = $row;
         }
 
@@ -182,7 +176,7 @@ class ABC extends \App\Pages\Base {
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']/1000);
+            $row['value'] = round($row['value'] / 1000);
             $list[] = $row;
         }
 
@@ -208,7 +202,7 @@ class ABC extends \App\Pages\Base {
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']/1000);
+            $row['value'] = round($row['value'] / 1000);
             $list[] = $row;
         }
 
@@ -237,7 +231,8 @@ class ABC extends \App\Pages\Base {
         }
         $val = 0;
         for ($i = 0; $i < count($_detail); $i++) {
-            if($sum==0)  continue;
+            if ($sum == 0)
+                continue;
             $_detail[$i]['perc'] = $_detail[$i]['value'] / $sum * 100;
             $_detail[$i]['value'] = $_detail[$i]['value'];
             $_detail[$i]['percsum'] = $_detail[$i]['perc'] + $val;

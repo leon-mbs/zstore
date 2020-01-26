@@ -17,7 +17,7 @@ class Entry extends \ZCL\DB\Entity {
      * @param mixed $amount Сумма. 
      * @param mixed $quantity количество
      */
-    public function __construct($document_id=0, $amount = 0, $quantity = 0) {
+    public function __construct($document_id = 0, $amount = 0, $quantity = 0) {
         parent::__construct();
 
 

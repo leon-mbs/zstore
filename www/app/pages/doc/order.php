@@ -223,10 +223,16 @@ class Order extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -256,6 +262,10 @@ class Order extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }
             $this->_doc->save();
 
             $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -266,10 +276,6 @@ class Order extends \App\Pages\Base {
             }
 
 
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
             $conn->CommitTrans();
             if ($sender->id == 'execdoc') {
                 App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
@@ -317,6 +323,9 @@ class Order extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
+        if (($this->docform->store->getValue() > 0 ) == false) {
+            $this->setError("Не выбран  склад");
+        }
 
         return !$this->isError();
     }
@@ -340,7 +349,7 @@ class Order extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
     public function OnChangeCustomer($sender) {

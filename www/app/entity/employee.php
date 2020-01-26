@@ -17,6 +17,7 @@ class Employee extends \ZCL\DB\Entity {
         $this->zmon = 0;
         $this->advance = 0;
         $this->zhour = 0;
+        $this->branch_id = 0;
     }
 
     protected function beforeSave() {
@@ -56,6 +57,10 @@ class Employee extends \ZCL\DB\Entity {
             return null;
         $login = Employee::qstr($login);
         return Employee::getFirst("login=" . $login);
+    }
+
+    public static function getConstraint() {
+        return \App\ACL::getBranchConstraint();
     }
 
 }

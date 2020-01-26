@@ -126,8 +126,24 @@ class ItemActivity extends \App\Pages\Base {
               AND sc2.document_date  < t.dt   
               GROUP BY st2.item_id 
                                  
-         ) as begin_quantity   
-         
+         ) as begin_quantity ,
+          
+    (
+        SELECT  
+          
+          COALESCE(SUM(sc3.`quantity`), 0)  
+         FROM entrylist_view sc3
+          JOIN store_stock_view st3
+            ON sc3.stock_id = st3.stock_id
+          JOIN documents dc3
+            ON sc3.document_id = dc3.document_id
+              WHERE st3.item_id = t.item_id  
+              AND st3.store_id = {$storeid} 
+              AND sc3.document_date  < t.dt   
+              GROUP BY st3.item_id 
+                                 
+         ) as begin_amount  
+                
           from (
            select
           st.item_id,
@@ -137,6 +153,8 @@ class ItemActivity extends \App\Pages\Base {
           date(sc.document_date) AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
+          SUM(CASE WHEN sc.amount > 0 THEN sc.amount ELSE 0 END) AS obinamount,
+          SUM(CASE WHEN sc.amount < 0 THEN 0 - sc.amount ELSE 0 END) AS oboutamount,
           GROUP_CONCAT(distinct dc.document_number) AS docs
         FROM entrylist_view sc
           JOIN store_stock_view st
@@ -156,7 +174,9 @@ class ItemActivity extends \App\Pages\Base {
 
 
         $rs = $conn->Execute($sql);
-
+        $ba = 0;
+        $bain = 0;
+        $baout = 0;
         foreach ($rs as $row) {
             $detail[] = array(
                 "code" => $row['item_code'],
@@ -168,6 +188,9 @@ class ItemActivity extends \App\Pages\Base {
                 "obout" => H::fqty($row['obout']),
                 "out" => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
+            $ba = $ba + $row['begin_amount'];
+            $bain = $bain + $row['obinamount'];
+            $baout = $baout + $row['oboutamount'];
         }
 
         $header = array('datefrom' => date('d.m.Y', $from),
@@ -175,6 +198,11 @@ class ItemActivity extends \App\Pages\Base {
             'dateto' => date('d.m.Y', $to),
             "store" => Store::load($storeid)->storename
         );
+        $header['ba'] = H::fa($ba);
+        $header['bain'] = H::fa($bain);
+        $header['baout'] = H::fa($baout);
+        $header['baend'] = H::fa($ba + $bain - $baout);
+
         $report = new \App\Report('itemactivity.tpl');
 
         $html = $report->generate($header);

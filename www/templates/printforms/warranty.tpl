@@ -44,7 +44,7 @@
     <tr>
         <td></td>
         <td colspan="3">
-            <b> Покупатель</b> {{customer}} 
+            <b> Покупатель</b> {{customer_name}} 
         </td>
         <td colspan="4">
             <b> Продавец</b> {{firmname}} 

@@ -12,8 +12,9 @@ use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\RedirectLink;
+use \Zippy\Html\Link\BookmarkableLink;
 use \App\Entity\Doc\Document;
-use \App\Helper;
+use \App\Helper as H;
 use \App\Application as App;
 use \App\System;
 
@@ -23,6 +24,7 @@ use \App\System;
 class DocView extends \Zippy\Html\PageFragment {
 
     private $_doc;
+    private $_p = null;
     public $_reldocs = array();
     public $_statelist = array();
     public $_fileslist = array();
@@ -32,21 +34,29 @@ class DocView extends \Zippy\Html\PageFragment {
     public function __construct($id) {
         parent::__construct($id);
 
-        $this->add(new RedirectLink('print', ""));
+        $this->add(new BookmarkableLink('print', ""));
         $this->add(new RedirectLink('html', ""))->setVisible(false);
         $this->add(new RedirectLink('word', ""));
         $this->add(new RedirectLink('excel', ""));
         $this->add(new RedirectLink('pdf', ""));
-        $this->add(new RedirectLink('pos', ""));
+        $this->add(new BookmarkableLink('pos', ""));
 
         $this->add(new Label('preview'));
+        $this->add(new Label('previewpos'));
 
-        $this->add(new DataView('reldocs', new ArrayDataSource(new Prop($this, '_reldocs')), $this, 'relDoclistOnRow'));
+        $this->add(new Label('hmessages'));
+        $this->add(new Label('hdocs'));
+        $this->add(new Label('hfiles'));
+
+
 
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
 
         $this->add(new DataView('dw_paylist', new ArrayDataSource(new Prop($this, '_paylist')), $this, 'payListOnRow'));
 
+        $this->add(new DataView('reldocs', new ArrayDataSource(new Prop($this, '_reldocs')), $this, 'relDoclistOnRow'));
+
+        $this->add(new ClickLink('pdoc'))->onClick($this, 'parentDocOnClick');
         $this->add(new Form('addrelform'))->onSubmit($this, 'OnReldocSubmit');
         $this->addrelform->add(new AutocompleteTextInput('addrel'))->onText($this, 'OnAddDoc');
 
@@ -65,21 +75,32 @@ class DocView extends \Zippy\Html\PageFragment {
     public function setDoc(\App\Entity\Doc\Document $doc) {
         $this->_doc = $doc;
         $doc = $this->_doc->cast();
-
+        // if (false == \App\ACL::checkShowDoc($doc, false)) {
+        //   $this->setvisible(false);
+        //   return;
+        // }
+        $this->setvisible(true);
         $html = $doc->generateReport();
         $this->preview->setText($html, true);
+        $htmlpos = $doc->generatePosReport();
+        $this->previewpos->setText($htmlpos, true);
+
+
         // проверяем  поддержку  экспорта
         $exportlist = $doc->supportedExport();
         $this->word->setVisible(in_array(Document::EX_WORD, $exportlist));
         $this->excel->setVisible(in_array(Document::EX_EXCEL, $exportlist));
         $this->pdf->setVisible(in_array(Document::EX_PDF, $exportlist));
         $this->pos->setVisible(in_array(Document::EX_POS, $exportlist));
+        $this->previewpos->setVisible(in_array(Document::EX_POS, $exportlist));
+
+
 
         $reportpage = "App/Pages/ShowDoc";
 
 
-        $this->print->pagename = $reportpage;
-        $this->print->params = array('print', $doc->document_id);
+        // $this->print->pagename = $reportpage;
+        //  $this->print->params = array('print', $doc->document_id);
         $this->html->pagename = $reportpage;
         $this->html->params = array('html', $doc->document_id);
         $this->word->pagename = $reportpage;
@@ -88,10 +109,8 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->excel->params = array('xls', $doc->document_id);
         $this->pdf->pagename = $reportpage;
         $this->pdf->params = array('pdf', $doc->document_id);
-
-        //список связаных  документов
-        $this->updateDocs();
-
+        //    $this->pos->pagename = $reportpage;
+        //    $this->pos->params = array('pos', $doc->document_id);
         //статусы
         $this->_statelist = $this->_doc->getLogList();
         $this->dw_statelist->Reload();
@@ -103,34 +122,11 @@ class DocView extends \Zippy\Html\PageFragment {
         //список приатаченных  файлов
         $this->updateFiles();
         $this->updateMessages();
-    }
-
-    // обновление  списка  связанных  документов
-    private function updateDocs() {
-        $this->_reldocs = $this->_doc->ConnectedDocList();
-        $this->reldocs->Reload();
-    }
-
-    //вывод строки  связанного  документа
-    public function relDoclistOnRow($row) {
-        $item = $row->getDataItem();
-        $row->add(new ClickLink('docitem'))->onClick($this, 'detailDocOnClick');
-        $row->add(new ClickLink('deldoc'))->onClick($this, 'deleteDocOnClick');
-        $row->docitem->setValue($item->meta_desc . ' ' . $item->document_number);
-    }
-
-    //удаление связанного  документа
-    public function deleteDocOnClick($sender) {
-        $doc = $sender->owner->getDataItem();
-        $this->_doc->RemoveConnectedDoc($doc->document_id);
         $this->updateDocs();
-    }
 
-    //открыть связанный документ
-    public function detailDocOnClick($sender) {
-        //$id = $sender->owner->getDataItem()->document_id;
-        //App::Redirect('\App\Pages\Register\DocList', $id);
-        $this->setDoc($sender->owner->getDataItem());
+        $this->_p = Document::load($doc->parent_id);
+        $this->pdoc->setVisible($this->_p instanceof Document);
+        $this->pdoc->setValue($this->_p->meta_desc . ' ' . $this->_p->document_number);
     }
 
     //вывод строки  лога состояний
@@ -146,42 +142,11 @@ class DocView extends \Zippy\Html\PageFragment {
     public function payListOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('paydate', date('Y.m.d', $item->paydate)));
-        $row->add(new Label('payamountp', Helper::fa($item->amount > 0 ? $item->amount : "")));
-        $row->add(new Label('payamountm', Helper::fa($item->amount < 0 ? 0 - $item->amount : "")));
+        $row->add(new Label('payamountp', H::fa($item->amount > 0 ? $item->amount : "")));
+        $row->add(new Label('payamountm', H::fa($item->amount < 0 ? 0 - $item->amount : "")));
         $row->add(new Label('payuser', $item->username));
         $row->add(new Label('paycomment', $item->notes));
         $row->add(new Label('paymf', $item->mf_name));
-    }
-
-    /**
-     * добавление  связанного  документа
-     *
-     * @param mixed $sender
-     */
-    public function OnReldocSubmit($sender) {
-
-        $id = $this->addrelform->addrel->getKey();
-
-        if ($id > 0) {
-            $this->_doc->AddConnectedDoc($id);
-            $this->updateDocs();
-            $this->addrelform->addrel->setText('');
-        } else {
-            
-        }
-    }
-
-    // автолоад списка  документов
-    public function OnAddDoc($sender) {
-        $text = $sender->getValue();
-        $answer = array();
-        $conn = \ZDB\DB::getConnect();
-        $sql = "select document_id,document_number from documents where document_number  like '%{$text}%' and document_id <> {$this->_doc->document_id} order  by document_id desc  limit 0,20";
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $answer[$row['document_id']] = $row['document_number'];
-        }
-        return $answer;
     }
 
     /**
@@ -197,15 +162,17 @@ class DocView extends \Zippy\Html\PageFragment {
             return;
         }
 
-        Helper::addFile($file, $this->_doc->document_id, $this->addfileform->adddescfile->getText(), \App\Entity\Message::TYPE_DOC);
+        H::addFile($file, $this->_doc->document_id, $this->addfileform->adddescfile->getText(), \App\Entity\Message::TYPE_DOC);
         $this->addfileform->adddescfile->setText('');
         $this->updateFiles();
     }
 
     // обновление  списка  прикрепленных файлов
     private function updateFiles() {
-        $this->_fileslist = Helper::getFileList($this->_doc->document_id, \App\Entity\Message::TYPE_DOC);
+        $this->_fileslist = H::getFileList($this->_doc->document_id, \App\Entity\Message::TYPE_DOC);
         $this->dw_files->Reload();
+        $this->hfiles->setText(count($this->_fileslist));
+        $this->hfiles->setVisible(count($this->_fileslist) > 0);
     }
 
     //вывод строки  прикрепленного файла
@@ -225,7 +192,7 @@ class DocView extends \Zippy\Html\PageFragment {
     //удаление прикрепленного файла
     public function deleteFileOnClick($sender) {
         $file = $sender->owner->getDataItem();
-        Helper::deleteFile($file->file_id);
+        H::deleteFile($file->file_id);
         $this->updateFiles();
     }
 
@@ -235,10 +202,13 @@ class DocView extends \Zippy\Html\PageFragment {
      * @param mixed $sender
      */
     public function OnMsgSubmit($sender) {
+
+        $user = System::getUser();
+
         $msg = new \App\Entity\Message();
         $msg->message = $this->addmsgform->addmsg->getText();
         $msg->created = time();
-        $msg->user_id = System::getUser()->user_id;
+        $msg->user_id = $user->user_id;
         $msg->item_id = $this->_doc->document_id;
         $msg->item_type = \App\Entity\Message::TYPE_DOC;
         if (strlen($msg->message) == 0)
@@ -249,34 +219,36 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->updateMessages();
 
         // уведомления
-        $user = System::getUser();
 
         $users = array();
-        $users[$this->_doc->user_id] = 0; //автор
-
         foreach ($this->_msglist as $msg) {
-            $users[$msg->user_id] = 0;  //коментаторы  
+            $users[$msg->user_id] = $msg->user_id;
         }
-        $users = array_keys($users);
+        $users[$this->_doc->user_id] = $this->_doc->user_id; //автор дока
+
+        unset($users[$user->user_id]); //себе не  нужно
+
+
         foreach ($users as $adr) {
             if ($adr == $user->user_id)
                 continue; //себе не  нужно
 
             $n = new \App\Entity\Notify();
             $n->user_id = $adr;
-            $n->message = "<b>Новый  коментарий к документу</b>";
-            $n->message .= "<br><b> Документ: </b> {$this->_doc->meta_desc} {$this->_doc->document_number} ";
-            $n->message .= "<br><b> Пользователь: </b> {$user->username}: ";
+            $n->message = "<b>Новый  коментарий к документу:</b> {$this->_doc->meta_desc} {$this->_doc->document_number}  ";
             $n->message .= "<br> {$msg->message} ";
             $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">Ответить</a> ";
+            $n->sender_name = $user->username;
             $n->save();
         }
     }
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type =1 and item_id=' . $this->_doc->document_id);
+        $this->_msglist = \App\Entity\Message::getMessages(1, $this->_doc->document_id);
         $this->dw_msglist->Reload();
+        $this->hmessages->setText(count($this->_msglist));
+        $this->hmessages->setVisible(count($this->_msglist) > 0);
     }
 
     //вывод строки  коментария
@@ -295,6 +267,68 @@ class DocView extends \Zippy\Html\PageFragment {
         $msg = $sender->owner->getDataItem();
         \App\Entity\Message::delete($msg->message_id);
         $this->updateMessages();
+    }
+
+    // обновление  списка  связанных  документов
+    private function updateDocs() {
+        $this->_reldocs = $this->_doc->getChildren();
+        $this->reldocs->Reload();
+
+        $cnt = count($this->_reldocs);
+        if ($this->_p != null)
+            $cnt++;
+        $this->hdocs->setText($cnt);
+        $this->hdocs->setVisible($cnt > 0);
+    }
+
+    //вывод строки  дочернего  документа
+    public function relDoclistOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new ClickLink('docitem'))->onClick($this, 'detailDocOnClick');
+        $row->add(new ClickLink('deldoc'))->onClick($this, 'deleteDocOnClick');
+        $row->docitem->setValue($item->meta_desc . ' ' . $item->document_number);
+    }
+
+    //удаление дочернего  документа
+    public function deleteDocOnClick($sender) {
+        $doc = $sender->owner->getDataItem();
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("update documents set parent_id=0 where  document_id=" . $doc->document_id);
+        $this->updateDocs();
+    }
+
+    //открыть дочерний документ
+    public function detailDocOnClick($sender) {
+        //$id = $sender->owner->getDataItem()->document_id;
+        //App::Redirect('\App\Pages\Register\DocList', $id);
+        $this->setDoc($sender->owner->getDataItem());
+    }
+
+    //открыть родительский документ
+    public function parentDocOnClick($sender) {
+        $this->setDoc($this->_p);
+    }
+
+    public function OnReldocSubmit($sender) {
+
+        $id = $this->addrelform->addrel->getKey();
+        $this->_doc->addChild($id);
+        $this->updateDocs();
+        $this->addrelform->addrel->setKey(0);
+        $this->addrelform->addrel->setText('');
+    }
+
+    // автолоад списка  документов
+    public function OnAddDoc($sender) {
+        $text = $sender->getValue();
+        $answer = array();
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select document_id,document_number from documents where document_number  like '%{$text}%' and document_id <> {$this->_doc->document_id} order  by document_id desc  limit 0,20";
+        $rs = $conn->Execute($sql);
+        foreach ($rs as $row) {
+            $answer[$row['document_id']] = $row['document_number'];
+        }
+        return $answer;
     }
 
 }

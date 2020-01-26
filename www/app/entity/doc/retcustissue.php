@@ -44,8 +44,8 @@ class RetCustIssue extends Document {
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "firmname" => $firm['firmname'],
-            "customername" => $this->customer_name . ', тел. ' . $customer->phone,
+            "firmname" => $this->headerdata["firmname"],
+            "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
             "total" => $this->amount
         );
@@ -66,23 +66,17 @@ class RetCustIssue extends Document {
 
             $sc = new Entry($this->document_id, 0 - $row['amount'], 0 - $row['quantity']);
             $sc->setStock($row['stock_id']);
-            $sc->setExtCode(0 - $row['amount']) ; //Для АВС 
-           
+            $sc->setExtCode(0 - $row['amount']); //Для АВС 
+
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME, $this->headerdata['paynotes']);
+            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
             $this->payamount = $this->amount;
         }
 
 
         return true;
-    }
-
-    public function getRelationBased() {
-        $list = array();
-     
-        return $list;
     }
 
     protected function getNumberTemplate() {

@@ -23,6 +23,16 @@ class Order extends \App\Entity\Doc\Document {
             if (isset($detail[$value['item_id']])) {
                 $detail[$value['item_id']]['quantity'] += $value['quantity'];
             } else {
+
+                $ocstoreopt = @unserialize($value['octoreoptions']);  //опции с  опенкарта
+                if (is_array($ocstoreopt)) {
+                    $t = "<table cellspacing='0' cellpadding='1' style='font-size:smaller'><tr><td style='padding: 1px;'>Опции:</td><td style='padding: 1px;'></td></tr>";
+                    foreach ($ocstoreopt as $k => $v) {
+                        $t .= "<tr><td style='padding: 1px;'>{$k}</td><td style='padding: 1px;'>{$v}</td></tr>";
+                    }
+                    $t .= "</table>";
+                    $value['itemname'] = $value['itemname'] . $t;
+                }
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $value['itemname'],
                     "tovar_code" => $value['item_code'],
@@ -34,12 +44,11 @@ class Order extends \App\Entity\Doc\Document {
             }
         }
 
-        //$firm = \App\System::getOptions("common");
 
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "customername" => $this->customer_name,
+            "customer_name" => $this->headerdata["customer_name"],
             "phone" => $this->headerdata["phone"],
             "email" => $this->headerdata["email"],
             "delivery" => $this->headerdata["delivery_name"],
@@ -51,11 +60,10 @@ class Order extends \App\Entity\Doc\Document {
             $header['delivery'] = $header['delivery'] . '. по адресу: ' . $this->headerdata["address"];
         }
 
-        $list = $this->ConnectedDocList();
+        $list = $this->getChildren('GoodsIssue');
         foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
-                $header['ttn'] = $d->document_number;
-            }
+
+            $header['ttn'] = $d->document_number;
         }
 
 
@@ -71,16 +79,17 @@ class Order extends \App\Entity\Doc\Document {
         return true;
     }
 
+    protected function getNumberTemplate() {
+        return 'ЗК-000000';
+    }
+  
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = 'Расходная накладная';
+        $list['Invoice'] = 'Счет-фактура';
+        $list['POSCheck'] = 'Чек';
 
 
         return $list;
     }
-
-    protected function getNumberTemplate() {
-        return 'ЗК-000000';
-    }
-
 }

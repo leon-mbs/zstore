@@ -1,0 +1,127 @@
+<html>
+
+    <body>
+        <div class="row">
+            <div class="col-12  col-xl-10"  >
+                <h3>Журнал нарядов</h3>
+                <div class="navbar nav">
+                    <form zippy="filterform" class="form-inline">
+
+
+                        <label for="filterclient"  >Клиент</label>
+
+                        <input class="form-control mr-sm-2 " zippy="filterclient"  placeholder="Начните вводить   ">
+
+
+
+                        <label for="filterassignedto"  >Исполнитель</label>
+
+                        <select class="form-control  mr-sm-2" zippy="filterassignedto">
+                            <option value="0">Все</option>
+                        </select>
+                        <label for="filterassignedto"  >Пр. участок</label>
+
+                        <select class="form-control  mr-sm-2" zippy="filterpa">
+                            <option value="0">Все</option>
+                        </select>
+
+
+
+                        <div class="form-check   ">
+
+                            <input class="form-check-input"  type="checkbox" zippy="filterfinished">
+                            <label class="form-check-label mr-sm-3" for="filterfinished">Закрытые</label>
+                        </div>                
+
+                        <button type="submit" class="btn btn-primary  ">ОК</button>
+                        &nbsp;<a title="Очистить фильтр" zippy="eraser"><i class="fa fa-eraser"></i></a>
+
+                    </form> 
+                </div>       
+            </div>
+        </div> 
+
+        <div class="row">
+
+
+            <div class="col-12  col-xl-10   "  >
+
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link  active" href="#tasktab" data-toggle="tab">Список</li>
+                    <li class="nav-item"><a class="nav-link" href="#caltab" data-toggle="tab">Календарь</li>
+
+                </ul>
+                <div class="tab-content">
+                    <div id="tasktab" class="tab-pane  active">
+                        <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Создать</a>
+
+                        <div class="row">
+                            <div class="col-12    table-responsive" > 
+
+
+                                <table class="table   table-sm table-hover">
+                                    <tr>
+
+                                        <th>Номер</th>
+                                        <th>Описание</th>
+
+                                        <th>Начало</th>
+
+                                        <th style="text-align: right;">Час.</th>
+                                        <th>Клиент</th>
+                                        <th>Исполнители</th>
+                                        <th>Статус</th>
+                                        <th class="text-right">Сумма</th>
+
+                                        <th style="width:75px;"> </th>
+
+                                    </tr>
+                                    <tr zippy="tasklist">
+
+                                        <td zippy="tasknumber"></td>
+                                        <td zippy="taskdesc"></td>
+
+                                        <td zippy="taskstartdate" style="white-space:   nowrap" ></td>
+                                        <td zippy="taskhours"  style="text-align: right;"></td>
+                                        <td zippy="taskclient"></td>
+                                        <td zippy="taskemps"></td>
+                                        <td zippy="taskstatus" ></td>
+                                        <td zippy="taskamount"  class="text-right"></td>
+
+
+
+
+
+
+                                        <td>
+                                            <a zippy="taskshow" title="Просмотр"><i class="fa fa-eye"></i></a>
+                                            &nbsp;&nbsp;<a zippy="taskedit" title="Редактировать"><i class="fa fa-edit"></i></a>
+
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <th colspan="7" class="text-right">Всего</th>
+                                        <th class="text-right" zippy="tamount"></th>
+
+                                        <td > </td>
+                                    </tr>
+                                </table>
+                                <div zippy="pag"></div>
+                                <a id="dankor"></a></div>     </div>       
+
+
+
+                    </div> <!-- tasktab -->
+                    <div id="caltab" class="tab-pane   ">
+
+                        <div zippy='calendar'></div>
+
+
+                    </div> 
+
+                </div>  
+
+            </div>                
+    </body>
+</html>

@@ -25,9 +25,8 @@ use \App\Application as App;
 use \App\System;
 use \App\Modules\Issue\Helper;
 use \App\Filter;
-use \ZCL\BT\Tags;
+use \App\Modules\Issue\Entity\Project;
 use \App\Modules\Issue\Entity\Issue;
-use \App\Entity\Customer;
 use \App\Entity\User;
 
 /**
@@ -41,7 +40,7 @@ class IssueList extends \App\Pages\Base {
     public $_msglist = array();
     public $_fileslist = array();
 
-    public function __construct($id = 0) {
+    public function __construct($id = 0, $project_id = 0) {
         parent::__construct();
 
         $this->_user = System::getUser();
@@ -53,68 +52,88 @@ class IssueList extends \App\Pages\Base {
             return;
         }
 
-        $this->add(new Panel("listpan"));
 
-        $this->listpan->add(new Form('filter'))->onSubmit($this, 'onFilter');
-        $this->listpan->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
-        $this->listpan->filter->add(new TextInput('searchnumber', $filter->searchnumber));
+        $this->add(new Form('filter'))->onSubmit($this, 'onFilter');
+        $where = 'archived<>1';
+        if ($project_id > 0)
+            $where .= " or project_id=" . $project_id;
+        $projects = Project::findArray('project_name', $where, 'project_name');
+        $this->filter->add(new DropDownChoice('searchproject', $projects, $project_id));
+
+
+        $this->filter->add(new TextInput('searchnumber'));
+        if ($id > 0)
+            $this->filter->searchnumber->setText($id);
 
         //пользователи ассоциированные с сотрудниками
-        $this->listpan->filter->add(new DropDownChoice('searchassignedto', User::findArray('username', 'employee_id > 0', 'username'), $user->employee_id > 0 ? $user->user_id : 0 ));
+
+        $users = User::findArray('username', 'user_id in (select user_id from issue_issuelist)', 'username');
+        $user_id = System::getUser()->user_id;
+
+        $where = 'status != ' . Issue::STATUS_CLOSED . ' and user_id=' . $user_id;
+        if ($project_id > 0)
+            $where .= " and project_id=" . $project_id;
+        $cnt = Issue::findCnt($where);
+
+        if ($id > 0 || $cnt == 0)
+            $user_id = 0;
+
+        $this->filter->add(new DropDownChoice('searchassignedto', $users, $user_id));
 
         $stlist = Issue::getStatusList();
-        $stlist[-1] = 'Открытые';
+        $stlist[0] = 'Открытые';
         $stlist[100] = 'Все';
-        $this->listpan->filter->add(new DropDownChoice('searchstatus', $stlist, -1));
+        $this->filter->add(new DropDownChoice('searchstatus', $stlist, 0));
 
+        $this->add(new ClickLink('addnew', $this, 'onNew'));
 
-        $this->listpan->add(new Form('sort'))->onSubmit($this, 'onFilter');
-        $this->listpan->sort->add(new DropDownChoice('sorttype', array(0 => 'Последние измененные', 1 => 'Дата создания', 2 => 'Приоритет'), 0));
-
+        $this->add(new Panel("listpan"));
 
         $list = $this->listpan->add(new DataView('list', new IssueDS($this), $this, 'listOnRow'));
+        $list->setSelectedClass('table-success');
         $list->setPageSize(25);
         $this->listpan->add(new Paginator('pag', $list));
-        $this->listpan->add(new ClickLink('addnew', $this, 'onNew'));
+
+        /*
+          $this->add(new Panel("editpan"))->setVisible(false);
+          $this->editpan->add(new Form('editform'))->onSubmit($this, 'onSaveIssue');
+          $this->editpan->editform->add(new TextInput('edittitle'));
+          $this->editpan->editform->add(new TextArea('editcontent'));
+          $this->editpan->editform->add(new DropDownChoice('editpr', array(0 => 'Нормальный', 1 => 'Высокий', -1 => 'Низкий'), 0));
+          $this->editpan->editform->add(new TextInput('editprice'));
+          $this->editpan->editform->add(new TextInput('edithours'));
+
+          $this->editpan->editform->add(new ClickLink('editcancel', $this, 'onCancel'));
+
+          $this->add(new Panel("msgpan"))->setVisible(false);
+          $this->msgpan->add(new ClickLink('back', $this, 'onCancel'));
+          $this->msgpan->add(new Label('mtitle'));
+          $this->msgpan->add(new Label('mdesc'));
+          $stform = $this->msgpan->add(new Form('stform'));
+
+          $stform->add(new DropDownChoice('ststatus', $stlist, -1));
+          $stform->add(new DropDownChoice('stpr', array(0 => 'Нормальный', 1 => 'Высокий', -1 => 'Низкий'), 0));
+          $stform->add(new DropDownChoice('stuser', User::findArray('username', 'employee_id > 0', 'username'), 0));
+          $stform->add(new TextInput('sthours'));
+          $stform->add(new SubmitButton('ststatusok'))->onClick($this, "onStatus");
+          $stform->add(new SubmitButton('stuserok'))->onClick($this, "onStatus");
+          $stform->add(new SubmitButton('stprok'))->onClick($this, "onStatus");
+          $stform->add(new SubmitButton('sthoursok'))->onClick($this, "onStatus");
+
+          $this->msgpan->add(new DataView('stlist', new ArrayDataSource($this, '_stlist'), $this, 'stlistOnRow'));
+
+          $this->msgpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
+          $this->msgpan->addmsgform->add(new TextArea('msgdata'));
+          $this->msgpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
+
+          $this->msgpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
+          $this->msgpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
+          $this->msgpan->add(new DataView('filelist', new ArrayDataSource($this, '_fileslist'), $this, 'fileListOnRow'));
+
+         */
+        $this->listpan->list->Reload();
 
         $this->add(new Panel("editpan"))->setVisible(false);
-        $this->editpan->add(new Form('editform'))->onSubmit($this, 'onSaveIssue');
-        $this->editpan->editform->add(new TextInput('edittitle'));
-        $this->editpan->editform->add(new TextArea('editcontent'));
-        $this->editpan->editform->add(new DropDownChoice('editpr', array(0 => 'Нормальный', 1 => 'Высокий', -1 => 'Низкий'), 0));
-        $this->editpan->editform->add(new TextInput('editprice'));
-        $this->editpan->editform->add(new TextInput('edithours'));
-
-        $this->editpan->editform->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
-        $this->editpan->editform->add(new ClickLink('editcancel', $this, 'onCancel'));
-
-        $this->add(new Panel("msgpan"))->setVisible(false);
-        $this->msgpan->add(new ClickLink('back', $this, 'onCancel'));
-        $this->msgpan->add(new Label('mtitle'));
-        $this->msgpan->add(new Label('mdesc'));
-        $stform = $this->msgpan->add(new Form('stform'));
-
-        $stform->add(new DropDownChoice('ststatus', $stlist, -1));
-        $stform->add(new DropDownChoice('stpr', array(0 => 'Нормальный', 1 => 'Высокий', -1 => 'Низкий'), 0));
-        $stform->add(new DropDownChoice('stuser', User::findArray('username', 'employee_id > 0', 'username'), 0));
-        $stform->add(new TextInput('sthours'));
-        $stform->add(new SubmitButton('ststatusok'))->onClick($this, "onStatus");
-        $stform->add(new SubmitButton('stuserok'))->onClick($this, "onStatus");
-        $stform->add(new SubmitButton('stprok'))->onClick($this, "onStatus");
-        $stform->add(new SubmitButton('sthoursok'))->onClick($this, "onStatus");
-
-        $this->msgpan->add(new DataView('stlist', new ArrayDataSource($this, '_stlist'), $this, 'stlistOnRow'));
-
-        $this->msgpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
-        $this->msgpan->addmsgform->add(new TextArea('msgdata'));
-        $this->msgpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
-
-        $this->msgpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
-        $this->msgpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
-        $this->msgpan->add(new DataView('filelist', new ArrayDataSource($this, '_fileslist'), $this, 'fileListOnRow'));
-
-
-        $this->listpan->list->Reload();
 
         $issue = Issue::load($id);
         if ($issue instanceof Issue) {
@@ -148,24 +167,10 @@ class IssueList extends \App\Pages\Base {
 
     public function listOnRow($row) {
         $issue = $row->getDataItem();
-        $row->add(new Label('issue_id', $issue->issue_id));
+        $row->add(new Label('issue_id', '#' . $issue->issue_id));
         $row->add(new Label('title', $issue->issue_name));
-        $row->add(new Label('issignedto', $issue->username));
         $row->add(new Label('prup'))->setVisible($issue->priority == 1);
         $row->add(new Label('prdown'))->setVisible($issue->priority == -1);
-        $st = Issue::getStatusList();
-        $status = $st[$issue->status];
-        if ($issue->status == Issue::STATUS_NEW)
-            $status = '<span class="badge badge-info">' . $status . '</span>';
-        if ($issue->status == Issue::STATUS_CLOSED)
-            $status = '<span class="badge badge-secondary">' . $status . '</span>';
-        $row->add(new Label('status', $status, true));
-        $row->add(new Label('ptime', $issue->hours));
-        $row->add(new Label('ftime', $issue->totaltime));
-
-        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->add(new ClickLink('opencomment'))->onClick($this, 'commentOnClick');
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
     public function editOnClick($sender) {
@@ -187,8 +192,6 @@ class IssueList extends \App\Pages\Base {
 
         $this->editpan->editform->edittitle->setText($this->_issue->issue_name);
         $this->editpan->editform->editcontent->setText($this->_issue->desc);
-        $this->editpan->editform->editcust->setKey($this->_issue->customer_id);
-        $this->editpan->editform->editcust->setText($this->_issue->customer_name);
         $this->editpan->editform->editpr->setValue($this->_issue->priority);
         $this->editpan->editform->edithours->setText($this->_issue->hours);
         $this->editpan->editform->editprice->setText($this->_issue->price);
@@ -199,7 +202,6 @@ class IssueList extends \App\Pages\Base {
 
         $this->_issue->issue_name = $sender->edittitle->getText();
         $this->_issue->desc = $sender->editcontent->getText();
-        $this->_issue->customer_id = $sender->editcust->getKey();
         $this->_issue->priority = $sender->editpr->getValue();
         $this->_issue->hours = $sender->edithours->getText();
         $this->_issue->price = $sender->editprice->getText();
@@ -217,7 +219,7 @@ class IssueList extends \App\Pages\Base {
 
     public function openIssue($issue) {
         $this->_issue = $issue;
-        $this->listpan->setVisible(false);
+
         $this->msgpan->setVisible(true);
 
         $this->msgpan->mtitle->setText('#' . $this->_issue->issue_id . ' ' . $this->_issue->issue_name);
@@ -228,6 +230,9 @@ class IssueList extends \App\Pages\Base {
         $this->msgpan->stform->sthours->setText('0');
         $this->updateStList();
         $this->updateMessages();
+
+        $this->listpan->list->setSelectedRow($sender->getOwner());
+        $this->listpan->list->Reload(false);
     }
 
     public function commentOnClick($sender) {
@@ -410,11 +415,6 @@ class IssueList extends \App\Pages\Base {
         $this->msgpan->stlist->Reload();
     }
 
-    public function OnAutoCustomer($sender) {
-        $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
-    }
-
 }
 
 class IssueDS implements \Zippy\Interfaces\DataSource {
@@ -429,17 +429,17 @@ class IssueDS implements \Zippy\Interfaces\DataSource {
         $status = $this->page->listpan->filter->searchstatus->getValue();
         $number = trim($this->page->listpan->filter->searchnumber->getText());
         $assignedto = $this->page->listpan->filter->searchassignedto->getValue();
-        $cust = $this->page->listpan->filter->searchcust->getKey();
+        $project = $this->page->listpan->filter->searchproject->getKey();
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "1=1 ";
+        $where = " 1=1 ";
         if ($status == -1)
             $where .= " and status <> " . Issue::STATUS_CLOSED;
         if ($status < 100 && $status >= 0)
             $where .= " and status = " . $status;
-        if ($cust > 0)
-            $where .= " and customer_id = " . $cust;
+        if ($project > 0)
+            $where .= " and project_id = " . $project;
         if ($assignedto > 0)
             $where .= " and user_id = " . $assignedto;
 

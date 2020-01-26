@@ -30,6 +30,7 @@ class Price extends \App\Pages\Base {
         $this->filter->add(new CheckBox('price3'))->setVisible(strlen($option['price3']) > 0);
         $this->filter->add(new CheckBox('price4'))->setVisible(strlen($option['price4']) > 0);
         $this->filter->add(new CheckBox('price5'))->setVisible(strlen($option['price5']) > 0);
+        $this->filter->add(new CheckBox('onstore'));
 
         $this->_tvars['price1name'] = $option['price1'];
         $this->_tvars['price2name'] = $option['price2'];
@@ -75,10 +76,14 @@ class Price extends \App\Pages\Base {
         $isp3 = $this->filter->price3->isChecked();
         $isp4 = $this->filter->price4->isChecked();
         $isp5 = $this->filter->price5->isChecked();
+        $onstore = $this->filter->onstore->isChecked();
 
         $detail = array();
-
-        $items = Item::find("disabled <>1 and detail like '%<pricelist>1</pricelist>%'", "cat_name,itemname");
+        $qty = "";
+        if ($onstore) {
+            $qty = " and item_id in(select  item_id from store_stock where  qty >0 ) ";
+        }
+        $items = Item::find("disabled <>1 {$qty} and detail like '%<pricelist>1</pricelist>%'", "cat_name,itemname");
 
 
 
@@ -88,11 +93,11 @@ class Price extends \App\Pages\Base {
                 "name" => $item->itemname,
                 "cat" => $item->cat_name,
                 "msr" => $item->msr,
-                "price1" =>H::fa( $isp1 ? round($this->checkPrice($item->item_id, $item->price1)) : ""),
-                "price2" =>H::fa( $isp2 ? round($this->checkPrice($item->item_id, $item->price2)) : ""),
-                "price3" =>H::fa( $isp3 ? round($this->checkPrice($item->item_id, $item->price3)) : ""),
-                "price4" =>H::fa( $isp4 ? round($this->checkPrice($item->item_id, $item->price4)) : ""),
-                "price5" =>H::fa( $isp5 ? round($this->checkPrice($item->item_id, $item->price5)) : "")
+                "price1" => $isp1 ? $item->getPrice('price1') : "",
+                "price2" => $isp2 ? $item->getPrice('price2') : "",
+                "price3" => $isp3 ? $item->getPrice('price3') : "",
+                "price4" => $isp4 ? $item->getPrice('price4') : "",
+                "price5" => $isp5 ? $item->getPrice('price5') : ""
             );
         }
 
@@ -110,24 +115,6 @@ class Price extends \App\Pages\Base {
         $html = $report->generate($header);
 
         return $html;
-    }
-
-    //проверка на наценку
-    private function checkPrice($item_id, $price) {
-        if (strpos($price, '%') > 0) {
-            $price = doubleval(str_replace('%', '', $price));
-            $conn = \ZDB\DB::getConnect();
-
-            $sql = "  select partion  from  store_stock where   item_id = {$item_id} order by stock_id desc limit 1";
-            $partionprice = $conn->GetOne($sql);
-            if ($partionprice > 0) {
-                return $partionprice + (int) $partionprice / 100 * $price;
-            } else {
-                return 0;
-            }
-        } else {
-            return H::fa($price);
-        }
     }
 
 }

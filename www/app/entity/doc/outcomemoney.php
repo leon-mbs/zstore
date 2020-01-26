@@ -15,7 +15,7 @@ class OutcomeMoney extends Document {
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, 1, 0 - $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
+        Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
 
 
         return true;
@@ -26,7 +26,7 @@ class OutcomeMoney extends Document {
         $pt = Pay::getPayTypeList(2);
 
         $header = array(
-            'amount' =>H::fa( $this->amount),
+            'amount' => H::fa($this->amount),
             'date' => date('d.m.Y', $this->document_date),
             "notes" => $this->notes,
             "from" => $this->headerdata["paymentname"],

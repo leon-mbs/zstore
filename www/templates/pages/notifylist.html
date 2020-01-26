@@ -4,12 +4,27 @@
         <div class="row">
             <div class="col-8">
                 <h3>Уведомления</h3>
-                <table class="table table-sm  ">
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline ">
+
+
+                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту" >
+
+                        <input type="submit" class="  btn btn-outline-success  " value="Искать">
+
+
+                    </form>
+                </div>   
+
+                <table class="table table-sm table-bordered  ">
                     <tr zippy="nlist">
 
-                        <td zippy="msg"> </td>
+                        <td  ><i class="fa fa-clock"> </i> <span zippy="ndate"></span>
+                            &nbsp;&nbsp;&nbsp;<i   class="fa fa-user"></i> <span zippy="sender"></span> 
+                            <p zippy="msg"><p>
+                        </td>
                         <td><span zippy="newn" class="badge badge-info">Новое</span> </td>
-                        <td class="text-nowrap"><span zippy="ndate"></span> </td>
+
 
                     </tr>
                 </table>

@@ -23,6 +23,7 @@ class Pay extends \ZCL\DB\Entity {
     const PAY_TAX_OUTCOME = 55;    //уплата  налогов  и сборов
     const PAY_BILL_OUTCOME = 56;    //расходы на  аренду и комуналку  
     const PAY_DIVIDEND_OUTCOME = 57;    //распределение прибыли 
+    const PAY_CANCEL = 58;    //отмена  платежа
     const PAY_COMMON_OUTCOME = 101;   //прочие расходы
 
     protected function init() {
@@ -51,19 +52,27 @@ class Pay extends \ZCL\DB\Entity {
      * @param mixed $mf      денежный счет
      * @param mixed $comment коментарий
      */
-    public static function addPayment($document_id, $indoc, $amount, $mf, $type, $comment = '') {
+    public static function addPayment($document_id, $amount, $mf, $type, $comment = '') {
         if (0 == (int) $amount || 0 == (int) $document_id || 0 == $mf)
             return;
+
+        if ($mf == MoneyFund::CREDIT)
+            return; //в  долг
+        if ($mf == MoneyFund::PREPAID)
+            return; //предоплата
+
+        if ($mf == MoneyFund::BEZNAL)
+            $mf = 0; //безнал
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf;
         $pay->document_id = $document_id;
         $pay->amount = $amount;
         $pay->paytype = $type;
         $pay->notes = $comment;
-        $pay->indoc = $indoc;
 
-        $admin = \App\Entity\User::getByLogin('admin');
-        $pay->user_id = $admin->user_id;
+
+        //   $admin = \App\Entity\User::getByLogin('admin');
+        $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
 
         $conn = \ZDB\DB::getConnect();
@@ -83,7 +92,7 @@ class Pay extends \ZCL\DB\Entity {
         if ($type != 2) {
             $list[PAY::PAY_BASE_INCOME] = "Доходы основной деятельности";
             $list[PAY::PAY_INVEST_INCOME] = "Инвестиции";
-            $list[PAY::PAY_OTHER_INCOME] = "Прочие расходы";
+            $list[PAY::PAY_OTHER_INCOME] = "Прочие доходы";
         }
         if ($type != 1) {
             $list[PAY::PAY_BASE_OUTCOME] = "Расходы основной деятельности";
@@ -95,6 +104,7 @@ class Pay extends \ZCL\DB\Entity {
             $list[PAY::PAY_BILL_OUTCOME] = "Расходы на  аренду и комуналку";
             $list[PAY::PAY_DIVIDEND_OUTCOME] = "Распределение прибыли  ";
             $list[PAY::PAY_COMMON_OUTCOME] = "Прочие расходы";
+            $list[PAY::PAY_CANCEL] = "Отмена  платежа";
         }
 
 

@@ -135,12 +135,13 @@ class Orders extends \App\Pages\Base {
                 $code = Item::qstr($product['sku']);
 
                 $tovar = Item::getFirst('item_code=' . $code);
-                if ($code == "") {
+                if ($tovar == null) {
                     $this->setWarn("Не найден товар  с артикулом '{$product['name']}' в заказе номер {$shoporder['order_id']} ");
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = round($product['price']);
+                $tovar->octoreoptions = serialize($product['_options_']);
                 $neworder->detaildata[] = $tovar->getData();
             }
 

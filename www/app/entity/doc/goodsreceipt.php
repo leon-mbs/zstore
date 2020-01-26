@@ -26,6 +26,7 @@ class GoodsReceipt extends Document {
 
             $detail[] = array("no" => $i++,
                 "itemname" => $name,
+                "snumber" => $value['snumber'],
                 "itemcode" => $value['item_code'],
                 "quantity" => H::fqty($value['quantity']),
                 "price" => H::fa($value['price']),
@@ -36,11 +37,12 @@ class GoodsReceipt extends Document {
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "customer_name" => $this->customer_name,
+            "basedoc" => $this->headerdata["basedoc"],
+            "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
-            "payed" => H::fa($this->headerdata['payed']),
-            "prepaid" => $this->headerdata['prepaid'] == 1,
+            "payed" => H::fa($this->payed),
+            "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
 
@@ -78,27 +80,25 @@ class GoodsReceipt extends Document {
                 $it->save();
             }
         }
-        $this->payed = 0;
 
-        if ($this->headerdata['payment'] > 0 && $this->headerdata['payed']) {
-            \App\Entity\Pay::addPayment($this->document_id, 1, 0 - $this->headerdata['payed'], $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME, $this->headerdata['paynotes']);
-            $this->payed = $this->headerdata['payed'];
+
+        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
 
 
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-
-        $list['RetCustIssue'] = 'Возврат  ';
-
-        return $list;
-    }
-
     protected function getNumberTemplate() {
         return 'ПН-000000';
     }
+   
+    public function getRelationBased() {
+        $list = array();
 
+        $list['RetCustIssue'] = 'Возврат  поставщику';
+
+        return $list;
+    }
 }

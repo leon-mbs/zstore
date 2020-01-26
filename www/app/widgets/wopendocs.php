@@ -24,8 +24,8 @@ class WOpenDocs extends \Zippy\Html\PageFragment {
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
 
-        // список  запланированных документов
-        $where = " state   in( " . Document::STATE_CANCELED . "," . Document::STATE_EDITED . "," . Document::STATE_NEW . ") ";
+        // список  открытых документов
+        $where = " state  < " . Document::STATE_EXECUTED;
 
         if ($visible) {
             $data = Document::find($where, "document_date desc");

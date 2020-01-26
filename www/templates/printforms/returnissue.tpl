@@ -6,7 +6,7 @@
     <tr>
         <td></td>
         <td>От покупателя</td>
-        <td colspan="5">{{customername}}</td>
+        <td colspan="5">{{customer_name}}</td>
     </tr>
 
     <tr>

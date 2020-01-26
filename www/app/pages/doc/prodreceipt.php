@@ -175,7 +175,7 @@ class ProdReceipt extends \App\Pages\Base {
         $item->sdate = $this->editdetail->editsdate->getDate();
         if ($item->sdate == false)
             $item->sdate = '';
-        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true ) {
+        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true) {
             $this->setError("К серии должна быть введена дата");
             return;
         }
@@ -204,6 +204,8 @@ class ProdReceipt extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -231,6 +233,10 @@ class ProdReceipt extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {
@@ -243,11 +249,6 @@ class ProdReceipt extends \App\Pages\Base {
             }
 
 
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
 
             $conn->CommitTrans();
         } catch (\Exception $ee) {
@@ -287,9 +288,10 @@ class ProdReceipt extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-        if ($this->docform->store->getValue() == 0) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
+
 
 
         return !$this->isError();

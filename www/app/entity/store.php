@@ -13,6 +13,7 @@ class Store extends \ZCL\DB\Entity {
     protected function init() {
 
         $this->store_id = 0;
+        $this->branch_id = 0;
     }
 
     protected function beforeDelete() {
@@ -20,7 +21,7 @@ class Store extends \ZCL\DB\Entity {
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  store_stock where   store_id = {$this->store_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Нельзя удалять используемый склад" : true;
+        return ($cnt > 0) ? "Нельзя удалять используемый склад" : '';
     }
 
     /**
@@ -29,6 +30,10 @@ class Store extends \ZCL\DB\Entity {
      */
     public static function getList() {
         return Store::findArray("storename", "");
+    }
+
+    public static function getConstraint() {
+        return \App\ACL::getBranchConstraint();
     }
 
 }

@@ -7,28 +7,14 @@
 
                 <form   zippy="common"  >
 
-             
-                    <div class="form-group  ">
-                        <label for="defstore" >Склад по умолчанию</label>
-
-                        <select class="form-control" zippy="defstore">
-                            <option value='0'>Не выбран</option>
-                        </select>
-                    </div>  
                     <div class="form-group  ">
                         <label for="partiontype" >Тип партионного учета</label>
                         <select class="form-control" zippy="partiontype">                        </select>
                         <small>Учет отдельно  по каждой закупочной цене позволяет точно  учтитывать
-                        прибыль но  осложняет  списание  партий</small>
-                        
-                    </div>  
-                    <div class="form-group  ">
-                        <label for="defmf" >Денежный счет по умолчанию</label>
+                            прибыль но  осложняет  списание  партий</small>
 
-                        <select class="form-control" zippy="defmf">
-                            <option value='0'>Не выбран</option>
-                        </select>
                     </div>  
+
                     <div class="form-group  ">
                         <label >Типы отпускных цен</label>
                         <input class="form-control" type="text" zippy="price1" required="required"   >
@@ -49,18 +35,24 @@
                             <option value='3'>3</option>
                         </select>
                     </div> 
-                  <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="amdigits" >Округление в  стоимости</label>
 
                         <select   class="form-control" zippy="amdigits">
                             <option value='0'>Без копеек</option>
                             <option value='1'>До 1 копейки</option>
                             <option value='5'>До 5 копеек</option>
-                            < 
+                            <option value='10'>До 10 копеек</option>
+
                         </select>
                     </div> 
-                  
-                 
+                    <div class="form-group">
+                        <label for="defprice" >Наценка по  умолчению, в процентах</label>
+                        <input style="width:100px" pattern="[0-9]+" class="form-control" type="text" zippy="defprice"     >
+                        <small>Используется если  не  задана  цена в товаре или  в  категории товара</small>
+                    </div>                   
+
+
 
                     <div class="form-check">
                         <input zippy="autoarticle" type="checkbox" class="form-check-input"  >
@@ -80,9 +72,19 @@
                     </div> 
 
                     <div class="form-check">
+                        <input zippy="useimages" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="useimages">Изображения в номенклатуре </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="   Возможность  добавления изображений в справочник товаров"></i>
+                    </div>
+                    <div class="form-check">
                         <input zippy="usescanner" type="checkbox" class="form-check-input"  >
                         <label class="form-check-label" for="usescanner">Поддержка сканера  штрих кодов </label>
                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Использование  сканера  штрих кодов для ввода  товаров в расходной накладной"></i>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="usebranch" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="usebranch">Использование  филиалов </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top" title="Фиомиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиалаю. Отпучскные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
                     </div>
 
                     <div class="form-check">
@@ -109,39 +111,81 @@
                     </div>
 
                 </form>
-                
-            <h4>Данные о компании</h4>   
-                 <form   zippy="firm"  >
 
-                  <div class="form-group">
+                <h4>Данные о компании</h4>   
+                <form   zippy="firm"  >
+
+                    <div class="form-group">
                         <label for="firmname" >Название  </label>
                         <input class="form-control" type="text" zippy="firmname" required="required"   >
                     </div>   
-                 <div class="form-group">
+                    <div class="form-group">
                         <label for="inn" >ИНН  </label>
-                        <input class="form-control" type="text" zippy="inn" required="required"   >
+                        <input class="form-control" type="text" zippy="inn"     >
                     </div>   
-              
-                  <div class="form-group">
-                        <label for="phone" >Телефон  </label>
+                    <div class="form-group">
+                        <label for="shopname" >Название торговой точки  </label>
+                        <input class="form-control" type="text" zippy="shopname"  >
+                        <small>Вводится  если  название маазина отличается  от названия компании</small>
+                    </div>   
+ 
+                    <div class="form-group">
+                        <label for="phone" >Телефон,viber  </label>
                         <input class="form-control" type="text" zippy="phone"     >
-                    </div>   
-              
-
-                  <div class="form-group">
-                        <label for="viber" >Viber  </label>
-                        <input class="form-control" type="text" zippy="viber"     >
                     </div>   
           
 
-                  <div class="form-group">
+                    <div class="form-group">
                         <label for="address" >Адрес  </label>
                         <input class="form-control" type="text" zippy="address"     >
                     </div>   
-                  <div class="form-group">
+                    <div class="form-group">
                         <button class="btn btn-primary" type="submit"  >Сохранить</button>
                     </div>
 
+                </form>
+                <h4>Настройка   принтера</h4>
+                <small>Настройки узкого принтера для печати  чеков и этикеток</small>   
+                <form   zippy="printer"  >
+                    <div class="form-group">
+                        <label for="pwidth" >Ширина печати в мм.</label>
+                        <input style="width:60px" pattern="[0-9]+" class="form-control" type="text" zippy="pwidth"     >
+                    </div>                    
+                    <div class="form-group">
+                        <label for="pwidth" >Параметры для этикеток и ценников</label>
+                    </div>                    
+                    <div class="form-group  ">
+                        <label for="pricetype" >Тип  цены</label>
+                        <select class="form-control" zippy="pricetype">
+                        </select>
+                    </div>                      
+                    <div class="form-check">
+                        <input zippy="pname" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="pname">Печатать название</label>
+                    </div>                               
+                    <div class="form-check">
+                        <input zippy="pcode" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="pcode">Печатать артикул</label>
+                    </div>                               
+                    <div class="form-check">
+                        <input zippy="pprice" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="pprice">Печатать цену</label>
+                    </div>                               
+                    <div class="form-check">
+                        <input zippy="pbarcode" type="checkbox" class="form-check-input"  >
+                        <label class="form-check-label" for="pbarcode">Печатать штрих код</label>
+                    </div>                               
+                    <div class="form-group  ">
+                        <label for="barcodetype" >Тип кода</label>
+                        <select class="form-control" zippy="barcodetype">
+                        </select>
+                    </div>                      
+
+
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit"  >Сохранить</button>
+                    </div>
                 </form>
 
             </div>        
@@ -225,17 +269,13 @@
 
                                 </select>
                             </div>
-                         
+
                             <div class="form-check   ">
 
                                 <input class="form-check-input"  type="checkbox" zippy="edit_disabled">
                                 <label class="form-check-label mr-sm-2" for="edit_disabled">Не показывать в меню</label>
                             </div>                                    
-                            <div class="form-check   ">
 
-                                <input class="form-check-input"  type="checkbox" zippy="edit_smart">
-                                <label class="form-check-label mr-sm-2" for="edit_smart">Показывать в  оперативном меню</label>
-                            </div>                                    
 
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary  ">Сохранить</button>

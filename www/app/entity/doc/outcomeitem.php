@@ -8,10 +8,10 @@ use \App\Entity\Store;
 use \App\Helper as H;
 
 /**
- * Класс-сущность  документ перемещения товаров
+ * Класс-сущность  документ списание товаров
  *
  */
-class MoveItem extends Document {
+class OutcomeItem extends Document {
 
     public function Execute() {
 
@@ -23,7 +23,7 @@ class MoveItem extends Document {
 
             //списываем  со склада
 
-            $listst = Stock::pickup($this->headerdata['storefrom'], $item['item_id'], $item['quantity'], $item['snumber']);
+            $listst = Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
             if (count($listst) == 0) {
                 \App\System::setErrorMsg('Недостаточно товара ' . $item['itemname']);
                 return false;
@@ -32,24 +32,13 @@ class MoveItem extends Document {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->save();
-
-                $stockto = Stock::getStock($this->headerdata['storeto'], $item['item_id'], $st->partion, $item['snumber'], 0, true);
-                $sc = new Entry($this->document_id, $st->quantity * $st->partion, $st->quantity);
-                $sc->setStock($stockto->stock_id);
-                $sc->save();
             }
         }
-
-
 
         return true;
     }
 
     public function generateReport() {
-
-
-
-
 
         $i = 1;
         $detail = array();
@@ -67,11 +56,11 @@ class MoveItem extends Document {
         $header = array(
             "_detail" => $detail,
             'date' => date('d.m.Y', $this->document_date),
-            "from" => $this->headerdata["storefromname"],
-            "to" => $this->headerdata["storetoname"],
+            "from" => $this->headerdata["storename"],
+            "notes" => $this->notes,
             "document_number" => $this->document_number
         );
-        $report = new \App\Report('moveitem.tpl');
+        $report = new \App\Report('outcomeitem.tpl');
 
         $html = $report->generate($header);
 
@@ -79,7 +68,13 @@ class MoveItem extends Document {
     }
 
     protected function getNumberTemplate() {
-        return 'ПТ-000000';
+        return 'ОТ-000000';
     }
 
+    public function getRelationBased() {
+        $list = array();
+        $list['IncomeItem'] = 'Оприходование товаров';
+        return $list;
+    }    
+    
 }

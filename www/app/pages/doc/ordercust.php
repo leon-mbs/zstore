@@ -204,6 +204,10 @@ class OrderCust extends \App\Pages\Base {
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -230,6 +234,10 @@ class OrderCust extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }
             $this->_doc->save();
 
 
@@ -248,11 +256,6 @@ class OrderCust extends \App\Pages\Base {
             }
 
 
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
 
             $conn->CommitTrans();
 
@@ -324,7 +327,7 @@ class OrderCust extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
     //добавление нового товара

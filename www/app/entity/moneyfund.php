@@ -10,8 +10,13 @@ namespace App\Entity;
  */
 class MoneyFund extends \ZCL\DB\Entity {
 
+    const BEZNAL = 10000;
+    const PREPAID = 10001;
+    const CREDIT = 10002;
+
     protected function init() {
         $this->mf_id = 0;
+        $this->branch_id = 0;
     }
 
     protected function beforeDelete() {
@@ -43,14 +48,26 @@ class MoneyFund extends \ZCL\DB\Entity {
     /**
      * список счетов для комбо
      * 
+     * @param mixed $beznal   добавить пункт  Безналичный расчет
+     * @param mixed $prepaid  добавить пункт  Была предоплата
      */
-    public static function getList() {
-        return MoneyFund::findArray("mf_name", "");
+    public static function getList($beznal = false, $credit = false, $prepaid = false) {
+        $ml = array();
+        if ($credit)
+            $ml[self::CREDIT] = 'В кредит';
+        if ($beznal)
+            $ml[self::BEZNAL] = 'Безналичный расчет';
+        if ($prepaid)
+            $ml[self::PREPAID] = 'Предоплата';
+        foreach (MoneyFund::findArray("mf_name", "") as $k => $v) {
+            $ml[$k] = $v;
+        }
+
+        return $ml;
     }
 
-    public static function getByCode($code) {
-
-        return MoneyFund::findOne("mf_code=" . MoneyFund::qstr($code));
+    public static function getConstraint() {
+        return \App\ACL::getBranchConstraint();
     }
 
 }

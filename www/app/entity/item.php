@@ -11,12 +11,15 @@ namespace App\Entity;
  */
 class Item extends \ZCL\DB\Entity {
 
+    private $brprice = array(); //цены по  филиалам
+
     protected function init() {
         $this->item_id = 0;
         $this->cat_id = 0;
         $this->curname = '';
         $this->currate = 0;
         $this->price = 0;
+        $this->image_id = 0;
     }
 
     protected function afterLoad() {
@@ -33,29 +36,66 @@ class Item extends \ZCL\DB\Entity {
         $this->currate = doubleval($xml->currate[0]);
         $this->pricelist = (int) $xml->pricelist[0];
         $this->useserial = (int) $xml->useserial[0];
-        
+        $this->image_id = (int) $xml->image_id[0];
+
         $this->cell = (string) $xml->cell[0];
-  
+        $this->octoreoptions = (string) $xml->octoreoptions[0];
+        $brprice = (string) $xml->brprice[0];
+
+        $this->brprice = @unserialize($brprice);
+        if (!is_array($this->brprice))
+            $this->brprice = array();
+
+        $id = \App\Session::getSession()->branch_id;
+        if ($id > 0 && is_array($this->brprice[$id])) {
+            $this->price1 = $this->brprice[$id]['price1'];
+            $this->price2 = $this->brprice[$id]['price2'];
+            $this->price3 = $this->brprice[$id]['price3'];
+            $this->price4 = $this->brprice[$id]['price4'];
+            $this->price5 = $this->brprice[$id]['price5'];
+        }
+
 
         parent::afterLoad();
     }
 
     protected function beforeSave() {
         parent::beforeSave();
+        $fid = \App\Session::getSession()->branch_id;
+        if ($fid > 0) {
+            $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
+            $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
+            $this->price1 = $prev->price1;
+            $this->price2 = $prev->price2;
+            $this->price3 = $prev->price3;
+            $this->price4 = $prev->price4;
+            $this->price5 = $prev->price5;
+        }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
         $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
-      
+
         $this->detail .= "<cell>{$this->cell}</cell>";
+        $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
         $this->detail .= "<price3>{$this->price3}</price3>";
         $this->detail .= "<price4>{$this->price4}</price4>";
         $this->detail .= "<price5>{$this->price5}</price5>";
+
         $this->detail .= "<curname>{$this->curname}</curname>";
         $this->detail .= "<currate>{$this->currate}</currate>";
+        $this->detail .= "<image_id>{$this->image_id}</image_id>";
+
+
+        //упаковываем  цены  по  филиалам
+        $brprice = serialize($this->brprice);
+
+
+        $this->detail .= "<brprice><![CDATA[{$brprice}]]></brprice>";
+
 
         $this->detail .= "</detail>";
 
@@ -71,6 +111,14 @@ class Item extends \ZCL\DB\Entity {
         return ($cnt > 0) ? "ТМЦ уже  используется" : "";
     }
 
+    protected function afterDelete() {
+
+
+        if ($this->image_id > 0) {
+            \App\Entity\Image::delete($this->image_id);
+        }
+    }
+
     //Вычисляет  отпускную цену
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад
@@ -79,6 +127,9 @@ class Item extends \ZCL\DB\Entity {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
+        if (strlen($common[$_price_]) == 0)
+            return 0;
+
 
         if ($_price_ == 'price1')
             $_price = $this->price1;
@@ -97,27 +148,50 @@ class Item extends \ZCL\DB\Entity {
 
             $ret = doubleval(str_replace('%', '', $_price));
             if ($ret > 0) {
-
-                if ($partion > 0) {
-                    
-                } else {  //ищем последнюю закупочную  цену 
-                    $conn = \ZDB\DB::getConnect();
-
-                    $sql = "  select coalesce(partion,0)  from  store_stock where   item_id = {$this->item_id}   ";
-                    if ($store > 0) {
-                        $sql = $sql . " and store_id=" . $store;
-                    }
-                    $sql = $sql . " order  by  stock_id desc limit 0,1";
-                    $partion = $conn->GetOne($sql);
+                if ($partion == 0) {
+                    //ищем последнюю закупочную  цену 
+                    $partion = $this->getLastPartion($store);
                 }
-
-
                 $price = $partion + (int) $partion / 100 * $ret;
             }
         } else if ($_price > 0) {
             $price = $_price; //задана  просто  цифра
         }
 
+        if ($price == 0 && $this->cat_id > 0) {
+            $cat = \App\Entity\Category::load($this->cat_id);
+            if ($cat != null) {
+                if ($partion == 0) {
+                    //ищем последнюю закупочную  цену 
+                    $partion = $this->getLastPartion($store);
+                }
+                if ($_price_ == 'price1' && $cat->price1 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                if ($_price_ == 'price2' && $cat->price2 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                if ($_price_ == 'price3' && $cat->price3 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                if ($_price_ == 'price4' && $cat->price4 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                if ($_price_ == 'price5' && $cat->price5 > 0)
+                    $price = $partion + (int) $partion / 100 * $cat->price1;
+            }
+        }
+
+
+
+
+
+        //если не  задано используем глобальную наценку
+        if ($common['defprice'] > 0 && $price == 0) {
+
+            if ($partion == 0) {
+                //ищем последнюю закупочную  цену 
+                $partion = $this->getLastPartion($store);
+            }
+
+            $price = $partion + (int) $partion / 100 * $common['defprice'];
+        }
 
         //поправка  по  валюте
 
@@ -136,7 +210,19 @@ class Item extends \ZCL\DB\Entity {
             $price = $price * $k;
         }
 
+
         return \App\Helper::fa($price);
+    }
+
+    private function getLastPartion($store) {
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select coalesce(partion,0)  from  store_stock where    item_id = {$this->item_id}   ";
+        if ($store > 0) {
+            $sql = $sql . " and store_id=" . $store;
+        }
+        $sql = $sql . " order  by  stock_id desc limit 0,1";
+
+        return $conn->GetOne($sql);
     }
 
     public static function getPriceTypeList() {
@@ -175,25 +261,25 @@ class Item extends \ZCL\DB\Entity {
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }
-  
+
     /**
-    * возвращает список скенрий производителя
-    * 
-    * @param mixed $store_id
-    */
+     * возвращает список скенрий производителя
+     * 
+     * @param mixed $store_id
+     */
     public function getSerials($store_id = 0) {
 
         $conn = \ZDB\DB::getConnect();
         $sql = "  select snumber  from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null ";
         if ($store_id > 0)
             $sql .= " and store_id = " . $store_id;
-        
-            
+
+
         $res = $conn->Execute($sql);
         $list = array();
-        foreach($res as $row){
-            if(strlen($row['snumber'])>0) {
-               $list[] = $row['snumber']  ;     
+        foreach ($res as $row) {
+            if (strlen($row['snumber']) > 0) {
+                $list[] = $row['snumber'];
             }
         }
         return $list;
@@ -231,7 +317,7 @@ class Item extends \ZCL\DB\Entity {
 
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
-            $partname = self::qstr(  $partname  );
+            $partname = self::qstr($partname);
             $criteria .= "  and  (itemname like {$like} or item_code = {$partname}   or   bar_code = {$partname} )";
         }
 

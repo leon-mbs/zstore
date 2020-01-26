@@ -45,13 +45,14 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextInput('basedoc'));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
-        $this->docform->add(new CheckBox('prepaid'))->onChange($this, 'OnPrepaid');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+
+
 
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
         $this->docform->add(new Label('course', 'Курс 1'));
@@ -100,18 +101,19 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->notes->setText($this->_doc->notes);
+            $this->docform->basedoc->setText($this->_doc->basedoc);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->docform->payed->setText($this->_doc->headerdata['payed']);
-            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            $this->docform->payed->setText($this->_doc->payed);
+            $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
-            $this->docform->prepaid->setChecked($this->_doc->headerdata['prepaid']);
-            $this->OnPrepaid($this->docform->prepaid);
+
+
+            $this->OnPayment($this->docform->payment);
 
             $this->docform->total->setText($this->_doc->amount);
 
@@ -134,26 +136,30 @@ class GoodsReceipt extends \App\Pages\Base {
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $order = $basedoc->cast();
-
+                        $this->docform->basedoc->setText('Заказ ' . $order->document_number);
                         foreach ($order->detaildata as $_item) {
                             $item = new Item($_item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
+                        $this->CalcTotal();
+                        $this->CalcPay();
                     }
                     if ($basedoc->meta_name == 'InvoiceCust') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-                        $this->docform->payamount->setText($basedoc->payamount);
 
                         $invoice = $basedoc->cast();
-
+                        $this->docform->basedoc->setText('Счет ' . $invoice->document_number);
+                        $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
 
 
                         foreach ($invoice->detaildata as $_item) {
                             $item = new Item($_item);
                             $this->_itemlist[$item->item_id] = $item;
                         }
+                        $this->CalcTotal();
+                        $this->CalcPay();
                     }
                     $this->calcTotal();
                 }
@@ -290,13 +296,13 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->setWarn("Не указана цена");
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
-        
-        if(strlen($item->snumber)==0 && $item->useserial==1 && $this->_tvars["usesnumber"] == true ){
+
+        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("Товар требует ввода партии производителя");
             return;
         }
-        
-        
+
+
         $item->sdate = $this->editdetail->editsdate->getDate();
         if ($item->sdate == false)
             $item->sdate = '';
@@ -333,20 +339,30 @@ class GoodsReceipt extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
 
+        $firm = H::getFirmData($this->_doc->branch_id);
+        $this->_doc->headerdata["firmname"] = $firm['firmname'];
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
-        $this->_doc->headerdata['prepaid'] = $this->docform->prepaid->isChecked();
-        if ($this->_doc->headerdata['prepaid'] == 1) {
-            $this->_doc->headerdata['payed'] = 0;
+        $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
+
+        $this->_doc->payed = $this->docform->payed->getText();
+
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
+            $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
+        }
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->_doc->payed = 0;
         }
 
         if ($this->checkForm() == false) {
@@ -399,16 +415,28 @@ class GoodsReceipt extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }
             $this->_doc->save();
-            $order = Document::load($this->_doc->headerdata['order_id']);
 
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if ($order instanceof Document) {
-                    $order->updateStatus(Document::STATE_CLOSED);
+
+                if ($this->_doc->parent_id > 0) {   //закрываем заказ
+                    if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+                        
+                    } else {
+                        $order = Document::load($this->_doc->parent_id);
+                        if ($order->state == Document::STATE_INPROCESS) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                            $this->setSuccess("Заказ {$order->document_number} закрыт");
+                        }
+                    }
                 }
             } else {
 
@@ -416,13 +444,22 @@ class GoodsReceipt extends \App\Pages\Base {
             }
 
 
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
             if ($file['size'] > 0) {
                 H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
             }
+
+            //если  выполнен и оплачен
+            if ($this->_doc->state == Document::STATE_EXECUTED && $this->_doc->payment > 0 && $this->_doc->payed == $this->_doc->payment) {
+                $orders = $this->_doc->getChildren('OrderCust');
+                foreach ($orders as $order) {
+                    if ($order->state == Document::STATE_INPROCESS) {
+                        //закрываем заявку
+                        $order->updateStatus(Document::STATE_CLOSED);
+                    }
+                }
+            }
+
+
             $conn->CommitTrans();
         } catch (\Exception $ee) {
             global $logger;
@@ -449,14 +486,20 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->goAnkor("tankor");
     }
 
-    public function OnPrepaid($sender) {
-        $b = $sender->isChecked();
-        if ($b) {
+    public function OnPayment($sender) {
+        $this->docform->payed->setVisible(true);
+        $this->docform->payamount->setVisible(true);
+
+
+        $b = $sender->getValue();
+
+
+        if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
-        } else {
-            $this->docform->payed->setVisible(true);
-            $this->docform->payamount->setVisible(true);
+        }
+        if ($b == \App\Entity\MoneyFund::CREDIT) {
+            $this->docform->payed->setVisible(false);
         }
     }
 
@@ -494,13 +537,13 @@ class GoodsReceipt extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-        if ($this->docform->store->getValue() == 0) {
+        if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");
         }
         if ($this->docform->customer->getKey() == 0) {
             $this->setError("Не выбран  поставщик");
         }
-        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
+        if ($this->docform->payment->getValue() == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
         return !$this->isError();
@@ -512,13 +555,13 @@ class GoodsReceipt extends \App\Pages\Base {
 
     public function OnAutoItem($sender) {
 
-        $text = trim($sender->getText()) ;
-        return Item::findArrayAC( $text);
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text);
     }
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and   (customer_name like {$text}  or phone like {$text} )");
     }
 
     //добавление нового товара

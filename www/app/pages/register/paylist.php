@@ -16,11 +16,13 @@ use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\BookmarkableLink;
 use \App\Entity\Doc\Document;
 use \App\Entity\Customer;
 use \App\Helper as H;
 use \App\Application as App;
 use \App\System;
+use \App\Entity\Pay;
 
 /**
  * журнал платежей
@@ -41,10 +43,11 @@ class PayList extends \App\Pages\Base {
 
         $this->_ptlist = \App\Entity\Pay::getPayTypeList();
 
+
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
-        $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
+        $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(System::getUser()->username == 'admin'), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
@@ -53,11 +56,13 @@ class PayList extends \App\Pages\Base {
 
 
         $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(25);
+        $doclist->setPageSize(H::getPG());
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-
+        $this->add(new Form('fnotes'))->onSubmit($this, 'delOnClick');
+        $this->fnotes->add(new TextInput('pl_id'));
+        $this->fnotes->add(new TextInput('notes'));
 
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
@@ -74,7 +79,7 @@ class PayList extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
     public function doclistOnRow($row) {
@@ -82,7 +87,7 @@ class PayList extends \App\Pages\Base {
 
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('date', date('d-m-Y',  $doc->paydate )));
+        $row->add(new Label('date', date('d-m-Y H:i', $doc->paydate)));
         $row->add(new Label('notes', $doc->notes));
         $row->add(new Label('amountp', H::fa($doc->amount > 0 ? $doc->amount : "")));
         $row->add(new Label('amountm', H::fa($doc->amount < 0 ? 0 - $doc->amount : "")));
@@ -94,7 +99,8 @@ class PayList extends \App\Pages\Base {
 
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        $row->add(new ClickLink('del', $this, 'delOnClick'))->setVisible($doc->indoc == 0);
+        $row->add(new ClickLink('del'));
+        $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
     }
 
     //просмотр
@@ -112,12 +118,17 @@ class PayList extends \App\Pages\Base {
 
     public function delOnClick($sender) {
 
+        $id = $sender->pl_id->getText();
 
-        $pl = $sender->getOwner()->getDataItem();
+
+        $pl = Pay::load($id);
+        if ($pl == null)
+            return;
+
+        Pay::addPayment($pl->document_id, 0 - $pl->amount, $pl->mf_id, Pay::PAY_CANCEL, $sender->notes->getText());
+
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "delete from paylist where pl_id=" . $pl->pl_id;
-        $conn->Execute($sql);
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
         $payed = $conn->GetOne($sql);
 
@@ -126,13 +137,7 @@ class PayList extends \App\Pages\Base {
         $this->doclist->Reload(true);
 
 
-        $n = new \App\Entity\Notify();
-        $n->user_id = System::getUser()->user_id;
-        $n->message = "Удален платеж  <br><br>";
-        $n->message .= "Платеж для документа {$pl->document_number} удален пользователем " . System::getUser()->userlogin;
-
-        $n->save();
-
+        $this->setSuccess('Платеж отменен');
         $this->resetURL();
     }
 
@@ -144,14 +149,14 @@ class PayList extends \App\Pages\Base {
 
         foreach ($list as $doc) {
 
-            $csv .= date('Y.m.d', strtotime($doc->paydate)) . ',';
-            $csv .= $doc->mf_name . ',';
-            $csv .= ($doc->amount > 0 ? $doc->amount : "") . ',';
-            $csv .= ($doc->amount < 0 ? 0 - $doc->amount : "" ) . ',';
-            $csv .= $doc->document_number . ',';
-            $csv .= $doc->username . ',';
-            $csv .= $doc->customer_name . ',';
-            $csv .= str_replace(',','',$doc->notes) . ',';
+            $csv .= date('Y.m.d', strtotime($doc->paydate)) . ';';
+            $csv .= $doc->mf_name . ';';
+            $csv .= ($doc->amount > 0 ? $doc->amount : "") . ';';
+            $csv .= ($doc->amount < 0 ? 0 - $doc->amount : "" ) . ';';
+            $csv .= $doc->document_number . ';';
+            $csv .= $doc->username . ';';
+            $csv .= $doc->customer_name . ';';
+            $csv .= str_replace(';', '', $doc->notes) . ';';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -199,6 +204,8 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and d.customer_id=" . $cust;
         }
         if ($mf > 0) {
+            if ($mf == \App\Entity\MoneyFund::BEZNAL)
+                $mf = 0;
             $where .= " and p.mf_id=" . $mf;
         }
         if ($author > 0) {

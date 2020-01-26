@@ -40,7 +40,7 @@ class ProdReceipt extends Document {
             "document_number" => $this->document_number,
             "pareaname" => $this->headerdata["pareaname"],
             "notes" => $this->notes,
-            "total" => H::fa($this->amount )
+            "total" => H::fa($this->amount)
         );
 
 
@@ -68,12 +68,6 @@ class ProdReceipt extends Document {
 
 
         return true;
-    }
-
-    public function getRelationBased() {
-        $list = array();
-
-        return $list;
     }
 
     protected function getNumberTemplate() {

@@ -6,7 +6,12 @@
         <div class="row">
             <div class="col-12 col-md-6 col-xl-4">
                 <div zippy="categorytable">
-                    <h3>Категории товаров </h3>
+                    <h3>Категории товаров 
+                        <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
+                           data-placement="bottom" data-content="Категории предназначены для  групировки  товаров  в  прайте, а также  для  
+                           задания  наценки  по  умолчанию для товаров  где  цена или наценка не  указаны  явно"></i> 
+
+                    </h3>                    
                     <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
                     <table class="table table-bordered   table-sm"  >
                         <tr>
@@ -36,7 +41,17 @@
                         <label for="editcat_name">Название</label>
                         <input  required="required" class="form-control" zippy="editcat_name"/>
                     </div>
-
+                    <div class="form-group  ">
+                        <label   for="editprice">Наценки  в  %</label>
+                        <div   > 
+                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice1"/>
+                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice2"/>
+                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice3"/>
+                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice4"/>
+                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice5"/>
+                            <small class="form-text text-muted">Типы цен задаются в настройках. </small>
+                        </div>
+                    </div>
 
                     <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
                     <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  "> 

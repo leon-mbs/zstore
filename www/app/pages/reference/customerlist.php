@@ -31,7 +31,7 @@ class CustomerList extends \App\Pages\Base {
     public $_msglist = array();
     public $_eventlist = array();
 
-    public function __construct() {
+    public function __construct($id = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('CustomerList'))
             return;
@@ -44,7 +44,7 @@ class CustomerList extends \App\Pages\Base {
 
         $this->add(new Panel('customertable'))->setVisible(true);
         $this->customertable->add(new DataView('customerlist', new \ZCL\DB\EntityDataSource('\App\Entity\Customer'), $this, 'customerlistOnRow'));
-        $this->customertable->customerlist->setPageSize(25);
+        $this->customertable->customerlist->setPageSize(Helper::getPG());
         $this->customertable->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->customerlist));
         $this->customertable->customerlist->setSelectedClass('table-success');
         $this->customertable->customerlist->Reload();
@@ -85,6 +85,13 @@ class CustomerList extends \App\Pages\Base {
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
         $this->contentview->dw_eventlist->setPageSize(10);
         $this->contentview->add(new \Zippy\Html\DataList\Paginator('eventpag', $this->contentview->dw_eventlist));
+
+        if ($id > 0) {
+            $this->_customer = Customer::load($id);
+            if ($this->_customer instanceof Customer) {
+                $this->show();
+            }
+        }
     }
 
     public function OnSearch($sender) {
@@ -127,6 +134,11 @@ class CustomerList extends \App\Pages\Base {
 
     public function editOnClick($sender) {
         $this->_customer = $sender->owner->getDataItem();
+        $this->show();
+    }
+
+    public function show() {
+
         $this->customertable->setVisible(false);
         $this->customerdetail->setVisible(true);
         $this->contentview->setVisible(false);
@@ -321,6 +333,7 @@ class CustomerList extends \App\Pages\Base {
             $n->dateshow = $event->eventdate - ($nt * 3600);
             $n->message = "<b>" . $event->title . "</b>" . "<br>" . $event->description;
             $n->message .= "<br><br><b> Контрагент: </b> {$this->_customer->customer_name} &nbsp;&nbsp; {$this->_customer->phone} ";
+
             $n->save();
         }
         $this->contentview->addeventform->clean();

@@ -24,6 +24,12 @@ class Users extends \App\Pages\Base {
     public function __construct() {
         parent::__construct();
 
+        if (System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('К странице имеет  доступ только администратор');
+            App::RedirectHome();
+            return false;
+        }
+
 
         $this->add(new Panel("listpan"));
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
@@ -63,12 +69,9 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->editpan->editform->add(new Panel('metaaccess'))->setVisible(false);
-        $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "meta_type"), $this, 'metarowOnRow'));
+        $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description"), $this, 'metarowOnRow'));
 
-        $this->add(new Panel("msgpan"))->setVisible(false);
-        $this->msgpan->add(new Form('msgform'))->onSubmit($this, 'OnSend');
-        $this->msgpan->msgform->add(new Button('cancelm'))->onClick($this, 'cancelOnClick');
-        $this->msgpan->msgform->add(new TextArea('msgtext'));
+        $this->editpan->editform->add(new DataView('brow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Branch", "disabled<>1", "branch_name"), $this, 'branchOnRow'));
     }
 
     public function onAdd($sender) {
@@ -109,6 +112,7 @@ class Users extends \App\Pages\Base {
 
         $this->editpan->editform->metaaccess->setVisible($this->user->acltype == 2);
         $this->editpan->editform->metaaccess->metarow->Reload();
+        $this->editpan->editform->brow->Reload();
 
 
 
@@ -178,18 +182,34 @@ class Users extends \App\Pages\Base {
             return;
         }
 
+        $barr = array();
+        foreach ($this->editpan->editform->brow->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->editbr == true)
+                $barr[] = $item->branch_id;
+        }
+        $this->user->aclbranch = implode(',', $barr);
+
         $varr = array();
         $earr = array();
+        $xarr = array();
 
         foreach ($this->editpan->editform->metaaccess->metarow->getDataRows() as $row) {
             $item = $row->getDataItem();
-            if ($item->viewacc == true)
-                $varr[] = $item->meta_id;
-            if ($item->editacc == true)
-                $earr[] = $item->meta_id;
+            if ($item->viewacc == true) {
+                $varr[] = $item->meta_id; 
+            }
+            if ($item->editacc == true) {
+                $earr[] = $item->meta_id; 
+            }
+            if ($item->exeacc == true) {
+                $xarr[] = $item->meta_id; 
+            }
         }
         $this->user->aclview = implode(',', $varr);
         $this->user->acledit = implode(',', $earr);
+        $this->user->aclexe = implode(',', $xarr);
+
 
         $widgets = "";
 
@@ -237,7 +257,6 @@ class Users extends \App\Pages\Base {
     public function cancelOnClick($sender) {
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
-        $this->msgpan->setVisible(false);
     }
 
     public function onAcl($sender) {
@@ -275,7 +294,17 @@ class Users extends \App\Pages\Base {
         $datarow->add(new \Zippy\Html\Label("email", $item->email));
         $datarow->add(new \Zippy\Html\Link\ClickLink("edit", $this, "OnEdit"))->setVisible($item->userlogin != 'admin');
         $datarow->add(new \Zippy\Html\Link\ClickLink("remove", $this, "OnRemove"))->setVisible($item->userlogin != 'admin');
-        $datarow->add(new \Zippy\Html\Link\ClickLink("msg", $this, "OnMsg"));
+    }
+
+    public function branchOnRow($row) {
+        $item = $row->getDataItem();
+        $arr = @explode(',', $this->user->aclbranch);
+        if (is_array($arr)) {
+            $item->editbr = in_array($item->branch_id, $arr);
+        }
+
+        $row->add(new Label('branch_name', $item->branch_name));
+        $row->add(new CheckBox('editbr', new Bind($item, 'editbr')));
     }
 
     public function metarowOnRow($row) {
@@ -297,6 +326,9 @@ class Users extends \App\Pages\Base {
                 $title = "Сервис";
                 break;
         }
+        $item->editacc = false;
+        $item->viewacc = false;
+        $item->exeacc = false;
         $earr = @explode(',', $this->user->acledit);
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
@@ -305,37 +337,17 @@ class Users extends \App\Pages\Base {
         if (is_array($varr)) {
             $item->viewacc = in_array($item->meta_id, $varr);
         }
+        $xarr = @explode(',', $this->user->aclexe);
+        if (is_array($xarr)) {
+            $item->exeacc = in_array($item->meta_id, $xarr);
+        }
 
         $row->add(new Label('description', $item->description));
         $row->add(new Label('meta_name', $title));
 
         $row->add(new CheckBox('viewacc', new Bind($item, 'viewacc')));
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
-    }
-
-    public function OnMsg($sender) {
-        $this->user = $sender->getOwner()->getDataItem();
-        $this->listpan->setVisible(false);
-        $this->msgpan->setVisible(true);
-    }
-
-    public function OnSend($sender) {
-        $msg = trim($sender->msgtext->getText());
-        if (strlen($msg) == 0)
-            return;
-
-        $from = System::getUser();
-
-        $n = new \App\Entity\Notify();
-        $n->user_id = $this->user->user_id;
-        $n->message = "Сообщение от пользователя <b>{$from->username}</b> <br><br>";
-        $n->message .= $msg;
-
-        $n->save();
-
-        $this->listpan->setVisible(true);
-        $this->msgpan->setVisible(false);
-        $this->setInfo('Отправлено');
+        $row->add(new CheckBox('exeacc', new Bind($item, 'exeacc')))->setVisible($item->meta_type == 1);
     }
 
 }

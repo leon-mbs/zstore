@@ -32,7 +32,6 @@ class ServiceAct extends \App\Pages\Base {
     private $_doc;
     private $_rowid = 0;
     private $_basedocid = 0;
-    private $_order_id = 0;
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -44,9 +43,11 @@ class ServiceAct extends \App\Pages\Base {
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('gar'));
+        $this->docform->add(new TextInput('device'));
+        $this->docform->add(new TextInput('devsn'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
@@ -55,7 +56,11 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
-        $this->docform->add(new TextInput('order'));
+        $this->docform->add(new Label('discount'))->setVisible(false);
+        $this->docform->add(new TextInput('editpaydisc'));
+        $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
+        $this->docform->add(new Label('paydisc', 0));
+
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
@@ -69,7 +74,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->editdetail->add(new AutocompleteTextInput('editservice'))->onText($this, 'OnAutoServive');
         $this->editdetail->editservice->onChange($this, 'OnChangeServive', true);
 
-        $this->editdetail->add(new TextInput('editquantity'))->setText("1");
+
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextArea('editdesc'));
 
@@ -83,21 +88,26 @@ class ServiceAct extends \App\Pages\Base {
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
-        if ($docid > 0) { //загружаем   содержимок  документа на страницу
+        if ($docid > 0) { //загружаем   содержимое   документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->headerdata['notes']);
             $this->docform->gar->setText($this->_doc->headerdata['gar']);
-            $this->docform->order->setText($this->_doc->headerdata['order']);
-            $this->_order_id = $this->_doc->headerdata['order_id'];
+
+
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->payed->setText($this->_doc->headerdata['payed']);
-            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            $this->docform->payed->setText($this->_doc->payed);
+            $this->docform->editpayed->setText($this->_doc->payed);
+            $this->docform->device->setText($this->_doc->device);
+            $this->docform->devsn->setText($this->_doc->devsn);
+            $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
+            $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+            $this->OnPayment($this->docform->payment);
+
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -111,51 +121,12 @@ class ServiceAct extends \App\Pages\Base {
         } else {
             $this->_doc = Document::create('ServiceAct');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-
-            if ($basedocid > 0) { //создание на  основании
-                $basedoc = Document::load($basedocid);
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'ServiceOrder') {
-
-                        $this->docform->customer->setKey($basedoc->customer_id);
-                        $this->docform->customer->setText($basedoc->customer_name);
-
-                        $this->_order_id = $basedocid;
-                        $this->docform->order->setText($basedoc->document_number);
-
-                        $notfound = array();
-                        $order = $basedoc->cast();
-
-
-                        //проверяем  что уже есть  акт
-                        $list = $order->ConnectedDocList();
-                        foreach ($list as $d) {
-                            if ($d->meta_name == 'ServiceAct') {
-                                $this->setWarn('У заказа  уже  есть акт');
-                                break;
-                            }
-                        }
-
-
-
-                        foreach ($order->detaildata as $item) {
-                            $item = new Service($item);
-                            $this->_servicelist[$item->service_id] = $item;
-                        }
-                    }
-                }
-            }
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
-        }
-
-        if ($this->_order_id) {
-            $this->docform->inprocdoc->setVisible(false); //Прячем  если  есть заказ чтобы не  дублировать 
         }
     }
 
@@ -165,10 +136,10 @@ class ServiceAct extends \App\Pages\Base {
         $row->add(new Label('item', $service->service_name));
         $row->add(new Label('desc', $service->desc));
 
-        $row->add(new Label('quantity', $service->quantity));
+
         $row->add(new Label('price', H::fa($service->price)));
 
-        $row->add(new Label('amount', H::fa($service->quantity * $service->price)));
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -179,7 +150,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->setVisible(false);
 
         $this->editdetail->editdesc->setText(($service->desc));
-        $this->editdetail->editquantity->setText(($service->quantity));
+
         $this->editdetail->editprice->setText($service->price);
 
         $this->editdetail->editservice->setKey($service->service_id);
@@ -205,7 +176,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->setVisible(false);
         $this->_rowid = 0;
         $this->editdetail->editdesc->setText('');
-        $this->editdetail->editquantity->setText(1);
+
         $this->editdetail->editprice->setText(0);
     }
 
@@ -216,7 +187,7 @@ class ServiceAct extends \App\Pages\Base {
             return;
         }
         $service = Service::load($id);
-        $service->quantity = $this->editdetail->editquantity->getText();
+
         $service->price = $this->editdetail->editprice->getText();
         $service->desc = $this->editdetail->editdesc->getText();
 
@@ -230,7 +201,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->editdetail->editservice->setKey(0);
         $this->editdetail->editdesc->setText('');
         $this->editdetail->editservice->setText('');
-        $this->editdetail->editquantity->setText("1");
+
 
         $this->editdetail->editprice->setText("0");
     }
@@ -249,20 +220,29 @@ class ServiceAct extends \App\Pages\Base {
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
-
-
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
+        $this->_doc->headerdata['device'] = $this->docform->device->getText();
+        $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
 
         $this->calcTotal();
 
-
-        $this->_doc->headerdata['order'] = $this->docform->order->getText();
-        $this->_doc->headerdata['order_id'] = $this->_order_id;
         $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
-        $this->_doc->payamount = $this->docform->payamount->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
+        $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
+            $this->_doc->headerdata['paydisc'] = 0;
+            $this->_doc->payed = 0;
+            $this->_doc->payamount = 0;
+        }
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->_doc->payed = 0;
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -279,6 +259,10 @@ class ServiceAct extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }
 
             $this->_doc->save();
 
@@ -290,27 +274,15 @@ class ServiceAct extends \App\Pages\Base {
                 if ($sender->id == 'execdoc') {
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
-
-                    $order = Document::load($this->_doc->headerdata['order_id']);
-                    if ($order instanceof Document) {
-                        $order->updateStatus(Document::STATE_CLOSED);
-                    }
                 }
 
                 if ($sender->id == 'inprocdoc') {
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                    $order = Document::load($this->_doc->headerdata['order_id']);
-                    if ($order instanceof Document) {
-                        $order->updateStatus(Document::STATE_INPROCESS);
-                    }
                 }
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
+
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
@@ -332,11 +304,53 @@ class ServiceAct extends \App\Pages\Base {
         $total = 0;
 
         foreach ($this->_servicelist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = $item->price;
 
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
+
+
+        $disc = 0;
+
+        $customer_id = $this->docform->customer->getKey();
+        if ($customer_id > 0) {
+            $customer = Customer::load($customer_id);
+
+            if ($customer->discount > 0) {
+                $disc = round($total * ($customer->discount / 100));
+            } else if ($customer->bonus > 0) {
+                if ($total >= $customer->bonus) {
+                    $disc = $customer->bonus;
+                } else {
+                    $disc = $total;
+                }
+            }
+        }
+
+
+        $this->docform->paydisc->setText($disc);
+        $this->docform->editpaydisc->setText($disc);
+    }
+
+    public function OnPayment($sender) {
+        $this->docform->payed->setVisible(true);
+        $this->docform->payamount->setVisible(true);
+        $this->docform->paydisc->setVisible(true);
+
+        $b = $sender->getValue();
+
+
+        if ($b == \App\Entity\MoneyFund::PREPAID) {
+            $this->docform->payed->setVisible(false);
+            $this->docform->payamount->setVisible(false);
+            $this->docform->paydisc->setVisible(false);
+        }
+        if ($b == \App\Entity\MoneyFund::CREDIT) {
+            $this->docform->payed->setVisible(false);
+            $this->docform->payed->setText(0);
+            $this->docform->editpayed->setText(0);
+        }
     }
 
     public function onPayAmount($sender) {
@@ -351,11 +365,12 @@ class ServiceAct extends \App\Pages\Base {
 
     private function CalcPay() {
         $total = $this->docform->total->getText();
+        $disc = $this->docform->paydisc->getText();
 
-        $this->docform->editpayamount->setText(round($total));
-        $this->docform->payamount->setText(round($total));
-        $this->docform->editpayed->setText(round($total));
-        $this->docform->payed->setText(round($total));
+        $this->docform->editpayamount->setText(H::fa($total - $disc));
+        $this->docform->payamount->setText(H::fa($total - $disc));
+        $this->docform->editpayed->setText(H::fa($total - $disc));
+        $this->docform->payed->setText(H::fa($total - $disc));
     }
 
     /**
@@ -369,7 +384,7 @@ class ServiceAct extends \App\Pages\Base {
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна позиция");
         }
-        if ($this->_doc->payamount > 0 && $this->_doc->headerdata['payed'] == 0) {
+        if ($this->docform->payment->getValue() == 0) {
             $this->setError("Не указан  способ  оплаты");
         }
 
@@ -384,7 +399,7 @@ class ServiceAct extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
     public function OnAutoServive($sender) {

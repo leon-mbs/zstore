@@ -16,7 +16,7 @@
                             <th  >Дата рег.</th>
 
                             <th  >Email</th>
-                            <th width="24">&nbsp;</th>
+
                             <th width="24">&nbsp;</th>
                             <th width="24">&nbsp;</th>
                         </tr>
@@ -28,7 +28,7 @@
                             <td zippy="created" align="center" style="white-space:nowrap"></td>
 
                             <td zippy="email"  ></td>
-                            <td><a zippy="msg"><i class="fa fa-comment"></i></a></td>
+
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
                             <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
                         </tr>
@@ -140,31 +140,50 @@
                         {{/issue}}       
 
                     </div>
+                    {{#usebranch}}
+
 
                     <div class="form-group">
+                        <label for="acl">Настройка доступа к филиалам</label>
+                        <table class="table table-sm table-striped">
+                            <tr zippy="brow"><td zippy="branch_name"> </td> <td><input zippy="editbr" class="acl" type="checkbox"></td></tr>
+
+                        </table>
+                    </div> 
+                    {{/usebranch}}
+                    <div class="form-group">
                         <label for="acl">Права доступа к  страницам</label>
-                        <select  style="width:200px"  class="form-control" zippy="editacl">
+                        <div class="form-check   ">
+
+                            <input class="form-check-input"  type="checkbox" zippy="editonlymy">
+                            <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ только  к  собственным документам</label>
+                        </div>            <select  style="width:200px"  class="form-control" zippy="editacl">
 
                             <option value="1">Полный доступ </option>
                             <option value="2">Раздельный  доступ</option>
 
                         </select>
                     </div> 
+
+
+
                     <div class="form-group" zippy="metaaccess"> 
-                        <h5>Настройка доступа к страницам</h5>
+
                         &nbsp;&nbsp;<span style="cursor:pointer" onclick=" $('.acl').prop('checked', true);"><i class="far fa-check-square"></i> Выставить все</span> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <span  style="cursor:pointer" onclick=" $('.acl').prop('checked', false);"><i class="far fa-square"></i> Снять все</span>  
                         <table class="table table-sm table-striped">
-                            <tr><th>Тип</th> <th>Страница</th><th style="width:30px" title="Просмотр"><i class="fa fa-search"></i> </th><th style="width:30px" title="Редактирование"><i class="fa fa-edit"></i> </th></tr>
-                            <tr zippy="metarow"><td zippy="meta_name"> </td>   <td zippy="description"> </td><td><input class="acl" zippy="viewacc" type="checkbox"></td><td><input zippy="editacc" class="acl" type="checkbox"></td></tr>
+                            <tr> <th>Страница</th><th>Тип</th><th style="width:30px" title="Просмотр"><i class="fa fa-search"></i> </th><th style="width:30px" title="Редактирование"><i class="fa fa-edit"></i> </th><th style="width:30px" title="Утверждение  и проведение"><i class="fa fa-gavel"></i> </th></tr>
+                            <tr zippy="metarow">
+
+                                <td zippy="description"> </td><td zippy="meta_name"> </td> 
+                                <td><input zippy="viewacc" class="acl" type="checkbox"></td>
+                                <td><input zippy="editacc" class="acl" type="checkbox"></td>
+                                <td><input zippy="exeacc" class="acl" type="checkbox"></td>
+                            </tr>
                         </table>
 
 
                     </div> 
-                    <div class="form-check   ">
 
-                        <input class="form-check-input"  type="checkbox" zippy="editonlymy">
-                        <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ только  к  собственным документам</label>
-                    </div>         
 
                     <div class="form-group">
 
@@ -173,21 +192,7 @@
                     </div>
                 </form> 
             </div>
-            <div zippy="msgpan" class="col-12 col-sm-10  col-md-6  col-lg-4">
-                <h4>Сообщение  пользователю</h4>   
-                <form zippy="msgform" role="form">
-                    <div class="form-group">
 
-                        <textarea   class="form-control" zippy="msgtext"  />
-
-                    </div>  
-                    <div class="form-group">
-
-                        <button type="submit" class="btn btn-primary   ">Отправить</button>
-                        &nbsp; <a zippy="cancelm" class="btn btn-light    ">Отменить</a>
-                    </div>
-                </form> 
-            </div>       
         </div>
         <script>
             function check_remove() {

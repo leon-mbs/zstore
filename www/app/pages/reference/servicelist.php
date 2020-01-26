@@ -12,6 +12,7 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Service;
+use \App\Helper as H;
 
 class ServiceList extends \App\Pages\Base {
 
@@ -29,7 +30,7 @@ class ServiceList extends \App\Pages\Base {
         $this->add(new Panel('servicetable'))->setVisible(true);
         $this->servicetable->add(new DataView('servicelist', new ServiceDataSource($this), $this, 'servicelistOnRow'))->Reload();
         $this->servicetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->servicetable->servicelist->setPageSize(25);
+        $this->servicetable->servicelist->setPageSize(H::getPG());
         $this->servicetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->servicetable->servicelist));
 
         $this->add(new Form('servicedetail'))->setVisible(false);

@@ -15,6 +15,7 @@
                     <div class="form-group  ">
                         <label for="store" >Со склада</label>
                         <select class="form-control" zippy="store">
+                            <option value="0">Не выбран</option>                        
                         </select>
                     </div>
                     <div class="form-group  ">
@@ -31,13 +32,7 @@
                     </div>
 
 
-                    <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
 
-                        <input class="form-control" type="text" zippy="notes">
-
-
-                    </div> 
 
                 </div>
                 <div class="col-12 col-md-4  col-xl-3">
@@ -55,18 +50,16 @@
                         </select>
                     </div> 
 
-                    <div class="form-group">
-                        <label data-label="paynotes" for="paynotes" > Комментарий к оплате</label>
-                        <input class="form-control" type="text" zippy="paynotes" >
-                    </div>   
-                    <div class="form-check">
-                        <input zippy="prepaid" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="useset">Была предоплата</label>
+                    <div class="form-group  ">
+                        <label for="notes" >Примечание </label>
 
-                    </div>
+                        <input class="form-control" type="text" zippy="notes">
+
+
+                    </div>       
 
                 </div>
-             
+
             </div>
             <div class="row">
                 <div class="col-12 col-md-10 col-xl-8">
@@ -162,8 +155,8 @@
                             <td zippy="payed" class="text-right"></td>
                             <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i class="fa fa-edit"></i></a> </td>
                         </tr>
-    
-                       <tr style="font-weight: bolder;">
+
+                        <tr style="font-weight: bolder;">
                             {{^usesnumber}} 
                             <td colspan="5" class="text-right"><span data-label="exchange" >Сдача:</span></td>
                             {{/usesnumber}} 
@@ -183,7 +176,7 @@
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
-                    
+
 
 
                 </div>
@@ -321,10 +314,10 @@
                 </div>
             </div>
         </form>
-        
-        
-            {{#usescanner}} 
-           <script>
+
+
+        {{#usescanner}} 
+        <script>
             $(document).ready(function () {
 
                 $('#barcode').focus();
@@ -338,6 +331,6 @@
                 }
             }
         </script>
-            {{/usescanner}} 
+        {{/usescanner}} 
     </body>
 </html>

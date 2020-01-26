@@ -19,6 +19,7 @@ use \App\Entity\Item;
 use \App\Entity\ItemSet;
 use \App\Entity\Category;
 use \App\System;
+use \App\Helper as H;
 
 class ItemList extends \App\Pages\Base {
 
@@ -39,7 +40,7 @@ class ItemList extends \App\Pages\Base {
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->itemlist->setPageSize(25);
+        $this->itemtable->itemlist->setPageSize(H::getPG());
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->itemlist));
 
         $this->add(new Form('itemdetail'))->setVisible(false);
@@ -82,7 +83,7 @@ class ItemList extends \App\Pages\Base {
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editminqty'));
-        
+
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
@@ -91,7 +92,9 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('edituseserial'));
         $this->itemdetail->add(new CheckBox('editpricelist', true));
-
+        $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
+        $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
+        $this->itemdetail->add(new CheckBox('editdelimage'));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -134,12 +137,19 @@ class ItemList extends \App\Pages\Base {
         if ($item->price5 > 0)
             $plist[] = $item->price5;
         $row->add(new Label('price', implode(',', $plist)));
-        $row->add(new Label('desc', $item->description));
+        $row->add(new Label('desc', htmlspecialchars_decode($item->description), true));
         $row->add(new Label('cell', $item->cell));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
+        $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
+
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
+        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        if ($item->image_id == 0) {
+            $row->imagelistitem->setVisible(false);
+        }
     }
 
     public function deleteOnClick($sender) {
@@ -181,6 +191,15 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
+        if ($this->_item->image_id > 0) {
+            $this->itemdetail->editdelimage->setChecked(false);
+            $this->itemdetail->editdelimage->setVisible(true);
+            $this->itemdetail->editimage->setVisible(true);
+            $this->itemdetail->editimage->setUrl('/LoadImage.php?id=' . $this->_item->image_id);
+        } else {
+            $this->itemdetail->editdelimage->setVisible(false);
+            $this->itemdetail->editimage->setVisible(false);
+        }
     }
 
     public function addOnClick($sender) {
@@ -189,6 +208,8 @@ class ItemList extends \App\Pages\Base {
         // Очищаем  форму
         $this->itemdetail->clean();
         $this->itemdetail->editmsr->setText('шт');
+        $this->itemdetail->editimage->setVisible(false);
+        $this->itemdetail->editdelimage->setVisible(false);
         $this->_item = new Item();
 
         if (System::getOption("common", "autoarticle") == 1) {
@@ -221,7 +242,7 @@ class ItemList extends \App\Pages\Base {
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
-        
+
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
@@ -238,7 +259,7 @@ class ItemList extends \App\Pages\Base {
             $code = Item::qstr($this->_item->item_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
             if ($cnt > 0) {
-                //пытаемся гtнерить еще раз 
+                //пытаемся генерить еще раз 
                 if ($this->_item->item_id == 0 && System::getOption("common", "autoarticle") == 1) {
                     $this->_item->item_code = Item::getNextArticle();
                     $this->itemdetail->editcode->setText($this->_item->item_code);
@@ -254,7 +275,41 @@ class ItemList extends \App\Pages\Base {
                 }
             }
         }
+        //delete image
+        if ($this->itemdetail->editdelimage->isChecked()) {
+            if ($this->_item->image_id > 0) {
+                \App\Entity\Image::delete($this->_item->image_id);
+            }
+            $this->_item->image_id = 0;
+        }
+
+
         $this->_item->Save();
+
+
+        $file = $this->itemdetail->editaddfile->getFile();
+        if (strlen($file["tmp_name"]) > 0) {
+            $imagedata = getimagesize($file["tmp_name"]);
+
+            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
+                $this->setError('Неверный формат изображения');
+                return;
+            }
+
+            if ($imagedata[0] * $imagedata[1] > 1000000) {
+                $this->setError('Слишком большой размер изображения');
+                return;
+            }
+
+            $image = new \App\Entity\Image();
+            $image->content = file_get_contents($file['tmp_name']);
+            $image->mime = $imagedata['mime'];
+
+            $image->save();
+            $this->_item->image_id = $image->image_id;
+            $this->_item->Save();
+        }
+
 
         $this->itemtable->itemlist->Reload();
 
@@ -330,6 +385,38 @@ class ItemList extends \App\Pages\Base {
         $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
 
         $this->setpanel->setlist->Reload();
+    }
+
+    public function printOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $printer = \App\System::getOptions('printer');
+        $wp = 'style="width:40mm"';
+        if (strlen($printer['pwidth']) > 0) {
+            $wp = 'style="width:' . $printer['pwidth'] . 'mm"';
+        }
+        $report = new \App\Report('item_tag.tpl');
+        $header = array('printw' => $wp);
+        if ($printer['pname'] == 1)
+            $header['name'] = $item->itemname;
+        if ($printer['pprice'] == 1)
+            $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
+        if ($printer['pcode'] == 1)
+            $header['article'] = $item->item_code;
+
+        if ($printer['pbarcode'] == 1) {
+            $barcode = $item->bar_code;
+            if (strlen($barcode) == 0)
+                $barcode = $item->item_code;
+
+            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+            $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
+            $header['img'] = $img;
+            $header['barcode'] = \App\Util::addSpaces($barcode);
+        }
+
+
+        $html = $report->generate($header);
+        $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
     }
 
 }

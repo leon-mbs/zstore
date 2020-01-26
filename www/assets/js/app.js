@@ -30,3 +30,23 @@ $(document).ready(function() {
     });
 });
 /* menu*/
+
+
+    function printpos(url, data) {
+
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data
+        }).success(function (data) {
+
+
+
+        }).fail(function (data) {
+
+            console.log(JSON.stringify(data));
+        });
+    }
+
+ 

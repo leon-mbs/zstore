@@ -16,23 +16,23 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Employee;
+use \App\Helper;
 
 class EmployeeList extends \App\Pages\Base {
 
     private $_employee;
+    private $_blist;
 
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('EmployeeList'))
             return;
+        $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
         $this->add(new Panel('employeetable'))->setVisible(true);
         $this->employeetable->add(new DataView('employeelist', new EDS('\App\Entity\Employee', '', 'disabled, emp_name'), $this, 'employeelistOnRow'))->Reload();
-        $this->employeetable->employeelist->setPageSize(25);
+        $this->employeetable->employeelist->setPageSize(Helper::getPG());
         $this->employeetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->employeetable->employeelist));
-
-
-
 
         $this->employeetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('employeedetail'))->setVisible(false);
@@ -41,15 +41,11 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         $this->employeedetail->add(new TextInput('editlogin'));
         $this->employeedetail->add(new TextInput('editemp_name'));
+        $this->employeedetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
         $this->employeedetail->add(new TextInput('editemail'));
         $this->employeedetail->add(new TextArea('editcomment'));
         $this->employeedetail->add(new CheckBox('editdisabled'));
-        //   $this->employeedetail->add(new TextInput('editzhour',0));        
-        //   $this->employeedetail->add(new TextInput('editzmon',0));        
-        //   $this->employeedetail->add(new TextInput('editadvance',0));        
-        //   $this->employeedetail->add(new DropDownChoice('editztype',array(1=>'Ставка',2=>'Почасовая',3=>'Сдельная'),1))->onChange($this,"onType");
-        //  $this->onType($this->employeedetail->editztype);
     }
 
     /*
@@ -65,6 +61,7 @@ class EmployeeList extends \App\Pages\Base {
 
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
+        $row->add(new Label('branch', $this->_blist[$item->branch_id]));
         //  $row->add(new Label('balance', $item->balance));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -87,10 +84,7 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->editemp_name->setText($this->_employee->emp_name);
         $this->employeedetail->editcomment->setText($this->_employee->comment);
         $this->employeedetail->editemail->setText($this->_employee->email);
-        //    $this->employeedetail->editztype->setValue($this->_employee->ztype);
-        //     $this->employeedetail->editzhour->setText($this->_employee->zhour);
-        //    $this->employeedetail->editzmon->setText($this->_employee->zmon);
-        //     $this->employeedetail->editadvance->setText($this->_employee->advance);
+        $this->employeedetail->editbranch->setValue($this->_employee->branch_id);
         $this->employeedetail->editdisabled->setChecked($this->_employee->disabled);
     }
 
@@ -99,6 +93,8 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->setVisible(true);
         // Очищаем  форму
         $this->employeedetail->clean();
+        $b = \App\Session::getSession()->branch_id;
+        $this->employeedetail->editbranch->setValue($b > 0 ? $b : 0);
 
 
         $this->_employee = new Employee();
@@ -129,10 +125,12 @@ class EmployeeList extends \App\Pages\Base {
         $this->_employee->emp_name = $this->employeedetail->editemp_name->getText();
         $this->_employee->email = $this->employeedetail->editemail->getText();
         $this->_employee->comment = $this->employeedetail->editcomment->getText();
-        //    $this->_employee->ztype = $this->employeedetail->editztype->getValue();
-        //    $this->_employee->advance = $this->employeedetail->editadvance->getText();
-        //    $this->_employee->zmon = $this->employeedetail->editzmon->getText();
-        //    $this->_employee->zhour = $this->employeedetail->editzhour->getText();
+
+        $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
+        if ($this->_tvars['usebranch'] == true && $this->_employee->branch_id == 0) {
+            $this->setError('Не выбран  филиал');
+            return;
+        }
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_employee->Save();

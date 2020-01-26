@@ -1,15 +1,18 @@
 {
     "require": {
-        "php": ">=5.4",
+        "php": ">=7.1",
         "phpmailer/phpmailer": "~5.2",
-        "monolog/monolog": "1.23.0",
-        "ircmaxell/password-compat": "v1.0.4",
-        "nesbot/Carbon": "1.29.2",
+        "monolog/monolog": "1.25.3",
+
+        "nesbot/Carbon": "1.39.1",
         "timetoogo/pinq": "3.4.1",
-        "jbzoo/image": "3.0.4",
-        "dompdf/dompdf": "v0.8.2",
+        "jbzoo/image": "3.0.5",
+        "dompdf/dompdf": "v0.8.3",
+        "firebase/php-jwt": "v5.0.0",
+
         "roave/security-advisories": "dev-master",
-        "rmccue/requests": ">=1.0",
-        "leon-mbs/zippy": "2.1.11"
+        "picqer/php-barcode-generator": "v0.3",
+
+        "leon-mbs/zippy": "2.1.14"
     }
 }

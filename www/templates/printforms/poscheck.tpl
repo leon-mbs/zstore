@@ -5,9 +5,9 @@
 
     <tr>
         <td>{{{print}}}</td>
-         
+
     </tr>
- 
+
 
 </table>
 

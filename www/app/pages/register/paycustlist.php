@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pages\Service;
+namespace App\Pages\Register;
 
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\DataList\Paginator;
@@ -14,7 +14,9 @@ use \Zippy\Html\Form\SubmitButton;
 use \Zippy\Html\Panel;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\RedirectLink;
 use \App\Entity\Doc\Document;
+use \App\Entity\Pay;
 use \App\Helper as H;
 use \App\Application as App;
 use \App\System;
@@ -37,7 +39,7 @@ class PayCustList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowSer('PayCustList'))
+        if (false == \App\ACL::checkShowReg('PayCustList'))
             return;
 
         $this->add(new Panel("clist"));
@@ -55,36 +57,39 @@ class PayCustList extends \App\Pages\Base {
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
-
         $this->add(new Panel("paypan"))->setVisible(false);
         $this->paypan->add(new Label("pname"));
         $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
         $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
 
-
-
         $this->updateCust();
     }
 
     public function updateCust() {
+        $br = "";
+        $blist = \App\ACL::getBranchListConstraint();
+        if (strlen($blist) > 0) {
+            $br = " branch_id in({$blist}) and ";
+        }
+        $sql = "select c.customer_name,c.phone, c.customer_id,sam,fl  from (select  customer_id,  coalesce(sum(payamount - payed),0) as sam,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
+            from `documents_view`
 
-        $sql = "select customer_name,fl,coalesce(sum(am),0) as sam from  (
-            select   customer_name,  ( payamount - payed)  as  am ,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
-            from `documents_view` where payamount > 0 and payamount > payed  and state not in (1,2,3,17)   
+            where  {$br} payamount > 0 and payamount > payed  and state not in (1,2,3,17)
 
-            ) t   group by customer_name ,fl   order by  (sam) desc";
+              group by customer_id ,fl ) t join customers c  on t.customer_id = c.customer_id  ";
         $this->_custlist = \App\DataItem::query($sql);
         $this->clist->custlist->Reload();
     }
 
     public function custlistOnRow($row) {
         $cust = $row->getDataItem();
-        $row->add(new Label('customer_name', $cust->customer_name));
+        $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
+        $row->add(new Label('phone', $cust->phone));
         $row->add(new Label('credit', H::fa($cust->fl == -1 ? $cust->sam : "")));
         $row->add(new Label('debet', H::fa($cust->fl == 1 ? $cust->sam : "")));
 
@@ -108,12 +113,17 @@ class PayCustList extends \App\Pages\Base {
             $docs = "'GoodsReceipt','InvoiceCust'";
         }
         if ($this->_cust->fl == 1) {
-            $docs = "'GoodsIssue','Task','ServiceAct','Invoice'";
+            $docs = "'GoodsIssue','Task','ServiceAct','Invoice','POSCheck'";
+        }
+
+        $br = "";
+        $blist = \App\ACL::getBranchListConstraint();
+        if (strlen($blist) > 0) {
+            $br = " branch_id in({$blist}) and ";
         }
 
 
-
-        $this->_doclist = \App\Entity\Doc\Document::find("payamount > 0 and payamount  > payed  and state not in (1,2,3,17)  and meta_name in({$docs})", "(payamount - payed) desc");
+        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  > payed  and state not in (1,2,3,17)  and meta_name in({$docs})", "(payamount - payed) desc");
 
         $this->plist->doclist->Reload();
     }
@@ -126,7 +136,7 @@ class PayCustList extends \App\Pages\Base {
         $row->add(new Label('date', date('d.m.Y', $doc->document_date)));
 
 
-        $row->add(new Label('amount',H::fa( ($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
+        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
 
         $row->add(new Label('payamount', H::fa($doc->payamount - $doc->payed)));
 
@@ -187,7 +197,7 @@ class PayCustList extends \App\Pages\Base {
 
     public function payOnRow($row) {
         $pay = $row->getDataItem();
-        $row->add(new Label('plamount', H::fa(0 - $pay->amount)));
+        $row->add(new Label('plamount', H::fa($pay->amount)));
         $row->add(new Label('pluser', $pay->username));
         $row->add(new Label('pldate', date('Y-m-d', $pay->paydate)));
         $row->add(new Label('plmft', $pay->mf_name));
@@ -212,10 +222,10 @@ class PayCustList extends \App\Pages\Base {
         //закупки  и возвраты
         if ($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'InvoiceCust' || $this->_doc->meta_name == 'ReturnIssue') {
             $amount = 0 - $amount;
-            $type = \App\Entity\Pay::PAY_BASE_OUTCOME;
+            $type = Pay::PAY_BASE_OUTCOME;
         }
 
-        \App\Entity\Pay::addPayment($this->_doc->document_id, 0, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
+        Pay::addPayment($this->_doc->document_id, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
 
 
@@ -231,11 +241,11 @@ class PayCustList extends \App\Pages\Base {
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ',';
-            $csv .= $d->document_number . ',';
-            $csv .= $d->headerdata["pareaname"] . ',';
-            $csv .= $d->amount . ',';
-            $csv .=  str_replace(',','',$d->notes) . ',';
+            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= $d->document_number . ';';
+            $csv .= $d->headerdata["pareaname"] . ';';
+            $csv .= $d->amount . ';';
+            $csv .= str_replace(';', '', $d->notes) . ';';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");

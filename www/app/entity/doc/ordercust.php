@@ -30,7 +30,7 @@ class OrderCust extends Document {
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "customer_name" => $this->customer_name,
+            "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount)
         );
@@ -48,16 +48,20 @@ class OrderCust extends Document {
         return true;
     }
 
-    public function getRelationBased() {
-        $list = array();
-
-        $list['GoodsReceipt'] = 'Приходная накладная';
-
-        return $list;
-    }
-
     protected function getNumberTemplate() {
         return 'ЗКП-000000';
     }
 
+    public function getRelationBased() {
+        $list = array();
+        $list['GoodsReceipt'] = 'Приходная накладная';
+        $list['InvoiceCust']  = 'Счет от поставщика';
+
+        return $list;
+    } 
+    
+
+    protected function getDefExecuteStatus(){
+        return self::STATE_INPROCESS;
+    }
 }

@@ -23,14 +23,14 @@ class Issue extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->issue_id = 0;
-        $this->customer_id = 0;
+        $this->project_id = 0;
+
 
         $this->user_id = 0;
         $this->status = 0;
         $this->priority = 0;
         $this->hours = 0;
 
-        $this->price = 0;
         $this->createdon = time();
         $this->lastupdate = time();
     }
@@ -55,15 +55,15 @@ class Issue extends \ZCL\DB\Entity {
     protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные  
-        $this->content = "<content>";
-        $this->content .= "<hours>{$this->hours}</hours>";
-        $this->content .= "<price>{$this->price}</price>";
-        $this->content .= "<createdon>{$this->createdon}</createdon>";
-        $this->content .= "<createdby>{$this->createdby}</createdby>";
-        $this->content .= "<desc><![CDATA[{$this->desc}]]></desc>";
+        $this->details = "<details>";
+        $this->details .= "<hours>{$this->hours}</hours>";
+        $this->details .= "<price>{$this->price}</price>";
+        $this->details .= "<createdon>{$this->createdon}</createdon>";
+        $this->details .= "<createdby>{$this->createdby}</createdby>";
+        $this->details .= "<desc><![CDATA[{$this->desc}]]></desc>";
 
-        $this->content .= "<createdbyname><![CDATA[{$this->createdbyname}]]></createdbyname>";
-        $this->content .= "</content>";
+        $this->details .= "<createdbyname><![CDATA[{$this->createdbyname}]]></createdbyname>";
+        $this->details .= "</details>";
 
         return true;
     }
@@ -73,14 +73,13 @@ class Issue extends \ZCL\DB\Entity {
         $this->lastupdate = strtotime($this->lastupdate);
 
         //распаковываем  данные из  
-        $xml = simplexml_load_string($this->content);
+        $xml = simplexml_load_string($this->details);
 
         $this->hours = (int) ($xml->hours[0]);
         $this->price = (int) ($xml->price[0]);
         $this->createdon = (int) ($xml->createdon[0]);
         $this->createdby = (int) ($xml->createdby[0]);
         $this->createdbyname = (string) ($xml->createdbyname[0]);
-
 
         $this->desc = (string) ($xml->desc[0]);
 

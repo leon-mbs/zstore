@@ -26,6 +26,7 @@ use \App\Entity\Service;
 use \App\Entity\Employee;
 use \App\Entity\ProdArea;
 use \App\Entity\Doc\Document;
+use \App\Entity\Doc\Task;
 use \App\Helper as H;
 use \App\System;
 use \App\Application;
@@ -54,22 +55,18 @@ class TaskList extends \App\Pages\Base {
         $this->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
         $this->tasklist->setSelectedClass('table-success');
 
-        $this->tasklist->setPageSize(15);
+        $this->tasklist->setPageSize(H::getPG(15));
         $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->tasklist));
 
         $this->add(new Form('filterform'))->onSubmit($this, 'OnFilter');
 
         $this->filterform->add(new DropDownChoice('filterassignedto', Employee::findArray('emp_name', '', 'emp_name'), 0));
         $this->filterform->add(new DropDownChoice('filterpa', ProdArea::findArray('pa_name', '', 'pa_name'), 0));
-        $this->filterform->add(new AutocompleteTextInput('filterclient'))->onText($this, 'OnAutoCustomer');
+
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
 
-
         $this->add(new Label("tamount"));
-
-
-
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -77,11 +74,12 @@ class TaskList extends \App\Pages\Base {
         $this->statuspan->statusform->add(new SubmitButton('binprocess'))->onClick($this, 'onStatus');
         $this->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'onStatus');
         $this->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'onStatus');
+        $this->statuspan->statusform->add(new SubmitButton('bitems'))->onClick($this, 'onStatus');
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->add(new \App\Calendar('calendar'))->setEvent($this, 'OnGal');
+        $this->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
         $this->updateTasks();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
@@ -114,9 +112,6 @@ class TaskList extends \App\Pages\Base {
 
 
 
-
-
-
         $emps = array();
         foreach ($task->detaildata as $ser) {
 
@@ -126,7 +121,7 @@ class TaskList extends \App\Pages\Base {
 
 
         $row->add(new Label('taskemps', implode(', ', $emps)));
-        $row->add(new Label('taskclient', $task->customer_name));
+
         $row->add(new Label('taskamount', H::fa($task->amount)));
 
         $this->_tamount = H::fa($this->_tamount + $task->amount);
@@ -153,7 +148,7 @@ class TaskList extends \App\Pages\Base {
         } else {
             $this->statuspan->statusform->bclosed->setVisible(false);
         }
-        if ($this->_task->state == Document::STATE_CANCELED || $this->_task->state == Document::STATE_EDITED || $this->_task->state == Document::STATE_NEW) {
+        if ($this->_task->state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binprocess->setVisible(true);
             $this->statuspan->statusform->bshifted->setVisible(true);
         } else {
@@ -166,6 +161,7 @@ class TaskList extends \App\Pages\Base {
         if ($this->_task->state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->bshifted->setVisible(true);
         }
+        $this->statuspan->statusform->bitems->setVisible($this->_task->state != Document::STATE_CLOSED);
 
 
         $this->statuspan->docview->setDoc($this->_task);
@@ -178,8 +174,6 @@ class TaskList extends \App\Pages\Base {
         $task = $sender->getOwner()->getDataItem();
         if (false == \App\ACL::checkEditDoc($task, true))
             return;
-
-
 
         Application::Redirect("\\App\\Pages\\Doc\\Task", $task->document_id);
     }
@@ -195,10 +189,15 @@ class TaskList extends \App\Pages\Base {
         }
         if ($sender->id == 'bclosed') {
             $this->_task->updateStatus(Document::STATE_EXECUTED);
-            if ($this->_task->payed == $this->_task->payamount) { //если оплачен
-                $this->_task->updateStatus(Document::STATE_CLOSED);
-                $this->setSuccess('Наряд закрыт');
+            $this->_task->updateStatus(Document::STATE_CLOSED);
+        }
+        if ($sender->id == 'bitems') {    //списание материалов
+            $d = $this->_task->getChildren('ProdIssue');
+            if (count($d) > 0) {
+                $this->setWarn('Уже есть документ Списание на производство');
             }
+            Application::Redirect("\\App\\Pages\\Doc\\ProdIssue", 0, $this->_task->document_id);
+            return;
         }
 
         $this->statuspan->setVisible(false);
@@ -209,28 +208,22 @@ class TaskList extends \App\Pages\Base {
     public function updateTasks() {
         $user = System::getUser();
 
-        $client = $this->filterform->filterclient->getKey();
+
 
         $sql = "meta_name='Task' ";
         if ($this->filterform->filterfinished->isChecked() == false) {
             $sql = $sql . " and state<>9 ";
         }
-        if ($client > 0) {
-            $sql = $sql . " and customer_id=" . $client;
-        }
+
         if ($this->filterform->filterassignedto->getValue() > 0) {
             $sql = $sql . " and  content  like '%<employee_id>" . $this->filterform->filterassignedto->getValue() . "</employee_id>%' ";
         }
         if ($this->filterform->filterpa->getValue() > 0) {
             $sql = $sql . " and  content  like '%<parea>" . $this->filterform->filterpa->getValue() . "</parea>%' ";
         }
-        if ($user->acltype == 2) {
-            if ($user->onlymy == 1) {
-
-                $sql .= " and user_id  = " . $user->user_id;
-            }
-
-            $sql .= " and meta_id in({$user->aclview}) ";
+        $c = Document::getConstraint();
+        if (strlen($c) > 0) {
+            $sql = $sql . " and ({$c})";
         }
         $this->_tamount = 0;
 
@@ -281,7 +274,7 @@ class TaskList extends \App\Pages\Base {
         $this->updateTasks();
     }
 
-    public function OnGal($sender, $action) {
+    public function OnCal($sender, $action) {
         if ($action['action'] == 'click') {
 
             $task = Document::load($action['id']);
@@ -341,23 +334,18 @@ class TaskList extends \App\Pages\Base {
         $this->updateTasks();
     }
 
-    public function OnAutoCustomer($sender) {
-        $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
-    }
-
     public function oncsv($sender) {
         $list = $this->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";
 
         foreach ($list as $task) {
             $csv .= $task->document_number . ',';
-            $csv .= $task->customer_name . ',';
-            $csv .= str_replace(',','',$task->notes) . ',';
-            $csv .= date('Y-m-d H:i', $task->headerdata['start_date']) . ',';
-            $csv .= $task->headerdata['taskhours'] . ',';
-            $csv .= Document::getStateName($task->state) . ',';
-            $csv .= $task->amount . ',';
+
+            $csv .= str_replace(',', '', $task->notes) . ';';
+            $csv .= date('Y-m-d H:i', $task->headerdata['start_date']) . ';';
+            $csv .= $task->headerdata['taskhours'] . ';';
+            $csv .= Document::getStateName($task->state) . ';';
+            $csv .= $task->amount . ';';
 
             $csv .= "\n";
         }

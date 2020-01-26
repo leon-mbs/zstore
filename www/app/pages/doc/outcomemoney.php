@@ -16,6 +16,7 @@ use \App\Entity\Doc\Document;
 use \App\Entity\Pay;
 use \App\Entity\MoneyFund;
 use \App\Application as App;
+use \App\System as System;
 use \App\Helper as H;
 
 /**
@@ -32,8 +33,8 @@ class OutcomeMoney extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(2)));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(System::getUser()->username == 'admin'), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(2), 0));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('amount'));
 
@@ -62,7 +63,8 @@ class OutcomeMoney extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $this->_doc->notes = $this->docform->notes->getText();
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();

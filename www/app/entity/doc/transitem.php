@@ -9,16 +9,30 @@ use \App\Entity\Item;
 use \App\Helper as H;
 
 /**
- * Класс-сущность  локумент перекомплектация товаров
+ * Класс-сущность  документ перекомплектация ТМЦ
  *
  */
 class TransItem extends Document {
 
     public function Execute() {
 
-        $conn = \ZDB\DB::getConnect();
+    
+           foreach($this->detaildata as $item){  
+           if ($item['st1'] > 0 && $item['st1'] > 0) {   //перемещение партий
+                $st1 = Stock::load($item['st1']);
+                $st2 = Stock::load($item['st2']);
 
+                $sc = new Entry($this->document_id, 0 - $item['quantity'] * $st1->partion, 0 - $item['quantity']);
+                $sc->setStock($st1->stock_id);
+                $sc->save();
 
+                $sc = new Entry($this->document_id, $item['quantity'] * $st2->partion, $item['quantity']);
+                $sc->setStock($st2->stock_id);
+                $sc->save();
+
+                return true;
+            }
+        }  
         //списываем  со склада
         $fi = Stock::load($this->headerdata['fromitem']);
 
@@ -29,7 +43,7 @@ class TransItem extends Document {
 
         $ti = Item::load($this->headerdata['toitem']);
         $price = round(($this->amount ) / $this->headerdata["toquantity"]);
-        $stockto = Stock::getStock($this->headerdata['storefrom'], $ti->item_id, $price, "", "", true);
+        $stockto = Stock::getStock($this->headerdata['store'], $ti->item_id, $price, "", "", true);
         $sc = new Entry($this->document_id, $this->headerdata["toquantity"] * $price, $this->headerdata["toquantity"]);
         $sc->setStock($stockto->stock_id);
 
@@ -41,19 +55,23 @@ class TransItem extends Document {
 
     public function generateReport() {
 
-
-        $fi = Stock::load($this->headerdata['fromitem']);
-        $fi = Item::load($fi->item_id);
+        
+        $si = Stock::load($this->headerdata['fromitem']);
+        $fi = Item::load($si->item_id);
         $ti = Item::load($this->headerdata['toitem']);
-
+        if ($item['st1'] > 0 && $item['st1'] > 0) {   //перемещение партий
+            $st1 = Stock::load($item['st1']);
+            $fi = Item::load($st1->item_id);
+            $ti = Item::load($st1->item_id);
+        }
 
         $header = array(
             'date' => date('d.m.Y', $this->document_date),
-            "from" => Store::load($this->headerdata["storefrom"])->storename,
+            "from" => Store::load($this->headerdata["store"])->storename,
             "fromitemname" => $fi->itemname . ', ' . $this->headerdata["fromquantity"] . $fi->msr,
-            "toitemname" => $fi->itemname . ', ' . $this->headerdata["toquantity"] . $fi->msr,
+            "toitemname" => $ti->itemname . ', ' . $this->headerdata["toquantity"] . $ti->msr,
             "document_number" => $this->document_number,
-            "amount" => H::fa($this->amount )
+            "amount" => H::fa($this->amount)
         );
         $report = new \App\Report('transitem.tpl');
 

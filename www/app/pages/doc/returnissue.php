@@ -35,7 +35,7 @@ class ReturnIssue extends \App\Pages\Base {
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
-        if($docid==0 && $basedocid==0){
+        if ($docid == 0 && $basedocid == 0) {
             $this->setWarn('Возврат следует создавать на  основании расходной накладной или  чека');
         }
         $this->add(new Form('docform'));
@@ -48,8 +48,8 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new TextInput('paynotes'));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()));
+
 
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -84,7 +84,7 @@ class ReturnIssue extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->paynotes->setText($this->_doc->headerdata['paynotes']);
+
 
             foreach ($this->_doc->detaildata as $item) {
                 $it = new Stock($item);
@@ -104,11 +104,11 @@ class ReturnIssue extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $elist = \App\Entity\Entry::find('document_id='.$basedoc->document_id) ;
+                        $elist = \App\Entity\Entry::find('document_id=' . $basedoc->document_id);
                         foreach ($elist as $entry) {
                             $stock = Stock::load($entry->stock_id);
-                            $stock->quantity=abs($entry->quantity);
-                            $stock->price=round(abs($entry->amount/$entry->quantity));
+                            $stock->quantity = abs($entry->quantity);
+                            $stock->price = round(abs($entry->amount / $entry->quantity));
                             $this->_tovarlist[$stock->stock_id] = $stock;
                         }
                     }
@@ -119,10 +119,7 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
-        
     }
-
-  
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
@@ -220,21 +217,29 @@ class ReturnIssue extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
         if ($this->checkForm() == false) {
             return;
         }
 
         $this->calcTotal();
 
+        $firm = H::getFirmData($this->_doc->branch_id);
+        $this->_doc->headerdata["firmname"] = $firm['firmname'];
 
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['paynotes'] = $this->docform->paynotes->getText();
+
 
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
@@ -247,6 +252,10 @@ class ReturnIssue extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited)
@@ -258,11 +267,6 @@ class ReturnIssue extends \App\Pages\Base {
             }
 
 
-
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
@@ -302,6 +306,9 @@ class ReturnIssue extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
+        if (($this->docform->store->getValue() > 0 ) == false) {
+            $this->setError("Не выбран  склад");
+        }
 
         return !$this->isError();
     }
@@ -319,7 +326,7 @@ class ReturnIssue extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and customer_name like " . $text);
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
     public function OnAutoItem($sender) {

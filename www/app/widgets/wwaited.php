@@ -26,10 +26,13 @@ class WWaited extends \Zippy\Html\PageFragment {
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
 
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0)
+            $cstr = "   sv.store_id in ({$cstr}) and  ";
 
         $sql = "select sum( ev.quantity) as qty, sv.`item_id`, sv.`store_id`,  sv.`itemname`, sv.`storename` from
         `store_stock_view` sv  join entrylist_view ev on ev.stock_id = sv.stock_id
-         where   ev.quantity < 0  and   ev.document_date > cast(now() as date)
+         where {$cstr}  ev.quantity < 0  and   ev.document_date > cast(now() as date)
          group by sv.`item_id`, sv.`store_id`,  sv.`itemname`, sv.`storename`
          order  by  sv.itemname";
 

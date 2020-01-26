@@ -27,9 +27,8 @@ class Stat extends \App\Pages\Base {
 
         parent::__construct();
 
-        $allow = (strpos(System::getUser()->modules, 'issue') !== false || System::getUser()->userlogin == 'admin');
-        if (!$allow) {
-            System::setErrorMsg('Нет права  доступа  к   модулю ');
+        if (System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('К странице имеет  доступ только администратор ');
             App::RedirectHome();
             return false;
         }

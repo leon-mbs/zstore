@@ -39,6 +39,18 @@
         <td> {{{documents}}}</td>
     </tr>
     {{/_detail}}
+    <tr>
+
+        <td> </td>
+        <td> </td>
+        <td align="right"><b>На  сумму</b></td>
+
+        <td align="right"><b>{{ba}}</b></td>
+        <td align="right"><b>{{bain}}</b></td>
+        <td align="right"><b>{{baout}}</b></td>
+        <td align="right"><b>{{baend}}</b> </td>
+        <th>  </th>
+    </tr>     
 </table>
 
 

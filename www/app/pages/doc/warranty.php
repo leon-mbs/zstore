@@ -79,20 +79,12 @@ class Warranty extends \App\Pages\Base {
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    $this->docform->customer->setText($basedoc->customer_name);
+                    $this->docform->customer->setText($basedoc->headerdata['customer_name']);
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
 
                         foreach ($basedoc->detaildata as $item) {
                             $item = new Item($item);
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
-                    }
-                    if ($basedoc->meta_name == 'Task') {
-                        $parts = unserialize(base64_decode($basedoc->headerdata['parts']));
-
-                        foreach ($parts as $_item) {
-                            $item = new Item($_item->getData());
                             $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
@@ -207,9 +199,11 @@ class Warranty extends \App\Pages\Base {
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
-        $this->_doc->customer_id = $this->docform->customer->getText();
+        $this->_doc->headerdata["customer_name"] = $this->docform->customer->getText();
 
-     
+        $firm = H::getFirmData($this->_doc->branch_id);
+        $this->_doc->headerdata["firmname"] = $firm['firmname'];
+
         $this->_doc->detaildata = array();
         foreach ($this->_tovarlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
@@ -222,6 +216,10 @@ class Warranty extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            if ($this->_basedocid > 0) {
+                $this->_doc->parent_id = $this->_basedocid;
+                $this->_basedocid = 0;
+            }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
@@ -229,11 +227,6 @@ class Warranty extends \App\Pages\Base {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-            // если   создан на  основании
-            if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
-                $this->_basedocid = 0;
-            }
 
             $conn->CommitTrans();
             App::RedirectBack();

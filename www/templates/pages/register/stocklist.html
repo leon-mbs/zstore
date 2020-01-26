@@ -4,7 +4,6 @@
             <div class="col-12 col-xl-8  ">
 
                 <h3>Журнал движения  ТМЦ </h3>
-                <small>Движение  ТМЦ  с детализацией по  партиям. </small>
 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
@@ -22,17 +21,17 @@
                         </select>
                         <label for="fitem"> ТМЦ </label>
                         <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="fitem" >
-                       
-            
+
+
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
                     </form>
                 </div>
-                </div>
-                </div>
-         <div class="row">
+            </div>
+        </div>
+        <div class="row">
             <div class="col-12 col-lg-8 col-xl-6">
-        
+
 
                 <table class="table   table-sm   ">
                     <tr>
@@ -40,12 +39,12 @@
 
                         <th>Дата</th>
                         <th>Документ</th>
-                   
+
                         <th class="text-right">Уч. цена </th>
-                       {{#usesnumber}} 
-                             <th class="text-right">Серия </th>
-                      {{/usesnumber}} 
-                       <th class="text-right">Кол </th>
+                        {{#usesnumber}} 
+                        <th class="text-right">Серия </th>
+                        {{/usesnumber}} 
+                        <th class="text-right">Кол </th>
                         <th class="text-right">Цена </th>
 
 
@@ -59,17 +58,17 @@
                         <td class="text-nowrap" zippy="date"></td>
                         <td zippy="dnumber"    ></td>
                         <td zippy="partion" class="text-right"  ></td>
-                         {{#usesnumber}} 
-                         <td zippy="snumber"></td>
-                       {{/usesnumber}}   
+                        {{#usesnumber}} 
+                        <td zippy="snumber"></td>
+                        {{/usesnumber}}   
                         <td zippy="qty" class="text-right"  ></td>
-                        
+
                         <td zippy="price"  class="text-right"  ></td>
 
-     
+
                         <td class="text-nowrap" >
                             <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
-                            
+
 
 
                         </td>
@@ -93,11 +92,7 @@
                 <div zippy="docview"></div>
             </div>   </div>
 
-        <script>
-            function check_del() {
-                return confirm("Удалить  платеж?")
-            }
-        </script>
+
 
 
     </body>

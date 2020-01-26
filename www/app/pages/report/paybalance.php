@@ -90,6 +90,9 @@ class PayBalance extends \App\Pages\Base {
         $detail = array();
         $detail2 = array();
 
+        $cstr = \App\Acl::getMFBranchConstraint();
+        if (strlen($cstr) > 0)
+            $cstr = "  mf_id in ({$cstr}) and ";
 
         $pl = \App\Entity\Pay::getPayTypeList();
 
@@ -97,7 +100,7 @@ class PayBalance extends \App\Pages\Base {
 
         $sql = " 
          SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
-             WHERE   
+             WHERE    {$cstr}
               amount >0 
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
@@ -145,7 +148,7 @@ class PayBalance extends \App\Pages\Base {
             "_detail2" => $detail2,
             'tin' => H::fa($tin),
             'tout' => H::fa($tout),
-            'total' => H::fa($total )
+            'total' => H::fa($total)
         );
         $report = new \App\Report('paybalance.tpl');
 

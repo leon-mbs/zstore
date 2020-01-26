@@ -174,10 +174,10 @@ class Import extends \App\Pages\Base {
             }
         }
         if (count($newitems) > 0) {
-            $doc = \App\Entity\Doc\Document::create('GoodsReceipt');
+            $doc = \App\Entity\Doc\Document::create('IncomeItem');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0)
-                $doc->document_number = "ПН0001";
+                $doc->document_number = "ПТ00001";
             $doc->document_date = time();
 
             $amount = 0;
@@ -185,7 +185,7 @@ class Import extends \App\Pages\Base {
                 $doc->detaildata[] = $item->getData();
                 $amount = $amount + ($item->quantity * $item->price);
             }
-            $doc->amount =H::fa( $amount);
+            $doc->amount = H::fa($amount);
             $doc->headerdata['store'] = $store;
 
             $doc->save();
@@ -196,7 +196,5 @@ class Import extends \App\Pages\Base {
 
         $this->iform->clean();
     }
-
-   
 
 }

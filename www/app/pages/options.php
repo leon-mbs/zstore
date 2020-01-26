@@ -23,29 +23,31 @@ class Options extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (System::getUser()->acltype == 2) {
+        if (System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('К странице имеет  доступ только администратор ');
             App::RedirectHome();
-            return;
+            return false;
         }
 
 
+
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
-        $this->common->add(new DropDownChoice('defstore', \App\Entity\Store::getList()));
-        $this->common->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList()));
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $pt = array(
-          "1"=>"По последней закупочсной цене",
-          "2"=>"Отдельно  по каждой закупочной цене"
+            "1" => "По последней закупочной цене",
+            "2" => "Отдельно  по каждой закупочной цене"
         );
-        $this->common->add(new DropDownChoice('partiontype',$pt,"1"));
-    
-  
+        $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
+
+
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
 
         $this->common->add(new CheckBox('usescanner'));
+        $this->common->add(new CheckBox('useimages'));
+        $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
         $this->common->add(new TextInput('cdoll'));
         $this->common->add(new TextInput('ceuro'));
@@ -55,21 +57,17 @@ class Options extends \App\Pages\Base {
         $this->common->add(new TextInput('price3'));
         $this->common->add(new TextInput('price4'));
         $this->common->add(new TextInput('price5'));
-        //  $this->common->add(new Date('closeddate'));
-
-
+        $this->common->add(new TextInput('defprice'));
 
 
         $common = System::getOptions("common");
         if (!is_array($common))
             $common = array();
 
-        $this->common->defstore->setValue($common['defstore']);
-        $this->common->defmf->setValue($common['defmf']);
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
-       
+
         $this->common->cdoll->setText($common['cdoll']);
         $this->common->ceuro->setText($common['ceuro']);
         $this->common->crub->setText($common['crub']);
@@ -78,14 +76,17 @@ class Options extends \App\Pages\Base {
         $this->common->price3->setText($common['price3']);
         $this->common->price4->setText($common['price4']);
         $this->common->price5->setText($common['price5']);
+        $this->common->defprice->setText($common['defprice']);
 
-    
+
         $this->common->autoarticle->setChecked($common['autoarticle']);
         $this->common->useset->setChecked($common['useset']);
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
         $this->common->useval->setChecked($common['useval']);
         $this->common->usescanner->setChecked($common['usescanner']);
+        $this->common->useimages->setChecked($common['useimages']);
+        $this->common->usebranch->setChecked($common['usebranch']);
         // $this->common->closeddate->setDate($common['closeddate']);
 
 
@@ -93,22 +94,44 @@ class Options extends \App\Pages\Base {
 
         $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
         $this->firm->add(new TextInput('firmname'));
+        $this->firm->add(new TextInput('shopname'));
         $this->firm->add(new TextInput('phone'));
-        $this->firm->add(new TextInput('viber'));
+       
         $this->firm->add(new TextInput('address'));
         $this->firm->add(new TextInput('inn'));
-        
+
         $firm = System::getOptions("firm");
         if (!is_array($firm))
             $firm = array();
-       
+
         $this->firm->firmname->setText($firm['firmname']);
+        $this->firm->shopname->setText($firm['shopname']);
         $this->firm->phone->setText($firm['phone']);
-        $this->firm->viber->setText($firm['viber']);
-        $this->firm->address->setText($firm['address']);
+         $this->firm->address->setText($firm['address']);
         $this->firm->inn->setText($firm['inn']);
-         
-        
+
+
+        $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
+        $this->printer->add(new TextInput('pwidth'));
+        $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
+        $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'EAN13'));
+        $this->printer->add(new CheckBox('pname'));
+        $this->printer->add(new CheckBox('pcode'));
+        $this->printer->add(new CheckBox('pbarcode'));
+        $this->printer->add(new CheckBox('pprice'));
+
+        $printer = System::getOptions("printer");
+        if (!is_array($printer))
+            $printer = array();
+
+        $this->printer->pwidth->setText($printer['pwidth']);
+        $this->printer->pricetype->setValue($printer['pricetype']);
+        $this->printer->barcodetype->setValue($printer['barcodetype']);
+        $this->printer->pname->setChecked($printer['pname']);
+        $this->printer->pcode->setChecked($printer['pcode']);
+        $this->printer->pbarcode->setChecked($printer['pbarcode']);
+        $this->printer->pprice->setChecked($printer['pprice']);
+
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
         $this->add(new Panel('listpan'));
@@ -128,9 +151,9 @@ class Options extends \App\Pages\Base {
         $this->editpan->editform->add(new TextInput('edit_description'));
         $this->editpan->editform->add(new TextInput('edit_meta_name'));
         $this->editpan->editform->add(new TextInput('edit_menugroup'));
-     
+
         $this->editpan->editform->add(new CheckBox('edit_disabled'));
-        $this->editpan->editform->add(new CheckBox('edit_smart'));
+
 
         $this->editpan->editform->add(new DropDownChoice('edit_meta_type', \App\Entity\MetaData::getNames()));
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
@@ -151,12 +174,10 @@ class Options extends \App\Pages\Base {
     public function saveCommonOnClick($sender) {
         $common = array();
 
-        $common['defstore'] = $this->common->defstore->getValue();
-        $common['defmf'] = $this->common->defmf->getValue();
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
- 
+
         $common['cdoll'] = $this->common->cdoll->getText();
         $common['ceuro'] = $this->common->ceuro->getText();
         $common['crub'] = $this->common->crub->getText();
@@ -165,14 +186,16 @@ class Options extends \App\Pages\Base {
         $common['price3'] = $this->common->price3->getText();
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
+        $common['defprice'] = $this->common->defprice->getText();
 
-       
         $common['autoarticle'] = $this->common->autoarticle->isChecked();
         $common['useset'] = $this->common->useset->isChecked();
 
         $common['usesnumber'] = $this->common->usesnumber->isChecked();
         $common['useval'] = $this->common->useval->isChecked();
         $common['usescanner'] = $this->common->usescanner->isChecked();
+        $common['useimages'] = $this->common->useimages->isChecked();
+        $common['usebranch'] = $this->common->usebranch->isChecked();
 
         // $common['closeddate'] = $this->common->closeddate->getDate();
 
@@ -181,18 +204,34 @@ class Options extends \App\Pages\Base {
         $this->setSuccess('Сохранено');
         $this->_tvars["defoptions"] = false;
     }
-    
+
     public function saveFirmOnClick($sender) {
         $firm = array();
         $firm['firmname'] = $this->firm->firmname->getText();
-        $firm['phone']    = $this->firm->phone->getText();
-        $firm['viber']    = $this->firm->viber->getText();
-        $firm['address']  = $this->firm->address->getText();
-        $firm['inn']  = $this->firm->inn->getText();
+        $firm['shopname'] = $this->firm->shopname->getText();
+        $firm['phone'] = $this->firm->phone->getText();
         
+        $firm['address'] = $this->firm->address->getText();
+        $firm['inn'] = $this->firm->inn->getText();
+
         System::setOptions("firm", $firm);
         $this->setSuccess('Сохранено');
     }
+
+    public function savePrinterOnClick($sender) {
+        $printer = array();
+        $printer['pwidth'] = $this->printer->pwidth->getText();
+        $printer['pricetype'] = $this->printer->pricetype->getValue();
+        $printer['barcodetype'] = $this->printer->barcodetype->getValue();
+        $printer['pname'] = $this->printer->pname->isChecked() ? 1 : 0;
+        $printer['pcode'] = $this->printer->pcode->isChecked() ? 1 : 0;
+        $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;
+        $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
+
+        System::setOptions("printer", $printer);
+        $this->setSuccess('Сохранено');
+    }
+
     public function filterOnSubmit($sender) {
 
         $where = "1<>1 ";
@@ -226,9 +265,8 @@ class Options extends \App\Pages\Base {
         $this->editpan->editform->meta_id->setText(0);
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
-        
+
         $this->editpan->editform->edit_disabled->setChecked(0);
-        $this->editpan->editform->edit_smart->setChecked(0);
     }
 
     public function mcancelOnClick($sender) {
@@ -253,7 +291,7 @@ class Options extends \App\Pages\Base {
                 $title = "Справочник";
                 break;
             case 5:
-                $title = "Каталог";
+                $title = "Сервис";
                 break;
         }
 
@@ -271,11 +309,11 @@ class Options extends \App\Pages\Base {
         $form = $this->editpan->editform;
         $form->meta_id->setText($item->meta_id);
         $form->edit_description->setText($item->description);
-          $form->edit_meta_name->setText($item->meta_name);
+        $form->edit_meta_name->setText($item->meta_name);
         $form->edit_menugroup->setText($item->menugroup);
         $form->edit_meta_type->setValue($item->meta_type);
         $form->edit_disabled->setChecked($item->disabled == 1);
-        $form->edit_smart->setChecked($item->smartmenu == 1);
+
 
 
         $this->listpan->setVisible(false);
@@ -303,9 +341,7 @@ class Options extends \App\Pages\Base {
         $item->meta_name = trim(ucfirst($this->editpan->editform->edit_meta_name->getText()));
         $item->meta_type = $this->editpan->editform->edit_meta_type->getValue();
         $item->disabled = $this->editpan->editform->edit_disabled->isChecked() ? 1 : 0;
-        $item->smartmenu = $this->editpan->editform->edit_smart->isChecked() ? 1 : 0;
-        if ($item->disabled == 1)
-            $item->smartmenu = 0;
+
 
         $item->save();
 
@@ -317,7 +353,6 @@ class Options extends \App\Pages\Base {
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_meta_name->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
-         
     }
 
 }

@@ -65,7 +65,7 @@
 
 
     <td align="right">{{summa}} </td>
-     <td align="right">{{navar}} </td>
+    <td align="right">{{navar}} </td>
     <td  >  </td>
 </tr>
 {{/_detail}}

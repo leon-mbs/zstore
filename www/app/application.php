@@ -97,16 +97,17 @@ class Application extends \Zippy\WebApplication {
         $arr = explode('/', $uri);
 
         $pages = array(
-            "shop" => "\\App\\Modules\\Shop\\Pages\\Main",
             "store" => "\\App\\Pages\\Main",
-            "topic" => "\\App\\Modules\\Note\\Pages\\ShowTopic",
+            "shop" => "\\App\\Modules\\Shop\\Pages\\Main",
             "sp" => "\\App\\Modules\\Shop\\Pages\\ProductView",
             "aboutus" => "\\App\\Modules\\Shop\\Pages\\AboutUs",
             "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
             "contact" => "\\App\\Modules\\Shop\\Pages\\Contact",
-            //  "simage" => "\\App\\Pages\\LoadImage",
             "scat" => "\\App\\Modules\\Shop\\Pages\\Main",
-            "pcat" => "\\App\\Modules\\Shop\\Pages\\Catalog"
+            "pcat" => "\\App\\Modules\\Shop\\Pages\\Catalog",
+            "project" => "\\App\\Modules\\Issue\\Pages\\ProjectList",
+            "issue" => "\\App\\Modules\\Issue\\Pages\\IssueList",
+            "topic" => "\\App\\Modules\\Note\\Pages\\ShowTopic"
         );
 
         if (strlen($pages[$arr[0]]) > 0) {

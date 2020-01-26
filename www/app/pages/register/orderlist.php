@@ -47,16 +47,16 @@ class OrderList extends \App\Pages\Base {
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(25);
+        $doclist->setPageSize(H::getPG());
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
 
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bact'))->onClick($this, 'statusOnSubmit');
-
+        $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
@@ -87,7 +87,7 @@ class OrderList extends \App\Pages\Base {
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
-        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW) {
+        if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
@@ -98,42 +98,35 @@ class OrderList extends \App\Pages\Base {
 
         $state = $this->_doc->state;
 
-        $ttn = false;
+
         //проверяем  что есть ТТН
-        $list = $this->_doc->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
-                $ttn = true;
-            }
-        }
-        $act = false;
-        //проверяем  что есть акт
-        $list = $this->_doc->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'ServiceAct') {
-                $act = true;
-            }
-        }
+        $list = $this->_doc->getChildren('GoodsIssue');
+        $ttn = count($list) > 0;
+        $list = $this->_doc->getChildren('Invoice');
+        $invoice = count($list) > 0;
 
-        if ($sender->id == "bcancel") {
-            $this->_doc->updateStatus(Document::STATE_CANCELED);
-            if ($ttn) {
-                $this->setWarn('Для заказа уже создана  отправка');
-            }
 
-            if ($act) {
-                $this->setWarn('Для заказа уже создан акт');
-            }
+        if ($sender->id == "binp") {
+            $this->_doc->updateStatus(Document::STATE_INPROCESS);
+        }
+        if ($sender->id == "bref") {
+            $this->_doc->updateStatus(Document::STATE_REFUSED);
+            $this->setWarn('Заказ аннулирован');
         }
 
         if ($sender->id == "bttn") {
+            if ($ttn)
+                $this->setWarn('Для закаа уже  создана отправка');
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
             return;
         }
-        if ($sender->id == "bact") {
-            App::Redirect("\\App\\Pages\\Doc\\ServiceAct", 0, $this->_doc->document_id);
+        if ($sender->id == "binv") {
+            if ($invoice)
+                $this->setWarn('Для закаа уже  создан счет фактура');
+            App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
             return;
         }
+
 
         if ($sender->id == "bclose") {
 
@@ -142,13 +135,6 @@ class OrderList extends \App\Pages\Base {
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
-            if ($ttn) {
-                $this->setWarn('Для заказа была создана ТТН');
-            }
-
-            if ($act) {
-                $this->setWarn('Для заказа был создан акт');
-            }
         }
 
         $this->doclist->Reload(false);
@@ -165,44 +151,50 @@ class OrderList extends \App\Pages\Base {
         $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
         //выполняется
         $inproc = $this->_doc->checkStates(array(Document::STATE_INPROCESS));
+        //аннулирован
+        $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED));
 
-        $ttn = false;
+
         //проверяем  что есть ТТН
-        $list = $this->_doc->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'GoodsIssue') {
-                $ttn = true;
-            }
-        }
+        $list = $this->_doc->getChildren('GoodsIssue');
+        $ttn = count($list) > 0;
+        $list = $this->_doc->getChildren('Invoice');
+        $invoice = count($list) > 0;
 
-        $this->statuspan->statusform->bttn->setVisible(!$ttn);
-
-        $act = false;
-        //проверяем  что есть акт
-        $list = $this->_doc->ConnectedDocList();
-        foreach ($list as $d) {
-            if ($d->meta_name == 'ServiceAct') {
-                $act = true;
-            }
-        }
-        $this->statuspan->statusform->bact->setVisible(!$act);
+        $this->statuspan->statusform->bttn->setVisible(!$sent);
+        $this->statuspan->statusform->binv->setVisible(!$sent);
 
         //новый
-        if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
+        if ($state < Document::STATE_EXECUTED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bcancel->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->binp->setVisible(true);
         } else {
 
-            $this->statuspan->statusform->bcancel->setVisible(true);
             $this->statuspan->statusform->bclose->setVisible(true);
+            $this->statuspan->statusform->bref->setVisible(true);
+            $this->statuspan->statusform->binp->setVisible(false);
         }
+
+        if ($ttn || $inv)
+            $this->statuspan->statusform->bref->setVisible(false);
+        if ($ref) {
+            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
+        }
+
+
         //закрыт
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bcancel->setVisible(false);
-            $this->statuspan->statusform->bact->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->binp->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
@@ -254,12 +246,12 @@ class OrderList extends \App\Pages\Base {
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ',';
-            $csv .= $d->document_number . ',';
-            $csv .= $d->customer_name . ',';
-            $csv .= $d->amount . ',';
-            $csv .= Document::getStateName($d->state) . ',';
-            $csv .= str_replace(',','',$d->notes) . ',';
+            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= $d->document_number . ';';
+            $csv .= $d->customer_name . ';';
+            $csv .= $d->amount . ';';
+            $csv .= Document::getStateName($d->state) . ';';
+            $csv .= str_replace(';', '', $d->notes) . ';';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -293,7 +285,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource {
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and (meta_name  = 'Order' or meta_name  = 'ServiceOrder'  )";
+        $where .= " and   meta_name  = 'Order'  ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
@@ -313,17 +305,14 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource {
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and meta_name  = 'Order' and  content like {$st} ";
+            $where .= " and  meta_name  = 'Order'  and  content like {$st} ";
         }
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = " meta_name  = 'Order' and document_number like  {$sn} ";
+            $where = "  meta_name  = 'Order'   document_number like  {$sn} ";
         }
-        if ($user->acltype == 2) {
 
-            $where .= " and meta_id in({$user->aclview}) ";
-        }
         return $where;
     }
 

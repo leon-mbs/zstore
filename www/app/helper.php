@@ -123,7 +123,13 @@ class Helper {
     public static function generateSmartMenu() {
         $conn = \ZDB\DB::getConnect();
 
-        $rows = $conn->Execute("select *  from  metadata where smartmenu =1 ");
+        $smartmenu = System::getUser()->smartmenu;
+
+        if (strlen($smartmenu) == 0)
+            return "";
+
+        $rows = $conn->Execute("select *  from  metadata  where meta_id in ({$smartmenu})   ");
+
         $textmenu = "";
         $aclview = explode(',', System::getUser()->aclview);
 
@@ -177,8 +183,6 @@ class Helper {
 
         return $template;
     }
-
-   
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
 
@@ -334,13 +338,16 @@ class Helper {
      * 
      */
     public static function getDefStore() {
-        $common = System::getOptions("common");
-        if ($common['defstore'] > 0) {
-            return $common['defstore'];
+        $user = System::getUser();
+        if ($user->defstore > 0) {
+            return $user->defstore;
         }
-
-        \App\System::setErrorMsg('Не задан склад  по  умолчанию');
-        \App\Application::Redirect("\\App\\Pages\\Options");
+        $st = \App\Entity\Store::getList();
+        if (count($st) == 1) {
+            $keys = array_keys($st);
+            return $keys[0];
+        }
+        return 0;
     }
 
     /**
@@ -348,13 +355,17 @@ class Helper {
      * 
      */
     public static function getDefMF() {
-        $common = System::getOptions("common");
-        if ($common['defmf'] > 0) {
-            return $common['defmf'];
+        $user = System::getUser();
+        if ($user->defmf > 0) {
+            return $user->defmf;
         }
 
-        \App\System::setErrorMsg('Не задан денежный счет по  умолчанию');
-        \App\Application::Redirect("\\App\\Pages\\Options");
+        $st = \App\Entity\MoneyFund::getList();
+        if (count($st) == 1) {
+            $keys = array_keys($st);
+            return $keys[0];
+        }
+        return 0;
     }
 
     /**
@@ -369,32 +380,74 @@ class Helper {
 
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
-            return number_format($qty, $common['qtydigits']  , '.', '');
+            return number_format($qty, $common['qtydigits'], '.', '');
         } else {
             return round($qty);
         }
     }
-  
+
     /**
-    * форматирование  сумм    с копейками
-    * 
-    * @param mixed $am
-    * @return mixed
-    */
+     * форматирование  сумм    с копейками
+     * 
+     * @param mixed $am
+     * @return mixed
+     */
     public static function fa($am) {
-        if (strlen($am) == 0)     return '';
-        
+        if (strlen($am) == 0)
+            return '';
+
         $common = System::getOptions("common");
-        if ($common['amdigits'] ==1) {
-            return number_format($am, 2  , '.', '');
+        if ($common['amdigits'] == 1) {
+            return number_format($am, 2, '.', '');
         }
         if ($common['amdigits'] == 5) {
-            $am = round($am*20)/20;
-            return number_format($am, 2  , '.', '');
+            $am = round($am * 20) / 20;
+            return number_format($am, 2, '.', '');
         }
-    
+        if ($common['amdigits'] == 10) {
+            $am = round($am * 10) / 10;
+            return number_format($am, 2, '.', '');
+        }
+
         return round($am);
-      
+    }
+
+    /**
+     * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
+     */
+    public static function getFirmData($id = 0) {
+
+        $data = \App\System::getOptions("firm");
+        if ($id > 0) {
+            $branch = \App\Entity\Branch::load($id);
+            if (strlen($branch->shopname) > 0)
+                $data['shopname'] = $branch->shop_name;
+            if (strlen($branch->address) > 0)
+                $data['address'] = $branch->address;
+            if (strlen($branch->phone) > 0)
+                $data['phone'] = $branch->phone;
+        }
+
+        return $data;
+    }
+
+    /**
+     * возвращает размер при пагинации
+     * 
+     * @param mixed $pagesize
+     * @return mixed
+     */
+    public static function getPG($pagesize = 0) {
+
+
+        if ($pagesize > 0) {
+            return $pagesize;
+        }
+        $user = \App\System::getUser();
+        if ($user->pagesize > 0) {
+            return $user->pagesize;
+        }
+        return 25;
     }
 
 }

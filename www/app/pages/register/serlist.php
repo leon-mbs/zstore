@@ -1,0 +1,301 @@
+<?php
+
+namespace App\Pages\Register;
+
+use \Zippy\Html\DataList\DataView;
+use \Zippy\Html\DataList\Paginator;
+use \Zippy\Html\DataList\ArrayDataSource;
+use \Zippy\Binding\PropertyBinding as Prop;
+use \Zippy\Html\Form\CheckBox;
+use \Zippy\Html\Form\Date;
+use \Zippy\Html\Form\DropDownChoice;
+use \Zippy\Html\Form\Form;
+use \Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\SubmitButton;
+use \Zippy\Html\Panel;
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+use \App\Entity\Doc\Document;
+use \App\Helper as H;
+use \App\Application as App;
+use \App\System;
+
+/**
+ * журнал  услуг
+ */
+class SerList extends \App\Pages\Base {
+
+    private $_doc = null;
+
+    /**
+     *
+     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
+     * @return DocList
+     */
+    public function __construct() {
+        parent::__construct();
+        if (false == \App\ACL::checkShowReg('SerList'))
+            return;
+
+        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
+        $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
+
+        $this->filter->add(new TextInput('searchnumber'));
+        $this->filter->add(new TextInput('searchtext'));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'На выполнении', 3 => 'Все'), 0));
+
+
+        $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
+        $doclist->setSelectedClass('table-success');
+
+        $this->add(new Paginator('pag', $doclist));
+        $doclist->setPageSize(H::getPG());
+
+
+
+
+        $this->add(new Panel("statuspan"))->setVisible(false);
+
+        $this->statuspan->add(new Form('statusform'));
+
+        $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
+
+
+        $this->statuspan->add(new \App\Widgets\DocView('docview'));
+
+        $this->doclist->Reload();
+        $this->add(new ClickLink('csv', $this, 'oncsv'));
+    }
+
+    public function filterOnSubmit($sender) {
+
+
+        $this->statuspan->setVisible(false);
+
+        $this->doclist->Reload(false);
+    }
+
+    public function doclistOnRow($row) {
+        $doc = $row->getDataItem();
+
+        $row->add(new Label('number', $doc->document_number));
+
+        $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
+        $row->add(new Label('onotes', $doc->notes));
+        $row->add(new Label('amount', H::fa($doc->amount)));
+
+        $row->add(new Label('customer', $doc->customer_name));
+
+        $row->add(new Label('state', Document::getStateName($doc->state)));
+
+        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
+        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        if ($doc->state < Document::STATE_EXECUTED) {
+            $row->edit->setVisible(true);
+        } else {
+            $row->edit->setVisible(false);
+        }
+    }
+
+    public function statusOnSubmit($sender) {
+
+        $state = $this->_doc->state;
+
+        $ttn = count($this->_doc->getChildren('GoodsIssue')) > 0;
+        $task = count($this->_doc->getChildren('Task')) > 0;
+
+
+        if ($sender->id == "btask") {
+            if ($task) {
+                $this->setWarn('Уже есть документ Наряд');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
+        }
+        if ($sender->id == "bttn") {
+            if ($ttn) {
+                $this->setWarn('Уже есть документ Расходная накладная');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+        }
+        if ($sender->id == "bref") {
+            if ($ttn || $task) {
+                $this->setWarn('Были созданы докумнты  Наряд и/или  Расходная накладная');
+            }
+            $this->_doc->updateStatus(Document::STATE_REFUSED);
+        }
+
+        if ($sender->id == "binproc") {
+            $this->_doc->updateStatus(Document::STATE_INPROCESS);
+        }
+
+        if ($sender->id == "bclose") {
+            $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            $this->_doc->updateStatus(Document::STATE_CLOSED);
+        }
+
+
+        $this->doclist->Reload(false);
+
+
+        $this->updateStatusButtons();
+    }
+
+    public function updateStatusButtons() {
+
+
+        $state = $this->_doc->state;
+
+        //новый     
+        if ($state < Document::STATE_EXECUTED) {
+            $this->statuspan->statusform->binproc->setVisible(true);
+            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+        }
+
+
+        // в работе
+        if ($state == Document::STATE_INPROCESS) {
+
+            $this->statuspan->statusform->binproc->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->bref->setVisible(true);
+            $this->statuspan->statusform->btask->setVisible(true);
+        }
+
+        //закрыт
+        if ($state == Document::STATE_CLOSED) {
+            $this->statuspan->statusform->binproc->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->setVisible(false);
+        }
+    }
+
+    //просмотр
+    public function showOnClick($sender) {
+
+        $this->_doc = $sender->owner->getDataItem();
+        if (false == \App\ACL::checkShowDoc($this->_doc, true))
+            return;
+
+        $this->statuspan->setVisible(true);
+        $this->statuspan->docview->setDoc($this->_doc);
+        $this->doclist->setSelectedRow($sender->getOwner());
+        $this->doclist->Reload(false);
+        $this->updateStatusButtons();
+        $this->goAnkor('dankor');
+    }
+
+    public function editOnClick($sender) {
+        $doc = $sender->getOwner()->getDataItem();
+        if (false == \App\ACL::checkEditDoc($doc, true))
+            return;
+
+
+        App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", $doc->document_id);
+    }
+
+    //оплаты
+
+    public function oncsv($sender) {
+        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+        $csv = "";
+
+        foreach ($list as $d) {
+            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= $d->document_number . ';';
+
+            $csv .= $d->customer_name . ';';
+            $csv .= $d->amount . ';';
+            $csv .= str_replace(';', '', $d->notes) . ';';
+            $csv .= "\n";
+        }
+        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+
+
+        header("Content-type: text/csv");
+        header("Content-Disposition: attachment;Filename=selllist.csv");
+        header("Content-Transfer-Encoding: binary");
+
+        echo $csv;
+        flush();
+        die;
+    }
+
+}
+
+/**
+ *  Источник  данных  для   списка  документов
+ */
+class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
+
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+        $user = System::getUser();
+
+        $conn = \ZDB\DB::getConnect();
+
+        $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
+
+        $where .= " and meta_name  in( 'ServiceAct'  ) ";
+
+        $status = $this->page->filter->status->getValue();
+        if ($status == 0) {
+            $where .= " and  state <>   " . Document::STATE_CLOSED;
+        }
+        if ($status == 1) {
+            $where .= " and  state =  " . Document::STATE_NEW;
+        }
+        if ($status == 2) {
+            $where .= " and state = " . Document::STATE_INPROCESS;
+        }
+
+        if ($status == 3) {
+            
+        }
+
+        $st = trim($this->page->filter->searchtext->getText());
+        if (strlen($st) > 2) {
+            $st = $conn->qstr('%' . $st . '%');
+
+            $where .= " and    content like {$st} ";
+        }
+        $sn = trim($this->page->filter->searchnumber->getText());
+        if (strlen($sn) > 1) { // игнорируем другие поля
+            $sn = $conn->qstr('%' . $sn . '%');
+            $where = " meta_name  in( 'ServiceAct'  )  and document_number like  {$sn} ";
+        }
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Document::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+        $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
+
+        return $docs;
+    }
+
+    public function getItem($id) {
+        
+    }
+
+}

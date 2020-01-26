@@ -13,7 +13,7 @@ use ZCL\DB\Entity;
  */
 class User extends Entity {
 
-    private $_options = array();
+     
 
     /**
      * @see Entity
@@ -22,6 +22,9 @@ class User extends Entity {
     protected function init() {
         $this->userlogin = "Гость";
         $this->user_id = 0;
+        $this->defstore = 0;
+        $this->defmf = 0;
+        $this->pagesize = 25;
         $this->createdon = time();
     }
 
@@ -47,20 +50,24 @@ class User extends Entity {
      */
     protected function afterLoad() {
         $this->createdon = strtotime($this->createdon);
-
-        //распаковываем  данные из detail
-        $xml = simplexml_load_string($this->acl);
-        $this->acltype = (int) ($xml->acltype[0]);
-        $this->onlymy = (int) ($xml->onlymy[0]);
-        $this->aclview = (string) ($xml->aclview[0]);
-        $this->acledit = (string) ($xml->acledit[0]);
-        $this->widgets = (string) ($xml->widgets[0]);
-        $this->modules = (string) ($xml->modules[0]);
-
-
-        if (strlen($this->options) > 0)
-            $this->_options = @unserialize($this->options);
-
+ 
+        $acl = @unserialize($this->acl);
+        if(!is_array($acl))$acl = array();
+        $this->acltype = (int)$acl['acltype'];
+        $this->onlymy = (int)$acl['onlymy'];
+        $this->aclview =  $acl['aclview'];
+        $this->acledit =  $acl['acledit'];
+        $this->aclexe =  $acl['aclexe'];
+        $this->aclbranch =  $acl['aclbranch'];
+        $this->widgets =  $acl['widgets'];
+        $this->modules =  $acl['modules'];
+        
+        $options = @unserialize($this->options);
+        if(!is_array($options))$options = array();
+        $this->smartmenu = $options['smartmenu'];
+        $this->defstore = (int)$options['defstore'];
+        $this->defmf  = (int)$options['defmf'];
+        $this->pagesize = (int)$options['pagesize'];
 
         parent::afterLoad();
     }
@@ -71,16 +78,25 @@ class User extends Entity {
      */
     protected function beforeSave() {
         parent::beforeSave();
-        //упаковываем  данные в detail
-        $this->acl = "<detail><acltype>{$this->acltype}</acltype>";
-        $this->acl .= "<onlymy>{$this->onlymy}</onlymy>";
-        $this->acl .= "<aclview>{$this->aclview}</aclview>";
-        $this->acl .= "<acledit>{$this->acledit}</acledit>";
-        $this->acl .= "<widgets>{$this->widgets}</widgets>";
-        $this->acl .= "<modules>{$this->modules}</modules>";
-        $this->acl .= "</detail>";
+               
+        $acl = array();
+        $acl['acltype'] =  $this->acltype ;
+        $acl['onlymy']  =  $this->onlymy ;
+        $acl['aclview'] =  $this->aclview ;
+        $acl['acledit'] =  $this->acledit ;
+        $acl['aclexe']  =  $this->aclexe ;
+        $acl['aclbranch'] =  $this->aclbranch ;
+        $acl['widgets'] =  $this->widgets ;
+        $acl['modules'] =  $this->modules ;
+        $this->acl  = serialize($acl);
 
-        $this->options = serialize($this->_options);
+        $options = array();
+        $options['smartmenu']= $this->smartmenu;
+        $options['defstore']= $this->defstore;
+        $options['defmf']= $this->defmf;
+        $options['pagesize']= $this->pagesize;
+        
+        $this->options = serialize($options);
 
         return true;
     }
@@ -94,7 +110,7 @@ class User extends Entity {
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Нельзя удалять пользователя с документами" : true;
+        return ($cnt > 0) ? "Нельзя удалять пользователя с документами" : '';
     }
 
     /**

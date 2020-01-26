@@ -29,7 +29,7 @@
                         <select class="form-control mr-2" zippy="status">
                         </select>
 
-                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту"] >
+                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту" >
 
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -40,7 +40,7 @@
                     </form>
                 </div>
                 <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Новый заказ</a>
-                &nbsp;<a href="/index.php?p=App/Pages/Doc/ServiceOrder" class="btn btn-info mt-2 mb-3">Новый заказ (услуги)</a>
+
 
                 <br><a zippy="csv"  >Скачать  CSV</a>  
 
@@ -91,16 +91,16 @@
 
 
         <div class="row" zippy="statuspan">
-            <div class="col-12">
+            <div class="col-12 col-xl-10">
 
                 <div class="navbar nav">
                     <form zippy="statusform" class="form-inline ">
 
                         <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 " > <i class="fa fa-gavel"></i> Выполнен</button>
+                        <button zippy="binp"  class= "btn btn-info  mr-2"  ><i class="fa fa-cog"></i> В  обработку</button>
+                        <button zippy="binv"  class= "btn btn-info  mr-2"  ><i class="fa fa-credit-card"></i> Создать счет-фактуру</button>
                         <button zippy="bttn"  class= "btn btn-info  mr-2"  ><i class="fa fa-truck"></i> Создать отправку</button>
-                        <button zippy="bact"  class= "btn btn-info  mr-2"  ><i class="fa fa-truck"></i> Создать акт</button>
-                        <button zippy="bcancel" type="submit" class="  btn btn-danger  mr-2 " > <i class="fa fa-trash"></i> Отменить</button>
-
+                        <button zippy="bref"  class= "btn btn-danger  mr-2"  ><i class="fas fa-thumbs-down"></i> Аннулирован</button>
 
                     </form>
                 </div>         

@@ -43,14 +43,14 @@ class GIList extends \App\Pages\Base {
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные', 5 => 'На выполнении', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные', 3 => 'Все'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
-        $doclist->setPageSize(25);
+        $doclist->setPageSize(H::getPG());
 
 
 
@@ -60,9 +60,10 @@ class GIList extends \App\Pages\Base {
         $this->statuspan->add(new Form('statusform'));
 
         $this->statuspan->statusform->add(new SubmitButton('bsend'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bcloseact'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('inprocact'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bdevivered'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new TextInput('ship_number'));
 
 
@@ -97,7 +98,7 @@ class GIList extends \App\Pages\Base {
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        if ($doc->state == Document::STATE_CANCELED || $doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_NEW) {
+        if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
@@ -107,8 +108,6 @@ class GIList extends \App\Pages\Base {
     public function statusOnSubmit($sender) {
 
         $state = $this->_doc->state;
-        $order = Document::load($this->_doc->headerdata['order_id']);
-
 
         if ($sender->id == "bsend") {
             $dec = $this->statuspan->statusform->ship_number->getText();
@@ -131,41 +130,40 @@ class GIList extends \App\Pages\Base {
             $this->setSuccess('Отправлено');
         }
 
-        if ($sender->id == "bclose") {
+        if ($sender->id == "bdevivered") {
             $this->_doc->updateStatus(Document::STATE_DELIVERED);
-            $msg = 'Отправка  доставлена.';
 
-            if ($order instanceof Document) {
-                $order = $order->cast();
-                if ($order->state != Document::STATE_CLOSED   ) { //если  все  доставлено    заказ
-                    $order->updateStatus(Document::STATE_CLOSED);
-                    $msg .= " Заказ {$order->document_number} закрыт";
+            if ($this->_doc->parent_id > 0) {   //закрываем заказ
+                if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+                    
+                } else {
+                    $order = Document::load($this->_doc->parent_id);
+                    if ($order->state == Document::STATE_INPROCESS) {
+                        $order->updateStatus(Document::STATE_CLOSED);
+                        $this->setSuccess("Заказ {$order->document_number} закрыт");
+                    }
                 }
             }
 
-            $this->setSuccess($msg);
-
-
-            //$this->_doc->save();
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
 
+        if ($sender->id == "bttn") {
+            $d = $this->_doc->getChildren('GoodsReceipt');
 
-        if ($sender->id == "inprocact") {
-            $this->_doc->updateStatus(Document::STATE_INPROCESS);
-        }
-        if ($sender->id == "bcloseact") {
-            $this->_doc->updateStatus(Document::STATE_EXECUTED);
-            $this->_doc->updateStatus(Document::STATE_CLOSED);
-            if ($order instanceof Document) {
-                $order = $order->cast();
-                if ($order->state != Document::STATE_CLOSED && $this->_doc->amount == $this->_doc->payamount) { //если  все   выполнено и оплачено закрываем  заказ
-                    $order->updateStatus(Document::STATE_CLOSED);
-                    $msg .= " Заказ {$order->document_number} закрыт";
-                }
+            if (count($d) > 0) {
+                $this->setWarn('Уже есть документ Приходная накладная');
             }
+            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
         }
+        if ($sender->id == "bgar") {
+            App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
+        }
+        if ($sender->id == "bret") {
+            App::Redirect("\\App\\Pages\\Doc\\ReturnIssue", 0, $this->_doc->document_id);
+        }
+
 
 
 
@@ -179,58 +177,60 @@ class GIList extends \App\Pages\Base {
 
     public function updateStatusButtons() {
 
-        $this->statuspan->statusform->bclose->setVisible(true);
+        $this->statuspan->statusform->bdevivered->setVisible(true);
+        $this->statuspan->statusform->bttn->setVisible(true);
+        $this->statuspan->statusform->bret->setVisible(true);
+        $this->statuspan->statusform->bsend->setVisible(true);
+        $this->statuspan->statusform->bgar->setVisible(true);
+        $this->statuspan->statusform->bdevivered->setVisible(true);
+        $this->statuspan->statusform->ship_number->setVisible(true);
 
         $state = $this->_doc->state;
 
 
-        //новый     
-        if ($state == Document::STATE_CANCELED || $state == Document::STATE_EDITED || $state == Document::STATE_NEW) {
-            $this->statuspan->statusform->bsend->setVisible(true);
-            $this->statuspan->statusform->ship_number->setVisible(true);
-            $this->statuspan->statusform->inprocact->setVisible(true);
 
-            $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bcloseact->setVisible(false);
-        } else {
-            $this->statuspan->statusform->bsend->setVisible(false);
-            $this->statuspan->statusform->ship_number->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(true);
-            $this->statuspan->statusform->bcloseact->setVisible(true);
-            $this->statuspan->statusform->inprocact->setVisible(true);
-        }
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
 
-            $this->statuspan->statusform->bclose->setVisible(true);
+            $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bsend->setVisible(false);
+            $this->statuspan->statusform->ship_number->setVisible(false);
         }
-        // в работе
-        if ($state == Document::STATE_INPROCESS) {
+        // Доставлен
+        if ($state == Document::STATE_DELIVERED) {
 
-            $this->statuspan->statusform->bcloseact->setVisible(true);
-            $this->statuspan->statusform->inprocact->setVisible(false);
-        }
-
-        //закрыт
-        if ($state == Document::STATE_CLOSED) {
+            $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bsend->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->setVisible(false);
+            $this->statuspan->statusform->ship_number->setVisible(false);
         }
-
-
 
         //прячем лишнее
         if ($this->_doc->meta_name == 'GoodsIssue') {
 
-            $this->statuspan->statusform->bcloseact->setVisible(false);
-            $this->statuspan->statusform->inprocact->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
         }
-        if ($this->_doc->meta_name == 'ServiceAct') {
+        if ($this->_doc->meta_name == 'POSCheck') {
+            $this->statuspan->statusform->bsend->setVisible(false);
+            $this->statuspan->statusform->bdevivered->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->ship_number->setVisible(false);
+        }
+        if ($this->_doc->meta_name == 'Invoice') {
 
             $this->statuspan->statusform->bsend->setVisible(false);
-            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->bdevivered->setVisible(false);
+            $this->statuspan->statusform->bret->setVisible(false);
+            $this->statuspan->statusform->bgar->setVisible(false);
+            $this->statuspan->statusform->ship_number->setVisible(false);
+        }
+        if ($this->_doc->meta_name == 'ReturnIssue') {
+
+
+            $this->statuspan->statusform->bsend->setVisible(false);
+            $this->statuspan->statusform->bdevivered->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bret->setVisible(false);
+            $this->statuspan->statusform->bgar->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
     }
@@ -266,12 +266,12 @@ class GIList extends \App\Pages\Base {
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ',';
-            $csv .= $d->document_number . ',';
-            $csv .= $d->headerdata['order'] . ',';
-            $csv .= $d->customer_name . ',';
-            $csv .= $d->amount . ',';
-            $csv .= str_replace(',','',$d->notes) . ',';
+            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= $d->document_number . ';';
+            $csv .= $d->headerdata['order'] . ';';
+            $csv .= $d->customer_name . ';';
+            $csv .= $d->amount . ';';
+            $csv .= str_replace(';', '', $d->notes) . ';';
             $csv .= "\n";
         }
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
@@ -306,7 +306,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
 
         $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and meta_name  in('GoodsIssue','ServiceAct','Invoice','POSCheck' ) ";
+        $where .= " and meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty' ) ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
@@ -321,9 +321,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
         if ($status == 4) {
             $where .= " and  amount > payamount";
         }
-        if ($status == 5) {
-            $where .= " and state = " . Document::STATE_INPROCESS;
-        }
+
         if ($status == 3) {
             
         }
@@ -332,18 +330,14 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and meta_name  = 'GoodsIssue' and  content like {$st} ";
+            $where .= " and    content like {$st} ";
         }
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = " meta_name  = 'GoodsIssue' and document_number like  {$sn} ";
+            $where = " meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' )  and document_number like  {$sn} ";
         }
-        if ($user->acltype == 2) {
 
-
-            $where .= " and meta_id in({$user->aclview}) ";
-        }
         return $where;
     }
 

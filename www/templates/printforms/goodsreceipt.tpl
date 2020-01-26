@@ -5,7 +5,12 @@
     <tr>
         <td></td>
         <td>Поставщик</td>
-        <td colspan="4">{{customer_name}}</td>
+        <td colspan="6">{{customer_name}}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Основание</td>
+        <td colspan="6">{{basedoc}}</td>
     </tr>
 
     <tr>
@@ -17,6 +22,7 @@
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
+        <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;"> </th>
         <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
         <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
@@ -29,6 +35,7 @@
         <td align="right">{{no}}</td>
         <td  >{{itemname}}</td>
         <td  >{{itemcode}}</td>
+        <td align="right">{{snumber}}</td>        
         <td  >{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
@@ -37,16 +44,16 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="6" align="right">Итого:</td>
+        <td style="border-top:1px #000 solid;" colspan="7" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
     {{^prepaid}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="6" align="right">К оплате:</td>
+        <td style="border-top:1px #000 solid;" colspan="7" align="right">К оплате:</td>
         <td style="border-top:1px #000 solid;" align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td   colspan="6" align="right">Оплата:</td>
+        <td   colspan="7" align="right">Оплата:</td>
         <td   align="right">{{payed}}</td>
     </tr>
     {{/prepaid}}
