@@ -11,6 +11,10 @@ use \ZCL\DB\DB as DB;
  */
 class Helper {
 
+    
+     const LOG_ISSUE=1;
+     const LOG_PROJECT=2;
+     
     public static function addHistory($issue_id, $status, $hours, $notes = '') {
         $user = \App\System::getUser();
         $conn = DB::getConnect();
@@ -41,4 +45,11 @@ class Helper {
         return $list;
     }
 
+    public static function  addLog($status,$type,$item){
+        
+    }
+    public static function  getLogList($type,$item){
+        
+    }
+    
 }

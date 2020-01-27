@@ -29,11 +29,12 @@ class ProjectList extends \App\Pages\Base {
     public $_project = null;
     public $_msglist = array();
     public $_fileslist = array();
+    public $_stlist = array();
 
     public function __construct($id = 0) {
         parent::__construct();
         $this->_user = System::getUser();
-
+        $this->_stlist =    Project::getStatusList();
         $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->userlogin == 'admin');
         if (!$allow) {
             System::setErrorMsg('Нет права  доступа  к   модулю ');
@@ -47,9 +48,9 @@ class ProjectList extends \App\Pages\Base {
 
         $clist = Customer::findArray('customer_name', 'customer_id in (select customer_id from issue_projectlist )', 'customer_name');
         $projectpanel->filter->add(new DropDownChoice('searchcust', $clist, 0));
+        $projectpanel->filter->add(new DropDownChoice('searchstate', $this->_stlist, 0));
         $projectpanel->filter->add(new TextInput('searchnumber'));
-        $projectpanel->filter->add(new CheckBox('searcharch'));
-
+       
         $list = $projectpanel->add(new DataView('projectlist', new ProjectDS($this), $this, 'listOnRow'));
         $list->setPageSize(25);
         $this->projectpanel->add(new Paginator('pag', $list));
@@ -63,19 +64,24 @@ class ProjectList extends \App\Pages\Base {
         $this->projectform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->projectform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
-        $this->add(new Panel("msgpan"))->setVisible(false);
-        $this->msgpan->add(new ClickLink('back', $this, 'cancelOnClick'));
-        $this->msgpan->add(new ClickLink('toilist', $this, 'toilistOnClick'));
+        $this->add(new Panel("showpan"))->setVisible(false);
+        $this->showpan->add(new ClickLink('back', $this, 'cancelOnClick'));
+        $this->showpan->add(new ClickLink('toilist', $this, 'toilistOnClick'));
 
-        $this->msgpan->add(new Label('mtitle'));
-        $this->msgpan->add(new Label('mdesc'));
-        $this->msgpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
-        $this->msgpan->addmsgform->add(new TextArea('msgdata'));
-        $this->msgpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
+        $this->showpan->add(new Label('mtitle'));
+        $this->showpan->add(new Label('mdesc'));
+        $this->showpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
+        $this->showpan->addmsgform->add(new TextArea('msgdata'));
+        $this->showpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
 
-        $this->msgpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
-        $this->msgpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
-        $this->msgpan->add(new DataView('filelist', new ArrayDataSource($this, '_fileslist'), $this, 'fileListOnRow'));
+        $this->showpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
+        $this->showpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
+        $this->showpan->add(new DataView('filelist', new ArrayDataSource($this, '_fileslist'), $this, 'fileListOnRow'));
+        
+        $this->showpan->add(new Form('statusform'))->onSubmit($this, 'onStatus');
+        $this->showpan->statusform->add(new DropDownChoice('stlist', $this->_stlist, 0));
+        
+        
     }
 
     public function listOnRow($row) {
@@ -83,6 +89,8 @@ class ProjectList extends \App\Pages\Base {
 
         $row->add(new Label('project_name', $pr->project_name));
         $row->add(new Label('customer_name', $pr->customer_name));
+        
+        $row->add(new Label('status',$this->_stlist[$pr->status] ));
         $row->add(new Label('inew', $pr->inew))->setVisible($pr->inew > 0);
         $row->add(new Label('iproc', $pr->iproc))->setVisible($pr->iproc > 0);
         $row->add(new Label('iclose', $pr->iclose))->setVisible($pr->iclose > 0);
@@ -91,18 +99,13 @@ class ProjectList extends \App\Pages\Base {
         $row->add(new ClickLink('preview'))->onClick($this, 'previewOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        $row->add(new ClickLink('archive'))->onClick($this, 'archiveOnClick');
-        $row->archive->setAttribute('title', 'Архивировать');
-        if ($pr->iproc > 0 || $pr->inew > 0) {
-            $row->archive->setVisible(false);
-        }
-        if ($pr->archived == 1) {
-            $row->archive->setVisible(true);
-            $row->preview->setVisible(false);
+        
+        if($pr->status == Project::STATUS_CLOSED){
             $row->edit->setVisible(false);
             $row->delete->setVisible(false);
-            $row->archive->setAttribute('title', 'Разархивировать');
         }
+        
+     
     }
 
     public function editOnClick($sender) {
@@ -113,13 +116,7 @@ class ProjectList extends \App\Pages\Base {
         $this->projectform->editdesc->setText($this->_project->desc);
     }
 
-    public function archiveOnClick($sender) {
-        $project = $sender->owner->getDataItem();
-        $project->archived = $project->archived == 1 ? 0 : 1;
-        $project->save();
-        $this->projectpanel->projectlist->Reload();
-    }
-
+   
     public function deleteOnClick($sender) {
 
         $del = Project::delete($sender->owner->getDataItem()->project_id);
@@ -167,7 +164,7 @@ class ProjectList extends \App\Pages\Base {
     }
 
     public function cancelOnClick($sender) {
-        $this->msgpan->setVisible(false);
+        $this->showpan->setVisible(false);
         $this->projectform->setVisible(false);
         $this->projectpanel->setVisible(true);
     }
@@ -180,13 +177,16 @@ class ProjectList extends \App\Pages\Base {
     public function previewOnClick($sender) {
 
         $this->_project = $sender->getOwner()->getDataItem();
-        $this->msgpan->mtitle->setText($this->_project->project_name);
-        $this->msgpan->mdesc->setText($this->_project->desc, true);
+        $this->showpan->mtitle->setText($this->_project->project_name);
+        $this->showpan->mdesc->setText($this->_project->desc, true);
 
         $this->projectpanel->setVisible(false);
 
-        $this->msgpan->setVisible(true);
+        $this->showpan->setVisible(true);
         $this->updateMessages();
+        
+        $this->showpan->statusform->stlist->setValue($this->_project->status);
+        
     }
 
     public function toilistOnClick($sender) {
@@ -195,7 +195,7 @@ class ProjectList extends \App\Pages\Base {
 
     public function onAddMsg($sender) {
         $msg = new \App\Entity\Message();
-        $msg->message = $this->msgpan->addmsgform->msgdata->getText();
+        $msg->message = $this->showpan->addmsgform->msgdata->getText();
         $msg->created = time();
         $msg->user_id = $this->_user->user_id;
         $msg->item_id = $this->_project->project_id;
@@ -204,7 +204,7 @@ class ProjectList extends \App\Pages\Base {
             return;
         $msg->save();
 
-        $this->msgpan->addmsgform->msgdata->setText('');
+        $this->showpan->addmsgform->msgdata->setText('');
         $this->updateMessages();
 
 
@@ -213,9 +213,9 @@ class ProjectList extends \App\Pages\Base {
 
     private function updateMessages() {
         $this->_msglist = \App\Entity\Message::find('item_type =6 and item_id=' . $this->_project->project_id);
-        $this->msgpan->msglist->Reload();
+        $this->showpan->msglist->Reload();
         $this->_fileslist = \App\Helper::getFileList($this->_project->project_id, 6);
-        $this->msgpan->filelist->Reload();
+        $this->showpan->filelist->Reload();
     }
 
     public function msgListOnRow($row) {
@@ -272,6 +272,13 @@ class ProjectList extends \App\Pages\Base {
         \App\Helper::deleteFile($file->file_id);
         $this->updateMessages();
     }
+    
+    public function onStatus($sender){
+        $this->_project->status  = $this->showpan->statusform->stlist->getValue();
+        $this->_project->save();
+        $this->projectpanel->projectlist->Reload();
+    }
+    
 
 }
 
@@ -287,15 +294,15 @@ class ProjectDS implements \Zippy\Interfaces\DataSource {
 
         $number = trim($this->page->projectpanel->filter->searchnumber->getText());
         $cust = $this->page->projectpanel->filter->searchcust->getValue();
-        $arch = $this->page->projectpanel->filter->searcharch->isChecked();
+        $status = $this->page->projectpanel->filter->searchstate->getValue();
 
         $conn = \ZDB\DB::getConnect();
 
 
-        if ($arch == false)
-            $where = " archived <> 1 ";
+        if ($status == 0)
+            $where = " status <>  ". Project::STATUS_CLOSED;
         else
-            $where = " archived = 1 ";
+            $where = " status= " .$status;
 
         if ($cust > 0)
             $where .= " and customer_id = " . $cust;
@@ -304,7 +311,7 @@ class ProjectDS implements \Zippy\Interfaces\DataSource {
         if (strlen($number) > 0) {
             $s = Project::qstr('%' . $number . '%');
 
-            $where .= " and (details like {$s} or project_name like {$s} or issue_id=" . Project::qstr(project_name) . ")  ";
+            $where  = "   (details like {$s} or project_name like {$s} or issue_id=" . Project::qstr(project_name) . ")  ";
         }
 
         return $where;

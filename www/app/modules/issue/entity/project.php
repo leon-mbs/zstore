@@ -9,10 +9,18 @@ namespace App\Modules\Issue\Entity;
  * @keyfield=project_id
  */
 class Project extends \ZCL\DB\Entity {
-
+    const STATUS_NEW = 0;
+    const STATUS_CLOSED = 1;
+    const STATUS_INPROCESS = 2;
+    const STATUS_REOPENED = 3;
+    const STATUS_WA = 4;
+    const STATUS_SHIFTED = 5;
+    const STATUS_WAITPAIMENT = 6;
+    
+    
     protected function init() {
         $this->project_id = 0;
-        $this->archived = 0;
+        $this->status = 0;
     }
 
     protected function beforeDelete() {
@@ -50,4 +58,17 @@ class Project extends \ZCL\DB\Entity {
         parent::afterLoad();
     }
 
+    public static function getStatusList() {
+        $list = array();
+        $list[self::STATUS_NEW] = 'Новый';
+       
+        $list[self::STATUS_INPROCESS] = 'В работе';
+        $list[self::STATUS_WA] = 'На  утверждении';
+        $list[self::STATUS_SHIFTED] = 'Отложен';
+        $list[self::STATUS_WAITPAIMENT] = 'Ждет оплату';
+        $list[self::STATUS_REOPENED] = 'Переоткрыт';
+        $list[self::STATUS_CLOSED] = 'Закрыт';
+        return $list;
+    }    
+    
 }
