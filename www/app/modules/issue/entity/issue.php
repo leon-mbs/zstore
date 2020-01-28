@@ -14,7 +14,7 @@ class Issue extends \ZCL\DB\Entity {
     const STATUS_NEW = 0;
     const STATUS_CLOSED = 1;
     const STATUS_INPROCESS = 2;
-    //const STATUS_FINISHED=3;
+  
     const STATUS_QA = 4;
     const STATUS_REOPENED = 5;
     const STATUS_RETURNED = 6;
@@ -91,7 +91,7 @@ class Issue extends \ZCL\DB\Entity {
         $list[self::STATUS_NEW] = 'Новая';
         $list[self::STATUS_CLOSED] = 'Закрыта';
         $list[self::STATUS_INPROCESS] = 'В работе';
-        //  $list[self::STATUS_FINISHED] =  'Закончена';
+  
         $list[self::STATUS_QA] = 'На проверке';
         $list[self::STATUS_REOPENED] = 'Переоткрыта';
         $list[self::STATUS_RETURNED] = 'Возвращена на доработку';

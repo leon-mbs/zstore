@@ -63,13 +63,54 @@ class POSCheck extends Document {
         return $s . str_repeat(' ', 30 - mb_strlen($s));
     }
 
+ 
+    
+   public function generateReport() {
 
-    public function generateReport() {
 
-        $print = implode("<br>", $this->generateCheck());
-        $print = str_replace(' ', '&nbsp;', $print);
+        $i = 1;
+        $detail = array();
 
-        $header = array('print' => $print);
+        foreach ($this->detaildata as $value) {
+
+
+            $name = $value['itemname'];
+            if (strlen($value['snumber']) > 0) {
+                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
+            }
+
+
+            $detail[] = array("no" => $i++,
+                "tovar_name" => $name,
+                "tovar_code" => $value['item_code'],
+                "quantity" => H::fqty($value['quantity']),
+                "msr" => $value['msr'],
+                "price" => H::fa($value['price']),
+                "amount" => H::fa($value['quantity'] * $value['price'])
+            );
+        }
+
+        $firm = H::getFirmData($this->branch_id);
+
+        $header = array('date' => date('d.m.Y', $this->document_date),
+            "_detail" => $detail,
+            "firmname" => $firm["firmname"],
+            "shopname" => $firm["shopname"],
+            "address" => $firm["address"],
+            "phone" => $firm["phone"],
+            "customer_name" => strlen($this->headerdata["customer_name"])>0 ? $this->headerdata["customer_name"] : false,
+            "exchange" => $this->headerdata["exchange"],
+            "pos_name" => $this->headerdata["pos_name"],
+            "time" => date('d.m.Y H:i',$this->headerdata["time"]),
+            "document_number" => $this->document_number,
+            "total" => H::fa($this->amount),
+            "payed" => H::fa($this->payed),
+            "paydisc" => H::fa($this->headerdata["paydisc"]),
+            "isdisc" => $this->headerdata["paydisc"] > 0,
+            "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+            "payamount" => H::fa($this->payamount)
+        );
+       
 
         $report = new \App\Report('poscheck.tpl');
 
@@ -77,10 +118,51 @@ class POSCheck extends Document {
 
         return $html;
     }
-    
-    public function generatePosReport() {
-        return $this->generateReport();   
-    }   
+ 
+   public function generatePosReport() {
+     
+        $detail = array();
+
+        foreach ($this->detaildata as $value) {
+
+            $name = $value['itemname'];
+
+            $detail[] = array( 
+                "tovar_name" => $name,
+                "quantity" => H::fqty($value['quantity']),
+                "amount" => H::fa($value['quantity'] * $value['price'])
+            );
+        }
+
+        $firm = H::getFirmData($this->branch_id);
+
+        $header = array('date' => date('d.m.Y', $this->document_date),
+            "_detail" => $detail,
+            "firmname" => $firm["firmname"],
+            "shopname" => strlen($firm["shopname"])>0 ? $firm["shopname"] : false,
+            "address" => $firm["address"],
+            "phone" => $firm["phone"],
+            "inn" => $firm["inn"],
+            "customer_name" => strlen($this->headerdata["customer_name"])>0 ? $this->headerdata["customer_name"] : false,
+            "exchange" => $this->headerdata["exchange"],
+            "pos_name" => $this->headerdata["pos_name"],
+            "time" => date('d.m.Y H:i',$this->headerdata["time"]),
+            "document_number" => $this->document_number,
+            "total" => H::fa($this->amount),
+            "payed" => H::fa($this->payed),
+            "paydisc" => H::fa($this->headerdata["paydisc"]),
+            "isdisc" => $this->headerdata["paydisc"] > 0,
+            "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+            "payamount" => H::fa($this->payamount)
+        );
+       
+
+        $report = new \App\Report('poscheck_bill.tpl');
+
+        $html = $report->generate($header);
+
+        return $html;
+    }
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();

@@ -513,6 +513,7 @@ class ARMPos extends \App\Pages\Base {
         }
 
         $this->doc->headerdata['pos'] = $this->pos->pos_id;
+        $this->doc->headerdata['pos_name'] = $this->pos->pos_name;
         $this->doc->headerdata['store'] = $this->pos->store;
         $this->doc->headerdata['pricetype'] = $this->pos->pricetype;
         //   $this->doc->headerdata['pricetypename'] = $this->form1->pricetype->getValueName();
