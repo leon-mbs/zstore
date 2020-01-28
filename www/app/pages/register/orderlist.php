@@ -204,15 +204,7 @@ class OrderList extends \App\Pages\Base {
             $this->_tvars['askclose'] = true;
         }
 
-        //прячем лишнее
-        if ($this->_doc->meta_name == 'Order') {
-
-            $this->statuspan->statusform->bact->setVisible(false);
-        }
-        if ($this->_doc->meta_name == 'ServiceOrder') {
-
-            $this->statuspan->statusform->bttn->setVisible(false);
-        }
+         
     }
 
     //просмотр
