@@ -63,8 +63,9 @@
                     <div class="col-12 col-md-8  ">
 
                         <h4 zippy="mtitle"></h4> 
-                        <small>Создан Admin 11.11.2011. Проект  <a href="/">ddddd</a> </small>  
+                        <small zippy="mcreate">Создан Admin 11.11.2011. Проект  <a href="/">ddddd</a> </small>  
                         <p zippy="mdesc"></p>   
+                        <a zippy="editissue" class="text-info  "><i class="fa fa-edit"></i>  Редактировать</a>&nbsp;&nbsp;<a zippy="deleteissue" class="text-danger"><i class="fa fa-trash"></i> Удалить</a>
                         <hr>
                         <form class="form-inline" zippy="addfileform" enctype="multipart/form-data">
                             <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
@@ -75,8 +76,8 @@
                             <input class="btn btn-outline-info  " type="submit" value="Добавить">
 
                         </form> 
-
-                        <div zippy="filelist" style="float:left">
+                        <a id="afiles"></a>
+                        <div zippy="filelist" style="float:left" >
 
                             <i class="fa fa-paperclip"></i><a zippy="filename" target="_blank"></a>
                             <a zippy="delfile" class="text-danger" title="Удалить" >x</a>&nbsp;&nbsp;
@@ -96,20 +97,24 @@
                                     <br><span   zippy="msgdata"></span>
 
                                 </td>
-                                <td valign="top"><a zippy="delmsg" class="text-danger" title="Удалить">x</a></td> 
+                                <td valign="top"><a zippy="delmsg" class="   text-danger" title="Удалить">x</a></td> 
                             </tr>
                         </table>
-                        <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
+                        <a id="msgankor"></a>
+                        <form style="margin-left:40px;" zippy="addmsgform" >
                             <label> Коментарий: </label>
                             <div class="form-group">
                                 <textarea     class="form-control" required="required" zippy="msgdata" style="width:400px;height:120px;"></textarea>
                             </div> 
+                            <span>Уведомить</span>
+                            <div zippy="edittags"> </div>                            
                             <input class="btn btn-outline-success  " type="submit" value="Добавить">
                         </form>
    
 
                     </div>
                     <div class="col-12 col-md-4  ">
+                        
                         <form zippy="stform">
 
                             <div class="form-group  ">
@@ -226,6 +231,13 @@
                     customConfig: '/assets/js/ckeditor/config.js',
                     filebrowserBrowseUrl: '', filebrowserUploadUrl: '/upload.php'
                 });
+            }
+            
+            
+            
+            function check_deleteissue()
+            {
+                return  confirm('Удалить задачу?');
             }
         </script>
     </body>

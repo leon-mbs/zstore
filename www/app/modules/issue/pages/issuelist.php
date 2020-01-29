@@ -97,21 +97,24 @@ class IssueList extends \App\Pages\Base {
         $msgpan = $this->listpan->add(new Panel("msgpan"));
         $msgpan->setVisible(false);
          
+        $msgpan->add(new Label('mcreate'));
         $msgpan->add(new Label('mtitle'));
         $msgpan->add(new Label('mdesc'));
-
+        $msgpan->add(new ClickLink('editissue',$this,'editOnClick'));
+        $msgpan->add(new ClickLink('deleteissue',$this,'deleteOnClick'));
           
  
           $msgpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
           $msgpan->addmsgform->add(new TextArea('msgdata'));
+          $msgpan->addmsgform->add(new \ZCL\BT\Tags("edittags"));
           $msgpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
 
           $msgpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
           $msgpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
           $msgpan->add(new DataView('filelist', new ArrayDataSource($this, '_fileslist'), $this, 'fileListOnRow'));
-         /*
+       
           $stform = $msgpan->add(new Form('stform'));
-
+           /*
           $stform->add(new DropDownChoice('ststatus', $stlist, -1));
           $stform->add(new DropDownChoice('stpr', array(0 => 'Нормальный', 1 => 'Высокий', -1 => 'Низкий'), 0));
           $stform->add(new DropDownChoice('stuser', User::findArray('username', 'employee_id > 0', 'username'), 0));
@@ -186,7 +189,7 @@ class IssueList extends \App\Pages\Base {
 
     public function editOnClick($sender) {
 
-        $this->_issue = $sender->getOwner()->getDataItem();
+        
         if ($this->_issue->status == Issue::STATUS_CLOSED) {
             $this->setError('Задача  закрыта');
             return;
@@ -204,6 +207,8 @@ class IssueList extends \App\Pages\Base {
         $this->editpan->editform->edittitle->setText($this->_issue->issue_name);
         $this->editpan->editform->editcontent->setText($this->_issue->desc);
         $this->editpan->editform->editpr->setValue($this->_issue->priority);
+        $this->editpan->editform->editproj->setValue($this->_issue->project_id);
+        $this->editpan->editform->editemp->setValue($this->_issue->user_id);
         $this->editpan->editform->edithours->setText($this->_issue->hours);
         
     }
@@ -232,11 +237,12 @@ class IssueList extends \App\Pages\Base {
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
         $this->listpan->list->Reload();
+        $this->openIssue($this->_issue) ;
     }
 
     public function openIssue($issue) {
         $this->_issue = $issue;
-
+         if($this->_issue==null)return; 
         $this->listpan->msgpan->setVisible(true);
 
         $this->listpan->msgpan->mtitle->setText('#' . $this->_issue->issue_id . ' ' . $this->_issue->issue_name);
@@ -249,32 +255,41 @@ class IssueList extends \App\Pages\Base {
           $this->updateMessages();
 
          $this->listpan->list->Reload(false);
+         
+         $this->listpan->msgpan->mcreate->setText('Создан '.$this->_issue->createdbyname.' '.date('Y-m-d',$this->_issue->createdon). '&nbsp;Проект&nbsp;<a href="/project/'.$this->_issue->project_id.'">'.$this->_issue->project_name.'</a> ',true);
+         
+         $this->listpan->msgpan->addmsgform->edittags->setTags(array());
+         $users = User::findArray('username') ;
+    
+         $this->listpan->msgpan->addmsgform->edittags->setSuggestions(array_values($users));
     }
 
  
 
     public function deleteOnClick($sender) {
 
-        $issue = $sender->getOwner()->getDataItem();
+     
 
-        if ($issue->status == Issue::STATUS_CLOSED) {
+        if ($this->_issue->status == Issue::STATUS_CLOSED) {
             $this->setError('Задача  закрыта');
             return;
         }
 
 
-        if ($this->_user->username != 'admin' && $this->_user->user_id != $issue->createdby) {
+        if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
             $this->setError('Удалить  может  только  автор или  администатор');
             return;
         }
 
 
-        $msg = Issue::delete($issue->issue_id);
-        if (strlen(msg) > 0) {
+        $msg = Issue::delete($this->_issue->issue_id);
+        if (strlen($msg) > 0) {
             $this->setError($msg);
             return;
         }
         $this->listpan->list->Reload();
+        $this->listpan->msgpan->setVisible(false);
+        $this->resetURL() ;
     }
 
     public function onAddMsg($sender) {
@@ -290,7 +305,18 @@ class IssueList extends \App\Pages\Base {
 
         $this->listpan->msgpan->addmsgform->msgdata->setText('');
         $this->updateMessages();
-
+        
+        $not = array();
+        $not[] =  $this->_issue->user_id;
+        
+        $names = $this->listpan->msgpan->addmsgform->edittags->getTags();
+        foreach($names as $n){
+           $u = User::getFirst('username='.User::qstr($n));    
+           if($u instanceof User)$not[] = $u->user_id;
+        }
+        
+        
+        
 
         $this->goAnkor('msgankor');
     }
@@ -334,6 +360,7 @@ class IssueList extends \App\Pages\Base {
         \App\Helper::addFile($file, $this->_issue->issue_id, '', 5);
 
         $this->updateMessages();
+        $this->goAnkor('afiles');
     }
 
     public function filelistOnRow($row) {
@@ -356,6 +383,7 @@ class IssueList extends \App\Pages\Base {
         $file = $sender->owner->getDataItem();
         \App\Helper::deleteFile($file->file_id);
         $this->updateMessages();
+         $this->goAnkor('afiles');
     }
 
     public function onStatus($sender) {
