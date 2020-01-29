@@ -56,6 +56,7 @@ class Issue extends \ZCL\DB\Entity {
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_ISSUE . " and item_id=" . $this->issue_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->issue_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
+        $conn->Execute("delete from issue_history where issue_id=".$this->issue_id);
     }
 
     protected function beforeSave() {
@@ -107,4 +108,34 @@ class Issue extends \ZCL\DB\Entity {
         return $list;
     }
 
+    
+    
+    public   function addStatusLog( ) {
+        $user = \App\System::getUser();
+        $conn = \ZCL\DB\DB::getConnect();
+        $createdon = $conn->DBDate(time());
+ 
+        $sql = "insert  into issue_history (issue_id,createdon,user_id, status) values ({$this->issue_id},{$createdon},{$user->user_id},  {$this->status}) ";
+        $conn->Execute($sql);
+    }
+
+    public   function getLogList( ) {
+        $stlist = Issue::getStatusList() ;
+        $list = array();
+        $conn = \ZCL\DB\DB::getConnect();
+        $sql = "select i.*,u.username from  issue_history i join users_view u on i.user_id = u.user_id where issue_id={$this->issue_id} order  by hist_id";
+        $res = $conn->Execute($sql);
+        foreach ($res as $v) {
+            $item = new \App\DataItem();
+
+            $item->createdon = strtotime($v['createdon']);
+            $item->username = $v['username'];
+            $item->statusname = $stlist[$v['status']];
+             
+            $list[] = $item;
+        }
+
+        return $list;
+    }    
+    
 }

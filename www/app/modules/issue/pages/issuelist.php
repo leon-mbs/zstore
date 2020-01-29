@@ -114,17 +114,13 @@ class IssueList extends \App\Pages\Base {
           $msgpan->add(new DataView('filelist', new ArrayDataSource($this, '_fileslist'), $this, 'fileListOnRow'));
        
           $stform = $msgpan->add(new Form('stform'));
-           /*
+        
           $stform->add(new DropDownChoice('ststatus', $stlist, -1));
-          $stform->add(new DropDownChoice('stpr', array(0 => 'Нормальный', 1 => 'Высокий', -1 => 'Низкий'), 0));
-          $stform->add(new DropDownChoice('stuser', User::findArray('username', 'employee_id > 0', 'username'), 0));
-          $stform->add(new TextInput('sthours'));
-          $stform->add(new SubmitButton('ststatusok'))->onClick($this, "onStatus");
-          $stform->add(new SubmitButton('stuserok'))->onClick($this, "onStatus");
-          $stform->add(new SubmitButton('stprok'))->onClick($this, "onStatus");
-          $stform->add(new SubmitButton('sthoursok'))->onClick($this, "onStatus");
+          $stform->add(new DropDownChoice('stpr', array(Issue::PRIORITY_NORMAL => 'Нормальный', Issue::PRIORITY_HIGH => 'Высокий', Issue::PRIORITY_LOW => 'Низкий'), 0));
+          $stform->add(new DropDownChoice('stuser', User::findArray('username', '', 'username'), 0));
+          $stform->onSubmit($this, "onStatus");
           $msgpan->add(new DataView('stlist', new ArrayDataSource($this, '_stlist'), $this, 'stlistOnRow'));
-          */
+      
           $this->listpan->list->Reload();
 
            
@@ -140,10 +136,10 @@ class IssueList extends \App\Pages\Base {
 
           $this->editpan->editform->add(new ClickLink('editcancel', $this, 'onCancel'));
 
-        $issue = Issue::load($id);
-        if ($issue instanceof Issue) {
-            $this->openIssue($issue);
-        }
+          $issue = Issue::load($id);
+          if ($issue instanceof Issue) {
+              $this->openIssue($issue);
+          }
     }
 
     public function onNew($sender) {
@@ -151,7 +147,7 @@ class IssueList extends \App\Pages\Base {
         $this->editpan->setVisible(true);
         $this->listpan->setVisible(false);
         $this->_issue = new Issue();
-         $this->editpan->editform->editproj->setValue($this->filter->searchproject->getValue());
+        $this->editpan->editform->editproj->setValue($this->filter->searchproject->getValue());
     }
 
     public function onCancel($sender) {
@@ -164,8 +160,6 @@ class IssueList extends \App\Pages\Base {
     }
 
     public function onFilter($sender) {
-
-
         $this->listpan->list->Reload();
     }
 
@@ -232,8 +226,9 @@ class IssueList extends \App\Pages\Base {
             $this->setError('Не указан  проект');
             return;
         }
+        $idnew = $this->_issue->issue_id ==0;
         $this->_issue->save();
-
+        if($idnew)  $this->_issue->addStatusLog() ;
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
         $this->listpan->list->Reload();
@@ -241,25 +236,27 @@ class IssueList extends \App\Pages\Base {
     }
 
     public function openIssue($issue) {
-        $this->_issue = $issue;
+         $this->_issue = $issue;
          if($this->_issue==null)return; 
-        $this->listpan->msgpan->setVisible(true);
-
-        $this->listpan->msgpan->mtitle->setText('#' . $this->_issue->issue_id . ' ' . $this->_issue->issue_name);
-        $this->listpan->msgpan->mdesc->setText($this->_issue->desc, true);
-      //  $this->listpan->msgpan->stform->ststatus->setValue($this->_issue->status);
-     //   $this->listpan->msgpan->stform->stpr->setValue($this->_issue->priority);
-      //  $this->listpan->msgpan->stform->stuser->setValue($this->_issue->user_id);
-      //  $this->listpan->msgpan->stform->sthours->setText('0');
-        // $this->updateStList();
-          $this->updateMessages();
+         $this->listpan->msgpan->setVisible(true);
+         $bd ="badge-success";
+         if($this->_issue->priority == Issue::PRIORITY_HIGH)$bd ="badge-danger"; ;
+         if($this->_issue->priority == Issue::PRIORITY_LOW) $bd ="badge-warning";;
+         $this->listpan->msgpan->mtitle->setText('<span class="badge '.$bd.'">#' . $this->_issue->issue_id . '</span> ' . $this->_issue->issue_name,true);
+         $this->listpan->msgpan->mdesc->setText($this->_issue->desc, true);
+         $this->listpan->msgpan->stform->ststatus->setValue($this->_issue->status);
+         $this->listpan->msgpan->stform->stpr->setValue($this->_issue->priority);
+         $this->listpan->msgpan->stform->stuser->setValue($this->_issue->user_id);
+          
+         $this->updateStList();
+         $this->updateMessages();
 
          $this->listpan->list->Reload(false);
          
          $this->listpan->msgpan->mcreate->setText('Создан '.$this->_issue->createdbyname.' '.date('Y-m-d',$this->_issue->createdon). '&nbsp;Проект&nbsp;<a href="/project/'.$this->_issue->project_id.'">'.$this->_issue->project_name.'</a> ',true);
          
          $this->listpan->msgpan->addmsgform->edittags->setTags(array());
-         $users = User::findArray('username') ;
+         $users = User::findArray('username','user_id <>'. System::getUser()->user_id );
     
          $this->listpan->msgpan->addmsgform->edittags->setSuggestions(array_values($users));
     }
@@ -267,9 +264,7 @@ class IssueList extends \App\Pages\Base {
  
 
     public function deleteOnClick($sender) {
-
-     
-
+  
         if ($this->_issue->status == Issue::STATUS_CLOSED) {
             $this->setError('Задача  закрыта');
             return;
@@ -314,9 +309,15 @@ class IssueList extends \App\Pages\Base {
            $u = User::getFirst('username='.User::qstr($n));    
            if($u instanceof User)$not[] = $u->user_id;
         }
-        
-        
-        
+        foreach($not as $u){
+             
+            $n = new \App\Entity\Notify();
+            $n->user_id = $u;
+            $n->message = " Коментарий к задаче  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
+            $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}/#msgankor\">Ответить</a> ";
+            $n->sender_name =  $user->username;
+            $n->save();           
+        }  
 
         $this->goAnkor('msgankor');
     }
@@ -387,72 +388,43 @@ class IssueList extends \App\Pages\Base {
     }
 
     public function onStatus($sender) {
-
-        if ($sender->id == 'ststatusok') {
-            $status = $this->listpan->msgpan->stform->ststatus->getValue();
-            if ($status == $this->_issue->status)
-                return;
-            $this->_issue->status = $status;
+  
+            $olduser = $this->_issue->user_id;
+            $oldstatus = $this->_issue->status;
+              
+            $this->_issue->status     = $sender->ststatus->getValue();
+            $this->_issue->user_id    = $sender->stuser->getValue();
+            $this->_issue->priority   = $sender->stpr->getValue();
             $this->_issue->lastupdate = time();
             $this->_issue->save();
-            Helper::addHistory($this->_issue->issue_id, $status, null, 'Статус ' . $this->listpan->msgpan->stform->ststatus->getValueName());
+            
+            if($oldstatus != $this->_issue->status){
+               $this->_issue->addStatusLog();   
+            }
+            
             $this->updateStList();
-            return;
-        }
-        if ($this->_issue->status == Issue::STATUS_CLOSED) {
-            $this->setError('Задача  закрыта');
-            return;
-        }
-        if ($sender->id == 'stprok') {
-            $priority = $this->listpan->msgpan->stform->stpr->getValue();
-            if ($priority == $this->_issue->priority)
-                return;
-            $this->_issue->priority = $priority;
-            $this->_issue->lastupdate = time();
-            $this->_issue->save();
-            Helper::addHistory($this->_issue->issue_id, null, null, 'Приоритет ' . $this->listpan->msgpan->stform->stpr->getValueName());
-        }
-
-
-
-        if ($sender->id == 'stuserok') {
-            $user_id = $this->listpan->msgpan->stform->stuser->getValue();
-            if ($user_id == 0) {
-                return;
+            $this->listpan->list->Reload(false);
+                 
+            if($olduser != $this->_issue->user_id){
+                $n = new \App\Entity\Notify();
+                $n->user_id = $this->_issue->user_id;
+                $n->message = " На  вас перенаначена задача  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
+                $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}\">Открыть</a> ";
+                $n->sender_name =  $user->username;
+                $n->save();                  
             }
-            if ($user_id == $this->_issue->user_id)
-                return;
-
-            $this->_issue->user_id = $user_id;
-            $this->_issue->lastupdate = time();
-            $this->_issue->save();
-            Helper::addHistory($this->_issue->issue_id, null, null, 'Переназначена на  ' . $this->listpan->msgpan->stform->stuser->getValueName());
-
-            $n = new \App\Entity\Notify();
-            $n->user_id = $user_id;
-            $n->message = " На  вас переведена задача <a href=\"/index.php?p=App/Modules/Issue/Pages/IssueList&arg={$this->_issue->issue_id}\">{$this->_issue->issue_name}</a> ";
-            $n->save();
-        }
-        if ($sender->id == 'sthoursok') {
-            $hours = $this->listpan->msgpan->stform->sthours->getText();
-            if ($hours > 0) {
-                Helper::addHistory($this->_issue->issue_id, null, $hours, "Добавлено время {$hours} ");
-            }
-            $this->listpan->msgpan->stform->sthours->setText('');
-        }
-
-        $this->updateStList();
+            
     }
 
     public function stlistOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('sttime', date('Y-m-d', $item->createdon)));
         $row->add(new Label('stuser', $item->username));
-        $row->add(new Label('stnotes', $item->notes));
+        $row->add(new Label('stname', $item->statusname));
     }
 
     public function updateStList() {
-        $this->_stlist = Helper::getHistoryList($this->_issue->issue_id);
+        $this->_stlist =  $this->_issue->getLogList();
         $this->listpan->msgpan->stlist->Reload();
     }
 
