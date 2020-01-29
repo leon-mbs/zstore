@@ -11,8 +11,8 @@ namespace App\Modules\Issue\Entity;
  */
 class Issue extends \ZCL\DB\Entity {
 
-    const STATUS_NEW = 0;
-    const STATUS_CLOSED = 1;
+    const STATUS_NEW = 1;
+
     const STATUS_INPROCESS = 2;
   
     const STATUS_QA = 4;
@@ -20,6 +20,12 @@ class Issue extends \ZCL\DB\Entity {
     const STATUS_RETURNED = 6;
     const STATUS_WA = 7;
     const STATUS_SHIFTED = 8;
+    const STATUS_CLOSED = 12;
+   
+   
+    const PRIORITY_HIGH=1;    
+    const PRIORITY_NORMAL=2;    
+    const PRIORITY_LOW=3;    
 
     protected function init() {
         $this->issue_id = 0;
@@ -27,7 +33,7 @@ class Issue extends \ZCL\DB\Entity {
 
 
         $this->user_id = 0;
-        $this->status = 0;
+        $this->status = 1;
         $this->priority = 0;
         $this->hours = 0;
 
@@ -89,7 +95,6 @@ class Issue extends \ZCL\DB\Entity {
     public static function getStatusList() {
         $list = array();
         $list[self::STATUS_NEW] = 'Новая';
-        $list[self::STATUS_CLOSED] = 'Закрыта';
         $list[self::STATUS_INPROCESS] = 'В работе';
   
         $list[self::STATUS_QA] = 'На проверке';
@@ -97,6 +102,7 @@ class Issue extends \ZCL\DB\Entity {
         $list[self::STATUS_RETURNED] = 'Возвращена на доработку';
         $list[self::STATUS_WA] = 'На  утверждении';
         $list[self::STATUS_SHIFTED] = 'Отложена';
+        $list[self::STATUS_CLOSED] = 'Закрыта';
 
         return $list;
     }

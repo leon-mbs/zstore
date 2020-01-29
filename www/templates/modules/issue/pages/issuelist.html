@@ -8,8 +8,9 @@
 
         <div class="row" >
             <div class="col-12  ">
+            <h3>Список задач </h3>
                 <div class="navbar nav">
-                    <h3>Список задач </h3>
+                    
 
                     <form zippy="filter" class="form-inline ">
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"  >
@@ -18,8 +19,8 @@
                         <select class="form-control mr-sm-2  " zippy="searchstatus">
 
                         </select>
-                        <label for="searchassignedto">исполнитель </label>
-                        <select class="form-control mr-sm-2  " zippy="searchassignedto">
+                        <label for="searchemp">исполнитель </label>
+                        <select class="form-control mr-sm-2  " zippy="searchemp">
                             <option value="0">Не выбран</option>
                         </select>
                         <label for="searchproject"> проект  </label>
@@ -36,32 +37,33 @@
             </div>
         </div>
         <div class="row"  zippy="listpan">
-            <div class="col-auto  ">
+            <div class="col-12 col-md-3  col-xl-2">
 
                 <table class="table   table-sm  table-hover   ">
 
                     <tr zippy="list">
 
-                        <td >
-                            <span zippy="issue_id"></span>
-                            <i zippy="prup" class="fa fa-arrow-up text-danger" title="Высокий приоритет"></i><i zippy="prdown" class="fa fa-arrow-down text-success"  title="Низкий приоритет"></i>
-                            <br><a><span zippy="title"></span></a>
-                        </td>
-
-
-
-
+                        
+                        <table class="ctable" style="width:100%" >
+                            <tr><td> <span   zippy="issue_number"></span></td>
+                            <td class="text-right"><h5> <span zippy="emp" class="badge badge-secondary badge-pill"></span></h5> </td>
+                            </tr>
+                            <tr><td colspan="2" ><a zippy="title"></a></td></tr>
+                            
+                        </table>
+  
                     </tr>  
                 </table>
 
                 <div zippy="pag"></div>       
 
             </div>
-            <div class="col-auto  "> 
+            <div class="col-12 col-md-9 col-xl-8 "> 
                 <div class="row" zippy="msgpan">
-                    <div class="col-12 col-md-8 col-xl-6">
+                    <div class="col-12 col-md-8  ">
 
-                        <h4 zippy="mtitle"></h4>   
+                        <h4 zippy="mtitle"></h4> 
+                        <small>Создан Admin 11.11.2011. Проект  <a href="/">ddddd</a> </small>  
                         <p zippy="mdesc"></p>   
                         <hr>
                         <form class="form-inline" zippy="addfileform" enctype="multipart/form-data">
@@ -94,71 +96,55 @@
                                     <br><span   zippy="msgdata"></span>
 
                                 </td>
-                                <td valign="top"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td> 
+                                <td valign="top"><a zippy="delmsg" class="text-danger" title="Удалить">x</a></td> 
                             </tr>
                         </table>
                         <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
                             <label> Коментарий: </label>
                             <div class="form-group">
-                                <textarea class="form-control" required="required" zippy="msgdata" style="width:400px;height:120px;"></textarea>
+                                <textarea     class="form-control" required="required" zippy="msgdata" style="width:400px;height:120px;"></textarea>
                             </div> 
                             <input class="btn btn-outline-success  " type="submit" value="Добавить">
                         </form>
    
 
                     </div>
-                    <div class="col-12 col-md-4 col-xl-3">
+                    <div class="col-12 col-md-4  ">
                         <form zippy="stform">
 
-                            <div class="form-group row">
-                                <label for="ststatus" class="col-4">Статус </label>
-                                <div class="col-6">
+                            <div class="form-group  ">
+                                <label for="ststatus"  >Статус </label>
+                           
                                     <select class="form-control   " zippy="ststatus">
 
                                     </select>
-                                </div>
-                                <div class="col-2">
-                                    <input zippy="ststatusok" type="submit" class="   btn btn-outline-success  " value="ОК">
-
-                                </div>
+                             
                             </div>
-                            <div class="form-group row">
-                                <label for="stuser" class="col-4">Перевести на </label>
+                            <div class="form-group  ">
+                                <label for="stuser"  >Перевести на </label>
 
-                                <div class="col-6">
+                            
                                     <select class="form-control    " zippy="stuser">
-                                        <option value="0">Не выбран</option>
+                                       
                                     </select>
-                                </div>
-                                <div class="col-2">
-                                    <input zippy="stuserok" type type="submit" class="   btn btn-outline-success  " value="ОК">
-
-                                </div>
+                              
+                              
                             </div>
-                            <div class="form-group row">
-                                <label for="stpr" class="col-4">Приоритет  </label>
-
-                                <div class="col-6">
-                                    <select class="form-control   " zippy="stpr" style="width:200px">
+                            <div class="form-group  ">
+                                <label for="stpr"  >Приоритет  </label>
+                                         
+                               
+                                    <select class="form-control   " zippy="stpr"  >
 
                                     </select>
-                                </div>
-                                <div class="col-2">
-                                    <input zippy="stprok" type="submit" class="   btn btn-outline-success  " value="ОК">
+                               </div>  
+                              <div class="form-group  " >
+                                    <input zippy="sthoursok" type="submit" class="   btn btn-outline-success  " value="Применить">
 
-                                </div>          
-                            </div>
+                                </div>                
+                           
 
-                            <div class="form-group row">
-                                <label for="sthours" class="col-4"> Время выполнения</label>
-                                <div class="col-6">
-                                    <input zippy="sthours" pattern="[0-9]+" type="text"   class="form-control"   >
-                                </div>
-                                <div class="col-2">
-                                    <input zippy="sthoursok" type="submit" class="   btn btn-outline-success  " value="ОК">
-
-                                </div>                   
-                            </div>     
+                                
 
                         </form> 
                         <hr>         
@@ -191,14 +177,26 @@
                         <textarea style="height:200px;" class="form-control" zippy="editcontent"></textarea>
                     </div>
                     <div class="form-group">
+                        <label for="editproj">Проект  </label>
+                        <select class="form-control    " zippy="editproj" style="width:200px">
+                                <option value="0">Не выбран</option>
+                        </select>
+                    </div>                  
+                   <div class="form-group">
                         <label for="editpr">Приоритет  </label>
                         <select class="form-control    " zippy="editpr" style="width:200px">
 
                         </select>
                     </div>                  
+                   <div class="form-group">
+                        <label for="editemp">Исполнитель  </label>
+                        <select class="form-control     " zippy="editemp" style="width:200px">
+                            <option value="0">Не выбран</option>
+                        </select>
+                    </div>                  
 
                     <div class="form-group">
-                        <label for="edithours">Планируемое время</label>
+                        <label for="edithours">Планируемое время,ч</label>
 
                         <input style="width:60px" zippy="edithours" pattern="[0-9\.]+" type="text"   class="form-control"   >
 
