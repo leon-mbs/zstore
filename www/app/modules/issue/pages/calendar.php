@@ -19,7 +19,10 @@ use \Zippy\Html\Form\TextInput;
 use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
-use \App\Entity\Employee;
+use \App\Modules\Issue\Entity\Issue;
+use \App\Modules\Issue\Entity\Project;
+use \App\Modules\Issue\Entity\TimeLine;
+use \ZCL\DB\EntityDataSource; 
 use \App\Entity\Doc\Document;
 use \App\Helper as H;
 use \App\System;
@@ -29,12 +32,13 @@ class Calendar extends \App\Pages\Base {
     private $timerow = null;
     public function __construct() {
         parent::__construct();
-
+        $user = System::getUser() ;
+        
         $this->add(new Panel('listpan'));
         
         $this->listpan->add(new ClickLink('addtime',$this,'OnAdd'));
         
-        $this->listpan->add(new DataView('timelist',new IssueTimeDataSource($this),$this,'OnTimeRow'));
+        $this->listpan->add(new DataView('timelist',new EntityDataSource("\\App\\Modules\\Issue\\Entity\\TimeLine",'user_id='.$user->user_id,'id desc'),$this,'OnTimeRow'));
         $this->listpan->add(new \Zippy\Html\DataList\Paginator('pag', $this->listpan->timelist));
         $this->listpan->timelist->setPageSize(H::getPG());          
         $this->listpan->timelist->Reload();
@@ -44,28 +48,74 @@ class Calendar extends \App\Pages\Base {
         $this->add(new Form('editform'))->onSubmit($this,'OnSave');
         $this->editform->setVisible(false);
         $this->editform->add(new ClickLink('cancel',$this,'OnCancel'));
+        $this->editform->add(new Date('edate',time() ));
+        $this->editform->add(new TextInput('etime' ));
+        $this->editform->add(new TextInput('enotes' ));
+        $this->editform->add(new DropDownChoice('eproject',Project::findArray('project_name','','project_id desc') ))->onChange($this,'OnProject');
+        $this->editform->add(new DropDownChoice('eissue'  ));
+         
         
     }
 
     public function OnTimeRow($row){
         $item = $row->getDataItem();
-           
+        $row->add(new Label('date',date('Y-m-d',$item->createdon)) );  
+        $row->add(new Label('time',$item->duration/100) );  
+        $row->add(new Label('issue','#'.$item->issue_id.' '.$item->issue_name) );  
+        $row->add(new Label('project',$item->project_name) );  
+        $row->add(new Label('notes',$item->notes) );  
+       
     }
     public function OnCancel($sender){
           $this->listpan->setVisible(true);
           $this->editform->setVisible(false);
           
     }
-   public function OnAdd($sender){
+    public function OnAdd($sender){
           $this->listpan->setVisible(false);
           $this->editform->setVisible(true);
           
     }
-   public function OnSave($sender){
+    public function OnSave($sender){
           $this->listpan->setVisible(false);
           $this->editform->setVisible(true);
           
+          $issue = $sender->eissue->getValue();
+          $h = $sender->etime->getText();
+          if($issue==0){
+              $this->setError('Не  выбрана задача');
+              return;
+          }
+          if(($h>0 )==false){
+              $this->setError('Не указано время');
+              return;
+          }
+          
+          $time =  new TimeLine();
+          $time->issue_id = $issue;
+          $time->user_id = System::getUser()->user_id;
+          $time->duration = $h*100;
+          $time->createdon = $sender->edate->getDate() ;
+          $time->notes = $sender->enotes->getText() ;
+          $time->save();
+          
+          $sender->eissue->setValue(0);
+          $sender->etime->setText('') ;
+          $this->listpan->timelist->Reload();
     }
+   
+    public function OnProject($sender){
+          $id = $sender->getValue();
+          $list = Issue::findArray('issue_name','project_id='.$id,'issue_id desc');
+          $opt = array();
+          $opt[0] = 'Не выбрана';
+          foreach($list as $k=>$v) {
+              $opt[$k] = '#'.$k.' '. $v;
+          }
+          $this->editform->eissue->setOptionList($opt);
+          $this->editform->eissue->setValue(0);
+    }
+   
    
    public function updateCal() {
 
@@ -128,41 +178,4 @@ class Calendar extends \App\Pages\Base {
      
 }
 
-class IssueTimeDataSource implements \Zippy\Interfaces\DataSource {
-
-    private $page;
-
-    public function __construct($page) {
-        $this->page = $page;
-    }
-  
-    public function getItemCount() {
-          
-          $conn = \ZDB\DB::getConnect();
-          return $conn->GetOne('select coalesce(count(*),0) from issue_time where user_id=' . System::getUser()->user_id ) ;
-          
-    }
-
-    public function getItems($start, $count, $sortfield = null, $asc = null) {
-          $conn = \ZDB\DB::getConnect();
-          $sql = 'select * from issue_time_view where user_id=' . System::getUser()->user_id ;
-          $rs = $conn->Execute($sql) ;
-
-          if ($start >= 0 or $count >= 0) {
-              $rs = $conn->SelectLimit($sql, $count, $start);
-          } else {
-              $rs = $conn->Execute($sql);
-          }
-                    
-          $list = array();
-          foreach($rs as $row) {
-              $list[$row['id']] = new \App\DataItem($row); 
-          }
-          return $list;
-    }
-
-    public function getItem($id) {
-        
-    }
-
-}
+ 
