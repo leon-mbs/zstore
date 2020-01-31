@@ -31,14 +31,13 @@ use \App\Helper as H;
  */
 class Task extends \App\Pages\Base {
 
-    public $_servicelist = array();
-    public $_emplist = array();
-    public $_eqlist = array();
+ 
     private $_doc;
 
-    public function __construct($docid = 0, $basedocid = 0) {
+    public function __construct($docid = 0, $basedocid = 0,$date=null) {
         parent::__construct();
-
+ 
+     
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new \ZCL\BT\DateTimePicker('start_date'))->setDate(time());
@@ -109,10 +108,18 @@ class Task extends \App\Pages\Base {
                 $this->_servicelist[$service->service_id] = $service;
             }
 
-            $this->_eqlist = unserialize(base64_decode($this->_doc->headerdata['eq']));
-            $this->_emplist = unserialize(base64_decode($this->_doc->headerdata['emp']));
+            $this->_eqlist = @unserialize(@base64_decode($this->_doc->headerdata['eq']));
+            if(!is_array($this->_eqlist)) $this->_eqlist = array();
+            $this->_emplist = @unserialize(@base64_decode($this->_doc>headerdata['emp']));
+            if(!is_array($this->_emplist)) $this->_emplist = array();
         } else {
             $this->_doc = Document::create('Task');
+            $this->docform->document_date->setDate(time());
+            if($date >0) { //с календаря
+               
+               $this->docform->start_date->setDate($date);
+               $this->docform->taskhours->setText(7);
+            }
             $this->docform->document_number->setText($this->_doc->nextNumber());
             if ($basedocid > 0) { //создание на  основании
                 $basedoc = Document::load($basedocid);

@@ -253,10 +253,7 @@ class TaskList extends \App\Pages\Base {
                 $col = "#ffc107";
             if ($item->state == Document::STATE_CLOSED)
                 $col = "#dddddd";
-            if ($item->state == Document::STATE_CLOSED && $item->amount > $task->payamount)
-                $col = "#ff0000";
-
-
+  
 
             $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->headerdata['start_date'], $item->headerdata['end_date'], $col);
         }
@@ -288,22 +285,11 @@ class TaskList extends \App\Pages\Base {
         }
         if ($action['action'] == 'add') {
 
-            $start = strtotime($action['id'] . '10:00');
-            $end = strtotime($action['id'] . '18:00');
+            $start = strtotime($action['id'] . ' 10:00');
+      
+            Application::Redirect("\\App\\Pages\\Doc\\Task", 0,0, $start);
 
-            $class = "\\App\\Pages\\Doc\\Task";
-
-            $task = Document::create($class);
-            $task->document_date = $end;
-            $task->headerdata['start_date'] = $start;
-            $task->headerdata['end_date'] = $end;
-            $task->document_number = $task->nextNumber();
-
-            $task->save();
-            Application::Redirect($class, $task->document_id);
-
-
-            return;
+          
         }
         if ($action['action'] == 'move') {
             $task = Task::load($action['id']);
