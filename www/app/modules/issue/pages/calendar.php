@@ -8,7 +8,7 @@ use \Zippy\Html\DataList\ArrayDataSource;
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\Form\AutocompleteTextInput;
 use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Date;
+ 
 use \Zippy\Html\Form\DropDownChoice;
 use \Zippy\Html\Form\File;
 use \Zippy\Html\Form\CheckBox;
@@ -30,6 +30,8 @@ use \App\Application as App;
 
 class Calendar extends \App\Pages\Base {
     private $timerow = null;
+    private $_tl=null;
+    
     public function __construct() {
         parent::__construct();
         $user = System::getUser() ;
@@ -43,12 +45,14 @@ class Calendar extends \App\Pages\Base {
         $this->listpan->timelist->setPageSize(H::getPG());          
         $this->listpan->timelist->Reload();
          
-        $this->listpan->add(new \App\Calendar('calendar'))->setEvent($this, 'OnGal');
+        $this->listpan->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
+        $this->updateCal() ;
         
         $this->add(new Form('editform'))->onSubmit($this,'OnSave');
         $this->editform->setVisible(false);
         $this->editform->add(new ClickLink('cancel',$this,'OnCancel'));
-        $this->editform->add(new Date('edate',time() ));
+        $this->editform->add(new \ZCL\BT\DateTimePicker('edate',time() ));
+        $this->editform->edate->setMinMax(15,8) ;
         $this->editform->add(new TextInput('etime' ));
         $this->editform->add(new TextInput('enotes' ));
         $this->editform->add(new DropDownChoice('eproject',Project::findArray('project_name','','project_id desc') ))->onChange($this,'OnProject');
@@ -60,22 +64,51 @@ class Calendar extends \App\Pages\Base {
     public function OnTimeRow($row){
         $item = $row->getDataItem();
         $row->add(new Label('date',date('Y-m-d',$item->createdon)) );  
-        $row->add(new Label('time',$item->duration/100) );  
+        $row->add(new Label('time',$item->duration ) );  
         $row->add(new Label('issue','#'.$item->issue_id.' '.$item->issue_name) );  
         $row->add(new Label('project',$item->project_name) );  
         $row->add(new Label('notes',$item->notes) );  
+        $row->add(new ClickLink('edit',$this,'OnEdit') );  
+        $row->add(new ClickLink('delete',$this,'OnDelete') );  
+        
        
     }
     public function OnCancel($sender){
           $this->listpan->setVisible(true);
           $this->editform->setVisible(false);
-          
+          $this->editform->clean();
     }
+ 
     public function OnAdd($sender){
           $this->listpan->setVisible(false);
           $this->editform->setVisible(true);
+          $this->_tl = new TimeLine();
+    }
+    public function OnDelete($sender){
+          $item=$sender->getOwner()->getDataItem();
+          TimeLine::delete($item->id);
+          $this->resetURL()  ;
+          $this->listpan->timelist->Reload(); 
+          $this->updateCal() ;         
+    }
+    public function OnEdit($sender){
+          $this->_tl = $sender->getOwner()->getDataItem();
+          $this->Open();
+    }
+    public function Open(){
+          
+          $this->editform->eproject->setValue($this->_tl->project_id) ;
+          $this->OnProject($this->editform->eproject);
+          $this->editform->eissue->setValue($this->_tl->issue_id);
+          $this->editform->etime->setValue($this->_tl->duration );
+          $this->editform->edate->setDate($this->_tl->createdon);
+          $this->editform->enotes->setText($this->_tl->notes);
+       
+          $this->listpan->setVisible(false);
+          $this->editform->setVisible(true);          
           
     }
+ 
     public function OnSave($sender){
           $this->listpan->setVisible(false);
           $this->editform->setVisible(true);
@@ -91,17 +124,21 @@ class Calendar extends \App\Pages\Base {
               return;
           }
           
-          $time =  new TimeLine();
-          $time->issue_id = $issue;
-          $time->user_id = System::getUser()->user_id;
-          $time->duration = $h*100;
-          $time->createdon = $sender->edate->getDate() ;
-          $time->notes = $sender->enotes->getText() ;
-          $time->save();
+        
+          $this->_tl->issue_id = $issue;
+          $this->_tl->user_id = System::getUser()->user_id;
+          $this->_tl->duration = $h ;
+          $this->_tl->createdon = $sender->edate->getDate() ;
+          $this->_tl->notes = $sender->enotes->getText() ;
+          $this->_tl->save();
           
           $sender->eissue->setValue(0);
           $sender->etime->setText('') ;
           $this->listpan->timelist->Reload();
+          $this->updateCal() ;
+          
+          $this->listpan->setVisible(true);
+          $this->editform->setVisible(false);            
     }
    
     public function OnProject($sender){
@@ -117,61 +154,58 @@ class Calendar extends \App\Pages\Base {
     }
    
    
-   public function updateCal() {
+    public function updateCal() {
 
-        $tasks = array();
-        $items = $this->_taskds->getItems();
+        $list = array();
+        $items = TimeLine::find('user_id=' . System::getUser()->user_id);
+        
         foreach ($items as $item) {
  
- 
-            $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->headerdata['start_date'], $item->headerdata['end_date'], "#28a745");
+            $col='black';
+            
+            $list[] = new \App\CEvent($item->id,  $item->issue_name, $item->createdon, $item->createdon + (3600*$item->duration ), $col );
         }
 
 
 
-        $this->calendar->setData($tasks);
+        $this->listpan->calendar->setData($list);
     }
    
     
     public function OnCal($sender, $action) {
         if ($action['action'] == 'click') {
 
-            $task = Document::load($action['id']);
-            //  $type = H::getMetaType($task->meta_id);
-            // $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
-            $class = "\\App\\Pages\\Doc\\Task";
-
-
-            Application::Redirect($class, $task->document_id);
-            return;
+            $this->_tl = TimeLine::load($action['id']);
+ 
+            $this->Open();
+             
         }
         if ($action['action'] == 'add') {
-
-            $start = strtotime($action['id'] . ' 10:00');
+            $this->_tl = new TimeLine();
+            $start = strtotime($action['id'] . ' 09:00');
       
-            Application::Redirect("\\App\\Pages\\Doc\\Task", 0,0, $start);
+            $this->OnAdd(null);
+            $this->_tl->createdOn =  $start;
 
           
         }
         if ($action['action'] == 'move') {
-            $task = Task::load($action['id']);
-            $task->start_date = $task->start_date + $action['delta'];
-            if ($task->state == Document::STATE_CLOSED)
-                return;
-            $task->save();
+            $tl = TimeLine::load($action['id']);
+            $tl->createdon = $tl->createdon + $action['delta'];
+   
+            $tl->save();
             $this->updateCal();
-            $this->updateTasks();
+            $this->listpan->timelist->Reload();
         }
         if ($action['action'] == 'resize') {
-            $task = Document::load($action['id']);
-            $task->hours = $task->hours + ($action['delta'] / 3600);
-            $task->end_date = $task->end_date + ($action['delta'] / 3600);
-            $task->document_date = $task->end_date;
-
+            $tl = TimeLine::load($action['id']);
+            
+            $tl->duration = $tl->duration + ($action['delta'] / 3600);
        
-            $task->save();
+            $tl->save();
+            
             $this->updateCal();
-            $this->updateTasks();
+            $this->listpan->timelist->Reload();
         }
     }
     

@@ -285,7 +285,7 @@ class TaskList extends \App\Pages\Base {
         }
         if ($action['action'] == 'add') {
 
-            $start = strtotime($action['id'] . ' 10:00');
+            $start = strtotime($action['id'] . ' 9:00');
       
             Application::Redirect("\\App\\Pages\\Doc\\Task", 0,0, $start);
 
