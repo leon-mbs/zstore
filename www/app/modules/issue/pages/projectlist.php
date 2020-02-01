@@ -81,7 +81,7 @@ class ProjectList extends \App\Pages\Base {
         $this->showpan->add(new Form('statusform'))->onSubmit($this, 'onStatus');
         $this->showpan->statusform->add(new DropDownChoice('stlist', $this->_stlist, 0));
         
-        
+        if($id>0)$this->open($id);
     }
 
     public function listOnRow($row) {
@@ -175,8 +175,13 @@ class ProjectList extends \App\Pages\Base {
     }
 
     public function previewOnClick($sender) {
+        
+       $this->open($sender->getOwner()->getDataItem()->project_id);    
+    }
+    public function open($id) {
 
-        $this->_project = $sender->getOwner()->getDataItem();
+        $this->_project = Project::load($id);
+        if($this->_project==null)return;
         $this->showpan->mtitle->setText($this->_project->project_name);
         $this->showpan->mdesc->setText($this->_project->desc, true);
 

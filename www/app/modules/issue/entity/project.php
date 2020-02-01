@@ -9,18 +9,18 @@ namespace App\Modules\Issue\Entity;
  * @keyfield=project_id
  */
 class Project extends \ZCL\DB\Entity {
-    const STATUS_NEW = 0;
-    const STATUS_CLOSED = 1;
+    const STATUS_NEW = 1;
+    
     const STATUS_INPROCESS = 2;
     const STATUS_REOPENED = 3;
     const STATUS_WA = 4;
     const STATUS_SHIFTED = 5;
     const STATUS_WAITPAIMENT = 6;
-    
+    const STATUS_CLOSED = 12;
     
     protected function init() {
         $this->project_id = 0;
-        $this->status = 0;
+        $this->status = 1;
     }
 
     protected function beforeDelete() {

@@ -29,11 +29,12 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
             $("#{$id}").fullCalendar({ 
               
              header: {
-        left: 'prev,next today',
+        left: '',
         center: 'title',
-        right: 'month,agendaWeek,agendaDay,listMonth'
+        right: ' prev,next'
          },
          defaultView: 'month',
+         eventTextColor:'white',
          minTime: '08:00:00',
          maxTime: '20:00:00',
          eventClick: function(calEvent, jsEvent, view) {
@@ -51,7 +52,7 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
               
          
         }, 
-editable: true,
+  editable: true,
   eventResize: function(event, delta, revertFunc) {
 
      
