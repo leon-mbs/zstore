@@ -138,6 +138,11 @@ class TransItem extends \App\Pages\Base {
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
             $this->setError("Не введен номер документа");
         }
+        if(false == $this->_doc->checkUniqueNumber()){
+              $this->docform->document_number->setText($this->_doc->nextNumber()); 
+              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
+               
+        }
         if ($this->_doc->headerdata['fromquantity'] > 0 && $this->_doc->headerdata['toquantity'] > 0) {
             
         } else {

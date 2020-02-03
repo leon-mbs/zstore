@@ -5,13 +5,7 @@
             Наряд № {{document_number}} с {{startdate}} по {{date}} 
         </td>
     </tr>   
-    <tr>
-        <td colspan="4">
-            Заказчик:   {{customer_name}}
-        </td>
-
-    </tr>
-
+  
 
     <tr>
         <td  colspan="4">
@@ -19,8 +13,14 @@
         </td>
 
     </tr>
+    {{#baseddoc}}
+    <tr>
+        <td  colspan="4">
+            Заказ:   {{baseddoc}}
+        </td>
 
-
+    </tr>
+     {{/baseddoc}}
 
 
     <tr style="font-weight: bolder;">
@@ -80,7 +80,12 @@
 
     </tr>
     {{/_detail3}}
+     <tr>
+        <td  colspan="4">
+              {{notes}}
+        </td>
 
+    </tr>
 
 </table>
 

@@ -227,14 +227,14 @@ class DocList extends \App\Pages\Base {
     //просмотр
 
     public function basedOnClick($sender) {
-        $doc = $sender->owner->getDataItem();
+        $doc = $sender->getOwner()->getDataItem();
         $parent = Document::load($doc->parent_id)  ;
  
         $this->show($parent) ;
     }
    public function showOnClick($sender) {
-        $doc = $sender->owner->getDataItem();
-
+        $doc = $sender->getOwner()->getDataItem();
+        $this->doclist->setSelectedRow($sender->getOwner());
         $this->show($doc);
     }
 
@@ -245,7 +245,7 @@ class DocList extends \App\Pages\Base {
         
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
-        $this->doclist->setSelectedRow($sender->getOwner());
+       
         $this->doclist->Reload(false);
         $this->goAnkor('dankor');
         $this->statusform->setVisible($this->_doc->state == Document::STATE_WA) ;

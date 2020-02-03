@@ -287,7 +287,12 @@ class IncomeItem extends \App\Pages\Base {
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
             $this->setError("Не введен номер документа");
         }
-        if (count($this->_itemlist) == 0) {
+        if(false == $this->_doc->checkUniqueNumber()){
+              $this->docform->document_number->setText($this->_doc->nextNumber()); 
+              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
+              return  false;
+        }
+       if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
 

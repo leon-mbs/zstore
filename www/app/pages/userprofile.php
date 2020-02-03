@@ -42,7 +42,7 @@ class UserProfile extends \App\Pages\Base {
             }
         }
 
-        $form->add(new DataView('mlist', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "disabled<>1  {$w}", "description"), $this, 'metarowOnRow'));
+        $form->add(new DataView('mlist', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "disabled<>1  {$w}", "meta_type,description"), $this, 'metarowOnRow'));
 
         $this->add($form);
         $form->mlist->Reload();

@@ -27,7 +27,7 @@ class Document extends \ZCL\DB\Entity {
     const STATE_SHIFTED = 16; // отложен
     const STATE_FAIL = 17; // Аннулирован
     const STATE_FINISHED = 18; // Закончен
-    const STATE_APPROVED = 19;      //  Утвержден
+    const STATE_APPROVED = 19;      //  Готов к выполнению
     const STATE_READYTOEXE = 20; // готов к выполнению    
     // типы  экспорта
     const EX_WORD = 1; //  Word
@@ -98,22 +98,32 @@ class Document extends \ZCL\DB\Entity {
     }
 
     protected function beforeSave() {
-        $this->document_number = trim($this->document_number);
-        $this->packData();
-        $doc = Document::getFirst("   document_number = '{$this->document_number}' ");
-        if ($doc instanceof Document) {
-            if ($this->document_id != $doc->document_id) {
-
-                 System::setWarnMsg('Не уникальный номер документа ') ;
-            }
+ 
+        
+        if(false == $this->checkUniqueNumber()){
+              System::setWarnMsg('Не уникальный номер документа ') ;
         }
         
         if($this->parent_id>0) {
             $p = Document::load($this->parent_id);
             $this->headerdata['parent_number'] = $p->document_number;
         }
+        $this->packData();
     }
 
+    public function checkUniqueNumber() {
+        $this->document_number = trim($this->document_number);
+        
+        $doc = Document::getFirst(" document_number = '{$this->document_number}' ");
+        if ($doc instanceof Document) {
+            if ($this->document_id != $doc->document_id) {
+                  return  false;
+            }
+        }       
+        return true;
+    }
+    
+    
     /**
      * Упаковка  данных  в  XML
      *
@@ -385,7 +395,7 @@ class Document extends \ZCL\DB\Entity {
             case Document::STATE_CLOSED:
                 return "Закрыт";
             case Document::STATE_APPROVED:
-                return "Утвержден";
+                return "Готов к выполнению";
             case Document::STATE_DELETED:
                 return "Удален";
 
@@ -405,8 +415,7 @@ class Document extends \ZCL\DB\Entity {
                 return "Аннулирован";
             case Document::STATE_INPROCESS:
                 return "Выполняется";
-            case Document::STATE_READYTOEXE:
-                 return "Готов к обработке";
+     
             default:
                 return "Неизвестный статус";
         }

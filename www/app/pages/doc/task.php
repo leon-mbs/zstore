@@ -348,8 +348,7 @@ class Task extends \App\Pages\Base {
                 }
 
                 //  $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                $this->_doc->updateStatus(Document::STATE_INPROCESS);
-
+                $this->_doc->updateStatus(Document::STATE_APPROVED );
 
                 $this->_doc->save();
             } else {
@@ -378,6 +377,11 @@ class Task extends \App\Pages\Base {
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
+        }
+        if(false == $this->_doc->checkUniqueNumber()){
+              $this->docform->document_number->setText($this->_doc->nextNumber()); 
+              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
+               
         }
         if (strlen($this->_doc->document_date) == 0) {
             $this->setError('Введите дату документа');

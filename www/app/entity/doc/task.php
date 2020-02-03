@@ -54,10 +54,14 @@ class Task extends Document {
             "pareaname" => $this->headerdata["pareaname"],
             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
             "document_number" => $this->document_number,
+            "notes" => $this->notes,
+            "baseddoc" => strlen($this->headerdata["parent_number"])>0 ? $this->headerdata["parent_number"] : false,
             "_detail" => $detail,
             "_detail2" => $detail2,
             "_detail3" => $detail3
         );
+        
+        
         $report = new \App\Report('task.tpl');
 
         $html = $report->generate($header);
