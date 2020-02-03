@@ -15,6 +15,8 @@ class Pay extends \ZCL\DB\Entity {
     const PAY_BASE_INCOME = 1;     //доход от основной  деятельности
     const PAY_INVEST_INCOME = 2;     //инвестиции
     const PAY_OTHER_INCOME = 100;   //прочие доходы
+    const PAY_CANCEL_CUST = 5;    //отмена  платежа  покупки
+    
     const PAY_BASE_OUTCOME = 50;      //расходы основной  деятельности
     const PAY_cCOMMON_OUTCOME = 51;    //общепроизводственные  расходы
     const PAY_ADMIN_OUTCOME = 52;    //административные  расходы
@@ -23,7 +25,7 @@ class Pay extends \ZCL\DB\Entity {
     const PAY_TAX_OUTCOME = 55;    //уплата  налогов  и сборов
     const PAY_BILL_OUTCOME = 56;    //расходы на  аренду и комуналку  
     const PAY_DIVIDEND_OUTCOME = 57;    //распределение прибыли 
-    const PAY_CANCEL = 58;    //отмена  платежа
+    const PAY_CANCEL = 58;    //отмена  платежа  продажи
     const PAY_COMMON_OUTCOME = 101;   //прочие расходы
 
     protected function init() {
@@ -93,7 +95,9 @@ class Pay extends \ZCL\DB\Entity {
             $list[PAY::PAY_BASE_INCOME] = "Доходы основной деятельности";
             $list[PAY::PAY_INVEST_INCOME] = "Инвестиции";
             $list[PAY::PAY_OTHER_INCOME] = "Прочие доходы";
+            $list[PAY::PAY_CANCEL_CUST] = "Отмена  платежа  покупки";
         }
+         
         if ($type != 1) {
             $list[PAY::PAY_BASE_OUTCOME] = "Расходы основной деятельности";
             $list[PAY::PAY_cCOMMON_OUTCOME] = "Общепроизводственные  расходы";
@@ -104,11 +108,9 @@ class Pay extends \ZCL\DB\Entity {
             $list[PAY::PAY_BILL_OUTCOME] = "Расходы на  аренду и комуналку";
             $list[PAY::PAY_DIVIDEND_OUTCOME] = "Распределение прибыли  ";
             $list[PAY::PAY_COMMON_OUTCOME] = "Прочие расходы";
-            $list[PAY::PAY_CANCEL] = "Отмена  платежа";
+            $list[PAY::PAY_CANCEL] = "Отмена  платежа продажи";
         }
-
-
-
+  
         return $list;
     }
 

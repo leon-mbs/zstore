@@ -28,7 +28,7 @@ class Document extends \ZCL\DB\Entity {
     const STATE_FAIL = 17; // Аннулирован
     const STATE_FINISHED = 18; // Закончен
     const STATE_APPROVED = 19;      //  Утвержден
- //   const STATE_READYTOEXE = 20; // готов к выполнению    
+    const STATE_READYTOEXE = 20; // готов к выполнению    
     // типы  экспорта
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -104,9 +104,13 @@ class Document extends \ZCL\DB\Entity {
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
 
-                throw new \Exception('Не уникальный номер документа ');
-                return false;
+                 System::setWarnMsg('Не уникальный номер документа ') ;
             }
+        }
+        
+        if($this->parent_id>0) {
+            $p = Document::load($this->parent_id);
+            $this->headerdata['parent_number'] = $p->document_number;
         }
     }
 
@@ -401,8 +405,8 @@ class Document extends \ZCL\DB\Entity {
                 return "Аннулирован";
             case Document::STATE_INPROCESS:
                 return "Выполняется";
-          //  case Document::STATE_READYTOEXE:
-          //      return "Готов к исполнению";
+            case Document::STATE_READYTOEXE:
+                 return "Готов к обработке";
             default:
                 return "Неизвестный статус";
         }

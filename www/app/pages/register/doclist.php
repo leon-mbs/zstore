@@ -144,7 +144,7 @@ class DocList extends \App\Pages\Base {
         $doc = $doc->cast();
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
-        $row->add(new Label('notes', $doc->notes));
+        
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('branch', $doc->branch_name));
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
@@ -158,7 +158,13 @@ class DocList extends \App\Pages\Base {
         $date = $date->addDay(1);
         $start = $date->startOfDay()->timestamp;
         $row->add(new Label('isplanned'))->setVisible($doc->document_date >= $start);
+  
+        $row->add(new Label('hasnotes'))->setVisible(strlen($doc->notes)>0 && $doc->notes == strip_tags($doc->notes));
+        $row->hasnotes->setAttribute('title',$doc->notes);
 
+        $row->add(new ClickLink('parentdoc',$this, 'basedOnClick'))->setVisible($doc->parent_id>0 );
+        $row->parentdoc->setValue($doc->headerdata['parent_number'] );
+        
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
@@ -220,10 +226,23 @@ class DocList extends \App\Pages\Base {
 
     //просмотр
 
-    public function showOnClick($sender) {
-        $this->_doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkShowDoc($this->_doc, true))
-            return;
+    public function basedOnClick($sender) {
+        $doc = $sender->owner->getDataItem();
+        $parent = Document::load($doc->parent_id)  ;
+ 
+        $this->show($parent) ;
+    }
+   public function showOnClick($sender) {
+        $doc = $sender->owner->getDataItem();
+
+        $this->show($doc);
+    }
+
+    public function show($doc) {
+        $this->_doc = $doc;
+         if (false == \App\ACL::checkShowDoc($this->_doc, true))
+            return;       
+        
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
@@ -232,6 +251,8 @@ class DocList extends \App\Pages\Base {
         $this->statusform->setVisible($this->_doc->state == Document::STATE_WA) ;
     }
 
+    
+    
     //редактирование
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
