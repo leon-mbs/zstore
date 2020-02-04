@@ -28,7 +28,7 @@ class Document extends \ZCL\DB\Entity {
     const STATE_FAIL = 17; // Аннулирован
     const STATE_FINISHED = 18; // Закончен
     const STATE_APPROVED = 19;      //  Готов к выполнению
-    const STATE_READYTOEXE = 20; // готов к выполнению    
+   // const STATE_READYTOEXE = 20; // готов к выполнению    
     // типы  экспорта
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -358,23 +358,13 @@ class Document extends \ZCL\DB\Entity {
 
         $this->save();
 
-       if ($state == self::STATE_APPROVED) {
-          
-          $this-> updateStatus($this->cast()->getDefExecuteStatus()); 
-       }
+   
          
        
         return true;
     }
 
-    /**
-    * возвращает  статус по  умолчанию  после  утверждения
-    * 
-    */
-    protected function getDefExecuteStatus(){
-        return self::STATE_EXECUTED ;
-    }
-    
+       
     /**
      * Возвращает название  статуса  документа
      *

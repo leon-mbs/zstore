@@ -119,7 +119,6 @@ class ServiceAct extends Document {
 
         return $html;
     }
-
     public function getRelationBased() {
         $list = array();
         $list['Task'] = 'Наряд';

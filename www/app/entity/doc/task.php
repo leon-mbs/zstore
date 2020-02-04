@@ -60,8 +60,6 @@ class Task extends Document {
             "_detail2" => $detail2,
             "_detail3" => $detail3
         );
-        
-        
         $report = new \App\Report('task.tpl');
 
         $html = $report->generate($header);

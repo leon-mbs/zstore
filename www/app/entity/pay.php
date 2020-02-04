@@ -16,7 +16,6 @@ class Pay extends \ZCL\DB\Entity {
     const PAY_INVEST_INCOME = 2;     //инвестиции
     const PAY_OTHER_INCOME = 100;   //прочие доходы
     const PAY_CANCEL_CUST = 5;    //отмена  платежа  покупки
-    
     const PAY_BASE_OUTCOME = 50;      //расходы основной  деятельности
     const PAY_cCOMMON_OUTCOME = 51;    //общепроизводственные  расходы
     const PAY_ADMIN_OUTCOME = 52;    //административные  расходы

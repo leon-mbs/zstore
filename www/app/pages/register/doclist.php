@@ -251,8 +251,6 @@ class DocList extends \App\Pages\Base {
         $this->statusform->setVisible($this->_doc->state == Document::STATE_WA) ;
     }
 
-    
-    
     //редактирование
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();

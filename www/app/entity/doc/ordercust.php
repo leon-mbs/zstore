@@ -61,7 +61,5 @@ class OrderCust extends Document {
     } 
     
 
-    protected function getDefExecuteStatus(){
-        return self::STATE_INPROCESS;
-    }
+    
 }

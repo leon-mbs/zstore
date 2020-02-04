@@ -70,7 +70,6 @@ class OutcomeItem extends \App\Pages\Base {
 
             foreach ($this->_doc->detaildata as $_item) {
                 $item = new Item($_item);
-                
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
         } else {
@@ -148,7 +147,6 @@ class OutcomeItem extends \App\Pages\Base {
         }
 
         $item = Item::load($id);
-    
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
         //ищем  последню цену

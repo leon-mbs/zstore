@@ -72,5 +72,4 @@ class IncomeItem extends Document {
         return 'ПТ-000000';
     }
 
-    
 }

@@ -482,6 +482,11 @@ class ARMPos extends \App\Pages\Base {
             $this->doc->document_number = $this->doc->nextNumber();
             $this->form3->document_number->setText($this->doc->document_number);
         }
+        if(false == $this->_doc->checkUniqueNumber()){
+              $this->docform->document_number->setText($this->_doc->nextNumber()); 
+              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
+              return; 
+        }        
         $this->doc->document_date = $this->form3->document_date->getDate();
         $this->doc->notes = $this->form3->notes->getText();
 

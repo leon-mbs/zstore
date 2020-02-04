@@ -5,7 +5,6 @@
             Наряд № {{document_number}} с {{startdate}} по {{date}} 
         </td>
     </tr>   
-  
 
     <tr>
         <td  colspan="4">
