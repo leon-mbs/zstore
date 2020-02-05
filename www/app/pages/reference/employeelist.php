@@ -129,10 +129,7 @@ class EmployeeList extends \App\Pages\Base {
         $this->_employee->comment = $this->employeedetail->editcomment->getText();
 
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
-        if ($this->_tvars['usebranch'] == true && $this->_employee->branch_id == 0) {
-            $this->setError('Не выбран  филиал');
-            return;
-        }
+    
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_employee->Save();
