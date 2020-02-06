@@ -104,6 +104,7 @@ class OrderCustList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
+        if(\App\Acl::checkExeDoc($this->_doc,true,true)==false ) return;
 
         $state = $this->_doc->state;
         $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
@@ -154,7 +155,7 @@ class OrderCustList extends \App\Pages\Base {
     }
 
     public function updateStatusButtons() {
-
+ 
         $this->statuspan->statusform->bclose->setVisible(true);
 
         $state = $this->_doc->state;

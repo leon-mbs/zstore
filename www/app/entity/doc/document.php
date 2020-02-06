@@ -341,6 +341,10 @@ class Document extends \ZCL\DB\Entity {
 
         //если нет права  выполнять    
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this,false,false)==false) {            
+            
+            $this->headerdata['_state_before_approve_'] = $state; 
+            if($state==self::STATE_WA) $this->headerdata['_state_before_approve_']  = self::STATE_APPROVED;
+            
             $state  = self::STATE_WA;
         }
             
@@ -357,9 +361,7 @@ class Document extends \ZCL\DB\Entity {
         $this->insertLog($state);
 
         $this->save();
-
-   
-         
+          
        
         return true;
     }

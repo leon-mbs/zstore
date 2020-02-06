@@ -106,7 +106,8 @@ class GIList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-
+        if(\App\Acl::checkExeDoc($this->_doc,true,true)==false ) return;
+ 
         $state = $this->_doc->state;
 
         if ($sender->id == "bsend") {
@@ -177,6 +178,8 @@ class GIList extends \App\Pages\Base {
 
     public function updateStatusButtons() {
 
+         
+        
         $this->statuspan->statusform->bdevivered->setVisible(true);
         $this->statuspan->statusform->bttn->setVisible(true);
         $this->statuspan->statusform->bret->setVisible(true);

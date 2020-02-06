@@ -71,10 +71,10 @@ class TaskList extends \App\Pages\Base {
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
-        $this->statuspan->statusform->add(new SubmitButton('binprocess'))->onClick($this, 'onStatus');
-        $this->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'onStatus');
-        $this->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'onStatus');
-        $this->statuspan->statusform->add(new SubmitButton('bitems'))->onClick($this, 'onStatus');
+        $this->statuspan->statusform->add(new SubmitButton('binprocess'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bitems'))->onClick($this, 'statusOnSubmit');
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
@@ -178,7 +178,11 @@ class TaskList extends \App\Pages\Base {
         Application::Redirect("\\App\\Pages\\Doc\\Task", $task->document_id);
     }
 
-    public function onStatus($sender) {
+    public function statusOnSubmit($sender) {
+       
+        if(\App\Acl::checkExeDoc($this->_doc,true,true)==false ) return;
+       
+       
         $this->_task = $this->_task->cast();
 
         if ($sender->id == 'binprocess') {

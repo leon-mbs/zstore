@@ -101,6 +101,7 @@ class GRList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
+         if(\App\Acl::checkExeDoc($this->_doc,true,true)==false ) return;
 
         $state = $this->_doc->state;
 
@@ -132,7 +133,7 @@ class GRList extends \App\Pages\Base {
     }
 
     public function updateStatusButtons() {
-
+ 
         $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name == 'InvoiceCust');
         $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name == 'GoodsReceipt');
 
