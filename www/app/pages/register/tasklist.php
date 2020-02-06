@@ -192,7 +192,7 @@ class TaskList extends \App\Pages\Base {
             $this->_task->updateStatus(Document::STATE_SHIFTED);
         }
         if ($sender->id == 'bclosed') {
-            $this->_task->updateStatus(Document::STATE_EXECUTED);
+        //    $this->_task->updateStatus(Document::STATE_EXECUTED);
             $this->_task->updateStatus(Document::STATE_CLOSED);
         }
         if ($sender->id == 'bitems') {    //списание материалов

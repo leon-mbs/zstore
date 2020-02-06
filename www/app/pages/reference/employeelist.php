@@ -43,6 +43,7 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->add(new TextInput('editemp_name'));
         $this->employeedetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
+        $this->employeedetail->add(new TextInput('editphone'));
         $this->employeedetail->add(new TextInput('editemail'));
         $this->employeedetail->add(new TextArea('editcomment'));
         $this->employeedetail->add(new CheckBox('editdisabled'));
@@ -84,6 +85,7 @@ class EmployeeList extends \App\Pages\Base {
         $this->employeedetail->editemp_name->setText($this->_employee->emp_name);
         $this->employeedetail->editcomment->setText($this->_employee->comment);
         $this->employeedetail->editemail->setText($this->_employee->email);
+        $this->employeedetail->editphone->setText($this->_employee->phone);
         $this->employeedetail->editbranch->setValue($this->_employee->branch_id);
         $this->employeedetail->editdisabled->setChecked($this->_employee->disabled);
     }
@@ -126,6 +128,7 @@ class EmployeeList extends \App\Pages\Base {
         $this->_employee->emp_name = trim($this->employeedetail->editemp_name->getText());
         
         $this->_employee->email = $this->employeedetail->editemail->getText();
+        $this->_employee->phone = $this->employeedetail->editphone->getText();
         $this->_employee->comment = $this->employeedetail->editcomment->getText();
 
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
