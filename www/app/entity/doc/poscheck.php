@@ -13,58 +13,7 @@ use \App\Util;
  */
 class POSCheck extends Document {
 
-    public function generateCheck() {
-
-        if ($this->headerdata['exchange'] > 0)
-            $this->payed += $this->headerdata['exchange']; //учитываем  со  здачей
-
-
-        $check = array();
-        $check[] .= $this->f30("Чек " . $this->document_number);
-        $check[] .= $this->f30("вiд " . date('Y-m-d H:i:s', $this->headerdata['time']));
-        $check[] .= $this->f30($this->headerdata["firmname"]);
-        $check[] .= $this->f30("IПН " . $this->headerdata["inn"]);
-        //  $check[] .=  $this->f30("Тел.  ". $firm['phone']);
-        foreach (explode(',', $this->headerdata["phone"]) as $p) {
-            $check[] .= $this->f30("Тел.  " . $p);
-        }
-        $check[] .= str_repeat('-', 30);
-        $a = "Адрес " . $this->headerdata["address"];
-        foreach (Util::mb_split($a, 30) as $p) {
-            $check[] .= $this->f30($p);
-        }
-        $check[] .= str_repeat('-', 30);
-        foreach ($this->detaildata as $value) {
-
-            $t = $value['item_code'] . ' ' . $value['itemname'];
-            foreach (Util::mb_split($t, 30) as $p) {
-                $check[] .= $this->f30($p);
-            }
-            $q = '' . H::fqty($value['quantity']) . $value['msr'] . ' по ' . H::fa($value['price']);
-            $check[] .= sprintf("%s%10s", $q . str_repeat(' ', 20 - mb_strlen($q)), H::fa($value['quantity'] * $value['price']));
-        }
-
-        $check[] .= str_repeat('-', 30);
-        $check[] .= sprintf("%s%10s", 'Всього' . str_repeat(' ', 14), H::fa($this->amount));
-        if ($this->headerdata["paydisc"] > 0) {
-            $check[] .= sprintf("%s%10s", 'Знижка' . str_repeat(' ', 14), H::fa($this->headerdata["paydisc"]));
-        }
-        $check[] .= sprintf("%s%10s", 'До сплати' . str_repeat(' ', 11), H::fa($this->payamount));
-        $check[] .= sprintf("%s%10s", 'Внесена оплата' . str_repeat(' ', 6), H::fa($this->payed));
-        $check[] .= sprintf("%s%10s", 'Здача' . str_repeat(' ', 15), H::fa($this->headerdata["exchange"]));
-
-        $check[] .= $this->f30("Дякуємо за довiру до нас!");
-
-
-        return $check;
-    }
-
-    private function f30($s) {
-        return $s . str_repeat(' ', 30 - mb_strlen($s));
-    }
-
- 
-    
+      
    public function generateReport() {
 
 

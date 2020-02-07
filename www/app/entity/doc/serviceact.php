@@ -60,7 +60,6 @@ class ServiceAct extends Document {
             \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
 
-
         return true;
     }
 
@@ -119,6 +118,7 @@ class ServiceAct extends Document {
 
         return $html;
     }
+   
     public function getRelationBased() {
         $list = array();
         $list['Task'] = 'Наряд';
