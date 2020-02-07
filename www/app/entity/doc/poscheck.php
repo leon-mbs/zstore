@@ -38,7 +38,20 @@ class POSCheck extends Document {
                 "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
-
+        $serlist = @unserialize($this->headerdata['serlist'])  ;
+        if(is_array($serlist)){
+            foreach ($serlist as $ser) {
+               $detail[] = array("no" => $i++,
+                    "tovar_name" => $ser->service_name,
+                    "tovar_code" => '',
+                    "quantity" => H::fqty($ser->quantity),
+                    "msr" => '',
+                    "price" => H::fa($ser->price),
+                    "amount" => H::fa($ser->quantity * $ser->price)
+                );             
+            }
+        }
+ 
         $firm = H::getFirmData($this->branch_id);
 
         $header = array('date' => date('d.m.Y', $this->document_date),
@@ -82,7 +95,18 @@ class POSCheck extends Document {
                 "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
-
+        $serlist = @unserialize($this->headerdata['serlist'])  ;
+        if(is_array($serlist)){
+            foreach ($serlist as $ser) {
+               $detail[] = array("no" => $i++,
+                    "tovar_name" => $ser->service_name,
+             
+                    "quantity" => H::fqty($ser->quantity),
+                  
+                    "amount" => H::fa($ser->quantity * $ser->price)
+                );             
+            }
+        }
         $firm = H::getFirmData($this->branch_id);
 
         $header = array('date' => date('d.m.Y', $this->document_date),
@@ -142,7 +166,17 @@ class POSCheck extends Document {
 
             $this->payed = $this->payed - $this->headerdata['exchange']; //без здачи
         }
+        $serlist = @unserialize($this->headerdata['serlist'])  ;
+        if(is_array($serlist)){
+            foreach ($serlist as $ser) {
 
+                $sc = new Entry($this->document_id, $se0 - ($ser->price *   $ser->quantity), 0 );
+                $sc->setService($ser->service_id);
+                $sc->setExtCode(0 - ($ser->price *   $ser->quantity)); //Для АВС 
+                //$sc->setCustomer($this->customer_id);
+                $sc->save();
+            }           
+        }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
