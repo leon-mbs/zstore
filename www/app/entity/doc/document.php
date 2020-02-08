@@ -207,6 +207,7 @@ class Document extends \ZCL\DB\Entity {
             $this->headerdata[(string) $child->getName()] = (string) $child;
         }
         $this->detaildata = array();
+       
         //deprecated
         foreach ($xml->detail->children() as $row) {
             $_row = array();
@@ -215,6 +216,26 @@ class Document extends \ZCL\DB\Entity {
             }
             $this->detaildata[] = $_row;
         }
+        //перепаковываем для старых документов
+        if(count($this->detaildata)>0){
+            $detaildata  = array();
+            
+            foreach($this->detaildata  as  $row){
+                if($row['service_id']>0) 
+                {
+                    $detaildata[$row['service_id']] =   new  \App\Entity\Service($row);
+                }  else   if($row['stock_id']>0) {
+                    $detaildata[$row['stock_id']]   =   new  \App\Entity\Stock($row);
+                } else {
+                    $id = $row['item_id']. (strlen($row['item_id'])>0 ? $row['item_id'] :'' );
+                    $detaildata[$id]=   new  \App\Entity\Item($row);
+                }
+                
+            }
+            $this->packDetails('detaildata',$detaildata) ;
+            
+        }
+                  
     }
 
     /**
@@ -661,7 +682,7 @@ class Document extends \ZCL\DB\Entity {
     }
     
     
-    public  packDetails($list,$dataname) {
+    public  function packDetails($dataname,$list) {
          $data = base64_encode(serialize($list));
          $this->headerdata[$dataname] = $data;
     }

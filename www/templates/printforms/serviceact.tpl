@@ -34,7 +34,7 @@
     {{#_detail}}
     <tr>
         <td>{{no}}</td>
-        <td>{{servicename}}</td>
+        <td>{{service_name}}</td>
 
         <td  >{{desc}}</td>
 

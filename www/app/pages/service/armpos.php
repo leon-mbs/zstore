@@ -19,6 +19,7 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Link\SubmitLink;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
+use \App\Entity\Service;
 use \App\Entity\Customer;
 use \App\Helper as H;
 use \App\Application as App;
@@ -30,9 +31,10 @@ use \App\System;
 class ARMPos extends \App\Pages\Base {
 
     public $_itemlist = array();
-    public $_itemlistrev = array();
+    public $_serlist = array();
+   
     private $pos;
-    private $doc = null;
+    private $_doc = null;
 
     public function __construct() {
         parent::__construct();
@@ -61,9 +63,12 @@ class ARMPos extends \App\Pages\Base {
         $this->form2->add(new TextInput('barcode'));
         $this->form2->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
         $this->form2->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
-        $this->form2->add(new Label('total'));
+        $this->form2->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
+        $this->form2->addser->setVisible(Service::findCnt('disabled<>1')>0);  //показываем  если  есть  услуги
+          $this->form2->add(new Label('total'));
 
-        $this->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlistrev')), $this, 'detailOnRow'));
+        $this->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
+        $this->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
 
         //оплата
         $this->add(new Form('form3'))->setVisible(false);
@@ -107,6 +112,19 @@ class ARMPos extends \App\Pages\Base {
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
+        
+        $this->add(new Form('editserdetail'))->setVisible(false);
+        $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
+        $this->editserdetail->add(new TextInput('editserprice'));
+        
+                                                       
+        $this->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
+        $this->editserdetail->editser->onChange($this, 'OnChangeSer', true);
+
+        $this->editserdetail->add(new Button('cancelser'))->onClick($this, 'cancelrowOnClick');
+        $this->editserdetail->add(new SubmitButton('submitser'))->onClick($this, 'saveserOnClick');
+        
+        
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
@@ -155,30 +173,21 @@ class ARMPos extends \App\Pages\Base {
         $this->newdoc(null);
     }
 
-    private function Reload() {
-
-        $arr = array_keys($this->_itemlist);
-        $arr = array_reverse($arr);
-        $this->_itemlistrev = array();
-
-        foreach ($arr as $id) {
-            $this->_itemlistrev[$id] = $this->_itemlist[$id];
-        }
-
-        $this->form2->detail->Reload();
-    }
+  
 
     public function newdoc($sender) {
 
-        $this->doc = \App\Entity\Doc\Document::create('POSCheck');
+        $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
 
         $this->_itemlist = array();
+        $this->_serlist = array();
         $this->form2->detail->Reload();
+        $this->form2->detailser->Reload();
         $this->calcTotal();
 
 
         $this->form3->document_date->setDate(time());
-        $this->form3->document_number->setText($this->doc->nextNumber());
+        $this->form3->document_number->setText($this->_doc->nextNumber());
         $this->form3->customer->setKey(0);
         $this->form3->customer->setText('');
         $this->form3->paydisc->setText('0');
@@ -219,6 +228,19 @@ class ARMPos extends \App\Pages\Base {
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
+    
+    public function serOnRow($row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label('service', $item->service_name));
+
+        $row->add(new Label('serquantity', H::fqty($item->quantity)));
+        $row->add(new Label('serprice', H::fa($item->price)));
+
+        $row->add(new Label('seramount', H::fa($item->quantity * $item->price)));
+        $row->add(new ClickLink('serdelete'))->onClick($this, 'serdeleteOnClick');
+        //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+    }    
     public function addcodeOnClick($sender) {
         $code = trim($this->form2->barcode->getText());
         $this->form2->barcode->setText('');
@@ -278,8 +300,8 @@ class ARMPos extends \App\Pages\Base {
             }
             $this->_itemlist[$item->item_id] = $item;
         }
-        $this->Reload();
-        $this->calcTotal();
+         $this->form2->detail->Reload();
+         $this->calcTotal();
     }
 
     public function deleteOnClick($sender) {
@@ -289,10 +311,23 @@ class ARMPos extends \App\Pages\Base {
         // unset($this->_itemlist[$tovar->tovar_id]);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
-        $this->Reload();
+         $this->form2->detail->Reload();
         $this->calcTotal();
     }
 
+    
+    public function serdeleteOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
+
+        $ser = $sender->owner->getDataItem();
+        // unset($this->_itemlist[$tovar->tovar_id]);
+
+        $this->_serlist = array_diff_key($this->_serlist, array($ser->service_id => $this->_serlist[$ser->service_id]));
+        $this->form2->detailser->Reload();
+        $this->calcTotal();
+         
+    }    
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
@@ -300,7 +335,14 @@ class ARMPos extends \App\Pages\Base {
         $this->editdetail->qtystock->setText("");
         $this->form2->setVisible(false);
     }
-
+    public function addserOnClick($sender) {
+        $this->editserdetail->setVisible(true);
+        $this->editserdetail->editserquantity->setText("1");
+        $this->editserdetail->editserprice->setText("0");
+        
+        $this->form2->setVisible(false);
+        
+    }
     public function saverowOnClick($sender) {
 
         $id = $this->editdetail->edittovar->getKey();
@@ -338,7 +380,7 @@ class ARMPos extends \App\Pages\Base {
         $this->editdetail->setVisible(false);
         $this->form2->setVisible(true);
 
-        $this->Reload();
+         $this->form2->detail->Reload();
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
@@ -350,6 +392,33 @@ class ARMPos extends \App\Pages\Base {
         $this->calcTotal();
     }
 
+    public function saveserOnClick($sender) {
+
+        $id = $this->editserdetail->editser->getKey();
+        if ($id == 0) {
+            $this->setError("Не выбрана услуга");
+            return;
+        }
+        $ser = Service::load($id);
+
+        $ser->quantity = $this->editserdetail->editserquantity->getText();
+
+        $ser->price = $this->editserdetail->editserprice->getText();
+
+        $this->_serlist[$ser->service_id] = $ser;
+        $this->editserdetail->setVisible(false);
+        $this->form2->setVisible(true);
+        $this->form2->detailser->Reload();
+
+        //очищаем  форму
+        $this->editserdetail->editser->setKey(0);
+        $this->editserdetail->editser->setText('');
+        $this->editserdetail->editserquantity->setText("1");
+        $this->editserdetail->editserprice->setText("");
+        $this->calcTotal();
+         
+    }    
+    
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->form2->setVisible(true);
@@ -367,6 +436,11 @@ class ARMPos extends \App\Pages\Base {
         $total = 0;
 
         foreach ($this->_itemlist as $item) {
+            $item->amount = $item->price * $item->quantity;
+
+            $total = $total + $item->amount;
+        }
+       foreach ($this->_serlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
@@ -406,6 +480,20 @@ class ARMPos extends \App\Pages\Base {
         return Item::findArrayAC($text);
     }
 
+    public function OnAutoSer($sender) {
+         
+        $text = trim($sender->getText());
+        $text = Service::qstr('%' . $text . '%');
+        return  Service::findArray('service_name',"disabled <> 1 and service_name like {$text}");
+    }
+    public function OnChangeSer($sender) {
+        $id = $sender->getKey();
+        $ser = Service::load($id);
+        $this->editserdetail->editserprice->setText($ser->price);
+        
+        $this->updateAjax(array(  'editserprice' ));
+    }    
+    
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
@@ -470,103 +558,95 @@ class ARMPos extends \App\Pages\Base {
 
     public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
-        $this->docform->setVisible(true);
+        $this->_docform->setVisible(true);
     }
 
     public function savedocOnClick($sender) {
 
-        $this->doc->document_number = $this->form3->document_number->getText();
+        $this->_doc->document_number = $this->form3->document_number->getText();
 
-        $doc = Document::getFirst("   document_number = '{$this->doc->document_number}' ");
+        $doc = Document::getFirst("   document_number = '{$this->_doc->document_number}' ");
         if ($doc instanceof Document) {   //если уже  кто то  сохранил  с таким номером
-            $this->doc->document_number = $this->doc->nextNumber();
-            $this->form3->document_number->setText($this->doc->document_number);
+            $this->_doc->document_number = $this->_doc->nextNumber();
+            $this->form3->document_number->setText($this->_doc->document_number);
         }
         if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
+              $this->_docform->document_number->setText($this->_doc->nextNumber()); 
               $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
               return; 
         }        
-        $this->doc->document_date = $this->form3->document_date->getDate();
-        $this->doc->notes = $this->form3->notes->getText();
+        $this->_doc->document_date = $this->form3->document_date->getDate();
+        $this->_doc->notes = $this->form3->notes->getText();
 
-        $this->doc->customer_id = $this->form3->customer->getKey();
-        $this->doc->payamount = $this->form3->payamount->getText();
+        $this->_doc->customer_id = $this->form3->customer->getKey();
+        $this->_doc->payamount = $this->form3->payamount->getText();
 
-        $this->doc->headerdata['time'] = time();
-        $this->doc->payed = $this->form3->payed->getText();
-        $this->doc->headerdata['exchange'] = $this->form3->exchange->getText();
-        $this->doc->headerdata['paydisc'] = $this->form3->paydisc->getText();
-        $this->doc->headerdata['payment'] = $this->form3->payment->getValue();
+        $this->_doc->headerdata['time'] = time();
+        $this->_doc->payed = $this->form3->payed->getText();
+        $this->_doc->headerdata['exchange'] = $this->form3->exchange->getText();
+        $this->_doc->headerdata['paydisc'] = $this->form3->paydisc->getText();
+        $this->_doc->headerdata['payment'] = $this->form3->payment->getValue();
 
-        if ($this->doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
-            $this->doc->headerdata['paydisc'] = 0;
-            $this->doc->payed = 0;
-            $this->doc->payamount = 0;
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
+            $this->_doc->headerdata['paydisc'] = 0;
+            $this->_doc->payed = 0;
+            $this->_doc->payamount = 0;
         }
-        if ($this->doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->doc->payed = 0;
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
+            $this->_doc->payed = 0;
         }
 
-        if ($this->doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID && $this->doc->customer_id == 0) {
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID && $this->_doc->customer_id == 0) {
             $this->setError("Если предоплата  должен  быть  выбран  контрагент");
             return;
         }
-        if ($this->doc->payamount > $this->doc->payed && $this->doc->customer_id == 0) {
+        if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
             $this->setError("Если в долг должен  быть  выбран  контрагент");
             return;
         }
 
-        $this->doc->headerdata['pos'] = $this->pos->pos_id;
-        $this->doc->headerdata['pos_name'] = $this->pos->pos_name;
-        $this->doc->headerdata['store'] = $this->pos->store;
-        $this->doc->headerdata['pricetype'] = $this->pos->pricetype;
-        //   $this->doc->headerdata['pricetypename'] = $this->form1->pricetype->getValueName();
-        $firm = H::getFirmData($this->doc->branch_id);
+        $this->_doc->headerdata['pos'] = $this->pos->pos_id;
+        $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
+        $this->_doc->headerdata['store'] = $this->pos->store;
+        $this->_doc->headerdata['pricetype'] = $this->pos->pricetype;
+        //   $this->_doc->headerdata['pricetypename'] = $this->form1->pricetype->getValueName();
+        $firm = H::getFirmData($this->_doc->branch_id);
 
-        $pos = \App\Entity\Pos::load($this->doc->headerdata['pos']);
+        $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
-        $this->doc->headerdata["firmname"] = $firm['firmname'];
-        $this->doc->headerdata["inn"] = $firm['inn'];
-        $this->doc->headerdata["address"] = $firm['address'];
-        $this->doc->headerdata["phone"] = $firm['phone'];
+        $this->_doc->headerdata["firmname"] = $firm['firmname'];
+        $this->_doc->headerdata["inn"] = $firm['inn'];
+        $this->_doc->headerdata["address"] = $firm['address'];
+        $this->_doc->headerdata["phone"] = $firm['phone'];
         
+ 
+        $this->_doc->packDetails('detaildata',$this->_itemlist) ;
+        $this->_doc->packDetails('services',$this->_serlist) ;
 
-        $this->doc->detaildata = array();
-        foreach ($this->_itemlist as $tovar) {
-            $this->doc->detaildata[] = $tovar->getData();
-        }
-
-        $this->doc->amount = $this->form3->total2->getText();
+        $this->_doc->amount = $this->form3->total2->getText();
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-            $this->doc->save();
-            $this->doc->updateStatus(Document::STATE_NEW);
+            $this->_doc->save();
+            $this->_doc->updateStatus(Document::STATE_NEW);
 
-            $this->doc->updateStatus(Document::STATE_EXECUTED);
+            $this->_doc->updateStatus(Document::STATE_EXECUTED);
             $conn->CommitTrans();
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->doc->meta_desc);
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
         $this->form3->setVisible(false);
         $this->form4->setVisible(true);
 
 
-        $check = $this->doc->generateReport();
+        $check = $this->_doc->generatePosReport();
         $this->form4->showcheck->setText($check, true);
-
-        $text = implode("", $this->doc->generateCheck());
-
-        $text = addslashes($text);
-
-        $this->form4->print->setAttribute("href", "javascript:void(0);return false;");
-        $this->form4->print->setAttribute('onClick', "printpos('{$pos->ip}','{$text}')");
+ 
     }
 
     public function OnPayment($sender) {

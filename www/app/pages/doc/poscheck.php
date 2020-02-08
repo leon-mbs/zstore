@@ -80,6 +80,9 @@ class POSCheck extends \App\Pages\Base {
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
+        $this->docform->addser->setVisible(Service::findCnt('disabled<>1')>0);  //показываем  если  есть  услуги
+        
+        
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
@@ -157,11 +160,9 @@ class POSCheck extends \App\Pages\Base {
             $this->OnChangeCustomer($this->docform->customer);
             
             $this->_serlist = $this->_doc->unpackDetails('services');
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
             
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Item($item);
-                $this->_itemlist[$item->item_id] = $item;
-            }
+            
         } else {
             $this->_doc = Document::create('POSCheck');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -435,10 +436,8 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
   
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
+   
+        $this->_doc->packDetails('detaildata',$this->_itemlist) ;
         $this->_doc->packDetails('services',$this->_serlist) ;
         $this->_doc->amount = $this->docform->total->getText();
 
@@ -686,8 +685,8 @@ class POSCheck extends \App\Pages\Base {
               $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
                
         }
-        if (count($this->_itemlist) == 0) {
-            $this->setError("Не веден ни один  товар");
+        if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
+            $this->setError("Не ведены позиции");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
             $this->setError("Не выбран  склад");

@@ -38,9 +38,7 @@ class POSCheck extends Document {
                 "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
-        $serlist = @unserialize($this->headerdata['serlist'])  ;
-        if(is_array($serlist)){
-            foreach ($serlist as $ser) {
+         foreach ($this->unpackDetails('services') as $ser) {
                $detail[] = array("no" => $i++,
                     "tovar_name" => $ser->service_name,
                     "tovar_code" => '',
@@ -50,7 +48,7 @@ class POSCheck extends Document {
                     "amount" => H::fa($ser->quantity * $ser->price)
                 );             
             }
-        }
+      
  
         $firm = H::getFirmData($this->branch_id);
 
@@ -95,9 +93,8 @@ class POSCheck extends Document {
                 "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
-        $serlist = @unserialize($this->headerdata['serlist'])  ;
-        if(is_array($serlist)){
-            foreach ($serlist as $ser) {
+
+            foreach ($this->unpackDetails('services') as $ser) {
                $detail[] = array("no" => $i++,
                     "tovar_name" => $ser->service_name,
              
@@ -106,7 +103,7 @@ class POSCheck extends Document {
                     "amount" => H::fa($ser->quantity * $ser->price)
                 );             
             }
-        }
+
         $firm = H::getFirmData($this->branch_id);
 
         $header = array('date' => date('d.m.Y', $this->document_date),

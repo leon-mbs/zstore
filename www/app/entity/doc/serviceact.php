@@ -17,11 +17,11 @@ class ServiceAct extends Document {
         $i = 1;
 
         $detail = array();
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $ser) {
             $detail[] = array("no" => $i++,
-                "servicename" => $value['service_name'],
-                "desc" => $value['desc'],
-                "price" => H::fa($value['price'])
+                "service_name" => $ser->service_name ,
+                "desc" => $ser->desc,
+                "price" => H::fa($ser->price)
             );
         }
 
@@ -48,11 +48,11 @@ class ServiceAct extends Document {
         $conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->detaildata as $row) {
+        foreach ($this->unpackDetails('detaildata') as  $ser) {
 
-            $sc = new Entry($this->document_id, 0 - $row['price'], 0);
-            $sc->setService($row['service_id']);
-            $sc->setExtCode($row['price']); //Для АВС 
+            $sc = new Entry($this->document_id, 0 - $ser->price, 0);
+            $sc->setService($ser->service_id);
+            $sc->setExtCode($ser->price); //Для АВС 
             //$sc->setCustomer($this->customer_id);
             $sc->save();
         }
@@ -95,10 +95,11 @@ class ServiceAct extends Document {
             $header['gar'] = 'Гарантия: ' . $this->headerdata['gar'];
         }
         $detail = array();
-        foreach ($this->detaildata as $value) {
-            $detail[] = array(
-                "service" => $value['service_name'],
-                "price" => H::fa($value['price'])
+        foreach ($this->unpackDetails('detaildata') as $ser) {
+            $detail[] = array("no" => $i++,
+                "service_name" => $ser->service_name ,
+    
+                "price" => H::fa($ser->price)
             );
         }
         $header['slist'] = $detail;
