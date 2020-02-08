@@ -150,7 +150,10 @@ class Document extends \ZCL\DB\Entity {
             }
             $this->content .= "<{$key}>{$value}</{$key}>";
         }
-        $this->content .= "</header><detail>";
+        $this->content .= "</header>";
+        
+        //deprecated
+        $this->content .= "<detail>";
         foreach ($this->detaildata as $row) {
             $this->content .= "<row>";
             foreach ($row as $key => $value) {
@@ -175,7 +178,11 @@ class Document extends \ZCL\DB\Entity {
 
             $this->content .= "</row>";
         }
-        $this->content .= "</detail></doc> ";
+        $this->content .= "</detail>";
+        
+        
+        
+        $this->content .= "</doc>";
     }
 
     /**
@@ -200,6 +207,7 @@ class Document extends \ZCL\DB\Entity {
             $this->headerdata[(string) $child->getName()] = (string) $child;
         }
         $this->detaildata = array();
+        //deprecated
         foreach ($xml->detail->children() as $row) {
             $_row = array();
             foreach ($row->children() as $item) {
@@ -639,5 +647,23 @@ class Document extends \ZCL\DB\Entity {
         return $list;
     }
     
+    /**
+    * распаковываем данные  детализации
+    * 
+    */
+    public   function unpackDetails($dataname) {
+        $list = @unserialize(@base64_decode($this->headerdata[$dataname]))  ;
+        if(is_array($list)){ 
+            return  $list;
+        }else {
+            return array() ;
+        }
+    }
+    
+    
+    public  packDetails($list,$dataname) {
+         $data = base64_encode(serialize($list));
+         $this->headerdata[$dataname] = $data;
+    }
     
 }

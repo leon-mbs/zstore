@@ -71,7 +71,8 @@
                     </div>
                     {{/usescanner}}
 
-                    <a class="btn btn-info btn-sm" zippy="addrow">Добавить позицию</a>
+                    <a class="btn btn-info btn-sm" zippy="addrow">Добавить товар</a>
+                    <a class="btn btn-info btn-sm" zippy="addser">Добавить услугу</a>
                     <table class="table table-sm"  >
                         <tr>
                             <th>Название</th>
@@ -106,6 +107,24 @@
 
                             <td zippy="amount"  class="text-right"></td>
                             <td>  <a zippy="delete"><i class="fa fa-trash"></i></a></td>
+
+                        </tr>
+                       <tr zippy="detailser">
+                            <td zippy="service"></td>
+                            <td ></td>
+                            <td ></td>
+                            {{#usesnumber}} 
+                            <td ></td>
+                            <td ></td>
+                            {{/usesnumber}} 
+
+
+
+                            <td zippy="serquantity"  class="text-right"></td>
+                            <td zippy="serprice"  class="text-right"></td>
+
+                            <td zippy="seramount"  class="text-right"></td>
+                            <td>  <a zippy="serdelete"><i class="fa fa-trash"></i></a></td>
 
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
@@ -292,6 +311,42 @@
                 </div>
             </div>
         </form>
+        <form zippy="editserdetail">
+            <h4>Ввод услуги </h4>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editser" >Название</label>
+                        <input placeholder="Начните вводить..." class="form-control "   zippy="editser" />
+
+                       
+
+                    </div>
+                               
+                    <div class="form-group">
+                        <label for="editserquantity" >Количество</label>
+                        <input class="form-control" type="text" zippy="editserquantity" required="required" pattern="[0-9\.]+"  style="width: 70px;">
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editserprice" >Стоимость  </label>
+                        <input class="form-control" type="text" zippy="editserprice" required="required" pattern="[0-9\.]+"
+                               style="width: 70px;">
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="submit" zippy="submitser" value="Сохранить" class="btn btn-outline-primary ">
+                        &nbsp; <input type="button" zippy="cancelser" value="Отменить" class="btn btn-light ">
+                    </div>
+
+
+                </div>
+            </div>
+        </form>        
         <form zippy="editcust">
             <h3>&nbsp;Новый контрагент </h3>
             <div class="row">

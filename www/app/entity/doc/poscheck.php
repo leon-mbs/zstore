@@ -166,16 +166,14 @@ class POSCheck extends Document {
 
             $this->payed = $this->payed - $this->headerdata['exchange']; //без здачи
         }
-        $serlist = @unserialize($this->headerdata['serlist'])  ;
-        if(is_array($serlist)){
-            foreach ($serlist as $ser) {
+        foreach ($this->unpackDetails('services') as  $ser) {
 
-                $sc = new Entry($this->document_id, $se0 - ($ser->price *   $ser->quantity), 0 );
-                $sc->setService($ser->service_id);
-                $sc->setExtCode(0 - ($ser->price *   $ser->quantity)); //Для АВС 
-                //$sc->setCustomer($this->customer_id);
-                $sc->save();
-            }           
+            $sc = new Entry($this->document_id, $se0 - ($ser->price *   $ser->quantity), 0 );
+            $sc->setService($ser->service_id);
+            $sc->setExtCode(0 - ($ser->price *   $ser->quantity)); //Для АВС 
+             
+            $sc->save();
+                       
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);

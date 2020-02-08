@@ -17,6 +17,7 @@ use \Zippy\Html\Link\SubmitLink;
 use \App\Entity\Customer;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
+use \App\Entity\Service;
 use \App\Entity\Store;
 use \App\Entity\MoneyFund;
 use \App\Helper as H;
@@ -29,9 +30,11 @@ use \App\Application as App;
 class POSCheck extends \App\Pages\Base {
 
     public $_itemlist = array();
+    public $_serlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
+    
     private $_order_id = 0;
     private $_prevcust = 0;   // преыдущий контрагент
 
@@ -76,6 +79,7 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->add(new TextInput('notes'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docform->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
@@ -83,7 +87,7 @@ class POSCheck extends \App\Pages\Base {
 
         $this->docform->add(new Label('total'));
 
-
+        //товар
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -92,12 +96,21 @@ class POSCheck extends \App\Pages\Base {
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
-
-
         $this->editdetail->add(new Label('qtystock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
+        //услуга
+        $this->add(new Form('editserdetail'))->setVisible(false);
+        $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
+        $this->editserdetail->add(new TextInput('editserprice'));
+        
+                                                       
+        $this->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
+        $this->editserdetail->editser->onChange($this, 'OnChangeSer', true);
+
+        $this->editserdetail->add(new Button('cancelser'))->onClick($this, 'cancelrowOnClick');
+        $this->editserdetail->add(new SubmitButton('submitser'))->onClick($this, 'saveserOnClick');
 
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
@@ -142,7 +155,9 @@ class POSCheck extends \App\Pages\Base {
             $this->_prevcust = $this->_doc->customer_id;
 
             $this->OnChangeCustomer($this->docform->customer);
-
+            
+            $this->_serlist = $this->_doc->unpackDetails('services');
+            
             foreach ($this->_doc->detaildata as $item) {
                 $item = new Item($item);
                 $this->_itemlist[$item->item_id] = $item;
@@ -191,6 +206,7 @@ class POSCheck extends \App\Pages\Base {
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
+        $this->docform->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
     }
@@ -212,6 +228,18 @@ class POSCheck extends \App\Pages\Base {
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
+    public function serOnRow($row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label('service', $item->service_name));
+
+        $row->add(new Label('serquantity', H::fqty($item->quantity)));
+        $row->add(new Label('serprice', H::fa($item->price)));
+
+        $row->add(new Label('seramount', H::fa($item->quantity * $item->price)));
+        $row->add(new ClickLink('serdelete'))->onClick($this, 'serdeleteOnClick');
+        //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+    }
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
@@ -225,7 +253,19 @@ class POSCheck extends \App\Pages\Base {
         $this->calcTotal();
         $this->calcPay();
     }
+   
+    public function serdeleteOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc))
+            return;
 
+        $ser = $sender->owner->getDataItem();
+        // unset($this->_itemlist[$tovar->tovar_id]);
+
+        $this->_serlist = array_diff_key($this->_serlist, array($ser->service_id => $this->_serlist[$ser->service_id]));
+        $this->docform->detailser->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+    }
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
@@ -233,6 +273,14 @@ class POSCheck extends \App\Pages\Base {
         $this->editdetail->qtystock->setText("");
         $this->docform->setVisible(false);
         $this->_rowid = 0;
+    }
+    public function addserOnClick($sender) {
+        $this->editserdetail->setVisible(true);
+        $this->editserdetail->editserquantity->setText("1");
+        $this->editserdetail->editserprice->setText("0");
+        
+        $this->docform->setVisible(false);
+        
     }
 
     public function editOnClick($sender) {
@@ -294,25 +342,57 @@ class POSCheck extends \App\Pages\Base {
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
-
         $this->editdetail->editquantity->setText("1");
-
         $this->editdetail->editprice->setText("");
-        $this->editdetail->editserial->setText("");
+        $this->editdetail->editprice->setText("");
+        $this->editdetail->qtystock->setText("");
+ 
+        $this->calcTotal();
+        $this->calcPay();
+    }
+   
+    public function saveserOnClick($sender) {
+
+        $id = $this->editserdetail->editser->getKey();
+        if ($id == 0) {
+            $this->setError("Не выбрана услуга");
+            return;
+        }
+        $ser = Service::load($id);
+
+        $ser->quantity = $this->editserdetail->editserquantity->getText();
+
+        $ser->price = $this->editserdetail->editserprice->getText();
+
+        $this->_serlist[$ser->service_id] = $ser;
+        $this->editserdetail->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->docform->detailser->Reload();
+
+        //очищаем  форму
+        $this->editserdetail->editser->setKey(0);
+        $this->editserdetail->editser->setText('');
+        $this->editserdetail->editserquantity->setText("1");
+        $this->editserdetail->editserprice->setText("");
         $this->calcTotal();
         $this->calcPay();
     }
 
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
+        $this->editserdetail->setVisible(false);
         $this->docform->setVisible(true);
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
-
         $this->editdetail->editquantity->setText("1");
-
         $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("");
+        $this->editdetail->qtystock->setText("");
+        $this->editserdetail->editser->setKey(0);
+        $this->editserdetail->editser->setText('');
+        $this->editserdetail->editserquantity->setText("1");
+        $this->editserdetail->editserprice->setText("");
     }
 
     public function savedocOnClick($sender) {
@@ -354,15 +434,12 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
-
- 
-
-
+  
         $this->_doc->detaildata = array();
         foreach ($this->_itemlist as $tovar) {
             $this->_doc->detaildata[] = $tovar->getData();
         }
-
+        $this->_doc->packDetails('services',$this->_serlist) ;
         $this->_doc->amount = $this->docform->total->getText();
 
         $isEdited = $this->_doc->document_id > 0;
@@ -458,6 +535,11 @@ class POSCheck extends \App\Pages\Base {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
+        }
+        foreach ($this->_serlist as $ser) {
+            $ser->amount = $ser->price * $ser->quantity;
+
+            $total = $total + $ser->amount;
         }
         $this->docform->total->setText(H::fa($total));
 
@@ -666,6 +748,20 @@ class POSCheck extends \App\Pages\Base {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
+    }
+    
+    public function OnAutoSer($sender) {
+         
+        $text = trim($sender->getText());
+        $text = Service::qstr('%' . $text . '%');
+        return  Service::findArray('service_name',"disabled <> 1 and service_name like {$text}");
+    }
+    public function OnChangeSer($sender) {
+        $id = $sender->getKey();
+        $ser = Service::load($id);
+        $this->editserdetail->editserprice->setText($ser->price);
+        
+        $this->updateAjax(array(  'editserprice' ));
     }
 
     public function OnAutoCustomer($sender) {
