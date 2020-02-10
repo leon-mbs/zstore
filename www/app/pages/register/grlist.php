@@ -168,10 +168,8 @@ class GRList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
-        if ($doc->meta_name == 'GoodsReceipt')
-            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
-        if ($doc->meta_name == 'InvoiceCust')
-            App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", $doc->document_id);
+        App::Redirect("\\App\\Pages\\Doc\\".$doc->meta_name, $doc->document_id);
+
     }
 
     public function oncsv($sender) {

@@ -257,9 +257,9 @@ class GIList extends \App\Pages\Base {
         $doc = $sender->getOwner()->getDataItem();
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
+        
+        App::Redirect("\\App\\Pages\\Doc\\".$doc->meta_name, $doc->document_id);
 
-
-        App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", $doc->document_id);
     }
 
     //оплаты

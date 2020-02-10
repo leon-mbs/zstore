@@ -65,7 +65,7 @@ class ARMPos extends \App\Pages\Base {
         $this->form2->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->form2->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
         $this->form2->addser->setVisible(Service::findCnt('disabled<>1')>0);  //показываем  если  есть  услуги
-          $this->form2->add(new Label('total'));
+        $this->form2->add(new Label('total'));
 
         $this->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
         $this->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
