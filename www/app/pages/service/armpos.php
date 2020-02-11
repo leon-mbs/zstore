@@ -201,8 +201,8 @@ class ARMPos extends \App\Pages\Base {
     }
 
     public function next2docOnClick($sender) {
-        if (count($this->_itemlist) == 0) {
-            $this->setError('Не введены товары');
+        if (count($this->_itemlist) == 0 && count($this->_serlist) == 0 ) {
+            $this->setError('Не введены позиции');
             return;
         }
 
