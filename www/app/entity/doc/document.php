@@ -4,6 +4,7 @@ namespace App\Entity\Doc;
 
 use \App\System;
 use \App\Helper;
+use \App\Util;
 
 /**
  * Класс-сущность документ
@@ -27,8 +28,8 @@ class Document extends \ZCL\DB\Entity {
     const STATE_SHIFTED = 16; // отложен
     const STATE_FAIL = 17; // Аннулирован
     const STATE_FINISHED = 18; // Закончен
-    const STATE_APPROVED = 19;      //  Утвержден
- //   const STATE_READYTOEXE = 20; // готов к выполнению    
+    const STATE_APPROVED = 19;      //  Готов к выполнению
+   // const STATE_READYTOEXE = 20; // готов к выполнению    
     // типы  экспорта
     const EX_WORD = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -98,18 +99,32 @@ class Document extends \ZCL\DB\Entity {
     }
 
     protected function beforeSave() {
-        $this->document_number = trim($this->document_number);
-        $this->packData();
-        $doc = Document::getFirst("   document_number = '{$this->document_number}' ");
-        if ($doc instanceof Document) {
-            if ($this->document_id != $doc->document_id) {
-
-                throw new \Exception('Не уникальный номер документа ');
-                return false;
-            }
+ 
+        
+        if(false == $this->checkUniqueNumber()){
+              System::setWarnMsg('Не уникальный номер документа ') ;
         }
+        
+        if($this->parent_id>0) {
+            $p = Document::load($this->parent_id);
+            $this->headerdata['parent_number'] = $p->document_number;
+        }
+        $this->packData();
     }
 
+    public function checkUniqueNumber() {
+        $this->document_number = trim($this->document_number);
+        
+        $doc = Document::getFirst(" document_number = '{$this->document_number}' ");
+        if ($doc instanceof Document) {
+            if ($this->document_id != $doc->document_id) {
+                  return  false;
+            }
+        }       
+        return true;
+    }
+    
+    
     /**
      * Упаковка  данных  в  XML
      *
@@ -136,7 +151,10 @@ class Document extends \ZCL\DB\Entity {
             }
             $this->content .= "<{$key}>{$value}</{$key}>";
         }
-        $this->content .= "</header><detail>";
+        $this->content .= "</header>";
+        
+        //deprecated
+        $this->content .= "<detail>";
         foreach ($this->detaildata as $row) {
             $this->content .= "<row>";
             foreach ($row as $key => $value) {
@@ -161,7 +179,11 @@ class Document extends \ZCL\DB\Entity {
 
             $this->content .= "</row>";
         }
-        $this->content .= "</detail></doc> ";
+        $this->content .= "</detail>";
+        
+        
+        
+        $this->content .= "</doc>";
     }
 
     /**
@@ -186,6 +208,8 @@ class Document extends \ZCL\DB\Entity {
             $this->headerdata[(string) $child->getName()] = (string) $child;
         }
         $this->detaildata = array();
+       
+        //deprecated
         foreach ($xml->detail->children() as $row) {
             $_row = array();
             foreach ($row->children() as $item) {
@@ -193,6 +217,26 @@ class Document extends \ZCL\DB\Entity {
             }
             $this->detaildata[] = $_row;
         }
+        //перепаковываем для старых документов
+        if(count($this->detaildata)>0){
+            $detaildata  = array();
+            
+            foreach($this->detaildata  as  $row){
+                if($row['service_id']>0) 
+                {
+                    $detaildata[$row['service_id']] =   new  \App\Entity\Service($row);
+                }  else   if($row['stock_id']>0) {
+                    $detaildata[$row['stock_id']]   =   new  \App\Entity\Stock($row);
+                } else {
+                    $id = $row['item_id']. (strlen($row['item_id'])>0 ? $row['item_id'] :'' );
+                    $detaildata[$id]=   new  \App\Entity\Item($row);
+                }
+                
+            }
+            $this->packDetails('detaildata',$detaildata) ;
+            
+        }
+                  
     }
 
     /**
@@ -327,6 +371,10 @@ class Document extends \ZCL\DB\Entity {
 
         //если нет права  выполнять    
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this,false,false)==false) {            
+            
+            $this->headerdata['_state_before_approve_'] = $state; 
+            if($state==self::STATE_WA) $this->headerdata['_state_before_approve_']  = self::STATE_APPROVED;
+            
             $state  = self::STATE_WA;
         }
             
@@ -343,24 +391,12 @@ class Document extends \ZCL\DB\Entity {
         $this->insertLog($state);
 
         $this->save();
-
-       if ($state == self::STATE_APPROVED) {
           
-          $this-> updateStatus($this->cast()->getDefExecuteStatus()); 
-       }
-         
        
         return true;
     }
 
-    /**
-    * возвращает  статус по  умолчанию  после  утверждения
-    * 
-    */
-    protected function getDefExecuteStatus(){
-        return self::STATE_EXECUTED ;
-    }
-    
+       
     /**
      * Возвращает название  статуса  документа
      *
@@ -381,7 +417,7 @@ class Document extends \ZCL\DB\Entity {
             case Document::STATE_CLOSED:
                 return "Закрыт";
             case Document::STATE_APPROVED:
-                return "Утвержден";
+                return "Готов к выполнению";
             case Document::STATE_DELETED:
                 return "Удален";
 
@@ -401,8 +437,7 @@ class Document extends \ZCL\DB\Entity {
                 return "Аннулирован";
             case Document::STATE_INPROCESS:
                 return "Выполняется";
-          //  case Document::STATE_READYTOEXE:
-          //      return "Готов к исполнению";
+     
             default:
                 return "Неизвестный статус";
         }
@@ -634,5 +669,23 @@ class Document extends \ZCL\DB\Entity {
         return $list;
     }
     
+    /**
+    * распаковываем данные  детализации
+    * 
+    */
+    public   function unpackDetails($dataname) {
+        $list = @unserialize(@base64_decode($this->headerdata[$dataname]))  ;
+        if(is_array($list)){ 
+            return  $list;
+        }else {
+            return array() ;
+        }
+    }
+    
+    
+    public  function packDetails($dataname,$list) {
+         $data = base64_encode(serialize($list));
+         $this->headerdata[$dataname] = $data;
+    }
     
 }

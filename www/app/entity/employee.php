@@ -26,6 +26,7 @@ class Employee extends \ZCL\DB\Entity {
         $this->detail = "<detail><login>{$this->login}</login>";
         $this->detail .= "<balance>{$this->balance}</balance>";
         $this->detail .= "<email>{$this->email}</email>";
+        $this->detail .= "<phone>{$this->phone}</phone>";
         $this->detail .= "<comment>{$this->comment}</comment>";
         //   $this->detail .= "<ztype>{$this->ztype}</ztype>";
         //    $this->detail .= "<zhour>{$this->zhour}</zhour>";
@@ -42,6 +43,7 @@ class Employee extends \ZCL\DB\Entity {
         $this->balance = (int) ($xml->balance[0]);
         $this->login = (string) ($xml->login[0]);
         $this->email = (string) ($xml->email[0]);
+        $this->phone = (string) ($xml->phone[0]);
         $this->comment = (string) ($xml->comment[0]);
         //  $this->ztype   = (int) ($xml->ztype[0]);
         //    $this->zmon    = (int) ($xml->zmon[0]);
@@ -60,7 +62,10 @@ class Employee extends \ZCL\DB\Entity {
     }
 
     public static function getConstraint() {
-        return \App\ACL::getBranchConstraint();
+       $br = \App\ACL::getBranchConstraint();
+       if(strlen($br)>0){
+           return  "({$br}  or branch_id=0)";
+       }
     }
 
 }

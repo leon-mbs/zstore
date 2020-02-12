@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ZCL\DB\Entity;
+ 
 
 /**
  *  Класс  инкапсулирующий   сущность  User
@@ -11,7 +11,7 @@ use ZCL\DB\Entity;
  * @keyfield=user_id
 
  */
-class User extends Entity {
+class User extends \ZCL\DB\Entity {
 
      
 

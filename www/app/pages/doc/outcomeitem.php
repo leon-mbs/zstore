@@ -70,7 +70,6 @@ class OutcomeItem extends \App\Pages\Base {
 
             foreach ($this->_doc->detaildata as $_item) {
                 $item = new Item($_item);
-                
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
         } else {
@@ -148,7 +147,6 @@ class OutcomeItem extends \App\Pages\Base {
         }
 
         $item = Item::load($id);
-    
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
         //ищем  последню цену
@@ -239,6 +237,11 @@ class OutcomeItem extends \App\Pages\Base {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
             $this->setError("Не введен номер документа");
+        }
+        if(false == $this->_doc->checkUniqueNumber()){
+              $this->docform->document_number->setText($this->_doc->nextNumber()); 
+              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
+               
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");

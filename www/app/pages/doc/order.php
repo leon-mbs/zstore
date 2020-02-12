@@ -321,6 +321,11 @@ class Order extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
+        if(false == $this->_doc->checkUniqueNumber()){
+              $this->docform->document_number->setText($this->_doc->nextNumber()); 
+              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
+             
+        }
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }

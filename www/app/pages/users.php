@@ -42,7 +42,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new TextInput('editpass'));
         $this->editpan->editform->add(new TextInput('editemail'));
         $this->editpan->editform->add(new DropDownChoice('editacl'))->onChange($this, 'onAcl');
-        ;
+         
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
 
@@ -61,15 +61,12 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editshop'));
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
-
-
-
-
+   
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->editpan->editform->add(new Panel('metaaccess'))->setVisible(false);
-        $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description"), $this, 'metarowOnRow'));
+        $this->editpan->editform->metaaccess->add(new DataView('metarow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "meta_type,description"), $this, 'metarowOnRow'));
 
         $this->editpan->editform->add(new DataView('brow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Branch", "disabled<>1", "branch_name"), $this, 'branchOnRow'));
     }

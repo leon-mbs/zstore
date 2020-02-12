@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ZCL\DB\Entity;
+ 
 
 /**
  *  Класс  уведомление
@@ -10,7 +10,7 @@ use ZCL\DB\Entity;
  * @keyfield=notify_id
 
  */
-class Notify extends Entity {
+class Notify extends \ZCL\DB\Entity {
 
     protected function init() {
 

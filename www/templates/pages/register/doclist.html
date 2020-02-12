@@ -50,7 +50,7 @@
                         <th class="text-nowrap  "><a zippy="sortstatus">Статус</a></th>
                         {{#usebranch}}  <th>Филиал</th>  {{/usebranch}}
 
-                        <th>Примечание</th>
+                        <th>Основание</th>
                         <th  > </th>
                         <th  > </th>
 
@@ -70,7 +70,8 @@
                             <td style="white-space:  nowrap" zippy="state"> </td>
                             {{#usebranch}}<td zippy="branch"></td>    {{/usebranch}}
 
-                            <td zippy="notes"></td>
+                            <td ><a zippy="parentdoc"></a></td>
+                            <td ><i zippy="hasnotes" class="far fa-sticky-note"  data-toggle="tooltip" data-placement="left"   ></i></td>
                             <td ><i zippy="isplanned" class="fa fa-calendar-alt"  title="Запланированный"></i></td>
                             <td ><i zippy="waitpay"   class="fa fa-credit-card"   title="Ожидает оплату "></i></td>
                             <td ><i zippy="waitapp"   class="fa fa-gavel"   title="Ожидает утверждения "></i></td>

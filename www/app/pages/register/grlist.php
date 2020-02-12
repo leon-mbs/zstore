@@ -101,6 +101,7 @@ class GRList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
+         if(\App\Acl::checkExeDoc($this->_doc,true,true)==false ) return;
 
         $state = $this->_doc->state;
 
@@ -132,7 +133,7 @@ class GRList extends \App\Pages\Base {
     }
 
     public function updateStatusButtons() {
-
+ 
         $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name == 'InvoiceCust');
         $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name == 'GoodsReceipt');
 
@@ -167,10 +168,8 @@ class GRList extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($doc, true))
             return;
 
-        if ($doc->meta_name == 'GoodsReceipt')
-            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
-        if ($doc->meta_name == 'InvoiceCust')
-            App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", $doc->document_id);
+        App::Redirect("\\App\\Pages\\Doc\\".$doc->meta_name, $doc->document_id);
+
     }
 
     public function oncsv($sender) {

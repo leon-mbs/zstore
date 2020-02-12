@@ -114,10 +114,9 @@ class ServiceAct extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Service($item);
-                $this->_servicelist[$item->service_id] = $item;
-            }
+ 
+            $this->_servicelist = $this->_doc->unpackDetails('detaildata');
+           
         } else {
             $this->_doc = Document::create('ServiceAct');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -247,10 +246,8 @@ class ServiceAct extends \App\Pages\Base {
             return;
         }
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_servicelist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+ 
+        $this->_doc->packDetails('detaildata',$this->_servicelist) ;
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
@@ -380,6 +377,11 @@ class ServiceAct extends \App\Pages\Base {
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
+        }
+        if(false == $this->_doc->checkUniqueNumber()){
+              $this->docform->document_number->setText($this->_doc->nextNumber()); 
+              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
+             
         }
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна позиция");

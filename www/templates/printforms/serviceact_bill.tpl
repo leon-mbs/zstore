@@ -42,7 +42,7 @@
     </tr>
     {{#slist}}
     <tr>
-        <td  >{{service}}</td>
+        <td  >{{service_name}}</td>
         <td align="right" >{{price}}</td>
     </tr>
 

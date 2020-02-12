@@ -26,7 +26,7 @@ class CustOrder extends \App\Pages\Base {
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-        $where = " customer_id in  (select customer_id from documents_view where meta_name='OrderCust'  and state= " . Document::STATE_INPROCESS . ")";
+        $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='OrderCust'  and state= " . Document::STATE_INPROCESS . ")";
         $this->filter->add(new DropDownChoice('cust', Customer::findArray('customer_name', $where, 'customer_name'), 0));
 
 

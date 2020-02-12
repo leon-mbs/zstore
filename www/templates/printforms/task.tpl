@@ -5,13 +5,6 @@
             Наряд № {{document_number}} с {{startdate}} по {{date}} 
         </td>
     </tr>   
-    <tr>
-        <td colspan="4">
-            Заказчик:   {{customer_name}}
-        </td>
-
-    </tr>
-
 
     <tr>
         <td  colspan="4">
@@ -19,8 +12,14 @@
         </td>
 
     </tr>
+    {{#baseddoc}}
+    <tr>
+        <td  colspan="4">
+            Заказ:   {{baseddoc}}
+        </td>
 
-
+    </tr>
+     {{/baseddoc}}
 
 
     <tr style="font-weight: bolder;">
@@ -31,7 +30,7 @@
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
         <th   style="border: 1px solid black;"  >Наименование</th>
-        <th style="border: 1px solid black;" width="50" align="right">Стоимость</th>
+        <th style="border: 1px solid black;" width="50" align="right"> </th>
         <th style="border: 1px solid black;" width="50" align="right">Часов</th>
 
 
@@ -40,8 +39,8 @@
     {{#_detail}}
     <tr>
         <td>{{no}}</td>
-        <td  >{{servicename}}</td>
-        <td align="right">{{price}}</td>
+        <td  >{{service_name}}</td>
+        <td align="right"> </td>
 
         <td align="right">{{hours}}</td>
 
@@ -80,7 +79,12 @@
 
     </tr>
     {{/_detail3}}
+     <tr>
+        <td  colspan="4">
+              {{notes}}
+        </td>
 
+    </tr>
 
 </table>
 

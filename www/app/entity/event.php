@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ZCL\DB\Entity;
+ 
 
 /**
  * Класс  расписания событий
@@ -11,7 +11,7 @@ use ZCL\DB\Entity;
  * @keyfield=event_id
 
  */
-class Event extends Entity {
+class Event extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->event_id = 0;

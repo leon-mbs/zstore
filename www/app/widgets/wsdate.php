@@ -32,7 +32,7 @@ class WSdate extends \Zippy\Html\PageFragment {
 
         if ($visible) {
 
-            $stock = Stock::find(" {$cstr} qty > 0 and sdate is not null  and sdate < now()");
+            $stock = Stock::find(" {$cstr} qty > 0 and sdate is not null  and sdate <  ADDDATE( now(), INTERVAL 7 day)  ");
 
 
             foreach ($stock as $st) {
@@ -63,6 +63,8 @@ class WSdate extends \Zippy\Html\PageFragment {
         $row->add(new Label('snumber', $stock->snumber));
         $row->add(new Label('edate', date('Y-m-d', $stock->sdate)));
         $row->add(new Label('qty', Helper::fqty($stock->qty)));
+        $row->edate->setAttribute('class','badge badge-danger');
+        if($stock->sdate> time()) $row->edate->setAttribute('class','badge badge-warning');
     }
 
 }
