@@ -116,7 +116,7 @@ class UserProfile extends \App\Pages\Base {
 
             $n->dateshow = time();
             $n->message = "Пользователь <b>{$this->user->username}</b> сменил пароль на  <b>{$pass}</b>";
-
+           
             $n->save();
         }
 

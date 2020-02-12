@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "84240970fa9a1d09d487bf1a692ca8a5",
     "content-hash": "99ae1217d5288bdd644fb548211bd037",
     "packages": [
         {
@@ -59,7 +58,7 @@
                 "library",
                 "php"
             ],
-            "time": "2019-11-24 10:59:54"
+            "time": "2019-11-24T10:59:54+00:00"
         },
         {
             "name": "automattic/woocommerce",
@@ -107,7 +106,7 @@
                 "api",
                 "woocommerce"
             ],
-            "time": "2019-01-16 20:28:40"
+            "time": "2019-01-16T20:28:40+00:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -173,7 +172,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2018-12-14 02:40:31"
+            "time": "2018-12-14T02:40:31+00:00"
         },
         {
             "name": "electrolinux/phpquery",
@@ -213,7 +212,7 @@
             ],
             "description": "phpQuery is a server-side, chainable, CSS3 selector driven Document Object Model (DOM) API based on jQuery JavaScript Library",
             "homepage": "http://code.google.com/p/phpquery/",
-            "time": "2013-03-21 12:39:33"
+            "time": "2013-03-21T12:39:33+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -259,7 +258,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2017-06-27 22:17:23"
+            "time": "2017-06-27T22:17:23+00:00"
         },
         {
             "name": "jbzoo/data",
@@ -324,7 +323,7 @@
                 "params",
                 "yml"
             ],
-            "time": "2018-12-03 16:32:55"
+            "time": "2018-12-03T16:32:55+00:00"
         },
         {
             "name": "jbzoo/image",
@@ -394,7 +393,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2018-09-26 15:11:55"
+            "time": "2018-09-26T15:11:55+00:00"
         },
         {
             "name": "jbzoo/utils",
@@ -485,7 +484,7 @@
                 "utility",
                 "utils"
             ],
-            "time": "2019-11-21 09:34:54"
+            "time": "2019-11-21T09:34:54+00:00"
         },
         {
             "name": "kylekatarnls/update-helper",
@@ -530,7 +529,7 @@
                 }
             ],
             "description": "Update helper",
-            "time": "2019-07-29 11:03:54"
+            "time": "2019-07-29T11:03:54+00:00"
         },
         {
             "name": "leon-mbs/zdb",
@@ -572,7 +571,7 @@
                 "database",
                 "php"
             ],
-            "time": "2020-01-13 22:17:09"
+            "time": "2020-01-13T22:17:09+00:00"
         },
         {
             "name": "leon-mbs/zippy",
@@ -616,7 +615,7 @@
                 "framework",
                 "php"
             ],
-            "time": "2020-02-01 14:56:38"
+            "time": "2020-02-01T14:56:38+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -694,7 +693,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2019-12-20 14:15:16"
+            "time": "2019-12-20T14:15:16+00:00"
         },
         {
             "name": "mustache/mustache",
@@ -740,7 +739,7 @@
                 "mustache",
                 "templating"
             ],
-            "time": "2019-11-23 21:40:31"
+            "time": "2019-11-23T21:40:31+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -801,7 +800,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2019-10-14 05:51:36"
+            "time": "2019-10-14T05:51:36+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -852,7 +851,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2018-02-28 20:30:58"
+            "time": "2018-02-28T20:30:58+00:00"
         },
         {
             "name": "phenx/php-font-lib",
@@ -889,7 +888,7 @@
             ],
             "description": "A library to read, parse, export and make subsets of different types of font files.",
             "homepage": "https://github.com/PhenX/php-font-lib",
-            "time": "2017-09-13 16:14:37"
+            "time": "2017-09-13T16:14:37+00:00"
         },
         {
             "name": "phenx/php-svg-lib",
@@ -929,7 +928,7 @@
             ],
             "description": "A library to read, parse and export to PDF SVG files.",
             "homepage": "https://github.com/PhenX/php-svg-lib",
-            "time": "2019-09-11 20:02:13"
+            "time": "2019-09-11T20:02:13+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -1006,7 +1005,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2018-11-15 22:32:31"
+            "time": "2018-11-15T22:32:31+00:00"
         },
         {
             "name": "picqer/php-barcode-generator",
@@ -1075,7 +1074,7 @@
                 "svg",
                 "upc"
             ],
-            "time": "2019-01-12 09:29:34"
+            "time": "2019-01-12T09:29:34+00:00"
         },
         {
             "name": "psr/log",
@@ -1122,7 +1121,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2019-11-01 11:05:21"
+            "time": "2019-11-01T11:05:21+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -1380,7 +1379,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2020-02-10 16:13:40"
+            "time": "2020-02-10T16:13:40+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -1425,7 +1424,7 @@
                 "parser",
                 "stylesheet"
             ],
-            "time": "2019-02-22 07:42:52"
+            "time": "2019-02-22T07:42:52+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1484,7 +1483,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-11-27 14:18:11"
+            "time": "2019-11-27T14:18:11+00:00"
         },
         {
             "name": "symfony/translation",
@@ -1560,7 +1559,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2020-01-15 13:29:06"
+            "time": "2020-01-15T13:29:06+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -1617,7 +1616,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-11-18 17:27:11"
+            "time": "2019-11-18T17:27:11+00:00"
         },
         {
             "name": "timetoogo/pinq",
@@ -1665,7 +1664,7 @@
                 "pinq",
                 "query"
             ],
-            "time": "2017-09-06 06:27:03"
+            "time": "2017-09-06T06:27:03+00:00"
         }
     ],
     "packages-dev": [],
