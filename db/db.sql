@@ -520,7 +520,7 @@ CREATE TABLE `mfund` (
   `mf_id` int(11) NOT NULL AUTO_INCREMENT,
   `mf_name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `branch_id` int(11) NOT NULL DEFAULT '0',
+  `branch_id` int(11)   DEFAULT '0',
   PRIMARY KEY (`mf_id`)
 )  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -880,7 +880,7 @@ CREATE TABLE `stores` (
   `store_id` int(11) NOT NULL AUTO_INCREMENT,
   `storename` varchar(64) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `branch_id` int(11) NOT NULL DEFAULT '0',
+  `branch_id` int(11)   DEFAULT '0',
   PRIMARY KEY (`store_id`)
 )  AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
