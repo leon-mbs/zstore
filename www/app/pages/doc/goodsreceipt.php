@@ -50,10 +50,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
-
-
-
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true,true), H::getDefMF()))->onChange($this, 'OnPayment');
+  
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
         $this->docform->add(new Label('course', 'Курс 1'));
         $this->docform->val->setVisible($common['useval'] == true);
