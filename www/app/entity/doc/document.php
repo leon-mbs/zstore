@@ -217,7 +217,7 @@ class Document extends \ZCL\DB\Entity {
             }
             $this->detaildata[] = $_row;
         }
-        //перепаковываем для старых документов
+        //перепаковываем в новый вариант
         if(count($this->detaildata)>0){
             $detaildata  = array();
             

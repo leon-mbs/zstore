@@ -425,6 +425,38 @@
 
                                     </li>  
                                     {{/ocstore}}            
+                                   {{#woocomerce}}
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>  
+                                            <p>Обмен с Woocomerce 
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/WC/Options" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>    
+                                                    <p>Настройки</p>
+                                                </a>
+                                            </li> 
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/WC/Orders" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>    
+                                                    <p>Заказы</p>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/WC/Items" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>    
+                                                    <p>Товары</p>
+                                                </a>
+                                            </li>
+                                        </ul>                  
+
+                                    </li>  
+                                    {{/woocomerce}}            
                                 
                                      {{#issue}}
                                     <li class="nav-item">

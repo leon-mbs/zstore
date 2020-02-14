@@ -58,6 +58,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editwreserved'));
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
+        $this->editpan->editform->add(new CheckBox('editwoocomerce'));
         $this->editpan->editform->add(new CheckBox('editshop'));
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
@@ -134,6 +135,8 @@ class Users extends \App\Pages\Base {
 
         if (strpos($this->user->modules, 'ocstore') !== false)
             $this->editpan->editform->editocstore->setChecked(true);
+        if (strpos($this->user->modules, 'woocomerce') !== false)
+            $this->editpan->editform->editwoocomerce->setChecked(true);
         if (strpos($this->user->modules, 'shop') !== false)
             $this->editpan->editform->editshop->setChecked(true);
         if (strpos($this->user->modules, 'note') !== false)
@@ -239,6 +242,8 @@ class Users extends \App\Pages\Base {
             $modules = $modules . ',note';
         if ($this->editpan->editform->editocstore->isChecked())
             $modules = $modules . ',ocstore';
+       if ($this->editpan->editform->editwoocomerce->isChecked())
+            $modules = $modules . ',woocomerce';
         if ($this->editpan->editform->editissue->isChecked())
             $modules = $modules . ',issue';
 

@@ -91,6 +91,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editnewitem->add(new TextInput('editnewitembarcode'));
         $this->editnewitem->add(new TextInput('editnewitemsnumber'));
         $this->editnewitem->add(new TextInput('editnewitemsdate'));
+        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::findArray("cat_name", "", "cat_name"), 0));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
@@ -589,6 +590,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
+        $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
         $this->editdetail->edititem->setText($item->itemname);
         $this->editdetail->edititem->setKey($item->item_id);
