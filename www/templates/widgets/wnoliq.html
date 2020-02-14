@@ -5,18 +5,23 @@
             <a   data-toggle="collapse" href="#collapsenoliq"   aria-expanded="false" aria-controls="collapseExample">
                 <h4  >Неликвидные  товары  <i style="font-size:smaller" class="fa fa-angle-down"></i></h4>
             </a>
-            <small>Товары которые не имели продаж в течение месяца</small>
+            <small>Товары которые не имели продаж в течение месяца. если  товар  больше  не  используется
+            нужно отметить это  флажком в карточке товара</small>
             <div class="collapse" id="collapsenoliq">
                 <a zippy="csvnoliq"  >Скачать  CSV</a>  
                 <table class="table   table-sm">
                     <tr>
 
+                        <th>Склад</th>
                         <th>Товар</th>
+                        <th>Код</th>
                         <th class="text-right" >Кол.</th>
                     </tr>
                     <tr zippy="noliqlist">
 
+                        <td zippy="storename"></td>
                         <td zippy="itemname"></td>
+                        <td zippy="item_code"></td>
                         <td zippy="qty"  class="text-right" ></td>
                     </tr>
                 </table>

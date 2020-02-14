@@ -79,4 +79,12 @@ class Customer extends \ZCL\DB\Entity {
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
     }
 
+    public static function getByPhone($phone) {
+        $conn = \ZDB\DB::getConnect();
+        return Customer::getFirst(' phone = ' . $conn->qstr($phone));
+    }
+    public static function getByEmail($email) {
+        $conn = \ZDB\DB::getConnect();
+        return Customer::getFirst(' email = ' . $conn->qstr($email));
+    }    
 }

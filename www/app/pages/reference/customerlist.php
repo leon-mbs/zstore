@@ -202,6 +202,22 @@ class CustomerList extends \App\Pages\Base {
         $this->_customer->status = $this->customerdetail->editstatus->getValue();
         $this->_customer->jurid = $this->customerdetail->editjurid->isChecked() ? 1 : 0;
 
+        $c = Customer::getByEmail($this->_customer->email) ;
+        if($c != null){
+            if($c->customer_id != $this->_customer->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким Email");
+                return;
+            }
+        }
+        $c = Customer::getByPhone($this->_customer->phone) ;
+        if($c != null){
+            if($c->customer_id != $this->_customer->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким телефоном");
+                return;
+            }
+        }
+
+        
         $this->_customer->Save();
         $this->customerdetail->setVisible(false);
         $this->customertable->setVisible(true);

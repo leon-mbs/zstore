@@ -152,7 +152,7 @@ class Items extends \App\Pages\Base {
                 continue;
 
             $qty = $item->getQuantity();
-            $elist[$item->item_code] = $qty;
+            $elist[$item->item_code] = round($qty);
         }
 
         $data = json_encode($elist);
