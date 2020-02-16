@@ -44,7 +44,7 @@ class WMinQty extends \Zippy\Html\PageFragment {
 
             foreach ($rs as $row) {
 
-                $this->data[$row['item_id']] = new DataItem($row);
+                $this->data[] = new DataItem($row);
             }
         }
 

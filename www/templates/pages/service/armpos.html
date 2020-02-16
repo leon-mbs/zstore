@@ -340,7 +340,12 @@
                     var payed = $("#payed").val()
                     var payamount = $("#payamount").val()
                     var exchange = parseFloat(payed) - parseFloat(payamount);
-                    $("#exchange").val(exchange.toFixed(2));
+                    if(exchange>0){
+                        $("#exchange").val(exchange.toFixed(2));
+                    } else {
+                        $("#exchange").val(0);
+                    }
+                    
                 });
 
             });

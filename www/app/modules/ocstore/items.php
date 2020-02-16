@@ -151,12 +151,12 @@ class Items extends \App\Pages\Base {
             if (strlen($item->item_code) == 0)
                 continue;
 
-            $qty = $item->getQuantity();
+            $qty = $item->getQuantity(); 
             $elist[$item->item_code] = round($qty);
         }
-
+    
         $data = json_encode($elist);
-
+        
         $fields = array(
             'data' => $data
         );

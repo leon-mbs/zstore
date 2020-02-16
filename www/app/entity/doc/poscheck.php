@@ -138,13 +138,14 @@ class POSCheck extends Document {
         //$conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->detaildata as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
+        foreach ($this->unpackDetails('detaildata') as  $item) {
+
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item->item_id , $item->quantity , $item->snumber );
 
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->setExtCode($item['price'] - $st->partion); //Для АВС 
+                $sc->setExtCode($item->price  - $st->partion); //Для АВС 
                 $sc->save();
             }
         }
@@ -153,7 +154,7 @@ class POSCheck extends Document {
         if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
             if ($customer->discount > 0) {
-                return; //процент
+                 //процент
             } else {
                 $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0 );
                 $customer->save();
@@ -161,11 +162,11 @@ class POSCheck extends Document {
         }
         if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
-            $this->payed = $this->payed - $this->headerdata['exchange']; //без здачи
+          //  $this->payed = $this->payed - $this->headerdata['exchange']; //без здачи
         }
         foreach ($this->unpackDetails('services') as  $ser) {
 
-            $sc = new Entry($this->document_id, $se0 - ($ser->price *   $ser->quantity), 0 );
+            $sc = new Entry($this->document_id, 0 - ($ser->price *   $ser->quantity), 0 );
             $sc->setService($ser->service_id);
             $sc->setExtCode(0 - ($ser->price *   $ser->quantity)); //Для АВС 
              
@@ -173,7 +174,7 @@ class POSCheck extends Document {
                        
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;

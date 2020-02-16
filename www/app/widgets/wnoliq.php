@@ -43,7 +43,7 @@ class WNoliq extends \Zippy\Html\PageFragment {
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
-                 $this->data[$row['item_id']] = new DataItem($row);
+                 $this->data[] = new DataItem($row);
             }
         }
 

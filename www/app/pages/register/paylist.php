@@ -99,7 +99,8 @@ class PayList extends \App\Pages\Base {
 
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        $row->add(new ClickLink('del'));
+        $user = \App\System::getUser();
+        $row->add(new ClickLink('del'))->setVisible($user->username =='admin');
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
     }
 
@@ -211,7 +212,18 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource {
         if ($author > 0) {
             $where .= " and p.user_id=" . $author;
         }
+ 
+        $c = \App\ACL::getBranchConstraint();
+        if (strlen($c) > 0) {
+            $where .= " and ".$c; 
+        }
+
         if ($user->acltype == 2) {
+             if ($user->onlymy == 1) {
+
+                $where .= " and d.user_id  = " . $user->user_id;
+            }           
+            
             $where .= " and d.meta_id in({$user->aclview}) ";
         }
         return $where;
@@ -240,3 +252,5 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource {
     }
 
 }
+
+

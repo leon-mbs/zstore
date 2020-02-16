@@ -759,6 +759,21 @@ class GoodsIssue extends \App\Pages\Base {
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustname->getText();
+        $c = Customer::getByName($cust->customer_name) ;
+        if($c != null){
+            if($c->customer_id != $cust->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким именем");
+                return;
+            }
+        }
+ 
+        $c = Customer::getByPhone($cust->phone) ;
+        if($c != null){
+            if($c->customer_id != $cust->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким телефоном");
+                return;
+            }
+        }
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);

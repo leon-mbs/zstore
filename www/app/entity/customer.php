@@ -17,6 +17,7 @@ class Customer extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->customer_id = 0;
+        $this->customer_name = '';
         $this->status = 0;
     }
 
@@ -80,11 +81,18 @@ class Customer extends \ZCL\DB\Entity {
     }
 
     public static function getByPhone($phone) {
+        if(strlen($phone)==0) return  null;
         $conn = \ZDB\DB::getConnect();
         return Customer::getFirst(' phone = ' . $conn->qstr($phone));
     }
     public static function getByEmail($email) {
+        if(strlen($email)==0) return  null;
         $conn = \ZDB\DB::getConnect();
         return Customer::getFirst(' email = ' . $conn->qstr($email));
+    }  
+    public static function getByName($name) {
+        if(strlen($name)==0) return  null;
+        $conn = \ZDB\DB::getConnect();
+        return Customer::getFirst(' customer_name = ' . $conn->qstr($name));
     }    
 }

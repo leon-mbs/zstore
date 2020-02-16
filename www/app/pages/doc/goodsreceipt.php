@@ -590,6 +590,16 @@ class GoodsReceipt extends \App\Pages\Base {
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        
+        $itemname = Item::qstr($item->itemname);
+        $code = Item::qstr($item->item_code);
+        $cnt = Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
+        if ($cnt > 0) {
+            $this->setError('ТМЦ с таким названием и артикулом  уже  существует');
+            return;
+        }
+        
+        
         $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
