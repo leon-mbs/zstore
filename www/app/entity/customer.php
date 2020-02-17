@@ -90,9 +90,5 @@ class Customer extends \ZCL\DB\Entity {
         $conn = \ZDB\DB::getConnect();
         return Customer::getFirst(' email = ' . $conn->qstr($email));
     }  
-    public static function getByName($name) {
-        if(strlen($name)==0) return  null;
-        $conn = \ZDB\DB::getConnect();
-        return Customer::getFirst(' customer_name = ' . $conn->qstr($name));
-    }    
+     
 }

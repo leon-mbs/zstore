@@ -6,4 +6,4 @@
 #HttpOnly_local.opencart	FALSE	/	FALSE	0	default	7a6cb8b5079fd12fb7fbdd473234efdc
 .local.opencart	TRUE	/	FALSE	1584446253	language	ru-ru
 .local.opencart	TRUE	/	FALSE	1584446253	currency	RUB
-#HttpOnly_local.opencart	FALSE	/	FALSE	0	api	5d311462d4175383294e7de223c658dc
+#HttpOnly_local.opencart	FALSE	/	FALSE	0	api	28459c885771d081b3bcfebc607266a0

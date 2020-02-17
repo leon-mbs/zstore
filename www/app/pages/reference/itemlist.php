@@ -165,7 +165,8 @@ class ItemList extends \App\Pages\Base {
         }
 
 
-        $this->itemtable->itemlist->Reload();
+        $this->itemtable->itemlist->Reload(false);
+        $this->resetURL() ;
     }
 
     public function editOnClick($sender) {

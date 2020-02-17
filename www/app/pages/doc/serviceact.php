@@ -440,12 +440,10 @@ class ServiceAct extends \App\Pages\Base {
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustname->getText();
-        $c = Customer::getByName($cust->customer_name) ;
-        if($c != null){
-            if($c->customer_id != $cust->customer_id) {
-                $this->setError("Уже есть  контрагент с  таким именем");
-                return;
-            }
+ 
+        if(strlen($cust->phone)>0 && strlen($cust->phone) != 10){
+            $this->setError("Телефон должен быть 10  цифр");    
+            return;
         }
  
         $c = Customer::getByPhone($cust->phone) ;
