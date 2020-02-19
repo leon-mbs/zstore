@@ -185,7 +185,6 @@ class GIList extends \App\Pages\Base {
         $this->statuspan->statusform->bret->setVisible(true);
         $this->statuspan->statusform->bsend->setVisible(true);
         $this->statuspan->statusform->bgar->setVisible(true);
-        $this->statuspan->statusform->bdevivered->setVisible(true);
         $this->statuspan->statusform->ship_number->setVisible(true);
 
         $state = $this->_doc->state;
@@ -195,7 +194,7 @@ class GIList extends \App\Pages\Base {
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
 
-            $this->statuspan->statusform->bdevivered->setVisible(false);
+            
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
