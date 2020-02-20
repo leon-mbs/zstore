@@ -18,28 +18,28 @@ class Order extends \App\Entity\Doc\Document {
         $i = 1;
         $detail = array();
 
-        foreach ($this->detaildata as $value) {
+        foreach ($this->detaildata as $item) {
 
-            if (isset($detail[$value['item_id']])) {
-                $detail[$value['item_id']]['quantity'] += $value['quantity'];
+            if (isset($detail[$item->item_id])) {
+                $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
 
-                $ocstoreopt = @unserialize($value['octoreoptions']);  //опции с  опенкарта
+                $ocstoreopt = @unserialize($item->octoreoptions);  //опции с  опенкарта
                 if (is_array($ocstoreopt)) {
                     $t = "<table cellspacing='0' cellpadding='1' style='font-size:smaller'><tr><td style='padding: 1px;'>Опции:</td><td style='padding: 1px;'></td></tr>";
                     foreach ($ocstoreopt as $k => $v) {
                         $t .= "<tr><td style='padding: 1px;'>{$k}</td><td style='padding: 1px;'>{$v}</td></tr>";
                     }
                     $t .= "</table>";
-                    $value['itemname'] = $value['itemname'] . $t;
+                    $item->itemname = $item->itemname . $t;
                 }
                 $detail[] = array("no" => $i++,
-                    "tovar_name" => $value['itemname'],
-                    "tovar_code" => $value['item_code'],
-                    "quantity" => H::fqty($value['quantity']),
-                    "price" => H::fa($value['price']),
-                    "msr" => $value['msr'],
-                    "amount" => H::fa($value['quantity'] * $value['price'])
+                    "tovar_name" => $item->itemname,
+                    "tovar_code" => $item->item_code,
+                    "quantity" => H::fqty($item->quantity),
+                    "price" => H::fa($item->price),
+                    "msr" => $item->msr,
+                    "amount" => H::fa($item->quantity * $item->price)
                 );
             }
         }

@@ -14,17 +14,17 @@ class Warranty extends Document {
 
         $detail = array();
         $total = 0;
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
             $detail[] = array(
-                "tovar_name" => $value['itemname'],
-                "quantity" => H::fqty($value['quantity']),
-                "price" => H::fa($value['price']),
-                "amount" => H::fa($value['quantity'] * $value['price']),
-                "sn" => $value['sn'],
-                "msr" => $value['msr'],
-                "warranty" => $value['warranty']
+                "tovar_name" => $item->itemname,
+                "quantity" => H::fqty($item->quantity),
+                "price" => H::fa($item->price),
+                "amount" => H::fa($item->quantity * $item->price),
+                "sn" => $item->sn,
+                "msr" => $item->msr,
+                "warranty" => $item->warranty
             );
-            $total += $value['quantity'] * $value['price'];
+            $total += $item->quantity * $item->price;
         }
 
 

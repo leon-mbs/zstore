@@ -108,10 +108,8 @@ class Order extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
-            foreach ($this->_doc->detaildata as $_item) {
-                $item = new Item($_item);
-                $this->_tovarlist[$item->item_id] = $item;
-            }
+            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+           
         } else {
             $this->_doc = Document::create('Order');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -247,13 +245,8 @@ class Order extends \App\Pages\Base {
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-
-
-
-        $this->_doc->detaildata = array();
-        foreach ($this->_tovarlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
+  
+        $this->_doc->packDetails('detaildata',$this->_tovarlist) ;
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payed = 0;
