@@ -84,11 +84,11 @@ class OrderCust extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
 
 
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Item($item);
-                $item->old = true;
-                $this->_itemlist[$item->item_id] = $item;
-            }
+
+              $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+              foreach ( $this->_itemlist as $item) {
+                  $item->old = true;
+              }          
         } else {
             $this->_doc = Document::create('OrderCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -223,11 +223,8 @@ class OrderCust extends \App\Pages\Base {
                 continue;
         }
 
-
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+ 
+        $this->_doc->packDetails('detaildata',$this->_itemlist) ;
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payed = 0;

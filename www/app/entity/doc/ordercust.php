@@ -17,14 +17,14 @@ class OrderCust extends Document {
         $i = 1;
 
         $detail = array();
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
             $detail[] = array("no" => $i++,
-                "itemname" => $value['itemname'],
-                "itemcode" => $value['item_code'],
-                "quantity" => H::fqty($value['quantity']),
-                "price" => H::fa($value['price']),
-                "msr" => $value['msr'],
-                "amount" => H::fa($value['quantity'] * $value['price'])
+                "itemname" => $item->itemname,
+                "itemcode" => $item->item_code,
+                "quantity" => H::fqty($item->quantity),
+                "price" => H::fa($item->price),
+                "msr" => $item->msr,
+                "amount" => H::fa($item->quantity * $item->price)
             );
         }
 

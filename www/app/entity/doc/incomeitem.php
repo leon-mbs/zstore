@@ -39,17 +39,17 @@ class IncomeItem extends Document {
 
         $i = 1;
         $detail = array();
-        foreach ($this->detaildata as $value) {
-            $name = $value['itemname'];
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $name = $item->itemname;
 
 
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
-                "snumber" => $value['snumber'],
-                "msr" => $value['msr'],
-                "quantity" => H::fqty($value['quantity']),
-                "price" => H::fa($value['price']),
-                "amount" => H::fa($value['quantity'] * $value['price'])
+                "snumber" => $item->snumber,
+                "msr" => $item->msr,
+                "quantity" => H::fqty($item->quantity),
+                "price" => H::fa($item->price),
+                "amount" => H::fa($item->quantity * $item->price)
             );
         }
 

@@ -18,7 +18,7 @@ class Order extends \App\Entity\Doc\Document {
         $i = 1;
         $detail = array();
 
-        foreach ($this->detaildata as $item) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
             if (isset($detail[$item->item_id])) {
                 $detail[$item->item_id]['quantity'] += $item->quantity;

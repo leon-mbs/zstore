@@ -13,18 +13,17 @@ class InvoiceCust extends Document {
 
     public function generateReport() {
 
-
         $i = 1;
 
         $detail = array();
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
             $detail[] = array("no" => $i++,
-                "itemname" => $value['itemname'],
-                "itemcode" => $value['item_code'],
-                "quantity" => H::fqty($value['quantity']),
-                "price" => H::fa($value['price']),
-                "msr" => $value['msr'],
-                "amount" => H::fa($value['quantity'] * $value['price'])
+                "itemname" => $item->itemname,
+                "itemcode" => $item->item_code,
+                "quantity" => H::fqty($item->quantity),
+                "price" => H::fa($item->price),
+                "msr" => $item->msr,
+                "amount" => H::fa($item->quantity * $item->price)
             );
         }
 
@@ -57,6 +56,7 @@ class InvoiceCust extends Document {
     protected function getNumberTemplate() {
         return 'СВ-000000';
     }
+
     public function getRelationBased() {
         $list = array();
         $list['GoodsReceipt'] = 'Приходная накладная';

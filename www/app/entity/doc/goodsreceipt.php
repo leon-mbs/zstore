@@ -17,21 +17,20 @@ class GoodsReceipt extends Document {
         $i = 1;
 
         $detail = array();
-        foreach ($this->detaildata as $value) {
-            $name = $value['itemname'];
-            if (strlen($value['snumber']) > 0) {
-                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $name = $item->itemname;
+            if (strlen($item->snumber) > 0) {
+                $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
             }
-
 
             $detail[] = array("no" => $i++,
                 "itemname" => $name,
-                "snumber" => $value['snumber'],
-                "itemcode" => $value['item_code'],
-                "quantity" => H::fqty($value['quantity']),
-                "price" => H::fa($value['price']),
-                "msr" => $value['msr'],
-                "amount" => H::fa($value['quantity'] * $value['price'])
+                "snumber" => $item->snumber,
+                "itemcode" => $item->item_code,
+                "quantity" => H::fqty($item->quantity),
+                "price" => H::fa($item->price),
+                "msr" => $item->msr,
+                "amount" => H::fa($item->quantity * $item->price)
             );
         }
 
@@ -59,13 +58,13 @@ class GoodsReceipt extends Document {
         $common = \App\System::getOptions("common");
 
         //аналитика
-        foreach ($this->detaildata as $row) {
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $row['item_id'], $row['price'], $row['snumber'], $row['sdate'], true);
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
 
 
-            $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
+            $sc = new Entry($this->document_id, $item->amount, $item->quantity);
             $sc->setStock($stock->stock_id);
-            $sc->setExtCode($row['amount']); //Для АВС 
+            $sc->setExtCode($item->amount); //Для АВС 
             // $sc->setCustomer($this->customer_id);
 
             $sc->save();
@@ -74,9 +73,9 @@ class GoodsReceipt extends Document {
             if ($common['useval'] == true) {
                 // if($row['old']==true)continue;  //не  меняем для  предыдущих строк
                 //запоминаем курс  последней покупки
-                $it = \App\Entity\Item::load($row['item_id']);
-                $it->curname = $row['curname'];
-                $it->currate = $row['currate'];
+                $it = \App\Entity\Item::load($item->item_id);
+                $it->curname = $item->curname;
+                $it->currate = $item->currate;
                 $it->save();
             }
         }

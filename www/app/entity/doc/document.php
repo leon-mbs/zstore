@@ -347,16 +347,7 @@ class Document extends \ZCL\DB\Entity {
         return $doc;
     }
 
-    protected function afterSave($update) {
-
-        //  if ($update == false) {   //новый  документ
-        //    $this->updateStatus(self::STATE_NEW);
-        // }
-        // else {
-        //    if ($this->state == self::STATE_NEW)
-        //    $this->updateStatus(self::STATE_EDITED);
-        //  }
-    }
+ 
 
     /**
      * Обновляет состояние  документа

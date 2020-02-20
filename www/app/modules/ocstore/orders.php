@@ -161,6 +161,7 @@ class Orders extends \App\Pages\Base {
             $neworder->notes .= " Комментарий:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
+            $neworder->updateStatus(Document::STATE_INPROCESS);
 
             $i++;
         }

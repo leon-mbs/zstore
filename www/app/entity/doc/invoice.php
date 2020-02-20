@@ -18,18 +18,18 @@ class Invoice extends \App\Entity\Doc\Document {
         $i = 1;
         $detail = array();
 
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$value['item_id']])) {
-                $detail[$value['item_id']]['quantity'] += $value['quantity'];
+            if (isset($detail[$item->item_id])) {
+                $detail[$item->item_id]['quantity'] += $item->antity;
             } else {
                 $detail[] = array("no" => $i++,
-                    "tovar_name" => $value['itemname'],
-                    "tovar_code" => $value['item_code'],
-                    "quantity" => H::fqty($value['quantity']),
-                    "price" => H::fa($value['price']),
-                    "msr" => $value['msr'],
-                    "amount" => H::fa($value['quantity'] * $value['price'])
+                    "tovar_name" => $item->itemname,
+                    "tovar_code" => $item->item_code,
+                    "quantity" => H::fqty($item->quantity),
+                    "price" => H::fa($item->price),
+                    "msr" => $item->msr,
+                    "amount" => H::fa($item->quantity * $item->price)
                 );
             }
         }
