@@ -17,16 +17,16 @@ class TransItem extends Document {
     public function Execute() {
 
     
-           foreach($this->detaildata as $item){  
-           if ($item['st1'] > 0 && $item['st1'] > 0) {   //перемещение партий
-                $st1 = Stock::load($item['st1']);
-                $st2 = Stock::load($item['st2']);
+           foreach($this->unpackDetails('detaildata') as $item){  
+           if ($item->st1 > 0 && $item->st1 > 0) {   //перемещение партий
+                $st1 = Stock::load($item->st1);
+                $st2 = Stock::load($item->st2);
 
-                $sc = new Entry($this->document_id, 0 - $item['quantity'] * $st1->partion, 0 - $item['quantity']);
+                $sc = new Entry($this->document_id, 0 - $item->quantity * $st1->partion, 0 - $item->quantity);
                 $sc->setStock($st1->stock_id);
                 $sc->save();
 
-                $sc = new Entry($this->document_id, $item['quantity'] * $st2->partion, $item['quantity']);
+                $sc = new Entry($this->document_id, $item->quantity * $st2->partion, $item->quantity);
                 $sc->setStock($st2->stock_id);
                 $sc->save();
 
@@ -59,7 +59,7 @@ class TransItem extends Document {
         $si = Stock::load($this->headerdata['fromitem']);
         $fi = Item::load($si->item_id);
         $ti = Item::load($this->headerdata['toitem']);
-        if ($item['st1'] > 0 && $item['st1'] > 0) {   //перемещение партий
+        if ($fi->st1 > 0 && $item['st1'] > 0) {   //перемещение партий
             $st1 = Stock::load($item['st1']);
             $fi = Item::load($st1->item_id);
             $ti = Item::load($st1->item_id);

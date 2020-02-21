@@ -58,13 +58,13 @@ class ReturnIssue extends Document {
         $conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->detaildata as $row) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
 
-            $sc = new Entry($this->document_id, $row['amount'], $row['quantity']);
-            $sc->setStock($row['stock_id']);
+            $sc = new Entry($this->document_id, $item->amount , $item->quantity );
+            $sc->setStock($item->stock_id );
 
-            $sc->setExtCode(0 - ($item['price'] - $st->partion)); //Для АВС 
+            $sc->setExtCode(0 - ($item->price - $st->partion)); //Для АВС 
             //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }
