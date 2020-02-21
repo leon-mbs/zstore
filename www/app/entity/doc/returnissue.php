@@ -18,22 +18,22 @@ class ReturnIssue extends Document {
         $i = 1;
         $detail = array();
 
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$value['item_id']])) {
-                $detail[$value['item_id']]['quantity'] += $value['quantity'];
+            if (isset($detail[$item->item_id])) {
+                $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
-                $name = $value['itemname'];
-                if (strlen($value['snumber']) > 0) {
-                    $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
+                $name = $item->itemname;
+                if (strlen($item->snumber) > 0) {
+                    $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
                 }
 
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $name,
-                    "quantity" => H::fqty($value['quantity']),
-                    "price" => H::fa($value['price']),
-                    "msr" => $value['msr'],
-                    "amount" => H::fa($value['quantity'] * $value['price'])
+                    "quantity" => H::fqty($item->quantity),
+                    "price" => H::fa($item->price),
+                    "msr" => $item->msr,
+                    "amount" => H::fa($item->quantity * $item->price)
                 );
             }
         }

@@ -18,24 +18,24 @@ class ProdIssue extends Document {
         $i = 1;
         $detail = array();
 
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$value['item_id']])) {
-                $detail[$value['item_id']]['quantity'] += $value['quantity'];
+            if (isset($detail[$item->item_id])) {
+                $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
-                $name = $value['itemname'];
-                if (strlen($value['snumber']) > 0) {
-                    $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
+                $name = $item->itemname;
+                if (strlen($item->snumber) > 0) {
+                    $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
                 }
 
 
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $name,
-                    "tovar_code" => $value['item_code'],
-                    "quantity" => H::fqty($value['quantity']),
-                    "price" => H::fa($value['price']),
-                    "msr" => $value['msr'],
-                    "amount" => H::fa($value['quantity'] * $value['price'])
+                    "tovar_code" => $item->item_code,
+                    "quantity" => H::fqty($item->quantity),
+                    "price" => H::fa($item->price),
+                    "msr" => $item->msr,
+                    "amount" => H::fa($item->quantity * $item->price)
                 );
             }
         }
@@ -61,13 +61,13 @@ class ProdIssue extends Document {
         $conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->detaildata as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item->item_id, $item->quantity, $item->snumber);
 
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $item['price'], 0 - $st->quantity);
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->setExtCode($item['price'] - $st->partion); //Для АВС 
+                $sc->setExtCode($item->price - $st->partion); //Для АВС 
                 $sc->save();
             }
         }

@@ -19,13 +19,13 @@ class OutcomeItem extends Document {
 
         $conn = \ZDB\DB::getConnect();
 
-        foreach ($this->detaildata as $item) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
             //списываем  со склада
 
-            $listst = Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
+            $listst = Stock::pickup($this->headerdata['store'], $item->item_id, $item->quantity, $item->snumber);
             if (count($listst) == 0) {
-                \App\System::setErrorMsg('Недостаточно товара ' . $item['itemname']);
+                \App\System::setErrorMsg('Недостаточно товара ' . $item->itemname);
                 return false;
             }
             foreach ($listst as $st) {
@@ -42,15 +42,15 @@ class OutcomeItem extends Document {
 
         $i = 1;
         $detail = array();
-        foreach ($this->detaildata as $value) {
-            $name = $value['itemname'];
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $name = $item->itemname;
 
 
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
-                "snumber" => $value['snumber'],
-                "msr" => $value['msr'],
-                "quantity" => H::fqty($value['quantity']));
+                "snumber" => $item->snumber,
+                "msr" => $item->msr,
+                "quantity" => H::fqty($item->quantity));
         }
 
         $header = array(

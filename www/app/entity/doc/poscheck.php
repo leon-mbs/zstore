@@ -20,22 +20,22 @@ class POSCheck extends Document {
         $i = 1;
         $detail = array();
 
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
 
-            $name = $value['itemname'];
-            if (strlen($value['snumber']) > 0) {
-                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
+            $name = $item->itemname;
+            if (strlen($item->snumber) > 0) {
+                $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
             }
 
 
             $detail[] = array("no" => $i++,
                 "tovar_name" => $name,
-                "tovar_code" => $value['item_code'],
-                "quantity" => H::fqty($value['quantity']),
-                "msr" => $value['msr'],
-                "price" => H::fa($value['price']),
-                "amount" => H::fa($value['quantity'] * $value['price'])
+                "tovar_code" => $item->item_code,
+                "quantity" => H::fqty($item->quantity),
+                "msr" => $item->msr,
+                "price" => H::fa($item->price),
+                "amount" => H::fa($item->quantity * $item->price)
             );
         }
          foreach ($this->unpackDetails('services') as $ser) {
@@ -79,30 +79,30 @@ class POSCheck extends Document {
         return $html;
     }
  
-   public function generatePosReport() {
+    public function generatePosReport() {
      
         $detail = array();
 
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $name = $value['itemname'];
+            $name = $item->itemname;
 
             $detail[] = array( 
                 "tovar_name" => $name,
-                "quantity" => H::fqty($value['quantity']),
-                "amount" => H::fa($value['quantity'] * $value['price'])
+                "quantity" => H::fqty($item->quantity),
+                "amount" => H::fa($item->quantity * $item->price)
             );
         }
 
-            foreach ($this->unpackDetails('services') as $ser) {
-               $detail[] = array("no" => $i++,
-                    "tovar_name" => $ser->service_name,
-             
-                    "quantity" => H::fqty($ser->quantity),
-                  
-                    "amount" => H::fa($ser->quantity * $ser->price)
-                );             
-            }
+        foreach ($this->unpackDetails('services') as $ser) {
+           $detail[] = array("no" => $i++,
+                "tovar_name" => $ser->service_name,
+         
+                "quantity" => H::fqty($ser->quantity),
+              
+                "amount" => H::fa($ser->quantity * $ser->price)
+            );             
+        }
 
         $firm = H::getFirmData($this->branch_id);
 
