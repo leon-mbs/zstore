@@ -180,7 +180,7 @@ class TaskList extends \App\Pages\Base {
 
     public function statusOnSubmit($sender) {
        
-        if(\App\Acl::checkExeDoc($this->_doc,true,true)==false ) return;
+        if(\App\Acl::checkExeDoc($this->_task,true,true)==false ) return;
        
        
         $this->_task = $this->_task->cast();

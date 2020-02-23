@@ -12,10 +12,10 @@
  ;
  
  ALTER TABLE stores 
-  ADD COLUMN branch_id INT(11) NOT NULL DEFAULT 0;
+  ADD COLUMN branch_id INT(11)   DEFAULT 0;
   
   ALTER TABLE mfund 
-  ADD COLUMN branch_id INT(11) NOT NULL DEFAULT 0;
+  ADD COLUMN branch_id INT(11)   DEFAULT 0;
   
 ALTER TABLE employees 
   ADD COLUMN branch_id INT(11) DEFAULT 0;

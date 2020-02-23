@@ -62,7 +62,7 @@ class PayCustList extends \App\Pages\Base {
         $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
-        $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
+        
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
 
@@ -215,9 +215,7 @@ class PayCustList extends \App\Pages\Base {
         $amount = $form->pamount->getText();
         if ($amount == 0)
             return;
-        $amount = $form->pamount->getText();
-        if ($amount == 0)
-            return;
+ 
 
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
             $this->setError('Сумма  больше  необходимой  оплаты');
