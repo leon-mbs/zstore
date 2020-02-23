@@ -32,7 +32,7 @@ class GoodsIssue extends Document {
                 "tovar_code" => $item->item_code,
                 "quantity" => H::fqty($item->quantity),
                 "msr" => $item->msr,
-                "price" => H::fa($item->(price),
+                "price" => H::fa($item->price),
                 "amount" => H::fa($item->quantity * $item->price)
             );
         }

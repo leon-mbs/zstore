@@ -6,7 +6,7 @@
         </td>
     </tr>
 
-</tr>
+ 
 <tr>
     <td colspan="4">
         <b>Со счета:</b> {{from}}

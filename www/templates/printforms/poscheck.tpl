@@ -1,9 +1,7 @@
  
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
-
-
-            
+              
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             Чек № {{document_number}} от {{date}} <br> 

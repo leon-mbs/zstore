@@ -240,18 +240,17 @@ class ItemList extends \App\Pages\Base {
             $doc->document_number = "ПК-000001";
         $doc->document_date = time();
 
-        $item = Item::load($st1->item_id);
-        $item->snumber = $st1->snumber;
-        $item->quantity = $qty;
-        $item->st1 = $st1->stock_id;
-        $item->st2 = $st2->stock_id;
+ 
 
 
-        $doc->detaildata[] = $item->getData();
+        $doc->headerdata['fromitem'] = $st1->stock_id ;
+        $doc->headerdata['tostock'] = $st2->stock_id ;
 
         $store = Store::load($st1->store_id);
         $doc->headerdata['store'] = $store->store_id;
         $doc->headerdata['storename'] = $store->storename;
+        $doc->headerdata['fromquantity'] = $qty;
+        $doc->headerdata['toquantity'] = $qty;
         $doc->notes = "Перемещение партий";
         $doc->save();
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
