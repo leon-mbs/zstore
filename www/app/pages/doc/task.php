@@ -323,7 +323,7 @@ class Task extends \App\Pages\Base {
                 }
 
                 //  $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                $this->_doc->updateStatus(Document::STATE_APPROVED );
+                $this->_doc->updateStatus(Document::STATE_INPROCESS );
 
                 $this->_doc->save();
             } else {
