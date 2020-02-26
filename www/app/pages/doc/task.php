@@ -61,8 +61,7 @@ class Task extends \App\Pages\Base {
    
         //service
         $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new AutocompleteTextInput('editservice'))->onText($this, 'OnAutoServive');
-        $this->editdetail->editservice->onChange($this, 'OnChangeServive', true);
+        $this->editdetail->add(new DropDownChoice('editservice',Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
     
         $this->editdetail->add(new TextInput('edithours'));
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -159,8 +158,8 @@ class Task extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-        $this->editdetail->editservice->setText('');
-        $this->editdetail->editservice->setKey(0);
+        
+        $this->editdetail->editservice->setValue(0);
 
       
         $this->editdetail->edithours->setText('');
@@ -175,8 +174,8 @@ class Task extends \App\Pages\Base {
       
         $this->editdetail->edithours->setText($service->hours);
 
-        $this->editdetail->editservice->setKey($service->service_id);
-        $this->editdetail->editservice->setText($service->service_name);
+        $this->editdetail->editservice->setValue($service->service_id);
+        
     }
 
     public function deleteOnClick($sender) {
@@ -189,7 +188,7 @@ class Task extends \App\Pages\Base {
     }
 
     public function saverowOnClick($sender) {
-        $id = $this->editdetail->editservice->getKey();
+        $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
             $this->setError("Не выбрана  услуга");
             return;
@@ -208,8 +207,8 @@ class Task extends \App\Pages\Base {
         $this->docform->detail->Reload();
 
         //очищаем  форму
-        $this->editdetail->editservice->setKey(0);
-        $this->editdetail->editservice->setText('');
+        $this->editdetail->editservice->setValue(0);
+        
         $this->editdetail->edithours->setText("0");
 
         
@@ -379,14 +378,9 @@ class Task extends \App\Pages\Base {
         App::RedirectBack();
     }
 
-    public function OnAutoServive($sender) {
-
-        $text = Service::qstr('%' . $sender->getText() . '%');
-        return Service::findArray("service_name", "  disabled<>1 and  service_name like {$text}");
-    }
-
+   
     public function OnChangeServive($sender) {
-        $id = $sender->getKey();
+        $id = $sender->getValue();
 
         $item = Service::load($id);
      

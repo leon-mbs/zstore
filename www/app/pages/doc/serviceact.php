@@ -71,8 +71,7 @@ class ServiceAct extends \App\Pages\Base {
 
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new AutocompleteTextInput('editservice'))->onText($this, 'OnAutoServive');
-        $this->editdetail->editservice->onChange($this, 'OnChangeServive', true);
+        $this->editdetail->add(new DropDownChoice('editservice',Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
 
 
         $this->editdetail->add(new TextInput('editprice'));
@@ -152,8 +151,8 @@ class ServiceAct extends \App\Pages\Base {
 
         $this->editdetail->editprice->setText($service->price);
 
-        $this->editdetail->editservice->setKey($service->service_id);
-        $this->editdetail->editservice->setText($service->service_name);
+        $this->editdetail->editservice->setValue($service->service_id);
+        
         $this->_rowid = $service->service_id;
     }
 
@@ -180,7 +179,7 @@ class ServiceAct extends \App\Pages\Base {
     }
 
     public function saverowOnClick($sender) {
-        $id = $this->editdetail->editservice->getKey();
+        $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
             $this->setError("Не выбрана  услуга");
             return;
@@ -197,9 +196,9 @@ class ServiceAct extends \App\Pages\Base {
         $this->calcTotal();
         $this->calcPay();
         //очищаем  форму
-        $this->editdetail->editservice->setKey(0);
+        $this->editdetail->editservice->setValue(0);
         $this->editdetail->editdesc->setText('');
-        $this->editdetail->editservice->setText('');
+        
 
 
         $this->editdetail->editprice->setText("0");
@@ -404,14 +403,9 @@ class ServiceAct extends \App\Pages\Base {
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
-    public function OnAutoServive($sender) {
-
-        $text = Service::qstr('%' . $sender->getText() . '%');
-        return Service::findArray("service_name", "    service_name like {$text}");
-    }
-
+    
     public function OnChangeServive($sender) {
-        $id = $sender->getKey();
+        $id = $sender->getValue();
 
         $item = Service::load($id);
         $price = $item->price;
