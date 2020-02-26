@@ -181,10 +181,12 @@ class Import extends \App\Pages\Base {
             $doc->document_date = time();
 
             $amount = 0;
+            $itlist = array();
             foreach ($newitems as $item) {
-                $doc->detaildata[] = $item->getData();
+                $itlist[] = $item;
                 $amount = $amount + ($item->quantity * $item->price);
             }
+            $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
             $doc->headerdata['store'] = $store;
 

@@ -107,12 +107,12 @@ class EqList extends \App\Pages\Base {
 
 
         foreach ($list as $task) {
-            foreach ($task->detaildata as $value) {
-                if ($value['eq_id'] > 0) {
+            foreach ($task->unpackDetails('eqlist') as $eq) {
+                if ($eq->eq_id > 0) {
 
                     $it = new \App\DataItem(array(
                         "usetask" => $task->document_number,
-                        "useplace" => $value['eq_name']
+                        "useplace" => $eq->eq_name
                     ));
                     $this->_uselist[] = $it;
                 }

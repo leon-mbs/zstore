@@ -62,14 +62,14 @@ class PayCustList extends \App\Pages\Base {
         $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
-        
+
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
 
         $this->clist->add(new ClickLink('csv', $this, 'oncsv'));
         $this->plist->add(new ClickLink('csv2', $this, 'oncsv'));
-        
-        
+
+
         $this->updateCust();
     }
 
@@ -88,8 +88,6 @@ class PayCustList extends \App\Pages\Base {
               group by customer_id ,fl ) t join customers c  on t.customer_id = c.customer_id order by c.customer_name ";
         $this->_custlist = \App\DataItem::query($sql);
         $this->clist->custlist->Reload();
-        
-        
     }
 
     public function custlistOnRow($row) {
@@ -215,7 +213,7 @@ class PayCustList extends \App\Pages\Base {
         $amount = $form->pamount->getText();
         if ($amount == 0)
             return;
- 
+
 
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
             $this->setError('Сумма  больше  необходимой  оплаты');
@@ -242,35 +240,35 @@ class PayCustList extends \App\Pages\Base {
 
     public function oncsv($sender) {
         $csv = "";
-        if($sender->id == 'csv') {
+        if ($sender->id == 'csv') {
             $list = $this->clist->custlist->getDataSource()->getItems(-1, -1, 'customer_name');
-            
+
 
             foreach ($list as $c) {
-                 
+
                 $csv .= $c->customer_name . ';';
                 $csv .= $c->phone . ';';
-           
-                $csv .= H::fa($c->fl == -1 ? $c->sam : "") . ';';  
-                $csv .= H::fa($c->fl ==  1 ? $c->sam : "") . ';';
-                 
+
+                $csv .= H::fa($c->fl == -1 ? $c->sam : "") . ';';
+                $csv .= H::fa($c->fl == 1 ? $c->sam : "") . ';';
+
                 $csv .= "\n";
             }
         }
-        if($sender->id == 'csv2') {
+        if ($sender->id == 'csv2') {
             $list = $this->plist->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-            
+
 
             foreach ($list as $d) {
                 $csv .= date('Y.m.d', $d->document_date) . ';';
                 $csv .= $d->document_number . ';';
-           
+
                 $csv .= H::fa($d->amount) . ';';
                 $csv .= str_replace(';', '', $d->notes) . ';';
                 $csv .= "\n";
             }
         }
-        
+
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
 
 
@@ -284,4 +282,3 @@ class PayCustList extends \App\Pages\Base {
     }
 
 }
- 

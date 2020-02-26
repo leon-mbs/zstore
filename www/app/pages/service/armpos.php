@@ -32,7 +32,6 @@ class ARMPos extends \App\Pages\Base {
 
     public $_itemlist = array();
     public $_serlist = array();
-   
     private $pos;
     private $_doc = null;
 
@@ -51,8 +50,8 @@ class ARMPos extends \App\Pages\Base {
             $plist = \App\Entity\Pos::findArray('pos_name', 'pos_id=' . $cc);
         }
         $this->form1->add(new DropDownChoice('pos', $plist, $cc));
-  
-  
+
+
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
         $this->add(new Form('form2'))->setVisible(false);
@@ -64,7 +63,7 @@ class ARMPos extends \App\Pages\Base {
         $this->form2->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
         $this->form2->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->form2->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
-        $this->form2->addser->setVisible(Service::findCnt('disabled<>1')>0);  //показываем  если  есть  услуги
+        $this->form2->addser->setVisible(Service::findCnt('disabled<>1') > 0);  //показываем  если  есть  услуги
         $this->form2->add(new Label('total'));
 
         $this->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
@@ -112,19 +111,19 @@ class ARMPos extends \App\Pages\Base {
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
-        
+
         $this->add(new Form('editserdetail'))->setVisible(false);
         $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
         $this->editserdetail->add(new TextInput('editserprice'));
-        
-                                                       
+
+
         $this->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
         $this->editserdetail->editser->onChange($this, 'OnChangeSer', true);
 
         $this->editserdetail->add(new Button('cancelser'))->onClick($this, 'cancelrowOnClick');
         $this->editserdetail->add(new SubmitButton('submitser'))->onClick($this, 'saveserOnClick');
-        
-        
+
+
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
@@ -173,8 +172,6 @@ class ARMPos extends \App\Pages\Base {
         $this->newdoc(null);
     }
 
-  
-
     public function newdoc($sender) {
 
         $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
@@ -201,7 +198,7 @@ class ARMPos extends \App\Pages\Base {
     }
 
     public function next2docOnClick($sender) {
-        if (count($this->_itemlist) == 0 && count($this->_serlist) == 0 ) {
+        if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
             $this->setError('Не введены позиции');
             return;
         }
@@ -228,7 +225,6 @@ class ARMPos extends \App\Pages\Base {
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
-    
     public function serOnRow($row) {
         $item = $row->getDataItem();
 
@@ -240,14 +236,15 @@ class ARMPos extends \App\Pages\Base {
         $row->add(new Label('seramount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('serdelete'))->onClick($this, 'serdeleteOnClick');
         //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-    }    
+    }
+
     public function addcodeOnClick($sender) {
         $code = trim($this->form2->barcode->getText());
         $this->form2->barcode->setText('');
         if ($code == '')
             return;
-     
-       
+
+
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$this->pos->store}) and  (item_code = {$code_} or bar_code = {$code_})");
 
@@ -300,8 +297,8 @@ class ARMPos extends \App\Pages\Base {
             }
             $this->_itemlist[$item->item_id] = $item;
         }
-         $this->form2->detail->Reload();
-         $this->calcTotal();
+        $this->form2->detail->Reload();
+        $this->calcTotal();
     }
 
     public function deleteOnClick($sender) {
@@ -311,11 +308,10 @@ class ARMPos extends \App\Pages\Base {
         // unset($this->_itemlist[$tovar->tovar_id]);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
-         $this->form2->detail->Reload();
+        $this->form2->detail->Reload();
         $this->calcTotal();
     }
 
-    
     public function serdeleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
@@ -326,8 +322,8 @@ class ARMPos extends \App\Pages\Base {
         $this->_serlist = array_diff_key($this->_serlist, array($ser->service_id => $this->_serlist[$ser->service_id]));
         $this->form2->detailser->Reload();
         $this->calcTotal();
-         
-    }    
+    }
+
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
@@ -335,14 +331,15 @@ class ARMPos extends \App\Pages\Base {
         $this->editdetail->qtystock->setText("");
         $this->form2->setVisible(false);
     }
+
     public function addserOnClick($sender) {
         $this->editserdetail->setVisible(true);
         $this->editserdetail->editserquantity->setText("1");
         $this->editserdetail->editserprice->setText("0");
-        
+
         $this->form2->setVisible(false);
-        
     }
+
     public function saverowOnClick($sender) {
 
         $id = $this->editdetail->edittovar->getKey();
@@ -380,7 +377,7 @@ class ARMPos extends \App\Pages\Base {
         $this->editdetail->setVisible(false);
         $this->form2->setVisible(true);
 
-         $this->form2->detail->Reload();
+        $this->form2->detail->Reload();
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
@@ -416,9 +413,8 @@ class ARMPos extends \App\Pages\Base {
         $this->editserdetail->editserquantity->setText("1");
         $this->editserdetail->editserprice->setText("");
         $this->calcTotal();
-         
-    }    
-    
+    }
+
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->form2->setVisible(true);
@@ -440,7 +436,7 @@ class ARMPos extends \App\Pages\Base {
 
             $total = $total + $item->amount;
         }
-       foreach ($this->_serlist as $item) {
+        foreach ($this->_serlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
@@ -481,19 +477,20 @@ class ARMPos extends \App\Pages\Base {
     }
 
     public function OnAutoSer($sender) {
-         
+
         $text = trim($sender->getText());
         $text = Service::qstr('%' . $text . '%');
-        return  Service::findArray('service_name',"disabled <> 1 and service_name like {$text}");
+        return Service::findArray('service_name', "disabled <> 1 and service_name like {$text}");
     }
+
     public function OnChangeSer($sender) {
         $id = $sender->getKey();
         $ser = Service::load($id);
         $this->editserdetail->editserprice->setText($ser->price);
-        
-        $this->updateAjax(array(  'editserprice' ));
-    }    
-    
+
+        $this->updateAjax(array('editserprice'));
+    }
+
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
@@ -546,21 +543,21 @@ class ARMPos extends \App\Pages\Base {
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editphone->getText();
- 
-        if(strlen($cust->phone)>0 && strlen($cust->phone) != 10){
-            $this->setError("Телефон должен быть 10  цифр");    
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+            $this->setError("Телефон должен быть 10  цифр");
             return;
         }
- 
-        $c = Customer::getByPhone($cust->phone) ;
-        if($c != null){
-            if($c->customer_id != $cust->customer_id) {
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
                 $this->setError("Уже есть  контрагент с  таким телефоном");
                 return;
             }
         }
-      
-      
+
+
         $cust->save();
         $this->form3->customer->setText($cust->customer_name);
         $this->form3->customer->setKey($cust->customer_id);
@@ -585,11 +582,11 @@ class ARMPos extends \App\Pages\Base {
             $this->_doc->document_number = $this->_doc->nextNumber();
             $this->form3->document_number->setText($this->_doc->document_number);
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->_docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              return; 
-        }        
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->_docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            return;
+        }
         $this->_doc->document_date = $this->form3->document_date->getDate();
         $this->_doc->notes = $this->form3->notes->getText();
 
@@ -633,10 +630,10 @@ class ARMPos extends \App\Pages\Base {
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];
-        
- 
-        $this->_doc->packDetails('detaildata',$this->_itemlist) ;
-        $this->_doc->packDetails('services',$this->_serlist) ;
+
+
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
+        $this->_doc->packDetails('services', $this->_serlist);
 
         $this->_doc->amount = $this->form3->total2->getText();
         $conn = \ZDB\DB::getConnect();
@@ -661,7 +658,6 @@ class ARMPos extends \App\Pages\Base {
 
         $check = $this->_doc->generatePosReport();
         $this->form4->showcheck->setText($check, true);
- 
     }
 
     public function OnPayment($sender) {

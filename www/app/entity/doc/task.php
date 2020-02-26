@@ -15,13 +15,11 @@ class Task extends Document {
     public function generateReport() {
 
         $i = 1;
-        
+
         $detail = array();
-        $eqlist = unserialize(base64_decode($this->headerdata['eq']));
-        $emplist = unserialize(base64_decode($this->headerdata['emp']));
 
 
-        foreach ($this->unpackDetails('detaildata') as  $ser) {
+        foreach ($this->unpackDetails('detaildata') as $ser) {
 
             $detail[] = array("no" => $i++,
                 "service_name" => $ser->service_name,
@@ -31,12 +29,12 @@ class Task extends Document {
         }
 
         $detail2 = array();
-        foreach ($this->unpackDetails('eqlist') as  $eq) {
-            
+        foreach ($this->unpackDetails('eqlist') as $eq) {
+
 
             $detail2[] = array(
-                "eq_name" => $eq->eq_name ,
-                "code" => $eq->code 
+                "eq_name" => $eq->eq_name,
+                "code" => $eq->code
             );
         }
         $detail3 = array();
@@ -45,17 +43,16 @@ class Task extends Document {
                 "emp_name" => $emp->emp_name
             );
         }
-  
+
         $header = array('date' => date('d.m.Y', $this->document_date),
-            
-            "pareaname" => strlen($this->headerdata["pareaname"])>0 ? $this->headerdata["pareaname"] : false, 
+            "pareaname" => strlen($this->headerdata["pareaname"]) > 0 ? $this->headerdata["pareaname"] : false,
             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
             "document_number" => $this->document_number,
             "notes" => $this->notes,
-            "baseddoc" => strlen($this->headerdata["parent_number"])>0 ? $this->headerdata["parent_number"] : false,
+            "baseddoc" => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
             "_detail" => $detail,
             "_detail2" => $detail2,
-            "iseq" => count($detail2)>0,
+            "iseq" => count($detail2) > 0,
             "_detail3" => $detail3
         );
         $report = new \App\Report('task.tpl');
@@ -68,8 +65,8 @@ class Task extends Document {
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
-   
-       foreach ($this->unpackDetails('detaildata') as  $ser) {
+
+        foreach ($this->unpackDetails('detaildata') as $ser) {
 
             $sc = new Entry($this->document_id, 0 - $ser->price, 0);
             $sc->setService($ser->service_id);
@@ -87,7 +84,8 @@ class Task extends Document {
     public function getRelationBased() {
         $list = array();
         $list['ProdIssue'] = 'Cписание в  производство ';
-    
+
         return $list;
-    }    
+    }
+
 }

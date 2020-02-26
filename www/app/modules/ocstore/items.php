@@ -151,12 +151,12 @@ class Items extends \App\Pages\Base {
             if (strlen($item->item_code) == 0)
                 continue;
 
-            $qty = $item->getQuantity(); 
+            $qty = $item->getQuantity();
             $elist[$item->item_code] = round($qty);
         }
-    
+
         $data = json_encode($elist);
-        
+
         $fields = array(
             'data' => $data
         );
@@ -227,7 +227,7 @@ class Items extends \App\Pages\Base {
                 continue;
             $cnt = Item::findCnt("item_code=" . Item::qstr($product['sku']));
             if ($cnt > 0)
-               continue; //уже  есть с  таким  артикулом
+                continue; //уже  есть с  таким  артикулом
 
             $product['name'] = str_replace('&quot;', '"', $product['name']);
             $item = new Item();
@@ -245,21 +245,21 @@ class Items extends \App\Pages\Base {
                 $item->price4 = $product['price'];
             if ($modules['ocpricetype'] == 'price5')
                 $item->price5 = $product['price'];
-                
-                
-            if($common['useimages']==1){
-                $im =  $modules['ocsite'] .'/image/'.$product['image'];
-                $im=  @file_get_contents($im);
-                if(strlen($im)>0){
-                    $imagedata = getimagesizefromstring($im ) ;
+
+
+            if ($common['useimages'] == 1) {
+                $im = $modules['ocsite'] . '/image/' . $product['image'];
+                $im = @file_get_contents($im);
+                if (strlen($im) > 0) {
+                    $imagedata = getimagesizefromstring($im);
                     $image = new \App\Entity\Image();
                     $image->content = $im;
                     $image->mime = $imagedata['mime'];
 
                     $image->save();
-                    $item->image_id = $image->image_id;                   
+                    $item->image_id = $image->image_id;
                 }
-            }   
+            }
             $item->save();
             $i++;
         }

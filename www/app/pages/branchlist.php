@@ -36,7 +36,7 @@ class BranchList extends \App\Pages\Base {
         $this->add(new Form('branchdetail'))->setVisible(false);
         $this->branchdetail->add(new TextInput('editbranchname'));
         $this->branchdetail->add(new TextInput('editshopname'));
-       
+
         $this->branchdetail->add(new TextInput('editaddress'));
         $this->branchdetail->add(new TextInput('editphone'));
         $this->branchdetail->add(new TextArea('editcomment'));
@@ -49,10 +49,10 @@ class BranchList extends \App\Pages\Base {
         $item = $row->getDataItem();
 
         $row->add(new Label('branch_name', $item->branch_name));
-     
-      
+
+
         $row->add(new Label('address', $item->address));
-       
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
@@ -79,7 +79,7 @@ class BranchList extends \App\Pages\Base {
         $this->branchdetail->editphone->setText($this->_branch->phone);
 
         $this->branchdetail->editaddress->setText($this->_branch->address);
-  
+
         $this->branchdetail->editcomment->setText($this->_branch->comment);
         $this->branchdetail->editdisabled->setChecked($this->_branch->disabled);
     }
@@ -105,7 +105,7 @@ class BranchList extends \App\Pages\Base {
         $this->_branch->address = $this->branchdetail->editaddress->getText();
         $this->_branch->phone = $this->branchdetail->editphone->getText();
         $this->_branch->shop_name = $this->branchdetail->editshopname->getText();
-         $this->_branch->comment = $this->branchdetail->editcomment->getText();
+        $this->_branch->comment = $this->branchdetail->editcomment->getText();
         $this->_branch->disabled = $this->branchdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_branch->Save();

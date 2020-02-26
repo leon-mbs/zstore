@@ -205,7 +205,7 @@ class ItemList extends \App\Pages\Base {
         }
         $this->detailpanel->moveform->frompart->setOptionList($st);
         $this->detailpanel->moveform->topart->setOptionList($st);
-        $this->detailpanel->moveform->setVisible(count($st)>1);
+        $this->detailpanel->moveform->setVisible(count($st) > 1);
     }
 
     public function OnMove($sender) {
@@ -240,11 +240,11 @@ class ItemList extends \App\Pages\Base {
             $doc->document_number = "ПК-000001";
         $doc->document_date = time();
 
- 
 
 
-        $doc->headerdata['fromitem'] = $st1->stock_id ;
-        $doc->headerdata['tostock'] = $st2->stock_id ;
+
+        $doc->headerdata['fromitem'] = $st1->stock_id;
+        $doc->headerdata['tostock'] = $st2->stock_id;
 
         $store = Store::load($st1->store_id);
         $doc->headerdata['store'] = $store->store_id;

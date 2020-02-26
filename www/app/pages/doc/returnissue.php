@@ -86,9 +86,9 @@ class ReturnIssue extends \App\Pages\Base {
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
 
-            foreach ($this->_doc->detaildata as $item) {
-                $it = new Stock($item);
-                $this->_tovarlist[$it->stock_id] = $it;
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
+                $this->_tovarlist[$it->stock_id] = $item;
             }
         } else {
             $this->_doc = Document::create('ReturnIssue');
@@ -241,10 +241,8 @@ class ReturnIssue extends \App\Pages\Base {
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_tovarlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
+
+        $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
@@ -303,10 +301,9 @@ class ReturnIssue extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-               
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");

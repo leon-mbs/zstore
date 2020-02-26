@@ -96,7 +96,7 @@ class Pay extends \ZCL\DB\Entity {
             $list[PAY::PAY_OTHER_INCOME] = "Прочие доходы";
             $list[PAY::PAY_CANCEL_CUST] = "Отмена  платежа  покупки";
         }
-         
+
         if ($type != 1) {
             $list[PAY::PAY_BASE_OUTCOME] = "Расходы основной деятельности";
             $list[PAY::PAY_cCOMMON_OUTCOME] = "Общепроизводственные  расходы";
@@ -109,7 +109,7 @@ class Pay extends \ZCL\DB\Entity {
             $list[PAY::PAY_COMMON_OUTCOME] = "Прочие расходы";
             $list[PAY::PAY_CANCEL] = "Отмена  платежа продажи";
         }
-  
+
         return $list;
     }
 

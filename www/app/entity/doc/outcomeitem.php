@@ -75,6 +75,6 @@ class OutcomeItem extends Document {
         $list = array();
         $list['IncomeItem'] = 'Оприходование товаров';
         return $list;
-    }    
-    
+    }
+
 }

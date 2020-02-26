@@ -22,7 +22,6 @@ use \Zippy\Html\DataList\DataView;
  */
 class Stat extends \App\Pages\Base {
 
- 
     public $_list = array();
 
     public function __construct() {
@@ -44,20 +43,20 @@ class Stat extends \App\Pages\Base {
         $projects = Project::findArray('project_name', '', 'project_name');
         $this->filter->add(new DropDownChoice('searchproject', $projects, 0));
         $users = User::findArray('username', '', 'username');
- 
+
         $user_id = 0;
- 
-        if ($user->username != 'admin'){
-            $user_id = $user->user_id;     
-            $users = User::findArray('username', 'user_id='.$user_id, 'username');            
+
+        if ($user->username != 'admin') {
+            $user_id = $user->user_id;
+            $users = User::findArray('username', 'user_id=' . $user_id, 'username');
         }
 
         $this->filter->add(new DropDownChoice('searchemp', $users, $user_id));
 
 
         $this->add(new DataView('list', new ArrayDataSource($this, '_list'), $this, 'listOnRow'));
-        $this->add(new Label('total'))->setVisible(false); ;
-         
+        $this->add(new Label('total'))->setVisible(false);
+        ;
     }
 
     public function filterOnSubmit($sender) {
@@ -67,10 +66,12 @@ class Stat extends \App\Pages\Base {
         $searchemp = $this->filter->searchemp->getValue();
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate(true);
-        $where ="";
-        if($searchproject>0) $where .=  " and project_id = " . $searchproject;
-        if($searchemp>0) $where .=  " and user_id = " . $searchemp;
-        
+        $where = "";
+        if ($searchproject > 0)
+            $where .= " and project_id = " . $searchproject;
+        if ($searchemp > 0)
+            $where .= " and user_id = " . $searchemp;
+
         $total = 0;
         $this->_list = array();
         $conn = DB::getConnect();
@@ -90,15 +91,14 @@ class Stat extends \App\Pages\Base {
             $item->username = $v['username'];
             $item->amount = $v['amount'];
             $this->_list[] = $item;
-            $total +=   $item->amount;
+            $total += $item->amount;
         }
-      
+
 
         $this->list->Reload();
- 
-        $this->total->setVisible($total>0);
+
+        $this->total->setVisible($total > 0);
         $this->total->setText($total);
- 
     }
 
     public function listOnRow($row) {
@@ -106,8 +106,6 @@ class Stat extends \App\Pages\Base {
         $row->add(new Label('project_name', $item->project_name));
         $row->add(new Label('username', $item->username));
         $row->add(new Label('amount', $item->amount));
-        
     }
 
-  
 }

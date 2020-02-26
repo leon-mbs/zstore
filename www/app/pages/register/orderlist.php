@@ -95,7 +95,8 @@ class OrderList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-         if(\App\Acl::checkExeDoc($this->_doc,true,true)==false ) return;
+        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false)
+            return;
 
         $state = $this->_doc->state;
 
@@ -143,7 +144,7 @@ class OrderList extends \App\Pages\Base {
     }
 
     public function updateStatusButtons() {
- 
+
         $this->statuspan->statusform->bclose->setVisible(true);
 
         $state = $this->_doc->state;
@@ -204,8 +205,6 @@ class OrderList extends \App\Pages\Base {
         if ($inproc == false || $sent == false) {
             $this->_tvars['askclose'] = true;
         }
-
-         
     }
 
     //просмотр

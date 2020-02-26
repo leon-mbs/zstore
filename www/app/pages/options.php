@@ -96,7 +96,7 @@ class Options extends \App\Pages\Base {
         $this->firm->add(new TextInput('firmname'));
         $this->firm->add(new TextInput('shopname'));
         $this->firm->add(new TextInput('phone'));
-       
+
         $this->firm->add(new TextInput('address'));
         $this->firm->add(new TextInput('inn'));
 
@@ -107,7 +107,7 @@ class Options extends \App\Pages\Base {
         $this->firm->firmname->setText($firm['firmname']);
         $this->firm->shopname->setText($firm['shopname']);
         $this->firm->phone->setText($firm['phone']);
-         $this->firm->address->setText($firm['address']);
+        $this->firm->address->setText($firm['address']);
         $this->firm->inn->setText($firm['inn']);
 
 
@@ -210,7 +210,7 @@ class Options extends \App\Pages\Base {
         $firm['firmname'] = $this->firm->firmname->getText();
         $firm['shopname'] = $this->firm->shopname->getText();
         $firm['phone'] = $this->firm->phone->getText();
-        
+
         $firm['address'] = $this->firm->address->getText();
         $firm['inn'] = $this->firm->inn->getText();
 

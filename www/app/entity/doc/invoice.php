@@ -77,11 +77,12 @@ class Invoice extends \App\Entity\Doc\Document {
     protected function getNumberTemplate() {
         return 'СФ-000000';
     }
-  
+
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = 'Расходная накладная';
 
         return $list;
     }
+
 }

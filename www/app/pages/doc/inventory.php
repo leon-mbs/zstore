@@ -66,8 +66,8 @@ class Inventory extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Item($item);
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
         } else {
@@ -191,10 +191,7 @@ class Inventory extends \App\Pages\Base {
         $this->_doc->headerdata['storemame'] = $this->docform->store->getValueName();
 
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -235,10 +232,9 @@ class Inventory extends \App\Pages\Base {
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
             $this->setError("Не введен номер документа");
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-               
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");

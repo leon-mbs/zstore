@@ -87,9 +87,9 @@ class RetCustIssue extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->detaildata as $item) {
-                $stock = new Stock($item);
-                $this->_tovarlist[$stock->stock_id] = $stock;
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
+                $this->_tovarlist[$stock->stock_id] = $item;
             }
         } else {
             $this->_doc = Document::create('RetCustIssue');
@@ -248,10 +248,8 @@ class RetCustIssue extends \App\Pages\Base {
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_tovarlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
+        $this->_doc->packDetails('detaildata', $this->_tovarlist);
+
 
         $this->_doc->amount = $this->docform->total->getText();
 
@@ -316,10 +314,9 @@ class RetCustIssue extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-               
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");

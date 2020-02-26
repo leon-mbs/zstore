@@ -25,7 +25,7 @@ class WMinQty extends \Zippy\Html\PageFragment {
         $this->add(new \Zippy\Html\Link\ClickLink('csvminqty', $this, 'oncsv'));
         $visible = (strpos(System::getUser()->widgets, 'wminqty') !== false || System::getUser()->userlogin == 'admin');
 
-        $cstr = \App\Acl::getStoreBranchConstraint();    
+        $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0)
             $cstr = " where  store_id in ({$cstr})  ";
 

@@ -166,7 +166,7 @@ class ItemList extends \App\Pages\Base {
 
 
         $this->itemtable->itemlist->Reload(false);
-        $this->resetURL() ;
+        $this->resetURL();
     }
 
     public function editOnClick($sender) {
@@ -251,9 +251,9 @@ class ItemList extends \App\Pages\Base {
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
 
         $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
- 
-  
- 
+
+
+
         //проверка  уникальности артикула
         if (strlen($this->_item->item_code) > 0) {
             $code = Item::qstr($this->_item->item_code);
@@ -275,7 +275,7 @@ class ItemList extends \App\Pages\Base {
                 }
             }
         }
-        
+
         $itemname = Item::qstr($this->_item->itemname);
         $code = Item::qstr($this->_item->item_code);
         $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and itemname={$itemname} and item_code={$code} ");
@@ -283,8 +283,8 @@ class ItemList extends \App\Pages\Base {
             $this->setError('ТМЦ с таким названием и артикулом  уже  существует');
             return;
         }
-        
-        
+
+
         //delete image
         if ($this->itemdetail->editdelimage->isChecked()) {
             if ($this->_item->image_id > 0) {

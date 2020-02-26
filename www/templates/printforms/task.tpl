@@ -5,15 +5,15 @@
             Наряд № {{document_number}} с {{startdate}} по {{date}} 
         </td>
     </tr>   
-   {{#pareaname}}
+    {{#pareaname}}
     <tr>
         <td  colspan="4">
             Произв. участок:   {{pareaname}}
         </td>
 
     </tr>
-       {{/pareaname}}
-   
+    {{/pareaname}}
+
     {{#baseddoc}}
     <tr>
         <td  colspan="4">
@@ -21,7 +21,7 @@
         </td>
 
     </tr>
-     {{/baseddoc}}
+    {{/baseddoc}}
 
 
     <tr style="font-weight: bolder;">
@@ -66,9 +66,9 @@
 
     </tr>
     {{/_detail3}}
-    
-    
-      {{#iseq}}
+
+
+    {{#iseq}}
 
     <tr style="font-weight: bolder;">
 
@@ -85,9 +85,9 @@
     </tr>
     {{/_detail2}}    
     {{/iseq}} 
-     <tr>
+    <tr>
         <td  colspan="4">
-              {{notes}}
+            {{notes}}
         </td>
 
     </tr>

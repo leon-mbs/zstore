@@ -68,7 +68,6 @@ class Warranty extends \App\Pages\Base {
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
-             
         } else {
             $this->_doc = Document::create('Warranty');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -199,9 +198,9 @@ class Warranty extends \App\Pages\Base {
         $firm = H::getFirmData($this->_doc->branch_id);
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
 
- 
-        $this->_doc->packDetails('detaildata',$this->_tovarlist) ;
-        
+
+        $this->_doc->packDetails('detaildata', $this->_tovarlist);
+
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $isEdited = $this->_doc->document_id > 0;
@@ -242,10 +241,9 @@ class Warranty extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-  
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         return !$this->isError();
     }

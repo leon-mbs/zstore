@@ -82,12 +82,12 @@ class CustOrder extends \App\Pages\Base {
 
         foreach ($docs as $doc) {
 
-            foreach ($doc->detaildata as $item) {
+            foreach ($doc->unpackDetails('detaildata') as $item) {
                 if (!isset($items[$item['itemname']])) {
-                    $items[$item['itemname']] = array('itemname' => $item['itemname'], 'msr' => $item['msr'], 'qty' => 0);
+                    $items[$item['itemname']] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0);
                 }
-                $items[$item['itemname']]['qty'] += $item['quantity'];
-                $total += $item['amount'];
+                $items[$item->itemname]['qty'] += $item->quantity;
+                $total += $item->amount;
             }
         };
 

@@ -30,7 +30,7 @@ class Options extends \App\Pages\Base {
         $form->add(new TextInput('keys', $modules['wckeys']));
         $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['wccustomer_id'] > 0 ? $modules['occustomer_id'] : 0));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['wcpricetype']));
-        $form->add(new DropDownChoice('api', array('v3'=>'v3','v2'=>'v2','v1'=>'v1'), $modules['wcapi']));
+        $form->add(new DropDownChoice('api', array('v3' => 'v3', 'v2' => 'v2', 'v1' => 'v1'), $modules['wcapi']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $form->add(new SubmitButton('check'))->onClick($this, 'checkOnClick');
@@ -41,33 +41,28 @@ class Options extends \App\Pages\Base {
         $keyc = $this->cform->keyc->getText();
         $keys = $this->cform->keys->getText();
         $api = $this->cform->api->getValue();
-        $site = trim($site, '/').'/';
+        $site = trim($site, '/') . '/';
 
-      
-    
+
+
         $woocommerce = new \Automattic\WooCommerce\Client(
-            $site, 
-            $keyc, 
-            $keys,
-            [
-                'version' => 'wc/'.$api,
-                'wp_api' => true
-            ]
+                $site,
+                $keyc,
+                $keys,
+                [
+            'version' => 'wc/' . $api,
+            'wp_api' => true
+                ]
         );
         try {
-           $woocommerce->get('');            
-            
-        }
-        catch(\Exception $ee)     {
-            $this->setError($ee->getMessage()) ;
+            $woocommerce->get('');
+        } catch (\Exception $ee) {
+            $this->setError($ee->getMessage());
             return;
         }
-        
-   
--        $this->setSuccess('Соединение успешно');
 
-  
-       
+
+        - $this->setSuccess('Соединение успешно');
     }
 
     public function saveOnClick($sender) {

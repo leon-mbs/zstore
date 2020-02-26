@@ -142,10 +142,10 @@ class Orders extends \App\Pages\Base {
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = round($product['price']);
                 $tovar->octoreoptions = serialize($product['_options_']);
-              
+
                 $tlist[] = $tovar;
             }
-            $neworder->packDetails('detaildata',$tlist) ;
+            $neworder->packDetails('detaildata', $tlist);
 
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;

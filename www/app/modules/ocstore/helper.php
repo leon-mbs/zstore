@@ -39,10 +39,10 @@ class Helper {
             return false;
         }
         $data = json_decode($result, true);
-        if ($data==null) {
-             \App\System::setErrorMsg($result);
+        if ($data == null) {
+            \App\System::setErrorMsg($result);
             return false;
-        }     
+        }
         //close connection
         curl_close($ch);
 

@@ -100,7 +100,7 @@ class PosList extends \App\Pages\Base {
 
 
         $this->_pos->pos_name = $this->posdetail->editpos_name->getText();
- 
+
         $this->_pos->branch_id = $this->posdetail->editbranch->getValue();
 
         $this->_pos->store = $this->posdetail->editstore->getValue();

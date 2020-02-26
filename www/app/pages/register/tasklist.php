@@ -87,14 +87,14 @@ class TaskList extends \App\Pages\Base {
 
     public function tasklistOnRow($row) {
         $task = $row->getDataItem();
-  
+
         $row->add(new Label('tasknumber', $task->document_number));
         $row->add(new Label('taskdesc', $task->notes));
-  
+
         $row->add(new Label('taskstartdate', date('Y-m-d H:i', $task->headerdata['start_date'])));
         $row->add(new Label('taskhours', $task->headerdata['taskhours']));
-   
-        $row->add(new Label('taskstatus',Document::getStateName($task->state)));
+
+        $row->add(new Label('taskstatus', Document::getStateName($task->state)));
 
         if ($task->state == Document::STATE_EXECUTED)
             $row->taskstatus->setText('<span class="badge badge-success">Выполнен</span>', true);
@@ -110,18 +110,18 @@ class TaskList extends \App\Pages\Base {
         $emps = array();
         foreach ($task->unpackDetails('emplist') as $emp) {
 
-            
-                $emps[] = $emp->emp_name ;
+
+            $emps[] = $emp->emp_name;
         }
-        
-        $row->add(new Label('taskemps', implode(', ', $emps)));        
+
+        $row->add(new Label('taskemps', implode(', ', $emps)));
         $sers = array();
         foreach ($task->unpackDetails('detaildata') as $ser) {
 
-             
-                $sers[] = $ser->service_name;
+
+            $sers[] = $ser->service_name;
         }
-          
+
         $row->add(new Label('taskservices', implode(', ', $sers)));
 
 
@@ -182,10 +182,11 @@ class TaskList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-       
-        if(\App\Acl::checkExeDoc($this->_task,true,true)==false ) return;
-       
-       
+
+        if (\App\Acl::checkExeDoc($this->_task, true, true) == false)
+            return;
+
+
         $this->_task = $this->_task->cast();
 
         if ($sender->id == 'binprocess') {
@@ -195,7 +196,7 @@ class TaskList extends \App\Pages\Base {
             $this->_task->updateStatus(Document::STATE_SHIFTED);
         }
         if ($sender->id == 'bclosed') {
-        //    $this->_task->updateStatus(Document::STATE_EXECUTED);
+            //    $this->_task->updateStatus(Document::STATE_EXECUTED);
             $this->_task->updateStatus(Document::STATE_CLOSED);
         }
         if ($sender->id == 'bitems') {    //списание материалов
@@ -260,7 +261,7 @@ class TaskList extends \App\Pages\Base {
                 $col = "#ffc107";
             if ($item->state == Document::STATE_CLOSED)
                 $col = "#dddddd";
-  
+
 
             $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->headerdata['start_date'], $item->headerdata['end_date'], $col);
         }
@@ -293,10 +294,8 @@ class TaskList extends \App\Pages\Base {
         if ($action['action'] == 'add') {
 
             $start = strtotime($action['id'] . ' 9:00');
-      
-            Application::Redirect("\\App\\Pages\\Doc\\Task", 0,0, $start);
 
-          
+            Application::Redirect("\\App\\Pages\\Doc\\Task", 0, 0, $start);
         }
         if ($action['action'] == 'move') {
             $task = Task::load($action['id']);

@@ -81,14 +81,17 @@ class Customer extends \ZCL\DB\Entity {
     }
 
     public static function getByPhone($phone) {
-        if(strlen($phone)==0) return  null;
+        if (strlen($phone) == 0)
+            return null;
         $conn = \ZDB\DB::getConnect();
         return Customer::getFirst(' phone = ' . $conn->qstr($phone));
     }
+
     public static function getByEmail($email) {
-        if(strlen($email)==0) return  null;
+        if (strlen($email) == 0)
+            return null;
         $conn = \ZDB\DB::getConnect();
         return Customer::getFirst(' email = ' . $conn->qstr($email));
-    }  
-     
+    }
+
 }

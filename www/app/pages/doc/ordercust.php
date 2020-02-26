@@ -85,10 +85,10 @@ class OrderCust extends \App\Pages\Base {
 
 
 
-              $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-              foreach ( $this->_itemlist as $item) {
-                  $item->old = true;
-              }          
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            foreach ($this->_itemlist as $item) {
+                $item->old = true;
+            }
         } else {
             $this->_doc = Document::create('OrderCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -223,12 +223,12 @@ class OrderCust extends \App\Pages\Base {
                 continue;
         }
 
- 
-        $this->_doc->packDetails('detaildata',$this->_itemlist) ;
+
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payed = 0;
-        $this->_doc->payamount = 0;        
+        $this->_doc->payamount = 0;
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -298,12 +298,11 @@ class OrderCust extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-         if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
-       if (count($this->_itemlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
 

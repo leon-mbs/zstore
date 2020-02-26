@@ -55,11 +55,9 @@ class OrderCust extends Document {
     public function getRelationBased() {
         $list = array();
         $list['GoodsReceipt'] = 'Приходная накладная';
-        $list['InvoiceCust']  = 'Счет от поставщика';
+        $list['InvoiceCust'] = 'Счет от поставщика';
 
         return $list;
-    } 
-    
+    }
 
-    
 }

@@ -95,9 +95,9 @@ class EmpTask extends \App\Pages\Base {
                 continue;
             $total = 0;
             $hours = 0;
-            foreach ($doc->detaildata as $service) {
-                $total += $service['price'];
-                $hours += $service['hours'];
+            foreach ($doc->unpackDetails('detaildata') as $service) {
+                $total += $service->price;
+                $hours += $service->hours;
             }
             if ($doc->headerdata['hours'] > 0)
                 $hours = $doc->headerdata['hours'];

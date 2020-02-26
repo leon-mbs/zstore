@@ -24,7 +24,7 @@ class WNoliq extends \Zippy\Html\PageFragment {
         parent::__construct($id);
         $this->add(new \Zippy\Html\Link\ClickLink('csvnoliq', $this, 'oncsv'));
         $visible = (strpos(System::getUser()->widgets, 'wnoliq') !== false || System::getUser()->userlogin == 'admin');
-        $cstr = \App\Acl::getStoreBranchConstraint();  
+        $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0)
             $cstr = " and st.store_id in ({$cstr})    ";
 
@@ -43,7 +43,7 @@ class WNoliq extends \Zippy\Html\PageFragment {
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
-                 $this->data[] = new DataItem($row);
+                $this->data[] = new DataItem($row);
             }
         }
 
@@ -65,7 +65,7 @@ class WNoliq extends \Zippy\Html\PageFragment {
         $row->add(new Label('storename', $item->storename));
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('item_code', $item->item_code));
-        $row->add(new Label( 'qty', Helper::fqty($item->qty)));
+        $row->add(new Label('qty', Helper::fqty($item->qty)));
     }
 
     public function oncsv($sender) {

@@ -152,8 +152,8 @@ class GoodsIssue extends \App\Pages\Base {
 
             $this->OnChangeCustomer($this->docform->customer);
 
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Item($item);
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
                 $this->_itemlist[$item->item_id] = $item;
             }
         } else {
@@ -168,7 +168,7 @@ class GoodsIssue extends \App\Pages\Base {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
- 
+
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
@@ -193,8 +193,8 @@ class GoodsIssue extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                        foreach ($order->detaildata as $item) {
-                            $item = new Item($item);
+                        foreach ($order->unpackDetails('detaildata') as $item) {
+
                             $this->_itemlist[$item->item_id] = $item;
                         }
                     }
@@ -202,7 +202,7 @@ class GoodsIssue extends \App\Pages\Base {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
- 
+
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
@@ -214,14 +214,14 @@ class GoodsIssue extends \App\Pages\Base {
 
                         $notfound = array();
                         $invoice = $basedoc->cast();
-                    
+
                         $this->docform->total->setText($invoice->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                        foreach ($order->detaildata as $item) {
-                            $item = new Item($item);
+                        foreach ($order->unpackDetails('detaildata') as $item) {
+
                             $this->_itemlist[$item->item_id] = $item;
                         }
                     }
@@ -411,11 +411,8 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
         $this->_doc->headerdata['order_id'] = $this->_orderid;
 
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
 
         $this->_doc->amount = $this->docform->total->getText();
 
@@ -572,7 +569,7 @@ class GoodsIssue extends \App\Pages\Base {
         if ($code == '')
             return;
         $store_id = $this->docform->store->getValue();
-        if($store_id==0){
+        if ($store_id == 0) {
             $this->setError('Не указан склад');
             return;
         }
@@ -653,13 +650,12 @@ class GoodsIssue extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
-               
-        
+
+
         if (count($this->_itemlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
@@ -705,9 +701,9 @@ class GoodsIssue extends \App\Pages\Base {
 
 
         $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
-        }
+    }
 
-   public function OnAutoItem($sender) {
+    public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
@@ -759,15 +755,15 @@ class GoodsIssue extends \App\Pages\Base {
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustname->getText();
- 
-        if(strlen($cust->phone)>0 && strlen($cust->phone) != 10){
-            $this->setError("Телефон должен быть 10  цифр");    
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+            $this->setError("Телефон должен быть 10  цифр");
             return;
         }
- 
-        $c = Customer::getByPhone($cust->phone) ;
-        if($c != null){
-            if($c->customer_id != $cust->customer_id) {
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
                 $this->setError("Уже есть  контрагент с  таким телефоном");
                 return;
             }

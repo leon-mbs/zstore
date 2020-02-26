@@ -14,7 +14,7 @@
     <tr>
         <td colspan="2"> {{shopname}}</td>
     </tr>
-      {{/shopname}}
+    {{/shopname}}
     <tr>
 
         <td colspan="2">  {{address}}</td>
@@ -22,11 +22,11 @@
     <tr>
         <td colspan="2"> {{phone}}</td>
     </tr>
-     
+
     <tr>
         <td colspan="2"> {{customer_name}}</td>
     </tr>
- 
+
 
 
     {{#isdevice}}

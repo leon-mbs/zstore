@@ -62,6 +62,6 @@ class InvoiceCust extends Document {
         $list['GoodsReceipt'] = 'Приходная накладная';
 
         return $list;
-    }    
+    }
 
 }

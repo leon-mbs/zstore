@@ -19,7 +19,7 @@ class ServiceAct extends Document {
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $ser) {
             $detail[] = array("no" => $i++,
-                "service_name" => $ser->service_name ,
+                "service_name" => $ser->service_name,
                 "desc" => $ser->desc,
                 "price" => H::fa($ser->price)
             );
@@ -48,7 +48,7 @@ class ServiceAct extends Document {
         $conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->unpackDetails('detaildata') as  $ser) {
+        foreach ($this->unpackDetails('detaildata') as $ser) {
 
             $sc = new Entry($this->document_id, 0 - $ser->price, 0);
             $sc->setService($ser->service_id);
@@ -83,7 +83,7 @@ class ServiceAct extends Document {
         $header = array('printw' => $wp, 'date' => date('d.m.Y', time()),
             "document_number" => $this->document_number,
             "firmname" => $firm['firmname'],
-            "shopname" => strlen($firm['shopname'])>0 ? $firm['shopname'] : false ,
+            "shopname" => strlen($firm['shopname']) > 0 ? $firm['shopname'] : false,
             "address" => $firm['address'],
             "phone" => $firm['phone'],
             "customer_name" => $this->headerdata['customer_name'],
@@ -97,8 +97,7 @@ class ServiceAct extends Document {
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $ser) {
             $detail[] = array("no" => $i++,
-                "service_name" => $ser->service_name ,
-    
+                "service_name" => $ser->service_name,
                 "price" => H::fa($ser->price)
             );
         }
@@ -119,12 +118,13 @@ class ServiceAct extends Document {
 
         return $html;
     }
-   
+
     public function getRelationBased() {
         $list = array();
         $list['Task'] = 'Наряд';
         $list['GoodsIssue'] = 'Расходная накладная';
-    
+
         return $list;
     }
+
 }
