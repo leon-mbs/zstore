@@ -47,13 +47,15 @@ class Task extends Document {
         }
   
         $header = array('date' => date('d.m.Y', $this->document_date),
-            "pareaname" => $this->headerdata["pareaname"],
+            
+            "pareaname" => strlen($this->headerdata["pareaname"])>0 ? $this->headerdata["pareaname"] : false, 
             "startdate" => date('d.m.Y', $this->headerdata["start_date"]),
             "document_number" => $this->document_number,
             "notes" => $this->notes,
             "baseddoc" => strlen($this->headerdata["parent_number"])>0 ? $this->headerdata["parent_number"] : false,
             "_detail" => $detail,
             "_detail2" => $detail2,
+            "iseq" => count($detail2)>0,
             "_detail3" => $detail3
         );
         $report = new \App\Report('task.tpl');

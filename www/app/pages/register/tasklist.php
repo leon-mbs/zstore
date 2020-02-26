@@ -108,14 +108,22 @@ class TaskList extends \App\Pages\Base {
 
 
         $emps = array();
-        foreach ($task->detaildata as $ser) {
+        foreach ($task->unpackDetails('emplist') as $emp) {
 
-            if (strlen($ser['employee_id']) > 0)
-                $emps[] = $ser['emp_name'];
+            
+                $emps[] = $emp->emp_name ;
         }
+        
+        $row->add(new Label('taskemps', implode(', ', $emps)));        
+        $sers = array();
+        foreach ($task->unpackDetails('detaildata') as $ser) {
 
+             
+                $sers[] = $ser->service_name;
+        }
+          
+        $row->add(new Label('taskservices', implode(', ', $sers)));
 
-        $row->add(new Label('taskemps', implode(', ', $emps)));
 
         $row->add(new Label('taskamount', H::fa($task->amount)));
 
