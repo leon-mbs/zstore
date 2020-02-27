@@ -149,7 +149,7 @@ class Orders extends \App\Pages\Base {
 
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
-            $neworder->headerdata['occlient'] .= $shoporder->firstname . ' ' . $shoporder->lastname;
+            $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->amount = round($shoporder->total);
             $neworder->notes = "OC номер:{$shoporder->order_id};";
             $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";

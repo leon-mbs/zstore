@@ -14,7 +14,7 @@ class Helper {
         $site = $modules['wcsite'];
         $keyc = $modules['wckeyc'];
         $keys = $modules['wckeys'];
-        $api = $modules['wcapi'];
+        $api  = $modules['wcapi'];
         $site = trim($site, '/') . '/';
 
         $woocommerce = new \Automattic\WooCommerce\Client(
@@ -22,7 +22,7 @@ class Helper {
                 $keyc,
                 $keys,
                 [
-            'version' => 'wc/' . $api,
+                  'version' => 'wc/' . $api,
                 ]
         );
 

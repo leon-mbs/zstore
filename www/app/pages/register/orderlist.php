@@ -193,7 +193,7 @@ class OrderList extends \App\Pages\Base {
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
-            $this->statuspan->statusform->bcancel->setVisible(false);
+            
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);

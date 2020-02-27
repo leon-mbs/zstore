@@ -22,25 +22,22 @@ class Items extends \App\Pages\Base {
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
+        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('Нет права доступа к странице');
 
             App::RedirectHome();
             return;
         }
         $modules = System::getOptions("modules");
-        $cats = System::getSession()->cats;
-        if (is_array($cats) == false) {
-            $cats = array();
-            $this->setWarn('Выполните соединение на странице настроек');
-        }
+      
+ 
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
         $this->add(new Form('exportform'))->onSubmit($this, 'exportOnSubmit');
 
         $this->exportform->add(new DataView('newitemlist', new ArrayDataSource(new Prop($this, '_items')), $this, 'itemOnRow'));
-        $this->exportform->add(new DropDownChoice('ecat', $cats, 0));
+    
 
         $this->add(new ClickLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->add(new ClickLink('updateprice'))->onClick($this, 'onUpdatePrice');
@@ -51,23 +48,28 @@ class Items extends \App\Pages\Base {
         $this->_items = array();
         $modules = System::getOptions("modules");
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url);
-        if ($json === false)
-            return;
-        $data = json_decode($json, true);
-        if (!isset($data)) {
-            $this->setError("Неверный ответ.");
-            \App\Helper::log($json);
-            return;
-        }
-        if ($data['error'] == "") {
+        $client = \App\Modules\WC\Helper::getClient() ;
+        $skus = array();
 
+        try {
+            $data =    $client->get('products',array('status'=>'publish')) ;
+        } catch (\Exception $ee) {
+            $this->setError($ee->getMessage());
+            return;
+        }    
+ 
+            foreach($data as $p){
+                if(strlen($p->sku)>0){
+                   $skus[]= $p->sku;
+                }
+            }
+            unset($data);
+            
             $items = Item::find("disabled <> 1", "itemname");
             foreach ($items as $item) {
                 if (strlen($item->item_code) == 0)
                     continue;
-                if (in_array($item->item_code, $data['articles']))
+                if (in_array($item->item_code, $skus))
                     continue; //уже  в  магазине
                 if (strlen($item->qty) == 0)
                     $item->qty = 0;
@@ -75,10 +77,8 @@ class Items extends \App\Pages\Base {
             }
 
             $this->exportform->newitemlist->Reload();
-            $this->exportform->ecat->setValue(0);
-        } else {
-            $this->setError($data['error']);
-        }
+            
+         
     }
 
     public function itemOnRow($row) {
@@ -95,46 +95,37 @@ class Items extends \App\Pages\Base {
 
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->exportform->ecat->getValue();
-        if ($cat == 0) {
-            $this->setError('Не выбрана категория  ');
-            return;
-        }
+        $client = \App\Modules\WC\Helper::getClient() ;
+
 
         $elist = array();
         foreach ($this->_items as $item) {
             if ($item->ch == false)
                 continue;
             $elist[] = array('name' => $item->itemname,
-                'description' => $item->description,
+                'short_description' => $item->description,
                 'sku' => $item->item_code,
-                'quantity' => \App\Helper::fqty($item->qty),
-                'price' => $item->getPrice($modules['ocpricetype'])
+                'manage_stock' => true,
+                'stock_quantity' => \App\Helper::fqty($item->qty),
+                'price' => $item->getPrice($modules['wcpricetype'])
             );
         }
         if (count($elist) == 0) {
             $this->setError('Не выбран ни один товар');
             return;
         }
-        $data = json_encode($elist);
-
-
-        $fields = array(
-            'data' => $data,
-            'cat' => $cat
-        );
-
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false)
-            return;
-        $data = json_decode($json, true);
-
-
-        if ($data['error'] != "") {
-            $this->setError($data['error']);
-            return;
+      
+        foreach($elist  as $p){
+            try {
+                $data =    $client->post('products',$p) ;
+            } catch (\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
+            }            
         }
+
+      
+ 
         $this->setSuccess("Экспортировано " . count($elist) . " товаров");
 
         //обновляем таблицу
@@ -205,45 +196,64 @@ class Items extends \App\Pages\Base {
 
     public function onGetItems($sender) {
         $modules = System::getOptions("modules");
+        $common = System::getOptions("common");
 
-        $elist = array();
+        $client = \App\Modules\WC\Helper::getClient() ;
+   
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url);
-        if ($json === false)
+       try {
+            $data =    $client->get('products',array('status'=>'publish')) ;
+        } catch (\Exception $ee) {
+            $this->setError($ee->getMessage());
             return;
-        $data = json_decode($json, true);
+        }        
 
-        if ($data['error'] != "") {
-            $this->setError($data['error']);
-            return;
-        }
         //  $this->setInfo($json);
         $i = 0;
-        foreach ($data['products'] as $product) {
+        foreach ($data  as $product) {
 
-            if (strlen($product['sku']) == 0)
+            if (strlen($product->sku) == 0)
                 continue;
-            $cnt = Item::findCnt("item_code=" . Item::qstr($product['sku']));
+            $cnt = Item::findCnt("item_code=" . Item::qstr($product->sku));
             if ($cnt > 0)
                 continue; //уже  есть с  таким  артикулом
 
-            $product['name'] = str_replace('&quot;', '"', $product['name']);
+            $product->name = str_replace('&quot;', '"', $product->name);
             $item = new Item();
-            $item->item_code = $product['sku'];
-            $item->itemname = $product['name'];
-            $item->description = $product['description'];
+            $item->item_code = $product->sku;
+            $item->itemname = $product->name;
+            $item->description = $product->short_description;
 
-            if ($modules['ocpricetype'] == 'price1')
-                $item->price1 = $product['price'];
-            if ($modules['ocpricetype'] == 'price2')
-                $item->price2 = $product['price'];
-            if ($modules['ocpricetype'] == 'price3')
-                $item->price3 = $product['price'];
-            if ($modules['ocpricetype'] == 'price4')
-                $item->price4 = $product['price'];
-            if ($modules['ocpricetype'] == 'price5')
-                $item->price5 = $product['price'];
+            if ($modules['wcpricetype'] == 'price1')
+                $item->price1 = $product->price;
+            if ($modules['wcpricetype'] == 'price2')
+                $item->price2 = $product->price;
+            if ($modules['wcpricetype'] == 'price3')
+                $item->price3 = $product->price;
+            if ($modules['wcpricetype'] == 'price4')
+                $item->price4 = $product->price;
+            if ($modules['wcpricetype'] == 'price5')
+                $item->price5 = $product->price;
+           
+           
+           if ($common['useimages'] == 1) {
+                foreach($product->images as $im)  {
+                
+                    $im = @file_get_contents($im->src);
+                    if (strlen($im) > 0) {                 
+                        $imagedata = getimagesizefromstring($im);
+                        $image = new \App\Entity\Image();
+                        $image->content = $im;
+                        $image->mime = $imagedata['mime'];
+
+                        $image->save();
+                        $item->image_id = $image->image_id;
+                        break;
+                    }
+             
+                }
+            }           
+           
             $item->save();
             $i++;
         }
