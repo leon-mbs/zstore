@@ -92,7 +92,8 @@ class Items extends \App\Pages\Base {
         $row->add(new Label('price', $item->getPrice($modules['ocpricetype'])));
         $row->add(new Label('desc', $item->desription));
     }
-
+    
+    //экспорт товара  в  магазин
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient() ;
@@ -117,7 +118,7 @@ class Items extends \App\Pages\Base {
       
         foreach($elist  as $p){
             try {
-                $data =    $client->post('products',$p) ;
+                $data = $client->post('products',$p) ;
             } catch (\Exception $ee) {
                 $this->setError($ee->getMessage());
                 return;
@@ -131,7 +132,7 @@ class Items extends \App\Pages\Base {
         //обновляем таблицу
         $this->filterOnSubmit(null);
     }
-
+    //обновление  количества в  магазине
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
 
@@ -146,24 +147,22 @@ class Items extends \App\Pages\Base {
             $elist[$item->item_code] = $qty;
         }
 
-        $data = json_encode($elist);
-
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false)
-            return;
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $this->setError($data['error']);
-            return;
-        }
+        $client = \App\Modules\WC\Helper::getClient() ;
+        foreach($elist  as $sku=>$qty){
+            try {
+                
+                //todo
+                
+            } catch (\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
+            }            
+        }   
+     
         $this->setSuccess("Обновлено ");
     }
 
+   //обновление цен в  магазине    
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
 
@@ -173,27 +172,26 @@ class Items extends \App\Pages\Base {
         foreach ($items as $item) {
             if (strlen($item->item_code) == 0)
                 continue;
-            $elist[$item->item_code] = $item->getPrice($modules['ocpricetype']);
+            $elist[$item->item_code] = $item->getPrice($modules['wcpricetype']);
         }
 
-        $data = json_encode($elist);
-
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false)
-            return;
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $this->setError($data['error']);
-            return;
-        }
+        $client = \App\Modules\WC\Helper::getClient() ;
+        
+        foreach($elist  as $sku=>$price){
+            try {
+                
+                //todo
+                
+            } catch (\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
+            }            
+        }   
+       
+        
         $this->setSuccess("Обновлено ");
     }
-
+    //импорт товара с  магазина
     public function onGetItems($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
