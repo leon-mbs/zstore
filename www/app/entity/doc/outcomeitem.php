@@ -23,7 +23,7 @@ class OutcomeItem extends Document {
 
             //списываем  со склада
 
-            $listst = Stock::pickup($this->headerdata['store'], $item->item_id, $item->quantity, $item->snumber);
+            $listst = Stock::pickup($this->headerdata['store'], $item);
             if (count($listst) == 0) {
                 \App\System::setErrorMsg('Недостаточно товара ' . $item->itemname);
                 return false;
