@@ -161,6 +161,25 @@ class GoodsReceipt extends \App\Pages\Base {
                         $this->CalcPay();
                     }
                     $this->calcTotal();
+                    if ($basedoc->meta_name == 'GoodsReceipt') {
+
+                        $this->docform->store->setValue($this->docform->store->getValue());
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $basedoc = $basedoc->cast();
+                       
+                        $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
+
+
+                        foreach ($basedoc->unpackDetails('detaildata') as $_item) {
+
+                            $this->_itemlist[$item->item_id] = $_item;
+                        }
+                        $this->CalcTotal();
+                        $this->CalcPay();
+                    }
+                    
                 }
             }
         }

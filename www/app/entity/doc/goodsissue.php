@@ -108,6 +108,7 @@ class GoodsIssue extends Document {
         $list = array();
         $list['Warranty'] = 'Гарантийный талон';
         $list['ReturnIssue'] = 'Возвратная накладная';
+        $list['GoodsIssue'] = 'Расходная накладная';
 
         return $list;
     }

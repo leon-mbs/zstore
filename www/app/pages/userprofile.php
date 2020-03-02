@@ -152,7 +152,7 @@ class UserProfile extends \App\Pages\Base {
         foreach ($list as $id) {
             $n = new \App\Entity\Notify();
             $n->user_id = $id;
-            $n->message .= $text;
+            $n->message  = $msg;
             $n->sender_name = $this->user->username;
             $n->save();
         }

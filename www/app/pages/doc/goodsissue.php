@@ -225,6 +225,29 @@ class GoodsIssue extends \App\Pages\Base {
                             $this->_itemlist[$item->item_id] = $item;
                         }
                     }
+                    if ($basedoc->meta_name == 'GoodsIssue') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                  
+                
+                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
+                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
+ 
+   
+                        $this->OnChangeCustomer($this->docform->customer);
+                        
+
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                            $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
+                            $this->_itemlist[$item->item_id] = $item;
+                        }
+                        $this->calcTotal();
+                        $this->calcPay();
+                    }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
                         $this->docform->notes->setText('Комплектующие  для  ' . $basedoc->document_number);

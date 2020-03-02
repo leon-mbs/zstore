@@ -97,6 +97,7 @@ class GoodsReceipt extends Document {
         $list = array();
 
         $list['RetCustIssue'] = 'Возврат  поставщику';
+        $list['GoodsReceipt'] = 'Приходная  накладная';
 
         return $list;
     }
