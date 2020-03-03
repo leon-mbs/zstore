@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pages\Reference;
+namespace App\Pages;
 
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\Form\Button;
