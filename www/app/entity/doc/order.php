@@ -74,10 +74,7 @@ class Order extends \App\Entity\Doc\Document {
         return $html;
     }
 
-    public function Execute() {
-
-        return true;
-    }
+  
 
     protected function getNumberTemplate() {
         return 'ЗК-000000';

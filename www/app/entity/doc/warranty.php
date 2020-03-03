@@ -42,10 +42,7 @@ class Warranty extends Document {
         return $html;
     }
 
-    public function Execute() {
-
-        return true;
-    }
+  
 
     protected function getNumberTemplate() {
         return 'ГТ-000000';

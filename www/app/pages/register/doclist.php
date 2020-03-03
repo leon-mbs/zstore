@@ -341,10 +341,11 @@ class DocList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\ACL::checkExeDoc($doc, true, false) == false) {
+        if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
             $this->setError('Нет  права выполнять документ ');
             return;
         }
+        $this->_doc= $this->_doc->cast();
         if ($sender->id == "bap") {
             $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
             $this->_doc->updateStatus($newstate);
