@@ -231,14 +231,20 @@ class ACL {
      * возвращает ограничение  для  ресурсов  по филиалам
      * 
      */
-    public static function getBranchConstraint() {
+    public static function getBranchConstraint($nul=false) {
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1)
             return '';
 
         $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
-        if ($id > 0)
-            return "branch_id in ({$id})";
+        if ($id > 0) {
+             if($nul==true) {
+                 return "branch_id in (0,{$id})";
+             } else{
+                 return "branch_id in ({$id})";
+             }
+        }
+            
 
         $user = \App\System::getUser();
         if ($user->username == 'admin')
@@ -246,10 +252,16 @@ class ACL {
 
         if (strlen($user->aclbranch) == 0)
             return '1=2'; //нет доступа  ни  к  одному филиалу
-        return "branch_id in ({$user->aclbranch})";
-    }
+ 
+             if($nul==true) {
+                 return "branch_id in (0,{$user->aclbranch})";
+             } else{
+                 return "branch_id in ({$user->aclbranch})";
+             }
 
-    /**
+        
+    }
+   /**
      * проверяет  что  выбран  конкретный текущий филиал
      * и возвраает его значение
      * 

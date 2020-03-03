@@ -31,7 +31,7 @@ class PayActivity extends \App\Pages\Base {
         $this->filter->add(new Date('to', time()));
 
 
-        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(System::getUser()->username == 'admin'), H::getDefMF()));
+        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList( ), H::getDefMF()));
 
 
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
@@ -80,8 +80,7 @@ class PayActivity extends \App\Pages\Base {
     private function generateReport() {
 
         $mf_id = $this->filter->mf->getValue();
-        if ($mf_id == \App\Entity\MoneyFund::BEZNAL)
-            $mf_id = 0; // безнал
+ 
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();

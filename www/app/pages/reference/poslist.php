@@ -37,7 +37,7 @@ class PosList extends \App\Pages\Base {
 
         $this->posdetail->add(new TextInput('editpos_name'));
         $this->posdetail->add(new DropDownChoice('editstore', \App\Entity\Store::getList(), H::getDefStore()));
-        $this->posdetail->add(new DropDownChoice('editmf', \App\Entity\MoneyFund::getList(true)));
+        $this->posdetail->add(new DropDownChoice('editmf', \App\Entity\MoneyFund::getList( )));
         $this->posdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList()));
 
 

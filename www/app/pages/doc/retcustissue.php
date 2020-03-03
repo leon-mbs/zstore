@@ -48,7 +48,7 @@ class RetCustIssue extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
 
 
         $this->docform->add(new TextInput('notes'));

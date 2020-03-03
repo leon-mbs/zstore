@@ -62,8 +62,7 @@ class Pay extends \ZCL\DB\Entity {
         if ($mf == MoneyFund::PREPAID)
             return; //предоплата
 
-        if ($mf == MoneyFund::BEZNAL)
-            $mf = 0; //безнал
+    
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $mf;
         $pay->document_id = $document_id;

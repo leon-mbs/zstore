@@ -166,8 +166,11 @@ class Stock extends \ZCL\DB\Entity {
                     $last->partion = $item->price;
                     $last->snumber = $item->snumber;
                     if(strlen($item->snumber) > 0)$last->sdate = time();
-                    $last->save();
+                    
+                } else {
+                    $last->partion = $price;
                 }
+                $last->save();
                 $last->quantity = $qty;
                 return array($last);
             }
