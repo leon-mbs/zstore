@@ -71,6 +71,9 @@ class Items extends \App\Pages\Base {
                     continue;
                 if (in_array($item->item_code, $skus))
                     continue; //уже  в  магазине
+             
+                $item->qty   =  $item->getQuantity(); 
+             
                 if (strlen($item->qty) == 0)
                     $item->qty = 0;
                 $this->_items[] = $item;
@@ -97,7 +100,7 @@ class Items extends \App\Pages\Base {
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient() ;
-
+  
 
         $elist = array();
         foreach ($this->_items as $item) {
@@ -107,25 +110,27 @@ class Items extends \App\Pages\Base {
                 'short_description' => $item->description,
                 'sku' => $item->item_code,
                 'manage_stock' => true,
-                'stock_quantity' => \App\Helper::fqty($item->qty),
-                'price' => $item->getPrice($modules['wcpricetype'])
+                'stock_quantity' =>(string) \App\Helper::fqty($item->qty),
+                'price' => (string)$item->getPrice($modules['wcpricetype']),
+                'regular_price' =>(string) $item->getPrice($modules['wcpricetype'])
             );
         }
         if (count($elist) == 0) {
             $this->setError('Не выбран ни один товар');
             return;
         }
-      
-        foreach($elist  as $p){
-            try {
-                $data = $client->post('products',$p) ;
-            } catch (\Exception $ee) {
+    
+     try {   
+            foreach($elist  as $p){
+               
+                 $data = $client->post('products',$p) ;
+                         
+            }
+
+         } catch (\Exception $ee) {
                 $this->setError($ee->getMessage());
                 return;
-            }            
-        }
-
-      
+         }      
  
         $this->setSuccess("Экспортировано " . count($elist) . " товаров");
 
@@ -200,7 +205,7 @@ class Items extends \App\Pages\Base {
    
 
        try {
-            $data =    $client->get('products',array('status'=>'publish')) ;
+            $data =    $client->get('products',array('status'=>'publish')) ; 
         } catch (\Exception $ee) {
             $this->setError($ee->getMessage());
             return;

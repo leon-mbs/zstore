@@ -69,6 +69,8 @@ class Items extends \App\Pages\Base {
                     continue;
                 if (in_array($item->item_code, $data['articles']))
                     continue; //уже  в  магазине
+               $item->qty   =  $item->getQuantity(); 
+                      
                 if (strlen($item->qty) == 0)
                     $item->qty = 0;
                 $this->_items[] = $item;
