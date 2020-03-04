@@ -29,7 +29,7 @@ class IncomeItem extends \App\Pages\Base {
     public $_itemlist = array();
     private $_doc;
     private $_rowid = 0;
-
+     private $_basedocid = 0;
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -71,7 +71,7 @@ class IncomeItem extends \App\Pages\Base {
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->unpackDetails('detaildata') as $_item) {
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
 
                 $item->old = true;
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;

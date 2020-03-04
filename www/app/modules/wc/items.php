@@ -140,61 +140,105 @@ class Items extends \App\Pages\Base {
     //обновление  количества в  магазине
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
+          $client = \App\Modules\WC\Helper::getClient() ;
 
-
+        try {
+            $data =    $client->get('products',array('status'=>'publish')) ;
+        } catch (\Exception $ee) {
+            $this->setError($ee->getMessage());
+            return;
+        }  
+        
+        $sku=array();
+        foreach ($data  as $p) {
+            if(strlen($p->sku)==0) continue;
+            $skulist[$p->sku] = $p->id;
+        }
+        unset($data);
+        
         $elist = array();
         $items = Item::find("disabled <> 1  ");
         foreach ($items as $item) {
             if (strlen($item->item_code) == 0)
                 continue;
-
-            $qty = $item->getQuantity();
-            $elist[$item->item_code] = $qty;
+            if($skulist[$item->item_code]>0) 
+            {
+              $qty = $item->getQuantity(); 
+              if($qty>0) {
+                 $elist[$item->item_code] = $qty;        
+              }
+              
+            }
+            
         }
-
-        $client = \App\Modules\WC\Helper::getClient() ;
+        $data = array('update'=>array()) ;
         foreach($elist  as $sku=>$qty){
-            try {
-                
-                //todo
+            
+              $data['update'][]  = array('id' => $skulist[$sku],'stock_quantity' => (string)$qty);
+          
+        }            
+        
+         try {
+            $client->post('products/batch', $data);
                 
             } catch (\Exception $ee) {
                 $this->setError($ee->getMessage());
                 return;
-            }            
-        }   
-     
-        $this->setSuccess("Обновлено ");
+          
+            }
+         $this->setSuccess("Обновлено ".count($data['update'])." товаров");
     }
 
    //обновление цен в  магазине    
-    public function onUpdatePrice($sender) {
+    public function onUpdatePrice($sender) {  
         $modules = System::getOptions("modules");
+          $client = \App\Modules\WC\Helper::getClient() ;
 
-
+        try {
+            $data =    $client->get('products',array('status'=>'publish')) ;
+        } catch (\Exception $ee) {
+            $this->setError($ee->getMessage());
+            return;
+        }  
+        
+        $sku=array();
+        foreach ($data  as $p) {
+            if(strlen($p->sku)==0) continue;
+            $skulist[$p->sku] = $p->id;
+        }
+        unset($data);
+        
         $elist = array();
         $items = Item::find("disabled <> 1  ");
         foreach ($items as $item) {
             if (strlen($item->item_code) == 0)
                 continue;
-            $elist[$item->item_code] = $item->getPrice($modules['wcpricetype']);
+            if($skulist[$item->item_code]>0) 
+            {
+              $price = $item->getPrice($modules['wcpricetype']); 
+              if($price>0) {
+                 $elist[$item->item_code] = $price;        
+              }
+              
+            }
+            
         }
-
-        $client = \App\Modules\WC\Helper::getClient() ;
-        
+        $data = array('update'=>array()) ;
         foreach($elist  as $sku=>$price){
-            try {
-                
-                //todo
+            
+              $data['update'][]  = array('id' => $skulist[$sku],'price' => (string)$price,'regular_price' => (string)$price);
+          
+        }            
+        
+         try {
+            $client->post('products/batch', $data);
                 
             } catch (\Exception $ee) {
                 $this->setError($ee->getMessage());
                 return;
-            }            
-        }   
-       
-        
-        $this->setSuccess("Обновлено ");
+          
+            }
+        $this->setSuccess("Обновлено ".count($data['update'])." товаров");
     }
     //импорт товара с  магазина
     public function onGetItems($sender) {

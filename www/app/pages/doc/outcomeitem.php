@@ -68,7 +68,7 @@ class OutcomeItem extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->unpackDetails('detaildata') as $_item) {
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
 
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }

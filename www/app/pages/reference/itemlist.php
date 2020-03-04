@@ -127,16 +127,16 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('cat_name', $item->cat_name));
         $plist = array();
         if ($item->price1 > 0)
-            $plist[] = $item->price1;
+            $plist[] = H::fa($item->price1);
         if ($item->price2 > 0)
-            $plist[] = $item->price2;
+            $plist[] = H::fa($item->price2);
         if ($item->price3 > 0)
-            $plist[] = $item->price3;
+            $plist[] = H::fa($item->price3);
         if ($item->price4 > 0)
-            $plist[] = $item->price4;
+            $plist[] = H::fa($item->price4);
         if ($item->price5 > 0)
-            $plist[] = $item->price5;
-        $row->add(new Label('price', implode(',', $plist)));
+            $plist[] = H::fa($item->price5);
+        $row->add(new Label('price', implode(', ', $plist)));
         $row->add(new Label('desc', htmlspecialchars_decode($item->description), true));
         $row->add(new Label('cell', $item->cell));
 
@@ -175,11 +175,11 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->setVisible(true);
 
         $this->itemdetail->editname->setText($this->_item->itemname);
-        $this->itemdetail->editprice1->setText($this->_item->price1);
-        $this->itemdetail->editprice2->setText($this->_item->price2);
-        $this->itemdetail->editprice3->setText($this->_item->price3);
-        $this->itemdetail->editprice4->setText($this->_item->price4);
-        $this->itemdetail->editprice5->setText($this->_item->price5);
+        $this->itemdetail->editprice1->setText(H::fa($this->_item->price1));
+        $this->itemdetail->editprice2->setText(H::fa($this->_item->price2));
+        $this->itemdetail->editprice3->setText(H::fa($this->_item->price3));
+        $this->itemdetail->editprice4->setText(H::fa($this->_item->price4));
+        $this->itemdetail->editprice5->setText(H::fa($this->_item->price5));
         $this->itemdetail->editcat->setValue($this->_item->cat_id);
 
         $this->itemdetail->editdescription->setText($this->_item->description);
