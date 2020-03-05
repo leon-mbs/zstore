@@ -40,7 +40,7 @@ class ItemList extends \App\Pages\Base {
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->itemlist->setPageSize(H::getPG());
+        $this->itemtable->itemlist->setPageSize(5);
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->itemlist));
 
         $this->add(new Form('itemdetail'))->setVisible(false);
@@ -321,7 +321,7 @@ class ItemList extends \App\Pages\Base {
         }
 
 
-        $this->itemtable->itemlist->Reload();
+        $this->itemtable->itemlist->Reload(false);
 
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);

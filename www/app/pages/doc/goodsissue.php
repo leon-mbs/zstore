@@ -112,6 +112,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new TextInput('editaddress'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -750,7 +751,10 @@ class GoodsIssue extends \App\Pages\Base {
                 $this->docform->discount->setText("Бонусы " . $customer->bonus);
                 $this->docform->discount->setVisible(true);
             }
-            $this->docform->ship_address->setText($customer->address);
+            if($this->docform->ship_address->getText()=='') {
+               $this->docform->ship_address->setText($customer->address);    
+            }
+            
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
             $this->_prevcust = $customer_id;
@@ -777,6 +781,8 @@ class GoodsIssue extends \App\Pages\Base {
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
+        $cust->address = $this->editaddress->editcustname->getText();
+        $this->docform->ship_address->setText($cust->address);
         $cust->phone = $this->editcust->editcustname->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
