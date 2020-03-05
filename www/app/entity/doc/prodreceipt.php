@@ -74,4 +74,14 @@ class ProdReceipt extends Document {
         return 'ОП-000000';
     }
 
+    protected function getNumberTemplate() {
+        return 'СП-000000';
+    }
+
+    public function getRelationBased() {
+        $list = array();
+        $list['ProdReceipt'] = 'Оприходование  с  производства';
+    
+        return $list;
+    }    
 }

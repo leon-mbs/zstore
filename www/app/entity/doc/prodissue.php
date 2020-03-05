@@ -79,4 +79,10 @@ class ProdIssue extends Document {
         return 'СП-000000';
     }
 
+        public function getRelationBased() {
+        $list = array();
+        $list['ProdIssue'] = 'Cписание в  производство';
+    
+        return $list;
+    }
 }

@@ -17,7 +17,7 @@ use \Zippy\Html\Link\SubmitLink;
 use \App\Entity\Customer;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
-use \App\Entity\Stock;
+ 
 use \App\Entity\Store;
 use \App\Entity\MoneyFund;
 use \App\Helper as H;
@@ -88,7 +88,7 @@ class ReturnIssue extends \App\Pages\Base {
 
             foreach ($this->_doc->unpackDetails('detaildata') as $item) {
 
-                $this->_tovarlist[$it->stock_id] = $item;
+                $this->_tovarlist[$item->item_id] = $item;
             }
         } else {
             $this->_doc = Document::create('ReturnIssue');
@@ -104,12 +104,9 @@ class ReturnIssue extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $elist = \App\Entity\Entry::find('document_id=' . $basedoc->document_id);
-                        foreach ($elist as $entry) {
-                            $stock = Stock::load($entry->stock_id);
-                            $stock->quantity = abs($entry->quantity);
-                            $stock->price = round(abs($entry->amount / $entry->quantity));
-                            $this->_tovarlist[$stock->stock_id] = $stock;
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+
+                            $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
                 }
@@ -158,7 +155,7 @@ class ReturnIssue extends \App\Pages\Base {
     }
 
     public function editOnClick($sender) {
-        $stock = $sender->getOwner()->getDataItem();
+        $item = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
@@ -166,12 +163,11 @@ class ReturnIssue extends \App\Pages\Base {
         $this->editdetail->editprice->setText($stock->price);
 
 
-        $this->editdetail->edittovar->setKey($stock->item_id);
-        $this->editdetail->edittovar->setText($stock->itemname);
+        $this->editdetail->edittovar->setKey($item->item_id);
+        $this->editdetail->edittovar->setText($item->itemname);
 
-
-
-        $this->_rowid = $stock->stock_id;
+        $this->_rowid = $item->item_id;
+ 
     }
 
     public function saverowOnClick($sender) {
@@ -183,13 +179,13 @@ class ReturnIssue extends \App\Pages\Base {
             return;
         }
 
-        $item = Stock::load($id);
+        $item = Item::load($id);
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
 
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$item->stock_id] = $item;
+        unset($this->_itemlist[$this->_rowid]);        
+        $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -329,9 +325,9 @@ class ReturnIssue extends \App\Pages\Base {
     }
 
     public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
+        
         $text = trim($sender->getText());
-        return Stock::findArrayAC($store_id, $text);
+        return Item::findArrayAC($text);
     }
 
 }

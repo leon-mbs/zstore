@@ -17,7 +17,7 @@ use \Zippy\Html\Link\SubmitLink;
 use \App\Entity\Customer;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
-use \App\Entity\Stock;
+
 use \App\Entity\Store;
 use \App\Entity\MoneyFund;
 use \App\Helper as H;
@@ -89,7 +89,7 @@ class RetCustIssue extends \App\Pages\Base {
 
             foreach ($this->_doc->unpackDetails('detaildata') as $item) {
 
-                $this->_tovarlist[$stock->stock_id] = $item;
+                $this->_tovarlist[$item->] = $item;
             }
         } else {
             $this->_doc = Document::create('RetCustIssue');
@@ -104,14 +104,11 @@ class RetCustIssue extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $elist = \App\Entity\Entry::find('document_id=' . $basedoc->document_id);
-                        foreach ($elist as $entry) {
-                            $stock = Stock::load($entry->stock_id);
-                            $stock->quantity = abs($entry->quantity);
-                            $stock->price = $stock->partion;
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
 
-                            $this->_tovarlist[$stock->stock_id] = $stock;
+                            $this->_tovarlist[$item->item_id] = $item;
                         }
+                        
                     }
                 }
             }
@@ -161,7 +158,7 @@ class RetCustIssue extends \App\Pages\Base {
     }
 
     public function editOnClick($sender) {
-        $stock = $sender->getOwner()->getDataItem();
+        $item = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
@@ -169,14 +166,15 @@ class RetCustIssue extends \App\Pages\Base {
         $this->editdetail->editprice->setText($stock->price);
 
 
-        $this->editdetail->edittovar->setKey($stock->stock_id);
-        $this->editdetail->edittovar->setText($stock->itemname);
-        $st = Stock::load($stock->stock_id);  //для актуального 
-        $qty = $st->qty - $st->wqty + $st->rqty;
-        $this->editdetail->qtystock->setText(H::fqty($st->qty));
+        $this->editdetail->edittovar->setKey($item->stock_id);
+        $this->editdetail->edittovar->setText($item->itemname);
+        
+        $qty = $item->getQuantity();
+        $this->editdetail->qtystock->setText(H::fqty($qty));
 
+        $this->_rowid = $item->item_id;
 
-        $this->_rowid = $stock->stock_id;
+         
     }
 
     public function saverowOnClick($sender) {
@@ -187,15 +185,15 @@ class RetCustIssue extends \App\Pages\Base {
             return;
         }
 
-        $stock = Stock::load($id);
-        $stock->quantity = $this->editdetail->editquantity->getText();
+        $item = Item::load($id);
+        $item->quantity = $this->editdetail->editquantity->getText();
 
 
-        $stock->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getText();
 
 
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$stock->stock_id] = $stock;
+        unset($this->_itemlist[$this->_rowid]);        
+        $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -342,15 +340,11 @@ class RetCustIssue extends \App\Pages\Base {
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
-        $stock = Stock::load($id);
+        $item = Item::load($id);
 
-        $this->editdetail->qtystock->setText(H::fqty($stock->qty));
-
-
-
-        $this->editdetail->editprice->setText($stock->partion);
-
-        $this->updateAjax(array('qtystock', 'editprice'));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
+       
+        $this->updateAjax(array('qtystock' ));
     }
 
     public function OnAutoCustomer($sender) {
@@ -359,9 +353,8 @@ class RetCustIssue extends \App\Pages\Base {
     }
 
     public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        return Stock::findArrayAC($store_id, $text);
+        return Item::findArrayAC($text);
     }
 
 }

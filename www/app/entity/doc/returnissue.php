@@ -59,12 +59,13 @@ class ReturnIssue extends Document {
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
 
 
             $sc = new Entry($this->document_id, $item->amount, $item->quantity);
             $sc->setStock($item->stock_id);
 
-            $sc->setExtCode(0 - ($item->price - $st->partion)); //Для АВС 
+            $sc->setExtCode(0 - ($item->price - $stock->partion)); //Для АВС 
             //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }

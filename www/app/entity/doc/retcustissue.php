@@ -64,10 +64,17 @@ class RetCustIssue extends Document {
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $sc = new Entry($this->document_id, 0 - $item->amount, 0 - $item->quantity);
-            $sc->setStock($item->stock_id);
-            $sc->setExtCode(0 - $item->amount); //Для АВС 
+            
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
+            foreach ($listst as $st) {
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+                $sc->setExtCode($item->price - $st->partion); //Для АВС 
+                $sc->save();
+            }            
+            
+        
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {

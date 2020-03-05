@@ -83,6 +83,21 @@ class ProdReceipt extends \App\Pages\Base {
         } else {
             $this->_doc = Document::create('ProdReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+            if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'ProdReceipt') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+
+                            $this->_itemlist[$item->item_id] = $item;
+                        }                        
+                    }
+                }
+            }
+            
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();

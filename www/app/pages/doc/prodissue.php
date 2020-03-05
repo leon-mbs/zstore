@@ -95,6 +95,14 @@ class ProdIssue extends \App\Pages\Base {
                         $this->docform->notes->setText('Материалы  для наряда ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                     }
+                    if ($basedoc->meta_name == 'ProdIssue') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+
+                            $this->_itemlist[$item->item_id] = $item;
+                        }                        
+                    }
                 }
             }
         }

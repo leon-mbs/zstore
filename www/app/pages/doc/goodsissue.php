@@ -770,6 +770,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->setVisible(false);
 
         $this->editcust->editcustname->setText('');
+        $this->editcust->editaddress->setText('');
         $this->editcust->editphone->setText('');
     }
 
@@ -781,9 +782,9 @@ class GoodsIssue extends \App\Pages\Base {
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->address = $this->editaddress->editcustname->getText();
+        $cust->address = $this->editcust->editaddress->getText();
         $this->docform->ship_address->setText($cust->address);
-        $cust->phone = $this->editcust->editcustname->getText();
+        $cust->phone = $this->editcust->editphone->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
             $this->setError("Телефон должен быть 10  цифр");
