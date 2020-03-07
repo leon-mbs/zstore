@@ -29,9 +29,8 @@ class Prod extends \App\Pages\Base {
         $this->filter->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new RedirectLink('print', "movereport"));
-        $this->detail->add(new RedirectLink('html', "movereport"));
-        $this->detail->add(new RedirectLink('word', "movereport"));
+         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
+       $this->detail->add(new RedirectLink('word', "movereport"));
         $this->detail->add(new RedirectLink('excel', "movereport"));
         $this->detail->add(new RedirectLink('pdf', "abc"));
         $this->detail->add(new Label('preview'));
@@ -49,11 +48,7 @@ class Prod extends \App\Pages\Base {
         $reportname = "prod";
 
 
-        $this->detail->print->pagename = $reportpage;
-        $this->detail->print->params = array('print', $reportname);
-        $this->detail->html->pagename = $reportpage;
-        $this->detail->html->params = array('html', $reportname);
-        $this->detail->word->pagename = $reportpage;
+           $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);

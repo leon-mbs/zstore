@@ -30,8 +30,7 @@ class Outcome extends \App\Pages\Base {
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new RedirectLink('print', "outcome"));
-        $this->detail->add(new RedirectLink('html', "outcome"));
+        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
         $this->detail->add(new RedirectLink('word', "outcome"));
         $this->detail->add(new RedirectLink('excel', "outcome"));
         $this->detail->add(new RedirectLink('pdf', "abc"));
@@ -62,11 +61,7 @@ class Outcome extends \App\Pages\Base {
         $reportname = "outcome";
 
 
-        $this->detail->print->pagename = $reportpage;
-        $this->detail->print->params = array('print', $reportname);
-        $this->detail->html->pagename = $reportpage;
-        $this->detail->html->params = array('html', $reportname);
-        $this->detail->word->pagename = $reportpage;
+           $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);

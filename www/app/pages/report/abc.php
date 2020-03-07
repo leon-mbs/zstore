@@ -40,8 +40,8 @@ class ABC extends \App\Pages\Base {
 
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new RedirectLink('print', "abc"));
-        $this->detail->add(new RedirectLink('html', "abc"));
+        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
+        
         $this->detail->add(new RedirectLink('excel', "abc"));
         $this->detail->add(new RedirectLink('pdf', "abc"));
         $this->detail->add(new Label('preview'));
@@ -57,10 +57,6 @@ class ABC extends \App\Pages\Base {
         $reportname = "abc";
 
 
-        $this->detail->print->pagename = $reportpage;
-        $this->detail->print->params = array('print', $reportname);
-        $this->detail->html->pagename = $reportpage;
-        $this->detail->html->params = array('html', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;

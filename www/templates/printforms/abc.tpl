@@ -10,8 +10,8 @@
     <tr style="font-weight: bolder;">
 
         <th width="300px" style="border-bottom:1px #000 solid;">Название</th>
-        <th width="100px" style="border-bottom:1px #000 solid;">Знач., тыс.</th>
-        <th width="80px" style="border-bottom:1px #000 solid;">%</th>
+        <th width="100px" style="border-bottom:1px #000 solid;" align="right">Знач., тыс.</th>
+        <th width="80px" style="border-bottom:1px #000 solid;" align="right">%</th>
         <th width="30px" style="border-bottom:1px #000 solid;"></th>
     </tr>
     {{#_detail}}

@@ -83,6 +83,9 @@ class Base extends \Zippy\Html\WebPage {
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
             $this->_tvars["ocstore"] = false;
         }
+        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->userlogin != 'admin') {
+            $this->_tvars["woocomerce"] = false;
+        }
 
         $this->_tvars["hideblock"] = false; //для скрытия блока разметки  в  шаблоне страниц 
     }

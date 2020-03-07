@@ -39,7 +39,7 @@ class Price extends \App\Pages\Base {
         $this->_tvars['price5name'] = $option['price5'];
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new RedirectLink('print', "price"));
+        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
         $this->detail->add(new RedirectLink('excel', "price"));
         $this->detail->add(new RedirectLink('pdf', "price"));
         $this->detail->add(new Label('preview'));
@@ -57,9 +57,7 @@ class Price extends \App\Pages\Base {
         $reportname = "price";
 
 
-        $this->detail->print->pagename = $reportpage;
-        $this->detail->print->params = array('print', $reportname);
-        $this->detail->excel->pagename = $reportpage;
+          $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;
         $this->detail->pdf->params = array('pdf', $reportname);
