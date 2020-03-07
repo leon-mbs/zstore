@@ -123,7 +123,7 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->dw_paylist->Reload();
 
         //проводки
-        $this->_itemlist = \App\Entity\Entry::find('document_id=' . $this->_doc->document_id);
+        $this->_itemlist = \App\Entity\Entry::find('stock_id > 0 and coalesce(quantity,0) <> 0  and document_id=' . $this->_doc->document_id);
         $this->dw_itemlist->Reload();
 
         //список приатаченных  файлов
@@ -151,8 +151,7 @@ class DocView extends \Zippy\Html\PageFragment {
         $row->add(new Label('paydate', date('Y.m.d', $item->paydate)));
         $row->add(new Label('payamountp', H::fa($item->amount > 0 ? $item->amount : "")));
         $row->add(new Label('payamountm', H::fa($item->amount < 0 ? 0 - $item->amount : "")));
-        $row->add(new Label('payuser', $item->username));
-        $row->add(new Label('paycomment', $item->notes));
+ 
         $row->add(new Label('paymf', $item->mf_name));
     }
     //вывод строки  проводок

@@ -40,7 +40,7 @@ class TransItem extends Document {
         $sc->setStock($fi->stock_id);
 
         $sc->save();
-        if (headerdata['toitem'] > 0) {
+        if ($this->headerdata['toitem'] > 0) {
             $ti = Item::load($this->headerdata['toitem']);
             $price = round(($this->amount ) / $this->headerdata["toquantity"]);
             $stockto = Stock::getStock($this->headerdata['store'], $ti->item_id, $price, "", "", true);

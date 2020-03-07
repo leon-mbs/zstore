@@ -247,7 +247,8 @@ class ProdIssue extends \App\Pages\Base {
 
 
         $this->_doc->amount = $this->docform->total->getText();
-
+        $this->_doc->payamount = 0;
+ 
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();

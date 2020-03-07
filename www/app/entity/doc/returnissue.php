@@ -70,7 +70,7 @@ class ReturnIssue extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL);
             $this->payamount = $this->amount;
         }
 

@@ -38,8 +38,7 @@ class PayActivity extends \App\Pages\Base {
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('print', "mfreport"));
-        $this->detail->add(new RedirectLink('html', "mfreport"));
-        $this->detail->add(new RedirectLink('word', "mfreport"));
+  
         $this->detail->add(new RedirectLink('excel', "mfreport"));
         $this->detail->add(new RedirectLink('pdf', "mfreport"));
         $this->detail->add(new Label('preview'));
@@ -61,11 +60,7 @@ class PayActivity extends \App\Pages\Base {
 
         $this->detail->print->pagename = $reportpage;
         $this->detail->print->params = array('print', $reportname);
-        $this->detail->html->pagename = $reportpage;
-        $this->detail->html->params = array('html', $reportname);
-        $this->detail->word->pagename = $reportpage;
-        $this->detail->word->params = array('doc', $reportname);
-        $this->detail->excel->pagename = $reportpage;
+          $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;
         $this->detail->pdf->params = array('pdf', $reportname);
@@ -111,8 +106,8 @@ class PayActivity extends \App\Pages\Base {
     
           date(sc.paydate) AS dt,
           SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS obin,
-          SUM(CASE WHEN amount < 0 THEN 0 - amount ELSE 0 END) AS obout,
-          GROUP_CONCAT(distinct sc.document_number) AS docs
+          SUM(CASE WHEN amount < 0 THEN 0 - amount ELSE 0 END) AS obout 
+           
         FROM paylist_view sc
              WHERE   
                 sc.mf_id = {$mf_id}
@@ -134,7 +129,7 @@ class PayActivity extends \App\Pages\Base {
 
             $detail[] = array(
                 "date" => date("Y-m-d", strtotime($row['dt'])),
-                "documents" => $row['docs'],
+          
                 "in" => H::fa(strlen($row['begin_amount']) > 0 ? $row['begin_amount'] : 0),
                 "obin" => H::fa($row['obin']),
                 "obout" => H::fa($row['obout']),

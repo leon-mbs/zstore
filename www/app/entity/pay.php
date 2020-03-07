@@ -11,7 +11,7 @@ namespace App\Entity;
  */
 class Pay extends \ZCL\DB\Entity {
 
-    //типы платеежей -щатраты и доходы
+    //типы платеежей - затраты и доходы
     const PAY_BASE_INCOME = 1;     //доход от основной  деятельности
     const PAY_INVEST_INCOME = 2;     //инвестиции
     const PAY_OTHER_INCOME = 100;   //прочие доходы

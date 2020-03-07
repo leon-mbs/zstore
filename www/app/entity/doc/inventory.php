@@ -26,7 +26,7 @@ class Inventory extends Document {
             }
             //списываем  со склада
             if ($item->quantity > $item->qfact) {
-                $$item->quantity = $item->quantity - $item->qfact;
+                $item->quantity = $item->quantity - $item->qfact;
                 $listst = Stock::pickup($this->headerdata['store'], $item );
                 foreach ($listst as $st) {
                     $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);

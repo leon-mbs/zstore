@@ -35,6 +35,7 @@ class Task extends \App\Pages\Base {
     public $_servicelist = array();
     public $_eqlist = array();
     public $_emplist = array();
+    private $_basedocid = 0;
 
     public function __construct($docid = 0, $basedocid = 0, $date = null) {
         parent::__construct();

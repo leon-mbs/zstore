@@ -187,6 +187,7 @@ class ServiceAct extends \App\Pages\Base {
 
         $service->price = $this->editdetail->editprice->getText();
         $service->desc = $this->editdetail->editdesc->getText();
+        $service->quantity = 1;
 
         $this->_servicelist[$service->service_id] = $service;
         $this->editdetail->setVisible(false);

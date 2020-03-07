@@ -252,7 +252,8 @@ class GoodsIssue extends \App\Pages\Base {
                     if ($basedoc->meta_name == 'ServiceAct') {
 
                         $this->docform->notes->setText('Комплектующие  для  ' . $basedoc->document_number);
-                        $this->docform->customer->setValue($basedoc->customer_id);
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
                     }
                 }
             }

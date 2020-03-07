@@ -40,7 +40,7 @@ class TaskList extends \App\Pages\Base {
     public $_store_id = 0;
     public $_discount = 0;
     private $_taskscnt = array();
-    public $_tamount = 0;
+ 
 
     public function __construct() {
 
@@ -55,7 +55,7 @@ class TaskList extends \App\Pages\Base {
         $this->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
         $this->tasklist->setSelectedClass('table-success');
 
-        $this->tasklist->setPageSize(H::getPG(15));
+        $this->tasklist->setPageSize(H::getPG(H::getPG()));
         $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->tasklist));
 
         $this->add(new Form('filterform'))->onSubmit($this, 'OnFilter');
@@ -65,9 +65,7 @@ class TaskList extends \App\Pages\Base {
 
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
-
-        $this->add(new Label("tamount"));
-
+ 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
@@ -75,8 +73,7 @@ class TaskList extends \App\Pages\Base {
         $this->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bitems'))->onClick($this, 'statusOnSubmit');
-
-
+ 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
@@ -104,31 +101,20 @@ class TaskList extends \App\Pages\Base {
             $row->taskstatus->setText('<span class="badge badge-warning">Отложена</span>', true);
         if ($task->state == Document::STATE_CLOSED)
             $row->taskstatus->setText('<span class="badge badge-default">Закончено</span>', true);
-
-
-
+ 
         $emps = array();
         foreach ($task->unpackDetails('emplist') as $emp) {
-
-
-            $emps[] = $emp->emp_name;
+             $emps[] = $emp->emp_name;
         }
 
         $row->add(new Label('taskemps', implode(', ', $emps)));
         $sers = array();
         foreach ($task->unpackDetails('detaildata') as $ser) {
-
-
-            $sers[] = $ser->service_name;
+             $sers[] = $ser->service_name;
         }
 
         $row->add(new Label('taskservices', implode(', ', $sers)));
-
-
-        $row->add(new Label('taskamount', H::fa($task->amount)));
-
-        $this->_tamount = H::fa($this->_tamount + $task->amount);
-
+ 
         $row->add(new ClickLink('taskshow'))->onClick($this, 'taskshowOnClick');
         $row->add(new ClickLink('taskedit'))->onClick($this, 'taskeditOnClick');
         if ($task->state == Document::STATE_CLOSED || $task->state == Document::STATE_EXECUTED) {
@@ -215,9 +201,7 @@ class TaskList extends \App\Pages\Base {
 
     public function updateTasks() {
         $user = System::getUser();
-
-
-
+ 
         $sql = "meta_name='Task' ";
         if ($this->filterform->filterfinished->isChecked() == false) {
             $sql = $sql . " and state<>9 ";
@@ -233,14 +217,10 @@ class TaskList extends \App\Pages\Base {
         if (strlen($c) > 0) {
             $sql = $sql . " and ({$c})";
         }
-        $this->_tamount = 0;
-
-
+ 
         $this->_taskds->setWhere($sql);
         $this->tasklist->Reload();
-        $this->tamount->setText($this->_tamount);
-
-
+ 
         $this->updateCal();
 
         $this->statuspan->setVisible(false);

@@ -89,8 +89,9 @@ class EmpTask extends \App\Pages\Base {
         $docs = Document::find($where);
 
         foreach ($docs as $doc) {
-
-            $emplist = unserialize(base64_decode($doc->headerdata['emp']));
+                   
+ 
+            $emplist = $doc->unpackDetails('emplist');
             if (count($emplist) == 0)
                 continue;
             $total = 0;

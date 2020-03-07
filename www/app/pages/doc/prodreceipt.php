@@ -240,8 +240,8 @@ class ProdReceipt extends \App\Pages\Base {
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
-        $this->_doc->payamount = $this->_doc->amount;
-
+        $this->_doc->payamount = 0;
+   
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();

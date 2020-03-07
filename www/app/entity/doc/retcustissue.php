@@ -78,7 +78,7 @@ class RetCustIssue extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL_CUST);
             $this->payamount = $this->amount;
         }
 
