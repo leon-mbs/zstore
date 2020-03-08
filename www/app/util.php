@@ -2,7 +2,7 @@
 
 namespace App;
 
-use \Symfony\Polyfill\Mbstring\Mbstring ;
+use \Symfony\Polyfill\Mbstring\Mbstring;
 
 /**
  * Класс   со  вспомагательными   функциями
@@ -10,23 +10,21 @@ use \Symfony\Polyfill\Mbstring\Mbstring ;
 class Util {
 
     /**
-    * возвращает первые  буквы
-    */
-    public static function getLabelName($name){
+     * возвращает первые  буквы
+     */
+    public static function getLabelName($name) {
         $name = preg_replace('|\s+|', ' ', $name);
-        $name = Mbstring::mb_strtoupper($name,'UTF-8');
-       
-      $w =explode(' ', $name );
-      $lb= Mbstring::mb_substr($w[0],0,1,'UTF-8');
-      if(count($w)>1) {
-        $lb .= Mbstring::mb_substr($w[1],0,1,'UTF-8');    
-      }
-      
-      return  $lb;
+        $name = Mbstring::mb_strtoupper($name, 'UTF-8');
+
+        $w = explode(' ', $name);
+        $lb = Mbstring::mb_substr($w[0], 0, 1, 'UTF-8');
+        if (count($w) > 1) {
+            $lb .= Mbstring::mb_substr($w[1], 0, 1, 'UTF-8');
+        }
+
+        return $lb;
     }
-    
-         
-    
+
     /**
      * Вставляет пробелы  между символами строки
      *

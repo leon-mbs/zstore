@@ -45,7 +45,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new Date('sent_date'));
         $this->docform->add(new Date('delivery_date'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList( true, true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -80,9 +80,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('ship_number'));
         $this->docform->add(new TextInput('ship_address'));
-
-
-
+  
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -112,6 +110,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new TextInput('editaddress'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -152,8 +151,8 @@ class GoodsIssue extends \App\Pages\Base {
 
             $this->OnChangeCustomer($this->docform->customer);
 
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Item($item);
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
                 $this->_itemlist[$item->item_id] = $item;
             }
         } else {
@@ -168,7 +167,7 @@ class GoodsIssue extends \App\Pages\Base {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
- 
+
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
@@ -193,8 +192,8 @@ class GoodsIssue extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                        foreach ($order->detaildata as $item) {
-                            $item = new Item($item);
+                        foreach ($order->unpackDetails('detaildata') as $item) {
+
                             $this->_itemlist[$item->item_id] = $item;
                         }
                     }
@@ -202,11 +201,11 @@ class GoodsIssue extends \App\Pages\Base {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
- 
+
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                        $this->_orderid = $basedocid;
-                        $this->docform->order->setText($basedoc->document_number);
+                      //  $this->_orderid = $basedocid;
+                      //  $this->docform->order->setText($basedoc->document_number);
                         $this->docform->ship_address->setText($basedoc->headerdata['address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
@@ -214,21 +213,53 @@ class GoodsIssue extends \App\Pages\Base {
 
                         $notfound = array();
                         $invoice = $basedoc->cast();
-                    
+
                         $this->docform->total->setText($invoice->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                        foreach ($order->detaildata as $item) {
-                            $item = new Item($item);
+                        foreach ($invoice->unpackDetails('detaildata') as $item) {
+
                             $this->_itemlist[$item->item_id] = $item;
                         }
+                        
+                        
+                        if($invoice->payamount>0){
+                            $this->docform->payment->setValie(MoneyFund::PREPAID) ;// предоплата
+                        }
+                    }
+                    
+                    
+                    
+                    if ($basedoc->meta_name == 'GoodsIssue') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                  
+                
+                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
+                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
+ 
+   
+                        $this->OnChangeCustomer($this->docform->customer);
+                        
+
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                            $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
+                            $this->_itemlist[$item->item_id] = $item;
+                        }
+                        $this->calcTotal();
+                        $this->calcPay();
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
                         $this->docform->notes->setText('Комплектующие  для  ' . $basedoc->document_number);
-                        $this->docform->customer->setValue($basedoc->customer_id);
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
                     }
                 }
             }
@@ -411,11 +442,8 @@ class GoodsIssue extends \App\Pages\Base {
         $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
         $this->_doc->headerdata['order_id'] = $this->_orderid;
 
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
 
         $this->_doc->amount = $this->docform->total->getText();
 
@@ -572,7 +600,7 @@ class GoodsIssue extends \App\Pages\Base {
         if ($code == '')
             return;
         $store_id = $this->docform->store->getValue();
-        if($store_id==0){
+        if ($store_id == 0) {
             $this->setError('Не указан склад');
             return;
         }
@@ -653,13 +681,12 @@ class GoodsIssue extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
-               
-        
+
+
         if (count($this->_itemlist) == 0) {
             $this->setError("Не веден ни один  товар");
         }
@@ -705,9 +732,9 @@ class GoodsIssue extends \App\Pages\Base {
 
 
         $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
-        }
+    }
 
-   public function OnAutoItem($sender) {
+    public function OnAutoItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
@@ -731,7 +758,10 @@ class GoodsIssue extends \App\Pages\Base {
                 $this->docform->discount->setText("Бонусы " . $customer->bonus);
                 $this->docform->discount->setVisible(true);
             }
-            $this->docform->ship_address->setText($customer->address);
+            if($this->docform->ship_address->getText()=='') {
+               $this->docform->ship_address->setText($customer->address);    
+            }
+            
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
             $this->_prevcust = $customer_id;
@@ -747,6 +777,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->setVisible(false);
 
         $this->editcust->editcustname->setText('');
+        $this->editcust->editaddress->setText('');
         $this->editcust->editphone->setText('');
     }
 
@@ -758,7 +789,22 @@ class GoodsIssue extends \App\Pages\Base {
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->phone = $this->editcust->editcustname->getText();
+        $cust->address = $this->editcust->editaddress->getText();
+        $this->docform->ship_address->setText($cust->address);
+        $cust->phone = $this->editcust->editphone->getText();
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+            $this->setError("Телефон должен быть 10  цифр");
+            return;
+        }
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким телефоном");
+                return;
+            }
+        }
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);

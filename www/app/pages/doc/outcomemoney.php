@@ -33,7 +33,7 @@ class OutcomeMoney extends \App\Pages\Base {
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(System::getUser()->username == 'admin'), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList( ), H::getDefMF()));
         $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(2), 0));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('amount'));
@@ -115,10 +115,9 @@ class OutcomeMoney extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError("Не введен номер документа");
         }
-         if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
 
         if (($this->_doc->amount > 0) == false) {

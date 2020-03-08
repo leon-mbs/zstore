@@ -26,28 +26,24 @@ class WNoliq extends \Zippy\Html\PageFragment {
         $visible = (strpos(System::getUser()->widgets, 'wnoliq') !== false || System::getUser()->userlogin == 'admin');
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0)
-            $cstr = " where sc2.stock_id in (select stock_id from store_stock st11 where st11.store_id in ({$cstr}) )  ";
+            $cstr = " and st.store_id in ({$cstr})    ";
 
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();
 
 
-        $sql = "select i.itemname,i.item_id from `items`  i where  i.disabled  <> 1 
-               and   i.item_id not  in(select coalesce(sc.item_id,0)   
-               from  entrylist_view  sc
-               where sc.item_id >0  and sc.document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  
-               and sc.quantity < 0 )  
-               and  i.item_id    in (select coalesce(sc2.item_id,0) from entrylist_view sc2   {$cstr} ); 
-                
+        $sql = "select coalesce(sum(st.qty),0) as qty, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1   
+               {$cstr} and   st.stock_id not  in(select   stock_id    
+               from  entrylist_view  
+               where    document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  and  quantity < 0 )  
+               group by  st.itemname,st.item_code,st.storename  
                  ";
 
         if ($visible) {
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
-                $item = Item::load($row['item_id']);
-                $item->qty = $item->getQuantity();
-                $this->data[$row['item_id']] = $item;
+                $this->data[] = new DataItem($row);
             }
         }
 
@@ -66,7 +62,9 @@ class WNoliq extends \Zippy\Html\PageFragment {
         $item = $row->getDataItem();
 
 
+        $row->add(new Label('storename', $item->storename));
         $row->add(new Label('itemname', $item->itemname));
+        $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('qty', Helper::fqty($item->qty)));
     }
 
@@ -77,7 +75,9 @@ class WNoliq extends \Zippy\Html\PageFragment {
         foreach ($this->data as $d) {
 
 
+            $csv .= $d->storename . ';';
             $csv .= $d->itemname . ';';
+            $csv .= $d->item_code . ';';
             $csv .= $d->qty;
 
 

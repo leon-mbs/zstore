@@ -27,24 +27,24 @@ class WMinQty extends \Zippy\Html\PageFragment {
 
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0)
-            $cstr = "  s.store_id in ({$cstr}) and ";
+            $cstr = " where  store_id in ({$cstr})  ";
 
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();
 
 
-        $sql = "select * from (select item_id, itemname,
-                 (select  coalesce(sum(s.qty) ,0) from `store_stock_view` s where {$cstr} s.item_id=i.item_id and s.qty <> 0    ) as iqty,
-                 i.`minqty`
-                 from items i where minqty>0 )t where   iqty <  minqty   
-                 ";
+        $sql = "select t.qty, i.`minqty`,i.`itemname`,i.`item_code`,s.`storename`  from (select  item_id,store_id,coalesce(sum( `qty`),0) as qty   from  store_stock
+            {$cstr} group by item_id,store_id   ) t
+            join items  i  on t.item_id = i.item_id
+            join stores s  on t.store_id = s.store_id
+            where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 ";
 
         if ($visible) {
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
 
-                $this->data[$row['item_id']] = new DataItem($row);
+                $this->data[] = new DataItem($row);
             }
         }
 
@@ -62,8 +62,10 @@ class WMinQty extends \Zippy\Html\PageFragment {
     public function mqlistOnRow($row) {
         $item = $row->getDataItem();
 
+        $row->add(new Label('storename', $item->storename));
         $row->add(new Label('itemname', $item->itemname));
-        $row->add(new Label('qty', Helper::fqty($item->iqty)));
+        $row->add(new Label('item_code', $item->item_code));
+        $row->add(new Label('qty', Helper::fqty($item->qty)));
         $row->add(new Label('minqty', Helper::fqty($item->minqty)));
     }
 
@@ -73,8 +75,10 @@ class WMinQty extends \Zippy\Html\PageFragment {
 
         foreach ($this->data as $d) {
 
+            $csv .= $d->storename . ';';
             $csv .= $d->itemname . ';';
-            $csv .= $d->iqty . ';';
+            $csv .= $d->item_code . ';';
+            $csv .= $d->qty . ';';
             $csv .= $d->minqty;
 
             $csv .= "\n";

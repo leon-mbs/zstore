@@ -7,6 +7,7 @@ use \App\Entity\User;
 use \App\Entity\Item;
 use \App\Entity\Store;
 use \App\Entity\Category;
+use \App\Entity\Customer;
 use \App\Helper as H;
 use \App\System;
 use \Zippy\WebApplication as App;
@@ -38,17 +39,36 @@ class Import extends \App\Pages\Base {
         $cols = array(0 => '-', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10);
         $form->add(new DropDownChoice("colname", $cols));
         $form->add(new DropDownChoice("colcode", $cols));
+        $form->add(new DropDownChoice("colbarcode", $cols));
         $form->add(new DropDownChoice("colgr", $cols));
         $form->add(new DropDownChoice("colqty", $cols));
         $form->add(new DropDownChoice("colprice", $cols));
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
         $form->add(new CheckBox("preview"));
-        $form->add(new SubmitButton("load"))->onClick($this, "onImport");
+  
+        $form->onSubmit($this, "onImport");
 
         $this->onType($form->itype);
 
+        $form = $this->add(new Form("cform"));
+
+        $form->add(new DropDownChoice("ctype", array(0=>'Не указано', 1=>'Поставщики', 2=>'Покупатели'), 0));
+        $form->add(new DropDownChoice("cencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
+        $form->add(new TextInput("csep", ';'));
+        $form->add(new CheckBox("cpreview"));
+        $form->add(new DropDownChoice("colcname", $cols));
+        $form->add(new DropDownChoice("colphone", $cols));
+        $form->add(new DropDownChoice("colemail", $cols));
+        $form->add(new DropDownChoice("colcity", $cols));
+        $form->add(new DropDownChoice("coladdress", $cols));
+        $form->add(new \Zippy\Html\Form\File("cfilename"));
+         
+        $form->onSubmit($this, "onCImport");
+        
+        
         $this->_tvars['preview'] = false;
+        $this->_tvars['preview2'] = false;
     }
 
     public function onType($sender) {
@@ -69,6 +89,7 @@ class Import extends \App\Pages\Base {
 
         $colname = $this->iform->colname->getValue();
         $colcode = $this->iform->colcode->getValue();
+        $colbarcode = $this->iform->colbarcode->getValue();
         $colgr = $this->iform->colgr->getValue();
         $colqty = $this->iform->colqty->getValue();
         $colprice = $this->iform->colprice->getValue();
@@ -96,8 +117,12 @@ class Import extends \App\Pages\Base {
 
         $data = array();
         if (($handle = fopen($file['tmp_name'], "r")) !== FALSE) {
-            while (($row = fgetcsv($handle, 0, $sep)) !== FALSE) {
-                $data[] = $row;
+              
+            while (($row = fgets($handle)) !== FALSE) {
+               if ($encode == 2)
+                    $row = mb_convert_encoding($row, "utf-8", "windows-1251");
+                
+                $data[] = explode($sep,$row);
             }
         }
         fclose($handle);
@@ -107,13 +132,11 @@ class Import extends \App\Pages\Base {
             $this->_tvars['preview'] = true;
             $this->_tvars['list'] = array();
             foreach ($data as $row) {
-                $itemname = $row[$colname - 1];
-                if ($encode == 2)
-                    $itemname = mb_convert_encoding($itemname, "utf-8", "windows-1251");
-
+ 
                 $this->_tvars['list'][] = array(
-                    'colname' => $itemname,
+                    'colname' => $row[$colname - 1],
                     'colcode' => $row[$colcode - 1],
+                    'colbarcode' => $row[$colbarcode - 1],
                     'colgr' => $row[$colgr - 1],
                     'colqty' => $row[$colqty - 1],
                     'colmsr' => $row[$colmsr - 1],
@@ -124,12 +147,10 @@ class Import extends \App\Pages\Base {
             return;
         }
 
-
-
+        $cnt=0;
         $newitems = array();
         foreach ($data as $row) {
-
-
+ 
             $catname = $row[$colgr - 1];
             if (strlen($catname) > 0) {
                 $cat = Category::getFirst('cat_name=' . Category::qstr($catname));
@@ -140,11 +161,17 @@ class Import extends \App\Pages\Base {
                 }
             }
             $itemname = $row[$colname - 1];
+            $itemcode = $row[$colcode - 1];
             if (strlen($itemname) > 0) {
-                if ($encode == 2)
-                    $itemname = mb_convert_encoding($itemname, "utf-8", "windows-1251");
-
-                $item = Item::getFirst('itemname=' . Item::qstr($itemname));
+  
+               if (strlen($itemcode) > 0) {
+                   $item = Item::getFirst('item_code=' . Item::qstr($itemcode));        
+               }
+               if ($item == null) {
+                   $item = Item::getFirst('itemname=' . Item::qstr($itemname));    
+               } 
+                
+                
                 if ($item == null) {
                     $price = str_replace(',', '.', $row[$colprice - 1]);
                     $inprice = str_replace(',', '.', $row[$colinprice - 1]);
@@ -153,6 +180,8 @@ class Import extends \App\Pages\Base {
                     $item->itemname = $itemname;
                     if (strlen($row[$colcode - 1]) > 0)
                         $item->item_code = $row[$colcode - 1];
+                    if (strlen($row[$colbarcode - 1]) > 0)
+                        $item->bar_code = $row[$colbarcode - 1];
                     if (strlen($row[$colmsr - 1]) > 0)
                         $item->msr = $row[$colmsr - 1];
                     if ($price > 0)
@@ -166,7 +195,7 @@ class Import extends \App\Pages\Base {
 
                     $item->amount = $item->quantity * $item->price;
                     $item->save();
-
+                    $cnt++; 
                     if ($item->quantity > 0) {
                         $newitems[] = $item; //для склада   
                     }
@@ -181,20 +210,126 @@ class Import extends \App\Pages\Base {
             $doc->document_date = time();
 
             $amount = 0;
+            $itlist = array();
             foreach ($newitems as $item) {
-                $doc->detaildata[] = $item->getData();
+                $itlist[] = $item;
                 $amount = $amount + ($item->quantity * $item->price);
             }
+            $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
+            $doc->payamount = 0;
+            $doc->payed = 0;
+            $doc->notes = 'Импорт с csv';
             $doc->headerdata['store'] = $store;
 
             $doc->save();
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
         }
-        $this->setSuccess('Импорт завершен');
+        $this->setSuccess("  Импортировано {$cnt} ТМЦ");
 
-        $this->iform->clean();
+         
     }
 
+    
+    public function onCImport($sender) {
+        $t = $this->cform->ctype->getValue();
+        
+        $encode = $this->cform->cencode->getValue();
+        $preview = $this->cform->cpreview->isChecked();
+        $this->_tvars['preview2'] = false;
+
+        $colcname   = $this->cform->colcname->getValue();
+        $colphone   = $this->cform->colphone->getValue();
+        $colemail   = $this->cform->colemail->getValue();
+        $colcity    = $this->cform->colcity->getValue();
+        $coladdress = $this->cform->coladdress->getValue();
+        $sep       = $this->cform->csep->getText();
+
+        if ($encode == 0) {
+            $this->setError('Не выбрана  кодировка');
+            return;
+        }
+        if ($colcname == 0) {
+            $this->setError('Не указан столбец  с  наименованием');
+            return;
+        }
+        
+        $file = $this->cform->cfilename->getFile();
+        if (strlen($file['tmp_name']) == 0) {
+            $this->setError('Не  выбран  файл');
+            return;
+        }
+
+        $data = array();
+        if (($handle = fopen($file['tmp_name'], "r")) !== FALSE) {
+              
+            while (($row = fgets($handle)) !== FALSE) {
+               if ($encode == 2)
+                    $row = mb_convert_encoding($row, "utf-8", "windows-1251");
+                
+                $data[] = explode($sep,$row);
+            }
+        }
+        fclose($handle);
+
+        if ($preview) {
+
+            $this->_tvars['preview2'] = true;
+            $this->_tvars['list2'] = array();
+            foreach ($data as $row) {
+ 
+                $this->_tvars['list2'][] = array(
+                    'colname' => $row[$colcname - 1],
+                    'colphone' => $row[$colphone - 1],
+                    'colemail' => $row[$colemail - 1],
+                    'colcity' => $row[$colcity - 1],
+                    'coladdress' => $row[$coladdress - 1]
+                );
+            }
+            return;
+        }
+
+        $cnt=0;
+        $newitems = array();
+        foreach ($data as $row) {
+ 
+            $c=null;
+            $name = $row[$colcname - 1];
+            $phone = $row[$colphone - 1];
+            
+            if (strlen(trim($name)) == 0) continue;
+            
+            if (strlen(trim($phone)) > 0) {
+               $c = Item::getFirst('pahone=' . Customer::qstr($phone));    
+            }    
+                
+                if ($c == null) {
+                  
+                    $c = new Customer();
+                    $c->type= $t;
+                    $c->customer_name = $name;
+                    
+                    if (strlen($row[$colphone - 1]) > 0)
+                        $item->phone = $row[$colphone - 1];
+                    if (strlen($row[$colemail - 1]) > 0)
+                        $item->email = $row[$colemail - 1];
+                    if (strlen($row[$colcity - 1]) > 0)
+                        $item->city = $row[$colcity - 1];
+                    if (strlen($row[$coladdress - 1]) > 0)
+                        $item->address = $row[$coladdress - 1];
+ 
+                    
+                    $c->save();
+                    $cnt++; 
+                    
+                }
+            
+        }
+     
+        $this->setSuccess("Импортировано {$cnt} контрагентов");
+
+         
+    }
+    
 }

@@ -1,5 +1,5 @@
 <html>
-       <head>
+    <head>
         <link rel="stylesheet" type="text/css" href="/vendor/leon-mbs/zippy/zcl/gantt/jquery.ganttView.css"/>
 
         <link href="/assets/css/ekko-lightbox.css" rel="stylesheet" type="text/css">
@@ -17,31 +17,31 @@
 
     </head>
     <body>
-  
+
 
         <div class="row">                           
-          
+
 
             <div class="col-12  col-xl-10   " zippy="listpan" >
-                  <h3>Календарь рабочего времени</h3>
-                   <a  zippy="addtime" class="btn btn-info mt-2 mb-3">Добавить</a>
+                <h3>Календарь рабочего времени</h3>
+                <a  zippy="addtime" class="btn btn-info mt-2 mb-3">Добавить</a>
 
                 <ul class="nav nav-tabs" >
                     <li class="nav-item"><a class="nav-link  active" href="#caltab" data-toggle="tab">Календарь</li>
                     <li class="nav-item"><a class="nav-link " href="#tasktab" data-toggle="tab">Список</li>
-                    
+
 
                 </ul>
                 <div class="tab-content">
-                     <div id="caltab" class="tab-pane active  ">
+                    <div id="caltab" class="tab-pane active  ">
 
                         <div zippy='calendar'></div>
 
 
                     </div>                    
-                   
+
                     <div id="tasktab" class="tab-pane  ">
- 
+
                         <div class="row">
                             <div class="col-12  col-md-10  col-xl-8  " > 
 
@@ -53,10 +53,10 @@
                                         <th>Время</th>
 
                                         <th>Задача</th>
-                                     
+
                                         <th>Проект</th>
                                         <th>Комментарий</th>
-  
+
                                         <th style="width:75px;"> </th>
 
                                     </tr>
@@ -70,45 +70,45 @@
                                         <td zippy="notes"></td>
 
                                         <td>
-                                            
+
                                             <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
                                             &nbsp;&nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
 
                                         </td>
 
                                     </tr>
-                                  
+
                                 </table>
                                 <div zippy="pag"></div>
                                 <a id="dankor"></a></div>  
-                             </div>       
+                        </div>       
 
 
 
                     </div> <!-- tasktab -->
-                  
+
 
                 </div>  
 
-             
+
             </div> 
-            
-             <div class="clearfix"></div>
-              <div class="col-12  col-md-4 col-xl-3  "   >
-                      <form zippy="editform">
+
+            <div class="clearfix"></div>
+            <div class="col-12  col-md-4 col-xl-3  "   >
+                <form zippy="editform">
                     <div class="form-group  ">
                         <label for="eproject" >Проект</label>
                         <select class="form-control  " zippy="eproject">
                             <option value="0">Не выбран</option>
                         </select>
                     </div>                  
-                 <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="eissue" >Задача</label>
                         <select class="form-control   " zippy="eissue">
-                       
+
                         </select>
                     </div>                  
-                   <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="edate" >Дата</label>
                         <input required="required" style="width:160px;" zippy="edate" class="form-control" >
                     </div>                  
@@ -121,14 +121,14 @@
                         <input  zippy="enotes" class="form-control" >
                     </div>                  
                     <div class="form-group  ">
-                    <a zippy="cancel" class="btn btn-default">Отменить</a> 
-                    &nbsp;&nbsp;<input   type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-              
+                        <a zippy="cancel" class="btn btn-default">Отменить</a> 
+                        &nbsp;&nbsp;<input   type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+
                     </div>                  
-                      
-                   </form>
-                </div>  
-            </div>    
-            
+
+                </form>
+            </div>  
+        </div>    
+
     </body>
 </html>

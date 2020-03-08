@@ -113,7 +113,7 @@ class ACL {
         if ($user->acltype != 2)
             return true;
 
-         self::load();
+        self::load();
         //для существующих документов
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
@@ -131,7 +131,7 @@ class ACL {
         if (in_array($doc->meta_id, $aclview)) {
             return true;
         }
-       
+
 
         if ($showerror == true) {
             System::setErrorMsg('Нет права  просмотра   документа ' . self::$_metasdesc[$doc]);
@@ -152,7 +152,7 @@ class ACL {
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg('Нет права  изменения   документа '  . self::$_metasdesc[$doc])  ;
+                System::setErrorMsg('Нет права  изменения   документа ' . self::$_metasdesc[$doc]);
                 if ($inreg == false)
                     App::RedirectHome();
                 return false;
@@ -176,21 +176,20 @@ class ACL {
         return false;
     }
 
-    
     /**
-    * проверка  на  доступ  к   утверждению и выполнению документа.
-    * 
-    * @param mixed $doc  документ
-    * @param mixed $inreg  в жернале - если нет перебрасывать на  домашнюю страницу
-    * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
-    */
+     * проверка  на  доступ  к   утверждению и выполнению документа.
+     * 
+     * @param mixed $doc  документ
+     * @param mixed $inreg  в жернале - если нет перебрасывать на  домашнюю страницу
+     * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
+     */
     public static function checkExeDoc($doc, $inreg = false, $showerror = true) {
         $user = System::getUser();
         if ($user->acltype != 2)
             return true;
-      
+
         self::load();
-          
+
         $aclexe = explode(',', $user->aclexe);
 
         if (in_array($doc->meta_id, $aclexe)) {
@@ -232,14 +231,20 @@ class ACL {
      * возвращает ограничение  для  ресурсов  по филиалам
      * 
      */
-    public static function getBranchConstraint() {
+    public static function getBranchConstraint($nul=false) {
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1)
             return '';
 
         $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
-        if ($id > 0)
-            return "branch_id in ({$id})";
+        if ($id > 0) {
+             if($nul==true) {
+                 return "branch_id in (0,{$id})";
+             } else{
+                 return "branch_id in ({$id})";
+             }
+        }
+            
 
         $user = \App\System::getUser();
         if ($user->username == 'admin')
@@ -247,10 +252,16 @@ class ACL {
 
         if (strlen($user->aclbranch) == 0)
             return '1=2'; //нет доступа  ни  к  одному филиалу
-        return "branch_id in ({$user->aclbranch})";
-    }
+ 
+             if($nul==true) {
+                 return "branch_id in (0,{$user->aclbranch})";
+             } else{
+                 return "branch_id in ({$user->aclbranch})";
+             }
 
-    /**
+        
+    }
+   /**
      * проверяет  что  выбран  конкретный текущий филиал
      * и возвраает его значение
      * 
@@ -359,7 +370,7 @@ class ACL {
     }
 
     /**
-     * Возвращает  список филиалов для подстьановки  в запрос по текущим  филиалам
+     * Возвращает  список филиалов для подстановки  в запрос по текущим  филиалам
      * 
      */
     public static function getBranchListConstraint() {

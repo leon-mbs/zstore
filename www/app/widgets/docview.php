@@ -30,6 +30,7 @@ class DocView extends \Zippy\Html\PageFragment {
     public $_fileslist = array();
     public $_msglist = array();
     public $_paylist = array();
+    public $_itemlist = array();
 
     public function __construct($id) {
         parent::__construct($id);
@@ -53,6 +54,8 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
 
         $this->add(new DataView('dw_paylist', new ArrayDataSource(new Prop($this, '_paylist')), $this, 'payListOnRow'));
+        
+        $this->add(new DataView('dw_itemlist', new ArrayDataSource(new Prop($this, '_itemlist')), $this, 'itemListOnRow'));
 
         $this->add(new DataView('reldocs', new ArrayDataSource(new Prop($this, '_reldocs')), $this, 'relDoclistOnRow'));
 
@@ -119,6 +122,10 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->_paylist = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->dw_paylist->Reload();
 
+        //проводки
+        $this->_itemlist = \App\Entity\Entry::find('stock_id > 0 and coalesce(quantity,0) <> 0  and document_id=' . $this->_doc->document_id);
+        $this->dw_itemlist->Reload();
+
         //список приатаченных  файлов
         $this->updateFiles();
         $this->updateMessages();
@@ -144,9 +151,19 @@ class DocView extends \Zippy\Html\PageFragment {
         $row->add(new Label('paydate', date('Y.m.d', $item->paydate)));
         $row->add(new Label('payamountp', H::fa($item->amount > 0 ? $item->amount : "")));
         $row->add(new Label('payamountm', H::fa($item->amount < 0 ? 0 - $item->amount : "")));
-        $row->add(new Label('payuser', $item->username));
-        $row->add(new Label('paycomment', $item->notes));
+ 
         $row->add(new Label('paymf', $item->mf_name));
+    }
+    //вывод строки  проводок
+    public function itemListOnRow($row) {
+        $entry = $row->getDataItem();
+        $stock = \App\Entity\Stock::load($entry->stock_id);;
+        $row->add(new Label('itname',   $stock->itemname)) ;
+        $row->add(new Label('itcode',   $stock->item_code)) ;
+        $row->add(new Label('itqty',    H::fqty(  $entry->quantity  )));
+        $row->add(new Label('itprice',  H::fa( $entry->amount/$entry->quantity   )));
+        $row->add(new Label('itamount', H::fa( $entry->amount  )));
+  
     }
 
     /**

@@ -125,14 +125,14 @@ class Stock extends \ZCL\DB\Entity {
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item_id, $qty, $snumber = "") {
+    public static function pickup($store_id, $item) {
         $res = array();
-        $where = "store_id = {$store_id} and item_id = {$item_id} and qty > 0   ";
-        if (strlen($snumber) > 0) {
-            $where .= " and snumber=" . Stock::qstr($snumber);
+        $where = "store_id = {$store_id} and item_id = {$item->item_id} and qty > 0   ";
+        if (strlen($item->snumber) > 0) {
+            $where .= " and snumber=" . Stock::qstr($item->snumber);
         }
         $stlist = self::find($where, ' stock_id  ');
-
+        $qty = $item->quantity;
         $last = null;
         foreach ($stlist as $st) {
             $last = $st;
@@ -148,26 +148,29 @@ class Stock extends \ZCL\DB\Entity {
             }
         }
         if ($qty > 0) {  // если не  достаточно
-            $item = Item::load($item_id);
+             
             \App\System::setWarnMsg("Создано отрицательное  количество  товара {$item->itemname} на  складе");
             if ($last != null) {
                 $last->quantity += $qty; //остаток  пишем  к  последней партии
             } else {
 
-                $where = "store_id = {$store_id} and item_id = {$item_id}   ";
+                $where = "store_id = {$store_id} and item_id = {$item->item_id}   ";
                 if (strlen($snumber) > 0) {
-                    $where .= " and snumber = " . Stock::qstr($snumber);
+                    $where .= " and snumber = " . Stock::qstr($item->snumber);
                 }
                 $last = self::getFirst($where, ' stock_id desc ');
                 if ($last == null) {
                     $last = new Stock();
                     $last->store_id = $store_id;
-                    $last->item_id = $item_id;
-                    $last->partion = 0;
-                    $last->snumber = $snumber;
-                    $last->sdate = time();
-                    $last->save();
+                    $last->item_id = $item->item_id;
+                    $last->partion = $item->price;
+                    $last->snumber = $item->snumber;
+                    if(strlen($item->snumber) > 0)$last->sdate = time();
+                    
+                } else {
+                    $last->partion = $price;
                 }
+                $last->save();
                 $last->quantity = $qty;
                 return array($last);
             }

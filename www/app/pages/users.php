@@ -42,7 +42,7 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new TextInput('editpass'));
         $this->editpan->editform->add(new TextInput('editemail'));
         $this->editpan->editform->add(new DropDownChoice('editacl'))->onChange($this, 'onAcl');
-         
+
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
 
@@ -58,10 +58,11 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->add(new CheckBox('editwreserved'));
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
+        $this->editpan->editform->add(new CheckBox('editwoocomerce'));
         $this->editpan->editform->add(new CheckBox('editshop'));
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
-   
+
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -134,6 +135,8 @@ class Users extends \App\Pages\Base {
 
         if (strpos($this->user->modules, 'ocstore') !== false)
             $this->editpan->editform->editocstore->setChecked(true);
+        if (strpos($this->user->modules, 'woocomerce') !== false)
+            $this->editpan->editform->editwoocomerce->setChecked(true);
         if (strpos($this->user->modules, 'shop') !== false)
             $this->editpan->editform->editshop->setChecked(true);
         if (strpos($this->user->modules, 'note') !== false)
@@ -194,13 +197,13 @@ class Users extends \App\Pages\Base {
         foreach ($this->editpan->editform->metaaccess->metarow->getDataRows() as $row) {
             $item = $row->getDataItem();
             if ($item->viewacc == true) {
-                $varr[] = $item->meta_id; 
+                $varr[] = $item->meta_id;
             }
             if ($item->editacc == true) {
-                $earr[] = $item->meta_id; 
+                $earr[] = $item->meta_id;
             }
             if ($item->exeacc == true) {
-                $xarr[] = $item->meta_id; 
+                $xarr[] = $item->meta_id;
             }
         }
         $this->user->aclview = implode(',', $varr);
@@ -239,6 +242,8 @@ class Users extends \App\Pages\Base {
             $modules = $modules . ',note';
         if ($this->editpan->editform->editocstore->isChecked())
             $modules = $modules . ',ocstore';
+        if ($this->editpan->editform->editwoocomerce->isChecked())
+            $modules = $modules . ',woocomerce';
         if ($this->editpan->editform->editissue->isChecked())
             $modules = $modules . ',issue';
 

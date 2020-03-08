@@ -108,10 +108,7 @@ class Order extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
-            foreach ($this->_doc->detaildata as $_item) {
-                $item = new Item($_item);
-                $this->_tovarlist[$item->item_id] = $item;
-            }
+            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
         } else {
             $this->_doc = Document::create('Order');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -248,12 +245,7 @@ class Order extends \App\Pages\Base {
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
-
-
-        $this->_doc->detaildata = array();
-        foreach ($this->_tovarlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
+        $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payed = 0;
@@ -273,7 +265,7 @@ class Order extends \App\Pages\Base {
 
 
             if ($sender->id == 'execdoc') {
-                // $this->_doc->updateStatus(Document::STATE_INPROCESS);       
+                  $this->_doc->updateStatus(Document::STATE_INPROCESS);       
             }
 
 
@@ -321,10 +313,9 @@ class Order extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-             
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
@@ -400,6 +391,19 @@ class Order extends \App\Pages\Base {
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustphone->getText();
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+            $this->setError("Телефон должен быть 10  цифр");
+            return;
+        }
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким телефоном");
+                return;
+            }
+        }
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);

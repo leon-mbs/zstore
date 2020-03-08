@@ -8,9 +8,9 @@
 
         <div class="row" >
             <div class="col-12  ">
-            <h3>Список задач </h3>
+                <h3>Список задач </h3>
                 <div class="navbar nav">
-                    
+
 
                     <form zippy="filter" class="form-inline ">
                         <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"  >
@@ -43,15 +43,15 @@
 
                     <tr zippy="list">
 
-                        
-                        <table class="ctable" style="width:100%" >
-                            <tr><td> <span   zippy="issue_number"></span></td>
+
+                    <table class="ctable" style="width:100%" >
+                        <tr><td> <span   zippy="issue_number"></span></td>
                             <td class="text-right"><h5> <span zippy="emp" class="badge badge-secondary badge-pill"></span></h5> </td>
-                            </tr>
-                            <tr><td colspan="2" ><a zippy="title"></a></td></tr>
-                            
-                        </table>
-  
+                        </tr>
+                        <tr><td colspan="2" ><a zippy="title"></a></td></tr>
+
+                    </table>
+
                     </tr>  
                 </table>
 
@@ -107,54 +107,54 @@
                                 <textarea     class="form-control" required="required" zippy="msgdata" style="width:400px;height:120px;"></textarea>
                             </div> 
                             <div class="form-group">                                    
-                            <span>Уведомить</span>
-                            <div zippy="edittags"> </div>                            
-                            <small>Наберите пользователей,  которых надо  уведомить о сообщении</small>
+                                <span>Уведомить</span>
+                                <div zippy="edittags"> </div>                            
+                                <small>Наберите пользователей,  которых надо  уведомить о сообщении</small>
                             </div> 
                             <div class="form-group">
-                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
+                                <input class="btn btn-outline-success  " type="submit" value="Добавить">
                             </div> 
                         </form>
-   
+
 
                     </div>
                     <div class="col-12 col-md-4  ">
-                        
+
                         <form zippy="stform">
 
                             <div class="form-group  ">
                                 <label for="ststatus"  >Статус </label>
-                           
-                                    <select class="form-control   " zippy="ststatus">
 
-                                    </select>
-                             
+                                <select class="form-control   " zippy="ststatus">
+
+                                </select>
+
                             </div>
                             <div class="form-group  ">
                                 <label for="stuser"  >Перевести на </label>
 
-                            
-                                    <select class="form-control  select2  " zippy="stuser">
-                                       
-                                    </select>
-                              
-                              
+
+                                <select class="form-control  select2  " zippy="stuser">
+
+                                </select>
+
+
                             </div>
                             <div class="form-group  ">
                                 <label for="stpr"  >Приоритет  </label>
-                                         
-                               
-                                    <select class="form-control   " zippy="stpr"  >
 
-                                    </select>
-                               </div>  
-                              <div class="form-group  " >
-                                    <input   type="submit" class="   btn btn-outline-success  " value="Применить">
 
-                                </div>                
-                           
+                                <select class="form-control   " zippy="stpr"  >
 
-                                
+                                </select>
+                            </div>  
+                            <div class="form-group  " >
+                                <input   type="submit" class="   btn btn-outline-success  " value="Применить">
+
+                            </div>                
+
+
+
 
                         </form> 
                         <hr>         
@@ -170,7 +170,7 @@
                     </div>
                 </div>                  
             </div>     
-                
+
 
 
         </div>     
@@ -189,16 +189,16 @@
                     <div class="form-group">
                         <label for="editproj">Проект  </label>
                         <select class="form-control  select2  " zippy="editproj" style="width:200px">
-                                <option value="0">Не выбран</option>
+                            <option value="0">Не выбран</option>
                         </select>
                     </div>                  
-                   <div class="form-group">
+                    <div class="form-group">
                         <label for="editpr">Приоритет  </label>
                         <select class="form-control    " zippy="editpr" style="width:200px">
 
                         </select>
                     </div>                  
-                   <div class="form-group">
+                    <div class="form-group">
                         <label for="editemp">Исполнитель  </label>
                         <select class="form-control     " zippy="editemp" style="width:200px">
                             <option value="0">Не выбран</option>
@@ -237,9 +237,9 @@
                     filebrowserBrowseUrl: '', filebrowserUploadUrl: '/upload.php'
                 });
             }
-            
-            
-            
+
+
+
             function check_deleteissue()
             {
                 return  confirm('Удалить задачу?');

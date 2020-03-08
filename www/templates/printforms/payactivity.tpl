@@ -22,7 +22,7 @@
         <th style="border: solid black 1px">Прих.</th>
         <th align="right" style="border: solid black 1px">Расх.</th>
         <th align="right" style="border: solid black 1px">Кон.</th>
-        <th style="border: solid black 1px">Документы</th>
+        
     </tr>
     {{#_detail}}
     <tr>
@@ -34,7 +34,7 @@
         <td align="right">{{obin}}</td>
         <td align="right">{{obout}}</td>
         <td align="right">{{out}} </td>
-        <td> {{{documents}}}</td>
+    
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">

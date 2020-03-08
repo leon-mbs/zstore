@@ -67,8 +67,9 @@ class Base extends \Zippy\Html\WebPage {
 
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
+        $this->_tvars["woocomerce"] = $_config['modules']['woocomerce'] == 1;
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
-        $this->_tvars["issue"] =  $_config['modules']['issue'] == 1;
+        $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
             $this->_tvars["shop"] = false;
@@ -81,6 +82,9 @@ class Base extends \Zippy\Html\WebPage {
         }
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
             $this->_tvars["ocstore"] = false;
+        }
+        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->userlogin != 'admin') {
+            $this->_tvars["woocomerce"] = false;
         }
 
         $this->_tvars["hideblock"] = false; //для скрытия блока разметки  в  шаблоне страниц 

@@ -62,10 +62,10 @@ class Employee extends \ZCL\DB\Entity {
     }
 
     public static function getConstraint() {
-       $br = \App\ACL::getBranchConstraint();
-       if(strlen($br)>0){
-           return  "({$br}  or branch_id=0)";
-       }
+        $br = \App\ACL::getBranchConstraint();
+        if (strlen($br) > 0) {
+            return "({$br}  or branch_id=0)";
+        }
     }
 
 }

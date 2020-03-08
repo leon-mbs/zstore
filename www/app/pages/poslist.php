@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pages\Reference;
+namespace App\Pages;
 
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\Form\Button;
@@ -37,7 +37,7 @@ class PosList extends \App\Pages\Base {
 
         $this->posdetail->add(new TextInput('editpos_name'));
         $this->posdetail->add(new DropDownChoice('editstore', \App\Entity\Store::getList(), H::getDefStore()));
-        $this->posdetail->add(new DropDownChoice('editmf', \App\Entity\MoneyFund::getList(true)));
+        $this->posdetail->add(new DropDownChoice('editmf', \App\Entity\MoneyFund::getList( )));
         $this->posdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList()));
 
 
@@ -100,7 +100,7 @@ class PosList extends \App\Pages\Base {
 
 
         $this->_pos->pos_name = $this->posdetail->editpos_name->getText();
- 
+
         $this->_pos->branch_id = $this->posdetail->editbranch->getValue();
 
         $this->_pos->store = $this->posdetail->editstore->getValue();

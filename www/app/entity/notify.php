@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
- 
-
 /**
  *  Класс  уведомление
  * @table=notifies

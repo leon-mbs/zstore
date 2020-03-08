@@ -5,13 +5,15 @@
             Наряд № {{document_number}} с {{startdate}} по {{date}} 
         </td>
     </tr>   
-
+    {{#pareaname}}
     <tr>
         <td  colspan="4">
             Произв. участок:   {{pareaname}}
         </td>
 
     </tr>
+    {{/pareaname}}
+
     {{#baseddoc}}
     <tr>
         <td  colspan="4">
@@ -19,7 +21,7 @@
         </td>
 
     </tr>
-     {{/baseddoc}}
+    {{/baseddoc}}
 
 
     <tr style="font-weight: bolder;">
@@ -50,21 +52,6 @@
 
 
 
-
-    <tr style="font-weight: bolder;">
-
-        <th colspan="4" style="text-align: left;">Оборудование </th>
-
-    </tr>          
-    {{#_detail2}}
-    <tr>
-
-        <td colspan="2">{{eq_name}}</td>
-
-        <td colspan="2" >{{code}} </td>
-
-    </tr>
-    {{/_detail2}}
     <tr style="font-weight: bolder;">
 
         <th colspan="4"  style="text-align: left;">Исполнители </th>
@@ -79,9 +66,28 @@
 
     </tr>
     {{/_detail3}}
-     <tr>
+
+
+    {{#iseq}}
+
+    <tr style="font-weight: bolder;">
+
+        <th colspan="4" style="text-align: left;">Оборудование </th>
+
+    </tr>          
+    {{#_detail2}}
+    <tr>
+
+        <td colspan="2">{{eq_name}}</td>
+
+        <td colspan="2" >{{code}} </td>
+
+    </tr>
+    {{/_detail2}}    
+    {{/iseq}} 
+    <tr>
         <td  colspan="4">
-              {{notes}}
+            {{notes}}
         </td>
 
     </tr>

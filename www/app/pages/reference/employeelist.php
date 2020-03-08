@@ -107,7 +107,7 @@ class EmployeeList extends \App\Pages\Base {
             return;
 
         $login = trim($this->employeedetail->editlogin->getText());
-       
+
         if (strlen($login) > 0) {
             if ($login == "admin") {
                 $this->setError('Недопустимый логин');
@@ -126,13 +126,13 @@ class EmployeeList extends \App\Pages\Base {
         }
         $this->_employee->login = $login;
         $this->_employee->emp_name = trim($this->employeedetail->editemp_name->getText());
-        
+
         $this->_employee->email = $this->employeedetail->editemail->getText();
         $this->_employee->phone = $this->employeedetail->editphone->getText();
         $this->_employee->comment = $this->employeedetail->editcomment->getText();
 
         $this->_employee->branch_id = $this->employeedetail->editbranch->getValue();
-    
+
         $this->_employee->disabled = $this->employeedetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_employee->Save();

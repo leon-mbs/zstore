@@ -20,14 +20,14 @@ class Inventory extends Document {
         $conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->detaildata as $item) {
-            if ($item['quantity'] == $item['qfact']) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            if ($item->quantity == $item->qfact) {
                 continue;
             }
             //списываем  со склада
-            if ($item['quantity'] > $item['qfact']) {
-                $qty = $item['quantity'] - $item['qfact'];
-                $listst = Stock::pickup($this->headerdata['store'], $item['item_id'], $qty, $item['snumber']);
+            if ($item->quantity > $item->qfact) {
+                $item->quantity = $item->quantity - $item->qfact;
+                $listst = Stock::pickup($this->headerdata['store'], $item );
                 foreach ($listst as $st) {
                     $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                     $sc->setStock($st->stock_id);
@@ -35,9 +35,9 @@ class Inventory extends Document {
                 }
             }
             //оприходуем
-            if ($item['quantity'] < $item['qfact']) {
-                $qty = $item['qfact'] - $item['quantity'];
-                $where = "store_id=" . $this->headerdata['store'] . " and item_id=" . $item['item_id'];
+            if ($item->quantity < $item->qfact) {
+                $qty = $item->qfact - $item->quantity;
+                $where = "store_id=" . $this->headerdata['store'] . " and item_id=" . $item->item_id;
 
                 $stock = Stock::getFirst($where, "store_id desc");  //последняя цена
 
@@ -58,15 +58,15 @@ class Inventory extends Document {
 
         $i = 1;
         $detail = array();
-        foreach ($this->detaildata as $value) {
-            $name = $value['itemname'];
-            $q = H::fqty($value['quantity']);
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $name = $item->itemname;
+            $q = H::fqty($item->quantity);
             if ($user->userlogin != 'admin')
                 $q = '-';
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
-                "qfact" => $value['qfact'],
-                "snumber" => $value['snumber'],
+                "qfact" => $item->qfact,
+                "snumber" => $item->snumber,
                 "quantity" => $q
             );
         }

@@ -36,8 +36,13 @@ class Helper {
         if ($result === false) {
             $error = curl_error($ch);
             \App\System::setErrorMsg($error);
+            return false;
         }
-
+        $data = json_decode($result, true);
+        if ($data == null) {
+            \App\System::setErrorMsg($result);
+            return false;
+        }
         //close connection
         curl_close($ch);
 

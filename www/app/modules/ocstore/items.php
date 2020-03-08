@@ -69,6 +69,8 @@ class Items extends \App\Pages\Base {
                     continue;
                 if (in_array($item->item_code, $data['articles']))
                     continue; //уже  в  магазине
+               $item->qty   =  $item->getQuantity(); 
+                      
                 if (strlen($item->qty) == 0)
                     $item->qty = 0;
                 $this->_items[] = $item;
@@ -152,7 +154,7 @@ class Items extends \App\Pages\Base {
                 continue;
 
             $qty = $item->getQuantity();
-            $elist[$item->item_code] = $qty;
+            $elist[$item->item_code] = round($qty);
         }
 
         $data = json_encode($elist);
@@ -205,6 +207,7 @@ class Items extends \App\Pages\Base {
 
     public function onGetItems($sender) {
         $modules = System::getOptions("modules");
+        $common = System::getOptions("common");
 
         $elist = array();
 
@@ -244,6 +247,21 @@ class Items extends \App\Pages\Base {
                 $item->price4 = $product['price'];
             if ($modules['ocpricetype'] == 'price5')
                 $item->price5 = $product['price'];
+
+
+            if ($common['useimages'] == 1) {
+                $im = $modules['ocsite'] . '/image/' . $product['image'];
+                $im = @file_get_contents($im);
+                if (strlen($im) > 0) {
+                    $imagedata = getimagesizefromstring($im);
+                    $image = new \App\Entity\Image();
+                    $image->content = $im;
+                    $image->mime = $imagedata['mime'];
+
+                    $image->save();
+                    $item->image_id = $image->image_id;
+                }
+            }
             $item->save();
             $i++;
         }

@@ -17,12 +17,12 @@
                         <select class="form-control  mr-2   " zippy="searchstate">
                             <option value="0">Открытые</option>
                         </select>
-                         <label for="searchcust">заказчик </label>
+                        <label for="searchcust">заказчик </label>
                         <select class="form-control   select2 " zippy="searchcust">
                             <option value="0">Не выбран</option>
                         </select>
 
-     
+
 
                         <input type="submit" class=" ml-2   btn btn-outline-success  " value="ОК">
                     </form>              
@@ -51,7 +51,7 @@
                             <a zippy="preview"><i class="fa fa-eye"></a>
                             &nbsp;&nbsp;
                             <a zippy="edit"   title="Редактировать"><i class="fa fa-edit"></i></a> 
-              
+
                             &nbsp;&nbsp; 
                             <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                     </tr>
@@ -81,21 +81,21 @@
                     <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
                     <input zippy="cancel" type="button" value="Отменить" class="btn btn-light ">
                 </div>
- 
+
             </form>
         </div>
         <div class="row" zippy="showpan">
             <div class="col-12 col-md-8 col-xl-6">
                 <a  zippy="back" ><i class="fa fa-arrow-circle-left"></i> К списку</a>
-                  &nbsp;  &nbsp;      <a   zippy="toilist"> К списку  задач</a> 
+                &nbsp;  &nbsp;      <a   zippy="toilist"> К списку  задач</a> 
                 <h4 zippy="mtitle"></h4>   
-                
+
                 <a href="#q1" data-toggle="collapse"  ><b> Описание  <i class="fa fa-chevron-down"></i></b> </a> 
 
                 <div id="q1" class="collapse "  >
-                 <p zippy="mdesc"></p> 
-                 </div>
-          
+                    <p zippy="mdesc"></p> 
+                </div>
+
                 <hr> <a id="afiles">
                     <form class="form-inline" zippy="addfileform" enctype="multipart/form-data">
                         <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
@@ -135,23 +135,23 @@
                             </div> 
                             <input class="btn btn-outline-success  " type="submit" value="Добавить">
                         </form>
-    
+
                         </div>
-            <div class="col-12 col-md-4 col-xl-3">
-                  <form zippy="statusform"  >
-                        <div class="form-group">
-                              <label for="stlist">Статус </label>
-                          <select class="form-control     " zippy="stlist">
-                            
-                        </select>       
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <form zippy="statusform"  >
+                                <div class="form-group">
+                                    <label for="stlist">Статус </label>
+                                    <select class="form-control     " zippy="stlist">
+
+                                    </select>       
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class=" ml-2   btn btn-outline-success  " value="Сменить">
+                                </div>
+
+                            </form>
+
                         </div>
-                        <div class="form-group">
-                        <input type="submit" class=" ml-2   btn btn-outline-success  " value="Сменить">
-                        </div>
-                  
-                  </form>
-                 
-            </div>
                         </div>
 
                         <script src="/assets/js/ckeditor/ckeditor.js" type="text/javascript"></script>

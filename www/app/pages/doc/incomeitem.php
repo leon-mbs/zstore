@@ -29,8 +29,8 @@ class IncomeItem extends \App\Pages\Base {
     public $_itemlist = array();
     private $_doc;
     private $_rowid = 0;
-
-    public function __construct($docid = 0,$basedocid=0) {
+     private $_basedocid = 0;
+    public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -59,7 +59,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->editdetail->add(new Date('editsdate'));
 
 
-        
+
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
 
@@ -71,38 +71,37 @@ class IncomeItem extends \App\Pages\Base {
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->detaildata as $_item) {
-                $item = new Item($_item);
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
                 $item->old = true;
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
-         } else {
+        } else {
             $this->_doc = Document::create('IncomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-             if ($basedocid > 0) {  //создание на  основании
-                $basedoc = Document::load($basedocid);  
+            if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'OutcomeItem') {
-                        
-                            
-                        foreach ($basedoc->detaildata as $_item) {
-                            $item = new Item($_item);
+
+
+                        foreach ($basedoc->unpackDetails('detaildata') as $_item) {
+
                             $item->old = false;
                             $this->_itemlist[$item->item_id . $item->snumber] = $item;
-                        }                      
+                        }
                     }
                 }
-             }       
+            }
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))  return;
-            
+        if (false == \App\ACL::checkShowDoc($this->_doc))
+            return;
+
         $this->docform->detail->Reload();
         $this->calcTotal();
-        
-                     
     }
 
     public function detailOnRow($row) {
@@ -214,7 +213,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->editdetail->editquantity->setText("1");
     }
 
-      public function savedocOnClick($sender) {
+    public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         if ($this->checkForm() == false) {
@@ -227,10 +226,7 @@ class IncomeItem extends \App\Pages\Base {
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -287,12 +283,12 @@ class IncomeItem extends \App\Pages\Base {
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
             $this->setError("Не введен номер документа");
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              return  false;
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            return false;
         }
-       if (count($this->_itemlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
 
@@ -309,8 +305,6 @@ class IncomeItem extends \App\Pages\Base {
         App::RedirectBack();
     }
 
- 
-
     public function OnAutocompleteItem($sender) {
 
         $text = trim($sender->getText());
@@ -320,7 +314,7 @@ class IncomeItem extends \App\Pages\Base {
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
- 
+
 
         $code = Item::qstr($code);
 

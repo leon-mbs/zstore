@@ -20,7 +20,7 @@ class Pos extends \ZCL\DB\Entity {
         $this->details = "<details>";
 
         $this->details .= "<comment><![CDATA[{$this->comment}]]></comment>";
-          
+
         $this->details .= "<pricetype>{$this->pricetype}</pricetype>";
         $this->details .= "<mf>{$this->mf}</mf>";
         $this->details .= "<store>{$this->store}</store>";

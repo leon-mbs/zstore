@@ -152,7 +152,7 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource {
         $sql = "select e.entry_id, e.quantity,  e.amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber from documents   d ";
         $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
         $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
-        $sql .= " where " . $this->getWhere() . " order  by  entry_id desc   ";
+        $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
         if ($count > 0)
             $sql .= " limit {$start},{$count}";
 

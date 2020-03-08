@@ -111,15 +111,16 @@ class Order extends Base {
             if (strlen($order->document_number) == 0)
                 $order->document_number = 'З0001';
             $amount = 0;
-
+            $itlist = array();
             foreach ($this->basketlist as $product) {
                 $item = \App\Entity\Item::load($product->item_id);
                 $item->price = $product->price;
                 $item->quantity = $product->quantity;
                 $item->product_id = $product->product_id;
                 $amount += ($product->price * $product->quantity);
-                $order->detaildata[] = $item->getData();
+                $itlist[] = $item;
             }
+            $order->packDetails('detaildata', $itlist);
 
             $order->headerdata = array(
                 'delivery' => $delivery,

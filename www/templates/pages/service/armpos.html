@@ -81,7 +81,7 @@
                             <td>  <a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                         </tr>
-           <tr zippy="detailser">
+                        <tr zippy="detailser">
                             <td zippy="service"></td>
                             <td ></td>
                             <td ></td>
@@ -97,7 +97,7 @@
 
                             <td zippy="seramount"  class="text-right"></td>
                             <td>  <a zippy="serdelete"><i class="fa fa-trash"></i></a></td>
-                        
+
                         <tr style="font-weight: bolder;" id="tankor">
 
                             {{^usesnumber}} 
@@ -261,8 +261,8 @@
                 </div>
             </div>
         </form>
-        
-     <form zippy="editserdetail">
+
+        <form zippy="editserdetail">
             <h4>Ввод услуги </h4>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
@@ -271,10 +271,10 @@
                         <label for="editser" >Название</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="editser" />
 
-                       
+
 
                     </div>
-                               
+
                     <div class="form-group">
                         <label for="editserquantity" >Количество</label>
                         <input class="form-control" type="text" zippy="editserquantity" required="required" pattern="[0-9\.]+"  style="width: 70px;">
@@ -340,7 +340,12 @@
                     var payed = $("#payed").val()
                     var payamount = $("#payamount").val()
                     var exchange = parseFloat(payed) - parseFloat(payamount);
-                    $("#exchange").val(exchange.toFixed(2));
+                    if (exchange > 0) {
+                        $("#exchange").val(exchange.toFixed(2));
+                    } else {
+                        $("#exchange").val(0);
+                    }
+
                 });
 
             });
@@ -353,9 +358,9 @@
                 }
             }
 
-       
 
-                                                       
+
+
 
         </script>
 

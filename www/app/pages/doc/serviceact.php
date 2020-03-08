@@ -46,7 +46,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->add(new TextInput('device'));
         $this->docform->add(new TextInput('devsn'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -71,8 +71,7 @@ class ServiceAct extends \App\Pages\Base {
 
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new AutocompleteTextInput('editservice'))->onText($this, 'OnAutoServive');
-        $this->editdetail->editservice->onChange($this, 'OnChangeServive', true);
+        $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
 
 
         $this->editdetail->add(new TextInput('editprice'));
@@ -114,9 +113,8 @@ class ServiceAct extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
- 
+
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
-           
         } else {
             $this->_doc = Document::create('ServiceAct');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -152,8 +150,8 @@ class ServiceAct extends \App\Pages\Base {
 
         $this->editdetail->editprice->setText($service->price);
 
-        $this->editdetail->editservice->setKey($service->service_id);
-        $this->editdetail->editservice->setText($service->service_name);
+        $this->editdetail->editservice->setValue($service->service_id);
+
         $this->_rowid = $service->service_id;
     }
 
@@ -180,7 +178,7 @@ class ServiceAct extends \App\Pages\Base {
     }
 
     public function saverowOnClick($sender) {
-        $id = $this->editdetail->editservice->getKey();
+        $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
             $this->setError("Не выбрана  услуга");
             return;
@@ -189,6 +187,7 @@ class ServiceAct extends \App\Pages\Base {
 
         $service->price = $this->editdetail->editprice->getText();
         $service->desc = $this->editdetail->editdesc->getText();
+        $service->quantity = 1;
 
         $this->_servicelist[$service->service_id] = $service;
         $this->editdetail->setVisible(false);
@@ -197,9 +196,9 @@ class ServiceAct extends \App\Pages\Base {
         $this->calcTotal();
         $this->calcPay();
         //очищаем  форму
-        $this->editdetail->editservice->setKey(0);
+        $this->editdetail->editservice->setValue(0);
         $this->editdetail->editdesc->setText('');
-        $this->editdetail->editservice->setText('');
+
 
 
         $this->editdetail->editprice->setText("0");
@@ -246,8 +245,8 @@ class ServiceAct extends \App\Pages\Base {
             return;
         }
 
- 
-        $this->_doc->packDetails('detaildata',$this->_servicelist) ;
+
+        $this->_doc->packDetails('detaildata', $this->_servicelist);
 
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
@@ -378,10 +377,9 @@ class ServiceAct extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-             
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_servicelist) == 0) {
             $this->setError("Не введена  ни одна позиция");
@@ -404,14 +402,8 @@ class ServiceAct extends \App\Pages\Base {
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
-    public function OnAutoServive($sender) {
-
-        $text = Service::qstr('%' . $sender->getText() . '%');
-        return Service::findArray("service_name", "    service_name like {$text}");
-    }
-
     public function OnChangeServive($sender) {
-        $id = $sender->getKey();
+        $id = $sender->getValue();
 
         $item = Service::load($id);
         $price = $item->price;
@@ -440,6 +432,20 @@ class ServiceAct extends \App\Pages\Base {
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustname->getText();
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+            $this->setError("Телефон должен быть 10  цифр");
+            return;
+        }
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким телефоном");
+                return;
+            }
+        }
+
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);

@@ -54,7 +54,7 @@ class Invoice extends \App\Pages\Base {
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
 
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -123,8 +123,8 @@ class Invoice extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->_prevcust = $this->_doc->customer_id;
-            foreach ($this->_doc->detaildata as $_item) {
-                $item = new Item($_item);
+            foreach ($this->_doc->unpackDetails('detaildata') as $_item) {
+
                 $this->_tovarlist[$item->item_id] = $item;
             }
             $this->OnChangeCustomer($this->docform->customer);
@@ -143,22 +143,21 @@ class Invoice extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
-                        $this->docform->order->setText($basedoc->document_number);
-
+                        
+                        $this->docform->notes->setText("счет  к  заказу ".$basedoc->document_number);
                         $order = $basedoc->cast();
 
 
                         $this->docform->total->setText($order->amount);
 
-                         
+
                         $this->calcPay();
 
-                        foreach ($order->detaildata as $item) {
-                            $item = new Item($item);
-                            $this->_itemlist[$item->item_id] = $item;
+                        foreach ($order->unpackDetails('detaildata') as $item) {
+
+                            $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
-                
                 }
             }
         }
@@ -295,10 +294,8 @@ class Invoice extends \App\Pages\Base {
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_tovarlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
+
+        $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->amount = $this->docform->total->getText();
 
@@ -430,10 +427,9 @@ class Invoice extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
@@ -519,6 +515,19 @@ class Invoice extends \App\Pages\Base {
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustphone->getText();
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+            $this->setError("Телефон должен быть 10  цифр");
+            return;
+        }
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким телефоном");
+                return;
+            }
+        }
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);

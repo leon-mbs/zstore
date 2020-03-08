@@ -44,12 +44,13 @@ class ShowReport extends \Zippy\Html\WebPage {
             header("Content-Transfer-Encoding: binary");
 
 
-            $dompdf = new \Dompdf\Dompdf();
+            $dompdf = new \Dompdf\Dompdf(array('defaultFont'=> 'DejaVu Sans'));
+            
+          //  $dompdf->set_option('defaultFont', 'DejaVu Sans');
             $dompdf->loadHtml($html);
 
             // (Optional) Setup the paper size and orientation
             $dompdf->setPaper('A4', 'landscape');
-            $dompdf->set_option('defaultFont', 'DejaVu Sans');
             // Render the HTML as PDF
             $dompdf->render();
 

@@ -46,7 +46,6 @@ class PayCustList extends \App\Pages\Base {
 
         $this->clist->add(new DataView('custlist', new ArrayDataSource($this, '_custlist'), $this, 'custlistOnRow'));
 
-        $this->clist->add(new ClickLink('csv', $this, 'oncsv'));
 
         $this->add(new Panel("plist"))->setVisible(false);
         $this->plist->add(new Label("cname"));
@@ -60,28 +59,35 @@ class PayCustList extends \App\Pages\Base {
         $this->add(new Panel("paypan"))->setVisible(false);
         $this->paypan->add(new Label("pname"));
         $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
+        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
-        $this->paypan->payform->add(new SubmitButton('bpay'))->onClick($this, 'payOnSubmit');
+
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
+
+        $this->clist->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->plist->add(new ClickLink('csv2', $this, 'oncsv'));
+
 
         $this->updateCust();
     }
 
     public function updateCust() {
         $br = "";
-        $blist = \App\ACL::getBranchListConstraint();
-        if (strlen($blist) > 0) {
-            $br = " branch_id in({$blist}) and ";
+        $c = \App\ACL::getBranchConstraint();
+        if (strlen($c) > 0) {
+            $br = " {$c} and ";
         }
-        $sql = "select c.customer_name,c.phone, c.customer_id,sam,fl  from (select  customer_id,  coalesce(sum(payamount - payed),0) as sam,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
-            from `documents_view`
 
-            where  {$br} payamount > 0 and payamount > payed  and state not in (1,2,3,17)
-
-              group by customer_id ,fl ) t join customers c  on t.customer_id = c.customer_id  ";
+        $sql = "select c.customer_name,c.phone, c.customer_id,sam, fl from (
+        select customer_id,   coalesce(sum(payamount - payed),0) as sam,
+        (case when
+         (SELECT coalesce(sum(amount),0)  FROM `paylist` WHERE documents.document_id = paylist.document_id )>0
+         then 1 else -1 end ) as fl
+            from `documents`  
+            where {$br}  payamount > 0 and payamount > payed  and state not in (1,2,3,17,8)   
+            group by customer_id, fl ) t join customers c  on t.customer_id = c.customer_id order by c.customer_name ";
         $this->_custlist = \App\DataItem::query($sql);
         $this->clist->custlist->Reload();
     }
@@ -110,20 +116,20 @@ class PayCustList extends \App\Pages\Base {
     public function updateDocs() {
 
         if ($this->_cust->fl == -1) {
-            $docs = "'GoodsReceipt','InvoiceCust'";
+            $docs = "'GoodsReceipt','InvoiceCust','ReturnIssue'";
         }
         if ($this->_cust->fl == 1) {
-            $docs = "'GoodsIssue','Task','ServiceAct','Invoice','POSCheck'";
+            $docs = "'GoodsIssue', 'ServiceAct','Invoice','POSCheck','RetCustIssue'";
         }
 
         $br = "";
-        $blist = \App\ACL::getBranchListConstraint();
-        if (strlen($blist) > 0) {
-            $br = " branch_id in({$blist}) and ";
+        $c = \App\ACL::getBranchConstraint();
+        if (strlen($c) > 0) {
+            $br = " {$c} and ";
         }
 
 
-        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  > payed  and state not in (1,2,3,17)  and meta_name in({$docs})", "(payamount - payed) desc");
+        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  > payed  and state not in (1,2,3,17,8)  and meta_name in({$docs})", "(payamount - payed) desc");
 
         $this->plist->doclist->Reload();
     }
@@ -209,9 +215,7 @@ class PayCustList extends \App\Pages\Base {
         $amount = $form->pamount->getText();
         if ($amount == 0)
             return;
-        $amount = $form->pamount->getText();
-        if ($amount == 0)
-            return;
+
 
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
             $this->setError('Сумма  больше  необходимой  оплаты');
@@ -237,17 +241,36 @@ class PayCustList extends \App\Pages\Base {
     }
 
     public function oncsv($sender) {
-        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";
+        if ($sender->id == 'csv') {
+            $list = $this->clist->custlist->getDataSource()->getItems(-1, -1, 'customer_name');
 
-        foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ';';
-            $csv .= $d->document_number . ';';
-            $csv .= $d->headerdata["pareaname"] . ';';
-            $csv .= $d->amount . ';';
-            $csv .= str_replace(';', '', $d->notes) . ';';
-            $csv .= "\n";
+
+            foreach ($list as $c) {
+
+                $csv .= $c->customer_name . ';';
+                $csv .= $c->phone . ';';
+
+                $csv .= H::fa($c->fl == -1 ? $c->sam : "") . ';';
+                $csv .= H::fa($c->fl == 1 ? $c->sam : "") . ';';
+
+                $csv .= "\n";
+            }
         }
+        if ($sender->id == 'csv2') {
+            $list = $this->plist->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+
+
+            foreach ($list as $d) {
+                $csv .= date('Y.m.d', $d->document_date) . ';';
+                $csv .= $d->document_number . ';';
+
+                $csv .= H::fa($d->amount) . ';';
+                $csv .= str_replace(';', '', $d->notes) . ';';
+                $csv .= "\n";
+            }
+        }
+
         $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
 
 
@@ -258,85 +281,6 @@ class PayCustList extends \App\Pages\Base {
         echo $csv;
         flush();
         die;
-    }
-
-}
-
-class PayCustDataSource implements \Zippy\Interfaces\DataSource {
-
-    private $page;
-
-    public function __construct($page) {
-        $this->page = $page;
-    }
-
-    public function getItemCount() {
-
-        $conn = \ZDB\DB::getConnect();
-
-        return $conn->GetOne($sql);
-    }
-
-    public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
-
-
-        return $docs;
-    }
-
-    public function getItem($id) {
-        
-    }
-
-}
-
-class PayCustDocDataSource implements \Zippy\Interfaces\DataSource {
-
-    private $page;
-
-    public function __construct($page) {
-        $this->page = $page;
-    }
-
-    private function getWhere() {
-        $user = System::getUser();
-
-        $conn = \ZDB\DB::getConnect();
-
-        $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
-        $where .= " and meta_name  in ('Task','ProdIssue','ProdReceipt')  ";
-
-
-
-
-        $parea = $this->page->filter->parea->getValue();
-        if ($parea > 0) {
-            $where .= " and content like '%<parea>{$parea}</parea>%'  ";
-        }
-
-
-
-        if ($user->acltype == 2) {
-
-
-            $where .= " and meta_id in({$user->aclview}) ";
-        }
-        return $where;
-    }
-
-    public function getItemCount() {
-        return Document::findCnt($this->getWhere());
-    }
-
-    public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
-
-        return $docs;
-    }
-
-    public function getItem($id) {
-        
     }
 
 }

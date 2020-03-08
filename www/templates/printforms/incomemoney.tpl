@@ -6,27 +6,27 @@
         </td>
     </tr>
 
-</tr>
-<tr>
-    <td colspan="4">
-        <b>На счет:</b> {{to}}
-    </td>
-</tr>
-<tr>
-    <td colspan="4">
-        <b>Сумма:</b> {{amount}}
-    </td>
-</tr>
-<tr>
-    <td colspan="4">
-        <b>Тип дохода:</b> {{type}}
-    </td>
-</tr>
-<tr>
-    <td colspan="4">
-        {{notes}}
-    </td>
-</tr>
+
+    <tr>
+        <td colspan="4">
+            <b>На счет:</b> {{to}}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <b>Сумма:</b> {{amount}}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <b>Тип дохода:</b> {{type}}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            {{notes}}
+        </td>
+    </tr>
 
 
 

@@ -50,9 +50,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
-
-
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList( true, true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
         $this->docform->add(new Label('course', 'Курс 1'));
@@ -93,6 +91,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editnewitem->add(new TextInput('editnewitembarcode'));
         $this->editnewitem->add(new TextInput('editnewitemsnumber'));
         $this->editnewitem->add(new TextInput('editnewitemsdate'));
+        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::findArray("cat_name", "", "cat_name"), 0));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
@@ -117,8 +116,8 @@ class GoodsReceipt extends \App\Pages\Base {
 
             $this->docform->total->setText($this->_doc->amount);
 
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Item($item);
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
                 $item->old = true;
                 $this->_itemlist[$item->item_id] = $item;
             }
@@ -137,9 +136,9 @@ class GoodsReceipt extends \App\Pages\Base {
 
                         $order = $basedoc->cast();
                         $this->docform->basedoc->setText('Заказ ' . $order->document_number);
-                        foreach ($order->detaildata as $_item) {
-                            $item = new Item($_item);
-                            $this->_itemlist[$item->item_id] = $item;
+                        foreach ($order->unpackDetails('detaildata') as $_item) {
+
+                            $this->_itemlist[$item->item_id] = $_item;
                         }
                         $this->CalcTotal();
                         $this->CalcPay();
@@ -154,14 +153,33 @@ class GoodsReceipt extends \App\Pages\Base {
                         $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
 
 
-                        foreach ($invoice->detaildata as $_item) {
-                            $item = new Item($_item);
-                            $this->_itemlist[$item->item_id] = $item;
+                        foreach ($invoice->unpackDetails('detaildata') as $_item) {
+
+                            $this->_itemlist[$item->item_id] = $_item;
                         }
                         $this->CalcTotal();
                         $this->CalcPay();
                     }
                     $this->calcTotal();
+                    if ($basedoc->meta_name == 'GoodsReceipt') {
+
+                        $this->docform->store->setValue($this->docform->store->getValue());
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $basedoc = $basedoc->cast();
+                       
+                        $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
+
+
+                        foreach ($basedoc->unpackDetails('detaildata') as $_item) {
+
+                            $this->_itemlist[$item->item_id] = $_item;
+                        }
+                        $this->CalcTotal();
+                        $this->CalcPay();
+                    }
+                    
                 }
             }
         }
@@ -399,14 +417,7 @@ class GoodsReceipt extends \App\Pages\Base {
             }
         }
 
-
-
-
-
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
@@ -534,10 +545,9 @@ class GoodsReceipt extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
@@ -591,6 +601,18 @@ class GoodsReceipt extends \App\Pages\Base {
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+
+        $itemname = Item::qstr($item->itemname);
+        $code = Item::qstr($item->item_code);
+        $cnt = Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
+        if ($cnt > 0) {
+            $this->setError('ТМЦ с таким названием и артикулом  уже  существует');
+            return;
+        }
+
+
+        $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
+        $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
         $this->editdetail->edititem->setText($item->itemname);
         $this->editdetail->edititem->setKey($item->item_id);

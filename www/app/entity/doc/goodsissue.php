@@ -18,22 +18,22 @@ class GoodsIssue extends Document {
         $i = 1;
         $detail = array();
 
-        foreach ($this->detaildata as $value) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
 
-            $name = $value['itemname'];
-            if (strlen($value['snumber']) > 0) {
-                $name .= ' (' . $value['snumber'] . ',' . date('d.m.Y', $value['sdate']) . ')';
+            $name = $item->itemname;
+            if (strlen($item->snumber) > 0) {
+                $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
             }
 
 
             $detail[] = array("no" => $i++,
                 "tovar_name" => $name,
-                "tovar_code" => $value['item_code'],
-                "quantity" => H::fqty($value['quantity']),
-                "msr" => $value['msr'],
-                "price" => H::fa($value['price']),
-                "amount" => H::fa($value['quantity'] * $value['price'])
+                "tovar_code" => $item->item_code,
+                "quantity" => H::fqty($item->quantity),
+                "msr" => $item->msr,
+                "price" => H::fa($item->price),
+                "amount" => H::fa($item->quantity * $item->price)
             );
         }
 
@@ -74,13 +74,13 @@ class GoodsIssue extends Document {
         //$conn = \ZDB\DB::getConnect();
 
 
-        foreach ($this->detaildata as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item['item_id'], $item['quantity'], $item['snumber']);
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $item['price'], 0 - $st->quantity);
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->setExtCode($item['price'] - $st->partion); //Для АВС 
+                $sc->setExtCode($item->price - $st->partion); //Для АВС 
                 $sc->save();
             }
         }
@@ -98,15 +98,17 @@ class GoodsIssue extends Document {
 
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;
     }
+
     public function getRelationBased() {
         $list = array();
         $list['Warranty'] = 'Гарантийный талон';
         $list['ReturnIssue'] = 'Возвратная накладная';
+        $list['GoodsIssue'] = 'Расходная накладная';
 
         return $list;
     }

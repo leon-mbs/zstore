@@ -69,6 +69,7 @@ class OrderCust extends \App\Pages\Base {
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
+        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::findArray("cat_name", "", "cat_name"), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
 
@@ -83,10 +84,10 @@ class OrderCust extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
 
 
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Item($item);
+
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            foreach ($this->_itemlist as $item) {
                 $item->old = true;
-                $this->_itemlist[$item->item_id] = $item;
             }
         } else {
             $this->_doc = Document::create('OrderCust');
@@ -223,14 +224,11 @@ class OrderCust extends \App\Pages\Base {
         }
 
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payed = 0;
-        $this->_doc->payamount = 0;        
+        $this->_doc->payamount = 0;
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -300,12 +298,11 @@ class OrderCust extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-         if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-              
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
-       if (count($this->_itemlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
         }
 
@@ -355,6 +352,7 @@ class OrderCust extends \App\Pages\Base {
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
         $this->editdetail->edititem->setText($item->itemname);
         $this->editdetail->edititem->setKey($item->item_id);

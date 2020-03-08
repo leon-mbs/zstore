@@ -75,14 +75,29 @@ class ProdReceipt extends \App\Pages\Base {
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
-            foreach ($this->_doc->detaildata as $item) {
-                $item = new Item($item);
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
                 $item->old = true;
                 $this->_itemlist[$item->item_id] = $item;
             }
         } else {
             $this->_doc = Document::create('ProdReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+            if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'ProdReceipt') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+
+                            $this->_itemlist[$item->item_id] = $item;
+                        }                        
+                    }
+                }
+            }
+            
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
@@ -220,15 +235,13 @@ class ProdReceipt extends \App\Pages\Base {
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
-        $this->_doc->payamount = $this->_doc->amount;
-
+        $this->_doc->payamount = 0;
+   
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -285,10 +298,9 @@ class ProdReceipt extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-               
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");

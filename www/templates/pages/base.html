@@ -344,7 +344,7 @@
                                     </p>
                                 </a>   
                                 <ul class="nav nav-treeview">
-                                   {{#note}}
+                                    {{#note}}
                                     <li class="nav-item  has-treeview">
                                         <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
                                             <i class="fa    nav-icon"></i> 
@@ -425,8 +425,40 @@
 
                                     </li>  
                                     {{/ocstore}}            
-                                
-                                     {{#issue}}
+                                    {{#woocomerce}}
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>  
+                                            <p>Обмен с Woocomerce 
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/WC/Options" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>    
+                                                    <p>Настройки</p>
+                                                </a>
+                                            </li> 
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/WC/Orders" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>    
+                                                    <p>Заказы</p>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/WC/Items" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>    
+                                                    <p>Товары</p>
+                                                </a>
+                                            </li>
+                                        </ul>                  
+
+                                    </li>  
+                                    {{/woocomerce}}            
+
+                                    {{#issue}}
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>  
@@ -449,12 +481,12 @@
                                                     <i class="fa    nav-icon"></i>    
                                                     <p>Календарь</p>
                                                 </a>
-                                              
+
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/Stat" class="nav-link">
                                                     <i class="fa    nav-icon"></i>    
                                                     <p>Статистика</p>
                                                 </a>
-                                               
+
                                             </li>
                                         </ul>                  
 
@@ -479,8 +511,8 @@
                                             <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Пользователи</p>
                                         </a>
                                     </li> 
-                              
 
+                     
                                     {{#usebranch}}
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/BranchList" class="nav-link">
@@ -490,10 +522,11 @@
                                     {{/usebranch}}
 
                                     <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Migration" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Миграция</p>
+                                        <a href="/index.php?p=App/Pages/PosList" class="nav-link">
+                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;POS терминалы</p>
                                         </a>
                                     </li>
+                               
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Options" class="nav-link">
                                             <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Настройки</p>

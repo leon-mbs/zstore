@@ -2,9 +2,6 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
 
-
-
-
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
             Списание на производство № {{document_number}} от {{date}} <br> 

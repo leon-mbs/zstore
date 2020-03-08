@@ -19,10 +19,10 @@ class IncomeItem extends Document {
 
         $conn = \ZDB\DB::getConnect();
 
-        foreach ($this->detaildata as $item) {
+        foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $stockto = Stock::getStock($this->headerdata['store'], $item['item_id'], $item['price'], $item['snumber'], 0, true);
-            $sc = new Entry($this->document_id, $item['quantity'] * $item['price'], $item['price']);
+            $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->number, 0, true);
+            $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->price);
             $sc->setStock($stockto->stock_id);
             $sc->save();
         }
@@ -39,17 +39,17 @@ class IncomeItem extends Document {
 
         $i = 1;
         $detail = array();
-        foreach ($this->detaildata as $value) {
-            $name = $value['itemname'];
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            $name = $item->itemname;
 
 
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
-                "snumber" => $value['snumber'],
-                "msr" => $value['msr'],
-                "quantity" => H::fqty($value['quantity']),
-                "price" => H::fa($value['price']),
-                "amount" => H::fa($value['quantity'] * $value['price'])
+                "snumber" => $item->snumber,
+                "msr" => $item->msr,
+                "quantity" => H::fqty($item->quantity),
+                "price" => H::fa($item->price),
+                "amount" => H::fa($item->quantity * $item->price)
             );
         }
 

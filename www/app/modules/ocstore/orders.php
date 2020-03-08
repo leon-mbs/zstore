@@ -127,7 +127,7 @@ class Orders extends \App\Pages\Base {
             $neworder->customer_id = $modules['occustomer_id'];
 
             //товары
-
+            $tlist = array();
             foreach ($shoporder->_products_ as $product) {
                 //ищем по артикулу 
                 if (strlen($product['sku']) == 0)
@@ -142,13 +142,14 @@ class Orders extends \App\Pages\Base {
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = round($product['price']);
                 $tovar->octoreoptions = serialize($product['_options_']);
-                $neworder->detaildata[] = $tovar->getData();
-            }
 
+                $tlist[] = $tovar;
+            }
+            $neworder->packDetails('detaildata', $tlist);
 
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
-            $neworder->headerdata['occlient'] .= $shoporder->firstname . ' ' . $shoporder->lastname;
+            $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->amount = round($shoporder->total);
             $neworder->notes = "OC номер:{$shoporder->order_id};";
             $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
@@ -160,6 +161,7 @@ class Orders extends \App\Pages\Base {
             $neworder->notes .= " Комментарий:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
+            $neworder->updateStatus(Document::STATE_INPROCESS);
 
             $i++;
         }

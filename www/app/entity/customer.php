@@ -17,6 +17,7 @@ class Customer extends \ZCL\DB\Entity {
 
     protected function init() {
         $this->customer_id = 0;
+        $this->customer_name = '';
         $this->status = 0;
     }
 
@@ -77,6 +78,20 @@ class Customer extends \ZCL\DB\Entity {
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
+    }
+
+    public static function getByPhone($phone) {
+        if (strlen($phone) == 0)
+            return null;
+        $conn = \ZDB\DB::getConnect();
+        return Customer::getFirst(' phone = ' . $conn->qstr($phone));
+    }
+
+    public static function getByEmail($email) {
+        if (strlen($email) == 0)
+            return null;
+        $conn = \ZDB\DB::getConnect();
+        return Customer::getFirst(' email = ' . $conn->qstr($email));
     }
 
 }

@@ -38,7 +38,7 @@ class OutcomeItem extends \App\Pages\Base {
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-  
+
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -68,8 +68,8 @@ class OutcomeItem extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->detaildata as $_item) {
-                $item = new Item($_item);
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+
                 $this->_itemlist[$item->item_id . $item->snumber] = $item;
             }
         } else {
@@ -151,17 +151,17 @@ class OutcomeItem extends \App\Pages\Base {
         $item->quantity = $this->editdetail->editquantity->getText();
         //ищем  последню цену
         $store_id = $this->docform->store->getValue();
-         
+
         $where = "store_id = {$store_id} and item_id = {$id}    ";
         if (strlen($item->snumber) > 0) {
             $where .= " and snumber=" . Stock::qstr($item->snumber);
         }
-        $s = Stock::getFirst($where, ' stock_id  desc '); 
-        if($s instanceof Stock) {
-          $item->price = $s->partion;    
+        $s = Stock::getFirst($where, ' stock_id  desc ');
+        if ($s instanceof Stock) {
+            $item->price = $s->partion;
         }
-        
-               
+
+
         $this->_itemlist[$id . $item->snumber] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -194,10 +194,7 @@ class OutcomeItem extends \App\Pages\Base {
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
-        $this->_doc->detaildata = array();
-        foreach ($this->_itemlist as $item) {
-            $this->_doc->detaildata[] = $item->getData();
-        }
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -238,10 +235,9 @@ class OutcomeItem extends \App\Pages\Base {
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
             $this->setError("Не введен номер документа");
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-               
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введен ни один  товар");
@@ -294,7 +290,7 @@ class OutcomeItem extends \App\Pages\Base {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
-        if($store_id==0){
+        if ($store_id == 0) {
             $this->setError('Не указан склад');
             return;
         }
@@ -324,13 +320,13 @@ class OutcomeItem extends \App\Pages\Base {
         }
 
         $this->_itemlist[$item->item_id]->quantity += 1;
-         //ищем  последню цену
-          
+        //ищем  последню цену
+
         $where = "store_id = {$store_id} and item_id = {$item->item_id}    ";
-   
-        $s = Stock::getFirst($where, ' stock_id  desc '); 
-        if($s instanceof Stock) {
-          $item->price = $s->partion;    
+
+        $s = Stock::getFirst($where, ' stock_id  desc ');
+        if ($s instanceof Stock) {
+            $item->price = $s->partion;
         }
         $this->docform->detail->Reload();
     }

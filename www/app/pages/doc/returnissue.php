@@ -17,7 +17,7 @@ use \Zippy\Html\Link\SubmitLink;
 use \App\Entity\Customer;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
-use \App\Entity\Stock;
+ 
 use \App\Entity\Store;
 use \App\Entity\MoneyFund;
 use \App\Helper as H;
@@ -48,7 +48,7 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList( ), H::getDefMF()));
 
 
 
@@ -59,6 +59,9 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new TextInput('editpayed', "0"));
+        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+        $this->docform->add(new Label('payed', 0));
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -84,11 +87,13 @@ class ReturnIssue extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+             $this->docform->total->setText(H::fa($this->_doc->amount));
 
 
-            foreach ($this->_doc->detaildata as $item) {
-                $it = new Stock($item);
-                $this->_tovarlist[$it->stock_id] = $it;
+            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+                $this->_tovarlist[$item->item_id] = $item;
             }
         } else {
             $this->_doc = Document::create('ReturnIssue');
@@ -104,18 +109,16 @@ class ReturnIssue extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $elist = \App\Entity\Entry::find('document_id=' . $basedoc->document_id);
-                        foreach ($elist as $entry) {
-                            $stock = Stock::load($entry->stock_id);
-                            $stock->quantity = abs($entry->quantity);
-                            $stock->price = round(abs($entry->amount / $entry->quantity));
-                            $this->_tovarlist[$stock->stock_id] = $stock;
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+
+                            $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
                 }
+                $this->calcTotal();                
             }
         }
-        $this->calcTotal();
+        
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -127,7 +130,7 @@ class ReturnIssue extends \App\Pages\Base {
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
+        $row->add(new Label('sdate', $item->snumber > 0 ? ($item->sdate > 0 ? date('Y-m-d', $item->sdate) : '')  :''   )   );
 
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
@@ -158,7 +161,7 @@ class ReturnIssue extends \App\Pages\Base {
     }
 
     public function editOnClick($sender) {
-        $stock = $sender->getOwner()->getDataItem();
+        $item = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
@@ -166,12 +169,11 @@ class ReturnIssue extends \App\Pages\Base {
         $this->editdetail->editprice->setText($stock->price);
 
 
-        $this->editdetail->edittovar->setKey($stock->item_id);
-        $this->editdetail->edittovar->setText($stock->itemname);
+        $this->editdetail->edittovar->setKey($item->item_id);
+        $this->editdetail->edittovar->setText($item->itemname);
 
-
-
-        $this->_rowid = $stock->stock_id;
+        $this->_rowid = $item->item_id;
+ 
     }
 
     public function saverowOnClick($sender) {
@@ -183,13 +185,13 @@ class ReturnIssue extends \App\Pages\Base {
             return;
         }
 
-        $item = Stock::load($id);
+        $item = Item::load($id);
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
 
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$item->stock_id] = $item;
+        unset($this->_itemlist[$this->_rowid]);        
+        $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -231,22 +233,18 @@ class ReturnIssue extends \App\Pages\Base {
             return;
         }
 
-        $this->calcTotal();
 
         $firm = H::getFirmData($this->_doc->branch_id);
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
-
-
+  
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-
-
-        $this->_doc->detaildata = array();
-        foreach ($this->_tovarlist as $tovar) {
-            $this->_doc->detaildata[] = $tovar->getData();
-        }
+  
+        $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->payamount = $this->docform->total->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -293,8 +291,22 @@ class ReturnIssue extends \App\Pages\Base {
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
+        $this->docform->editpayed->setText(H::fa($total));
     }
 
+    public function onPayed($sender) {
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $payed = $this->docform->payed->getText();
+        $total = $this->docform->total->getText();
+        if ($payed > $total) {
+            $this->setWarn('Внесена  сумма  больше  необходимой');
+        } else {
+            $this->goAnkor("tankor");
+        }
+    }
+    
+    
     /**
      * Валидация   формы
      *
@@ -303,10 +315,9 @@ class ReturnIssue extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-               
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_tovarlist) == 0) {
             $this->setError("Не веден ни один  товар");
@@ -335,9 +346,9 @@ class ReturnIssue extends \App\Pages\Base {
     }
 
     public function OnAutoItem($sender) {
-        $store_id = $this->docform->store->getValue();
+        
         $text = trim($sender->getText());
-        return Stock::findArrayAC($store_id, $text);
+        return Item::findArrayAC($text);
     }
 
 }

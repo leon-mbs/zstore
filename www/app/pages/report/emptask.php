@@ -29,8 +29,7 @@ class EmpTask extends \App\Pages\Base {
         $this->filter->add(new Date('to', time()));
 
         $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new RedirectLink('print', "movereport"));
-        $this->detail->add(new RedirectLink('html', "movereport"));
+        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
         $this->detail->add(new RedirectLink('word', "movereport"));
         $this->detail->add(new RedirectLink('excel', "movereport"));
         $this->detail->add(new RedirectLink('pdf', "movereport"));
@@ -49,11 +48,7 @@ class EmpTask extends \App\Pages\Base {
         $reportname = "emptask";
 
 
-        $this->detail->print->pagename = $reportpage;
-        $this->detail->print->params = array('print', $reportname);
-        $this->detail->html->pagename = $reportpage;
-        $this->detail->html->params = array('html', $reportname);
-        $this->detail->word->pagename = $reportpage;
+            $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
@@ -89,15 +84,16 @@ class EmpTask extends \App\Pages\Base {
         $docs = Document::find($where);
 
         foreach ($docs as $doc) {
-
-            $emplist = unserialize(base64_decode($doc->headerdata['emp']));
+                   
+ 
+            $emplist = $doc->unpackDetails('emplist');
             if (count($emplist) == 0)
                 continue;
             $total = 0;
             $hours = 0;
-            foreach ($doc->detaildata as $service) {
-                $total += $service['price'];
-                $hours += $service['hours'];
+            foreach ($doc->unpackDetails('detaildata') as $service) {
+                $total += $service->price;
+                $hours += $service->hours;
             }
             if ($doc->headerdata['hours'] > 0)
                 $hours = $doc->headerdata['hours'];

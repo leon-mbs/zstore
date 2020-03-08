@@ -102,10 +102,10 @@ class MFList extends \App\Pages\Base {
             return;
         }
         $this->_mf->branch_id = $this->mfdetail->editbranch->getValue();
-        if ($this->_tvars['usebranch'] == true && $this->_mf->branch_id == 0) {
-            $this->setError('Не выбран  филиал');
-            return;
-        }
+      //  if ($this->_tvars['usebranch'] == true && $this->_mf->branch_id == 0) {
+      //      $this->setError('Не выбран  филиал');
+      //      return;
+     //   }
 
         $this->_mf->Save();
         $this->mfdetail->setVisible(false);

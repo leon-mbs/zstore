@@ -10,7 +10,7 @@ namespace App\Entity;
  */
 class MoneyFund extends \ZCL\DB\Entity {
 
-    const BEZNAL = 10000;
+  //  const BEZNAL = 10000;
     const PREPAID = 10001;
     const CREDIT = 10002;
 
@@ -51,12 +51,12 @@ class MoneyFund extends \ZCL\DB\Entity {
      * @param mixed $beznal   добавить пункт  Безналичный расчет
      * @param mixed $prepaid  добавить пункт  Была предоплата
      */
-    public static function getList($beznal = false, $credit = false, $prepaid = false) {
+    public static function getList(  $credit = false, $prepaid = false) {
         $ml = array();
         if ($credit)
             $ml[self::CREDIT] = 'В кредит';
-        if ($beznal)
-            $ml[self::BEZNAL] = 'Безналичный расчет';
+   //     if ($beznal)
+      //      $ml[self::BEZNAL] = 'Безналичный расчет';
         if ($prepaid)
             $ml[self::PREPAID] = 'Предоплата';
         foreach (MoneyFund::findArray("mf_name", "") as $k => $v) {
@@ -67,7 +67,7 @@ class MoneyFund extends \ZCL\DB\Entity {
     }
 
     public static function getConstraint() {
-        return \App\ACL::getBranchConstraint();
+        return \App\ACL::getBranchConstraint(true);
     }
 
 }

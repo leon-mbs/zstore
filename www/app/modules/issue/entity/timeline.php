@@ -1,5 +1,4 @@
 <?php
-  
 
 namespace App\Modules\Issue\Entity;
 
@@ -11,16 +10,17 @@ namespace App\Modules\Issue\Entity;
 
  */
 class TimeLine extends \ZCL\DB\Entity {
-      protected function init() {
+
+    protected function init() {
         $this->issue_id = 0;
- 
+
         $this->user_id = 0;
         $this->duration = 0;
-     
-    } 
-    
-      protected function afterLoad() {
+    }
 
-         $this->createdon = strtotime($this->createdon);
-      }
+    protected function afterLoad() {
+
+        $this->createdon = strtotime($this->createdon);
+    }
+
 }

@@ -65,7 +65,7 @@ class OrderCustList extends \App\Pages\Base {
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bcan'))->onClick($this, 'statusOnSubmit');
- 
+
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->doclist->Reload();
@@ -104,7 +104,8 @@ class OrderCustList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-        if(\App\Acl::checkExeDoc($this->_doc,true,true)==false ) return;
+        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false)
+            return;
 
         $state = $this->_doc->state;
         $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
@@ -148,14 +149,13 @@ class OrderCustList extends \App\Pages\Base {
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
         }
-    
+
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
-
     }
 
     public function updateStatusButtons() {
- 
+
         $this->statuspan->statusform->bclose->setVisible(true);
 
         $state = $this->_doc->state;
@@ -169,7 +169,7 @@ class OrderCustList extends \App\Pages\Base {
         $ttn = count($d) > 0;
 
         $this->statuspan->statusform->binp->setVisible(false);
-   
+
         //новый     
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->bclose->setVisible(false);
@@ -182,7 +182,7 @@ class OrderCustList extends \App\Pages\Base {
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bcan->setVisible(true);
         }
-   
+
         if ($state == Document::STATE_WA) {
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
@@ -219,10 +219,9 @@ class OrderCustList extends \App\Pages\Base {
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bcan->setVisible(false);
-            
+
             $this->statuspan->statusform->setVisible(false);
         }
-        
     }
 
     //просмотр

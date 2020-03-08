@@ -10,7 +10,7 @@
 
         <td colspan="2"> {{firmname}}</td>
     </tr>
-   <tr>
+    <tr>
 
         <td colspan="3">ИНН {{inn}}</td>
     </tr>
@@ -18,7 +18,7 @@
     <tr>
         <td colspan="3"> {{shopname}}</td>
     </tr>
-      {{/shopname}}
+    {{/shopname}}
     <tr>
 
         <td colspan="3">  {{address}}</td>
@@ -30,20 +30,20 @@
     <tr>
         <td colspan="3"> {{customer_name}}</td>
     </tr>
- 
-   {{/customer_name}}
+
+    {{/customer_name}}
     {{#_detail}}
     <tr>
         <td   >{{tovar_name}}</td>
         <td   align="right">{{quantity}}</td>
         <td align="right" >{{amount}}</td>
     </tr>   
-   {{/_detail}}
-     <tr>
+    {{/_detail}}
+    <tr>
         <td colspan="2" align="right">Всего:</td>
         <td align="right" >{{total}}</td>
     </tr>
-  
+
     {{^prepaid}}
     {{#isdisc}}
     <tr style="font-weight: bolder;">
@@ -64,5 +64,5 @@
         <td   align="right">{{exchange}}</td>
     </tr>
     {{/prepaid}}
-     
+
 </table>

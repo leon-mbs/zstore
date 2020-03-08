@@ -31,7 +31,7 @@
                         <select class="form-control  mr-sm-2" zippy="filterassignedto">
                             <option value="0">Все</option>
                         </select>
-                        <label for="filterassignedto"  >Пр. участок</label>
+                        <label for="filterpa"  >Пр. участок</label>
 
                         <select class="form-control  mr-sm-2" zippy="filterpa">
                             <option value="0">Все</option>
@@ -75,15 +75,17 @@
                                     <tr>
 
                                         <th>Номер</th>
-                                        <th>Описание</th>
+                                       
 
                                         <th>Начало</th>
 
                                         <th style="text-align: right;">Час.</th>
 
-                                        <th>Исполнители</th>
+                                        <th>Исполнитель</th>
+                                        <th>Работа</th>
                                         <th>Статус</th>
-                                        <th class="text-right">Сумма</th>
+                                        <th>Описание</th>
+                                       
 
                                         <th style="width:75px;"> </th>
 
@@ -91,15 +93,16 @@
                                     <tr zippy="tasklist">
 
                                         <td zippy="tasknumber"></td>
-                                        <td zippy="taskdesc"></td>
+                                       
 
                                         <td zippy="taskstartdate" style="white-space:   nowrap" ></td>
                                         <td zippy="taskhours"  style="text-align: right;"></td>
 
                                         <td zippy="taskemps"></td>
+                                        <td zippy="taskservices"></td>
                                         <td zippy="taskstatus" ></td>
-                                        <td zippy="taskamount"  class="text-right"></td>
-
+                                     
+                                        <td zippy="taskdesc"></td>
 
                                         <td>
                                             <a zippy="taskshow" title="Просмотр"><i class="fa fa-eye"></i></a>
@@ -108,12 +111,7 @@
                                         </td>
 
                                     </tr>
-                                    <tr>
-                                        <th colspan="7" class="text-right">Всего</th>
-                                        <th class="text-right" zippy="tamount"></th>
-
-                                        <td > </td>
-                                    </tr>
+                                    
                                 </table>
                                 <div zippy="pag"></div>
                                 <a id="dankor"></a></div>     </div>       

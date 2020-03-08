@@ -1,21 +1,18 @@
  
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
-
-
-    <tr>
-        <td></td>
-        <td><b>Поставщик</b></td>
-        <td colspan="4">{{customer_name}}</td>
-    </tr>
-
+  
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
             Возврат постващику № {{document_number}} от {{date}} <br> 
         </td>
     </tr>
-
+     <tr>
+        <td></td>
+        <td><b>Поставщик</b></td>
+        <td colspan="4">{{customer_name}}</td>
+    </tr>
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
@@ -41,6 +38,10 @@
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
+    </tr>
+    <tr style="font-weight: bolder;">
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">Оплачено:</td>
+        <td style="border-top:1px #000 solid;" align="right">{{payed}}</td>
     </tr>
 
 

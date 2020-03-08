@@ -34,7 +34,6 @@ class POSCheck extends \App\Pages\Base {
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-    
     private $_order_id = 0;
     private $_prevcust = 0;   // преыдущий контрагент
 
@@ -46,7 +45,7 @@ class POSCheck extends \App\Pages\Base {
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true, true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -80,9 +79,9 @@ class POSCheck extends \App\Pages\Base {
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
-        $this->docform->addser->setVisible(Service::findCnt('disabled<>1')>0);  //показываем  если  есть  услуги
-        
-        
+        $this->docform->addser->setVisible(Service::findCnt('disabled<>1') > 0);  //показываем  если  есть  услуги
+
+
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
@@ -107,8 +106,8 @@ class POSCheck extends \App\Pages\Base {
         $this->add(new Form('editserdetail'))->setVisible(false);
         $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
         $this->editserdetail->add(new TextInput('editserprice'));
-        
-                                                       
+
+
         $this->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
         $this->editserdetail->editser->onChange($this, 'OnChangeSer', true);
 
@@ -158,11 +157,9 @@ class POSCheck extends \App\Pages\Base {
             $this->_prevcust = $this->_doc->customer_id;
 
             $this->OnChangeCustomer($this->docform->customer);
-            
+
             $this->_serlist = $this->_doc->unpackDetails('services');
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-            
-            
         } else {
             $this->_doc = Document::create('POSCheck');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -197,11 +194,40 @@ class POSCheck extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                        foreach ($order->detaildata as $item) {
-                            $item = new Item($item);
+                        foreach ($order->unpackDetails('detaildata') as $item) {
+
                             $this->_itemlist[$item->item_id] = $item;
                         }
                     }
+                 
+                    if ($basedoc->meta_name == 'Invoice') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+              
+                        $notfound = array();
+                        $invoice = $basedoc->cast();
+
+                        $this->docform->total->setText($invoice->amount);
+
+                        $this->OnChangeCustomer($this->docform->customer);
+                        $this->calcPay();
+
+                        foreach ($invoice->unpackDetails('detaildata') as $item) {
+
+                            $this->_itemlist[$item->item_id] = $item;
+                        }
+                        
+                        
+                        if($invoice->payamount>0){
+                            $this->docform->payment->setValie(MoneyFund::PREPAID) ;// предоплата
+                        }
+                    }
+ 
+                
                 }
             }
         }
@@ -229,6 +255,7 @@ class POSCheck extends \App\Pages\Base {
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
+
     public function serOnRow($row) {
         $item = $row->getDataItem();
 
@@ -254,7 +281,7 @@ class POSCheck extends \App\Pages\Base {
         $this->calcTotal();
         $this->calcPay();
     }
-   
+
     public function serdeleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
@@ -267,6 +294,7 @@ class POSCheck extends \App\Pages\Base {
         $this->calcTotal();
         $this->calcPay();
     }
+
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
@@ -275,13 +303,13 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->setVisible(false);
         $this->_rowid = 0;
     }
+
     public function addserOnClick($sender) {
         $this->editserdetail->setVisible(true);
         $this->editserdetail->editserquantity->setText("1");
         $this->editserdetail->editserprice->setText("0");
-        
+
         $this->docform->setVisible(false);
-        
     }
 
     public function editOnClick($sender) {
@@ -347,11 +375,11 @@ class POSCheck extends \App\Pages\Base {
         $this->editdetail->editprice->setText("");
         $this->editdetail->editprice->setText("");
         $this->editdetail->qtystock->setText("");
- 
+
         $this->calcTotal();
         $this->calcPay();
     }
-   
+
     public function saveserOnClick($sender) {
 
         $id = $this->editserdetail->editser->getKey();
@@ -435,10 +463,10 @@ class POSCheck extends \App\Pages\Base {
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
         $this->_doc->headerdata['order_id'] = $this->_order_id;
-  
-   
-        $this->_doc->packDetails('detaildata',$this->_itemlist) ;
-        $this->_doc->packDetails('services',$this->_serlist) ;
+
+
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
+        $this->_doc->packDetails('services', $this->_serlist);
         $this->_doc->amount = $this->docform->total->getText();
 
         $isEdited = $this->_doc->document_id > 0;
@@ -596,8 +624,8 @@ class POSCheck extends \App\Pages\Base {
         $this->docform->barcode->setText('');
         if ($code == '')
             return;
-         $store_id = $this->docform->store->getValue();
-        if($store_id==0){
+        $store_id = $this->docform->store->getValue();
+        if ($store_id == 0) {
             $this->setError('Не указан склад');
             return;
         }
@@ -680,10 +708,9 @@ class POSCheck extends \App\Pages\Base {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введите номер документа');
         }
-        if(false == $this->_doc->checkUniqueNumber()){
-              $this->docform->document_number->setText($this->_doc->nextNumber()); 
-              $this->setError('Не уникальный номер документа. Сгенерирован новый номер') ;
-               
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $this->docform->document_number->setText($this->_doc->nextNumber());
+            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
         }
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
             $this->setError("Не ведены позиции");
@@ -748,19 +775,20 @@ class POSCheck extends \App\Pages\Base {
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }
-    
+
     public function OnAutoSer($sender) {
-         
+
         $text = trim($sender->getText());
         $text = Service::qstr('%' . $text . '%');
-        return  Service::findArray('service_name',"disabled <> 1 and service_name like {$text}");
+        return Service::findArray('service_name', "disabled <> 1 and service_name like {$text}");
     }
+
     public function OnChangeSer($sender) {
         $id = $sender->getKey();
         $ser = Service::load($id);
         $this->editserdetail->editserprice->setText($ser->price);
-        
-        $this->updateAjax(array(  'editserprice' ));
+
+        $this->updateAjax(array('editserprice'));
     }
 
     public function OnAutoCustomer($sender) {
@@ -808,6 +836,19 @@ class POSCheck extends \App\Pages\Base {
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustname->getText();
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+            $this->setError("Телефон должен быть 10  цифр");
+            return;
+        }
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+                $this->setError("Уже есть  контрагент с  таким телефоном");
+                return;
+            }
+        }
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);
