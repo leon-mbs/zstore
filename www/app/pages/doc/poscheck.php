@@ -199,6 +199,35 @@ class POSCheck extends \App\Pages\Base {
                             $this->_itemlist[$item->item_id] = $item;
                         }
                     }
+                 
+                    if ($basedoc->meta_name == 'Invoice') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+              
+                        $notfound = array();
+                        $invoice = $basedoc->cast();
+
+                        $this->docform->total->setText($invoice->amount);
+
+                        $this->OnChangeCustomer($this->docform->customer);
+                        $this->calcPay();
+
+                        foreach ($invoice->unpackDetails('detaildata') as $item) {
+
+                            $this->_itemlist[$item->item_id] = $item;
+                        }
+                        
+                        
+                        if($invoice->payamount>0){
+                            $this->docform->payment->setValie(MoneyFund::PREPAID) ;// предоплата
+                        }
+                    }
+ 
+                
                 }
             }
         }

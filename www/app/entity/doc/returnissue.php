@@ -44,7 +44,8 @@ class ReturnIssue extends Document {
             "firmname" => $this->headerdata["firmname"],
             "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
-            "total" => H::fa($this->amount)
+            "total" => H::fa($this->amount),
+            "payed" => H::fa($this->payed )
         );
 
         $report = new \App\Report('returnissue.tpl');
@@ -63,14 +64,14 @@ class ReturnIssue extends Document {
 
 
             $sc = new Entry($this->document_id, $item->amount, $item->quantity);
-            $sc->setStock($item->stock_id);
+            $sc->setStock($stock->stock_id);
 
             $sc->setExtCode(0 - ($item->price - $stock->partion)); //Для АВС 
             //  $sc->setCustomer($this->customer_id);
             $sc->save();
         }
-        if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL);
+        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL);
             $this->payamount = $this->amount;
         }
 

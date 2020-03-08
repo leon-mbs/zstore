@@ -80,7 +80,8 @@ class Invoice extends \App\Entity\Doc\Document {
 
     public function getRelationBased() {
         $list = array();
-        $list['GoodsIssue'] = 'Расходная накладная';
+        $list['GoodsIssue'] ='Расходная накладная';
+        $list['Invoice'] = 'Кассовый чек';
 
         return $list;
     }

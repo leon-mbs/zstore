@@ -59,6 +59,9 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new TextInput('editpayed', "0"));
+        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+        $this->docform->add(new Label('payed', 0));
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -84,10 +87,12 @@ class ReturnIssue extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+             $this->docform->total->setText(H::fa($this->_doc->amount));
 
 
             foreach ($this->_doc->unpackDetails('detaildata') as $item) {
-
                 $this->_tovarlist[$item->item_id] = $item;
             }
         } else {
@@ -110,9 +115,10 @@ class ReturnIssue extends \App\Pages\Base {
                         }
                     }
                 }
+                $this->calcTotal();                
             }
         }
-        $this->calcTotal();
+        
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -227,7 +233,6 @@ class ReturnIssue extends \App\Pages\Base {
             return;
         }
 
-        $this->calcTotal();
 
         $firm = H::getFirmData($this->_doc->branch_id);
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
@@ -238,6 +243,8 @@ class ReturnIssue extends \App\Pages\Base {
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->payamount = $this->docform->total->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -284,8 +291,22 @@ class ReturnIssue extends \App\Pages\Base {
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
+        $this->docform->editpayed->setText(H::fa($total));
     }
 
+    public function onPayed($sender) {
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $payed = $this->docform->payed->getText();
+        $total = $this->docform->total->getText();
+        if ($payed > $total) {
+            $this->setWarn('Внесена  сумма  больше  необходимой');
+        } else {
+            $this->goAnkor("tankor");
+        }
+    }
+    
+    
     /**
      * Валидация   формы
      *

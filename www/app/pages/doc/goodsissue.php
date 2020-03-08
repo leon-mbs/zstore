@@ -80,9 +80,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('ship_number'));
         $this->docform->add(new TextInput('ship_address'));
-
-
-
+  
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -206,8 +204,8 @@ class GoodsIssue extends \App\Pages\Base {
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                        $this->_orderid = $basedocid;
-                        $this->docform->order->setText($basedoc->document_number);
+                      //  $this->_orderid = $basedocid;
+                      //  $this->docform->order->setText($basedoc->document_number);
                         $this->docform->ship_address->setText($basedoc->headerdata['address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
@@ -221,11 +219,19 @@ class GoodsIssue extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                        foreach ($order->unpackDetails('detaildata') as $item) {
+                        foreach ($invoice->unpackDetails('detaildata') as $item) {
 
                             $this->_itemlist[$item->item_id] = $item;
                         }
+                        
+                        
+                        if($invoice->payamount>0){
+                            $this->docform->payment->setValie(MoneyFund::PREPAID) ;// предоплата
+                        }
                     }
+                    
+                    
+                    
                     if ($basedoc->meta_name == 'GoodsIssue') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);

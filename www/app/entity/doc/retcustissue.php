@@ -47,7 +47,8 @@ class RetCustIssue extends Document {
             "firmname" => $this->headerdata["firmname"],
             "customer_name" => $this->headerdata["customer_name"],
             "document_number" => $this->document_number,
-            "total" => $this->amount
+            "total" => H::fa($this->amount),
+            "payed" => H::fa($this->payed )
         );
 
 
@@ -77,8 +78,8 @@ class RetCustIssue extends Document {
         
             $sc->save();
         }
-        if ($this->headerdata['payment'] > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL_CUST);
+        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL_CUST);
             $this->payamount = $this->amount;
         }
 

@@ -265,7 +265,7 @@ class Order extends \App\Pages\Base {
 
 
             if ($sender->id == 'execdoc') {
-                // $this->_doc->updateStatus(Document::STATE_INPROCESS);       
+                  $this->_doc->updateStatus(Document::STATE_INPROCESS);       
             }
 
 

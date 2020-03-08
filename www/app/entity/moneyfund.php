@@ -51,7 +51,7 @@ class MoneyFund extends \ZCL\DB\Entity {
      * @param mixed $beznal   добавить пункт  Безналичный расчет
      * @param mixed $prepaid  добавить пункт  Была предоплата
      */
-    public static function getList($beznal = false, $credit = false, $prepaid = false) {
+    public static function getList(  $credit = false, $prepaid = false) {
         $ml = array();
         if ($credit)
             $ml[self::CREDIT] = 'В кредит';

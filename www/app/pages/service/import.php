@@ -38,6 +38,7 @@ class Import extends \App\Pages\Base {
         $cols = array(0 => '-', 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10);
         $form->add(new DropDownChoice("colname", $cols));
         $form->add(new DropDownChoice("colcode", $cols));
+        $form->add(new DropDownChoice("colbarcode", $cols));
         $form->add(new DropDownChoice("colgr", $cols));
         $form->add(new DropDownChoice("colqty", $cols));
         $form->add(new DropDownChoice("colprice", $cols));
@@ -69,6 +70,7 @@ class Import extends \App\Pages\Base {
 
         $colname = $this->iform->colname->getValue();
         $colcode = $this->iform->colcode->getValue();
+        $colbarcode = $this->iform->colbarcode->getValue();
         $colgr = $this->iform->colgr->getValue();
         $colqty = $this->iform->colqty->getValue();
         $colprice = $this->iform->colprice->getValue();
@@ -114,6 +116,7 @@ class Import extends \App\Pages\Base {
                 $this->_tvars['list'][] = array(
                     'colname' => $itemname,
                     'colcode' => $row[$colcode - 1],
+                    'colbarcode' => $row[$colbarcode - 1],
                     'colgr' => $row[$colgr - 1],
                     'colqty' => $row[$colqty - 1],
                     'colmsr' => $row[$colmsr - 1],
@@ -124,12 +127,10 @@ class Import extends \App\Pages\Base {
             return;
         }
 
-
-
+ 
         $newitems = array();
         foreach ($data as $row) {
-
-
+ 
             $catname = $row[$colgr - 1];
             if (strlen($catname) > 0) {
                 $cat = Category::getFirst('cat_name=' . Category::qstr($catname));
@@ -153,6 +154,8 @@ class Import extends \App\Pages\Base {
                     $item->itemname = $itemname;
                     if (strlen($row[$colcode - 1]) > 0)
                         $item->item_code = $row[$colcode - 1];
+                    if (strlen($row[$colbarcode - 1]) > 0)
+                        $item->bar_code = $row[$colbarcode - 1];
                     if (strlen($row[$colmsr - 1]) > 0)
                         $item->msr = $row[$colmsr - 1];
                     if ($price > 0)

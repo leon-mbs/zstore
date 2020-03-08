@@ -80,12 +80,14 @@ class PayCustList extends \App\Pages\Base {
             $br = " {$c} and ";
         }
 
-        $sql = "select c.customer_name,c.phone, c.customer_id,sam,fl  from (select  customer_id,  coalesce(sum(payamount - payed),0) as sam,(case when meta_name in('GoodsReceipt','InvoiceCust') then -1 else 1 end) as fl
-            from `documents_view`
-
-            where  {$br} payamount > 0 and payamount > payed  and state not in (1,2,3,17,8)
-
-              group by customer_id ,fl ) t join customers c  on t.customer_id = c.customer_id order by c.customer_name ";
+        $sql = "select c.customer_name,c.phone, c.customer_id,sam, fl from (
+        select customer_id,   coalesce(sum(payamount - payed),0) as sam,
+        (case when
+         (SELECT coalesce(sum(amount),0)  FROM `paylist` WHERE documents.document_id = paylist.document_id )>0
+         then 1 else -1 end ) as fl
+            from `documents`  
+            where {$br}  payamount > 0 and payamount > payed  and state not in (1,2,3,17,8)   
+            group by customer_id, fl ) t join customers c  on t.customer_id = c.customer_id order by c.customer_name ";
         $this->_custlist = \App\DataItem::query($sql);
         $this->clist->custlist->Reload();
     }
@@ -114,10 +116,10 @@ class PayCustList extends \App\Pages\Base {
     public function updateDocs() {
 
         if ($this->_cust->fl == -1) {
-            $docs = "'GoodsReceipt','InvoiceCust'";
+            $docs = "'GoodsReceipt','InvoiceCust','ReturnIssue'";
         }
         if ($this->_cust->fl == 1) {
-            $docs = "'GoodsIssue', 'ServiceAct','Invoice','POSCheck'";
+            $docs = "'GoodsIssue', 'ServiceAct','Invoice','POSCheck','RetCustIssue'";
         }
 
         $br = "";

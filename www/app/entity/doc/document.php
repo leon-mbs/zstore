@@ -270,16 +270,17 @@ class Document extends \ZCL\DB\Entity {
             //удаляем освободившиеся стоки
             $conn->Execute("delete from store_stock where stock_id not in (select coalesce(stock_id,0) from entrylist) ");
 
-
-            //отменяем оплаты  но  в  документе  оставляем
+            //отменяем оплаты   
+            $conn->Execute("delete from paylist where document_id = " . $this->document_id);
+            
+            /*
             $sql = "select coalesce( sum(amount),0) from paylist where document_id=" . $this->document_id;
             $payed = $conn->GetOne($sql);
             if ($payed != 0) {
-                \App\Entity\Pay::addPayment($this->document_id, 0 - $payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL, 'Отмена  документа');
+                \App\Entity\Pay::addPayment($this->document_id, 0 - $payed, $this->headerdata['payment'],  ($payed>0) \App\Entity\Pay::PAY_OTHER_OUTCOME ? : \App\Entity\Pay::PAY_OTHER_INCOME, 'Отмена  документа');
             }
-            // $this->payed=0;
-            // $this->save();
-            //$conn->Execute("update documents set payed=0 where   document_id =" . $this->document_id);
+            */
+          
             // возвращаем бонусы
             if ($this->headerdata['paydisc'] > 0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);

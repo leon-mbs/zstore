@@ -43,10 +43,7 @@
 
                         </select>
                     </div> 
-
-
-
-
+ 
                 </div>
             </div>
             <div class="row">
@@ -98,7 +95,17 @@
                             <td></td>
                         </tr>
 
+                         <tr style="font-weight: bolder;">
+                            {{^usesnumber}} 
+                            <td colspan="4" class="text-right"><span data-label="payed" >Внесена оплата:</span></td>
+                            {{/usesnumber}} 
+                            {{#usesnumber}} 
+                            <td colspan="6" class="text-right"><span data-label="payed" >Внесена оплата:</span></td>
+                            {{/usesnumber}} 
 
+                            <td zippy="payed" class="text-right"></td>
+                            <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i class="fa fa-edit"></i></a>  </td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -111,6 +118,30 @@
 
                 </div>
             </div>
+            
+            <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Оплата</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editpayed" pattern="[0-9\.]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
         </form>
         <form zippy="editdetail">
             <h4>Ввод товара </h4>

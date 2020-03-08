@@ -143,8 +143,8 @@ class Invoice extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
-                        $this->docform->order->setText($basedoc->document_number);
-
+                        
+                        $this->docform->notes->setText("счет  к  заказу ".$basedoc->document_number);
                         $order = $basedoc->cast();
 
 
@@ -155,7 +155,7 @@ class Invoice extends \App\Pages\Base {
 
                         foreach ($order->unpackDetails('detaildata') as $item) {
 
-                            $this->_itemlist[$item->item_id] = $item;
+                            $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
                 }

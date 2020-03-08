@@ -113,7 +113,7 @@ class InvoiceCust extends \App\Pages\Base {
 
                         $order = $basedoc->cast();
 
-                        foreach ($order->unpackDetails('detaildata') as $_item) {
+                        foreach ($order->unpackDetails('detaildata') as $item) {
 
                             $this->_itemlist[$item->item_id] = $item;
                         }
