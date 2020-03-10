@@ -13,7 +13,8 @@ use \Zippy\Html\Label;
 use \Zippy\WebApplication as App;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
-use \Zippy\Html\Link\ClickLink;
+use \Zippy\Html\Link\ClickLink; 
+use \App\Helper as H;
 
 class Items extends \App\Pages\Base {
 
@@ -37,7 +38,9 @@ class Items extends \App\Pages\Base {
         $this->add(new Form('exportform'))->onSubmit($this, 'exportOnSubmit');
 
         $this->exportform->add(new DataView('newitemlist', new ArrayDataSource(new Prop($this, '_items')), $this, 'itemOnRow'));
-    
+        $this->exportform->newitemlist->setPageSize(H::getPG());
+        $this->exportform->add(new \Zippy\Html\DataList\Paginator('pag', $this->exportform->newitemlist));
+   
 
         $this->add(new ClickLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->add(new ClickLink('updateprice'))->onClick($this, 'onUpdatePrice');
