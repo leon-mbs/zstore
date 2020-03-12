@@ -27,7 +27,7 @@ class CategoryList extends \App\Pages\Base {
             return;
 
         $this->add(new Panel('categorytable'))->setVisible(true);
-        $this->categorytable->add(new DataView('categorylist', new \ZCL\DB\EntityDataSource('\App\Entity\Category'), $this, 'categorylistOnRow'))->Reload();
+        $this->categorytable->add(new DataView('categorylist', new \ZCL\DB\EntityDataSource('\App\Entity\Category','','cat_name'), $this, 'categorylistOnRow'))->Reload();
         $this->categorytable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('categorydetail'))->setVisible(false);
         $this->categorydetail->add(new TextInput('editcat_name'));
