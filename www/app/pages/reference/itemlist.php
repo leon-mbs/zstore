@@ -40,7 +40,7 @@ class ItemList extends \App\Pages\Base {
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->itemlist->setPageSize(5);
+        $this->itemtable->itemlist->setPageSize(H::getPG());
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->itemlist));
 
         $this->add(new Form('itemdetail'))->setVisible(false);
@@ -450,7 +450,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         if ($cat > 0) {
             $where = $where . " and cat_id=" . $cat;
         }
-        if ($showdis > 0) {
+        if ($showdis == true) {
             
         } else {
             $where = $where . " and disabled <> 1";
