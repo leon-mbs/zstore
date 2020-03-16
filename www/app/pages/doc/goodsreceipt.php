@@ -38,6 +38,9 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $common = System::getOptions("common");
 
+        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 7:5;
+        
+        
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
@@ -52,10 +55,6 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList( true, true), H::getDefMF()))->onChange($this, 'OnPayment');
 
-        $this->docform->add(new DropDownChoice('val', array(1 => 'Гривна', 2 => 'Доллар', 3 => 'Евро', 4 => 'Рубль')))->onChange($this, "onVal", true);
-        $this->docform->add(new Label('course', 'Курс 1'));
-        $this->docform->val->setVisible($common['useval'] == true);
-        $this->docform->course->setVisible($common['useval'] == true);
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -65,12 +64,20 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+        $this->docform->add(new TextInput('editnds', "0"));
+        $this->docform->add(new SubmitButton('bnds'))->onClick($this, 'onNds');
+        $this->docform->add(new TextInput('editrate', "1"));
+        $this->docform->add(new SubmitButton('brate'))->onClick($this, 'onRate');
+        $this->docform->add(new TextInput('editdisc', "0"));
+        $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
 
+        $this->docform->add(new Label('nds', 0));
+        $this->docform->add(new Label('rate', 1));
+        $this->docform->add(new Label('disc', 0));
         $this->docform->add(new Label('payed', 0));
-
         $this->docform->add(new Label('payamount', 0));
-
         $this->docform->add(new Label('total'));
+        
         $this->docform->add(new \Zippy\Html\Form\File('scan'));
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -106,6 +113,12 @@ class GoodsReceipt extends \App\Pages\Base {
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
+            $this->docform->nds->setText($this->_doc->headerdata['nds']);
+            $this->docform->editnds->setText($this->_doc->headerdata['nds']);
+            $this->docform->rate->setText($this->_doc->headerdata['rate']);
+            $this->docform->editrate->setText($this->_doc->headerdata['rate']);
+            $this->docform->disc->setText($this->_doc->headerdata['disc']);
+            $this->docform->editdisc->setText($this->_doc->headerdata['disc']);
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -116,11 +129,8 @@ class GoodsReceipt extends \App\Pages\Base {
 
             $this->docform->total->setText($this->_doc->amount);
 
-            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
-
-                $item->old = true;
-                $this->_itemlist[$item->item_id] = $item;
-            }
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
         } else {
             $this->_doc = Document::create('GoodsReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -189,21 +199,7 @@ class GoodsReceipt extends \App\Pages\Base {
             return;
     }
 
-    public function onVal($sender) {
-        $val = $sender->getValue();
-        $common = System::getOptions("common");
-
-        if ($val == 1)
-            $this->docform->course->setText('Курс 1');
-        if ($val == 2)
-            $this->docform->course->setText('Курс  ' . $common['cdoll']);
-        if ($val == 3)
-            $this->docform->course->setText('Курс  ' . $common['ceuro']);
-        if ($val == 4)
-            $this->docform->course->setText('Курс  ' . $common['crub']);
-
-        $this->updateAjax(array('course'));
-    }
+ 
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
@@ -218,7 +214,6 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->edit->setVisible($item->old != true);
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -371,6 +366,9 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['rate'] = $this->docform->rate->getValue();
+        $this->_doc->headerdata['nds'] = $this->docform->nds->getValue();
+        $this->_doc->headerdata['disc'] = $this->docform->disc->getValue();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
@@ -394,28 +392,7 @@ class GoodsReceipt extends \App\Pages\Base {
         }
 
         $common = System::getOptions("common");
-        foreach ($this->_itemlist as $item) {
-            if ($item->old == true)
-                continue;
-            if ($common['useval'] != true)
-                continue;
-
-            if ($this->docform->val->getValue() == 2) {
-                $item->price = round($item->price * $common['cdoll']);
-                $item->curname = 'cdoll';
-                $item->currate = $common['cdoll'];
-            }
-            if ($this->docform->val->getValue() == 3) {
-                $item->price = round($item->price * $common['ceuro']);
-                $item->curname = 'ceuro';
-                $item->currate = $common['ceuro'];
-            }
-            if ($this->docform->val->getValue() == 4) {
-                $item->price = round($item->price * $common['crub']);
-                $item->curname = 'crub';
-                $item->currate = $common['crub'];
-            }
-        }
+ 
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
@@ -485,7 +462,6 @@ class GoodsReceipt extends \App\Pages\Base {
 
     public function onPayAmount($sender) {
 
-
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->docform->payed->setText($this->docform->editpayamount->getText());
         $this->docform->editpayed->setText($this->docform->editpayamount->getText());
@@ -500,6 +476,9 @@ class GoodsReceipt extends \App\Pages\Base {
     public function OnPayment($sender) {
         $this->docform->payed->setVisible(true);
         $this->docform->payamount->setVisible(true);
+        $this->docform->nds->setVisible(true);
+        $this->docform->rate->setVisible(true);
+        $this->docform->disc->setVisible(true);
 
 
         $b = $sender->getValue();
@@ -508,12 +487,34 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
+            $this->docform->nds->setVisible(false);
+            $this->docform->rate->setVisible(false);
+            $this->docform->disc->setVisible(false);
+            
         }
         if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->docform->payed->setVisible(false);
         }
     }
-
+ 
+ 
+    public function onDisc($sender) {
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
+        $this->CalcPay() ;
+        $this->goAnkor("tankor");
+    }
+    public function onNds($sender) {
+        $this->docform->nds->setText(H::fa($this->docform->editnds->getText()));
+        $this->CalcPay() ;
+        $this->goAnkor("tankor");
+    }
+    public function onRate($sender) {
+        $this->docform->rate->setText(H::fa($this->docform->editrate->getText()));
+        $this->CalcPay() ;
+        $this->goAnkor("tankor");
+    }
+ 
+  
     /**
      * Расчет  итого
      *
@@ -531,6 +532,12 @@ class GoodsReceipt extends \App\Pages\Base {
 
     private function CalcPay() {
         $total = $this->docform->total->getText();
+        $disc  = $this->docform->disc->getText();
+        $nds   = $this->docform->nds->getText();
+        $rate  = $this->docform->rate->getText();
+        $total = $total + $nds - $disc;  
+        if($rate > 0)   $total = $total * $rate;
+        
         $this->docform->editpayamount->setText(round($total));
         $this->docform->payamount->setText(round($total));
         $this->docform->editpayed->setText(round($total));

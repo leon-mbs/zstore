@@ -48,10 +48,6 @@ class Options extends \App\Pages\Base {
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('useimages'));
         $this->common->add(new CheckBox('usebranch'));
-        $this->common->add(new CheckBox('useval'))->onChange($this, "onVal");
-        $this->common->add(new TextInput('cdoll'));
-        $this->common->add(new TextInput('ceuro'));
-        $this->common->add(new TextInput('crub'));
         $this->common->add(new TextInput('price1'));
         $this->common->add(new TextInput('price2'));
         $this->common->add(new TextInput('price3'));
@@ -68,9 +64,6 @@ class Options extends \App\Pages\Base {
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
 
-        $this->common->cdoll->setText($common['cdoll']);
-        $this->common->ceuro->setText($common['ceuro']);
-        $this->common->crub->setText($common['crub']);
         $this->common->price1->setText($common['price1']);
         $this->common->price2->setText($common['price2']);
         $this->common->price3->setText($common['price3']);
@@ -83,14 +76,13 @@ class Options extends \App\Pages\Base {
         $this->common->useset->setChecked($common['useset']);
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
-        $this->common->useval->setChecked($common['useval']);
+
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
         // $this->common->closeddate->setDate($common['closeddate']);
 
 
-        $this->onVal($this->common->useval);
 
         $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
         $this->firm->add(new TextInput('firmname'));
@@ -159,18 +151,7 @@ class Options extends \App\Pages\Base {
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
     }
 
-    public function onVal($sender) {
-        if ($sender->isChecked()) {
-            $this->common->cdoll->setVisible(true);
-            $this->common->ceuro->setVisible(true);
-            $this->common->crub->setVisible(true);
-        } else {
-            $this->common->cdoll->setVisible(false);
-            $this->common->ceuro->setVisible(false);
-            $this->common->crub->setVisible(false);
-        }
-    }
-
+ 
     public function saveCommonOnClick($sender) {
         $common = array();
 
@@ -178,9 +159,6 @@ class Options extends \App\Pages\Base {
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
 
-        $common['cdoll'] = $this->common->cdoll->getText();
-        $common['ceuro'] = $this->common->ceuro->getText();
-        $common['crub'] = $this->common->crub->getText();
         $common['price1'] = $this->common->price1->getText();
         $common['price2'] = $this->common->price2->getText();
         $common['price3'] = $this->common->price3->getText();
@@ -188,21 +166,20 @@ class Options extends \App\Pages\Base {
         $common['price5'] = $this->common->price5->getText();
         $common['defprice'] = $this->common->defprice->getText();
 
-        $common['autoarticle'] = $this->common->autoarticle->isChecked();
-        $common['useset'] = $this->common->useset->isChecked();
+        $common['autoarticle'] = $this->common->autoarticle->isChecked() ?1:0;
+        $common['useset'] = $this->common->useset->isChecked()?1:0;
 
-        $common['usesnumber'] = $this->common->usesnumber->isChecked();
-        $common['useval'] = $this->common->useval->isChecked();
-        $common['usescanner'] = $this->common->usescanner->isChecked();
-        $common['useimages'] = $this->common->useimages->isChecked();
-        $common['usebranch'] = $this->common->usebranch->isChecked();
+        $common['usesnumber'] = $this->common->usesnumber->isChecked()?1:0;
+        $common['usescanner'] = $this->common->usescanner->isChecked()?1:0;
+        $common['useimages'] = $this->common->useimages->isChecked()?1:0;
+        $common['usebranch'] = $this->common->usebranch->isChecked()?1:0;
 
         // $common['closeddate'] = $this->common->closeddate->getDate();
 
         System::setOptions("common", $common);
 
         $this->setSuccess('Сохранено');
-        $this->_tvars["defoptions"] = false;
+         
     }
 
     public function saveFirmOnClick($sender) {

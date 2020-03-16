@@ -38,6 +38,11 @@ class GoodsIssue extends \App\Pages\Base {
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
+        $common = System::getOptions("common");
+
+        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 7:5;
+        
+        
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 

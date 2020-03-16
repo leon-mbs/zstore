@@ -143,47 +143,35 @@
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
 
-                            {{^usesnumber}} 
-                            <td colspan="5" class="text-right">Всего:</td>
-                            {{/usesnumber}} 
-                            {{#usesnumber}} 
-                            <td colspan="7" class="text-right">Всего:</td>
-                            {{/usesnumber}} 
+                            
+                            <td colspan={{colspan}} class="text-right">Всего:</td>
+                    
 
                             <td zippy="total"  class="text-right"></td>
                             <td></td>
                         </tr>
 
                         <tr style="font-weight: bolder;" >
-                            {{^usesnumber}} 
-                            <td colspan="5" class="text-right"><span data-label="paydisc" >Скидка:</span></td>
-                            {{/usesnumber}} 
-                            {{#usesnumber}} 
-                            <td colspan="7" class="text-right"><span data-label="paydisc" >Скидка:</span></td>
-                            {{/usesnumber}} 
+                            
+                            <td colspan={{colspan}} class="text-right"><span data-label="paydisc" >Скидка:</span></td>
+                       
 
 
                             <td zippy="paydisc" class="text-right"></td>
                             <td> <a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i class="fa fa-edit"></i></a>   </td>
                         </tr>  
                         <tr style="font-weight: bolder;">
-                            {{^usesnumber}} 
-                            <td colspan="5" class="text-right"><span data-label="payamount" >К оплате:</span></td>
-                            {{/usesnumber}} 
-                            {{#usesnumber}} 
-                            <td colspan="7" class="text-right"><span data-label="payamount" >К оплате:</span></td>
-                            {{/usesnumber}} 
+                          
+                            <td colspan={{colspan}} class="text-right"><span data-label="payamount" >К оплате:</span></td>
+                 
 
                             <td zippy="payamount" class="text-right"></td>
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i class="fa fa-edit"></i></a> </td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            {{^usesnumber}} 
-                            <td colspan="5" class="text-right"><span data-label="payed" >Внесена оплата:</span></td>
-                            {{/usesnumber}} 
-                            {{#usesnumber}} 
-                            <td colspan="7" class="text-right"><span data-label="payed" >Внесена оплата:</span></td>
-                            {{/usesnumber}} 
+                           
+                            <td colspan={{colspan}} class="text-right"><span data-label="payed" >Внесена оплата:</span></td>
+                         
 
                             <td zippy="payed" class="text-right"></td>
                             <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i class="fa fa-edit"></i></a> </td>
