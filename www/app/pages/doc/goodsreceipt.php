@@ -64,6 +64,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+     
         $this->docform->add(new TextInput('editnds', "0"));
         $this->docform->add(new SubmitButton('bnds'))->onClick($this, 'onNds');
         $this->docform->add(new TextInput('editrate', "1"));
@@ -74,10 +75,10 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->docform->add(new Label('nds', 0));
         $this->docform->add(new Label('rate', 1));
         $this->docform->add(new Label('disc', 0));
+     
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
         $this->docform->add(new Label('total'));
-        
         $this->docform->add(new \Zippy\Html\Form\File('scan'));
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -366,9 +367,9 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-        $this->_doc->headerdata['rate'] = $this->docform->rate->getValue();
-        $this->_doc->headerdata['nds'] = $this->docform->nds->getValue();
-        $this->_doc->headerdata['disc'] = $this->docform->disc->getValue();
+        $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
+        $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
+        $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
@@ -536,7 +537,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $nds   = $this->docform->nds->getText();
         $rate  = $this->docform->rate->getText();
         $total = $total + $nds - $disc;  
-        if($rate > 0)   $total = $total * $rate;
+       // if($rate > 0)   $total = $total * $rate;
         
         $this->docform->editpayamount->setText(round($total));
         $this->docform->payamount->setText(round($total));
@@ -583,7 +584,7 @@ class GoodsReceipt extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and   (customer_name like {$text}  or phone like {$text} )");
+        return Customer::findArray("customer_name", "status=0 and   (customer_name like {$text}  or phone like {$text} ) and   (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' ) ");
     }
 
     //добавление нового товара

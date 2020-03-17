@@ -48,9 +48,28 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
     {{^prepaid}}
+    {{#isdisc}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="7" align="right">К оплате:</td>
-        <td style="border-top:1px #000 solid;" align="right">{{payamount}}</td>
+        <td   colspan="7" align="right">Скидка:</td>
+        <td   align="right">{{disc}}</td>
+    </tr>
+     {{/isdisc}}    
+    {{#isnds}}
+    <tr style="font-weight: bolder;">
+        <td   colspan="7" align="right">НДС:</td>
+        <td   align="right">{{nds}}</td>
+    </tr>
+     {{/isnds}}    
+    {{#israte}}
+    <tr style="font-weight: bolder;">
+        <td   colspan="7" align="right">Курс:</td>
+        <td   align="right">{{rate}}</td>
+    </tr>
+     {{/israte}}    
+
+   <tr style="font-weight: bolder;">
+        <td  colspan="7" align="right">К оплате:</td>
+        <td   align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
         <td   colspan="7" align="right">Оплата:</td>

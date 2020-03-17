@@ -462,7 +462,7 @@ class Invoice extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} ) and   (detail like '%<type>1</type>%'  or detail like '%<type>0</type>%' ) ");
     }
 
     public function OnChangeCustomer($sender) {

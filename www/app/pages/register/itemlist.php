@@ -154,7 +154,7 @@ class ItemList extends \App\Pages\Base {
                 $row->sedate->setText(date('Y-m-d', $term));
             }
         }
-        $row->add(new Label('partion', $stock->partion));
+        $row->add(new Label('partion', H::fa($stock->partion)));
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
         $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
