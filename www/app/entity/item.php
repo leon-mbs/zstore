@@ -16,8 +16,7 @@ class Item extends \ZCL\DB\Entity {
     protected function init() {
         $this->item_id = 0;
         $this->cat_id = 0;
-        $this->curname = '';
-        $this->currate = 0;
+ 
         $this->price = 0;
         $this->image_id = 0;
     }
@@ -32,8 +31,6 @@ class Item extends \ZCL\DB\Entity {
         $this->price3 = (string) ($xml->price3[0]);
         $this->price4 = (string) ($xml->price4[0]);
         $this->price5 = (string) ($xml->price5[0]);
-        $this->curname = (string) ($xml->curname[0]);
-        $this->currate = doubleval($xml->currate[0]);
         $this->pricelist = (int) $xml->pricelist[0];
         $this->useserial = (int) $xml->useserial[0];
         $this->image_id = (int) $xml->image_id[0];
@@ -85,8 +82,6 @@ class Item extends \ZCL\DB\Entity {
         $this->detail .= "<price4>{$this->price4}</price4>";
         $this->detail .= "<price5>{$this->price5}</price5>";
 
-        $this->detail .= "<curname>{$this->curname}</curname>";
-        $this->detail .= "<currate>{$this->currate}</currate>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
 
 
@@ -178,9 +173,7 @@ class Item extends \ZCL\DB\Entity {
             }
         }
 
-
-
-
+  
 
         //если не  задано используем глобальную наценку
         if ($common['defprice'] > 0 && $price == 0) {
@@ -195,20 +188,7 @@ class Item extends \ZCL\DB\Entity {
 
         //поправка  по  валюте
 
-        if ($common['useval'] == true) {
-            $k = 1;
-            if ($common['cdoll'] > 0 && $this->currate > 0 && $this->curname == 'cdoll') {
-                $k = $common['cdoll'] / $this->currate;
-            }
-            if ($common['ceuro'] > 0 && $this->currate > 0 && $this->curname == 'ceuro') {
-                $k = $common['ceuro'] / $this->currate;
-            }
-            if ($common['crub'] > 0 && $this->currate > 0 && $this->curname == 'crub') {
-                $k = $common['crub'] / $this->currate;
-            }
-
-            $price = $price * $k;
-        }
+ 
 
 
         return \App\Helper::fa($price);

@@ -44,8 +44,14 @@ class GoodsReceipt extends Document {
             "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
-
-
+ 
+        $header['isdisc'] = $this->headerdata["disc"] > 0;
+        $header['isnds']  = $this->headerdata["nds"] > 0;
+        $header['israte'] = ($this->headerdata["rate"] != 0 ) && ($this->headerdata["rate"] != 1 );
+        $header['disc'] = H::fa($this->headerdata["disc"]);
+        $header['nds']  = H::fa($this->headerdata["nds"]);
+        $header['rate'] = $this->headerdata["rate"] ;
+        
         $report = new \App\Report('goodsreceipt.tpl');
 
         $html = $report->generate($header);
@@ -56,11 +62,27 @@ class GoodsReceipt extends Document {
     public function Execute() {
         $types = array();
         $common = \App\System::getOptions("common");
-
+        if($this->amount==0) return;
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
+         
+             
+            $total=$this->amount;
+             
+            if($this->headerdata["disc"] > 0) {
+                $total = $total - $this->headerdata["disc"];
+            }  
+            if($this->headerdata["nds"] > 0) {
+                $total = $total + $this->headerdata["nds"];
+            }  
+            if(($this->headerdata["rate"] != 0 ) && ($this->headerdata["rate"] != 1 )) {
+                $total = $total * $this->headerdata["rate"];
+            }  
+            $k = $total / $this->amount; 
+            $item->price = $item->price*$k;
+               
+            $item->amount =   $item->price * $item->quantity;    
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
-
 
             $sc = new Entry($this->document_id, $item->amount, $item->quantity);
             $sc->setStock($stock->stock_id);
@@ -70,14 +92,7 @@ class GoodsReceipt extends Document {
             $sc->save();
 
 
-            if ($common['useval'] == true) {
-                // if($row['old']==true)continue;  //не  меняем для  предыдущих строк
-                //запоминаем курс  последней покупки
-                $it = \App\Entity\Item::load($item->item_id);
-                $it->curname = $item->curname;
-                $it->currate = $item->currate;
-                $it->save();
-            }
+ 
         }
 
 

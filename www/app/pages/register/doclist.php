@@ -98,7 +98,7 @@ class DocList extends \App\Pages\Base {
         $this->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new TextInput('refcomment'));
 
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->add(new ClickLink('csv', $this, 'oncsv'));     
     }
 
     public function onErase($sender) {
@@ -405,7 +405,7 @@ class DocList extends \App\Pages\Base {
         flush();
         die;
     }
-
+    
 }
 
 /**
@@ -456,5 +456,5 @@ class DocDataSource implements \Zippy\Interfaces\DataSource {
     public function getItem($id) {
         
     }
-
+    
 }

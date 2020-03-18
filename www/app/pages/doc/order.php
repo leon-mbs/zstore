@@ -346,7 +346,7 @@ class Order extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} ) and   (detail like '%<type>1</type>%'  or detail like '%<type>0</type>%' ) ");
     }
 
     public function OnChangeCustomer($sender) {
@@ -404,6 +404,8 @@ class Order extends \App\Pages\Base {
                 return;
             }
         }
+      
+        $cust->type = 1;
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);

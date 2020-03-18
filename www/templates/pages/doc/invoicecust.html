@@ -78,11 +78,27 @@
                             <td zippy="total" class="text-right"></td>
                             <td> </td>
                         </tr>
-                        <tr style="font-weight: bolder;">
+                         <tr style="font-weight: bolder;" id="tankor">
+                            <td data-label="nds" colspan="5" class="text-right">НДС:</td>
+                            <td  zippy="nds"  class="text-right"></td>
+                            <td  data-label="nds"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i class="fa fa-edit"></i></a></td>
+                        </tr>
+                        <tr style="font-weight: bolder;" id="tankor">
+                            <td data-label="disc" colspan="5" class="text-right">Скидка:</td>
+                            <td zippy="disc"   class="text-right"></td>
+                            <td  data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i class="fa fa-edit"></i></a></td>
+                        </tr>
+                        <tr style="font-weight: bolder;" id="tankor">
+                            <td data-label="rate" colspan="5" class="text-right">Курс валюты:</td>
+                            <td zippy="rate" class="text-right"></td>
+                            <td  data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i class="fa fa-edit"></i></a></td>
+                        </tr>
+                          <tr style="font-weight: bolder;">
                             <td colspan="5" class="text-right">К оплате:</td>
                             <td zippy="payamount" class="text-right"></td>
                             <td><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i class="fa fa-edit"></i></a> </td>
                         </tr>
+                     
                         <tr style="font-weight: bolder;">
                             <td colspan="5" class="text-right">Внесена оплата:</td>
                             <td zippy="payed" class="text-right"></td>
@@ -133,6 +149,79 @@
                     </div>
                 </div>
             </div>
+  
+            <div id="modalnds" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">НДС</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editnds" pattern="[0-9\.]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bnds" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+  
+          <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Скидка</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editdisc" pattern="[0-9\.]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bdisc" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+             
+            
+            <div id="modalrate" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Курс валюты</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group  ">  
+                                <input class="form-control" type="text" zippy="editrate" pattern="[0-9\.]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="brate" class="ml-2 btn btn-info  ">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+             
+            
             <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -155,6 +244,9 @@
                     </div>
                 </div>
             </div>
+        
+  
+  
         </form>
 
 

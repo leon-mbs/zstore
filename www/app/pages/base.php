@@ -175,5 +175,5 @@ class Base extends \Zippy\Html\WebPage {
     protected final function resetURL() {
         \App\Application::$app->setReloadPage();
     }
-
+  
 }

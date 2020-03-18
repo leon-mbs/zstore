@@ -55,6 +55,18 @@ class InvoiceCust extends \App\Pages\Base {
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
 
+        $this->docform->add(new TextInput('editnds', "0"));
+        $this->docform->add(new SubmitButton('bnds'))->onClick($this, 'onNds');
+        $this->docform->add(new TextInput('editrate', "1"));
+        $this->docform->add(new SubmitButton('brate'))->onClick($this, 'onRate');
+        $this->docform->add(new TextInput('editdisc', "0"));
+        $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
+        
+        $this->docform->add(new Label('nds', 0));
+        $this->docform->add(new Label('rate', 1));
+        $this->docform->add(new Label('disc', 0));
+       
+        
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
         $this->docform->add(new Label('total'));
@@ -87,6 +99,12 @@ class InvoiceCust extends \App\Pages\Base {
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
+            $this->docform->nds->setText($this->_doc->headerdata['nds']);
+            $this->docform->editnds->setText($this->_doc->headerdata['nds']);
+            $this->docform->rate->setText($this->_doc->headerdata['rate']);
+            $this->docform->editrate->setText($this->_doc->headerdata['rate']);
+            $this->docform->disc->setText($this->_doc->headerdata['disc']);
+            $this->docform->editdisc->setText($this->_doc->headerdata['disc']);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -229,6 +247,12 @@ class InvoiceCust extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
+     
+        $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
+        $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
+        $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
+     
+     
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
         }
@@ -307,6 +331,7 @@ class InvoiceCust extends \App\Pages\Base {
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
+     
     }
 
     public function onPayed($sender) {
@@ -326,16 +351,40 @@ class InvoiceCust extends \App\Pages\Base {
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
+        
     }
 
     private function CalcPay() {
-        $total = $this->docform->total->getText();
+         $total = $this->docform->total->getText();
+     
+        $nds   = $this->docform->nds->getText();
+        $disc  = $this->docform->disc->getText();
+        $total = $total + $nds - $disc;  
+      
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
     }
 
+    
+    public function onDisc($sender) {
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
+        $this->CalcPay() ;
+        $this->goAnkor("tankor");
+    }
+    public function onNds($sender) {
+        $this->docform->nds->setText(H::fa($this->docform->editnds->getText()));
+        $this->CalcPay() ;
+        $this->goAnkor("tankor");
+    }
+    public function onRate($sender) {
+        $this->docform->rate->setText(H::fa($this->docform->editrate->getText()));
+        $this->CalcPay() ;
+        $this->goAnkor("tankor");
+    }
+    
+    
     /**
      * Валидация   формы
      *
@@ -373,7 +422,7 @@ class InvoiceCust extends \App\Pages\Base {
 
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
+        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} ) and   (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' ) ");
     }
 
     //добавление нового товара

@@ -31,7 +31,7 @@ class UserProfile extends \App\Pages\Base {
         $form->add(new TextInput('email', $this->user->email));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
-        $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100, 200 => 200), $this->user->pagesize));
+        $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100 ), $this->user->pagesize));
 
         $w = "";
         if ($this->user->acltype == 2) {
