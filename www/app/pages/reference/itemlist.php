@@ -446,7 +446,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         $this->page = $page;
     }
 
-    private function getWhere() {
+    private function getWhere($p=false) {
 
         $form = $this->page->filter;
         $where = "1=1";
@@ -463,8 +463,13 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
             $where = $where . " and disabled <> 1";
         }
         if (strlen($text) > 0) {
-            $text = Item::qstr('%' . $text . '%');
-            $where = $where . " and (itemname like {$text} or item_code like {$text} )  ";
+            if($p==false) {
+              $text = Item::qstr('%' . $text . '%');
+              $where = $where . " and (itemname like {$text} or item_code like {$text} )  ";
+            } else {
+              $text = Item::qstr($text);
+              $where = $where . " and (itemname = {$text} or item_code = {$text} )  ";
+            }
         }
         return $where;
     }
@@ -474,7 +479,12 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return Item::find($this->getWhere(), "itemname asc", $count, $start);
+        $l= Item::find($this->getWhere( true), "itemname asc", $count, $start);
+        $f = Item::find($this->getWhere(), "itemname asc", $count, $start);
+        foreach($f as $k=>$v){
+            $l[$k]= $v;
+        }
+        return $l;
     }
 
     public function getItem($id) {

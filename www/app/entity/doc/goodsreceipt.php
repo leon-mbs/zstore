@@ -92,14 +92,7 @@ class GoodsReceipt extends Document {
             $sc->save();
 
 
-            if ($common['useval'] == true) {
-                // if($row['old']==true)continue;  //не  меняем для  предыдущих строк
-                //запоминаем курс  последней покупки
-                $it = \App\Entity\Item::load($item->item_id);
-                $it->curname = $item->curname;
-                $it->currate = $item->currate;
-                $it->save();
-            }
+ 
         }
 
 

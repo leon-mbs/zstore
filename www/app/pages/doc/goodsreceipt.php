@@ -162,6 +162,12 @@ class GoodsReceipt extends \App\Pages\Base {
                         $invoice = $basedoc->cast();
                         $this->docform->basedoc->setText('Счет ' . $invoice->document_number);
                         $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
+                        $this->docform->nds->setText($this->$invoice->headerdata['nds']);
+                        $this->docform->editnds->setText($this->$invoice->headerdata['nds']);
+                        $this->docform->rate->setText($this->$invoice->headerdata['rate']);
+                        $this->docform->editrate->setText($this->$invoice->headerdata['rate']);
+                        $this->docform->disc->setText($this->$invoice->headerdata['disc']);
+                        $this->docform->editdisc->setText($this->$invoice->headerdata['disc']);
 
 
                         foreach ($invoice->unpackDetails('detaildata') as $_item) {
@@ -535,7 +541,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $total = $this->docform->total->getText();
         $disc  = $this->docform->disc->getText();
         $nds   = $this->docform->nds->getText();
-        $rate  = $this->docform->rate->getText();
+
         $total = $total + $nds - $disc;  
        // if($rate > 0)   $total = $total * $rate;
         

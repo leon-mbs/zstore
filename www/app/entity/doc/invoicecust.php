@@ -36,7 +36,13 @@ class InvoiceCust extends Document {
             "payamount" => H::fa($this->payamount)
         );
 
-
+        $header['isdisc'] = $this->headerdata["disc"] > 0;
+        $header['isnds']  = $this->headerdata["nds"] > 0;
+        $header['israte'] = ($this->headerdata["rate"] != 0 ) && ($this->headerdata["rate"] != 1 );
+        $header['disc'] = H::fa($this->headerdata["disc"]);
+        $header['nds']  = H::fa($this->headerdata["nds"]);
+        $header['rate'] = $this->headerdata["rate"] ;
+    
         $report = new \App\Report('invoicecust.tpl');
 
         $html = $report->generate($header);
