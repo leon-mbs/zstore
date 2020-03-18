@@ -115,6 +115,8 @@ class ItemList extends \App\Pages\Base {
         } else {
             $this->addOnClick(null);
         }
+        
+                
     }
 
     public function itemlistOnRow($row) {
@@ -150,6 +152,8 @@ class ItemList extends \App\Pages\Base {
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
+        
+
     }
 
     public function deleteOnClick($sender) {

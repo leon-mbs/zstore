@@ -528,6 +528,7 @@ class Invoice extends \App\Pages\Base {
                 return;
             }
         }
+        $cust->type = 1;
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);

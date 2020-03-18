@@ -36,11 +36,10 @@ class PayBalance extends \App\Pages\Base {
         $this->filter->add(new Date('to', $to));
 
 
-        $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
-
+       
         $this->add(new Panel('detail'))->setVisible(false);
          $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-       $this->detail->add(new RedirectLink('html', "mfreport"));
+    
         $this->detail->add(new RedirectLink('word', "mfreport"));
         $this->detail->add(new RedirectLink('excel', "mfreport"));
         $this->detail->add(new RedirectLink('pdf', "mfreport"));
@@ -56,12 +55,11 @@ class PayBalance extends \App\Pages\Base {
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
-        // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $reportpage = "App/Pages/ShowReport";
         $reportname = "mfreport";
 
 
-          $this->detail->word->pagename = $reportpage;
+        $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
@@ -69,8 +67,7 @@ class PayBalance extends \App\Pages\Base {
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
-
-        $this->detail->preview->setText("<b >Загрузка...</b>", true);
+  
         \App\Session::getSession()->printform = "";
         \App\Session::getSession()->issubmit = true;
     }
@@ -153,20 +150,6 @@ class PayBalance extends \App\Pages\Base {
         return $html;
     }
 
-    public function OnAutoLoad($sender) {
-
-        if (\App\Session::getSession()->issubmit === true) {
-            $html = $this->generateReport();
-            \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-            $this->detail->preview->setText($html, true);
-            $this->updateAjax(array('preview'));
-        }
-    }
-
-    public function beforeRender() {
-        parent::beforeRender();
-
-        App::addJavaScript("\$('#autoclick').click()", true);
-    }
+  
 
 }
