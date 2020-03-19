@@ -87,7 +87,10 @@ class Base extends \Zippy\Html\WebPage {
             $this->_tvars["woocomerce"] = false;
         }
 
-        $this->_tvars["hideblock"] = false; //для скрытия блока разметки  в  шаблоне страниц 
+        //скрыть  боковое  меню
+        $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse':'hold-transition sidebar-mini sidebar-collapse';
+        //для скрытия блока разметки  в  шаблоне страниц                           
+        $this->_tvars["hideblock"] = false; 
     }
 
     public function LogoutClick($sender) {
