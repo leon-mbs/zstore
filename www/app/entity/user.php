@@ -20,6 +20,7 @@ class User extends \ZCL\DB\Entity {
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
+        $this->hidesidebar = 0;
         $this->pagesize = 25;
         $this->createdon = time();
     }
@@ -66,6 +67,7 @@ class User extends \ZCL\DB\Entity {
         $this->defstore = (int) $options['defstore'];
         $this->defmf = (int) $options['defmf'];
         $this->pagesize = (int) $options['pagesize'];
+        $this->hidesidebar = (int) $options['hidesidebar'];
 
         parent::afterLoad();
     }
@@ -93,6 +95,7 @@ class User extends \ZCL\DB\Entity {
         $options['defstore'] = $this->defstore;
         $options['defmf'] = $this->defmf;
         $options['pagesize'] = $this->pagesize;
+        $options['hidesidebar'] = $this->hidesidebar;
 
         $this->options = serialize($options);
 
