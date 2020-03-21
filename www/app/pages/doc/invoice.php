@@ -125,7 +125,7 @@ class Invoice extends \App\Pages\Base {
             $this->_prevcust = $this->_doc->customer_id;
             foreach ($this->_doc->unpackDetails('detaildata') as $_item) {
 
-                $this->_tovarlist[$item->item_id] = $item;
+                $this->_tovarlist[$item->item_id] = $_item;
             }
             $this->OnChangeCustomer($this->docform->customer);
         } else {
