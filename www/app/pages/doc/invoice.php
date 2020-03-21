@@ -123,10 +123,9 @@ class Invoice extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->_prevcust = $this->_doc->customer_id;
-            foreach ($this->_doc->unpackDetails('detaildata') as $_item) {
 
-                $this->_tovarlist[$item->item_id] = $_item;
-            }
+            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+
             $this->OnChangeCustomer($this->docform->customer);
         } else {
             $this->_doc = Document::create('Invoice');
@@ -153,10 +152,8 @@ class Invoice extends \App\Pages\Base {
 
                         $this->calcPay();
 
-                        foreach ($order->unpackDetails('detaildata') as $item) {
+                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
 
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
                     }
                 }
             }

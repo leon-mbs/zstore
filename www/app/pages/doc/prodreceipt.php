@@ -90,10 +90,9 @@ class ProdReceipt extends \App\Pages\Base {
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
-
-                            $this->_itemlist[$item->item_id] = $item;
-                        }                        
+  
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+ 
                     }
                 }
             }

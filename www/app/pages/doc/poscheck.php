@@ -194,10 +194,9 @@ class POSCheck extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                        foreach ($order->unpackDetails('detaildata') as $item) {
-
-                            $this->_itemlist[$item->item_id] = $item;
-                        }
+                     
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        
                     }
                  
                     if ($basedoc->meta_name == 'Invoice') {
@@ -216,11 +215,9 @@ class POSCheck extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                        foreach ($invoice->unpackDetails('detaildata') as $item) {
-
-                            $this->_itemlist[$item->item_id] = $item;
-                        }
-                        
+ 
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                       
                         
                         if($invoice->payamount>0){
                             $this->docform->payment->setValie(MoneyFund::PREPAID) ;// предоплата

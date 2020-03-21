@@ -110,7 +110,7 @@ class InvoiceCust extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->total->setText($this->_doc->amount);
-
+            
             foreach ($this->_doc->unpackDetails('detaildata') as $item) {
 
                 $item->old = true;
@@ -131,10 +131,8 @@ class InvoiceCust extends \App\Pages\Base {
 
                         $order = $basedoc->cast();
 
-                        foreach ($order->unpackDetails('detaildata') as $item) {
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                            $this->_itemlist[$item->item_id] = $item;
-                        }
                         $this->CalcTotal();
                         $this->CalcPay();
                     }

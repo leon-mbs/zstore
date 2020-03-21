@@ -86,7 +86,7 @@ class IncomeItem extends \App\Pages\Base {
                     if ($basedoc->meta_name == 'OutcomeItem') {
 
 
-                        foreach ($basedoc->unpackDetails('detaildata') as $_item) {
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
 
                             $item->old = false;
                             $this->_itemlist[$item->item_id . $item->snumber] = $item;

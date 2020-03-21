@@ -96,10 +96,8 @@ class RetCustIssue extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
-
-                $this->_tovarlist[$item->item_id] = $item;
-            }
+            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+ 
         } else {
             $this->_doc = Document::create('RetCustIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -113,11 +111,9 @@ class RetCustIssue extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
-
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
-                        
+    
+                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                      
                     }
                 }
                 $this->calcTotal();
