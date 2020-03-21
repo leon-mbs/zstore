@@ -21,7 +21,7 @@ class Invoice extends \App\Entity\Doc\Document {
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->antity;
+                $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $item->itemname,

@@ -66,10 +66,10 @@ class Inventory extends \App\Pages\Base {
 
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
-
-                $this->_itemlist[$item->item_id . $item->snumber] = $item;
-            }
+        
+           $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
+            
         } else {
             $this->_doc = Document::create('Inventory');
             $this->docform->document_number->setText($this->_doc->nextNumber());

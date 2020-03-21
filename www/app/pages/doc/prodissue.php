@@ -78,11 +78,9 @@ class ProdIssue extends \App\Pages\Base {
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 
             $this->docform->notes->setText($this->_doc->notes);
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
-            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
-
-                $this->_itemlist[$item->item_id] = $item;
-            }
+         
         } else {
             $this->_doc = Document::create('ProdIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -98,10 +96,9 @@ class ProdIssue extends \App\Pages\Base {
                     if ($basedoc->meta_name == 'ProdIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                 
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                            $this->_itemlist[$item->item_id] = $item;
-                        }                        
                     }
                 }
             }

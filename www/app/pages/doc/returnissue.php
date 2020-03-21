@@ -89,12 +89,10 @@ class ReturnIssue extends \App\Pages\Base {
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payed->setText(H::fa($this->_doc->payed));
             $this->docform->editpayed->setText(H::fa($this->_doc->payed));
-             $this->docform->total->setText(H::fa($this->_doc->amount));
+            $this->docform->total->setText(H::fa($this->_doc->amount));
 
-
-            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
-                $this->_tovarlist[$item->item_id] = $item;
-            }
+            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+ 
         } else {
             $this->_doc = Document::create('ReturnIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -109,10 +107,9 @@ class ReturnIssue extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
-
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
+ 
+                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+ 
                     }
                 }
                 $this->calcTotal();                

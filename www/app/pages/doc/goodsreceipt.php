@@ -147,11 +147,8 @@ class GoodsReceipt extends \App\Pages\Base {
 
                         $order = $basedoc->cast();
                         $this->docform->basedoc->setText('Заказ ' . $order->document_number);
-                        foreach ($order->unpackDetails('detaildata') as $_item) {
-
-                            $this->_itemlist[$item->item_id] = $_item;
-                        }
-                        $this->CalcTotal();
+                       $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                         $this->CalcTotal();
                         $this->CalcPay();
                     }
                     if ($basedoc->meta_name == 'InvoiceCust') {
@@ -170,11 +167,8 @@ class GoodsReceipt extends \App\Pages\Base {
                         $this->docform->editdisc->setText($this->$invoice->headerdata['disc']);
 
 
-                        foreach ($invoice->unpackDetails('detaildata') as $_item) {
-
-                            $this->_itemlist[$item->item_id] = $_item;
-                        }
-                        $this->CalcTotal();
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                         $this->CalcTotal();
                         $this->CalcPay();
                     }
                     $this->calcTotal();
@@ -188,11 +182,8 @@ class GoodsReceipt extends \App\Pages\Base {
                        
                         $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
 
-
-                        foreach ($basedoc->unpackDetails('detaildata') as $_item) {
-
-                            $this->_itemlist[$item->item_id] = $_item;
-                        }
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                         
                         $this->CalcTotal();
                         $this->CalcPay();
                     }
