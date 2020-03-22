@@ -25,8 +25,6 @@
         <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
 
         <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сумма</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -36,14 +34,10 @@
         <td  >{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
-        <td align="right">{{amount}}</td>
+        
     </tr>
     {{/_detail}}
-    <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="8" align="right">Итого:</td>
-        <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
-    </tr>
+  
 
 
 

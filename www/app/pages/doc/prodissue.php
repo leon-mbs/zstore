@@ -41,7 +41,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
+        
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
@@ -50,14 +50,14 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
-        $this->docform->add(new Label('total'));
+        
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
-        $this->editdetail->add(new TextInput('editprice'));
+   
         $this->editdetail->add(new TextInput('editserial'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
@@ -103,7 +103,7 @@ class ProdIssue extends \App\Pages\Base {
                 }
             }
         }
-        $this->calcTotal();
+         
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc))
             return;
@@ -117,11 +117,11 @@ class ProdIssue extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', H::fa($item->price)));
+        
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
-        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
+        
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
@@ -133,14 +133,14 @@ class ProdIssue extends \App\Pages\Base {
 
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
-        $this->calcTotal();
+       
         $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("0");
+        
         $this->docform->setVisible(false);
         $this->_rowid = 0;
     }
@@ -151,7 +151,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->setVisible(false);
 
         $this->editdetail->editquantity->setText($stock->quantity);
-        $this->editdetail->editprice->setText($stock->price);
+        
         $this->editdetail->editserial->setText($item->serial);
 
 
@@ -181,7 +181,7 @@ class ProdIssue extends \App\Pages\Base {
             $this->setWarn('Недостаточное  количество на  складе');
         }
 
-        $item->price = $this->editdetail->editprice->getText();
+        
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("Товар требует ввода партии производителя");
@@ -200,14 +200,14 @@ class ProdIssue extends \App\Pages\Base {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-        $this->calcTotal();
+        
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
 
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editserial->setText("");
-        $this->editdetail->editprice->setText("");
+        
     }
 
     public function cancelrowOnClick($sender) {
@@ -219,7 +219,7 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        
     }
 
     public function savedocOnClick($sender) {
@@ -232,9 +232,7 @@ class ProdIssue extends \App\Pages\Base {
             return;
         }
 
-        $this->calcTotal();
-
-
+    
 
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
@@ -243,7 +241,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
 
-        $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->amount = 0;
         $this->_doc->payamount = 0;
  
         $isEdited = $this->_doc->document_id > 0;
@@ -278,21 +276,7 @@ class ProdIssue extends \App\Pages\Base {
         }
     }
 
-    /**
-     * Расчет  итого
-     *
-     */
-    private function calcTotal() {
-
-        $total = 0;
-
-        foreach ($this->_itemlist as $item) {
-            $item->amount = $item->price * $item->quantity;
-
-            $total = $total + $item->amount;
-        }
-        $this->docform->total->setText(H::fa($total));
-    }
+ 
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
@@ -333,8 +317,6 @@ class ProdIssue extends \App\Pages\Base {
         } else {
 
 
-            $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
-            $item->price = $price;
             $item->quantity = 1;
 
             if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
@@ -357,7 +339,7 @@ class ProdIssue extends \App\Pages\Base {
                     $this->editdetail->edittovar->setText($item->itemname);
                     $this->editdetail->editserial->setText('');
                     $this->editdetail->editquantity->setText('1');
-                    $this->editdetail->editprice->setText($item->price);
+                    
 
 
 
@@ -369,7 +351,7 @@ class ProdIssue extends \App\Pages\Base {
             $this->_itemlist[$item->item_id] = $item;
         }
         $this->docform->detail->Reload();
-        $this->calcTotal();
+      
     }
 
     /**
@@ -406,16 +388,14 @@ class ProdIssue extends \App\Pages\Base {
 
     public function OnChangeItem($sender) {
 
-
         $id = $sender->getKey();
         $item = Item::load($id);
         $store_id = $this->docform->store->getValue();
-
-        $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+        
         $qty = $item->getQuantity($store_id);
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
-        $this->editdetail->editprice->setText($price);
+        
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $serial = '';
@@ -426,8 +406,7 @@ class ProdIssue extends \App\Pages\Base {
             $this->editdetail->editserial->setText($serial);
         }
 
-
-        $this->updateAjax(array('qtystock', 'editprice', 'editserial'));
+        $this->updateAjax(array('qtystock',   'editserial'));
     }
 
     public function OnAutoItem($sender) {

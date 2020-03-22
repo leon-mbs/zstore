@@ -59,7 +59,7 @@ class ProdReceipt extends Document {
         foreach ($this->unpackDetails('detaildata') as $item) {
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
 
-            $sc = new Entry($this->document_id, $item->amount, $item->quantity);
+            $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stock->stock_id);
 
             $sc->save();
