@@ -32,10 +32,11 @@ class ProdIssue extends Document {
                 $detail[] = array("no" => $i++,
                     "tovar_name" => $name,
                     "tovar_code" => $item->item_code,
-                    "quantity" => H::fqty($item->quantity),
-                    "price" => H::fa($item->price),
                     "msr" => $item->msr,
-                    "amount" => H::fa($item->quantity * $item->price)
+                    "quantity" => H::fqty($item->quantity)
+                  
+                    
+                    
                 );
             }
         }
@@ -46,7 +47,7 @@ class ProdIssue extends Document {
             "_detail" => $detail,
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
+           
             "notes" => $this->notes
         );
 
@@ -65,9 +66,9 @@ class ProdIssue extends Document {
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->setExtCode($item->price - $st->partion); //Для АВС 
+               
                 $sc->save();
             }
         }
@@ -79,7 +80,7 @@ class ProdIssue extends Document {
         return 'СП-000000';
     }
 
-        public function getRelationBased() {
+    public function getRelationBased() {
         $list = array();
         $list['ProdIssue'] = 'Cписание в  производство';
     
