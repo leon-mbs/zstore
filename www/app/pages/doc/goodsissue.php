@@ -227,7 +227,7 @@ class GoodsIssue extends \App\Pages\Base {
                          
                         
                         if($invoice->payamount>0){
-                            $this->docform->payment->setValie(MoneyFund::PREPAID) ;// предоплата
+                            $this->docform->payment->setValue(MoneyFund::PREPAID) ;// предоплата
                         }
                     }
                     
