@@ -30,10 +30,11 @@ class UserProfile extends \App\Pages\Base {
         $form->add(new Label('userlogin', $this->user->userlogin));
         $form->add(new TextInput('email', $this->user->email));
         $form->add(new CheckBox('hidesidebar',$this->user->hidesidebar));
+        $form->add(new CheckBox('popupmessage',$this->user->popupmessage));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100 ), $this->user->pagesize));
-
+ 
         $w = "";
         if ($this->user->acltype == 2) {
             if (strlen($this->user->aclview) > 0) {
@@ -66,10 +67,11 @@ class UserProfile extends \App\Pages\Base {
 
         $this->user->email = $sender->email->getText();
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1:0;
+        $this->user->popupmessage = $sender->popupmessage->isChecked() ? 1:0;
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
-
+   
         $smartmenu = array();
 
         foreach ($sender->mlist->getDataRows() as $row) {
