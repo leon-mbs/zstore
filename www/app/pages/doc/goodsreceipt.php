@@ -147,8 +147,8 @@ class GoodsReceipt extends \App\Pages\Base {
 
                         $order = $basedoc->cast();
                         $this->docform->basedoc->setText('Заказ ' . $order->document_number);
-                       $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                         $this->CalcTotal();
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->CalcTotal();
                         $this->CalcPay();
                     }
                     if ($basedoc->meta_name == 'InvoiceCust') {
@@ -159,12 +159,12 @@ class GoodsReceipt extends \App\Pages\Base {
                         $invoice = $basedoc->cast();
                         $this->docform->basedoc->setText('Счет ' . $invoice->document_number);
                         $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
-                        $this->docform->nds->setText($this->$invoice->headerdata['nds']);
-                        $this->docform->editnds->setText($this->$invoice->headerdata['nds']);
-                        $this->docform->rate->setText($this->$invoice->headerdata['rate']);
-                        $this->docform->editrate->setText($this->$invoice->headerdata['rate']);
-                        $this->docform->disc->setText($this->$invoice->headerdata['disc']);
-                        $this->docform->editdisc->setText($this->$invoice->headerdata['disc']);
+                        $this->docform->nds->setText($invoice->headerdata['nds']);
+                        $this->docform->editnds->setText($invoice->headerdata['nds']);
+                        $this->docform->rate->setText($invoice->headerdata['rate']);
+                        $this->docform->editrate->setText($invoice->headerdata['rate']);
+                        $this->docform->disc->setText($invoice->headerdata['disc']);
+                        $this->docform->editdisc->setText($invoice->headerdata['disc']);
 
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
