@@ -1,0 +1,85 @@
+<html >
+    <body >
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-6">
+                <h3>Формирование заказа</h3>
+                <form zippy="listform" method="post">
+                    <table class="table table-bordered" style="border-bottom: none;">
+                        <tr>
+                            <th style="width:64px">&nbsp;</th>
+                            <th  >Наименование</th>
+                            <th style="text-align: right;">Цeна</th>
+                            <th  >Кoл.</th>
+                            <th> </th>
+                        </tr>
+                        <tr zippy="pitem">
+                            <td><img zippy="photo" style="width: 64px;"  /> </td>
+                            <td><a zippy="pname"></a></td>
+                            <td  style="text-align: right;" zippy="price"></td>
+                            <td><input class="_number" style="width:50px" type="number"   zippy="quantity" /></td>
+                            <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                        <tr>
+                            <td   > </td>
+                            <td  style="text-align: right;"  ><b>Всего:</b></td>
+                            <td  style="text-align: right;"><b><span zippy="summa"></span></b></td>
+                            <td  ></td>
+                            <td  ></td>
+                        </tr>
+                    </table>
+
+                </form>
+            </div>   
+            <div class="w-100"></div>
+            <div class="col-12 col-md-8 col-lg-6">
+                <form zippy="orderform" method="post">
+                    <div class="form-group row">
+                        <label for="phone" class="col-4">Телефон</label>
+                        <div class="col-8">
+                            <input zippy="phone"   class="form-control" >
+                        </div>    
+                    </div>    
+                    <div class="form-group row">
+                        <label for="email" class="col-4">Email</label>
+                        <div class="col-8">
+                            <input zippy="email"   class="form-control" >
+                        </div>    
+                    </div>    
+
+                    <div class="form-group row">
+                        <label for="delivery" class="col-4">Доставка</label>
+                        <div class="col-8">
+                            <select  class="form-control" zippy="delivery"><option value="0">Выбрать</option></select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label data-label="address" for="address" class="col-4">Адрес</label>
+                        <div class="col-8">
+                            <input zippy="address"    class="form-control" >
+                        </div>    
+                    </div>                    
+                    <div class="form-group row">
+                        <label for="contact" class="col-4">Коментарий</label>
+                        <div class="col-8">
+                            <textarea zippy="contact"   class="form-control" ></textarea>
+                        </div>     
+                    </div>     
+                    <div class="form-group">
+                        <input type="submit"  class="btn btn-primary" value="Отправить" >
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>  
+
+        <script>
+            $("._number").bind('  change  ', function () {
+                $("#listform").submit();
+            });
+
+        </script>        
+
+    </body>
+</html>

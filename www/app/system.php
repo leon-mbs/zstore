@@ -84,12 +84,13 @@ class System {
      * @param mixed $options
      */
     public static function setOptions($group, $options) {
+        self::$_options[$group] = $options;
         $options = serialize($options);
         $conn = \ZDB\DB::getConnect();
 
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
-        self::$_options[$group] = $options;
+        
     }
 
     public static function setCache($key, $data) {
@@ -136,4 +137,6 @@ class System {
         return Session::getSession()->imsg;
     }
 
+    
+    
 }

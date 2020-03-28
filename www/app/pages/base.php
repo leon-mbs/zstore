@@ -28,7 +28,9 @@ class Base extends \Zippy\Html\WebPage {
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
+  
+         
+        
         $this->branch_id = Session::getSession()->branch_id;
         $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
         if (count($blist) == 1) {      //если  одна

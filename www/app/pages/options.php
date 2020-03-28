@@ -14,6 +14,7 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\System;
+use \App\Helper as H;
 use \App\Application as App;
 
 class Options extends \App\Pages\Base {
@@ -39,6 +40,7 @@ class Options extends \App\Pages\Base {
             "2" => "Отдельно  по каждой закупочной цене"
         );
         $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
+        $this->common->add(new DropDownChoice('lang', array('ru' => 'Русский','ua' => 'Українська'   ), 'ru'));
 
 
         $this->common->add(new CheckBox('autoarticle'));
@@ -63,6 +65,7 @@ class Options extends \App\Pages\Base {
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
+        $this->common->lang->setValue($common['lang']);
 
         $this->common->price1->setText($common['price1']);
         $this->common->price2->setText($common['price2']);
@@ -158,6 +161,7 @@ class Options extends \App\Pages\Base {
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
+        $common['lang'] = $this->common->lang->getValue();
 
         $common['price1'] = $this->common->price1->getText();
         $common['price2'] = $this->common->price2->getText();
@@ -178,8 +182,8 @@ class Options extends \App\Pages\Base {
 
         System::setOptions("common", $common);
 
-        $this->setSuccess('Сохранено');
-         
+        $this->setSuccess(H::l('msg_saved'));
+        System::setCache('labels',null) ;
     }
 
     public function saveFirmOnClick($sender) {

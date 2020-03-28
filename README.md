@@ -28,4 +28,4 @@ Zippy Store
 
 Домашняя страница:  [http://zippy.com.ua/zstore](https://zippy.com.ua/zstore)  
 
-Требования: PHP7.2+    Mysql 5.0+ 
+Требования: PHP7.2+    Mysql 5.1+ 
