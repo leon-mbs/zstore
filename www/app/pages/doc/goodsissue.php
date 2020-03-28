@@ -397,6 +397,8 @@ class GoodsIssue extends \App\Pages\Base {
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
+        $this->goAnkor("");
+            
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();

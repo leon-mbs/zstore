@@ -349,6 +349,7 @@ class GoodsReceipt extends \App\Pages\Base {
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
+        $this->goAnkor("");
 
         $firm = H::getFirmData($this->_doc->branch_id);
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
