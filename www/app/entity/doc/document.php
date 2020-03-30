@@ -273,13 +273,7 @@ class Document extends \ZCL\DB\Entity {
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
             
-            /*
-            $sql = "select coalesce( sum(amount),0) from paylist where document_id=" . $this->document_id;
-            $payed = $conn->GetOne($sql);
-            if ($payed != 0) {
-                \App\Entity\Pay::addPayment($this->document_id, 0 - $payed, $this->headerdata['payment'],  ($payed>0) \App\Entity\Pay::PAY_OTHER_OUTCOME ? : \App\Entity\Pay::PAY_OTHER_INCOME, 'Отмена  документа');
-            }
-            */
+ 
           
             // возвращаем бонусы
             if ($this->headerdata['paydisc'] > 0) {

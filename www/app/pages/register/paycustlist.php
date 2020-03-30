@@ -62,6 +62,7 @@ class PayCustList extends \App\Pages\Base {
         $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
+        $this->paypan->payform->add(new Date('pdate',time()));
 
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
@@ -213,6 +214,7 @@ class PayCustList extends \App\Pages\Base {
     public function payOnSubmit($sender) {
         $form = $this->paypan->payform;
         $amount = $form->pamount->getText();
+        $pdate = $form->pdate->getDate();
         if ($amount == 0)
             return;
 
@@ -229,7 +231,7 @@ class PayCustList extends \App\Pages\Base {
             $type = Pay::PAY_BASE_OUTCOME;
         }
 
-        Pay::addPayment($this->_doc->document_id, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
+        Pay::addPayment($this->_doc->document_id,$pdate, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
 
 
