@@ -5,10 +5,10 @@
         <div class="row ">
             <div class="col-10 col-lg-3 col-md-4">
 
-                <h4>Мой профиль</h4>
+                <h4>Мій профіль</h4>
                 <form role="form" zippy="profileform">
                     <div class="form-group">
-                        <label for="userlogin">Логин</label>
+                        <label for="userlogin">Логін</label>
                         <span zippy="userlogin" class="form-control-plaintext"></span>
                     </div>
 
@@ -17,42 +17,36 @@
                         <input type="email" class="form-control" zippy="email"  >
                     </div>
                     <div class="form-group  ">
-                        <label for="defstore" >Склад по умолчанию</label>
+                        <label for="defstore" >Склад за замовчуванням</label>
 
                         <select class="form-control" zippy="defstore">
-                            <option value='0'>Не выбран</option>
+                            <option value='0'>Не встановлено</option>
                         </select>
                     </div>  
                     <div class="form-group  ">
-                        <label for="defmf" >Денежный счет по умолчанию</label>
+                        <label for="defmf" >Грошовий рахунок за замовчуванням</label>
 
                         <select class="form-control" zippy="defmf">
-                            <option value='0'>Не выбран</option>
+                            <option value='0'>Не встановлено</option>
                         </select>
                     </div> 
                     <div class="form-group  ">
-                        <label for="pagesize" >Строк в таблицах с постраничным выводом </label>
+                        <label for="pagesize" >Рядків в таблицях з посторінковим висновком </label>
 
                         <select class="form-control" zippy="pagesize">
 
                         </select>
                     </div> 
- 
                     <div class="form-check">
                         <input zippy="hidesidebar" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="hidesidebar">Прятать боковое меню </label>
-                        
-                    </div>
-                    <div class="form-check">
-                        <input zippy="popupmessage" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="popupmessage">Всплывающие сообщения системы</label>
+                        <label class="form-check-label" for="hidesidebar">Ховати бічне меню </label>
                         
                     </div>
                     
                     
                     <div class="form-group  ">
                         <a   data-toggle="collapse" href="#collapsesmartmenu"   aria-expanded="false" aria-controls="collapseExample">
-                            <b>Оперативное меню  <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
+                            <b>Оперативне меню  <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
                         </a>  <br>
                         <div class="collapse" id="collapsesmartmenu">
 
@@ -69,13 +63,13 @@
                         </div> 
                     </div> 
                     <div class="form-group  ">
-                        <button type="submit" zippy="submitpass" class="btn btn-primary">Сохранить</button>
+                        <button type="submit" zippy="submitpass" class="btn btn-primary">Зберегти</button>
                     </div> 
                 </form>
             </div>
             <div class="col-10 col-lg-3 col-md-4">
 
-                <h4>Смена пароля</h4>
+                <h4>Зміна пароля</h4>
                 <form role="form" zippy="passwordform">
 
                     <div class="form-group">
@@ -84,27 +78,27 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="userpassword">Подтверждение</label>
+                        <label for="userpassword">Підтвердження</label>
                         <input type="password" class="form-control " zippy="confirmpassword" required="required">
                     </div>
 
-                    <button type="submit" zippy="submitpass" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" zippy="submitpass" class="btn btn-primary">Зберегти</button>
                 </form>
             </div>
             <div class="col-10 col-lg-3 col-md-4">        
 
-                <h4>Сообщение  пользователю</h4>   
+                <h4>Повідомлення користувачу</h4>   
                 <form zippy="msgform" role="form">
                     <div class="form-group  ">
-                        <label for="users" >Выбрать получателя</label>
+                        <label for="users" >Вибрати одержувача</label>
 
                         <select class="form-control select2" zippy="users">
-                            <option value='0'>Не выбран</option>
+                            <option value='0'>Не встановлено</option>
                         </select>
                     </div>  
                     <div class="form-check">
                         <input zippy="sendall" type="checkbox" class="form-check-input"  >
-                        <label  data-label="sendall" class="form-check-label" for="sendall">Всем пользователям</label>
+                        <label  data-label="sendall" class="form-check-label" for="sendall">Всім користувачам</label>
 
                     </div>                 
                     <div class="form-group">
@@ -115,7 +109,7 @@
                     </div>  
                     <div class="form-group">
 
-                        <button type="submit" class="btn btn-primary   ">Отправить</button>
+                        <button type="submit" class="btn btn-primary   ">Відправити</button>
 
                     </div>
                 </form> 

@@ -2,13 +2,13 @@
 <table class="ctable"   border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
         <td colspan="4" align="center">
-            Наряд № {{document_number}} с {{startdate}} по {{date}} 
+            Наряд № {{document_number}} з {{startdate}} по {{date}} 
         </td>
     </tr>   
     {{#pareaname}}
     <tr>
         <td  colspan="4">
-            Произв. участок:   {{pareaname}}
+            Вироб. ділянка:   {{pareaname}}
         </td>
 
     </tr>
@@ -17,7 +17,7 @@
     {{#baseddoc}}
     <tr>
         <td  colspan="4">
-            Заказ:   {{baseddoc}}
+            Замовлення:   {{baseddoc}}
         </td>
 
     </tr>
@@ -26,14 +26,14 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="4" style="text-align: left;">Работы  </th>
+        <th colspan="4" style="text-align: left;">Роботи  </th>
 
     </tr>  
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
-        <th   style="border: 1px solid black;"  >Наименование</th>
+        <th   style="border: 1px solid black;"  >Найменування</th>
         <th style="border: 1px solid black;" width="50" align="right"> </th>
-        <th style="border: 1px solid black;" width="50" align="right">Часов</th>
+        <th style="border: 1px solid black;" width="50" align="right">Годин</th>
 
 
 
@@ -54,7 +54,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="4"  style="text-align: left;">Исполнители </th>
+        <th colspan="4"  style="text-align: left;">Виконавці </th>
 
     </tr>
     {{#_detail3}}
@@ -72,7 +72,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="4" style="text-align: left;">Оборудование </th>
+        <th colspan="4" style="text-align: left;">Устаткування </th>
 
     </tr>          
     {{#_detail2}}

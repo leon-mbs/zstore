@@ -8,7 +8,7 @@
         </style>
         <div class="row"  >
             <div class="col-12">
-                <h3>Список товаров</h3>
+                <h3>Список товарів</h3>
             </div>
 
             <div class="col-12 col-md-4">
@@ -20,55 +20,55 @@
                         <div class="navbar nav">
                             <form zippy="searchform" class="form-inline  ">
 
-                                <input  zippy="skeyword"  placeholder="Поиск" type="text" class="form-control mr-sm-2"  >
+                                <input  zippy="skeyword"  placeholder="Пошук" type="text" class="form-control mr-sm-2"  >
 
 
                                 <div class="form-check   ">
 
                                     <input class="form-check-input"  type="checkbox" zippy="sstatus">
-                                    <label class="form-check-label mr-sm-2" for="sstatus"> неактивный </label>
+                                    <label class="form-check-label mr-sm-2" for="sstatus"> неактивний </label>
                                 </div>    
                                 <select  zippy="smanuf" class="form-control mr-sm-2 select2  " >
-                                    <option value="0">Производитель, бренд</option>
+                                    <option value="0">Виробник, бренд</option>
 
                                 </select>
 
                                 <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>  
-                                &nbsp;<a title="Очистка форми" zippy="sclear" ><i class="fa fa-eraser"></i></a>  
+                                &nbsp;<a title="Очищення форми" zippy="sclear" ><i class="fa fa-eraser"></i></a>  
 
                             </form>
                         </div>
                         <div class="navbar nav">
                             <form  zippy="sortform" class="form-inline  ">
 
-                                <label for="sorting">Сортировать </label>
+                                <label for="sorting">Сортувати </label>
                                 <select zippy="sorting" class="form-control   mr-sm-2" >
-                                    <option value="0">По названию</option>
-                                    <option value="1">По возрастанию цены</option>
-                                    <option value="2">По уменьшению цены</option>
-                                    <option value="3">По уменьшению наличия</option>
-                                    <option value="4">По увеличению наличия</option>
+                                    <option value="0">За назвою</option>
+                                    <option value="1">За зростанням ціни</option>
+                                    <option value="2">За зменшення ціни</option>
+                                    <option value="3">За зменшення наявності</option>
+                                    <option value="4">За збільшення наявності</option>
 
 
                                 </select>
 
                             </form>
                         </div>
-                        <a zippy="addnew" class="btn btn-info">Добавить новый</a>
+                        <a zippy="addnew" class="btn btn-info">Додати новий</a>
 
                         <table class="table table-sm">
                             <tr><th style="width:75px;"> </th>
-                                <th>Наименование</th> <th style="text-align: right;">Цена </th><th style="text-align: right;">Кол.</th><th> </th>  </tr>
+                                <th>Найменування</th> <th style="text-align: right;">Ціна </th><th style="text-align: right;">Кіл.</th><th> </th>  </tr>
                             <tr zippy="plist">
                                 <td><img style="width:75px;" zippy="lphoto"> 
                                 </td>
-                                <td><h6 ><a zippy="lname" title="Редактировать"></a></h6> 
+                                <td><h6 ><a zippy="lname" title="Редагувати"></a></h6> 
                                     Код: <span zippy="lcode"></span>
 
                                 </td>
 
 
-                                <td  ><a zippy="imedit" title="Редактировать фото"><i class="fa fa-images"></i></a> </td>
+                                <td  ><a zippy="imedit" title="Редагувати фото"><i class="fa fa-images"></i></a> </td>
 
                                 <td style="text-align: right;"><span zippy="lprice"></span> </td>
                                 <td style="text-align: right;"><span zippy="lcnt"></span> </td>
@@ -83,15 +83,15 @@
 
 
                         <form zippy="editform"  >
-                            <h4>Редактирование</h4>
+                            <h4>Редагування</h4>
                             <div class="form-group row">
-                                <label class="col-4" for="eitem"   >Складское название</label>
+                                <label class="col-4" for="eitem"   >Складська назва</label>
                                 <div class="col-8">
-                                    <input zippy="eitem"  type="text" class="form-control"  placeholder="Начните вводить..."    >
+                                    <input zippy="eitem"  type="text" class="form-control"  placeholder="Почніть вводити..."    >
                                 </div>
                             </div>                            
                             <div class="form-group  row">
-                                <label class="col-4"  for="ename">Название</label>
+                                <label class="col-4"  for="ename">Назва</label>
                                 <div class="col-8">
                                     <input zippy="ename"  type="text" class="form-control"    >
                                 </div>       
@@ -104,7 +104,7 @@
                             </div> 
 
                             <div class="form-group row">
-                                <label class="col-4" for="eprice">Цена</label>
+                                <label class="col-4" for="eprice">Ціна</label>
                                 <div class="col-4">
 
                                     <input zippy="eprice"  type="text" class="form-control"  >
@@ -113,22 +113,22 @@
                             </div>                                  
 
                             <div class="form-group row">
-                                <label class="col-4"  for="edescshort">Краткое описание</label>
+                                <label class="col-4"  for="edescshort">Короткий опис</label>
                                 <div class="col-8">
                                     <textarea zippy="edescshort"   class="form-control"  ></textarea>
                                 </div>       
                             </div>       
                             <div class="form-group row">
-                                <label class="col-4" for="edescdet">Полное описание</label>
+                                <label class="col-4" for="edescdet">Повний опис</label>
                                 <div class="col-8">
                                     <textarea style="height:200px" zippy="edescdet"   class="form-control"   ></textarea>
                                 </div>       
                             </div>       
                             <div class="form-group row">
-                                <label class="col-4" for="emanuf">Производитель, бренд</label>
+                                <label class="col-4" for="emanuf">Виробник, бренд</label>
                                 <div class="col-8">
                                     <select    zippy="emanuf"   class="form-control select2"  >
-                                        <option value='0'>Выбрать  </option>
+                                        <option value='0'>Вибрати  </option>
                                     </select>
                                 </div> 
                             </div> 
@@ -146,7 +146,7 @@
 
 
                             <div class="form-group  row">
-                                <label class="col-4" for="egroup">Группа&nbsp;<i zippy="tt" class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Выбор другой группы для перемещения товара"></i></label>
+                                <label class="col-4" for="egroup">Группа&nbsp;<i zippy="tt" class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Вибір іншої групи для переміщення товару"></i></label>
                                 <div class="col-8">
                                     <select zippy="egroup"   class="form-control select2"  >
                                     </select>
@@ -155,33 +155,33 @@
                             <div class="form-check   ">
 
                                 <input class="form-check-input"  type="checkbox" zippy="edisabled">
-                                <label class="form-check-label  " for="edisabled" data-label="edisabled">  Снят  с  продажи  </label>
+                                <label class="form-check-label  " for="edisabled" data-label="edisabled">  Знятий з продажу  </label>
                             </div>
                             <div class="form-group"  >
 
-                                <a zippy="bcancel"  class="btn btn-light   ">Отмена</a>
-                                &nbsp;<input type="submit"    class="btn btn-outline-success   " value="Сохранить" >
-                                &nbsp;<a zippy="bdelete"  class="btn btn-outline-danger   ">Удалить</a>
+                                <a zippy="bcancel"  class="btn btn-light   ">Скасувати</a>
+                                &nbsp;<input type="submit"    class="btn btn-outline-success   " value="Зберегти" >
+                                &nbsp;<a zippy="bdelete"  class="btn btn-outline-danger   ">Вилучити</a>
 
                             </div>        
                         </form>
                     </div>
 
                     <div zippy="editimagepanel"  class="col-12     col-xl-10 "> 
-                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> К списку продуктов</a>
-                        <h4>Список изображений</h4>
+                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> До списку продуктів</a>
+                        <h4>Список зображень</h4>
 
                         <form class="form-inline" zippy="addimageform"  enctype="multipart/form-data">
                             <input zippy="photo" type="file" class="form-control mr-2"> 
-                            <input type="submit"    class="btn btn-success   " value="Добавить" >    
+                            <input type="submit"    class="btn btn-success   " value="Додати" >    
                         </form>
 
                         <div class="w-100">
 
                             <div zippy="imagelist" style="float:left;">
                                 <img zippy="imgitem" style="height: 128px;" /> 
-                                <br><a zippy="idel">Удалить</a>
-                                <br><a zippy="icover">Сделать основным</a>
+                                <br><a zippy="idel">Вилучити</a>
+                                <br><a zippy="icover">Встановити як</a>
 
 
                             </div>

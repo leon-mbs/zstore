@@ -3,19 +3,19 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Платежный баланс 
+            Платіжний баланс
         </td>
     </tr>            
     <tr>
 
         <td align="center" colspan="2">
-            Период с {{datefrom}} по {{dateto}}  <br>
+            Період з {{datefrom}} по {{dateto}}  <br>
         </td>
     </tr>
     <tr>
 
         <td   colspan="2">
-            <b>Доходы</b> 
+            <b>Доходи</b> Д
         </td>
     </tr>
 
@@ -31,7 +31,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Итого:</td>
+        <td align="right">Разом:</td>
 
         <td align="right">{{tin}} </td>
 
@@ -39,7 +39,7 @@
     <tr>
 
         <td   colspan="2">
-            <b>Расходы</b>>
+            <b>Витрати</b>>
         </td>
     </tr>
 
@@ -55,7 +55,7 @@
     {{/_detail2}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Итого:</td>
+        <td align="right">Разом:</td>
 
         <td align="right">{{tout}} </td>
 

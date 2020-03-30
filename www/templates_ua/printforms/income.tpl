@@ -5,21 +5,21 @@
     <tr>
 
         <td align="center" colspan="4">
-            Период с {{datefrom}} по {{dateto}}    <br> <br>
+            Період з{{datefrom}} по {{dateto}}    <br> <br>
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Закупки  по товарам  <br><br>
+            Закупівлі по товарах  <br><br>
         </td>
     </tr> 
     <tr style="font-weight: bolder;">
-        <th style="border: solid black 1px" >Наименование</th>
+        <th style="border: solid black 1px" >Найменування</th>
         <th style="border: solid black 1px" >Код</th>
 
-        <th align="right" style="border: solid black 1px">Кол.</th>
-        <th align="right" style="border: solid black 1px">На сумму</th>
+        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th align="right" style="border: solid black 1px">На суму</th>
 
     </tr>
     {{#_detail}}
@@ -39,15 +39,15 @@
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупки  по поставщикам  <br> <br>
+        Закупівлі по постачальниках  <br> <br>
     </td>
 </tr> 
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px" >Наименование</th>
+    <th colspan="2" style="border: solid black 1px" >Найменування</th>
 
 
 
-    <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
     <th  > </th>
 </tr>
 {{#_detail}}
@@ -67,13 +67,13 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупки  по датам  <br> <br>
+        Закупівлі по датам  <br> <br>
     </td>
 </tr> 
 <tr style="font-weight: bolder;">
     <th  style="border: solid black 1px;width:120px;" >Дата</th>
 
-    <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
     <th  > </th>
     <th  > </th>
 

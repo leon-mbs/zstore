@@ -1,10 +1,10 @@
 <table class="ctable"   border="0" cellpadding="1" cellspacing="0"  {{{printw}}}  >
     <tr>
-        <td colspan="2">Квитанция {{document_number}}</td>
+        <td colspan="2">Квитанція {{document_number}}</td>
     </tr>
     <tr>
 
-        <td colspan="2">от {{date}}</td>
+        <td colspan="2">від {{date}}</td>
     </tr>
     <tr>
 
@@ -31,14 +31,14 @@
 
     {{#isdevice}}
     <tr>
-        <td colspan="2"> Принято от клиента</td>
+        <td colspan="2"> Прийнято від клієнта</td>
     </tr>
     <tr>
         <td colspan="2"> {{device}}</td>
     </tr>
     {{/isdevice}}
     <tr>
-        <td colspan="2">Работы:</td>
+        <td colspan="2">Роботи:</td>
     </tr>
     {{#slist}}
     <tr>
@@ -48,12 +48,12 @@
 
     {{/slist}}
     <tr>
-        <td align="right">Всего:</td>
+        <td align="right">Всього:</td>
         <td align="right" >{{total}}</td>
     </tr>
     {{#ispay}} 
     <tr>
-        <td colspan="2">Оплаты:</td>
+        <td colspan="2">Оплати:</td>
     </tr>    
     {{#plist}}
     <tr>
@@ -68,11 +68,11 @@
 
     </tr>     
     <tr>
-        <td  >Исполнитель</td>
+        <td  >Виконавець</td>
         <td  >________</td>
     </tr>     
     <tr>
-        <td  >Клиент</td>
+        <td  >Клієнт</td>
         <td  >________</td>
     </tr>     
 </table>

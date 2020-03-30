@@ -3,24 +3,24 @@
     <body>
         <div class="row">
             <div class="col-12 col-lg-6 ">
-                <h3>Импорт номенклатуры
+                <h3>Імпорт номенклатури
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
-                       data-placement="bottom" data-html="true" data-content="Импорт ТМЦ из  CSV файла.
-                       Для указания расположения данных необходимо  указать номера  соответствующих столбцов. Проаеряется  на                                 уникальность  артикул  и наименование
-                       Может  быть  выполнен  импорт номенклатуры  в справочник или  если  указано количество  оприходование на  склад.                       В этом  случае создается документ  Оприходование  товара 
-                       <br>Также  есть  возможность предварительного просмотра данных. "></i> 
+                       data-placement="bottom" data-html="true" data-content="Імпорт ТМЦ з CSV файлу.
+                       Для вказівки розташування даних необхідно вказати номери відповідних стовпців. перевіряється на                                 унікальність артикул і найменування
+                       Може бути виконаний імпорт номенклатури в довідник, або якщо вказано кількість оприбуткування на склад.                       У цьому випадку створюється документ Оприбуткування товару
+                       <br>Також є можливість попереднього перегляду даних. "></i> 
                 </h3>
 
                 <br><br><form zippy="iform" class="row" enctype="multipart/form-data">
                     <div class="col-6">
                    
                         <div class="form-group  ">
-                            <label for="itype" >Тип импорта</label>
+                            <label for="itype" >Тип імпорту</label>
                             <select zippy="itype" class="form-control  ">
                             </select>
                         </div>             
                         <div class="form-group  ">
-                            <label for="price" >Тип цены</label>
+                            <label for="price" >Тип ціни</label>
                             <select zippy="price" class="form-control  ">
                             </select>
                         </div>    
@@ -30,23 +30,23 @@
                             </select>
                         </div>    
                         <div class="form-group  ">
-                            <label   for="sep" >Разделитель</label>
+                            <label   for="sep" >Роздільник</label>
                             <input   style="width:50px;"   zippy="sep" class="form-control  " />
 
                         </div> 
                         <div class="form-group  ">
-                            <label for="encode" >Кодировка</label>
+                            <label for="encode" >Кодування</label>
                             <select zippy="encode" class="form-control  ">
-                                <option value="0">Не выбрана</option>
+                                <option value="0">Не обрано</option>
                             </select>
                         </div>                    
                         <div class="form-group  ">
-                            <label   for="filename" >Файл импорта</label>
+                            <label   for="filename" >Файл імпорту</label>
                             <input type="file" zippy="filename" class="form-control  " />
                         </div>   
                         <div class="  form-check">
                             <input zippy="preview" type="checkbox" class="form-check-input"  >
-                            <label class="form-check-label" for="preview">Предпросмотр</label>
+                            <label class="form-check-label" for="preview">Попередній</label>
                         </div>               
                        
                         <div class="form-group  ">
@@ -55,11 +55,11 @@
                     </div>
                     <div class="col-6">     
                         <div class="form-group  ">
-                            <label   ><b>Номера столбцов CSV файла</b> </label>
+                            <label   ><b>Номери стовпців CSV файлу</b> </label>
 
                         </div>    
                         <div class="form-group  ">
-                            <label   for="colname" >Наименование</label>
+                            <label   for="colname" >Найменування</label>
                             <select style="width:100px;" zippy="colname" class="form-control  ">
                             </select>
                         </div>    
@@ -74,28 +74,28 @@
                             </select>
                         </div>    
                         <div class="form-group  ">
-                            <label   for="colgr" >Группа</label>
+                            <label   for="colgr" >Група</label>
                             <select style="width:100px;" zippy="colgr" class="form-control  ">
                             </select>
                         </div>   
                         <div class="form-group  ">
-                            <label    for="colmsr" >Ед. измерения</label>
+                            <label    for="colmsr" >Од. виміру</label>
                             <select style="width:100px;" zippy="colmsr" class="form-control  ">
                             </select>
                         </div>    
 
                         <div class="form-group  ">
-                            <label data-label="colqty"  for="colqty" >Количество</label>
+                            <label data-label="colqty"  for="colqty" >Кількість</label>
                             <select style="width:100px;" zippy="colqty" class="form-control  ">
                             </select>
                         </div>    
                         <div class="form-group  ">
-                            <label   for="colprice" >Отпускная цена</label>
+                            <label   for="colprice" >Відпускна ціна</label>
                             <select style="width:100px;" zippy="colprice" class="form-control  ">
                             </select>
                         </div>
                         <div class="form-group  ">
-                            <label data-label="colinprice"  for="colinprice" >Учетная  цена</label>
+                            <label data-label="colinprice"  for="colinprice" >Облікова ціна</label>
                             <select style="width:100px;" zippy="colinprice" class="form-control  ">
                             </select>
                         </div>    
@@ -111,13 +111,13 @@
             <div class="col-12 col-lg-10 " >
                 <table class="table table-sm">
                     <tr>
-                        <th>Наименование</th>
+                        <th>Найменування</th>
                         <th>Код</th>
-                        <th>Группа</th>
-                        <th>Ед.</th>
-                        <th class="text-right">Кол.</th>
-                        <th class="text-right">Уч. цена</th>
-                        <th class="text-right">Отп. цена</th>
+                        <th>Група</th>
+                        <th>Од.</th>
+                        <th class="text-right">Кіл.</th>
+                        <th class="text-right">Обл. ціна</th>
+                        <th class="text-right">Опт. ціна</th>
                     </tr>
                     {{#list}}
                     <tr>
@@ -136,12 +136,12 @@
         {{/preview}}                
             </div>
             <div class="col-12 col-lg-6 ">
-                <h3>Импорт контрагентов
+                <h3>Імпорт контрагентів
                       <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
-                       data-placement="bottom" data-html="true" data-content="Импорт контрагентов из  CSV файла.
-                       Для указания расположения данных необходимо  указать номера  соответствующих столбцов.
-                       Проверяется  на  уникальность телефон 
-                       <br>Также  есть  возможность предварительного просмотра данных. "></i> 
+                       data-placement="bottom" data-html="true" data-content="Імпорт контрагентів з CSV файлу.
+                       Для вказівки розташування даних необхідно вказати номери відповідних стовпців.
+                       Перевіряється на унікальність телефон 
+                       <br>Також є можливість попереднього перегляду даних. "></i> 
                 </h3>
 
                 <br><br><form zippy="cform" class="row" enctype="multipart/form-data">
@@ -151,31 +151,31 @@
 
                         </div> 
                         <div class="form-group  ">
-                            <label for="ctype" >Импортировать  как</label>
+                            <label for="ctype" >Імпортувати як</label>
                             <select zippy="ctype" class="form-control   ">
                             </select>
                         </div>             
                 
                         <div class="form-group  ">
-                            <label   for="csep" >Разделитель</label>
+                            <label   for="csep" >Роздільник</label>
                             <input   style="width:50px;"   zippy="csep" class="form-control  " />
 
                         </div> 
                         <div class="form-group  ">
-                            <label for="cencode" >Кодировка</label>
+                            <label for="cencode" >Кодування</label>
                             <select zippy="cencode" class="form-control  ">
-                                <option value="0">Не выбрана</option>
+                                <option value="0">Не обрано</option>
                             </select>
                         </div>                    
                         <div class="form-group  ">
-                            <label   for="cfilename" >Файл импорта</label>
+                            <label   for="cfilename" >Файл імпорту</label>
                             <input type="file" zippy="cfilename" class="form-control  " />
 
                         </div>   
                                     
                        <div class="  form-check">
                             <input zippy="cpreview" type="checkbox" class="form-check-input"  >
-                            <label class="form-check-label" for="cpreview">Предпросмотр</label>
+                            <label class="form-check-label" for="cpreview">Попередній</label>
                         </div>               
                        
                         <div class="form-group  ">
@@ -185,11 +185,11 @@
                     </div>
                     <div class="col-6">     
                         <div class="form-group  ">
-                            <label   ><b>Номера столбцов CSV файла</b> </label>
+                            <label   ><b>Номери стовпців CSV файлу</b> </label>
 
                         </div>    
                         <div class="form-group  ">
-                            <label   for="colcname" >Наименование</label>
+                            <label   for="colcname" >Найменування</label>
                             <select style="width:100px;" zippy="colcname" class="form-control  ">
                             </select>
                         </div>                   
@@ -204,12 +204,12 @@
                             </select>
                         </div> 
                          <div class="form-group  ">
-                            <label   for="colcity" >Город</label>
+                            <label   for="colcity" >Місто</label>
                             <select style="width:100px;" zippy="colcity" class="form-control  ">
                             </select>
                         </div>
                         <div class="form-group  ">
-                            <label   for="coladdress" >Адрес</label>
+                            <label   for="coladdress" >Адреса</label>
                             <select style="width:100px;" zippy="coladdress" class="form-control  ">
                             </select>
                         </div>                            
@@ -227,11 +227,11 @@
             <div class="col-12 col-lg-10 " >
                 <table class="table table-sm">
                     <tr>
-                        <th>Наименование</th>
+                        <th>Найменування</th>
                         <th>Тел.</th>
                         <th>Email</th>
-                        <th>Город</th>
-                        <th >Адрес</th>
+                        <th>Місто</th>
+                        <th >Адреса</th>
                         
                     </tr>
                     {{#list2}}

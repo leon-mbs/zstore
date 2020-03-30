@@ -8,10 +8,10 @@
 
 
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link  active" href="#printtab" data-toggle="tab"><i class="fa fa-print"></i> Форма для печати</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#messagetab" data-toggle="tab"><i class="fa fa-comments"></i> Коментарии <span zippy="hmessages" class="badge badge-pill badge-info"></span> &nbsp;&nbsp;<i class="fa fa-paperclip"></i> файлы <span zippy="hfiles" class="badge badge-pill badge-info"></span></a> </li>
-                    <li class="nav-item"><a class="nav-link" href="#doctab"  data-toggle="tab"><i class="fas fa-project-diagram"></i> Связанные   документы <span zippy="hdocs" class="badge badge-pill badge-info"></span></a> </li>
-                    <li class="nav-item"><a class="nav-link" href="#stattab" data-toggle="tab"><i class="fa fa-calendar-alt"></i> История изменений   </a></li>
+                    <li class="nav-item"><a class="nav-link  active" href="#printtab" data-toggle="tab"><i class="fa fa-print"></i> Форма для друку</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#messagetab" data-toggle="tab"><i class="fa fa-comments"></i> Коментарії <span zippy="hmessages" class="badge badge-pill badge-info"></span> &nbsp;&nbsp;<i class="fa fa-paperclip"></i> файлы <span zippy="hfiles" class="badge badge-pill badge-info"></span></a> </li>
+                    <li class="nav-item"><a class="nav-link" href="#doctab"  data-toggle="tab"><i class="fas fa-project-diagram"></i> Зв'язані документи <span zippy="hdocs" class="badge badge-pill badge-info"></span></a> </li>
+                    <li class="nav-item"><a class="nav-link" href="#stattab" data-toggle="tab"><i class="fa fa-calendar-alt"></i> Історія змін   </a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -54,7 +54,7 @@
                                 <form zippy="addmsgform">
 
                                     <div class="form-group">
-                                        <label for="addmsg"> Коментарий: </label>
+                                        <label for="addmsg"> Коментар: </label>
                                         <textarea class="form-control" required="required" zippy="addmsg" style="width:300px;height:120px;"></textarea>
                                     </div> 
                                     <input class="btn btn-light  " type="submit" value="Добавить">
@@ -76,12 +76,12 @@
                                 <form zippy="addfileform" enctype="multipart/form-data">
 
                                     <div class="form-group">
-                                        <label for="addfile"> Выбрать файл: </label>
+                                        <label for="addfile"> Вибрати файл: </label>
                                         <input class="form-control" type="file" required="required" zippy="addfile">
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="adddescfile">  Коментарий </label> 
+                                        <label for="adddescfile">  Коментар </label> 
                                         <input class="form-control" type="text" zippy="adddescfile" style="width:200px">
                                     </div>
                                     <input class="btn btn-light  " type="submit" value="Добавить">
@@ -100,7 +100,7 @@
 
                                 <table class="table table-sm">
                                     <tr><td colspan="2">
-                                            <span data-label="pdoc"><b>Родительский документ:</b></span> <a zippy="pdoc"></a>
+                                            <span data-label="pdoc"><b>Батьківський документ:</b></span> <a zippy="pdoc"></a>
                                         </td></tr>
                                     <tr zippy="reldocs">
                                         <td><a zippy="docitem"></a></td>
@@ -110,7 +110,7 @@
                                 <hr>
                                 <form zippy="addrelform">
 
-                                    <label for="addrel">Добавить дочерний документ:</label>
+                                    <label for="addrel">Додати дочірній документ:</label>
                                     <div class="form-group">
                                         <input class="form-control" placeholder="Начните ввод номера " style="width:200px" type="text"
                                                required="required" zippy="addrel">
@@ -128,12 +128,12 @@
                         <div class="row">
 
                             <div   class="col-auto " >
-                                <h5>История изменений статусов</h5>
+                                <h5>Історія змін статусів</h5>
                                 <table class="table table-sm">
                                     <tr>
                                         <th>Статус</th>
                                         <th>Дата</th>
-                                        <th>Изменил</th>
+                                        <th>Змінив</th>
 
 
                                     </tr>
@@ -147,13 +147,13 @@
                                 </table>
                             </div>
                             <div   class="col-auto " >
-                                <h5>История оплат</h5>
+                                <h5>Історія оплат</h5>
                                 <table class="table table-sm">
                                     <tr>
                                         <th>Дата</th>
-                                        <th>Счет</th>
-                                        <th class="text-right">Приход</th>
-                                        <th class="text-right">Расход</th>
+                                        <th>Рахунок</th>
+                                        <th class="text-right">Прихід</th>
+                                        <th class="text-right">Витрати</th>
                                      
 
                                     </tr>
@@ -169,14 +169,14 @@
                                 </table>
                             </div>
                             <div   class="col-auto " >
-                                <h5>Проводки по  складу</h5>
+                                <h5>Проведення по складу</h5>
                                 <table class="table table-sm">
                                     <tr>
                                         <th>ТМЦ</th>
                                         <th>Код</th>
-                                        <th class="text-right">Кол.</th>
-                                        <th class="text-right">Цена</th>
-                                        <th class="text-right">Сумма</th>
+                                        <th class="text-right">Кіл.</th>
+                                        <th class="text-right">Ціна</th>
+                                        <th class="text-right">Сума</th>
     
                                     </tr>
                                     <tr zippy="dw_itemlist"  >

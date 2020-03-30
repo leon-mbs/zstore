@@ -4,7 +4,7 @@
     </tr>
     <tr>
 
-        <td colspan="3">от {{time}}</td>
+        <td colspan="3">від {{time}}</td>
     </tr>
     <tr>
 
@@ -12,7 +12,7 @@
     </tr>
     <tr>
 
-        <td colspan="3">ИНН {{inn}}</td>
+        <td colspan="3">ІПН {{inn}}</td>
     </tr>
     {{#shopname}}
     <tr>
@@ -40,19 +40,19 @@
     </tr>   
     {{/_detail}}
     <tr>
-        <td colspan="2" align="right">Всего:</td>
+        <td colspan="2" align="right">Всього:</td>
         <td align="right" >{{total}}</td>
     </tr>
 
     {{^prepaid}}
     {{#isdisc}}
     <tr style="font-weight: bolder;">
-        <td   colspan="2" align="right">Скидка:</td>
+        <td   colspan="2" align="right">Знижка:</td>
         <td   align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
     <tr style="font-weight: bolder;">
-        <td   colspan="2" align="right">К оплате:</td>
+        <td   colspan="2" align="right">До оплати:</td>
         <td   align="right">{{payamount}}</td>
     </tr>    
     <tr style="font-weight: bolder;">
@@ -60,7 +60,7 @@
         <td   align="right">{{payed}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td   colspan="2" align="right">Сдача:</td>
+        <td   colspan="2" align="right">Решта:</td>
         <td   align="right">{{exchange}}</td>
     </tr>
     {{/prepaid}}

@@ -31,7 +31,7 @@
                 <div class="row">
                     <div class="col-12">
                         <span  zippy="novelty"  class="badge badge-success">Новинка</span>
-                        <span  zippy="topsold" class="badge badge-warning">Топ продаж</span>
+                        <span  zippy="topsold" class="badge badge-warning">Топ продажів</span>
 
                         <h4 zippy="productname"  ></h4> 
                         <h6><span zippy="manufacturername"></span></h6>
@@ -46,7 +46,7 @@
 
                     </div> 
                     <div class="col-12">
-                        <a zippy="addtocompare" >Добавить  к  сравнению</a><a zippy="compare" >Сравнить</a>
+                        <a zippy="addtocompare" >Додати до порівняння</a><a zippy="compare" >Порівняти</a>
                         <br> <input readonly="readonly"   type="hidden" class="rating"  zippy="rated"   value="0"  data-filled="fas fa-star" data-empty="far fa-star "/>&nbsp;<span zippy="comments"></span>
                     </div> 
 
@@ -60,7 +60,7 @@
             </div>    
             <div class="col-12"></div> 
             <div class="col-12 col-sm-6 col-lg-6 col-xl-4" >
-                <h4>Характеритики</h4>
+                <h4>Характеристики</h4>
                 <table    class="table table-sm   table-stripped  ">
                     <tr  zippy="attributelist">
                         <td><span zippy="attrname" ></span></td>
@@ -69,7 +69,7 @@
                 </table>
             </div>     
             <div class="col-12 col-sm-6 col-lg-4 " >
-                <h4>Отзывы</h4>
+                <h4>Відгуки</h4>
                 <table class="table"  >
                     <tr zippy="commentlist">
                         <td>
@@ -81,7 +81,7 @@
                         </td>
                         <td>
                             {{#islogined}}    
-                            <a zippy="deletecomment" class="deletecomment" title=" Удалить коментарий "><i style="color:red;" class="fa fa-trash-alt"></i></a>
+                            <a zippy="deletecomment" class="deletecomment" title=" Видалити коментар "><i style="color:red;" class="fa fa-trash-alt"></i></a>
                             {{/islogined}}    
                         </td>
                     </tr>
@@ -91,21 +91,21 @@
                 <form method="post" zippy="formcomment">
                     <a name="commentbegin" ></a>  
                     <div class="form-group">
-                        <label>Имя</label>
+                        <label>Ім'я</label>
                         <input class="form-control" type="text" zippy="nick" required="required"  />
                     </div>
                     <div class="form-group">
-                        <label>Oценка</label>
+                        <label>Оцінка</label>
                         <input   type="hidden" class="rating"  zippy="rating"   value="0"  data-filled="fas fa-star" data-empty="far fa-star "/>
                     </div>
 
                     <div class="form-group">
-                        <label>Отзыв</label>
+                        <label>Відгук</label>
                         <textarea class="form-control" type zippy="comment" cols="40" rows="5" required="required" ></textarea>
                     </div>
 
                     <div class="form-group">
-                        <input type="submit" value="Добавить" class="btn btn-primary "/>
+                        <input type="submit" value="Додати" class="btn btn-primary "/>
                     </div>                         
 
 

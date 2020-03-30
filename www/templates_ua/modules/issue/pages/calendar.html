@@ -23,12 +23,12 @@
 
 
             <div class="col-12  col-xl-10   " zippy="listpan" >
-                <h3>Календарь рабочего времени</h3>
-                <a  zippy="addtime" class="btn btn-info mt-2 mb-3">Добавить</a>
+                <h3>Календар робочого часу</h3>
+                <a  zippy="addtime" class="btn btn-info mt-2 mb-3">Додати</a>
 
                 <ul class="nav nav-tabs" >
-                    <li class="nav-item"><a class="nav-link  active" href="#caltab" data-toggle="tab">Календарь</li>
-                    <li class="nav-item"><a class="nav-link " href="#tasktab" data-toggle="tab">Список</li>
+                    <li class="nav-item"><a class="nav-link  active" href="#caltab" data-toggle="tab">Календар</li>
+                    <li class="nav-item"><a class="nav-link " href="#tasktab" data-toggle="tab">Перелік</li>
 
 
                 </ul>
@@ -50,12 +50,12 @@
                                     <tr>
 
                                         <th>Дата</th>
-                                        <th>Время</th>
+                                        <th>Час</th>
 
-                                        <th>Задача</th>
+                                        <th>Завдання</th>
 
                                         <th>Проект</th>
-                                        <th>Комментарий</th>
+                                        <th>Коментар</th>
 
                                         <th style="width:75px;"> </th>
 
@@ -71,8 +71,8 @@
 
                                         <td>
 
-                                            <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                            &nbsp;&nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
+                                            <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
+                                            &nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
 
                                         </td>
 
@@ -99,11 +99,11 @@
                     <div class="form-group  ">
                         <label for="eproject" >Проект</label>
                         <select class="form-control  " zippy="eproject">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>                  
                     <div class="form-group  ">
-                        <label for="eissue" >Задача</label>
+                        <label for="eissue" >Завдання</label>
                         <select class="form-control   " zippy="eissue">
 
                         </select>
@@ -113,16 +113,16 @@
                         <input required="required" style="width:160px;" zippy="edate" class="form-control" >
                     </div>                  
                     <div class="form-group  ">
-                        <label for="etime" >Часов</label>
+                        <label for="etime" >Годин</label>
                         <input required="required" pattern="[0-9\.]+" style="width:100px;" zippy="etime" class="form-control" >
                     </div>                  
                     <div class="form-group  ">
-                        <label for="enotes" >Коментарий</label>
+                        <label for="enotes" >Коментар</label>
                         <input  zippy="enotes" class="form-control" >
                     </div>                  
                     <div class="form-group  ">
-                        <a zippy="cancel" class="btn btn-default">Отменить</a> 
-                        &nbsp;&nbsp;<input   type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+                        <a zippy="cancel" class="btn btn-default">Скасувати</a> 
+                        &nbsp;&nbsp;<input   type="submit" value="Зберегти" class="btn btn-outline-primary  ">
 
                     </div>                  
 

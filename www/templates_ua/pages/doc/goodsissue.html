@@ -4,7 +4,7 @@
 
 
         <form zippy="docform">
-            <h3>Расходная накладная </h3>
+            <h3>Видаткова накладна </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
@@ -13,22 +13,22 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="store" >Со склада</label>
+                        <label for="store" >З складу</label>
 
                         <select class="form-control" zippy="store">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="pricetype" >Тип  цены</label>
+                        <label for="pricetype" >Тип ціни</label>
                         <select class="form-control" zippy="pricetype">
                         </select>
                     </div>                      
                     <div class="form-group  ">
-                        <label for="customer" >Покупатель</label>
-                        <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
+                        <label for="customer" >Покупець</label>
+                        <input placeholder="Почніть вводити..." class="form-control "   zippy="customer" />
                         <span zippy="discount" style="display:block;font-size:smaller"></span>
-                        <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
+                        <a style="font-size:smaller" zippy="addcust">Додати нового</a>
 
                     </div>
 
@@ -41,17 +41,17 @@
                         <label for="document_date" > Дата</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
                     </div>             <div class="form-group">                                         
-                        <label for="order" >Заказ</label>
+                        <label for="order" >Замовлення</label>
                         <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order"  >
                     </div>
                     <div class="form-group  ">
                         <label for="payment" >Оплата</label>
                         <select class="form-control" zippy="payment">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не вибрано</option>
                         </select>
                     </div> 
                     <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
+                        <label for="notes" >Примітка </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -69,22 +69,22 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label data-label="ship_address" for="ship_address" >Адрес доставки</label>
+                        <label data-label="ship_address" for="ship_address" >Адреса доставки</label>
                         <input    class="form-control" type="text" zippy="ship_address"   >
                     </div>                                       
                     <div class="form-group">
-                        <label data-label="ship_number" for="ship_number" >Номер декларации</label>
+                        <label data-label="ship_number" for="ship_number" >Номер декларації</label>
                         <input    class="form-control" type="text" zippy="ship_number"   >
                     </div>                     
                     <div class="form-group  ">
-                        <label data-label="emp" for="emp" >Ответственный за доставку</label>
+                        <label data-label="emp" for="emp" >Відповідальний за доставку</label>
                         <select class="form-control select2" zippy="emp">
-                            <option>Не указан</option>
+                            <option>Не вказано</option>
                         </select>                    
                     </div>                
 
                     <div class="form-group">
-                        <label data-label="sent_date" for="sent_date" > Дата отправки</label>
+                        <label data-label="sent_date" for="sent_date" > Дата відправки</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="sent_date" required="required">
                     </div>                    
                     <div class="form-group">
@@ -104,23 +104,23 @@
                     </div>
                     {{/usescanner}}
 
-                    <a class="btn btn-info btn-sm" zippy="addrow">Добавить позицию</a>
+                    <a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
                     <table class="table table-sm"  >
                         <tr>
-                            <th>Название</th>
+                            <th>Назва</th>
                             <th  >Код</th>
-                            <th  >Ед.</th>
+                            <th  >Од.</th>
                             {{#usesnumber}} 
-                            <th  >Серия</th>
+                            <th  >Серія</th>
                             <th  >Дата</th>
                             {{/usesnumber}} 
 
 
 
-                            <th   class="text-right">Кол.</th>
-                            <th    class="text-right" >Цена</th>
+                            <th   class="text-right">Кіл.</th>
+                            <th    class="text-right" >Ціна</th>
 
-                            <th class="text-right">Сумма</th>
+                            <th class="text-right">Сума</th>
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail">
@@ -144,7 +144,7 @@
                         <tr style="font-weight: bolder;" id="tankor">
 
                             
-                            <td colspan={{colspan}} class="text-right">Всего:</td>
+                            <td colspan={{colspan}} class="text-right">Всього:</td>
                     
 
                             <td zippy="total"  class="text-right"></td>
@@ -153,7 +153,7 @@
 
                         <tr style="font-weight: bolder;" >
                             
-                            <td colspan={{colspan}} class="text-right"><span data-label="paydisc" >Скидка:</span></td>
+                            <td colspan={{colspan}} class="text-right"><span data-label="paydisc" >Знижка:</span></td>
                        
 
 
@@ -162,7 +162,7 @@
                         </tr>  
                         <tr style="font-weight: bolder;">
                           
-                            <td colspan={{colspan}} class="text-right"><span data-label="payamount" >К оплате:</span></td>
+                            <td colspan={{colspan}} class="text-right"><span data-label="payamount" >До оплати:</span></td>
                  
 
                             <td zippy="payamount" class="text-right"></td>
@@ -182,10 +182,10 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
-                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-light  ">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
-                    &nbsp;<input zippy="senddoc" type="submit" value="Отправить" class="btn btn-primary  ">
+                    &nbsp;<input zippy="senddoc" type="submit" value="Відправити" class="btn btn-primary  ">
 
 
 
@@ -195,7 +195,7 @@
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Скидка</h5>
+                            <h5 class="modal-title">Знижка</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -218,7 +218,7 @@
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">К оплате</h5>
+                            <h5 class="modal-title">До оплати</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -260,33 +260,33 @@
             </div>
         </form>
         <form zippy="editdetail">
-            <h4>Ввод товара </h4>
+            <h4>Введення товару </h4>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
-                        <label for="edittovar" >Название</label>
-                        <input placeholder="Начните вводить..." class="form-control "   zippy="edittovar" />
+                        <label for="edittovar" >Назва</label>
+                        <input placeholder="Почніть вводити..." class="form-control "   zippy="edittovar" />
 
-                        Наличие: <span zippy="qtystock"></span>
+                        Наявність: <span zippy="qtystock"></span>
 
                     </div>
                     {{#usesnumber}} 
                     <div class="form-group">
-                        <label for="editserial">Серия производителя </label>
+                        <label for="editserial">Серія виробника </label>
                         <input   class="form-control "   zippy="editserial" />
 
                     </div>
 
                     {{/usesnumber}}                       
                     <div class="form-group">
-                        <label for="editquantity" >Количество</label>
+                        <label for="editquantity" >Кількість</label>
                         <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"  style="width: 70px;">
 
                     </div>
 
                     <div class="form-group">
-                        <label for="editprice" >Цена  </label>
+                        <label for="editprice" >Ціна  </label>
                         <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
                                style="width: 70px;">
 
@@ -294,8 +294,8 @@
 
 
                     <div class="form-group">
-                        <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-light ">
+                        <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
+                        &nbsp; <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-light ">
                     </div>
 
 
@@ -303,12 +303,12 @@
             </div>
         </form>
         <form zippy="editcust">
-            <h3>&nbsp;Новый контрагент </h3>
+            <h3>&nbsp;Новий контрагент </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
-                        <label for="editcustname">Название </label>
+                        <label for="editcustname">Назва </label>
                         <input  class="form-control "   zippy="editcustname" required="required" />       
                     </div>
                     <div class="form-group">
@@ -316,14 +316,14 @@
                         <input class="form-control" type="text" zippy="editphone"  ></input>
                     </div>
                     <div class="form-group">
-                        <label for="editaddress">Адрес</label>
+                        <label for="editaddress">Адреса</label>
                         <input class="form-control" type="text" zippy="editaddress"  ></input>
                     </div>
 
 
                     <div class="form-group">
-                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
-                        <input type="button"   zippy="cancelcust"          value="Отменить"                                                                                                            class="btn btn-light ">
+                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        <input type="button"   zippy="cancelcust"          value="Скасувати"                                                                                                            class="btn btn-light ">
                     </div>
                 </div>
             </div>

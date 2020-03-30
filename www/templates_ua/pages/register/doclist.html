@@ -3,17 +3,17 @@
         <div class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Журнал документов 
+                <h3>Журнал документів 
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
-                       data-placement="bottom" data-content="Общий журнал для всех  документов с возможностью их отмены и удаления.
-                       Более детальное  управление статусами производится  в  соответствуюжих специализированых журналах."></i> 
+                       data-placement="bottom" data-content="Загальний журнал для всіх документів з можливістю їх скасування та видалення.
+                       Більш детальне управління статусами проводиться у відповідних спеціалізованих журналах."></i> 
                 </h3>
 
 
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline ">
 
-                        <label   for="from">С  </label>
+                        <label   for="from">З  </label>
                         <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
 
 
@@ -23,34 +23,34 @@
 
                         <label for="doctype"> Тип </label>
                         <select class="form-control mr-sm-2  " zippy="doctype">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не встановлено</option>
                         </select>
                         <label for="searchcust"> Контрагент  </label>
-                        <input placeholder="Начните вводить..." class="form-control mr-2" type="text" zippy="searchcust"  >
+                        <input placeholder="Почніть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
 
                         <input placeholder="Номер..." class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
 
 
                         <input type="submit" class="mr-2  btn btn-outline-success  " value="ОК">
-                        <a zippy="erase" title="Сбросить фильтр"><i class="fa fa-eraser"></i></a>
+                        <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
 
 
 
                     </form>
                 </div>
-                <a zippy="csv"  >Скачать  CSV</a>  
+                <a zippy="csv"  >Завантажити CSV</a>  
                 <table class="table   table-sm  table-hover   ">
                     <tr>
                         <th class="text-nowrap  "><a zippy="sortdoc">Документ</a></th>
                         <th class="text-nowrap  "><a zippy="sortnum">Номер</a></th>
                         <th class="text-nowrap  "><a zippy="sortdate">Дата</a></th>
                         <th class="text-nowrap  " ><a zippy="sortcust">Контрагент</a></th>
-                        <th class="text-right text-nowrap " ><a zippy="sortamount">Сумма</a></th>
+                        <th class="text-right text-nowrap " ><a zippy="sortamount">Сума</a></th>
                         <th class="text-nowrap  "><a zippy="sortstatus">Статус</a></th>
-                        {{#usebranch}}  <th>Филиал</th>  {{/usebranch}}
+                        {{#usebranch}}  <th>Філія</th>  {{/usebranch}}
 
-                        <th>Основание</th>
+                        <th>Підстава</th>
                         <th  > </th>
                         <th  > </th>
 
@@ -72,25 +72,25 @@
 
                             <td ><a zippy="parentdoc"></a></td>
                             <td ><i zippy="hasnotes" class="far fa-sticky-note"  data-toggle="tooltip" data-placement="left"   ></i></td>
-                            <td ><i zippy="isplanned" class="fa fa-calendar-alt"  title="Запланированный"></i></td>
-                            <td ><i zippy="waitpay"   class="fa fa-credit-card"   title="Ожидает оплату "></i></td>
-                            <td ><i zippy="waitapp"   class="fa fa-gavel"   title="Ожидает утверждения "></i></td>
+                            <td ><i zippy="isplanned" class="fa fa-calendar-alt"  title="Запланований"></i></td>
+                            <td ><i zippy="waitpay"   class="fa fa-credit-card"   title="Чекає оплату "></i></td>
+                            <td ><i zippy="waitapp"   class="fa fa-gavel"   title="Очікує затвердження "></i></td>
 
 
                             <td style="white-space:   nowrap"> &nbsp;&nbsp;
-                                <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a>
-                                <a zippy="edit" title="Редактирование"><i class="fa fa-edit"> &nbsp;&nbsp;</a>
-                                <a zippy="cancel" title="Отменить выполнение"><i class="fa fa-undo"></i> </a>
+                                <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a>
+                                <a zippy="edit" title="Редагування"><i class="fa fa-edit"> &nbsp;&nbsp;</a>
+                                <a zippy="cancel" title="Скасувати виконання"><i class="fa fa-undo"></i> </a>
 
                             </td>
                             <td>
-                                <a zippy="delete" title="Удаление"><i class="fa fa-trash"></i></a>
+                                <a zippy="delete" title="Видалення"><i class="fa fa-trash"></i></a>
                             </td>
                             <td>
                                 <div class="btn-group" zippy="basedon">
-                                    <button title="Создать на  основании" type="button"
+                                    <button title="Створити на підставі" type="button"
                                             class="btn btn-light btn-sm  dropdown-toggle" data-toggle="dropdown">
-                                        Создать <span class="caret"></span>
+                                        Створити <span class="caret"></span>
                                     </button>
                                     <div  class="dropdown-menu" role="menu" zippy="basedlist">
 
@@ -105,9 +105,9 @@
 
                 <div class="navbar nav">
                     <form zippy="statusform" class="form-inline ">
-                        <button zippy="bap"   class= "btn btn-success  mr-2"  ><i class="fas fa-thumbs-up"></i> Утвердить</button>
-                        <button  zippy="bref"  class= "btn btn-danger  mr-2"  > <i class="fas fa-thumbs-down"></i> Отклонить</button>
-                        <input   zippy="refcomment" placeholder="Коментарий к  отмене" >
+                        <button zippy="bap"   class= "btn btn-success  mr-2"  ><i class="fas fa-thumbs-up"></i> Затвердити</button>
+                        <button  zippy="bref"  class= "btn btn-danger  mr-2"  > <i class="fas fa-thumbs-down"></i> Відхилити</button>
+                        <input   zippy="refcomment" placeholder="Коментар до скасування" >
 
                     </form>
                 </div> 
@@ -122,7 +122,7 @@
 
         <script>
             function check_delete() {
-                return confirm("Удалить  документ?")
+                return confirm("Видалити документ?")
             }
         </script>
     </body>

@@ -3,13 +3,13 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="6">
-            Движение по денежным счетам 
+            Рух по грошовим рахунках
         </td>
     </tr>            
     <tr>
 
         <td align="center" colspan="6">
-            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Счет: <strong>{{mf_name}}</strong> 
+            Період з {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Рахунок: <strong>{{mf_name}}</strong> 
         </td>
     </tr>
 
@@ -18,10 +18,10 @@
         <th style="border: solid black 1px"  >Дата</th>
 
 
-        <th align="right" style="border: solid black 1px">Нач.</th>
+        <th align="right" style="border: solid black 1px">Поч.</th>
         <th style="border: solid black 1px">Прих.</th>
-        <th align="right" style="border: solid black 1px">Расх.</th>
-        <th align="right" style="border: solid black 1px">Кон.</th>
+        <th align="right" style="border: solid black 1px">Витр.</th>
+        <th align="right" style="border: solid black 1px">Кін.</th>
         
     </tr>
     {{#_detail}}
@@ -39,7 +39,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Итого:</td>
+        <td align="right">Разом:</td>
 
 
         <td align="right">{{tb}}</td>

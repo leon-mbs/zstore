@@ -5,16 +5,16 @@
     <tr>
 
         <th align="center" colspan="9">
-            Прайс от  {{date}}<br>
+            Прайс від  {{date}}<br>
         </th>
     </tr>
 
     <tr style="font-weight: bolder;">
 
-        <th   >Наименование</th>
+        <th   >Найменування</th>
         <th   >Код</th>
-        <th   >Ед.Изм. </th>
-        <th   >Категория</th>
+        <th   >Од. вим. </th>
+        <th   >Категорія</th>
 
         <th  >{{price1name}}</th>
         <th  >{{price2name}}</th>

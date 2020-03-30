@@ -3,26 +3,26 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Оплата  по  нарядам 
+            Оплата за нарядами 
         </td>
     </tr>            
     <tr>
 
         <td align="center" colspan="5">
-            Период с {{datefrom}} по {{dateto}}
+            Період з {{datefrom}} по {{dateto}}
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px" >Исполнитель</th>
+        <th style="border: solid black 1px" >Виконавець</th>
 
-        <th align="right" style="border: solid black 1px">Нарядов</th>
-        <th align="right" style="border: solid black 1px">Часов</th>
+        <th align="right" style="border: solid black 1px">Нарядів</th>
+        <th align="right" style="border: solid black 1px">Годин</th>
 
-        <th align="right" style="border: solid black 1px">Сумма</th>
-        <th align="right" style="border: solid black 1px">К оплате</th>
+        <th align="right" style="border: solid black 1px">Сума</th>
+        <th align="right" style="border: solid black 1px">До оплати</th>
 
         {{#_detail}}
     <tr>

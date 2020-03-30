@@ -2,7 +2,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr  >
         <td colspan="6" align="center">
-            <b> Оприходование ТМЦ № {{document_number}} от {{date}}</b> <br> 
+            <b> Оприбуткування ТМЦ № {{document_number}} від {{date}}</b> <br> 
         </td>
     </tr>
 
@@ -15,14 +15,14 @@
 
 
     <tr style="font-weight: bolder;">
-        <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Название</th>
+        <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Назва</th>
         <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;"> </th>
-        <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
+        <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
 
-        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кол.</th>
-        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Цена</th>
-        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Сумма</th>
+        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
+        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ціна</th>
+        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Сума</th>
 
     </tr>
     {{#_detail}}
@@ -39,7 +39,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="5" align="right">На сумму:</td>
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">На суму:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>    
     <tr>

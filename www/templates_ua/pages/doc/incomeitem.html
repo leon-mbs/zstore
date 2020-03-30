@@ -6,7 +6,7 @@
 
 
         <form zippy="docform">
-            <h3> Оприходование ТМЦ</h3>
+            <h3> Оприбуткування ТМЦ</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -21,12 +21,12 @@
                     <div class="form-group  ">
                         <label for="store" >На склад</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не выбран</option>                        
+                            <option value="0">Не обрано</option>                        
                         </select>
                     </div>
 
                     <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
+                        <label for="notes" >Примітка </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -44,19 +44,19 @@
 
                     </div>
                     {{/usescanner}}
-                    <a zippy="addrow">Добавить товар</a>
+                    <a zippy="addrow">Додати товар</a>
                     <table class="table table-sm">
                         <tr>
-                            <th>Название</th>
-                            <th>Ед.</th>
+                            <th>Назва</th>
+                            <th>Од.</th>
                             {{#usesnumber}} 
-                            <th  >Серия</th>
+                            <th  >Серія</th>
                             <th  >Дата</th>
                             {{/usesnumber}} 
-                            <th width="40"  class="text-right" >Кол.</th>
-                            <th   class="text-right">Цена</th>
+                            <th width="40"  class="text-right" >Кіл.</th>
+                            <th   class="text-right">Ціна</th>
 
-                            <th   class="text-right">Сумма</th>
+                            <th   class="text-right">Сума</th>
                             <th width="50"></th>
                         </tr>
                         <tr zippy="detail">
@@ -76,10 +76,10 @@
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
                             {{^usesnumber}} 
-                            <td colspan="4" class="text-right">Всего:</td>
+                            <td colspan="4" class="text-right">Всього:</td>
                             {{/usesnumber}} 
                             {{#usesnumber}} 
-                            <td colspan="6" class="text-right">Всего:</td>
+                            <td colspan="6" class="text-right">Всього:</td>
                             {{/usesnumber}} 
                             <td zippy="total" class="text-right"></td>
                             <td></td>
@@ -91,8 +91,8 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-light">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-light">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>
@@ -103,46 +103,46 @@
 
     </form>
     <form zippy="editdetail">
-        <h4>Ввод товара </h4>
+        <h4>Введення товару </h4>
         <div class="row">
             <div class="col-12 col-md-4">
 
                 <div class="form-group">
-                    <label for="edititem" >Наименование</label>
-                    <input class="form-control" zippy="edititem"  placeholder="Начните вводить  ">
+                    <label for="edititem" >Найменування</label>
+                    <input class="form-control" zippy="edititem"  placeholder="Почніть вводити...  ">
 
 
                 </div> 
                 {{#usesnumber}} 
                 <div class="form-group">
-                    <label for="editsnumber" >Партия поставщика</label>
+                    <label for="editsnumber" >Партія постачальника</label>
 
                     <input   type="text" zippy="editsnumber" class="form-control"
                              ></input>
 
                 </div>
                 <div class="form-group">
-                    <label for="editsdate">Годен, до </label>
+                    <label for="editsdate">Придатний до </label>
                     <input   class="form-control "   zippy="editsdate" />
 
                 </div>                
                 {{/usesnumber}} 
                 <div class="form-group">
-                    <label for="editquantity" >Количество</label>
+                    <label for="editquantity" >Кількість</label>
 
                     <input style="width:100px;" type="text" zippy="editquantity" class="form-control"
                            required="required" pattern="[0-9\.]+"></input>
 
                 </div>
                 <div class="form-group">
-                    <label for="editprice">Цена  </label>
+                    <label for="editprice">Ціна  </label>
                     <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
                            style="width: 100px;">
                 </div>                
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Отменить" class="btn   btn-light">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
+                        type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-light">
                 </div>
             </div>
         </div>

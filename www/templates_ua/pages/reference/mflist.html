@@ -6,14 +6,14 @@
         <div class="row">
             <div class="col-12 col-md-6 col-xl-4">
                 <div zippy="mftable">
-                    <h3>Кассы </h3>
-                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
+                    <h3>Каси </h3>
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
                     <table class="table    table-sm"  >
                         <tr>
-                            <th>Название</th>
-                            {{#usebranch}}  <th>Филиал</th>  {{/usebranch}}
+                            <th>Назва</th>
+                            {{#usebranch}}  <th>Філія</th>  {{/usebranch}}
 
-                            <th>Описание</th>
+                            <th>Опис</th>
                             <th class="text-right">Баланс</th>
 
                             <th> </th>
@@ -25,8 +25,8 @@
                             <td zippy="description"></td>
                             <td class="text-right" zippy="amount"></td>
 
-                            <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                <a  zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
+                            <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
+                                <a  zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     </table>
@@ -42,25 +42,25 @@
 
                 <form  zippy="mfdetail"  >
                     <div class="form-group">
-                        <label for="editmf_name">Название</label>
+                        <label for="editmf_name">Назва</label>
                         <input  required="required" class="form-control" zippy="editmf_name"/>
                     </div>
                     {{#usebranch}}
                     <div class="form-group">
-                        <label for="editbranch">Филиал</label>
+                        <label for="editbranch">Філія</label>
                         <select    class="form-control" zippy="editbranch">
-                            <option value="0">Не выбран</option>                                                                                                          
+                            <option value="0">Не обрано</option>                                                                                                          
                         </select>
                     </div>
                     {{/usebranch}}                     
                     <div class="form-group">
-                        <label for="editmf_description">Описание</label>
+                        <label for="editmf_description">Опис</label>
                         <textarea    class="form-control" zippy="editmf_description" ></textarea>
                     </div>
 
 
-                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  "> 
+                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  "> 
 
                 </form>
             </div>
