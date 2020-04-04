@@ -80,7 +80,7 @@ class TransItem extends Document {
             "amount" => H::fa($this->amount)
         );
 
-        $report = new \App\Report('transitem.tpl');
+        $report = new \App\Report('doc/transitem.tpl');
 
         $html = $report->generate($header);
 

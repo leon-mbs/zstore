@@ -3,6 +3,7 @@
 namespace App;
 
 use \Symfony\Polyfill\Mbstring\Mbstring;
+use \App\Helper as H;
 
 /**
  * Класс   со  вспомагательными   функциями
@@ -48,7 +49,7 @@ class Util {
      */
     public static function getYears() {
         $list = array();
-        for ($i = 2016; $i <= 2030; $i++)
+        for ($i = 2020; $i <= 2030; $i++)
             $list[$i] = $i;
         return $list;
     }
@@ -58,18 +59,18 @@ class Util {
      */
     public static function getMonth() {
         $list = array();
-        $list[1] = "Январь";
-        $list[2] = "Февраль";
-        $list[3] = "Март";
-        $list[4] = "Апрель";
-        $list[5] = "Май";
-        $list[6] = "Июнь";
-        $list[7] = "Июль";
-        $list[8] = "Август";
-        $list[9] = "Сентябрь";
-        $list[10] = "Октябрь";
-        $list[11] = "Ноябрь";
-        $list[12] = "Декабрь";
+        $list[1] = H::l('january');
+        $list[2] = H::l('february');
+        $list[3] = H::l('march');
+        $list[4] = H::l('april');
+        $list[5] = H::l('may');
+        $list[6] = H::l('june');
+        $list[7] = H::l('july');
+        $list[8] = H::l('august');
+        $list[9] = H::l('september');
+        $list[10] = H::l('october');
+        $list[11] = H::l('november');
+        $list[12] = H::l('december');
         return $list;
     }
 

@@ -385,39 +385,39 @@ class Document extends \ZCL\DB\Entity {
 
         switch ($state) {
             case Document::STATE_NEW:
-                return "Новый";
+                return Helper::l('st_new') ;
             case Document::STATE_EDITED:
-                return "Отредактирован";
+                return Helper::l('st_edit') ;
             case Document::STATE_CANCELED:
-                return "Отменен";
+                return Helper::l('st_canceled') ;
             case Document::STATE_EXECUTED:
-                return "Проведен";
+                return Helper::l('st_executed') ;
             case Document::STATE_CLOSED:
-                return "Закрыт";
+                return Helper::l('st_closed') ;
             case Document::STATE_APPROVED:
-                return "Готов к выполнению";
+                return Helper::l('st_approved') ;
             case Document::STATE_DELETED:
-                return "Удален";
+                return Helper::l('st_deleted') ;
 
             case Document::STATE_WA:
-                return "Ожидает утверждения";
+                return Helper::l('st_wa') ;
             case Document::STATE_INSHIPMENT:
-                return "В доставке";
+                return Helper::l('st_inshipment') ;
             case Document::STATE_FINISHED:
-                return "Выполнен";
+                return Helper::l('st_finished') ;
             case Document::STATE_DELIVERED:
-                return "Доставлен";
+                return Helper::l('st_delivered') ;
             case Document::STATE_REFUSED:
-                return "Отклонен";
+                return Helper::l('st_refused') ;
             case Document::STATE_SHIFTED:
-                return "Отложен";
+                return Helper::l('st_shifted') ;
             case Document::STATE_FAIL:
-                return "Аннулирован";
+                return Helper::l('st_fail') ;
             case Document::STATE_INPROCESS:
-                return "Выполняется";
+                return Helper::l('st_inprocess') ;
 
             default:
-                return "Неизвестный статус";
+                return Helper::l('st_unknow') ;
         }
     }
 

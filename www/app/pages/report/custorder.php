@@ -103,7 +103,7 @@ class CustOrder extends \App\Pages\Base {
             'date' => date('d.m.Y', time()),
             'customer_name' => $this->filter->cust->getValueName()
         );
-        $report = new \App\Report('custorder.tpl');
+        $report = new \App\Report('report/custorder.tpl');
 
         $html = $report->generate($header, $detail);
 

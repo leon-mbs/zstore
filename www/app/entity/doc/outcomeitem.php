@@ -60,7 +60,7 @@ class OutcomeItem extends Document {
             "notes" => $this->notes,
             "document_number" => $this->document_number
         );
-        $report = new \App\Report('outcomeitem.tpl');
+        $report = new \App\Report('doc/outcomeitem.tpl');
 
         $html = $report->generate($header);
 

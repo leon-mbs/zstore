@@ -190,7 +190,7 @@ class Outcome extends \App\Pages\Base {
             $header['_type3'] = false;
             $header['_type4'] = true;
         }
-        $report = new \App\Report('outcome.tpl');
+        $report = new \App\Report('report/outcome.tpl');
 
         $html = $report->generate($header);
 

@@ -36,8 +36,8 @@ class Options extends \App\Pages\Base {
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $pt = array(
-            "1" => "По последней закупочной цене",
-            "2" => "Отдельно  по каждой закупочной цене"
+            "1" =>H::l('opt_lastprice') ,
+            "2" => H::l('opt_partion') 
         );
         $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
         $this->common->add(new DropDownChoice('lang', array('ru' => 'Русский','ua' => 'Українська'   ), 'ru'));
@@ -182,7 +182,7 @@ class Options extends \App\Pages\Base {
 
         System::setOptions("common", $common);
 
-        $this->setSuccess(H::l('msg_saved'));
+        $this->setSuccess(H::l('saved'));
         System::setCache('labels',null) ;
     }
 
@@ -260,19 +260,19 @@ class Options extends \App\Pages\Base {
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
         switch ($item->meta_type) {
             case 1:
-                $title = "Документ";
+                $title = H::l('md_doc');
                 break;
             case 2:
-                $title = "Отчет";
+                $title = H::l('md_rep');
                 break;
             case 3:
-                $title = "Журнал";
+                $title = H::l('md_reg');
                 break;
             case 4:
-                $title = "Справочник";
+                $title = H::l('md_ref');
                 break;
             case 5:
-                $title = "Сервис";
+                $title = H::l('md_ser');
                 break;
         }
 

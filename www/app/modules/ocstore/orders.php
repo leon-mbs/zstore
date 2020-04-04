@@ -165,7 +165,7 @@ class Orders extends \App\Pages\Base {
 
             $i++;
         }
-        $this->setInfo("Импортировано {$i} заказов");
+        $this->setInfo( H::l('imported_orders',$i))   ;
 
         $this->_neworders = array();
         $this->neworderslist->Reload();

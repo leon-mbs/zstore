@@ -52,7 +52,7 @@ class RetCustIssue extends Document {
         );
 
 
-        $report = new \App\Report('retcustissue.tpl');
+        $report = new \App\Report('doc/retcustissue.tpl');
 
         $html = $report->generate($header);
 

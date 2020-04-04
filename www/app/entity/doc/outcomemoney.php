@@ -33,7 +33,7 @@ class OutcomeMoney extends Document {
             "type" => $pt[$this->headerdata["type"]],
             "document_number" => $this->document_number
         );
-        $report = new \App\Report('outcomemoney.tpl');
+        $report = new \App\Report('doc/outcomemoney.tpl');
 
         $html = $report->generate($header);
 

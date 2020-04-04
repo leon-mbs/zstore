@@ -54,11 +54,11 @@ class MoneyFund extends \ZCL\DB\Entity {
     public static function getList(  $credit = false, $prepaid = false) {
         $ml = array();
         if ($credit)
-            $ml[self::CREDIT] = 'В кредит';
+            $ml[self::CREDIT] = \App\Helper::l("credit");
    //     if ($beznal)
       //      $ml[self::BEZNAL] = 'Безналичный расчет';
         if ($prepaid)
-            $ml[self::PREPAID] = 'Предоплата';
+            $ml[self::PREPAID] = \App\Helper::l("prepaid") ;
         foreach (MoneyFund::findArray("mf_name", "") as $k => $v) {
             $ml[$k] = $v;
         }

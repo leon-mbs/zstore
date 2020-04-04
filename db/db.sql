@@ -420,7 +420,7 @@ CREATE TABLE `item_set` (
   `set_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) DEFAULT '0',
   `pitem_id` int(11) DEFAULT '0',
-  `qty` int(11) DEFAULT '0',
+  `qty` decimal(11,3) DEFAULT '0',
   PRIMARY KEY (`set_id`)
 )  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

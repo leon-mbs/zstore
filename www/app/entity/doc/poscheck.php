@@ -71,7 +71,7 @@ class POSCheck extends Document {
         );
 
 
-        $report = new \App\Report('poscheck.tpl');
+        $report = new \App\Report('doc/poscheck.tpl');
 
         $html = $report->generate($header);
 
@@ -124,7 +124,7 @@ class POSCheck extends Document {
         );
 
 
-        $report = new \App\Report('poscheck_bill.tpl');
+        $report = new \App\Report('doc/poscheck_bill.tpl');
 
         $html = $report->generate($header);
 

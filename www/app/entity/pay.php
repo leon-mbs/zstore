@@ -91,23 +91,23 @@ class Pay extends \ZCL\DB\Entity {
     public static function getPayTypeList($type = 0) {
         $list = array();
         if ($type != 2) {
-            $list[PAY::PAY_BASE_INCOME] = "Доходы основной деятельности";
-            $list[PAY::PAY_INVEST_INCOME] = "Инвестиции";
-            $list[PAY::PAY_OTHER_INCOME] = "Прочие доходы";
-            $list[PAY::PAY_CANCEL_CUST] = "Возврат  поставщику";
+            $list[PAY::PAY_BASE_INCOME] = \App\Helper::l('pt_inprod') ;
+            $list[PAY::PAY_INVEST_INCOME] = \App\Helper::l('pt_ininv') ;
+            $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother') ;
+            $list[PAY::PAY_CANCEL_CUST] = \App\Helper::l('pt_infromcust') ;
         }
 
         if ($type != 1) {
-            $list[PAY::PAY_BASE_OUTCOME] = "Расходы основной деятельности";
-            $list[PAY::PAY_COMMON_OUTCOME] = "Общепроизводственные  расходы";
-            $list[PAY::PAY_ADMIN_OUTCOME] = "Административные  расходы";
-            $list[PAY::PAY_SALE_OUTCOME] = "Расходы на сбыт";
-            $list[PAY::PAY_SALARY_OUTCOME] = "Выплата зарплат";
-            $list[PAY::PAY_TAX_OUTCOME] = "Уплата  налогов  и сборов";
-            $list[PAY::PAY_BILL_OUTCOME] = "Расходы на  аренду и комуналку";
-            $list[PAY::PAY_DIVIDEND_OUTCOME] = "Распределение прибыли  ";
-            $list[PAY::PAY_OTHER_OUTCOME] = "Прочие расходы";
-            $list[PAY::PAY_CANCEL] = "Возврат  покупателю";
+            $list[PAY::PAY_BASE_OUTCOME] =\App\Helper::l('pt_outprod');
+            $list[PAY::PAY_COMMON_OUTCOME] =\App\Helper::l('pt_outcommon') ;
+            $list[PAY::PAY_ADMIN_OUTCOME] =\App\Helper::l('pt_outadm') ;
+            $list[PAY::PAY_SALE_OUTCOME] =\App\Helper::l('pt_outsell') ;
+            $list[PAY::PAY_SALARY_OUTCOME] =\App\Helper::l('pt_outsalary');
+            $list[PAY::PAY_TAX_OUTCOME] = \App\Helper::l('pt_outtax');
+            $list[PAY::PAY_BILL_OUTCOME] =\App\Helper::l('pt_outrent') ;
+            $list[PAY::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
+            $list[PAY::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
+            $list[PAY::PAY_CANCEL] =\App\Helper::l('pt_outbackcust') ;
         }
 
         return $list;

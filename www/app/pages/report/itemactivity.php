@@ -126,7 +126,7 @@ class ItemActivity extends \App\Pages\Base {
     (
         SELECT  
           
-          COALESCE(SUM(sc3.`quantity`), 0)  
+          COALESCE(SUM(sc3.`amount`), 0)  
          FROM entrylist_view sc3
           JOIN store_stock_view st3
             ON sc3.stock_id = st3.stock_id
@@ -198,7 +198,7 @@ class ItemActivity extends \App\Pages\Base {
         $header['baout'] = H::fa($baout);
         $header['baend'] = H::fa($ba + $bain - $baout);
 
-        $report = new \App\Report('itemactivity.tpl');
+        $report = new \App\Report('report/itemactivity.tpl');
 
         $html = $report->generate($header);
 

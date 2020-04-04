@@ -33,7 +33,7 @@ class IncomeMoney extends Document {
             "to" => $this->headerdata["paymentname"],
             "document_number" => $this->document_number
         );
-        $report = new \App\Report('incomemoney.tpl');
+        $report = new \App\Report('doc/incomemoney.tpl');
 
         $html = $report->generate($header);
 

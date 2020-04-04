@@ -49,7 +49,7 @@ class Invoice extends \App\Entity\Doc\Document {
         );
 
 
-        $report = new \App\Report('invoice.tpl');
+        $report = new \App\Report('doc/invoice.tpl');
 
         $html = $report->generate($header);
 

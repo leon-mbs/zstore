@@ -52,7 +52,7 @@ class GoodsReceipt extends Document {
         $header['nds']  = H::fa($this->headerdata["nds"]);
         $header['rate'] = $this->headerdata["rate"] ;
         
-        $report = new \App\Report('goodsreceipt.tpl');
+        $report = new \App\Report('doc/goodsreceipt.tpl');
 
         $html = $report->generate($header);
 

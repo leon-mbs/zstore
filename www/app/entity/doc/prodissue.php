@@ -51,7 +51,7 @@ class ProdIssue extends Document {
             "notes" => $this->notes
         );
 
-        $report = new \App\Report('prodissue.tpl');
+        $report = new \App\Report('doc/prodissue.tpl');
 
         $html = $report->generate($header);
 

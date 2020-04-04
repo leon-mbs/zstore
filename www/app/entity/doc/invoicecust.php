@@ -43,7 +43,7 @@ class InvoiceCust extends Document {
         $header['nds']  = H::fa($this->headerdata["nds"]);
         $header['rate'] = $this->headerdata["rate"] ;
     
-        $report = new \App\Report('invoicecust.tpl');
+        $report = new \App\Report('doc/invoicecust.tpl');
 
         $html = $report->generate($header);
 

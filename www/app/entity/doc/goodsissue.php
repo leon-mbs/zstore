@@ -63,7 +63,7 @@ class GoodsIssue extends Document {
         }
         $header["isdelivery"] = $this->headerdata["delivery"] > 1;
 
-        $report = new \App\Report('goodsissue.tpl');
+        $report = new \App\Report('doc/goodsissue.tpl');
 
         $html = $report->generate($header);
 

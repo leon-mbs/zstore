@@ -11,6 +11,7 @@ use \Zippy\Html\Form\Form;
 use \Zippy\Html\Label;
 use \App\System;
 use \Zippy\Html\DataList\DataView;
+use \App\Helper as H;
 
 class UserProfile extends \App\Pages\Base {
 
@@ -168,19 +169,19 @@ class UserProfile extends \App\Pages\Base {
         $item = $row->getDataItem();
         switch ($item->meta_type) {
             case 1:
-                $title = "Документ";
+                $title = H::l('md_doc') ;
                 break;
             case 2:
-                $title = "Отчет";
+                $title = H::l('md_rep');
                 break;
             case 3:
-                $title = "Журнал";
+                $title = H::l('md_reg');
                 break;
             case 4:
-                $title = "Справочник";
+                $title = H::l('md_ref');
                 break;
             case 5:
-                $title = "Сервис ";
+                $title = H::l('md_ser');
                 break;
         }
         $smartmenu = @explode(',', $this->user->smartmenu);

@@ -48,7 +48,7 @@ class ReturnIssue extends Document {
             "payed" => H::fa($this->payed )
         );
 
-        $report = new \App\Report('returnissue.tpl');
+        $report = new \App\Report('doc/returnissue.tpl');
 
         $html = $report->generate($header);
 

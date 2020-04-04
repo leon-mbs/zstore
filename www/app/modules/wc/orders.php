@@ -140,7 +140,8 @@ class Orders extends \App\Pages\Base {
             $shoporder->updateStatus(Document::STATE_NEW);
    
         }
-        $this->setInfo("Импортировано " . count($this->_neworders) . " заказов");
+       
+        $this->setInfo( H::l('imported_orders',count($this->_neworders)))   ;
 
         $this->_neworders = array();
         $this->neworderslist->Reload();

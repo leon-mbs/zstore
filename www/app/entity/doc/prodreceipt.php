@@ -44,7 +44,7 @@ class ProdReceipt extends Document {
         );
 
 
-        $report = new \App\Report('prodreceipt.tpl');
+        $report = new \App\Report('doc/prodreceipt.tpl');
 
         $html = $report->generate($header);
 
