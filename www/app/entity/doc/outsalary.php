@@ -16,8 +16,7 @@ class OutSalary extends Document {
 
 
         Pay::addPayment($this->document_id,$this->document_date, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_SALARY_OUTCOME );
-
-
+ 
         return true;
     }
 

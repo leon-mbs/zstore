@@ -12,7 +12,7 @@ class Application extends \Zippy\WebApplication {
      * Возвращает  шаблон  страницы
      */
     public function getTemplate($name) {
-        $common=\App\System::getOptions('common') ;
+        global $_config; 
         
         
         $path = '';
@@ -20,7 +20,7 @@ class Application extends \Zippy\WebApplication {
         $arr = explode('\\', $name);
         
         $templatepath = 'templates/';
-        if($common['lang']=='ua') $templatepath = 'templates_ua/';
+        if($_config['common']['lang']=='ua') $templatepath = 'templates_ua/';
         
         $className = str_replace("\\", "/", ltrim($name, '\\'));
 

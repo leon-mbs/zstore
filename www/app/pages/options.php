@@ -40,8 +40,7 @@ class Options extends \App\Pages\Base {
             "2" => H::l('opt_partion') 
         );
         $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
-        $this->common->add(new DropDownChoice('lang', array('ru' => 'Русский','ua' => 'Українська'   ), 'ru'));
-
+        
 
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
@@ -65,7 +64,7 @@ class Options extends \App\Pages\Base {
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
-        $this->common->lang->setValue($common['lang']);
+        
 
         $this->common->price1->setText($common['price1']);
         $this->common->price2->setText($common['price2']);
@@ -132,7 +131,7 @@ class Options extends \App\Pages\Base {
         $this->add(new Panel('listpan'));
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->listpan->filter->add(new CheckBox('fdoc'))->setChecked(true);
-        $this->listpan->filter->add(new CheckBox('fdic'))->setChecked(true);
+        $this->listpan->filter->add(new CheckBox('fref'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('frep'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('freg'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('fser'))->setChecked(true);
@@ -161,8 +160,7 @@ class Options extends \App\Pages\Base {
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
-        $common['lang'] = $this->common->lang->getValue();
-
+      
         $common['price1'] = $this->common->price1->getText();
         $common['price2'] = $this->common->price2->getText();
         $common['price3'] = $this->common->price3->getText();
@@ -222,10 +220,10 @@ class Options extends \App\Pages\Base {
         if ($this->listpan->filter->frep->isChecked()) {
             $where .= " or meta_type = 2";
         }
-        if ($this->listpan->filter->freg->isChecked()) {
+        if ($this->listpan->filter->fref->isChecked()) {
             $where .= " or meta_type = 3";
         }
-        if ($this->listpan->filter->fdic->isChecked()) {
+        if ($this->listpan->filter->freg->isChecked()) {
             $where .= " or meta_type = 4";
         }
         if ($this->listpan->filter->fser->isChecked()) {
@@ -266,10 +264,10 @@ class Options extends \App\Pages\Base {
                 $title = H::l('md_rep');
                 break;
             case 3:
-                $title = H::l('md_reg');
+                $title = H::l('md_ref');
                 break;
             case 4:
-                $title = H::l('md_ref');
+                $title = H::l('md_reg');
                 break;
             case 5:
                 $title = H::l('md_ser');

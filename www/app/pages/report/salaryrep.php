@@ -11,15 +11,16 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\RedirectLink;
 use \Zippy\Html\Panel;
 use \App\Entity\MoneyFund;
+use \App\Entity\Employee;
 use \App\Entity\Pay;
 use \App\Helper as H;
 use \App\Application as App;
 use \App\System as System;
 
 /**
- * Движение по денежным счетам
+ *  Отчет по  зарплате
  */
-class PayActivity extends \App\Pages\Base {
+class SalaryRep extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
@@ -27,22 +28,23 @@ class PayActivity extends \App\Pages\Base {
             return;
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time()));
+ 
 
+        $this->filter->add(new DropDownChoice('yfrom', \App\Util::getYears(), round(date('Y'))));
+        $this->filter->add(new DropDownChoice('mfrom', \App\Util::getMonth(), round(date('m'))));
+        $this->filter->add(new DropDownChoice('yto', \App\Util::getYears(), round(date('Y'))));
+        $this->filter->add(new DropDownChoice('mto', \App\Util::getMonth(), round(date('m'))));
+        
+        $this->filter->add(new DropDownChoice('emp', Employee::findArray('emp_name','disabled<>1','emp_name') ));
 
-        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList( ), H::getDefMF()));
-
-
-        $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
-
+      
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
   
         $this->detail->add(new RedirectLink('excel', "mfreport"));
         $this->detail->add(new RedirectLink('pdf', "mfreport"));
         $this->detail->add(new Label('preview'));
-        \App\Session::getSession()->issubmit = false;
+  
     }
 
     public function OnSubmit($sender) {
@@ -51,11 +53,10 @@ class PayActivity extends \App\Pages\Base {
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-
+ 
         // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $reportpage = "App/Pages/ShowReport";
-        $reportname = "mfreport";
+        $reportname = "slreport";
 
 
             $this->detail->excel->pagename = $reportpage;
@@ -64,111 +65,92 @@ class PayActivity extends \App\Pages\Base {
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
-
-        $this->detail->preview->setText("<b >Загрузка...</b>", true);
-        \App\Session::getSession()->printform = "";
-        \App\Session::getSession()->issubmit = true;
-    }
+        $html  = $this->generateReport();
+        
+        $this->detail->preview->setText($html, true);        
+    }   
 
     private function generateReport() {
 
-        $mf_id = $this->filter->mf->getValue();
- 
+        $emp_id = $this->filter->emp->getValue();
+        $emp_name = $this->filter->emp->getValueName();
+        $yfrom = $this->filter->yfrom->getValue();
+        $mfrom = $this->filter->mfrom->getValue();
+        $mfromname = $this->filter->mfrom->getValueName();
+        $yto = $this->filter->yto->getValue();
+        $mto = $this->filter->mto->getValue();
+        $mtoname = $this->filter->mto->getValueName();
 
-        $from = $this->filter->from->getDate();
-        $to = $this->filter->to->getDate();
-
-        $i = 1;
-        $detail = array();
-        $conn = \ZDB\DB::getConnect();
-
-        $sql = "
-         SELECT  t.*,
-          
-         (
-        SELECT  
-          
-          COALESCE(SUM(sc2.`amount`), 0)  
-         FROM paylist_view sc2
-           
-              WHERE 
-              sc2.mf_id =  {$mf_id}
+        $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");   
         
-              AND sc2.paydate  < t.dt   
-               
-                                 
-         ) as begin_amount   
-         
-          from (
-           select
-    
-          date(sc.paydate) AS dt,
-          SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS obin,
-          SUM(CASE WHEN amount < 0 THEN 0 - amount ELSE 0 END) AS obout 
+        $detail = array();
+        
+        $from = strtotime($yfrom.'-'.$mfrom.'-01');
+        $to = strtotime($yto.'-'.$mto.'-01 23:59:59');
+        
+        foreach($doclist as $doc){
+            
+           $date  = strtotime($doc->headerdata['year'].'-'.$doc->headerdata['month'].'-01');
            
-        FROM paylist_view sc
-             WHERE   
-                sc.mf_id = {$mf_id}
-              AND DATE(sc.paydate) >= " . $conn->DBDate($from) . "
-              AND DATE(sc.paydate) <= " . $conn->DBDate($to) . "
-              GROUP BY    
-                       DATE(sc.paydate)  ) t
-              ORDER BY t.dt  
-        ";
-
-
-        $rs = $conn->Execute($sql);
-
-        $tend = 0;
-        $tin = 0;
-        $tout = 0;
-        foreach ($rs as $row) {
-
-
-            $detail[] = array(
-                "date" => date("Y-m-d", strtotime($row['dt'])),
-          
-                "in" => H::fa(strlen($row['begin_amount']) > 0 ? $row['begin_amount'] : 0),
-                "obin" => H::fa($row['obin']),
-                "obout" => H::fa($row['obout']),
-                "out" => H::fa($row['begin_amount'] + $row['obin'] - $row['obout'])
-            );
-            $tend = $row['begin_amount'] + $row['obin'] - $row['obout'];
-            $tin += $row['obin'];
-            $tout += $row['obout'];
+           $d1 = date("Y-m-d H:i",$from)  ;
+           $d2 = date("Y-m-d H:i",$to)  ;
+           $d3 = date("Y-m-d H:i",$date)  ;
+           
+           if($date < $from || $date>$to) continue;
+            
+           foreach($doc->unpackDetails('detaildata') as $emp){
+               
+               if($emp_id>0){
+                  if($emp->employee_id != $emp_id)  continue;
+                  
+                  $detail[$doc->headerdata['year'].$doc->headerdata['month']]=array('k'=>$doc->headerdata['monthname'].' ' . $doc->headerdata['year'],'v'=>$emp->amount); 
+                   
+               }  else {
+                  if($emp->amount >0){
+                      if(is_array($detail[$emp->emp_id]))   {
+                           $detail[$emp->employee_id]['amount'] += $emp->amount;
+                      }   else {
+                         $detail[$emp->employee_id]=array('k'=>$emp->emp_name,'v'=>$emp->amount); 
+                      }
+                  }
+                   
+               }
+               
+               
+           }
+            
+            
         }
-        $tb = $tend - $tin + $tout;
-
-        $header = array('datefrom' => date('d.m.Y', $from),
-            "_detail" => $detail,
-            'tb' => H::fa($tb),
-            'tin' => H::fa($tin),
-            'tout' => H::fa($tout),
-            'tend' => H::fa($tend),
-            'dateto' => date('d.m.Y', $to),
-            "mf_name" => MoneyFund::load($mf_id)->mf_name
+        $total=0;
+        foreach($detail as $k=>$item) {
+           $total += $item['v'];
+           $item['v'] = H::fa($item['v']);
+        }
+        
+        
+    
+        $header = array( 
+            "_detail" => array_values( $detail),
+            'yfrom' => $yfrom,
+            'mfrom' => $mfromname,
+            'yto' => $yto,
+            'mto' => $mtoname,
+            'isemp' => $emp_id>0,
+            'total' => H::fa($total),
+        
+            "emp_name" => $emp_name
         );
-        $report = new \App\Report('report/payactivity.tpl');
-
+        
+        
+        $report = new \App\Report('report/salaryrep.tpl');
+       
         $html = $report->generate($header);
 
         return $html;
     }
 
-    public function OnAutoLoad($sender) {
+   
 
-        if (\App\Session::getSession()->issubmit === true) {
-            $html = $this->generateReport();
-            \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-            $this->detail->preview->setText($html, true);
-            $this->updateAjax(array('preview'));
-        }
-    }
-
-    public function beforeRender() {
-        parent::beforeRender();
-
-        App::addJavaScript("\$('#autoclick').click()", true);
-    }
+   
 
 }

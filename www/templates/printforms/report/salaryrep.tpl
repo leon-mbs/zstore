@@ -2,51 +2,39 @@
 <table    border="0" class="ctable" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="6">
-            Движение по денежным счетам 
+        <td align="center" colspan="2">
+            Отчет по  зарплате 
         </td>
     </tr>            
     <tr>
 
-        <td align="center" colspan="6">
-            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Счет: <strong>{{mf_name}}</strong> 
+        <td align="center" colspan="2">
+            Период с {{mfrom}} {{yfrom}} по  {{mto}} {{yto}}  
         </td>
     </tr>
+    {{#isemp}}
+   <tr>
 
-    <tr style="font-weight: bolder;">
-
-        <th style="border: solid black 1px"  >Дата</th>
-
-
-        <th align="right" style="border: solid black 1px">Нач.</th>
-        <th style="border: solid black 1px">Прих.</th>
-        <th align="right" style="border: solid black 1px">Расх.</th>
-        <th align="right" style="border: solid black 1px">Кон.</th>
-        
+        <td style="font-weight: bolder;"  colspan="2">
+            {{emp_name}}
+        </td>
     </tr>
+    {{/isemp}}
+ 
     {{#_detail}}
     <tr>
 
-        <td>{{date}}</td>
-
-
-        <td align="right">{{in}}</td>
-        <td align="right">{{obin}}</td>
-        <td align="right">{{obout}}</td>
-        <td align="right">{{out}} </td>
+        <td>{{k}}</td>
+        <td class="text-right">{{v}}</td>
     
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Итого:</td>
-
-
-        <td align="right">{{tb}}</td>
-        <td align="right">{{tin}}</td>
-        <td align="right">{{tout}}</td>
-        <td align="right">{{tend}} </td>
-        <td>  </td>
+        <td class="text-right">Итого:</td>
+  
+        <td class="text-right">{{total}}</td>
+ 
     </tr>
 
 </table>
