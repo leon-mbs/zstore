@@ -158,7 +158,8 @@ class Order extends Base {
 
         $this->orderform->setVisible(false);
         $this->listform->setVisible(false);
-        $this->setSuccess("Заказ  отправлен");
+       
+        $this->setSuccess("order_sent");
         App::RedirectURI("/shop");
     }
 

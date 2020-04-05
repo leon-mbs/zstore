@@ -226,7 +226,8 @@ class Import extends \App\Pages\Base {
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
         }
-        $this->setSuccess("  Импортировано {$cnt} ТМЦ");
+  
+        $this->setSuccess("imported_items", $cnt  );
 
          
     }
@@ -327,7 +328,8 @@ class Import extends \App\Pages\Base {
             
         }
      
-        $this->setSuccess("Импортировано {$cnt} контрагентов");
+        $this->setSuccess("imported_customers {$cnt} ");
+    
 
          
     }

@@ -279,7 +279,7 @@ class ARMPos extends \App\Pages\Base {
                 }
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('Нужно ввести  номер партии производителя');
+                    $this->setWarn('needs_serial');
                     $this->editdetail->setVisible(true);
                     $this->form2->setVisible(false);
 
@@ -356,11 +356,11 @@ class ARMPos extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('Введено  больше  товара  чем  в  наличии');
+            $this->setWarn('inserted_extra_count');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+            $this->setError("needs_serial");
             return;
         }
 
@@ -368,7 +368,7 @@ class ARMPos extends \App\Pages\Base {
             $slist = $item->getSerials($this->pos->store);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setWarn('Неверный номер серии');
+                $this->setWarn('invalid_serialno');
             }
         }
 

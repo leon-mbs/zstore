@@ -208,7 +208,7 @@ class InvoiceCust extends \App\Pages\Base {
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         if ($item->price == 0) {
-            $this->setWarn("Не указана цена");
+            $this->setWarn("no_price");
         }
 
         unset($this->_itemlist[$this->_rowid]);

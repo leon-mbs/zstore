@@ -175,12 +175,12 @@ class IncomeItem extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->price == 0) {
-            $this->setWarn("Не указана цена");
+            $this->setWarn("no_price");
         }
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+            $this->setError("needs_serial");
             return;
         }
         $item->sdate = $this->editdetail->editsdate->getDate();

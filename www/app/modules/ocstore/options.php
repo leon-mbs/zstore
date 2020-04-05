@@ -80,7 +80,8 @@ class Options extends \App\Pages\Base {
                 System::getSession()->octoken = "token=" . $data['token'];
             }
 
-            $this->setSuccess('Соединение успешно');
+ 
+            $this->setSuccess('connected');
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
@@ -133,7 +134,7 @@ class Options extends \App\Pages\Base {
         $modules['ocpricetype'] = $pricetype;
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('Сохранено');
+        $this->setSuccess('saved');
     }
 
 }

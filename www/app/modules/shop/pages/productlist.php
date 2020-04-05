@@ -48,7 +48,8 @@ class ProductList extends \App\Pages\Base {
 
         $this->op = System::getOptions("shop");
         if (strlen($this->op['defcust']) == 0 || strlen($this->op['defstore']) == 0 || strlen($this->op['defpricetype']) == 0) {
-            $this->setWarn('Не заданы все настройки магазина. Перейдите на страницу  настроек.');
+            
+            $this->setWarn('notsetoptionsmag');
         }
 
 

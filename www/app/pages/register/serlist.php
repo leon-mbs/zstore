@@ -114,19 +114,21 @@ class SerList extends \App\Pages\Base {
 
         if ($sender->id == "btask") {
             if ($task) {
-                $this->setWarn('Уже есть документ Наряд');
+              
+                $this->setWarn('task_exists');
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bttn") {
             if ($ttn) {
-                $this->setWarn('Уже есть документ Расходная накладная');
+                $this->setWarn('goodsissue_exists');
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bref") {
             if ($ttn || $task) {
-                $this->setWarn('Были созданы докумнты  Наряд и/или  Расходная накладная');
+           
+                $this->setWarn('created_task_gi');
             }
             $this->_doc->updateStatus(Document::STATE_REFUSED);
         }

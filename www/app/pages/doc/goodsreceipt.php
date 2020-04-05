@@ -272,7 +272,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_rowid = 0;
 
         if ($item == null) {
-            $this->setWarn('Товар не  найден');
+         
+            $this->setWarn('item_notfound');
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
@@ -304,12 +305,13 @@ class GoodsReceipt extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->price == 0) {
-            $this->setWarn("Не указана цена");
+          
+            $this->setWarn("no_price");
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+            $this->setError("needs_serial");
             return;
         }
 
@@ -421,7 +423,8 @@ class GoodsReceipt extends \App\Pages\Base {
                         $order = Document::load($this->_doc->parent_id);
                         if ($order->state == Document::STATE_INPROCESS) {
                             $order->updateStatus(Document::STATE_CLOSED);
-                            $this->setSuccess("Заказ {$order->document_number} закрыт");
+                          
+                            $this->setSuccess("order_closed", $order->document_number );
                         }
                     }
                 }

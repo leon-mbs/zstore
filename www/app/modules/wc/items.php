@@ -135,7 +135,8 @@ class Items extends \App\Pages\Base {
                 return;
          }      
  
-        $this->setSuccess("Экспортировано " . count($elist) . " товаров");
+   
+        $this->setSuccess("exported_items" , count($elist)  );
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -189,7 +190,8 @@ class Items extends \App\Pages\Base {
                 return;
           
             }
-         $this->setSuccess("Обновлено ".count($data['update'])." товаров");
+         $this->setSuccess("refreshed_items", count($data['update']));
+      
     }
 
    //обновление цен в  магазине    
@@ -241,7 +243,8 @@ class Items extends \App\Pages\Base {
                 return;
           
             }
-        $this->setSuccess("Обновлено ".count($data['update'])." товаров");
+           $this->setSuccess("refreshed_items", count($data['update']));
+
     }
     //импорт товара с  магазина
     public function onGetItems($sender) {
@@ -310,8 +313,8 @@ class Items extends \App\Pages\Base {
 
 
 
+         $this->setSuccess("loaded_items", $i);
 
-        $this->setSuccess("Загружено {$i} товаров");
-    }
+     }
 
 }

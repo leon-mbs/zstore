@@ -62,7 +62,7 @@ class Options extends \App\Pages\Base {
         }
 
 
-        - $this->setSuccess('Соединение успешно');
+        - $this->setSuccess('connected');
     }
 
     public function saveOnClick($sender) {
@@ -93,7 +93,7 @@ class Options extends \App\Pages\Base {
         $modules['wcpricetype'] = $pricetype;
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('Сохранено');
+        $this->setSuccess('saved');
     }
 
 }

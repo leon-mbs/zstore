@@ -234,8 +234,8 @@ class PayCustList extends \App\Pages\Base {
         Pay::addPayment($this->_doc->document_id,$pdate, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
 
-
-        $this->setSuccess('Оплата добавлена');
+ 
+        $this->setSuccess('payment_added');
 
 
         $this->updateDocs();

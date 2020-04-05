@@ -138,7 +138,8 @@ class PayList extends \App\Pages\Base {
         $this->doclist->Reload(true);
 
 
-        $this->setSuccess('Платеж отменен');
+      
+        $this->setSuccess('payment_canceled');
         $this->resetURL();
     }
 

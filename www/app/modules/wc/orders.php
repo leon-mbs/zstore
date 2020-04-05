@@ -87,7 +87,8 @@ class Orders extends \App\Pages\Base {
 
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
-                    $this->setWarn("Не найден товар  с артикулом '{$product->name}' в заказе номер {$shoporder->order_id} ");
+
+                    $this->setWarn("nofoundarticle_inorder",$product->name,$shoporder->order_id);
                     continue;
                 }
                 $tovar->quantity = $product->quantity;
@@ -141,7 +142,7 @@ class Orders extends \App\Pages\Base {
    
         }
        
-        $this->setInfo( H::l('imported_orders',count($this->_neworders)))   ;
+        $this->setInfo(  'imported_orders',count($this->_neworders))   ;
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -200,7 +201,7 @@ class Orders extends \App\Pages\Base {
            }
         
          
-        $this->setSuccess("Обновлено " . count($elist) . " заказов");
+        $this->setSuccess("refrehed_orders" , count($elist) );
   
         $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();

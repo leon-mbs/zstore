@@ -256,7 +256,7 @@ class ItemList extends \App\Pages\Base {
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
 
-        $this->setInfo( H::l('partion_moved',$doc->document_number));
+        $this->setInfo(  'partion_moved',$doc->document_number);
         
         $sender->clean();
         $this->detailpanel->stocklist->Reload();

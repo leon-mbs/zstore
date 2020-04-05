@@ -180,7 +180,7 @@ class Options extends \App\Pages\Base {
 
         System::setOptions("common", $common);
 
-        $this->setSuccess(H::l('saved'));
+        $this->setSuccess('saved');
         System::setCache('labels',null) ;
     }
 
@@ -194,7 +194,7 @@ class Options extends \App\Pages\Base {
         $firm['inn'] = $this->firm->inn->getText();
 
         System::setOptions("firm", $firm);
-        $this->setSuccess('Сохранено');
+        $this->setSuccess('saved');
     }
 
     public function savePrinterOnClick($sender) {
@@ -208,7 +208,7 @@ class Options extends \App\Pages\Base {
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
 
         System::setOptions("printer", $printer);
-        $this->setSuccess('Сохранено');
+        $this->setSuccess('saved');
     }
 
     public function filterOnSubmit($sender) {

@@ -31,7 +31,8 @@ class Contact extends Base {
         $message .= "<br>";
 
         \App\Helper::sendLetter($message, $shop['email'], $shop['email'], 'Сообщение с каталога');
-        $this->setSuccess('Отпралено');
+        
+        $this->setSuccess('sent');
     }
 
 }

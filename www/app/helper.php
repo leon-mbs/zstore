@@ -458,6 +458,7 @@ class Helper {
     * @param mixed $p2
     */
     public static function l($label,$p1="",$p2="") {
+         $label = trim($label);
          $labels = System::getCache('labels') ;
          if($labels==null){
             $lang = System::getOption('common','lang') ;

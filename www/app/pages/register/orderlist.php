@@ -113,18 +113,19 @@ class OrderList extends \App\Pages\Base {
         }
         if ($sender->id == "bref") {
             $this->_doc->updateStatus(Document::STATE_REFUSED);
-            $this->setWarn('Заказ аннулирован');
+            
+            $this->setWarn('order_canceled');
         }
 
         if ($sender->id == "bttn") {
             if ($ttn)
-                $this->setWarn('Для закаа уже  создана отправка');
+                $this->setWarn('order_has_sent');
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "binv") {
             if ($invoice)
-                $this->setWarn('Для закаа уже  создан счет фактура');
+                $this->setWarn('invoice_exists');
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
             return;
         }

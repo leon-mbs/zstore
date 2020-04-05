@@ -187,7 +187,8 @@ class POSCheck extends \App\Pages\Base {
                         $list = $order->getChildren('POSCheck');
 
                         if (count($listyt) > 0) {
-                            $this->setWarn('У заказа  уже  есть продажа');
+                            
+                            $this->setWarn('order_has_sell');
                         }
                         $this->docform->total->setText($order->amount);
 
@@ -343,11 +344,11 @@ class POSCheck extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('Введено  больше  товара  чем  в  наличии');
+            $this->setWarn('extra_count');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+            $this->setError("needs_serial");
             return;
         }
 
@@ -355,7 +356,8 @@ class POSCheck extends \App\Pages\Base {
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setWarn('Неверный номер серии');
+                
+                $this->setWarn('invalid_serialno');
             }
         }
 
@@ -670,7 +672,7 @@ class POSCheck extends \App\Pages\Base {
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('Нужно ввести  номер партии производителя');
+                    $this->setWarn('needs_serial');
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 

@@ -37,7 +37,8 @@ class RetCustIssue extends \App\Pages\Base {
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
-            $this->setWarn('Возврат следует создавать на  основании приходной накладной  ');
+          
+            $this->setWarn('return_basedon_receiptisssue');
         }
 
         $this->add(new Form('docform'));
@@ -314,7 +315,7 @@ class RetCustIssue extends \App\Pages\Base {
             $payed = $this->docform->payed->getText();
             $total = $this->docform->total->getText();
             if ($payed > $total) {
-                $this->setWarn('Внесена  сумма  больше  необходимой');
+                $this->setWarn('inserted_extrasum');
             } else {
                 $this->goAnkor("tankor");
             }

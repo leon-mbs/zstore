@@ -178,13 +178,13 @@ class ProdIssue extends \App\Pages\Base {
         $item->quantity = $this->editdetail->editquantity->getText();
         $qstock = $this->editdetail->qtystock->getText();
         if ($item->quantity > $qstock) {
-            $this->setWarn('Недостаточное  количество на  складе');
+            $this->setWarn('extra_count');
         }
 
         
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+            $this->setError("needs_serial");
             return;
         }
 
@@ -192,7 +192,7 @@ class ProdIssue extends \App\Pages\Base {
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setWarn('Неверный номер серии');
+                $this->setWarn('invalid_serialno');
             }
         }
 
@@ -330,7 +330,7 @@ class ProdIssue extends \App\Pages\Base {
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('Нужно ввести  номер партии производителя');
+                    $this->setWarn('needs_serial');
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 

@@ -34,7 +34,7 @@ class Orders extends \App\Pages\Base {
         $statuses = System::getSession()->statuses;
         if (is_array($statuses) == false) {
             $statuses = array();
-            $this->setWarn('Выполните соединение на странице настроек');
+            $this->setWarn('do_connect');
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -86,7 +86,8 @@ class Orders extends \App\Pages\Base {
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
                     if ($code == "") {
-                        $this->setWarn("Не задан артикул товара '{$product['name']}' в заказе номер {$ocorder['order_id']} ");
+                        $this->setWarn("noarticle_inorder",$product['name'],$ocorder['order_id']);
+                        
                     }
                 }
 
@@ -136,7 +137,8 @@ class Orders extends \App\Pages\Base {
 
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
-                    $this->setWarn("Не найден товар  с артикулом '{$product['name']}' в заказе номер {$shoporder['order_id']} ");
+                    
+                    $this->setWarn("nofoundarticle_inorder",$product['name'],$shoporder['order_id']);
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -165,7 +167,7 @@ class Orders extends \App\Pages\Base {
 
             $i++;
         }
-        $this->setInfo( H::l('imported_orders',$i))   ;
+        $this->setInfo( 'imported_orders',$i)   ;
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -221,7 +223,8 @@ class Orders extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Обновлено " . count($elist) . " заказов");
+        
+        $this->setSuccess("refrehed_orders",count($elist));
 
 
         foreach ($this->_eorders as $order) {

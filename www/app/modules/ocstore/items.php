@@ -33,7 +33,8 @@ class Items extends \App\Pages\Base {
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('Выполните соединение на странице настроек');
+            $this->setWarn('do_connect');
+             
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -140,7 +141,7 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Экспортировано " . count($elist) . " товаров");
+        $this->setSuccess( 'exported_items', count($elist));
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -175,7 +176,7 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Обновлено ");
+        $this->setSuccess('refreshed');
     }
 
     public function onUpdatePrice($sender) {
@@ -205,7 +206,8 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Обновлено ");
+        $this->setSuccess('refreshed');
+
     }
 
     public function onGetItems($sender) {
@@ -269,10 +271,7 @@ class Items extends \App\Pages\Base {
             $i++;
         }
 
-
-
-
-        $this->setSuccess("Загружено {$i} товаров");
+        $this->setSuccess("loaded_items",$i);
     }
 
 }
