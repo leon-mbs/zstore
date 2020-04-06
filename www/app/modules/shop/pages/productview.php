@@ -126,7 +126,7 @@ class ProductView extends Base {
         $product = Product::load($this->product_id);
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
-        $this->setSuccess("Товар  добавлен  в   корзину");
+        $this->setSuccess("addedtocart");
         //$this->resetURL();
         App::RedirectURI('/pcat/' . $product->group_id);
     }
@@ -136,7 +136,8 @@ class ProductView extends Base {
         $product = Product::load($this->product_id);
         $comparelist = \App\Modules\Shop\CompareList::getCompareList();
         if (false == $comparelist->addProduct($product)) {
-            $this->setWarn('Добавлять можно только товары с одинаковой категорией');
+            
+            $this->setWarn('onlythesamecategory');
             return;
         }
         // App::RedirectURI('/pcat/'.$product->group_id)  ;

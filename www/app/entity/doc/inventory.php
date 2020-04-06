@@ -77,7 +77,7 @@ class Inventory extends Document {
             "store" => $this->headerdata["storename"],
             "document_number" => $this->document_number
         );
-        $report = new \App\Report('inventory.tpl');
+        $report = new \App\Report('doc/inventory.tpl');
 
         $html = $report->generate($header);
 

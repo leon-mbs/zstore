@@ -188,7 +188,8 @@ class TaskList extends \App\Pages\Base {
         if ($sender->id == 'bitems') {    //списание материалов
             $d = $this->_task->getChildren('ProdIssue');
             if (count($d) > 0) {
-                $this->setWarn('Уже есть документ Списание на производство');
+            
+                $this->setWarn('exists_prodissue');
             }
             Application::Redirect("\\App\\Pages\\Doc\\ProdIssue", 0, $this->_task->document_id);
             return;

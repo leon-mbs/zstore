@@ -71,7 +71,7 @@ class POSCheck extends Document {
         );
 
 
-        $report = new \App\Report('poscheck.tpl');
+        $report = new \App\Report('doc/poscheck.tpl');
 
         $html = $report->generate($header);
 
@@ -124,7 +124,7 @@ class POSCheck extends Document {
         );
 
 
-        $report = new \App\Report('poscheck_bill.tpl');
+        $report = new \App\Report('doc/poscheck_bill.tpl');
 
         $html = $report->generate($header);
 
@@ -170,7 +170,7 @@ class POSCheck extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;

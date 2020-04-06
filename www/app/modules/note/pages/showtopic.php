@@ -42,7 +42,8 @@ class ShowTopic extends \App\Pages\Base {
         $user = System::getUser();
         $node = Node::getFirst("user_id=" . $user->user_id, "node_id  ");
         if ($node == null) {
-            $this->setError("Не найден корневой узел");
+            $this->setError("noroot");
+           
             return;
         }
 

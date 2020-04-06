@@ -37,7 +37,7 @@ class ServiceAct extends Document {
             "payed" => H::fa($this->payed),
             "total" => H::fa($this->amount)
         );
-        $report = new \App\Report('serviceact.tpl');
+        $report = new \App\Report('doc/serviceact.tpl');
 
         $html = $report->generate($header);
 
@@ -57,7 +57,7 @@ class ServiceAct extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;
@@ -112,7 +112,7 @@ class ServiceAct extends Document {
         }
         $header['ispay'] = count($pays) > 0;
 
-        $report = new \App\Report('serviceact_bill.tpl');
+        $report = new \App\Report('doc/serviceact_bill.tpl');
 
         $html = $report->generate($header);
 

@@ -83,12 +83,12 @@ class Options extends \App\Pages\Base {
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Неверный формат');
+                $this->setError('invalidformat');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 1000000) {
-                $this->setError('Слишком большой размер изображения');
+                $this->setError('toobigimage');
                 return;
             }
 
@@ -99,7 +99,7 @@ class Options extends \App\Pages\Base {
             $shop['logo'] = "/upload/" . $name;
         }
         System::setOptions("shop", $shop);
-        $this->setSuccess('Сохранено');
+        $this->setSuccess('saved');
     }
 
     public function updatePriceOnClick($sender) {
@@ -117,7 +117,7 @@ class Options extends \App\Pages\Base {
             $p->price = $price;
             $p->save();
         }
-        $this->setSuccess('Обновлено');
+        $this->setSuccess('refreshed');
     }
 
     public function saveTextsOnClick($sender) {
@@ -128,7 +128,7 @@ class Options extends \App\Pages\Base {
         $shop['delivery'] = base64_encode($this->texts->delivery->getText());
 
         System::setOptions("shop", $shop);
-        $this->setSuccess('Обновлено');
+        $this->setSuccess('refreshed');
     }
 
 }

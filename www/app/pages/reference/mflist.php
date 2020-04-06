@@ -98,7 +98,7 @@ class MFList extends \App\Pages\Base {
 
         $this->_mf->description = $this->mfdetail->editmf_description->getText();
         if ($this->_mf->mf_name == '') {
-            $this->setError("Введите наименование");
+            $this->setError("entername");
             return;
         }
         $this->_mf->branch_id = $this->mfdetail->editbranch->getValue();

@@ -109,25 +109,28 @@ class PosList extends \App\Pages\Base {
         $this->_pos->pricetype = $this->posdetail->editpricetype->getValue();
 
         if ($this->_pos->pos_name == '') {
-            $this->setError("Введите наименование");
+            $this->setError("entername");
             return;
         }
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {
-            $this->setError("Выберите  филиал");
+         
+            $this->setError("selbranch");
             return;
         }
         if ($this->_pos->mf == 0) {
-            $this->setError("Выберите  кассу");
+          
+            $this->setError("selmf");
             return;
         }
 
         if ($this->_pos->store == 0) {
-            $this->setError("Не выбран склад");
+           
+            $this->setError("noselstore");
             return;
         }
 
         if ($this->_pos->pricetype == "0") {
-            $this->setError("Не выбран тип цены");
+            $this->setError("noselpricetype");
             return;
         }
 
@@ -135,11 +138,12 @@ class PosList extends \App\Pages\Base {
             $mf = \App\Entity\MoneyFund::load($this->_pos->mf);
             $store = \App\Entity\Store::load($this->_pos->store);
             if ($this->_pos->branch_id != $mf->branch_id) {
-                $this->setError("Касса  и терминал  должны быть  с  одного  филиала");
+                
+                $this->setError("thesamebranch");
                 return;
             }
             if ($this->_pos->branch_id != $store->branch_id) {
-                $this->setError("Склад  и терминал  должны быть  с  одного  филиала");
+                $this->setError("thesamebranch");
                 return;
             }
         }

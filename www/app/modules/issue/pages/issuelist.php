@@ -186,13 +186,15 @@ class IssueList extends \App\Pages\Base {
 
 
         if ($this->_issue->status == Issue::STATUS_CLOSED) {
-            $this->setError('Задача  закрыта');
+            $this->setError('issueclosed');
+            
             return;
         }
 
 
         if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
-            $this->setError('Редактировать  может  только  автор или  администатор');
+            
+            $this->setError('editallowedaa');
             return;
         }
 
@@ -224,7 +226,8 @@ class IssueList extends \App\Pages\Base {
             $this->_issue->createdbyname = $this->_user->username;
         }
         if ($this->_issue->project_id == 0) {
-            $this->setError('Не указан  проект');
+          
+            $this->setError('noselproject');
             return;
         }
         $idnew = $this->_issue->issue_id == 0;
@@ -270,13 +273,14 @@ class IssueList extends \App\Pages\Base {
     public function deleteOnClick($sender) {
 
         if ($this->_issue->status == Issue::STATUS_CLOSED) {
-            $this->setError('Задача  закрыта');
+            $this->setError('issueclosed');
             return;
         }
 
 
         if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
-            $this->setError('Удалить  может  только  автор или  администатор');
+            $this->setError('delallowedaa');
+           
             return;
         }
 
@@ -359,7 +363,8 @@ class IssueList extends \App\Pages\Base {
 
         $file = $sender->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->getOwnerPage()->setError("Файл больше 10М!");
+         
+            $this->getOwnerPage()->setError("filemore10M");
             return;
         }
 

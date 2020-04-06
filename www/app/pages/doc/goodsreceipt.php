@@ -88,10 +88,15 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
+        $this->editdetail->add(new ClickLink('openitemsel',$this,'onOpenItemSel'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
+        
+        $this->add(new \App\Widgets\ItemSel('wselitem',$this,'onSelectItem'))->setVisible(false);
+        
+        
         //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
@@ -272,7 +277,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->_rowid = 0;
 
         if ($item == null) {
-            $this->setWarn('Товар не  найден');
+         
+            $this->setWarn('item_notfound');
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
@@ -292,7 +298,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
 
@@ -304,12 +310,13 @@ class GoodsReceipt extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->price == 0) {
-            $this->setWarn("Не указана цена");
+          
+            $this->setWarn("no_price");
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+            $this->setError("needs_serial");
             return;
         }
 
@@ -318,7 +325,8 @@ class GoodsReceipt extends \App\Pages\Base {
         if ($item->sdate == false)
             $item->sdate = '';
         if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0) {
-            $this->setError("К серии должна быть введена дата срока годности");
+            
+            $this->setError("dateforserial");
             return;
         }
         unset($this->_itemlist[$this->_rowid]);
@@ -329,6 +337,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->calcTotal();
         $this->calcPay();
 
+        $this->wselitem->setVisible(false);
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
@@ -344,11 +353,13 @@ class GoodsReceipt extends \App\Pages\Base {
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
+        $this->wselitem->setVisible(false);
     }
 
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
+        $this->goAnkor("");
 
         $firm = H::getFirmData($this->_doc->branch_id);
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
@@ -385,7 +396,7 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл больше 10М!");
+            $this->setError("filemore10M");
             return;
         }
 
@@ -420,7 +431,8 @@ class GoodsReceipt extends \App\Pages\Base {
                         $order = Document::load($this->_doc->parent_id);
                         if ($order->state == Document::STATE_INPROCESS) {
                             $order->updateStatus(Document::STATE_CLOSED);
-                            $this->setSuccess("Заказ {$order->document_number} закрыт");
+                          
+                            $this->setSuccess("order_closed", $order->document_number );
                         }
                     }
                 }
@@ -525,7 +537,7 @@ class GoodsReceipt extends \App\Pages\Base {
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText(H::fa($total));
     }
 
     private function CalcPay() {
@@ -548,23 +560,23 @@ class GoodsReceipt extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введен ни один  товар");
+            $this->setError("noenteritem");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("Не выбран  поставщик");
+            $this->setError("noselsender");
         }
         if ($this->docform->payment->getValue() == 0) {
-            $this->setError("Не указан  способ  оплаты");
+            $this->setError("noselpaytype");
         }
         return !$this->isError();
     }
@@ -600,7 +612,7 @@ class GoodsReceipt extends \App\Pages\Base {
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено имя");
+            $this->setError("entername");
             return;
         }
         $item = new Item();
@@ -611,7 +623,8 @@ class GoodsReceipt extends \App\Pages\Base {
         $code = Item::qstr($item->item_code);
         $cnt = Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
-            $this->setError('ТМЦ с таким названием и артикулом  уже  существует');
+           
+            $this->setError('itemnamecode_exists');
             return;
         }
 
@@ -631,4 +644,13 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
     }
 
+    public function onOpenItemSel($sender){
+        $this->wselitem->setVisible(true);
+        $this->wselitem->Reload();
+    }
+    public function onSelectItem($item_id,$itemname){
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        
+    }
 }

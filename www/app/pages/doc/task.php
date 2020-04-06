@@ -186,7 +186,7 @@ class Task extends \App\Pages\Base {
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не выбрана  услуга");
+            $this->setError("noseljob");
             return;
         }
         $service = Service::load($id);
@@ -219,7 +219,8 @@ class Task extends \App\Pages\Base {
     public function saverow3OnClick($sender) {
         $id = $this->editdetail3->editemp->getValue();
         if ($id == 0) {
-            $this->setError("Не выбран исполнитель");
+          
+            $this->setError("noselexecutor");
             return;
         }
         $emp = Employee::load($id);
@@ -254,7 +255,8 @@ class Task extends \App\Pages\Base {
     public function saverow4OnClick($sender) {
         $id = $this->editdetail4->editeq->getValue();
         if ($id == 0) {
-            $this->setError("Не выбрано оборудование ");
+          
+            $this->setError("noseleq");
             return;
         }
         $eq = Equipment::load($id);
@@ -348,17 +350,18 @@ class Task extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (strlen($this->_doc->document_date) == 0) {
-            $this->setError('Введите дату документа');
+           
+            $this->setError('enterdatedoc');
         }
         if (count($this->_servicelist) == 0) {
-            $this->setError("Не введена  ни одна работа");
+            $this->setError("noenterpos");
         }
 
 

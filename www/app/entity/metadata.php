@@ -18,11 +18,11 @@ class MetaData extends \ZCL\DB\Entity {
 
     public static function getNames() {
         $list = array();
-        $list[1] = "Документ";
-        $list[2] = "Отчет";
-        $list[3] = "Журнал";
-        $list[4] = "Справочник";
-        $list[5] = "Cервисная страница";
+        $list[1] = \App\Helper::l("md_doc");
+        $list[2] = \App\Helper::l("md_rep");
+        $list[3] = \App\Helper::l("md_ref");
+        $list[4] = \App\Helper::l("md_reg");
+        $list[5] = \App\Helper::l("md_ser");
 
 
         return $list;

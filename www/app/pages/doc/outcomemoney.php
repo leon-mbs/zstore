@@ -113,18 +113,18 @@ class OutcomeMoney extends \App\Pages\Base {
     private function checkForm() {
 
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("Не введен номер документа");
+            $this->setError("enterdocnumber");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
 
         if (($this->_doc->amount > 0) == false) {
-            $this->setError("Не введена сумма");
+            $this->setError("noentersum");
         }
         if ($this->docform->mtype->getValue() == 0) {
-            $this->setError("Не выбран тип расхода");
+            $this->setError("noseloutcome");
         }
 
         return !$this->isError();

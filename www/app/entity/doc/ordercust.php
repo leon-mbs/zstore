@@ -36,7 +36,7 @@ class OrderCust extends Document {
         );
 
 
-        $report = new \App\Report('ordercust.tpl');
+        $report = new \App\Report('doc/ordercust.tpl');
 
         $html = $report->generate($header);
 

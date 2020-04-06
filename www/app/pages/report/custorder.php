@@ -78,8 +78,8 @@ class CustOrder extends \App\Pages\Base {
         foreach ($docs as $doc) {
 
             foreach ($doc->unpackDetails('detaildata') as $item) {
-                if (!isset($items[$item['itemname']])) {
-                    $items[$item['itemname']] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0);
+                if (!isset($items[$item->itemname])) {
+                    $items[$item->itemname] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0);
                 }
                 $items[$item->itemname]['qty'] += $item->quantity;
                 $total += $item->amount;
@@ -103,7 +103,7 @@ class CustOrder extends \App\Pages\Base {
             'date' => date('d.m.Y', time()),
             'customer_name' => $this->filter->cust->getValueName()
         );
-        $report = new \App\Report('custorder.tpl');
+        $report = new \App\Report('report/custorder.tpl');
 
         $html = $report->generate($header, $detail);
 

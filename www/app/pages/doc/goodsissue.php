@@ -94,8 +94,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-
-
+          
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -103,14 +102,16 @@ class GoodsIssue extends \App\Pages\Base {
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
+  
 
-
-
+        $this->editdetail->add(new ClickLink('openitemsel',$this,'onOpenItemSel'));
         $this->editdetail->add(new Label('qtystock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
+        $this->add(new \App\Widgets\ItemSel('wselitem',$this,'onSelectItem'))->setVisible(false);
+        
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
@@ -190,7 +191,8 @@ class GoodsIssue extends \App\Pages\Base {
                         $list = $order->getChildren('GoodsIssue');
 
                         if (count($list) > 0) {
-                            $this->setWarn('У заказа  уже  есть отправка');
+                     
+                            $this->setWarn('order_has_sent');
                         }
                         $this->docform->total->setText($order->amount);
 
@@ -335,7 +337,7 @@ class GoodsIssue extends \App\Pages\Base {
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
         $item = Item::load($id);
@@ -348,11 +350,13 @@ class GoodsIssue extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('Введено  больше  товара  чем  в  наличии');
+           
+            $this->setWarn('inserted_extra_count');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+       
+            $this->setError("needs_serial");
             return;
         }
 
@@ -360,13 +364,15 @@ class GoodsIssue extends \App\Pages\Base {
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setWarn('Неверный номер серии');
+                
+                $this->setWarn('invalid_serialno');
             }
         }
 
         unset($this->_itemlist[$this->_rowid]);
         $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
+        $this->wselitem->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
 
@@ -383,6 +389,7 @@ class GoodsIssue extends \App\Pages\Base {
     }
 
     public function cancelrowOnClick($sender) {
+        $this->wselitem->setVisible(false);
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         //очищаем  форму
@@ -397,6 +404,8 @@ class GoodsIssue extends \App\Pages\Base {
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
+        $this->goAnkor("");
+            
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -515,7 +524,8 @@ class GoodsIssue extends \App\Pages\Base {
         $payed = $this->docform->payed->getText();
         $payamount = $this->docform->payamount->getText();
         if ($payed > $payamount) {
-            $this->setWarn('Внесена  сумма  больше  необходимой');
+             
+            $this->setWarn('inserted_extrasum');
         } else {
             $this->goAnkor("tankor");
         }
@@ -602,7 +612,7 @@ class GoodsIssue extends \App\Pages\Base {
             return;
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не указан склад');
+            $this->setError('noselstore');
             return;
         }
 
@@ -612,7 +622,8 @@ class GoodsIssue extends \App\Pages\Base {
 
 
         if ($item == null) {
-            $this->setError("Товар с  кодом '{$code}' не  найден");
+           
+            $this->setError("noitemcode",$code);
             return;
         }
 
@@ -623,7 +634,8 @@ class GoodsIssue extends \App\Pages\Base {
 
         $qty = $item->getQuantity($store);
         if ($qty <= 0) {
-            $this->setError("Товара {$item->itemname} нет на складе");
+           
+            $this->setError("noitemonstore",$item->itemname );
         }
 
 
@@ -647,7 +659,7 @@ class GoodsIssue extends \App\Pages\Base {
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('Нужно ввести  номер партии производителя');
+                    $this->setWarn('needs_serial');
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 
@@ -680,23 +692,25 @@ class GoodsIssue extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+ 
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
 
 
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не веден ни один  товар");
+            $this->setError("noenteritem");
         }
 
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
         if ($this->docform->payment->getValue() == 0) {
-            $this->setError("Не указан  способ  оплаты");
+         
+            $this->setError("noselpaytype");
         }
         return !$this->isError();
     }
@@ -785,7 +799,7 @@ class GoodsIssue extends \App\Pages\Base {
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено имя");
+            $this->setError("entername");
             return;
         }
         $cust = new Customer();
@@ -795,14 +809,16 @@ class GoodsIssue extends \App\Pages\Base {
         $cust->phone = $this->editcust->editphone->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
-            $this->setError("Телефон должен быть 10  цифр");
+            $this->setError("");
+            $this->setError("tel10");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Уже есть  контрагент с  таким телефоном");
+         
+                $this->setError("existcustphone");
                 return;
             }
         }
@@ -845,4 +861,14 @@ class GoodsIssue extends \App\Pages\Base {
         }
     }
 
+    public function onOpenItemSel($sender){
+        $this->wselitem->setVisible(true);
+        $this->wselitem->setPriceType($this->docform->pricetype->getValue());
+        $this->wselitem->Reload();
+    }
+    public function onSelectItem($item_id,$itemname){
+        $this->editdetail->edittovar->setKey($item_id);
+        $this->editdetail->edittovar->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edittovar);
+    }
 }

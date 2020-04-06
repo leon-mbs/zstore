@@ -129,7 +129,7 @@ class GIList extends \App\Pages\Base {
                 $order->updateStatus(Document::STATE_INSHIPMENT);
             }
             $this->statuspan->statusform->ship_number->setText('');
-            $this->setSuccess('Отправлено');
+            $this->setSuccess('sent');
         }
 
         if ($sender->id == "bdevivered") {
@@ -142,7 +142,7 @@ class GIList extends \App\Pages\Base {
                     $order = Document::load($this->_doc->parent_id);
                     if ($order->state == Document::STATE_INPROCESS) {
                         $order->updateStatus(Document::STATE_CLOSED);
-                        $this->setSuccess("Заказ {$order->document_number} закрыт");
+                        $this->setSuccess("order_closed ",$order->document_number );
                     }
                 }
             }
@@ -155,7 +155,8 @@ class GIList extends \App\Pages\Base {
             $d = $this->_doc->getChildren('GoodsReceipt');
 
             if (count($d) > 0) {
-                $this->setWarn('Уже есть документ Приходная накладная');
+                $this->setWarn('goodsreceipt_exists');
+                 
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
         }

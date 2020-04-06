@@ -164,7 +164,7 @@ class IncomeItem extends \App\Pages\Base {
             return;
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
 
@@ -175,19 +175,19 @@ class IncomeItem extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->price == 0) {
-            $this->setWarn("Не указана цена");
+            $this->setWarn("no_price");
         }
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+            $this->setError("needs_serial");
             return;
         }
         $item->sdate = $this->editdetail->editsdate->getDate();
         if ($item->sdate == false)
             $item->sdate = '';
         if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0) {
-            $this->setError("К серии должна быть введена дата срока годности");
+            $this->setError("dateforserial");
             return;
         }
         $this->_itemlist[$id . $item->snumber] = $item;
@@ -281,19 +281,19 @@ class IncomeItem extends \App\Pages\Base {
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Не введен номер документа");
+            $this->setError("enterdocnumber");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
             return false;
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введен ни один  товар");
+            $this->setError("noenteritem");
         }
 
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
 
 
@@ -320,7 +320,7 @@ class IncomeItem extends \App\Pages\Base {
 
         $item = Item::getFirst("    (item_code = {$code} or bar_code = {$code})");
         if ($item == null) {
-            $this->setError('Товар не  найден');
+            $this->setError('noitem');
             return;
         }
 

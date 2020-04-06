@@ -143,7 +143,7 @@ class Prod extends \App\Pages\Base {
         if ($parea > 0) {
             $header['parea'] = $this->filter->parea->getValueName();
         }
-        $report = new \App\Report('prod.tpl');
+        $report = new \App\Report('report/prod.tpl');
 
         $html = $report->generate($header);
 

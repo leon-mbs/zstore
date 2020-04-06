@@ -36,7 +36,8 @@ class ReturnIssue extends \App\Pages\Base {
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
-            $this->setWarn('Возврат следует создавать на  основании расходной накладной или  чека');
+       
+            $this->setWarn('return_basedon_goodsissue');
         }
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -178,7 +179,7 @@ class ReturnIssue extends \App\Pages\Base {
             return;
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
 
@@ -297,7 +298,7 @@ class ReturnIssue extends \App\Pages\Base {
         $payed = $this->docform->payed->getText();
         $total = $this->docform->total->getText();
         if ($payed > $total) {
-            $this->setWarn('Внесена  сумма  больше  необходимой');
+            $this->setWarn('inserted_extrasum');
         } else {
             $this->goAnkor("tankor");
         }
@@ -310,17 +311,17 @@ class ReturnIssue extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_tovarlist) == 0) {
-            $this->setError("Не веден ни один  товар");
+            $this->setError("noenteritem");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
 
         return !$this->isError();

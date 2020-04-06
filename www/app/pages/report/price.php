@@ -108,7 +108,7 @@ class Price extends \App\Pages\Base {
             "price5name" => $isp5 ? $option['price5'] : "",
             'date' => date('d.m.Y', time())
         );
-        $report = new \App\Report('price.tpl');
+        $report = new \App\Report('report/price.tpl');
 
         $html = $report->generate($header);
 

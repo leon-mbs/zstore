@@ -28,7 +28,9 @@ class Base extends \Zippy\Html\WebPage {
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
+  
+         
+        
         $this->branch_id = Session::getSession()->branch_id;
         $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
         if (count($blist) == 1) {      //если  одна
@@ -116,19 +118,23 @@ class Base extends \Zippy\Html\WebPage {
     }
 
     //вывод ошибки,  используется   в дочерних страницах
-    public function setError($msg) {
+    public function setError($msg,$p1="",$p2="") {
+        $msg = Helper::l($msg,$p1,$p2);
         System::setErrorMsg($msg);
     }
 
-    public function setSuccess($msg) {
+    public function setSuccess($msg,$p1="",$p2="") {
+        $msg = Helper::l($msg,$p1,$p2);
         System::setSuccesMsg($msg);
     }
 
-    public function setWarn($msg) {
+    public function setWarn($msg,$p1="",$p2="") {
+        $msg = Helper::l($msg,$p1,$p2);
         System::setWarnMsg($msg);
     }
 
-    public function setInfo($msg) {
+    public function setInfo($msg,$p1="",$p2="") {
+        $msg = Helper::l($msg,$p1,$p2);
         System::setInfoMsg($msg);
     }
 
@@ -144,28 +150,40 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars['alertwarning'] = "";
         $this->_tvars['alertsuccess'] = "";
         $this->_tvars['alertinfo'] = "";
+      
+        if($user->popupmessage != 1) {
 
-        if (strlen(System::getErrorMsg()) > 0) {
-            $this->_tvars['alerterror'] = System::getErrorMsg();
-            $this->goAnkor('');
-        }
-        if (strlen(System::getWarnMsg()) > 0) {
-            $this->_tvars['alertwarning'] = System::getWarnMsg();
-            $this->goAnkor('');
-        }
-        if (strlen(System::getSuccesMsg()) > 0) {
-            $this->_tvars['alertsuccess'] = System::getSuccesMsg();
-            $this->goAnkor('');
-        }
-        if (strlen(System::getInfoMsg()) > 0) {
-            $this->_tvars['alertinfo'] = System::getInfoMsg();
-            $this->goAnkor('');
+            if (strlen(System::getErrorMsg()) > 0) {
+                $this->_tvars['alerterror'] = System::getErrorMsg();
+                $this->goAnkor('');
+            }
+            if (strlen(System::getWarnMsg()) > 0) {
+                $this->_tvars['alertwarning'] = System::getWarnMsg();
+                $this->goAnkor('');
+            }
+            if (strlen(System::getSuccesMsg()) > 0) {
+                $this->_tvars['alertsuccess'] = System::getSuccesMsg();
+                $this->goAnkor('');
+            }
+            if (strlen(System::getInfoMsg()) > 0) {
+                $this->_tvars['alertinfo'] = System::getInfoMsg();
+                $this->goAnkor('');
+            }
         }
     }
 
     protected function afterRender() {
-
-
+        $user = System::getUser();
+        if($user->popupmessage == 1) {
+            if (strlen(System::getErrorMsg()) > 0)
+                $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "')        ", true);
+            if (strlen(System::getWarnMsg()) > 0)
+                $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "')        ", true);
+            if (strlen(System::getSuccesMsg()) > 0)
+                $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "')        ", true);
+            if (strlen(System::getInfoMsg()) > 0)
+                $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "')        ", true);
+        }
         $this->setError('');
         $this->setSuccess('');
 
@@ -178,5 +196,16 @@ class Base extends \Zippy\Html\WebPage {
     protected final function resetURL() {
         \App\Application::$app->setReloadPage();
     }
+  
+  
+    /**
+     * Вставляет  JavaScript  в  конец   выходного  потока
+     * @param string  Код  скрипта
+     * @param  boolean Если  true  - вставка  после  загрузки  документа в  браузер
+     */
+    public function  addJavaScript($js, $docready = false){
+          App::$app->getResponse()->addJavaScript($js,$docready)  ;
+    }
+  
   
 }

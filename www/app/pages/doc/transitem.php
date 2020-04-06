@@ -134,24 +134,25 @@ class TransItem extends \App\Pages\Base {
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Не введен номер документа");
+            $this->setError("enterdocnumber");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if ($this->_doc->headerdata['fromquantity'] > 0 && $this->_doc->headerdata['toquantity'] > 0) {
             
-        } else {
-            $this->setError("Неверное количество");
+        } else {              
+            $this->setError("invalidquantity");
         }
         if ($this->_doc->headerdata['fromitem'] > 0 && $this->_doc->headerdata['toitem'] > 0) {
             
         } else {
-            $this->setError("Не  введены  ТМЦ  ");
+            $this->setError("noenteritem");
         }
         if ($this->_doc->headerdata['fromitem'] == $this->_doc->headerdata['toitem']) {
-            $this->setError("Одинаковые ТМЦ");
+           
+            $this->setError("thesameitems");
         }
 
         return !$this->isError();

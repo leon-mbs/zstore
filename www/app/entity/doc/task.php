@@ -55,7 +55,7 @@ class Task extends Document {
             "iseq" => count($detail2) > 0,
             "_detail3" => $detail3
         );
-        $report = new \App\Report('task.tpl');
+        $report = new \App\Report('doc/task.tpl');
 
         $html = $report->generate($header);
 

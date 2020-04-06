@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "phpmailer/phpmailer": "~5.2",
         "monolog/monolog": "1.25.3",
 
@@ -15,6 +15,6 @@
         "endroid/qr-code": "3.7.5",
         "automattic/woocommerce": "3.0.0",
         "symfony/polyfill-mbstring"   : "^1.10",
-        "leon-mbs/zippy": "2.1.15"
+        "leon-mbs/zippy": "2.1.16"
     }  
 }

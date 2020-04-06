@@ -148,7 +148,7 @@ class PayActivity extends \App\Pages\Base {
             'dateto' => date('d.m.Y', $to),
             "mf_name" => MoneyFund::load($mf_id)->mf_name
         );
-        $report = new \App\Report('payactivity.tpl');
+        $report = new \App\Report('report/payactivity.tpl');
 
         $html = $report->generate($header);
 

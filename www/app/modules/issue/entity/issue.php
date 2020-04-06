@@ -91,15 +91,14 @@ class Issue extends \ZCL\DB\Entity {
 
     public static function getStatusList() {
         $list = array();
-        $list[self::STATUS_NEW] = 'Новая';
-        $list[self::STATUS_INPROCESS] = 'В работе';
-
-        $list[self::STATUS_QA] = 'На проверке';
-        $list[self::STATUS_REOPENED] = 'Переоткрыта';
-        $list[self::STATUS_RETURNED] = 'Возвращена на доработку';
-        $list[self::STATUS_WA] = 'На  утверждении';
-        $list[self::STATUS_SHIFTED] = 'Отложена';
-        $list[self::STATUS_CLOSED] = 'Закрыта';
+        $list[self::STATUS_NEW] =  \App\Helper::l('is_new') ;
+        $list[self::STATUS_INPROCESS] = \App\Helper::l('is_inp') ;
+        $list[self::STATUS_QA] = \App\Helper::l('is_qa') ;
+        $list[self::STATUS_REOPENED] = \App\Helper::l('is_reopened') ;
+        $list[self::STATUS_RETURNED] = \App\Helper::l('is_ret') ;
+        $list[self::STATUS_WA] = \App\Helper::l('is_wa') ;
+        $list[self::STATUS_SHIFTED] = \App\Helper::l('is_shifted') ;
+        $list[self::STATUS_CLOSED] = \App\Helper::l('is_closed') ;
 
         return $list;
     }

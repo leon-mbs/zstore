@@ -140,7 +140,8 @@ class Catalog extends Base {
         $product = $sender->getOwner()->getDataItem();
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
-        $this->setSuccess("Товар  добавлен  в   корзину");
+         
+        $this->setSuccess("addedtocart");
 
         $this->resetURL();
     }

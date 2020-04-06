@@ -9,6 +9,12 @@ INSERT INTO `users` (`user_id`, `userlogin`, `userpass`, `createdon`, `email`, `
 INSERT  INTO `stores` (  `storename`, `description`) VALUES(  'Основной склад', '');
 INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`) VALUES(2, 'Касса', 'Основная касса');
 
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:16:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:11:"partiontype";s:1:"1";s:4:"lang";s:2:"ru";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"defprice";s:2:"10";s:11:"autoarticle";i:1;s:6:"useset";i:0;s:10:"usesnumber";i:0;s:10:"usescanner";i:0;s:9:"useimages";i:0;s:9:"usebranch";i:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('firm', 'a:5:{s:8:"firmname";s:20:"Наша  фирма";s:8:"shopname";s:14:"Магазин";s:5:"phone";s:0:"";s:7:"address";s:0:"";s:3:"inn";s:0:"";}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:7:{s:6:"pwidth";s:0:"";s:9:"pricetype";s:6:"price1";s:11:"barcodetype";s:5:"EAN13";s:5:"pname";i:1;s:5:"pcode";i:0;s:8:"pbarcode";i:1;s:6:"pprice";i:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('modules', 'a:11:{s:6:"ocsite";s:20:"http://local.ostore3";s:9:"ocapiname";s:5:"admin";s:5:"ockey";s:256:"Bf81dB8fY2waVxlhych4fFprGfxF2tULlSlHiwEXZqf45E6HDBoA6XjocGcziRsfCQsRovzzDAvMBImmrlzXqEJcMByQpkfeLYfZBDoYstDVuA0Qvx86YkeXVwQ6I2v8xEXS2ZL6ioH1l8qinySGZdRrO5mgFCFWKhgKxIfkNOYpvzIZdR2MdqkHKSzHGSfoDVmbts8slGNFqYzvkXQSP0VaHcw0fYmBZLo0HEvLb2EiBZ5A8EcGDZWWtndg2wlY";s:13:"occustomer_id";s:1:"8";s:11:"ocpricetype";s:6:"price1";s:6:"wcsite";s:15:"http://local.wp";s:6:"wckeyc";s:43:"ck_a36c9d5d8ef70a34001b6a44bc245a7665ca77e7";s:6:"wckeys";s:43:"cs_12b03012d9db469b45b1fc82e329a3bc995f3e36";s:5:"wcapi";s:2:"v3";s:13:"wccustomer_id";s:1:"8";s:11:"wcpricetype";s:6:"price1";}');
+
   
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(1, 4, 'Склады', 'StoreList', 'Товары', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(2, 4, 'Номенклатура', 'ItemList', 'Товары', 0);
@@ -63,3 +69,5 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(67, 5, 'АРМ кассира', 'ARMPos', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(70, 3, 'Расчеты с  контрагентами', 'PayCustList', 'Касса и платежи', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(71, 3, 'Товары  на  складе', 'ItemList', 'Склад', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(76, 1, 'Выплата зарплаты', 'OutSalary', 'Платежи', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(77, 2, 'Отчет по  зарплате', 'SalaryRep', 'Платежи', 0);

@@ -259,16 +259,17 @@
                 </div>
             </div>
         </form>
-        <form zippy="editdetail">
-            <h4>Ввод товара </h4>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
+        <form zippy="editdetail">
+            <h4>Ввод товара </h4>
+
 
                     <div class="form-group">
                         <label for="edittovar" >Название</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="edittovar" />
-
-                        Наличие: <span zippy="qtystock"></span>
+                         <a zippy="openitemsel">Открыть справочник</a>
+                        <br>Наличие: <span zippy="qtystock"></span>
 
                     </div>
                     {{#usesnumber}} 
@@ -299,9 +300,16 @@
                     </div>
 
 
-                </div>
-            </div>
+              
         </form>
+               </div>   
+             
+                <div class="col-12 col-md-8 col-xl-6">
+                   <div zippy="wselitem"></div>
+                   
+                   
+              </div>
+                  </div>
         <form zippy="editcust">
             <h3>&nbsp;Новый контрагент </h3>
             <div class="row">

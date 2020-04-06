@@ -167,7 +167,7 @@ class Income extends \App\Pages\Base {
             $header['_type2'] = false;
             $header['_type3'] = true;
         }
-        $report = new \App\Report('income.tpl');
+        $report = new \App\Report('report/income.tpl');
 
         $html = $report->generate($header, $detail);
 

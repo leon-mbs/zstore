@@ -52,7 +52,7 @@ class GoodsReceipt extends Document {
         $header['nds']  = H::fa($this->headerdata["nds"]);
         $header['rate'] = $this->headerdata["rate"] ;
         
-        $report = new \App\Report('goodsreceipt.tpl');
+        $report = new \App\Report('doc/goodsreceipt.tpl');
 
         $html = $report->generate($header);
 
@@ -97,7 +97,7 @@ class GoodsReceipt extends Document {
 
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
 
 

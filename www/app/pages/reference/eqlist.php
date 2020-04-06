@@ -87,7 +87,8 @@ class EqList extends \App\Pages\Base {
         if ($item->checkDelete()) {
             Equipment::delete($item->eq_id);
         } else {
-            $this->setError("Нельзя удалить   ");
+           
+            $this->setError("nodelete");
             return;
         }
 

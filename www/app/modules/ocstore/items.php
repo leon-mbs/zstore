@@ -33,7 +33,8 @@ class Items extends \App\Pages\Base {
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('Выполните соединение на странице настроек');
+            $this->setWarn('do_connect');
+             
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -60,7 +61,8 @@ class Items extends \App\Pages\Base {
             return;
         $data = json_decode($json, true);
         if (!isset($data)) {
-            $this->setError("Неверный ответ.");
+           
+            $this->setError("invalidresponse");
             \App\Helper::log($json);
             return;
         }
@@ -102,7 +104,8 @@ class Items extends \App\Pages\Base {
         $modules = System::getOptions("modules");
         $cat = $this->exportform->ecat->getValue();
         if ($cat == 0) {
-            $this->setError('Не выбрана категория  ');
+        
+            $this->setError('noselcategory');
             return;
         }
 
@@ -118,7 +121,8 @@ class Items extends \App\Pages\Base {
             );
         }
         if (count($elist) == 0) {
-            $this->setError('Не выбран ни один товар');
+          
+            $this->setError('noselitem');
             return;
         }
         $data = json_encode($elist);
@@ -140,7 +144,7 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Экспортировано " . count($elist) . " товаров");
+        $this->setSuccess( 'exported_items', count($elist));
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -175,7 +179,7 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Обновлено ");
+        $this->setSuccess('refreshed');
     }
 
     public function onUpdatePrice($sender) {
@@ -205,7 +209,8 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Обновлено ");
+        $this->setSuccess('refreshed');
+
     }
 
     public function onGetItems($sender) {
@@ -269,10 +274,7 @@ class Items extends \App\Pages\Base {
             $i++;
         }
 
-
-
-
-        $this->setSuccess("Загружено {$i} товаров");
+        $this->setSuccess("loaded_items",$i);
     }
 
 }

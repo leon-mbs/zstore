@@ -62,7 +62,7 @@ class Options extends \App\Pages\Base {
         }
 
 
-        - $this->setSuccess('Соединение успешно');
+        - $this->setSuccess('connected');
     }
 
     public function saveOnClick($sender) {
@@ -73,11 +73,11 @@ class Options extends \App\Pages\Base {
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
         if ($customer_id == 0) {
-            $this->setError('Не задан  контрагент');
+            $this->setError('noselcust');
             return;
         }
         if (strlen($pricetype) < 2) {
-            $this->setError('Не указан тип  цены');
+            $this->setError('noselpricetype');
             return;
         }
 
@@ -93,7 +93,7 @@ class Options extends \App\Pages\Base {
         $modules['wcpricetype'] = $pricetype;
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('Сохранено');
+        $this->setSuccess('saved');
     }
 
 }

@@ -12,12 +12,16 @@ class Application extends \Zippy\WebApplication {
      * Возвращает  шаблон  страницы
      */
     public function getTemplate($name) {
-
+        global $_config; 
+        
+        
         $path = '';
         $name = ltrim($name, '\\');
         $arr = explode('\\', $name);
+        
         $templatepath = 'templates/';
-
+        if($_config['common']['lang']=='ua') $templatepath = 'templates_ua/';
+        
         $className = str_replace("\\", "/", ltrim($name, '\\'));
 
         if (strpos($className, 'App/') === 0) {

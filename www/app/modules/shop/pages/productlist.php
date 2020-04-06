@@ -48,7 +48,8 @@ class ProductList extends \App\Pages\Base {
 
         $this->op = System::getOptions("shop");
         if (strlen($this->op['defcust']) == 0 || strlen($this->op['defstore']) == 0 || strlen($this->op['defpricetype']) == 0) {
-            $this->setWarn('Не заданы все настройки магазина. Перейдите на страницу  настроек.');
+            
+            $this->setWarn('notsetoptionsmag');
         }
 
 
@@ -274,7 +275,7 @@ class ProductList extends \App\Pages\Base {
 
         $this->product->deleted = $sender->edisabled->isChecked();
         if (strlen($this->product->productname) == 0) {
-            $this->setError('Не указано имя');
+            $this->setError('entername');
             return;
         }
 
@@ -342,17 +343,17 @@ class ProductList extends \App\Pages\Base {
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Неверный формат');
+                $this->setError('invalidformat');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 1000000) {
-                $this->setError('Слишком большой размер изображения');
+                $this->setError('toobigimage');
                 return;
             }
             $r = ((double) $imagedata[0]) / $imagedata[1];
             if ($r > 1.1 || $r < 0.9) {
-                $this->setError('Изображеие должно  быть примерно квадратным');
+                $this->setError('squareimage');
                 return;
             }
 

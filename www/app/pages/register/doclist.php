@@ -277,18 +277,21 @@ class DocList extends \App\Pages\Base {
 
         $user = System::getUser();
         if ($doc->user_id != $user->user_id && $user->userlogin != 'admin') {
-            $this->setError("Удалять документ  может  только  автор или администратор");
+             
+            $this->setError("candeleteadmin");
             return;
         }
         $f = $doc->checkStates(array(Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-            $this->setError("У документа были отправки или доставки");
+           
+            $this->setError("dochassentorrecieve");
             return;
         }
 
         $list = $doc->getChildren();
         if (count($list) > 0) {
-            $this->setError("У документа есть дочерние документы");
+            $this->setError("dochaschilld");
+            
             return;
         }
 
@@ -313,7 +316,8 @@ class DocList extends \App\Pages\Base {
             if ($doc->state == Document::STATE_WA && $doc->user_id == $user->user_id) {
                 //свой может  отменить
             } else {
-                $this->setError('Нет  права отменять документ ' . $doc->meta_desc);
+       
+                $this->setError('notallowedcanceldoc' , $doc->meta_desc);
                 return;
             }
         }
@@ -321,11 +325,12 @@ class DocList extends \App\Pages\Base {
 
         $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-            System::setWarnMsg("У документа были отправки, доставки или документ был  закрыт");
+            System::setWarnMsg("dochas_sent_rec_closed");
         }
         $list = $doc->getChildren('', true);
         if (count($list) > 0) {
-            $this->setError("У документа есть неотмененные дочерние документы");
+            
+            $this->setError("dochasnocanceledchilld");
             return;
         }
 
@@ -342,7 +347,7 @@ class DocList extends \App\Pages\Base {
 
     public function statusOnSubmit($sender) {
         if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
-            $this->setError('Нет  права выполнять документ ');
+            $this->setError('notallowedexedoc');
             return;
         }
         $this->_doc= $this->_doc->cast();

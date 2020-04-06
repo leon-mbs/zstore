@@ -199,7 +199,7 @@ class InvoiceCust extends \App\Pages\Base {
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
 
@@ -208,7 +208,7 @@ class InvoiceCust extends \App\Pages\Base {
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         if ($item->price == 0) {
-            $this->setWarn("Не указана цена");
+            $this->setWarn("no_price");
         }
 
         unset($this->_itemlist[$this->_rowid]);
@@ -267,7 +267,7 @@ class InvoiceCust extends \App\Pages\Base {
 
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл больше 10М!");
+            $this->setError("filemore10M");
             return;
         }
 
@@ -389,21 +389,21 @@ class InvoiceCust extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введен ни один товар");
+            $this->setError("noenteritem");
         }
 
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("Не выбран поставщик");
+            $this->setError("noselsender");
         }
         if ($this->docform->payment->getValue() == 0) {
-            $this->setError("Не указан  способ  оплаты");
+            $this->setError("noselpaytype");
         }
         return !$this->isError();
     }
@@ -435,7 +435,7 @@ class InvoiceCust extends \App\Pages\Base {
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено имя");
+            $this->setError("entername");
             return;
         }
         $item = new Item();

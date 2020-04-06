@@ -98,20 +98,21 @@ class Import extends \App\Pages\Base {
         $sep = $this->iform->sep->getText();
 
         if ($encode == 0) {
-            $this->setError('Не выбрана  кодировка');
+            $this->setError('noselencode');
             return;
         }
         if ($colname == 0) {
-            $this->setError('Не указан столбец  с  наименованием');
+            $this->setError('noselcolname');
             return;
         }
         if ($t == 1 && $colqty == 0) {
-            $this->setError('Не указан столбец  с  количеством');
+            $this->setError('noselcolqty');
             return;
         }
         $file = $this->iform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('Не  выбран  файл');
+            
+            $this->setError('noselfile');
             return;
         }
 
@@ -226,7 +227,8 @@ class Import extends \App\Pages\Base {
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
         }
-        $this->setSuccess("  Импортировано {$cnt} ТМЦ");
+  
+        $this->setSuccess("imported_items", $cnt  );
 
          
     }
@@ -247,17 +249,17 @@ class Import extends \App\Pages\Base {
         $sep       = $this->cform->csep->getText();
 
         if ($encode == 0) {
-            $this->setError('Не выбрана  кодировка');
+            $this->setError('noselencode');
             return;
         }
         if ($colcname == 0) {
-            $this->setError('Не указан столбец  с  наименованием');
+            $this->setError('noselcolname');
             return;
         }
         
         $file = $this->cform->cfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('Не  выбран  файл');
+            $this->setError('noselfile');
             return;
         }
 
@@ -327,7 +329,8 @@ class Import extends \App\Pages\Base {
             
         }
      
-        $this->setSuccess("Импортировано {$cnt} контрагентов");
+        $this->setSuccess("imported_customers ", $cnt);
+    
 
          
     }

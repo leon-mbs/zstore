@@ -48,7 +48,7 @@ class ReturnIssue extends Document {
             "payed" => H::fa($this->payed )
         );
 
-        $report = new \App\Report('returnissue.tpl');
+        $report = new \App\Report('doc/returnissue.tpl');
 
         $html = $report->generate($header);
 
@@ -71,7 +71,7 @@ class ReturnIssue extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL);
+            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL);
             $this->payamount = $this->amount;
         }
 

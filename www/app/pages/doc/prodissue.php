@@ -169,7 +169,7 @@ class ProdIssue extends \App\Pages\Base {
             return;
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
         $store_id = $this->docform->store->getValue();
@@ -178,13 +178,13 @@ class ProdIssue extends \App\Pages\Base {
         $item->quantity = $this->editdetail->editquantity->getText();
         $qstock = $this->editdetail->qtystock->getText();
         if ($item->quantity > $qstock) {
-            $this->setWarn('Недостаточное  количество на  складе');
+            $this->setWarn('inserted_extra_count');
         }
 
         
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Товар требует ввода партии производителя");
+            $this->setError("needs_serial");
             return;
         }
 
@@ -192,7 +192,7 @@ class ProdIssue extends \App\Pages\Base {
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setWarn('Неверный номер серии');
+                $this->setWarn('invalid_serialno');
             }
         }
 
@@ -286,7 +286,7 @@ class ProdIssue extends \App\Pages\Base {
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не указан склад');
+            $this->setError('noselstore');
             return;
         }
 
@@ -294,21 +294,17 @@ class ProdIssue extends \App\Pages\Base {
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_})");
 
 
-
         if ($item == null) {
-            $this->setError("Товар с  кодом '{$code}' не  найден");
+            $this->setError("noitemcode",$code);
             return;
         }
-
-
-
-
+ 
 
         $store_id = $this->docform->store->getValue();
 
         $qty = $item->getQuantity($store);
         if ($qty <= 0) {
-            $this->setError("Товара {$item->itemname} нет на складе");
+            $this->setError("noitemonstore",$item->itemname);
         }
 
 
@@ -330,7 +326,7 @@ class ProdIssue extends \App\Pages\Base {
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('Нужно ввести  номер партии производителя');
+                    $this->setWarn('needs_serial');
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 
@@ -360,17 +356,17 @@ class ProdIssue extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не веден ни один  товар");
+            $this->setError("noenteritem");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
 
         return !$this->isError();

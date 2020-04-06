@@ -180,7 +180,7 @@ class ServiceAct extends \App\Pages\Base {
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не выбрана  услуга");
+            $this->setError("noselservice");
             return;
         }
         $service = Service::load($id);
@@ -375,17 +375,17 @@ class ServiceAct extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_servicelist) == 0) {
-            $this->setError("Не введена  ни одна позиция");
+            $this->setError("noenterpos");
         }
         if ($this->docform->payment->getValue() == 0) {
-            $this->setError("Не указан  способ  оплаты");
+            $this->setError("noselpaytype");
         }
 
         return !$this->isError();
@@ -426,7 +426,7 @@ class ServiceAct extends \App\Pages\Base {
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено имя");
+            $this->setError("entername");
             return;
         }
         $cust = new Customer();
@@ -434,14 +434,14 @@ class ServiceAct extends \App\Pages\Base {
         $cust->phone = $this->editcust->editcustname->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
-            $this->setError("Телефон должен быть 10  цифр");
+            $this->setError("tel10");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Уже есть  контрагент с  таким телефоном");
+                $this->setError("existcustphone");
                 return;
             }
         }

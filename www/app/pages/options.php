@@ -14,6 +14,7 @@ use \Zippy\Html\Label;
 use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\System;
+use \App\Helper as H;
 use \App\Application as App;
 
 class Options extends \App\Pages\Base {
@@ -35,11 +36,11 @@ class Options extends \App\Pages\Base {
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $pt = array(
-            "1" => "По последней закупочной цене",
-            "2" => "Отдельно  по каждой закупочной цене"
+            "1" =>H::l('opt_lastprice') ,
+            "2" => H::l('opt_partion') 
         );
         $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
-
+        
 
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
@@ -63,6 +64,7 @@ class Options extends \App\Pages\Base {
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
+        
 
         $this->common->price1->setText($common['price1']);
         $this->common->price2->setText($common['price2']);
@@ -129,7 +131,7 @@ class Options extends \App\Pages\Base {
         $this->add(new Panel('listpan'));
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->listpan->filter->add(new CheckBox('fdoc'))->setChecked(true);
-        $this->listpan->filter->add(new CheckBox('fdic'))->setChecked(true);
+        $this->listpan->filter->add(new CheckBox('fref'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('frep'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('freg'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('fser'))->setChecked(true);
@@ -158,7 +160,7 @@ class Options extends \App\Pages\Base {
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
-
+      
         $common['price1'] = $this->common->price1->getText();
         $common['price2'] = $this->common->price2->getText();
         $common['price3'] = $this->common->price3->getText();
@@ -178,8 +180,8 @@ class Options extends \App\Pages\Base {
 
         System::setOptions("common", $common);
 
-        $this->setSuccess('Сохранено');
-         
+        $this->setSuccess('saved');
+        System::setCache('labels',null) ;
     }
 
     public function saveFirmOnClick($sender) {
@@ -192,7 +194,7 @@ class Options extends \App\Pages\Base {
         $firm['inn'] = $this->firm->inn->getText();
 
         System::setOptions("firm", $firm);
-        $this->setSuccess('Сохранено');
+        $this->setSuccess('saved');
     }
 
     public function savePrinterOnClick($sender) {
@@ -206,7 +208,7 @@ class Options extends \App\Pages\Base {
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
 
         System::setOptions("printer", $printer);
-        $this->setSuccess('Сохранено');
+        $this->setSuccess('saved');
     }
 
     public function filterOnSubmit($sender) {
@@ -218,10 +220,10 @@ class Options extends \App\Pages\Base {
         if ($this->listpan->filter->frep->isChecked()) {
             $where .= " or meta_type = 2";
         }
-        if ($this->listpan->filter->freg->isChecked()) {
+        if ($this->listpan->filter->fref->isChecked()) {
             $where .= " or meta_type = 3";
         }
-        if ($this->listpan->filter->fdic->isChecked()) {
+        if ($this->listpan->filter->freg->isChecked()) {
             $where .= " or meta_type = 4";
         }
         if ($this->listpan->filter->fser->isChecked()) {
@@ -256,19 +258,19 @@ class Options extends \App\Pages\Base {
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
         switch ($item->meta_type) {
             case 1:
-                $title = "Документ";
+                $title = H::l('md_doc');
                 break;
             case 2:
-                $title = "Отчет";
+                $title = H::l('md_rep');
                 break;
             case 3:
-                $title = "Журнал";
+                $title = H::l('md_ref');
                 break;
             case 4:
-                $title = "Справочник";
+                $title = H::l('md_reg');
                 break;
             case 5:
-                $title = "Сервис";
+                $title = H::l('md_ser');
                 break;
         }
 

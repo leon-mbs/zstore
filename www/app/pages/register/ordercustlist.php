@@ -115,7 +115,7 @@ class OrderCustList extends \App\Pages\Base {
         if ($sender->id == "bttn") {
 
             if ($ttn) {
-                $this->setWarn('Уже есть документ Приходная накладная');
+                $this->setWarn('goodsreceipt_exists');
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
             return;
@@ -123,11 +123,12 @@ class OrderCustList extends \App\Pages\Base {
         if ($sender->id == "binv") {
 
             if ($ttn) {
-                $this->setWarn('Уже есть документ Приходная накладная');
+                $this->setWarn('goodsreceipt_exists');
             }
             $d = $this->_doc->getChildren('InvoiceCust');
             if (count($d) > 0) {
-                $this->setWarn('Уже есть документ Cчет');
+           
+                $this->setWarn('invoice_exists');
             }
 
             App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", 0, $this->_doc->document_id);

@@ -143,7 +143,7 @@ class PayBalance extends \App\Pages\Base {
             'tout' => H::fa($tout),
             'total' => H::fa($total)
         );
-        $report = new \App\Report('paybalance.tpl');
+        $report = new \App\Report('report/paybalance.tpl');
 
         $html = $report->generate($header);
 

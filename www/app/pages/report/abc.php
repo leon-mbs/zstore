@@ -97,7 +97,7 @@ class ABC extends \App\Pages\Base {
             'to' => date('d.m.Y', $to),
             "type" => $this->typelist[$type]
         );
-        $report = new \App\Report('abc.tpl');
+        $report = new \App\Report('report/abc.tpl');
 
         $html = $report->generate($header);
 

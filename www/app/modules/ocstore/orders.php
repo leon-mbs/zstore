@@ -34,7 +34,7 @@ class Orders extends \App\Pages\Base {
         $statuses = System::getSession()->statuses;
         if (is_array($statuses) == false) {
             $statuses = array();
-            $this->setWarn('Выполните соединение на странице настроек');
+            $this->setWarn('do_connect');
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -66,7 +66,7 @@ class Orders extends \App\Pages\Base {
             return;
         $data = json_decode($json, true);
         if (!isset($data)) {
-            $this->setError("Неверный ответ.");
+            $this->setError("invalidresponse");
             \App\Helper::log($json);
             return;
         }
@@ -86,7 +86,8 @@ class Orders extends \App\Pages\Base {
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
                     if ($code == "") {
-                        $this->setWarn("Не задан артикул товара '{$product['name']}' в заказе номер {$ocorder['order_id']} ");
+                        $this->setWarn("noarticle_inorder",$product['name'],$ocorder['order_id']);
+                        
                     }
                 }
 
@@ -136,7 +137,8 @@ class Orders extends \App\Pages\Base {
 
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
-                    $this->setWarn("Не найден товар  с артикулом '{$product['name']}' в заказе номер {$shoporder['order_id']} ");
+                    
+                    $this->setWarn("nofoundarticle_inorder",$product['name'],$shoporder['order_id']);
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -165,7 +167,7 @@ class Orders extends \App\Pages\Base {
 
             $i++;
         }
-        $this->setInfo("Импортировано {$i} заказов");
+        $this->setInfo( 'imported_orders',$i)   ;
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -193,7 +195,8 @@ class Orders extends \App\Pages\Base {
 
         $st = $this->updateform->estatus->getValue();
         if ($st == 0) {
-            $this->setError('Не выбран статус');
+ 
+            $this->setError('noselstatus');
             return;
         }
         $elist = array();
@@ -203,7 +206,8 @@ class Orders extends \App\Pages\Base {
             $elist[$order->headerdata['ocorder']] = $st;
         }
         if (count($elist) == 0) {
-            $this->setError('Не выбран ни один ордер');
+           
+            $this->setError('noselorder');
             return;
         }
         $data = json_encode($elist);
@@ -221,7 +225,8 @@ class Orders extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess("Обновлено " . count($elist) . " заказов");
+        
+        $this->setSuccess("refrehed_orders",count($elist));
 
 
         foreach ($this->_eorders as $order) {

@@ -115,11 +115,13 @@ class Calendar extends \App\Pages\Base {
         $issue = $sender->eissue->getValue();
         $h = $sender->etime->getText();
         if ($issue == 0) {
-            $this->setError('Не  выбрана задача');
+             
+            $this->setError('nosetissue');
             return;
         }
         if (($h > 0 ) == false) {
-            $this->setError('Не указано время');
+             
+            $this->setError('nosettime');
             return;
         }
 

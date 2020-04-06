@@ -35,7 +35,7 @@ class Warranty extends Document {
             "document_number" => $this->document_number
         );
 
-        $report = new \App\Report('warranty.tpl');
+        $report = new \App\Report('doc/warranty.tpl');
 
         $html = $report->generate($header);
 

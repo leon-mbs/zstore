@@ -450,4 +450,44 @@ class Helper {
         return 25;
     }
 
+    /**
+    * Возвращает языковую метку
+    * 
+    * @param mixed $label    
+    * @param mixed $p1      
+    * @param mixed $p2
+    */
+    public static function l($label,$p1="",$p2="") {
+         $label = trim($label);
+         $labels = System::getCache('labels') ;
+         if($labels==null){
+            $lang = System::getOption('common','lang') ;
+            $filename=_ROOT.'templates/lang.json' ;
+            if($lang=='ua')$filename=_ROOT.'templates_ua/lang.json';
+            $file = @file_get_contents($filename);
+            
+            if(strlen($file)==0) {
+                echo "Не найден файл локализации  " .$filename;
+                die; 
+            }
+            $labels=@json_decode( $file,true)  ;
+            if($labels==null) {
+                echo "Неверный файл локализации  " .$filename;
+                die; 
+            }
+            System::setCache('labels',$labels) ;
+            
+         }
+         if(isset($labels[$label])) {
+            $text =  $labels[$label] ;
+            $text = sprintf($text,$p1,$p2);
+            return $text;
+             
+         }   else {
+             return $label;
+         }
+         
+         
+         
+    }
 }

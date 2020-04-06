@@ -175,7 +175,7 @@ class DocView extends \Zippy\Html\PageFragment {
 
         $file = $this->addfileform->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->getOwnerPage()->setError("Файл больше 10М !");
+            $this->getOwnerPage()->setError("filemore10M");
             return;
         }
 

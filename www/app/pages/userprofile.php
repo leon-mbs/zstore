@@ -11,6 +11,7 @@ use \Zippy\Html\Form\Form;
 use \Zippy\Html\Label;
 use \App\System;
 use \Zippy\Html\DataList\DataView;
+use \App\Helper as H;
 
 class UserProfile extends \App\Pages\Base {
 
@@ -30,10 +31,11 @@ class UserProfile extends \App\Pages\Base {
         $form->add(new Label('userlogin', $this->user->userlogin));
         $form->add(new TextInput('email', $this->user->email));
         $form->add(new CheckBox('hidesidebar',$this->user->hidesidebar));
+        $form->add(new CheckBox('popupmessage',$this->user->popupmessage));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100 ), $this->user->pagesize));
-
+ 
         $w = "";
         if ($this->user->acltype == 2) {
             if (strlen($this->user->aclview) > 0) {
@@ -66,10 +68,11 @@ class UserProfile extends \App\Pages\Base {
 
         $this->user->email = $sender->email->getText();
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1:0;
+        $this->user->popupmessage = $sender->popupmessage->isChecked() ? 1:0;
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
-
+   
         $smartmenu = array();
 
         foreach ($sender->mlist->getDataRows() as $row) {
@@ -83,7 +86,7 @@ class UserProfile extends \App\Pages\Base {
 
         if (!$this->isError()) {
             $this->user->save();
-            $this->setSuccess('Изменения сохранены');
+            $this->setSuccess('saved');
             System::setUser($this->user);
         }
     }
@@ -95,20 +98,22 @@ class UserProfile extends \App\Pages\Base {
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('Введите пароль');
+            $this->setError('enterpassword');
         } else
         if ($confirm == '') {
-            $this->setError('Подтвердите пароль');
+            $this->setError('confirmpass');
+         
         } else
         if ($confirm != $pass) {
-            $this->setError('Неверное подтверждение');
+       
+            $this->setError('invalidconfirm');
         }
 
 
         if (!$this->isError()) {
             $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
             $this->user->save();
-            $this->setSuccess('Пароль сохранен');
+            $this->setSuccess('saved');
         }
 
         if ($this->user->username != 'admin') {
@@ -117,7 +122,8 @@ class UserProfile extends \App\Pages\Base {
             $n->user_id = $admin->user_id;
 
             $n->dateshow = time();
-            $n->message = "Пользователь <b>{$this->user->username}</b> сменил пароль на  <b>{$pass}</b>";
+            $n->message = H::l('passchanged',$this->user->username,$pass);
+            
 
             $n->save();
         }
@@ -144,7 +150,8 @@ class UserProfile extends \App\Pages\Base {
         } else {
             $id = $sender->users->getValue();
             if ($id == 0) {
-                $this->setError('Не  выбран  получатель');
+             
+                $this->setError('noselreciever');
                 return;
             }
             $list[] = $id;
@@ -158,7 +165,7 @@ class UserProfile extends \App\Pages\Base {
             $n->sender_name = $this->user->username;
             $n->save();
         }
-        $this->setSuccess('Отправлено');
+        $this->setSuccess('sent');
         $sender->clean();
     }
 
@@ -166,19 +173,19 @@ class UserProfile extends \App\Pages\Base {
         $item = $row->getDataItem();
         switch ($item->meta_type) {
             case 1:
-                $title = "Документ";
+                $title = H::l('md_doc') ;
                 break;
             case 2:
-                $title = "Отчет";
+                $title = H::l('md_rep');
                 break;
             case 3:
-                $title = "Журнал";
+                $title = H::l('md_reg');
                 break;
             case 4:
-                $title = "Справочник";
+                $title = H::l('md_ref');
                 break;
             case 5:
-                $title = "Сервис ";
+                $title = H::l('md_ser');
                 break;
         }
         $smartmenu = @explode(',', $this->user->smartmenu);

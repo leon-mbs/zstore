@@ -125,7 +125,7 @@ class EmpTask extends \App\Pages\Base {
             "_detail" => $detail,
             'dateto' => date('d.m.Y', $to)
         );
-        $report = new \App\Report('emptask.tpl');
+        $report = new \App\Report('report/emptask.tpl');
 
         $html = $report->generate($header, $detail);
 

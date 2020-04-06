@@ -67,7 +67,7 @@ class Order extends \App\Entity\Doc\Document {
         }
 
 
-        $report = new \App\Report('order.tpl');
+        $report = new \App\Report('doc/order.tpl');
 
         $html = $report->generate($header);
 

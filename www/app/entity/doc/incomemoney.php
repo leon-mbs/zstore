@@ -15,7 +15,7 @@ class IncomeMoney extends Document {
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
+        Pay::addPayment($this->document_id,$this->document_date, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
 
 
         return true;
@@ -33,7 +33,7 @@ class IncomeMoney extends Document {
             "to" => $this->headerdata["paymentname"],
             "document_number" => $this->document_number
         );
-        $report = new \App\Report('incomemoney.tpl');
+        $report = new \App\Report('doc/incomemoney.tpl');
 
         $html = $report->generate($header);
 

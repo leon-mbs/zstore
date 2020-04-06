@@ -127,7 +127,7 @@ class CategoryList extends \App\Pages\Base {
 
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
         if ($this->_category->cat_name == '') {
-            $this->setError("Введите наименование");
+            $this->setError("entername");
             return;
         }
 

@@ -188,7 +188,7 @@ class CustomerList extends \App\Pages\Base {
 
         $this->_customer->customer_name = $this->customerdetail->editcustomername->getText();
         if ($this->_customer->customer_name == '') {
-            $this->setError("Введите наименование");
+            $this->setError("entername");
             return;
         }
         $this->_customer->phone = $this->customerdetail->editphone->getText();
@@ -206,18 +206,18 @@ class CustomerList extends \App\Pages\Base {
         $c = Customer::getByEmail($this->_customer->email);
         if ($c != null) {
             if ($c->customer_id != $this->_customer->customer_id) {
-                $this->setError("Уже есть  контрагент с  таким Email");
+                $this->setError("existcustemail");
                 return;
             }
         }
         if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != 10) {
-            $this->setError("Телефон должен быть 10  цифр");
+            $this->setError("tel10");
             return;
         }
         $c = Customer::getByPhone($this->_customer->phone);
         if ($c != null) {
             if ($c->customer_id != $this->_customer->customer_id) {
-                $this->setError("Уже есть  контрагент с  таким телефоном");
+                $this->setError("existcustphone");
                 return;
             }
         }
@@ -251,7 +251,7 @@ class CustomerList extends \App\Pages\Base {
 
         $file = $this->contentview->addfileform->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->getOwnerPage()->setError("Файл больше 10М !");
+            $this->getOwnerPage()->setError("filemore10M");
             return;
         }
 

@@ -63,7 +63,7 @@ class GoodsIssue extends Document {
         }
         $header["isdelivery"] = $this->headerdata["delivery"] > 1;
 
-        $report = new \App\Report('goodsissue.tpl');
+        $report = new \App\Report('doc/goodsissue.tpl');
 
         $html = $report->generate($header);
 
@@ -98,7 +98,7 @@ class GoodsIssue extends Document {
 
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;
