@@ -152,7 +152,8 @@ class Main extends \App\Pages\Base {
         $topic->content = $this->editform->editcontent->getText();
         $topic->ispublic = $this->editform->editispublic->isChecked();
         if (strlen($topic->title) == 0) {
-            $this->setError('не введен заголовое');
+            $this->setError('notitle');
+             
             return;
         }
         $topic->save();
@@ -207,7 +208,8 @@ class Main extends \App\Pages\Base {
             }
             $node = Node::load($this->clipboard[0]);
             if (strpos($dest->mpath, $node->mpath) === 0) {
-                $this->setError("Нельзя  переместить в своего наследника");
+             
+                $this->setError("nomovedesc");
                 return;
             }
 
@@ -397,7 +399,8 @@ class Main extends \App\Pages\Base {
         if (strlen($file['tmp_name']) > 0) {
             if (filesize($file['tmp_name']) / 1024 / 1024 > 10) {
 
-                $this->setError("Файл слишком  большой");
+              
+                $this->setError("filetobig");
                 return;
             }
         } else
@@ -431,7 +434,7 @@ class Main extends \App\Pages\Base {
         $text = $form->skeyword->getText();
         $t = $form->searchtype->getValue();
         if ($text == "") {
-            $this->setError('Enter text!');
+            $this->setError('entertext');
             return;
         }
 

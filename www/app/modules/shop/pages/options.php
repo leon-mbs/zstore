@@ -83,12 +83,12 @@ class Options extends \App\Pages\Base {
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Неверный формат');
+                $this->setError('invalidformat');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 1000000) {
-                $this->setError('Слишком большой размер изображения');
+                $this->setError('toobigimage');
                 return;
             }
 

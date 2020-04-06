@@ -57,7 +57,8 @@ class Order extends Base {
         foreach ($rows as $row) {
             $product = $row->GetDataItem();
             if (!is_numeric($product->quantity)) {
-                $this->setError('Неверное количество');
+              
+                $this->setError('invalidquantity');
                 break;
             }
 
@@ -91,15 +92,18 @@ class Order extends Base {
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
-            $this->setError("Выберите  тип доставки");
+             
+            $this->setError("enterdelivery");
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
-            $this->setError(" Введите адрес");
+             
+            $this->setError("enteraddress");
             return;
         }
         if (strlen($phone) == 0 && strlen($email) == 0) {
-            $this->setError(" Введите телефон или  email");
+            
+            $this->setError("entertelemail");
             return;
         }
 

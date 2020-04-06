@@ -63,7 +63,7 @@ class Project extends \ZCL\DB\Entity {
         $list[self::STATUS_NEW] =\App\Helper::l('pr_new')  ;
 
         $list[self::STATUS_INPROCESS] = \App\Helper::l('pr_inp')  ;
-        $list[self::STATUS_WA] = \App\Helper::l('pr_wa') '';
+        $list[self::STATUS_WA] = \App\Helper::l('pr_wa')  ;
         $list[self::STATUS_SHIFTED] = \App\Helper::l('pr_shifted')  ;
         $list[self::STATUS_WAITPAIMENT] = \App\Helper::l('pr_wp')  ;
         $list[self::STATUS_REOPENED] =\App\Helper::l('pr_reopened')   ;

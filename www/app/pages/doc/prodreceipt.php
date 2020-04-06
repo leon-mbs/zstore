@@ -166,7 +166,7 @@ class ProdReceipt extends \App\Pages\Base {
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0 && strlen($name) < 2) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
         if ($id == 0) {
@@ -190,7 +190,7 @@ class ProdReceipt extends \App\Pages\Base {
         if ($item->sdate == false)
             $item->sdate = '';
         if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("К серии должна быть введена дата");
+            $this->setError("dateforserial");
             return;
         }
 
@@ -295,17 +295,17 @@ class ProdReceipt extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введен ни один  товар");
+            $this->setError("noenteritem");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
 
 

@@ -136,7 +136,8 @@ class GroupList extends \App\Pages\Base {
         } else {
             $pcnt = Product::findCnt("group_id=" . $this->group->parent_id);
             if ($pcnt > 0) {
-                $this->setError('Нльзя добавить дочернюю в  группу с товарами');
+                $this->setError('notallowedtotovgroup');
+           
                 return;
             }
         }
@@ -179,17 +180,19 @@ class GroupList extends \App\Pages\Base {
             $imagedata = getimagesize($filedata["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Невірний формат');
+                $this->setError('');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 1000000) {
-                $this->setError('Шлишком большой размер изображения');
+         
+                $this->setError('toobigimage');
                 return;
             }
             $r = ((double) $imagedata[0]) / $imagedata[1];
             if ($r > 1.1 || $r < 0.9) {
-                $this->setError('Изображение должно  быть примерно квадратным');
+                $this->setError('');
+                $this->setError('squareimage');
                 return;
             }
             $th = new \JBZoo\Image\Image($filedata['tmp_name']);
@@ -318,7 +321,7 @@ class GroupList extends \App\Pages\Base {
 
 
         if (strlen($attr->attributename) == 0) {
-            $this->setError("Введіть найменування!");
+            $this->setError("entername");
 
             return;
         }

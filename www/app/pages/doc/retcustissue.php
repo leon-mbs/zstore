@@ -188,7 +188,7 @@ class RetCustIssue extends \App\Pages\Base {
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
 
@@ -328,17 +328,17 @@ class RetCustIssue extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_tovarlist) == 0) {
-            $this->setError("Не веден ни один  товар");
+            $this->setError("noenteritem");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
         if ($this->docform->customer->getKey() == 0 && trim($this->docform->customer->getText()) == '') {
             //$this->setError("Неверно введен  постащик");

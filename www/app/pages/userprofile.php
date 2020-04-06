@@ -98,13 +98,15 @@ class UserProfile extends \App\Pages\Base {
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('Введите пароль');
+            $this->setError('enterpassword');
         } else
         if ($confirm == '') {
-            $this->setError('Подтвердите пароль');
+            $this->setError('confirmpass');
+         
         } else
         if ($confirm != $pass) {
-            $this->setError('Неверное подтверждение');
+       
+            $this->setError('invalidconfirm');
         }
 
 
@@ -120,7 +122,8 @@ class UserProfile extends \App\Pages\Base {
             $n->user_id = $admin->user_id;
 
             $n->dateshow = time();
-            $n->message = "Пользователь <b>{$this->user->username}</b> сменил пароль на  <b>{$pass}</b>";
+            $n->message = H::l('passchanged',$this->user->username,$pass);
+            
 
             $n->save();
         }
@@ -147,7 +150,8 @@ class UserProfile extends \App\Pages\Base {
         } else {
             $id = $sender->users->getValue();
             if ($id == 0) {
-                $this->setError('Не  выбран  получатель');
+             
+                $this->setError('noselreciever');
                 return;
             }
             $list[] = $id;

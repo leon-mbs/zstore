@@ -332,7 +332,7 @@ class POSCheck extends \App\Pages\Base {
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
         $item = Item::load($id);
@@ -344,7 +344,7 @@ class POSCheck extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
         if ($item->quantity > $qstock) {
-            $this->setWarn('extra_count');
+            $this->setWarn('inserted_extra_count');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
@@ -383,7 +383,8 @@ class POSCheck extends \App\Pages\Base {
 
         $id = $this->editserdetail->editser->getKey();
         if ($id == 0) {
-            $this->setError("Не выбрана услуга");
+            
+            $this->setError("noselservice");
             return;
         }
         $ser = Service::load($id);
@@ -625,7 +626,7 @@ class POSCheck extends \App\Pages\Base {
             return;
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не указан склад');
+            $this->setError('noselstore');
             return;
         }
 
@@ -636,7 +637,7 @@ class POSCheck extends \App\Pages\Base {
 
 
         if ($item == null) {
-            $this->setError("Товар с  кодом '{$code}' не  найден");
+            $this->setError("noitemcode",$code);
             return;
         }
 
@@ -648,7 +649,7 @@ class POSCheck extends \App\Pages\Base {
 
         $qty = $item->getQuantity($store);
         if ($qty <= 0) {
-            $this->setError("Товара {$item->itemname} нет на складе");
+            $this->setError("noitemonstore",$item->itemname);
         }
 
 
@@ -705,28 +706,28 @@ class POSCheck extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
-            $this->setError("Не ведены позиции");
+            $this->setError("noenterpos");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
         if ($p == 0) {
-            $this->setError("Не указан  способ  оплаты");
+            $this->setError("noselpaytype");
         }
         if ($p == \App\Entity\MoneyFund::PREPAID && $c == 0) {
-            $this->setError("Если предоплата  должен  быть  выбран  контрагент");
+            $this->setError("mustsel_cust");
         }
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("Если в долг должен  быть  выбран  контрагент");
+            $this->setError("mustsel_cust");
         }
 
 
@@ -829,7 +830,7 @@ class POSCheck extends \App\Pages\Base {
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено имя");
+            $this->setError("entername");
             return;
         }
         $cust = new Customer();
@@ -837,14 +838,14 @@ class POSCheck extends \App\Pages\Base {
         $cust->phone = $this->editcust->editcustname->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
-            $this->setError("Телефон должен быть 10  цифр");
+            $this->setError("tel10");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Уже есть  контрагент с  таким телефоном");
+                $this->setError("existcustphone");
                 return;
             }
         }

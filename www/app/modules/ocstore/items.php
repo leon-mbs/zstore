@@ -61,7 +61,8 @@ class Items extends \App\Pages\Base {
             return;
         $data = json_decode($json, true);
         if (!isset($data)) {
-            $this->setError("Неверный ответ.");
+           
+            $this->setError("invalidresponse");
             \App\Helper::log($json);
             return;
         }
@@ -103,7 +104,8 @@ class Items extends \App\Pages\Base {
         $modules = System::getOptions("modules");
         $cat = $this->exportform->ecat->getValue();
         if ($cat == 0) {
-            $this->setError('Не выбрана категория  ');
+        
+            $this->setError('noselcategory');
             return;
         }
 
@@ -119,7 +121,8 @@ class Items extends \App\Pages\Base {
             );
         }
         if (count($elist) == 0) {
-            $this->setError('Не выбран ни один товар');
+          
+            $this->setError('noselitem');
             return;
         }
         $data = json_encode($elist);

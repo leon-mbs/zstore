@@ -132,7 +132,7 @@ class Inventory extends \App\Pages\Base {
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("Выберите склад источник");
+            $this->setError("noselstore");
             return;
         }
         $this->editdetail->setVisible(true);
@@ -146,7 +146,7 @@ class Inventory extends \App\Pages\Base {
             return;
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
         $item = Item::load($id);
@@ -230,17 +230,17 @@ class Inventory extends \App\Pages\Base {
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Не введен номер документа");
+            $this->setError("enterdocnumber");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введен ни один  товар");
+            $this->setError("noenteritem");
         }
         if (($this->docform->store->getValue() > 0 ) == false) {
-            $this->setError("Не выбран  склад");
+            $this->setError("noselstore");
         }
 
 
@@ -275,7 +275,7 @@ class Inventory extends \App\Pages\Base {
 
         $item = Item::getFirst("item_code={$code_} or bar_code={$code_}");
         if ($item == null) {
-            $this->setError('Не найден товар с кодом ' . $code);
+            $this->setError('noitemcode', $code);
             return;
         }
 

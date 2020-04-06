@@ -274,17 +274,19 @@
 
         </form>
 
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
 
         <form zippy="editdetail">
             <h4>Ввод товара </h4>
-            <div class="row">
-                <div class="col-4">
+         
 
 
                     <div class="form-group">
                         <label for="edititem">Название </label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="edititem" />
-                        <a style="font-size:smaller" zippy="addnewitem">Добавить новый</a>
+                          <a zippy="openitemsel">Открыть справочник</a>
+                          <br><a   zippy="addnewitem">Добавить новый товар</a>
                     </div>
                     {{#usesnumber}} 
                     <div class="form-group">
@@ -315,12 +317,18 @@
                     <div class="form-group">
                         <input zippy="saverow" type="submit" value="Сохранить" class="btn btn-outline-primary"> <input type="button" zippy="cancelrow" value="Отменить"       class="btn btn-light ">
                     </div>
-                </div>
-            </div>
+           
 
 
         </form>
-
+                 </div>   
+             
+                <div class="col-12 col-md-8 col-xl-6">
+                   <div zippy="wselitem"></div>
+                   
+                   
+              </div>
+                  </div>
         <form zippy="editnewitem">
             <h3>&nbsp;Новый товар </h3>
             <div class="row">

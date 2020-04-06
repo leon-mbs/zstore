@@ -94,7 +94,7 @@ class ServiceList extends \App\Pages\Base {
         $this->_service->price = $this->servicedetail->editprice->getText();
         $this->_service->hours = $this->servicedetail->edithours->getText();
         if ($this->_service->service_name == '') {
-            $this->setError("Введите наименование");
+            $this->setError("entername");
             return;
         }
         $this->_service->disabled = $this->servicedetail->editdisabled->isChecked() ? 1 : 0;

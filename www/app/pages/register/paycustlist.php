@@ -220,7 +220,8 @@ class PayCustList extends \App\Pages\Base {
 
 
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
-            $this->setError('Сумма  больше  необходимой  оплаты');
+            
+            $this->setError('sumoverpay');
             return;
         }
 

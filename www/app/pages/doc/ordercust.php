@@ -162,7 +162,7 @@ class OrderCust extends \App\Pages\Base {
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
 
@@ -296,18 +296,18 @@ class OrderCust extends \App\Pages\Base {
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введите номер документа');
+            $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введен ни один  товар");
+            $this->setError("noenteritem");
         }
 
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("Не выбран  поставщик");
+            $this->setError("noselsender");
         }
 
         return !$this->isError();
@@ -346,7 +346,7 @@ class OrderCust extends \App\Pages\Base {
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено имя");
+            $this->setError("entername");
             return;
         }
         $item = new Item();

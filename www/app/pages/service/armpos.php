@@ -156,7 +156,7 @@ class ARMPos extends \App\Pages\Base {
 
 
         if ($this->pos == null) {
-            $this->setError("Не выбран терминал");
+            $this->setError("noselterm");
             return;
         }
         setcookie("posterminal", $this->pos->pos_id, time() + 60 * 60 * 24 * 30);
@@ -199,7 +199,7 @@ class ARMPos extends \App\Pages\Base {
 
     public function next2docOnClick($sender) {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
-            $this->setError('Не введены позиции');
+            $this->setError('noenterpos');
             return;
         }
 
@@ -251,13 +251,13 @@ class ARMPos extends \App\Pages\Base {
 
 
         if ($item == null) {
-            $this->setError("Товар с  кодом '{$code}' не  найден");
+            $this->setError("noitemcode",$code);
             return;
         }
 
         $qty = $item->getQuantity($this->pos->store);
         if ($qty <= 0) {
-            $this->setError("Товара {$item->itemname} нет на складе");
+            $this->setError("noitemonstore", $item->itemname);
         }
 
 
@@ -344,7 +344,7 @@ class ARMPos extends \App\Pages\Base {
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не выбран товар");
+            $this->setError("noselitem");
             return;
         }
         $item = Item::load($id);
@@ -393,7 +393,7 @@ class ARMPos extends \App\Pages\Base {
 
         $id = $this->editserdetail->editser->getKey();
         if ($id == 0) {
-            $this->setError("Не выбрана услуга");
+            $this->setError("noselservice");
             return;
         }
         $ser = Service::load($id);
@@ -537,7 +537,7 @@ class ARMPos extends \App\Pages\Base {
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено имя");
+            $this->setError("entername");
             return;
         }
         $cust = new Customer();
@@ -545,14 +545,14 @@ class ARMPos extends \App\Pages\Base {
         $cust->phone = $this->editcust->editphone->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
-            $this->setError("Телефон должен быть 10  цифр");
+            $this->setError("tel10");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Уже есть  контрагент с  таким телефоном");
+                $this->setError("existcustphone");
                 return;
             }
         }
@@ -584,7 +584,7 @@ class ARMPos extends \App\Pages\Base {
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->_docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
             return;
         }
         $this->_doc->document_date = $this->form3->document_date->getDate();
@@ -609,11 +609,11 @@ class ARMPos extends \App\Pages\Base {
         }
 
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID && $this->_doc->customer_id == 0) {
-            $this->setError("Если предоплата  должен  быть  выбран  контрагент");
+            $this->setError("mustsel_cust");
             return;
         }
         if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-            $this->setError("Если в долг должен  быть  выбран  контрагент");
+            $this->setError("mustsel_cust");
             return;
         }
 

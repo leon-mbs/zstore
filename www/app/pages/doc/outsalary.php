@@ -104,7 +104,10 @@ class OutSalary extends \App\Pages\Base {
               $this->_doc->amount += $emp->amount; 
            }   
         }
-         
+        if($this->_doc->amount == 0) {
+            $this->setError("noentersum");           
+            return;
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -143,11 +146,11 @@ class OutSalary extends \App\Pages\Base {
     private function checkForm() {
 
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("Не введен номер документа");
+            $this->setError("enterdocnumber");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('Не уникальный номер документа. Сгенерирован новый номер');
+            $this->setError('nouniquedocnumber_created');
         }
  
 

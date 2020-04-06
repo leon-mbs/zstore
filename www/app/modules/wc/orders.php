@@ -178,7 +178,7 @@ class Orders extends \App\Pages\Base {
             $elist[] =   $order;
         }
         if (count($elist) == 0) {
-            $this->setError('Не выбран ни один ордер');
+            $this->setError('noselorder');
             return;
         }
     

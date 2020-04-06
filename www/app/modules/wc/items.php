@@ -119,7 +119,7 @@ class Items extends \App\Pages\Base {
             );
         }
         if (count($elist) == 0) {
-            $this->setError('Не выбран ни один товар');
+            $this->setError('noselitem');
             return;
         }
     

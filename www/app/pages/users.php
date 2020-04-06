@@ -155,7 +155,8 @@ class Users extends \App\Pages\Base {
         $user = User::getByLogin($this->user->userlogin);
         if ($user instanceof User) {
             if ($user->user_id != $this->user->user_id) {
-                $this->setError('Неуникальный логин');
+                $this->setError('nouniquelogin');
+               
                 return;
             }
         }
@@ -163,7 +164,8 @@ class Users extends \App\Pages\Base {
             $user = User::getByEmail($this->user->email);
             if ($user instanceof User) {
                 if ($user->user_id != $this->user->user_id) {
-                    $this->setError('Неуникальный email');
+                
+                    $this->setError('nouniqueemail');
                     return;
                 }
             }
@@ -178,7 +180,8 @@ class Users extends \App\Pages\Base {
             ;
         }
         if ($this->user->user_id == 0 && strlen($pass) == 0) {
-            $this->setError("Введите пароль нового пользователя");
+            
+            $this->setError("enterpassword");
             return;
         }
 

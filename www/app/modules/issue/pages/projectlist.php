@@ -151,7 +151,8 @@ class ProjectList extends \App\Pages\Base {
         $this->_project->customer_id = $this->projectform->editcust->getKey();
         $this->_project->desc = $this->projectform->editdesc->getText();
         if ($this->_project->project_name == '') {
-            $this->setError("Введите наименование");
+        
+            $this->setError("entername");
             return;
         }
 
@@ -194,7 +195,7 @@ class ProjectList extends \App\Pages\Base {
     }
 
     public function toilistOnClick($sender) {
-        
+       App::Redirect("\\App\\Modules\\Issue\\Pages\\IssueList",0,$this->_project->project_id); 
     }
 
     public function onAddMsg($sender) {
@@ -246,7 +247,7 @@ class ProjectList extends \App\Pages\Base {
 
         $file = $sender->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->getOwnerPage()->setError("Файл больше 10М!");
+            $this->getOwnerPage()->setError("filemore10M");
             return;
         }
 

@@ -65,7 +65,7 @@ class Export extends \App\Pages\Base {
         $sep = $this->cform->csep->getText();
 
         if ($encode == 0) {
-            $this->setError('Не выбрана кодировка');
+            $this->setError('noselencode');
             return;
         }
         
@@ -111,7 +111,7 @@ class Export extends \App\Pages\Base {
         $sep = $this->iform->sep->getText();
 
         if ($encode == 0) {
-            $this->setError('Не выбрана кодировка');
+            $this->setError('noselencode');
             return;
         }
  

@@ -66,7 +66,7 @@ class Orders extends \App\Pages\Base {
             return;
         $data = json_decode($json, true);
         if (!isset($data)) {
-            $this->setError("Неверный ответ.");
+            $this->setError("invalidresponse");
             \App\Helper::log($json);
             return;
         }
@@ -195,7 +195,8 @@ class Orders extends \App\Pages\Base {
 
         $st = $this->updateform->estatus->getValue();
         if ($st == 0) {
-            $this->setError('Не выбран статус');
+ 
+            $this->setError('noselstatus');
             return;
         }
         $elist = array();
@@ -205,7 +206,8 @@ class Orders extends \App\Pages\Base {
             $elist[$order->headerdata['ocorder']] = $st;
         }
         if (count($elist) == 0) {
-            $this->setError('Не выбран ни один ордер');
+           
+            $this->setError('noselorder');
             return;
         }
         $data = json_encode($elist);

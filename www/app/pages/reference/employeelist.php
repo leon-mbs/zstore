@@ -110,17 +110,17 @@ class EmployeeList extends \App\Pages\Base {
 
         if (strlen($login) > 0) {
             if ($login == "admin") {
-                $this->setError('Недопустимый логин');
+                $this->setError('invalidlogin');
                 return;
             }
             $_emp = Employee::getFirst("login = '{$login}'");
             if ($_emp != null && $_emp->employee_id != $this->_employee->employee_id) {
-                $this->setError('Логин уже назначен  ' . $_emp->emp_name());
+                $this->setError('assignedlogin' , $_emp->emp_name());
                 return;
             }
             $user = \App\Entity\User::getByLogin($login);
             if ($user == null) {
-                $this->setError('Несуществующий логин');
+                $this->setError('invalidlogin');
                 return;
             }
         }

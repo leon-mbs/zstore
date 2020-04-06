@@ -91,12 +91,13 @@ class StoreList extends \App\Pages\Base {
         $this->_store->storename = $this->storeform->storeeditname->getText();
         $this->_store->description = $this->storeform->storeeditdesc->getText();
         if ($this->_store->storename == '') {
-            $this->setError("Введите наименование");
+            $this->setError("entername");
             return;
         }
         $this->_store->branch_id = $this->storeform->editbranch->getValue();
         if ($this->_tvars['usebranch'] == true && $this->_store->branch_id == 0) {
-            $this->setError('Не выбран  филиал');
+            $this->setError('selbranch');
+            
             return;
         }
 

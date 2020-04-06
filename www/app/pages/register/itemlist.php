@@ -213,24 +213,25 @@ class ItemList extends \App\Pages\Base {
         $st2 = $sender->topart->getValue();
         $qty = $sender->mqty->getText();
         if ($st1 == 0 || $st2 == 0) {
-            $this->setError('Не выбрана  партия');
+            
+            $this->setError('noselpartion');
 
             return;
         }
         if ($st1 == $st2) {
-            $this->setError('Одинаковые партии');
+            $this->setError('thesamepartion');
 
             return;
         }
         if (($qty > 0) == false) {
-            $this->setError('Неверное количество');
+            $this->setError('invalidquantity');
 
             return;
         }
         $st1 = Stock::load($st1);
         $st2 = Stock::load($st2);
         if ($qty > $st1->qty) {
-            $this->setError('Превышено количество');
+            $this->setError('overqty');
 
             return;
         }
