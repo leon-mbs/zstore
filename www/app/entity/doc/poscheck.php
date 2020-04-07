@@ -57,7 +57,7 @@ class POSCheck extends Document {
             "shopname" => $firm["shopname"],
             "address" => $firm["address"],
             "phone" => $firm["phone"],
-            "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+            "customer_name" => strlen($this->customer_name) > 0 ? $this->customer_name : false,
             "exchange" => $this->headerdata["exchange"],
             "pos_name" => $this->headerdata["pos_name"],
             "time" => date('d.m.Y H:i', $this->headerdata["time"]),

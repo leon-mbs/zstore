@@ -27,7 +27,7 @@ class ServiceAct extends Document {
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "customer_name" => $this->headerdata["customer_name"],
+            "customer_name" => $this->customer_name,
             "gar" => $this->headerdata['gar'],
             "isdevice" => strlen($this->headerdata["device"]) > 0,
             "device" => $this->headerdata["device"],

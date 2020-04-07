@@ -45,7 +45,7 @@ class RetCustIssue extends Document {
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $this->headerdata["firmname"],
-            "customer_name" => $this->headerdata["customer_name"],
+            "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed )
