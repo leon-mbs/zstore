@@ -42,7 +42,7 @@ class GoodsIssue extends Document {
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $this->headerdata["firmname"],
-            "customer_name" => $this->headerdata["customer_name"],
+            "customer_name" => $this->customer_name,
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],
             "order" => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
