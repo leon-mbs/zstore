@@ -630,12 +630,7 @@ class Document extends \ZCL\DB\Entity {
         return Document::find($where);
     }
 
-    public function addChild($id) {
-        if ($id > 0) {
-            $conn = \ZDB\DB::getConnect();
-            $conn->Execute("update documents set parent_id={$this->document_id} where  document_id=" . $id);
-        }
-    }
+  
 
     /**
      *  Возвращает  списки  документов которые  могут быть  созданы  на  основании
