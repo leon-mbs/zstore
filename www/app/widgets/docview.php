@@ -329,7 +329,12 @@ class DocView extends \Zippy\Html\PageFragment {
     public function OnReldocSubmit($sender) {
 
         $id = $this->addrelform->addrel->getKey();
-        $this->_doc->addChild($id);
+        $child = Document::load($id) ;
+        if($child instanceof Document){
+           $child->parent_id = $this->_doc->document_id ;
+           $child->save();
+        }
+        
         $this->updateDocs();
         $this->addrelform->addrel->setKey(0);
         $this->addrelform->addrel->setText('');
