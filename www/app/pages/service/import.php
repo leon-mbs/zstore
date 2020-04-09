@@ -161,8 +161,9 @@ class Import extends \App\Pages\Base {
                     $cat->save();
                 }
             }
-            $itemname = $row[$colname - 1];
-            $itemcode = $row[$colcode - 1];
+            $item = null;
+            $itemname = trim($row[$colname - 1]);
+            $itemcode = trim($row[$colcode - 1]);
             if (strlen($itemname) > 0) {
   
                if (strlen($itemcode) > 0) {
@@ -174,17 +175,17 @@ class Import extends \App\Pages\Base {
                 
                 
                 if ($item == null) {
-                    $price = str_replace(',', '.', $row[$colprice - 1]);
-                    $inprice = str_replace(',', '.', $row[$colinprice - 1]);
-                    $qty = str_replace(',', '.', $row[$colqty - 1]);
+                    $price = str_replace(',', '.', trim($row[$colprice - 1]));
+                    $inprice = str_replace(',', '.', trim($row[$colinprice - 1]));
+                    $qty = str_replace(',', '.', trim($row[$colqty - 1]));
                     $item = new Item();
                     $item->itemname = $itemname;
                     if (strlen($row[$colcode - 1]) > 0)
-                        $item->item_code = $row[$colcode - 1];
+                        $item->item_code = trim($row[$colcode - 1]);
                     if (strlen($row[$colbarcode - 1]) > 0)
-                        $item->bar_code = $row[$colbarcode - 1];
+                        $item->bar_code = trim($row[$colbarcode - 1]);
                     if (strlen($row[$colmsr - 1]) > 0)
-                        $item->msr = $row[$colmsr - 1];
+                        $item->msr = trim($row[$colmsr - 1]);
                     if ($price > 0)
                         $item->{$pt} = $price;
                     if ($inprice > 0)
