@@ -325,7 +325,7 @@ class DocList extends \App\Pages\Base {
 
         $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-            System::setWarnMsg("dochas_sent_rec_closed");
+           $this->setWarn("dochas_sent_rec_closed");
         }
         $list = $doc->getChildren('', true);
         if (count($list) > 0) {
