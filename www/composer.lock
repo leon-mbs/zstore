@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fab3e1f25e3e91c350d4c0fae7b66b73",
-    "content-hash": "6b3eb0e1c60ec71202cc9f5795c505ee",
+    "hash": "8bd731b7546e8a980161569cd568e2d1",
+    "content-hash": "a14044961f50f73769a19c41984343ac",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -265,46 +265,6 @@
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
             "time": "2018-12-14 02:40:31"
-        },
-        {
-            "name": "electrolinux/phpquery",
-            "version": "0.9.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/electrolinux/phpquery.git",
-                "reference": "6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/electrolinux/phpquery/zipball/6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a",
-                "reference": "6cb8afcfe8cd4ce45f2f8c27d561383037c27a3a",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "phpQuery/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tobiasz Cudnik",
-                    "email": "tobiasz.cudnik@gmail.com",
-                    "homepage": "https://github.com/TobiaszCudnik",
-                    "role": "Developer"
-                },
-                {
-                    "name": "didier Belot",
-                    "role": "Packager"
-                }
-            ],
-            "description": "phpQuery is a server-side, chainable, CSS3 selector driven Document Object Model (DOM) API based on jQuery JavaScript Library",
-            "homepage": "http://code.google.com/p/phpquery/",
-            "time": "2013-03-21 12:39:33"
         },
         {
             "name": "endroid/qr-code",
@@ -690,16 +650,16 @@
         },
         {
             "name": "kylekatarnls/update-helper",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kylekatarnls/update-helper.git",
-                "reference": "5786fa188e0361b9adf9e8199d7280d1b2db165e"
+                "reference": "429be50660ed8a196e0798e5939760f168ec8ce9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kylekatarnls/update-helper/zipball/5786fa188e0361b9adf9e8199d7280d1b2db165e",
-                "reference": "5786fa188e0361b9adf9e8199d7280d1b2db165e",
+                "url": "https://api.github.com/repos/kylekatarnls/update-helper/zipball/429be50660ed8a196e0798e5939760f168ec8ce9",
+                "reference": "429be50660ed8a196e0798e5939760f168ec8ce9",
                 "shasum": ""
             },
             "require": {
@@ -731,7 +691,49 @@
                 }
             ],
             "description": "Update helper",
-            "time": "2019-07-29 11:03:54"
+            "time": "2020-04-07 20:44:10"
+        },
+        {
+            "name": "leon-mbs/phpquery",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leon-mbs/phpquery.git",
+                "reference": "c762e42df84fca7fd4766861f17e45ad37aeaf63"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leon-mbs/phpquery/zipball/c762e42df84fca7fd4766861f17e45ad37aeaf63",
+                "reference": "c762e42df84fca7fd4766861f17e45ad37aeaf63",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "phpQuery/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "didier Belot",
+                    "role": "Packager, maintainer"
+                },
+                {
+                    "name": "Tobiasz Cudnik",
+                    "email": "tobiasz.cudnik@gmail.com",
+                    "homepage": "https://github.com/TobiaszCudnik",
+                    "role": "Developer"
+                }
+            ],
+            "description": "phpQuery is a server-side, chainable, CSS3 selector driven Document Object Model (DOM) API based on jQuery JavaScript Library",
+            "time": "2020-04-10 20:43:49"
         },
         {
             "name": "leon-mbs/zdb",
@@ -777,20 +779,20 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.1.16",
+            "version": "2.1.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "98ac3cb67f8c38a328a51cdc7fbb43ca64183404"
+                "reference": "63786f51d1fdc716ceb11fbec5a7701e0d1eec5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/98ac3cb67f8c38a328a51cdc7fbb43ca64183404",
-                "reference": "98ac3cb67f8c38a328a51cdc7fbb43ca64183404",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/63786f51d1fdc716ceb11fbec5a7701e0d1eec5a",
+                "reference": "63786f51d1fdc716ceb11fbec5a7701e0d1eec5a",
                 "shasum": ""
             },
             "require": {
-                "electrolinux/phpquery": ">=0.9.6",
+                "leon-mbs/phpquery": ">=1.0.0",
                 "leon-mbs/zdb": "1.2.6",
                 "mustache/mustache": "v2.13.0",
                 "php": ">=7.2.0"
@@ -817,7 +819,7 @@
                 "framework",
                 "php"
             ],
-            "time": "2020-04-05 16:13:10"
+            "time": "2020-04-10 20:52:35"
         },
         {
             "name": "monolog/monolog",

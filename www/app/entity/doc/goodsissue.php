@@ -23,7 +23,12 @@ class GoodsIssue extends Document {
 
             $name = $item->itemname;
             if (strlen($item->snumber) > 0) {
-                $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
+                $s = ' (' . $item->snumber . ' )';
+                if (strlen($item->sdate) > 0) {
+                    $s = ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
+                }
+                $name .= $s;
+                
             }
 
 
