@@ -6,11 +6,11 @@
 
 
         <form zippy="docform">
-            <h3> Выплата зарплаты</h3>
+            <h3> Виплата зарплати</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="document_number" >Номер документа</label>
+                        <label for="document_number" >Номер документу</label>
                         <input class="form-control" type="text" zippy="document_number" >
                     </div>
                     <div class="form-group">
@@ -20,7 +20,7 @@
 
  
                     <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
+                        <label for="notes" >Примiтка </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -29,17 +29,17 @@
                 </div>
                 <div class="col-12 col-md-4 col-xl-3">
                       <div class="form-group  ">
-                        <label for="payment" >Со  счета</label>
+                        <label for="payment" >З рахунку</label>
                         <select class="form-control" zippy="payment">
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="year" >Год</label>
+                        <label for="year" >Рiк</label>
                         <select class="form-control" zippy="year">
                         </select>
                     </div>
                    <div class="form-group  ">
-                        <label for="month" >Месяц</label>
+                        <label for="month" >Мiсяць</label>
                         <select class="form-control" zippy="month">
                         </select>
                     </div>
@@ -50,14 +50,14 @@
                 <div class="col-12 col-md-8 col-xl-6">
                      <table class="table ">
                          <tr>
-                          <th>ФИО</th>
-                          <th>Сумма</th>
+                          <th>ПIБ</th>
+                          <th>Сума</th>
                         </tr>           <tr zippy="elist">
                           <td > <span zippy="emp_name"></span></td>
                           <td > <input onblur="calcTotal()" class="salsum" zippy="amount" pattern="[0-9\.]+" style="width:100px" /></td>
                         </tr>
                         <tr>
-                          <td><b>Итого</b></td>
+                          <td><b>Всього</b></td>
                           <td><b zippy="total"></b></td>
                         </tr>  
                      </table>
@@ -66,8 +66,8 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-light">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
+                    <input type="button" value="Вiдмiнити" zippy="backtolist" class="btn   btn-light">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>

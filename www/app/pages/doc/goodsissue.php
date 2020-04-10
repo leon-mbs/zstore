@@ -18,6 +18,7 @@ use \App\Entity\Customer;
 use \App\Entity\Doc\Document;
 use \App\Entity\Item;
 use \App\Entity\Store;
+use \App\Entity\Stock;
 use \App\Entity\MoneyFund;
 use \App\Helper as H;
 use \App\System;
@@ -366,7 +367,15 @@ class GoodsIssue extends \App\Pages\Base {
             if (in_array($item->snumber, $slist) == false) {
                 
                 $this->setWarn('invalid_serialno');
+            }  else{
+                $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=". Stock::qstr($item->snumber)) ;
+                if($st instanceof Stock){
+                   $item->sdate=$st->sdate; 
+                }
+                
             }
+            
+            
         }
 
         unset($this->_itemlist[$this->_rowid]);
