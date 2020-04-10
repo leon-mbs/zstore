@@ -143,16 +143,10 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('snumber', $stock->snumber));
         $row->add(new Label('sdate', ''));
 
-        $row->add(new Label('sedate', ''));
-
-
-
-        if (strlen($stock->snumber) > 0) {
+    
+        if (strlen($stock->snumber) > 0 && strlen($stock->sdate) > 0) {
             $row->sdate->setText(date('Y-m-d', $stock->sdate));
-            if ($this->_item->term > 0) {
-                $term = strtotime("+{$this->_item->term} month", $stock->sdate);
-                $row->sedate->setText(date('Y-m-d', $term));
-            }
+ 
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
 

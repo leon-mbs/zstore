@@ -26,10 +26,12 @@ class Report {
      * @param mixed $summary Список  полей  по  которым  вычисляются  итоговые  данные табличной части
      */
     public function generate(array $header) {
+        global $_config; 
 
+        $temp =   'templates';
+        if($_config['common']['lang']=='ua') $temp = 'templates_ua';
 
-
-        $template = @file_get_contents(_ROOT . 'templates/printforms/' . $this->_template);
+        $template = @file_get_contents(_ROOT . $temp. '/printforms/' . $this->_template);
         if (strlen($template) == 0) {
             return "Файл  печатной формы " . $this->_template . " не найден";
         }
