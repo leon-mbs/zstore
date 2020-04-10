@@ -458,10 +458,12 @@ class Helper {
     * @param mixed $p2
     */
     public static function l($label,$p1="",$p2="") {
+         global $_config; 
+
          $label = trim($label);
          $labels = System::getCache('labels') ;
          if($labels==null){
-            $lang = System::getOption('common','lang') ;
+            $lang = $_config['common']['lang'];
             $filename=_ROOT.'templates/lang.json' ;
             if($lang=='ua')$filename=_ROOT.'templates_ua/lang.json';
             $file = @file_get_contents($filename);
