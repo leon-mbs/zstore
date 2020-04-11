@@ -17,7 +17,7 @@ class GoodsIssue extends Document {
 
         $i = 1;
         $detail = array();
-
+        $weight = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -30,7 +30,9 @@ class GoodsIssue extends Document {
                 $name .= $s;
                 
             }
-
+            if($item->weight>0) {
+              $weight += $item->weight;  
+            }
 
             $detail[] = array("no" => $i++,
                 "tovar_name" => $name,
@@ -48,6 +50,7 @@ class GoodsIssue extends Document {
             "_detail" => $detail,
             "firmname" => $this->headerdata["firmname"],
             "customer_name" => $this->customer_name,
+            "weight" => $weight >0 ? H::l("allweight",$weight) :'',
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],
             "order" => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,

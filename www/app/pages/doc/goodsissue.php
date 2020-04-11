@@ -95,6 +95,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new Label('weight'))->setVisible(false);
           
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -553,13 +554,17 @@ class GoodsIssue extends \App\Pages\Base {
     private function calcTotal() {
 
         $total = 0;
+        $weight = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
+            if($item->weight>0)$weight = $weight + $item->weight;
         }
         $this->docform->total->setText(H::fa($total));
+        $this->docform->weight->setText(H::l("allweight",$weight));
+        $this->docform->weight->setVisible($weight>0);
 
 
         $disc = 0;
