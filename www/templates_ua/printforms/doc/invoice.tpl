@@ -64,6 +64,9 @@
         <td   colspan="8" align="right">Оплата:</td>
         <td   align="right">{{payed}}</td>
     </tr>
-
+     <tr  >
+        <td   colspan="7" >На  суму <b>{{totalstr}}<b>  </td>
+         
+    </tr>
 </table>
 

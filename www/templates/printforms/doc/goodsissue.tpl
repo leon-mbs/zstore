@@ -96,6 +96,9 @@
         <td   align="right">{{payed}}</td>
     </tr>
     {{/prepaid}}
-
+    <tr  >
+        <td   colspan="7" >На  сумму <b>{{totalstr}}<b>  </td>
+         
+    </tr>
 </table>
 

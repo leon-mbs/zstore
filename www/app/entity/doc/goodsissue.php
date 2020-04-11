@@ -13,7 +13,7 @@ use \App\Util;
 class GoodsIssue extends Document {
 
     public function generateReport() {
-
+   
 
         $i = 1;
         $detail = array();
@@ -44,8 +44,9 @@ class GoodsIssue extends Document {
             );
         }
 
-
-
+        $totalstr = H::sumstr($this->amount);
+     
+        
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $this->headerdata["firmname"],
@@ -56,6 +57,7 @@ class GoodsIssue extends Document {
             "order" => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
+            "totalstr" => $totalstr,
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),
             "paydisc" => H::fa($this->headerdata["paydisc"]),

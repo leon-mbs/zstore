@@ -34,7 +34,8 @@ class Invoice extends \App\Entity\Doc\Document {
             }
         }
 
-
+        $totalstr = H::sumstr($this->amount);
+ 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
@@ -42,6 +43,7 @@ class Invoice extends \App\Entity\Doc\Document {
             "email" => $this->headerdata["email"],
             "notes" => $this->notes,
             "document_number" => $this->document_number,
+            "totalstr" => $totalstr,
             "total" => $this->amount,
             "payamount" => H::fa($this->payamount),
             "payed" => H::fa($this->payed),
