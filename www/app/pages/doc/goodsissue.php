@@ -501,7 +501,7 @@ class GoodsIssue extends \App\Pages\Base {
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-                $this->_doc->headerdata['sent_date'] = time();
+             //   $this->_doc->headerdata['sent_date'] = time();
                 $this->_doc->save();
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);

@@ -324,11 +324,7 @@ class GoodsReceipt extends \App\Pages\Base {
         $item->sdate = $this->editdetail->editsdate->getDate();
         if ($item->sdate == false)
             $item->sdate = '';
-        if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0) {
-            
-            $this->setError("dateforserial");
-            return;
-        }
+ 
         unset($this->_itemlist[$this->_rowid]);
         $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
@@ -630,6 +626,14 @@ class GoodsReceipt extends \App\Pages\Base {
 
 
         $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
+        $item->snumber = $this->editnewitem->editnewitemsnumber->getText();
+        if(strlen($item->snumber) >0) $item->useserial = 1;
+        
+        $item->sdate = $this->editnewitem->editnewitemsdate->getDate();
+        if ($item->sdate == false)
+            $item->sdate = '';
+  
+
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
         $item->save();
         $this->editdetail->edititem->setText($item->itemname);
