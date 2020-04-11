@@ -83,6 +83,7 @@ class ItemList extends \App\Pages\Base {
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editminqty'));
+        $this->itemdetail->add(new TextInput('editweight'));
 
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
@@ -190,6 +191,7 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
+        $this->itemdetail->editweight->setText($this->_item->weight);
 
         $this->itemdetail->editcell->setText($this->_item->cell);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
@@ -247,6 +249,7 @@ class ItemList extends \App\Pages\Base {
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
+        $this->_item->weight = $this->itemdetail->editweight->getText();
 
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
