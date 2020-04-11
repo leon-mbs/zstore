@@ -35,6 +35,7 @@ class Options extends \App\Pages\Base {
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
+        $this->common->add(new DropDownChoice('curr',array('gr'=>'Гривна','ru'=>'Рубль'),'gr'));
         $pt = array(
             "1" =>H::l('opt_lastprice') ,
             "2" => H::l('opt_partion') 
@@ -64,6 +65,7 @@ class Options extends \App\Pages\Base {
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
+        $this->common->curr->setValue($common['curr']);
         
 
         $this->common->price1->setText($common['price1']);
@@ -160,6 +162,7 @@ class Options extends \App\Pages\Base {
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
+        $common['curr'] = $this->common->curr->getValue();
       
         $common['price1'] = $this->common->price1->getText();
         $common['price2'] = $this->common->price2->getText();

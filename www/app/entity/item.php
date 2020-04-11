@@ -34,6 +34,7 @@ class Item extends \ZCL\DB\Entity {
         $this->pricelist = (int) $xml->pricelist[0];
         $this->useserial = (int) $xml->useserial[0];
         $this->image_id = (int) $xml->image_id[0];
+        $this->weight = (string) $xml->weight[0];
 
         $this->cell = (string) $xml->cell[0];
         $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -83,6 +84,7 @@ class Item extends \ZCL\DB\Entity {
         $this->detail .= "<price5>{$this->price5}</price5>";
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
+        $this->detail .= "<weight>{$this->weight}</weight>";
 
 
         //упаковываем  цены  по  филиалам

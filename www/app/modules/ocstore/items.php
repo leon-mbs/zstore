@@ -244,7 +244,12 @@ class Items extends \App\Pages\Base {
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];
             $item->description = $product['description'];
-
+            $w = $product['weight'] ;
+            $w = str_replace(',','.',$w) ;
+            if($product['weight_class_id']==2) $w=$w/1000; //граммы
+            if($w>0){
+               $item->weight  =  floatval($w);
+            }
             if ($modules['ocpricetype'] == 'price1')
                 $item->price1 = $product['price'];
             if ($modules['ocpricetype'] == 'price2')
@@ -265,7 +270,7 @@ class Items extends \App\Pages\Base {
                     $image = new \App\Entity\Image();
                     $image->content = $im;
                     $image->mime = $imagedata['mime'];
-
+                    
                     $image->save();
                     $item->image_id = $image->image_id;
                 }

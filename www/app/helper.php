@@ -492,4 +492,24 @@ class Helper {
          
          
     }
+    
+    /**
+    * Сумма прописью
+    * 
+    */
+    public static function sumstr($amount){
+       global $_config; 
+       $curr = \App\System::getOption('common','curr') ;
+ 
+        $totalstr = \App\Util::money2str_rugr($amount);
+        if($curr =='ru')$totalstr = \App\Util::money2str_ru($amount);
+        if(false)$totalstr= \App\Util::money2str_ru($this->amount);
+        
+        if($_config['common']['lang']=='ua')  $totalstr= \App\Util::money2str_ua($amount);
+      
+      
+      
+      
+      return $totalstr;
+    }
 }

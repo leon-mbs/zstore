@@ -75,7 +75,8 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="6" align="right">Итого:</td>
+        <td style="border-top:1px #000 solid;" colspan="2"  >{{weight}} </td>
+        <td style="border-top:1px #000 solid;" colspan="4" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
@@ -95,6 +96,9 @@
         <td   align="right">{{payed}}</td>
     </tr>
     {{/prepaid}}
-
+    <tr  >
+        <td   colspan="7" >На  сумму <b>{{totalstr}}<b>  </td>
+         
+    </tr>
 </table>
 
