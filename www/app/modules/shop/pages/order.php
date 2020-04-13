@@ -122,9 +122,8 @@ class Order extends Base {
                 $item->quantity = $product->quantity;
                 $item->product_id = $product->product_id;
                 $amount += ($product->price * $product->quantity);
-                $itlist[] = $item;
+                $itlist[$item->item_id] = $item;
             }
-            $order->packDetails('detaildata', $itlist);
 
             $order->headerdata = array(
                 'delivery' => $delivery,
@@ -134,7 +133,9 @@ class Order extends Base {
                 'address' => $address,
                 'total' => $amount
             );
+            $order->packDetails('detaildata', $itlist);
 
+            
             $op = System::getOptions("shop");
             $cust = \App\Entity\Customer::load($op["defcust"]);
             if ($cust instanceof \App\Entity\Customer) {
