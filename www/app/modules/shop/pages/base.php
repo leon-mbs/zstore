@@ -25,6 +25,7 @@ class Base extends \Zippy\Html\WebPage {
         $user = System::getUser();
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["currencyname"] = $shop["currencyname"];
+        $this->_tvars["notcnt"] = false;
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Order"))->setVisible(false);
         $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Compare"))->setVisible(false);
@@ -33,6 +34,7 @@ class Base extends \Zippy\Html\WebPage {
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
+        
     }
 
     //вывод ошибки,  используется   в дочерних страницах
@@ -61,8 +63,13 @@ class Base extends \Zippy\Html\WebPage {
     }
 
     protected function beforeRender() {
-        $this->shopcart->setVisible(\App\Modules\Shop\Basket::getBasket()->isEmpty() == false);
+        $basket = \App\Modules\Shop\Basket::getBasket() ;
+        $this->shopcart->setVisible($basket->isEmpty() == false);
         $this->showcompare->setVisible(\App\Modules\Shop\CompareList::getCompareList()->isEmpty() == false);
+  
+        $this->_tvars["notcnt"] = $basket->getItemCount();
+
+    
     }
 
     protected function afterRender() {
