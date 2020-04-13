@@ -136,6 +136,124 @@
         {{/preview}}                
             </div>
             <div class="col-12 col-lg-6 ">
+                <h3>Импорт накладной
+                    <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
+                       data-placement="bottom" data-html="true" data-content="Импорт накладной из  CSV файла.
+                       Для указания расположения данных необходимо  указать номера  соответствующих столбцов. 
+                       Проаеряется  на    уникальность  артикул  и наименование если товар не  найден он  добавляется в справочник.
+                       В результате  создается   документ Приходная  накладная который следует  провести  после ввода 
+                        оплат и других атрибутов
+                       <br>Также  есть  возможность предварительного просмотра данных. "></i> 
+                </h3>
+
+                <br><br><form zippy="nform" class="row" enctype="multipart/form-data">
+                    <div class="col-6">
+   
+                        <div class="form-group  ">
+                            <label   for="ncust" >Контрагент</label>
+                            <input      zippy="ncust" class="form-control  " />
+
+                        </div> 
+                       <div class="form-group  ">
+                            <label data-label="nstore" for="store" >Склад</label>
+                            <select zippy="nstore" class="form-control  ">
+                            </select>
+                        </div>    
+                        <div class="form-group  ">
+                            <label   for="nsep" >Разделитель</label>
+                            <input   style="width:50px;"   zippy="nsep" class="form-control  " />
+
+                        </div> 
+                        <div class="form-group  ">
+                            <label for="nencode" >Кодировка</label>
+                            <select zippy="nencode" class="form-control  ">
+                                <option value="0">Не выбрана</option>
+                            </select>
+                        </div>                    
+                        <div class="form-group  ">
+                            <label   for="nfilename" >Файл импорта</label>
+                            <input type="file" zippy="nfilename" class="form-control  " />
+                        </div>   
+                        <div class="  form-check">
+                            <input zippy="npreview" type="checkbox" class="form-check-input"  >
+                            <label class="form-check-label" for="npreview">Предпросмотр</label>
+                        </div>               
+                       
+                        <div class="form-group  ">
+                            <input   class="btn btn-info"  type="submit"  value="Загрузить" />
+                        </div> 
+                    </div>
+                    <div class="col-6">     
+                        <div class="form-group  ">
+                            <label   ><b>Номера столбцов CSV файла</b> </label>
+
+                        </div>    
+                        <div class="form-group  ">
+                            <label   for="ncolname" >Наименование</label>
+                            <select style="width:100px;" zippy="ncolname" class="form-control  ">
+                            </select>
+                        </div>    
+                        <div class="form-group  ">
+                            <label   for="ncolcode" >Код, артикул</label>
+                            <select style="width:100px;" zippy="ncolcode" class="form-control  ">
+                            </select>
+                        </div>    
+   
+                        <div class="form-group  ">
+                            <label    for="ncolmsr" >Ед. измерения</label>
+                            <select style="width:100px;" zippy="ncolmsr" class="form-control  ">
+                            </select>
+                        </div>    
+
+                        <div class="form-group  ">
+                            <label data-label="ncolqty"  for="ncolqty" >Количество</label>
+                            <select style="width:100px;" zippy="ncolqty" class="form-control  ">
+                            </select>
+                        </div>    
+                        <div class="form-group  ">
+                            <label   for="ncolprice" >Входящая цена</label>
+                            <select style="width:100px;" zippy="ncolprice" class="form-control  ">
+                            </select>
+                        </div>
+                   
+
+
+                    </div>
+
+
+
+                </form>
+        {{#preview3}}
+        <div class="row">
+            <div class="col-12 col-lg-10 " >
+                <table class="table table-sm">
+                    <tr>
+                        <th>Наименование</th>
+                        <th>Код</th>
+                      
+                        <th>Ед.</th>
+                        <th class="text-right">Кол.</th>
+                        <th class="text-right">Уч. цена</th>
+               
+                    </tr>
+                    {{#list}}
+                    <tr>
+                        <td>{{colname}}</td>
+                        <td>{{colcode}}</td>
+       
+                        <td>{{colmsr}}</td>
+                        <td class="text-right">{{colqty}}</td>
+                        <td class="text-right">{{colprice}}</td>
+       
+                    </tr>
+                    {{/list}}
+                </table>
+            </div>
+        </div>
+        {{/preview3}}                
+            </div>
+           
+            <div class="col-12 col-lg-6 ">
                 <h3>Импорт контрагентов
                       <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
                        data-placement="bottom" data-html="true" data-content="Импорт контрагентов из  CSV файла.

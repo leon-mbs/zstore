@@ -46,11 +46,11 @@
                         </div>   
                         <div class="  form-check">
                             <input zippy="preview" type="checkbox" class="form-check-input"  >
-                            <label class="form-check-label" for="preview">Попередній</label>
+                            <label class="form-check-label" for="preview">Попередній перегляд</label>
                         </div>               
                        
                         <div class="form-group  ">
-                            <input   class="btn btn-info"  type="submit"  value="Загрузить" />
+                            <input   class="btn btn-info"  type="submit"  value="Загрузити" />
                         </div> 
                     </div>
                     <div class="col-6">     
@@ -135,6 +135,125 @@
         </div>
         {{/preview}}                
             </div>
+            
+           <div class="col-12 col-lg-6 ">
+                <h3>Імпорт накладної
+                    <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
+                       data-placement="bottom" data-html="true" data-content="Імпорт накладної з  CSV файлу.
+                        Для вказівки розташування даних необхідно вказати номери відповідних стовпців. перевіряється на    унікальність артикул і найменування
+                        
+                       В результатi створюется локусмент Прибуткова накладна який слiд  провести  пiсля вводу                         оплат и других атрибцутов
+                        <br>Також є можливість попереднього перегляду даних. "></i> 
+                </h3>
+
+                <br><br><form zippy="nform" class="row" enctype="multipart/form-data">
+                    <div class="col-6">
+   
+                        <div class="form-group  ">
+                            <label   for="ncust" >Контрагент</label>
+                            <input      zippy="ncust" class="form-control  " />
+
+                        </div> 
+                       <div class="form-group  ">
+                            <label data-label="nstore" for="store" >Склад</label>
+                            <select zippy="nstore" class="form-control  ">
+                            </select>
+                        </div>    
+                        <div class="form-group  ">
+                            <label   for="nsep" >Роздільник</label>
+                            <input   style="width:50px;"   zippy="nsep" class="form-control  " />
+
+                        </div> 
+                        <div class="form-group  ">
+                            <label for="nencode" >Кодування</label>
+                            <select zippy="nencode" class="form-control  ">
+                                <option value="0">Не обрано</option>
+                            </select>
+                        </div>                    
+                        <div class="form-group  ">
+                            <label   for="nfilename" >Файл імпорту</label>
+                            <input type="file" zippy="nfilename" class="form-control  " />
+                        </div>   
+                        <div class="  form-check">
+                            <input zippy="npreview" type="checkbox" class="form-check-input"  >
+                            <label class="form-check-label" for="npreview">Попередній перегляд</label>
+                        </div>               
+                       
+                        <div class="form-group  ">
+                            <input   class="btn btn-info"  type="submit"  value="Загрузити" />
+                        </div> 
+                    </div>
+                    <div class="col-6">     
+                        <div class="form-group  ">
+                            <label   ><b>Номери стовпців CSV файлу</b> </label>
+
+                        </div>    
+                        <div class="form-group  ">
+                            <label   for="ncolname" >Найменування</label>
+                            <select style="width:100px;" zippy="ncolname" class="form-control  ">
+                            </select>
+                        </div>    
+                        <div class="form-group  ">
+                            <label   for="ncolcode" >Код, артикул</label>
+                            <select style="width:100px;" zippy="ncolcode" class="form-control  ">
+                            </select>
+                        </div>    
+   
+                        <div class="form-group  ">
+                            <label    for="ncolmsr" >Од. виміру</label>
+                            <select style="width:100px;" zippy="ncolmsr" class="form-control  ">
+                            </select>
+                        </div>    
+
+                        <div class="form-group  ">
+                            <label data-label="ncolqty"  for="ncolqty" >Кількість</label>
+                            <select style="width:100px;" zippy="ncolqty" class="form-control  ">
+                            </select>
+                        </div>    
+                        <div class="form-group  ">
+                            <label   for="ncolprice" >Вхiдна ціна</label>
+                            <select style="width:100px;" zippy="ncolprice" class="form-control  ">
+                            </select>
+                        </div>
+                   
+
+
+                    </div>
+
+
+
+                </form>
+        {{#preview3}}
+        <div class="row">
+            <div class="col-12 col-lg-10 " >
+                <table class="table table-sm">
+                    <tr>
+                        <th>Найменування</th>
+                        <th>Код</th>
+                      
+                        <th>Од.</th>
+                        <th class="text-right">Кіл.</th>
+                        <th class="text-right">Цiна</th>
+               
+                    </tr>
+                    {{#list}}
+                    <tr>
+                        <td>{{colname}}</td>
+                        <td>{{colcode}}</td>
+       
+                        <td>{{colmsr}}</td>
+                        <td class="text-right">{{colqty}}</td>
+                        <td class="text-right">{{colprice}}</td>
+       
+                    </tr>
+                    {{/list}}
+                </table>
+            </div>
+        </div>
+        {{/preview3}}                
+            </div>
+            
+            
             <div class="col-12 col-lg-6 ">
                 <h3>Імпорт контрагентів
                       <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
@@ -175,11 +294,11 @@
                                     
                        <div class="  form-check">
                             <input zippy="cpreview" type="checkbox" class="form-check-input"  >
-                            <label class="form-check-label" for="cpreview">Попередній</label>
+                            <label class="form-check-label" for="cpreview">Попередній перегляд</label>
                         </div>               
                        
                         <div class="form-group  ">
-                            <input   class="btn btn-info"  type="submit"  value="Загрузить" />
+                            <input   class="btn btn-info"  type="submit"  value="Загрузити" />
                         </div> 
 
                     </div>
