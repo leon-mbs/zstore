@@ -300,7 +300,7 @@ function money2str_ua($money, $options = 0) {
 
     $units_ru = array(
         (($options & M2S_KOPS_SHORT) ? array('коп.', 'коп.', 'коп.') : array('копiйка', 'копiйки', 'копiйок')),
-        array('гртвня', 'гривны', 'гривень'),
+        array('гривня', 'гривнi', 'гривень'),
         array('тисяча', 'тисячi', 'тисяч'),
         array('мiльйон', 'мiльйона', 'мiльйонiв')
     );
