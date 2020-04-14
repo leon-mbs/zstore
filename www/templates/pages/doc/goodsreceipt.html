@@ -21,6 +21,7 @@
                     <div class="form-group  ">
                         <label for="customer"  >Поставщик</label>
                         <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
+                        <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
 
                     </div>
                     <div class="form-group  ">
@@ -373,6 +374,36 @@
                 </div>
             </div>
         </form> 
+        
+        
+     <form zippy="editcust">
+            <h3>&nbsp;Новый поставщик </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editcustname">Название </label>
+                        <input  class="form-control "   zippy="editcustname" required="required" />       
+                    </div>
+                    <div class="form-group">
+                        <label for="editphone">Телефон</label>
+                        <input class="form-control" type="text" zippy="editphone"  ></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="editaddress">Адрес</label>
+                        <input class="form-control" type="text" zippy="editaddress"  ></input>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                        <input type="button"   zippy="cancelcust"          value="Отменить"                                                                                                            class="btn btn-light ">
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        
         {{#usescanner}} 
         <script>
             $(document).ready(function () {
