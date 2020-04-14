@@ -38,7 +38,7 @@ class CustomerList extends \App\Pages\Base {
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchtype', array(1 => 'Покупатели', 2 => 'Поставщики'), 0));
+        $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => 'Покупатели', Customer::TYPE_SELLER => 'Поставщики'), 0));
         $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется', Customer::STATUS_WAIT => 'Потенциальный'), Customer::STATUS_ACTUAL));
 
 

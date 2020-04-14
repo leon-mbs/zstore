@@ -15,6 +15,10 @@ class Customer extends \ZCL\DB\Entity {
     const STATUS_DISABLED = 1; //не используется
     const STATUS_WAIT = 2; //потенциальный
 
+    
+    const TYPE_BAYER = 1; //покупатель
+    const TYPE_SELLER = 2; //поставщик
+    
     protected function init() {
         $this->customer_id = 0;
         $this->customer_name = '';

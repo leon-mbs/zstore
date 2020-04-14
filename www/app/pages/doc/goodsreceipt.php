@@ -55,6 +55,7 @@ class GoodsReceipt extends \App\Pages\Base {
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList( true, true), H::getDefMF()))->onChange($this, 'OnPayment');
 
+         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -108,6 +109,16 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
+        
+        //добавление нового контрагента
+        $this->add(new Form('editcust'))->setVisible(false);
+        $this->editcust->add(new TextInput('editcustname'));
+        $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new TextInput('editaddress'));
+        $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
+        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
+        
+        
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -665,6 +676,56 @@ class GoodsReceipt extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
     }
 
+    
+    //добавление нового контрагента
+    public function addcustOnClick($sender) {
+        $this->editcust->setVisible(true);
+        $this->docform->setVisible(false);
+
+        $this->editcust->editcustname->setText('');
+        $this->editcust->editaddress->setText('');
+        $this->editcust->editphone->setText('');
+    }
+
+    public function savecustOnClick($sender) {
+        $custname = trim($this->editcust->editcustname->getText());
+        if (strlen($custname) == 0) {
+            $this->setError("entername");
+            return;
+        }
+        $cust = new Customer();
+        $cust->customer_name = $custname;
+        $cust->address = $this->editcust->editaddress->getText();
+        $cust->phone = $this->editcust->editphone->getText();
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+            $this->setError("");
+            $this->setError("tel10");
+            return;
+        }
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+         
+                $this->setError("existcustphone");
+                return;
+            }
+        }
+        $cust->type = Customer::TYPE_BAYER ;
+        $cust->save();
+        $this->docform->customer->setText($cust->customer_name);
+        $this->docform->customer->setKey($cust->customer_id);
+
+        $this->editcust->setVisible(false);
+        $this->docform->setVisible(true);
+    }
+
+    public function cancelcustOnClick($sender) {
+        $this->editcust->setVisible(false);
+        $this->docform->setVisible(true);
+    }    
+    
     public function onOpenItemSel($sender){
         $this->wselitem->setVisible(true);
         $this->wselitem->Reload();
