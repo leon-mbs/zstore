@@ -36,7 +36,7 @@ class Base extends \Zippy\Html\WebPage {
         if (count($blist) == 1) {      //если  одна
             $this->branch_id = array_pop(array_keys($blist));
             Session::getSession()->branch_id = $this->branch_id;
-        }
+		} 
         //форма  филиалов       
         $this->add(new \Zippy\Html\Form\Form('nbform'));
         $this->nbform->add(new \Zippy\Html\Form\DropDownChoice('nbbranch', $blist, $this->branch_id))->onChange($this, 'onnbFirm');
@@ -60,13 +60,19 @@ class Base extends \Zippy\Html\WebPage {
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
+		
+		
+		
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
             Session::getSession()->branch_id = 0;
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
 
-
+		$this->_tvars["home-shop"] = $_config['modules']['shop'] == 1;
+		$this->_tvars["home-storage"] = $_config['modules']['shop'] == 1;
+		$this->_tvars["home"] = $_config['modules']['shop'] == 0;
+		
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
         $this->_tvars["woocomerce"] = $_config['modules']['woocomerce'] == 1;
@@ -75,7 +81,7 @@ class Base extends \Zippy\Html\WebPage {
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
             $this->_tvars["shop"] = false;
-        }
+		}
         if (strpos(System::getUser()->modules, 'note') === false && System::getUser()->userlogin != 'admin') {
             $this->_tvars["note"] = false;
         }
