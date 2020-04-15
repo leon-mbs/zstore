@@ -94,7 +94,7 @@
                 <div class="sidebar">    
                     <nav class="mt-2">
                         <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-						{{#home-shop}} 
+						{{#shop}} 
                             <li class="nav-item  ">
                                 <a href="/index.php" class="nav-link">
                                     <i class="nav-icon fa fa-shopping-cart"></i>
@@ -104,8 +104,7 @@
                                     </p>
                                 </a>
 							</li>
-							{{/home-shop}}
-							{{#home-storage}} 							
+						  							
 							<li class="nav-item  ">
 							<a href="/store" class="nav-link">
                                     <i class="nav-icon fa fa-home"></i>
@@ -115,8 +114,8 @@
                                     </p>
                                 </a>
 							</li>	
-							{{/home-storage}} 
-							{{#home}} 							
+							{{/shop}} 
+							{{^shop}} 							
 							<li class="nav-item  ">
 							<a href="/index.php" class="nav-link">
                                     <i class="nav-icon fa fa-home"></i>
@@ -125,7 +124,7 @@
                                     </p>
                                 </a>
 							</li>	
-							{{/home}} 
+							{{/shop}} 
 									
 							
                             <li class="nav-item has-treeview">
