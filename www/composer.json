@@ -4,7 +4,7 @@
         "phpmailer/phpmailer": "~5.2",
         "monolog/monolog": "1.25.3",
 
-        "nesbot/Carbon": "1.39.1",
+        "nesbot/Carbon": "2.32.2",
         "timetoogo/pinq": "3.4.1",
         "jbzoo/image": "3.0.5",
         "dompdf/dompdf": "v0.8.3",
@@ -15,6 +15,6 @@
         "endroid/qr-code": "3.7.5",
         "automattic/woocommerce": "3.0.0",
         "symfony/polyfill-mbstring"   : "^1.10",
-        "leon-mbs/zippy": "2.1.18"
+        "leon-mbs/zippy": "2.1.19"
     }  
 }
