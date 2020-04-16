@@ -69,10 +69,7 @@ class Base extends \Zippy\Html\WebPage {
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
 
-		$this->_tvars["home-shop"] = $_config['modules']['shop'] == 1;
-		$this->_tvars["home-storage"] = $_config['modules']['shop'] == 1;
-		$this->_tvars["home"] = $_config['modules']['shop'] == 0;
-		
+ 		
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
         $this->_tvars["woocomerce"] = $_config['modules']['woocomerce'] == 1;
