@@ -33,8 +33,12 @@
 
         <td align="right">{{qty}}</td>
         <td align="right">{{summa}} </td>
+       {{#navarsign}}
         <td align="right">{{navar}} </td>
-
+      {{/navarsign}}
+      {{^navarsign}}  
+        <td align="right" style="color:red">{{navar}} </td>
+      {{/navarsign}}
 
     </tr>
     {{/_detail}}

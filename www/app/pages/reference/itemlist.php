@@ -50,6 +50,7 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->add(new TextInput('editprice3'));
         $this->itemdetail->add(new TextInput('editprice4'));
         $this->itemdetail->add(new TextInput('editprice5'));
+        $this->itemdetail->add(new TextInput('editmanufacturer'));
         $common = System::getOptions('common');
         if (strlen($common['price1']) > 0) {
             $this->itemdetail->editprice1->setVisible(true);
@@ -187,6 +188,7 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editprice5->setText(H::fa($this->_item->price5));
         $this->itemdetail->editcat->setValue($this->_item->cat_id);
 
+        $this->itemdetail->editmanufacturer->setText($this->_item->manufacturer);
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
@@ -246,6 +248,7 @@ class ItemList extends \App\Pages\Base {
         $this->_item->price5 = $this->itemdetail->editprice5->getText();
 
         $this->_item->item_code = trim($this->itemdetail->editcode->getText());
+        $this->_item->manufacturer = trim($this->itemdetail->editmanufacturer->getText());
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();

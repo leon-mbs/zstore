@@ -94,15 +94,39 @@
                 <div class="sidebar">    
                     <nav class="mt-2">
                         <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+						{{#shop}} 
                             <li class="nav-item  ">
                                 <a href="/index.php" class="nav-link">
-                                    <i class="nav-icon fa fa-home"></i>
+                                    <i class="nav-icon fa fa-shopping-cart"></i>
                                     <p>
-                                        Головна
+                                        Головна Магазин
 
                                     </p>
                                 </a>
-                            </li>
+							</li>
+						  							
+							<li class="nav-item  ">
+							<a href="/store" class="nav-link">
+                                    <i class="nav-icon fa fa-home"></i>
+                                    <p>
+                                        Головна Склад
+
+                                    </p>
+                                </a>
+							</li>	
+							{{/shop}} 
+							{{^shop}} 							
+							<li class="nav-item  ">
+							<a href="/index.php" class="nav-link">
+                                    <i class="nav-icon fa fa-home"></i>
+                                    <p>
+                                        Головна
+                                    </p>
+                                </a>
+							</li>	
+							{{/shop}} 
+									
+							
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-file"></i>
