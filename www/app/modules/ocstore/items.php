@@ -38,6 +38,7 @@ class Items extends \App\Pages\Base {
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->filter->add(new DropDownChoice('searchcat', \App\Entity\Category::findArray("cat_name", "", "cat_name"), 0));
 
         $this->add(new Form('exportform'))->onSubmit($this, 'exportOnSubmit');
 
@@ -68,7 +69,10 @@ class Items extends \App\Pages\Base {
         }
         if ($data['error'] == "") {
 
-            $items = Item::find("disabled <> 1", "itemname");
+            $cat = $this->filter->searchcat->getValue();
+            $where = "disabled <> 1   ";
+            if($cat>0) $where .= " and cat_id=".$cat ;
+            $items = Item::find($where, "itemname");
             foreach ($items as $item) {
                 if (strlen($item->item_code) == 0)
                     continue;
@@ -103,11 +107,7 @@ class Items extends \App\Pages\Base {
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $cat = $this->exportform->ecat->getValue();
-        if ($cat == 0) {
-        
-            $this->setError('noselcategory');
-            return;
-        }
+ 
 
         $elist = array();
         foreach ($this->_items as $item) {

@@ -6,9 +6,15 @@
             <div class="col-12 col-xl-10">
 
                 <h3>Экспорт новых товаров</h3>
+                &nbsp;&nbsp;&nbsp;<small><i class="fa fa-exclamation-triangle text-danger"></i> Наличие  спецсимволов  (типа <b> & ' " `</b>)  в названии или  описании  может  вызвать пробему с  выгрузкой</small>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
+                        <label for="searchcat">Категория</label>
+
+                        <select   class="form-control mr-sm-2" zippy="searchcat">
+                            <option value="0">Не задана</option>
+                        </select>         
 
 
                         <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  " value="Загрузить">
@@ -18,7 +24,8 @@
                 </div>                
 
                 <form zippy="exportform"  >
-                    <table class="table   table-sm   ">
+                     
+                     <table class="table   table-sm   ">
                         <tr>
 
                             <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"> </th>

@@ -57,10 +57,9 @@ class Entry extends \ZCL\DB\Entity {
 
     //типы  налогов, начислений  удержаний, прочая вспомагтельная  аналитика
     public function setExtCode($code) {
-        if ($code > 0)
-            $this->extcode = $code;
-        else
-            $this->extcode = 0;
+    
+         $this->extcode = $code;
+    
     }
 
     /**
