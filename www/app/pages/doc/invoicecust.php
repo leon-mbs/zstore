@@ -370,10 +370,13 @@ class InvoiceCust extends \App\Pages\Base {
 
     private function CalcPay() {
          $total = $this->docform->total->getText();
-     
+         $rate  = $this->docform->rate->getText();
+  
         $nds   = $this->docform->nds->getText();
         $disc  = $this->docform->disc->getText();
         $total = $total + $nds - $disc;  
+        $rate  = $this->docform->rate->getText();
+        if($rate !=1 && $rate >0)   $total = $total * $rate;
       
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));

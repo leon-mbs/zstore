@@ -96,10 +96,26 @@ class ABC extends \App\Pages\Base {
 
         $detail = $this->calc($detail);
 
+        $total=0;
+        $totala=0;
+        $totalb=0;
+        $totalc=0;
+        foreach($detail as $d){
+            $total += $d['value'] ;
+            if($d['group']=='A') $totala += $d['value'] ;
+            if($d['group']=='B') $totalb += $d['value'] ;
+            if($d['group']=='C') $totalc += $d['value'] ;
+        }
+        
+        
         $header = array('from' => date('d.m.Y', $from),
             "_detail" => $detail,
             'to' => date('d.m.Y', $to),
-            "type" => $this->typelist[$type]
+            "type" => $this->typelist[$type],
+            'totala'=>$totala,
+            'totalb'=>$totalb,
+            'totalc'=>$totalc,
+            'total'=>$total
         );
         $report = new \App\Report('report/abc.tpl');
 
