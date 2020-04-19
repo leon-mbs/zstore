@@ -25,7 +25,38 @@
     </tr>
     {{/_detail}}
 
+         <tr>
 
+            <td width="300px"   align="right"><b>Всего A:</b></td>
+            <td width="100px"   align="right"><b>{{totala}}</b> &nbsp;</td>
+            <td width="80px"   align="right">  &nbsp;</td>
+            <td width="30px" > </td>
+
+        </tr>
+         <tr>
+
+            <td width="300px"   align="right"><b>Всего B:</b></td>
+            <td width="100px"   align="right"><b>{{totalb}}</b> &nbsp;</td>
+            <td width="80px"   align="right">  &nbsp;</td>
+            <td width="30px"  > </td>
+
+        </tr>
+         <tr>
+
+            <td width="300px"   align="right"><b>Всего C:</b></td>
+            <td width="100px"   align="right"><b>{{totalc}}</b> &nbsp;</td>
+            <td width="80px"   align="right">  &nbsp;</td>
+            <td width="30px"  > </td>
+
+        </tr>
+         <tr>
+
+            <td width="300px"   align="right"><b>Всего:</b></td>
+            <td width="100px"   align="right"><b>{{total}}</b> &nbsp;</td>
+            <td width="80px"   align="right">  &nbsp;</td>
+            <td width="30px"  > </td>
+
+        </tr>
 </table>
 
 

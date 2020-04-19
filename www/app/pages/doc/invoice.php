@@ -230,9 +230,24 @@ class Invoice extends \App\Pages\Base {
 
         $item->price = $this->editdetail->editprice->getText();
 
-
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$item->item_id] = $item;
+         $tarr = array();
+ 
+        foreach($this->_tovarlist as $k=>$value){
+               
+           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
+              $tarr[$item->item_id] = $item;    // заменяем
+           }   else {
+              $tarr[$k] = $value;    // старый
+           }
+                
+        }
+     
+        if($this->_rowid == 0) {        // в конец
+            $tarr[$item->item_id] = $item;
+        }
+        $this->_tovarlist = $tarr;
+        $this->_rowid = 0;
+ 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

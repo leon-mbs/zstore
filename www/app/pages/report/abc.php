@@ -23,10 +23,11 @@ class ABC extends \App\Pages\Base {
         if (false == \App\ACL::checkShowReport('ABC'))
             return;
 
-        $this->typelist[1] = "Товары,  прибыль";
-        $this->typelist[2] = "Поставщики, объем поставок";
-        $this->typelist[3] = "Покупатели, объем продаж";
-        $this->typelist[4] = "Услуги, выручка";
+        $this->typelist[1] = H::l('abc1');
+        $this->typelist[2] = H::l('abc2');
+        $this->typelist[3] = H::l('abc3');
+        $this->typelist[4] = H::l('abc4');
+        $this->typelist[5] = H::l('abc5');
 
         $dt = new \Carbon\Carbon;
         $dt->subMonth();
@@ -89,13 +90,32 @@ class ABC extends \App\Pages\Base {
         if ($type == 4) {
             $detail = $this->find4();
         }
+        if ($type == 5) {
+            $detail = $this->find5();
+        }
 
         $detail = $this->calc($detail);
 
+        $total=0;
+        $totala=0;
+        $totalb=0;
+        $totalc=0;
+        foreach($detail as $d){
+            $total += $d['value'] ;
+            if($d['group']=='A') $totala += $d['value'] ;
+            if($d['group']=='B') $totalb += $d['value'] ;
+            if($d['group']=='C') $totalc += $d['value'] ;
+        }
+        
+        
         $header = array('from' => date('d.m.Y', $from),
             "_detail" => $detail,
             'to' => date('d.m.Y', $to),
-            "type" => $this->typelist[$type]
+            "type" => $this->typelist[$type],
+            'totala'=>$totala,
+            'totalb'=>$totalb,
+            'totalc'=>$totalc,
+            'total'=>$total
         );
         $report = new \App\Report('report/abc.tpl');
 
@@ -124,7 +144,7 @@ class ABC extends \App\Pages\Base {
         H::log($sql);
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value'] / 1000);
+            $row['value'] = round($row['value']  );
             $list[] = $row;
         }
 
@@ -163,7 +183,7 @@ class ABC extends \App\Pages\Base {
                     FROM  `entrylist_view` 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue')  
+                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck')  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     GROUP BY name
@@ -205,6 +225,31 @@ class ABC extends \App\Pages\Base {
         return $list;
     }
 
+    private function find5() {
+        $list = array();
+        $conn = \ZDB\DB::getConnect();
+        $sql = "SELECT * FROM (
+                    SELECT customers.customer_name as name, SUM( ABS( extcode*quantity  ) ) AS value
+                    FROM  `entrylist_view` 
+                    join customers on entrylist_view.customer_id = customers.customer_id 
+                    join documents_view  on entrylist_view.document_id = documents_view.document_id 
+                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck')  
+                    AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
+                    AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
+                    GROUP BY name
+                    )t      
+                    ORDER BY value DESC";
+
+        $rs = $conn->Execute($sql);
+        foreach ($rs as $row) {
+            $row['value'] = round($row['value'] / 1000);
+            $list[] = $row;
+        }
+
+        return $list;
+    }
+    
+    
     //выполняет расчет  АВС
     private function calc($detail) {
 
