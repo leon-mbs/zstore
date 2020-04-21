@@ -568,9 +568,10 @@ class GoodsReceipt extends \App\Pages\Base {
         $total = $this->docform->total->getText();
         $disc  = $this->docform->disc->getText();
         $nds   = $this->docform->nds->getText();
+        $rate  = $this->docform->rate->getText();
 
         $total = $total + $nds - $disc;  
-       // if($rate > 0)   $total = $total * $rate;
+        if($rate !=1 && $rate >0)   $total = $total * $rate;
         
         $this->docform->editpayamount->setText(round($total));
         $this->docform->payamount->setText(round($total));
