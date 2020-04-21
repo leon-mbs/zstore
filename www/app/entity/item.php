@@ -35,9 +35,10 @@ class Item extends \ZCL\DB\Entity {
         $this->useserial = (int) $xml->useserial[0];
         $this->image_id = (int) $xml->image_id[0];
         $this->weight = (string) $xml->weight[0];
+        $this->manufacturer = (string) $xml->manufacturer[0];
 
         $this->cell = (string) $xml->cell[0];
-        $this->octoreoptions = (string) $xml->octoreoptions[0];
+      //  $this->octoreoptions = (string) $xml->octoreoptions[0];
         $brprice = (string) $xml->brprice[0];
 
         $this->brprice = @unserialize($brprice);
@@ -75,7 +76,8 @@ class Item extends \ZCL\DB\Entity {
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
 
         $this->detail .= "<cell>{$this->cell}</cell>";
-        $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
+     //   $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
+        $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
