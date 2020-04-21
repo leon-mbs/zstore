@@ -110,12 +110,10 @@ class InvoiceCust extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->total->setText($this->_doc->amount);
-            
-            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+  
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
-                $item->old = true;
-                $this->_itemlist[$item->item_id] = $item;
-            }
+ 
         } else {
             $this->_doc = Document::create('InvoiceCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -156,7 +154,7 @@ class InvoiceCust extends \App\Pages\Base {
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->edit->setVisible($item->old != true);
+ 
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
