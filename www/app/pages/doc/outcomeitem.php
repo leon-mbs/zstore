@@ -42,6 +42,7 @@ class OutcomeItem extends \App\Pages\Base {
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
+        $this->docform->add(new \Zippy\Html\Form\File('scan'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -188,6 +189,13 @@ class OutcomeItem extends \App\Pages\Base {
         if ($this->checkForm() == false) {
             return;
         }
+        $file = $this->docform->scan->getFile();
+        if ($file['size'] > 10000000) {
+            $this->setError("filemore10M");
+            return;
+        }
+        
+        
         $this->_doc->notes = $this->docform->notes->getText();
 
 
@@ -229,6 +237,12 @@ class OutcomeItem extends \App\Pages\Base {
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
+            
+            if ($file['size'] > 0) {
+                H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+            }
+            
+            
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
