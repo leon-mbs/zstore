@@ -149,7 +149,7 @@ class Stock extends \ZCL\DB\Entity {
         }
         if ($qty > 0) {  // если не  достаточно
              
-            \App\System::setWarnMsg("negative_qty",   $item->itemname );  
+          
             if ($last != null) {
                 $last->quantity += $qty; //остаток  пишем  к  последней партии
             } else {

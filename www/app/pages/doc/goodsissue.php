@@ -499,6 +499,22 @@ class GoodsIssue extends \App\Pages\Base {
                 if (!$isEdited)
                     $this->_doc->updateStatus(Document::STATE_NEW);
 
+                    
+                    
+                    // проверка на минус  в  количестве
+                    $allowminus = System::getOption("common","allowminus") ;
+                    if($allowminus != 1) {
+                
+                        foreach($this->_itemlist as $item) {
+                             $qty = $item->getQuantity($this->_doc->headerdata['store']);
+                             if($qty<$item->quantity) {
+                                $this->setError("nominus",H::fqty($qty),$item->item_name);
+                                return;
+                             }
+                        }
+                    }                    
+                    
+                      
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
@@ -742,6 +758,10 @@ class GoodsIssue extends \App\Pages\Base {
          
             $this->setError("noselpaytype");
         }
+        
+
+        
+        
         return !$this->isError();
     }
 
@@ -896,6 +916,7 @@ class GoodsIssue extends \App\Pages\Base {
         $this->wselitem->setPriceType($this->docform->pricetype->getValue());
         $this->wselitem->Reload();
     }
+
     public function onSelectItem($item_id,$itemname){
         $this->editdetail->edittovar->setKey($item_id);
         $this->editdetail->edittovar->setText($itemname);
