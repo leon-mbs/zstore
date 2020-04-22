@@ -639,6 +639,22 @@ class ARMPos extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+            
+                // проверка на минус  в  количестве
+                $allowminus = System::getOption("common","allowminus") ;
+                if($allowminus != 1) {
+            
+                    foreach($this->_itemlist as $item) {
+                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
+                         if($qty<$item->quantity) {
+                            $this->setError("nominus",H::fqty($qty),$item->item_name);
+                            return;
+                         }
+                    }
+                }                    
+        
+            
+            
             $this->_doc->save();
             $this->_doc->updateStatus(Document::STATE_NEW);
 

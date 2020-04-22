@@ -50,6 +50,7 @@ class Options extends \App\Pages\Base {
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('useimages'));
         $this->common->add(new CheckBox('usebranch'));
+        $this->common->add(new CheckBox('allowminus'));
         $this->common->add(new TextInput('price1'));
         $this->common->add(new TextInput('price2'));
         $this->common->add(new TextInput('price3'));
@@ -84,9 +85,8 @@ class Options extends \App\Pages\Base {
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
-        // $this->common->closeddate->setDate($common['closeddate']);
-
-
+        $this->common->allowminus->setChecked($common['allowminus']);
+   
 
         $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
         $this->firm->add(new TextInput('firmname'));
@@ -178,9 +178,9 @@ class Options extends \App\Pages\Base {
         $common['usescanner'] = $this->common->usescanner->isChecked()?1:0;
         $common['useimages'] = $this->common->useimages->isChecked()?1:0;
         $common['usebranch'] = $this->common->usebranch->isChecked()?1:0;
+        $common['allowminus'] = $this->common->allowminus->isChecked()?1:0;
 
-        // $common['closeddate'] = $this->common->closeddate->getDate();
-
+  
         System::setOptions("common", $common);
 
         $this->setSuccess('saved');

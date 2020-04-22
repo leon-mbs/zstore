@@ -334,7 +334,7 @@ class ProdReceipt extends \App\Pages\Base {
 
         // $this->editdetail->editprice->setText($stock->partion);
 
-        $this->updateAjax(array('qtystock', 'editprice'));
+        $this->updateAjax(array(  'editprice'));
     }
 
 }
