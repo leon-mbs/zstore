@@ -86,9 +86,7 @@ class OrderCust extends \App\Pages\Base {
 
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-            foreach ($this->_itemlist as $item) {
-                $item->old = true;
-            }
+ 
         } else {
             $this->_doc = Document::create('OrderCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -177,9 +175,24 @@ class OrderCust extends \App\Pages\Base {
         }
 
 
-
-        unset($this->_itemlist[$this->_rowid]);
-        $this->_itemlist[$item->item_id] = $item;
+         $tarr = array();
+ 
+        foreach($this->_itemlist as $k=>$value){
+               
+           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
+              $tarr[$item->item_id] = $item;    // заменяем
+           }   else {
+              $tarr[$k] = $value;    // старый
+           }
+                
+        }
+     
+        if($this->_rowid == 0) {        // в конец
+            $tarr[$item->item_id] = $item;
+        }
+        $this->_itemlist = $tarr;
+        $this->_rowid = 0;
+  
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -215,13 +228,7 @@ class OrderCust extends \App\Pages\Base {
 
         $this->calcTotal();
 
-        $common = System::getOptions("common");
-        foreach ($this->_itemlist as $item) {
-            if ($item->old == true)
-                continue;
-            if ($common['useval'] != true)
-                continue;
-        }
+ 
 
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);

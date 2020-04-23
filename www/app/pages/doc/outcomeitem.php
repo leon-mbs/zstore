@@ -95,7 +95,7 @@ class OutcomeItem extends \App\Pages\Base {
         $row->add(new Label('quantity', H::fqty($item->quantity)));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->edit->setVisible($item->old == false);
+      
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
@@ -103,7 +103,7 @@ class OutcomeItem extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         $item = $sender->owner->getDataItem();
-        $id = $item->item_id . $item->snumber;
+        $id = $item->item_id  ;
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
         $this->docform->detail->Reload();
@@ -163,7 +163,24 @@ class OutcomeItem extends \App\Pages\Base {
         }
 
 
-        $this->_itemlist[$id . $item->snumber] = $item;
+         $tarr = array();
+ 
+        foreach($this->_itemlist as $k=>$value){
+               
+           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
+              $tarr[$item->item_id] = $item;    // заменяем
+           }   else {
+              $tarr[$k] = $value;    // старый
+           }
+                
+        }
+     
+        if($this->_rowid == 0) {        // в конец
+            $tarr[$item->item_id] = $item;
+        }
+        $this->_itemlist = $tarr;
+        $this->_rowid = 0;
+  
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

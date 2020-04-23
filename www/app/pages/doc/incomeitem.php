@@ -71,11 +71,8 @@ class IncomeItem extends \App\Pages\Base {
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->notes->setText($this->_doc->notes);
 
-            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
-                $item->old = true;
-                $this->_itemlist[$item->item_id . $item->snumber] = $item;
-            }
         } else {
             $this->_doc = Document::create('IncomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -86,11 +83,8 @@ class IncomeItem extends \App\Pages\Base {
                     if ($basedoc->meta_name == 'OutcomeItem') {
 
 
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                        $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
-                            $item->old = false;
-                            $this->_itemlist[$item->item_id . $item->snumber] = $item;
-                        }
                     }
                 }
             }
@@ -126,7 +120,7 @@ class IncomeItem extends \App\Pages\Base {
         if (false == \App\ACL::checkEditDoc($this->_doc))
             return;
         $item = $sender->owner->getDataItem();
-        $id = $item->item_id . $item->snumber;
+        $id = $item->item_id ;
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
         $this->docform->detail->Reload();
@@ -156,7 +150,7 @@ class IncomeItem extends \App\Pages\Base {
 
 
 
-        $this->_rowid = $item->item_id . $item->snumber;
+        $this->_rowid = $item->item_id  ;
     }
 
     public function saverowOnClick($sender) {
@@ -169,7 +163,7 @@ class IncomeItem extends \App\Pages\Base {
         }
 
         $item = Item::load($id);
-        $item->old = false;
+       
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -190,7 +184,27 @@ class IncomeItem extends \App\Pages\Base {
             $this->setError("dateforserial");
             return;
         }
-        $this->_itemlist[$id . $item->snumber] = $item;
+
+         $tarr = array();
+ 
+        foreach($this->_itemlist as $k=>$value){
+               
+           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
+              $tarr[$item->item_id] = $item;    // заменяем
+           }   else {
+              $tarr[$k] = $value;    // старый
+           }
+                
+        }
+     
+        if($this->_rowid == 0) {        // в конец
+            $tarr[$item->item_id] = $item;
+        }
+        $this->_itemlist = $tarr;
+        $this->_rowid = 0;
+          
+        
+        
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

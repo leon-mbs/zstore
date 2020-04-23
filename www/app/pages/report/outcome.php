@@ -170,7 +170,7 @@ class Outcome extends \App\Pages\Base {
         if ($type == 1) {
             $header['_type1'] = true;
             $header['_type2'] = false;
-            $header['_type4'] = false;
+            $header['_type3'] = false;
             $header['_type4'] = false;
         }
         if ($type == 2) {

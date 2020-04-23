@@ -19,6 +19,7 @@ class Item extends \ZCL\DB\Entity {
  
         $this->price = 0;
         $this->image_id = 0;
+        $this->pricelist = 1;
     }
 
     protected function afterLoad() {
