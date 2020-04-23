@@ -53,7 +53,7 @@ class ProdReceipt extends \App\Pages\Base {
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
-        //$this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -344,7 +344,16 @@ class ProdReceipt extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
 
-        // $this->editdetail->editprice->setText($stock->partion);
+            $ilist = \App\Entity\ItemSet::find("pitem_id=" . $id );
+            $price=0;
+            if(count($ilist)>0  ) {
+                 foreach($ilist as  $iset) {
+                    $it = \App\Entity\Item::load($iset->item_id);
+                    $pr = $it->getLastPartion(0); 
+                    $price += ($iset->qty*$pr);
+                 }
+            }       
+            $this->editdetail->editprice->setText($price > 0 ? H::fa($price) :'' );
 
         $this->updateAjax(array(  'editprice'));
     }
