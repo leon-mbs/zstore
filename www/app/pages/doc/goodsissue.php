@@ -678,7 +678,7 @@ class GoodsIssue extends \App\Pages\Base {
 
         $store_id = $this->docform->store->getValue();
 
-        $qty = $item->getQuantity($store);
+        $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
            
             $this->setError("noitemonstore",$item->itemname );

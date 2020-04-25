@@ -151,9 +151,10 @@ class Items extends \App\Pages\Base {
         } catch (\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
-        }  
-        
-        $sku=array();
+        }
+
+        $skulist=array();
+
         foreach ($data  as $p) {
             if(strlen($p->sku)==0) continue;
             $skulist[$p->sku] = $p->id;

@@ -63,7 +63,7 @@ class Order extends Base {
             }
 
             $this->sum = $this->sum + $product->price * $product->quantity;
-            $this->sum = $this->sum;
+
         }
         Basket::getBasket()->list = $this->basketlist;
         $this->listform->pitem->Reload();

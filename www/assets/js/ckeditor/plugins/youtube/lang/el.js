@@ -1,4 +1,4 @@
-﻿CKEDITOR.plugins.setLang('youtube', 'el', {
+CKEDITOR.plugins.setLang('youtube', 'el', {
     button: 'Ενσωμάτωση Youtube βίντεο',
     title: 'Ενσωμάτωση Youtube βίντεο',
     txtEmbed: 'Επικόλλησε τον κώδικα ενσωμάτωσης',

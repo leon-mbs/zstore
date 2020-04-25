@@ -137,7 +137,7 @@ class Document extends \ZCL\DB\Entity {
                 continue;
 
             if (strpos($value, '[CDATA[') !== false) {
-                \App\System::getWarnMsg('CDATA в  поле  обьекта');
+                \App\System::setWarnMsg('CDATA в  поле  обьекта');
                 \App\Helper::log(' CDATA в  поле  обьекта');
                 continue;
             }
@@ -160,7 +160,7 @@ class Document extends \ZCL\DB\Entity {
                     continue;
 
                 if (strpos($value, '[CDATA[') !== false) {
-                    \App\System::getWarnMsg('CDATA в  поле  обьекта');
+                    \App\System::setWarnMsg('CDATA в  поле  обьекта');
                     \App\Helper::log(' CDATA в  поле  обьекта');
                     continue;
                 }

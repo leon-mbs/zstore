@@ -140,7 +140,7 @@ class GRList extends \App\Pages\Base {
         $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name == 'GoodsReceipt');
 
         //новый     
-        if ($state < Document::STATE_EXECUTED) {
+        if ($this->_doc->state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
         }
@@ -227,9 +227,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
         if ($status == 2) {
             $where .= " and  (payamount > 0 and payamount > payed)";
         }
-        if ($status == 0) {
-            
-        }
+
 
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {

@@ -44,7 +44,7 @@ class Helper {
     }
 
     //формирование  условий отбора   по  выбранным  критериям
-    private static function _getWhere(ProductSearchFilter $filter) {
+    private static function _getWhere( $filter) {
         $where = ' where deleted <> 1  ';
         if ($filter->group_id > 0) {
             // $where = $where . " and p.group_id in (select g.group_id  from  shop_productgroups g where  treeorder like '%" . sprintf('%08s', $filter->group_id) . "%') ";
@@ -119,9 +119,9 @@ class Helper {
     }
 
     //количество  отфильтрованных товаров (используется  для  пагинатора)
-    public static function getProductCount(ProductSearchFilter $filter) {
+    public static function getProductCount(  $filter) {
 
-        $filter = ProductSearchFilter::getFilter();
+
         if ($filter->group_id == 0)
             return 0;
 

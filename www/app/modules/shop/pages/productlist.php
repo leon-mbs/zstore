@@ -22,7 +22,7 @@ use \App\Modules\Shop\Entity\Product;
 use \App\Entity\Item;
 use \App\Entity\Stock;
 use \App\Modules\Shop\Entity\ProductAttribute;
-use \App\Modules\Shop\Entity\ProductAttributeValue;
+
 use \App\Modules\Shop\Helper;
 use \Zippy\Html\DataList\DataView;
 use \Zippy\Html\DataList\ArrayDataSource;
@@ -30,6 +30,7 @@ use \ZCL\DB\EntityDataSource;
 use \Zippy\Binding\PropertyBinding as PB;
 use \App\System;
 use \Zippy\Html\Form\AutocompleteTextInput;
+use \App\Application as App;
 
 class ProductList extends \App\Pages\Base {
 
@@ -504,7 +505,7 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
         }
         //'Список'
         if ($this->productattribute->attributetype == 3) {
-
+            $sel='';
             $ret .= " <select style='width:250px;' name=\"{$this->id}\" class=\"form-control\" ><option value=\"-1\">Не выбран</option>";
             $list = explode(',', $this->productattribute->valueslist);
             foreach ($list as $key => $value) {

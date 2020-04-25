@@ -124,10 +124,10 @@ class GIList extends \App\Pages\Base {
 
 
             $this->_doc->save();
-            if ($order instanceof Document) {
-                $order = $order->cast();
-                $order->updateStatus(Document::STATE_INSHIPMENT);
-            }
+           // if ($order instanceof Document) {
+           //     $order = $order->cast();
+           //     $order->updateStatus(Document::STATE_INSHIPMENT);
+           // }
             $this->statuspan->statusform->ship_number->setText('');
             $this->setSuccess('sent');
         }
@@ -325,9 +325,6 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and  amount > payamount";
         }
 
-        if ($status == 3) {
-            
-        }
 
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {

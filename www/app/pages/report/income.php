@@ -169,7 +169,7 @@ class Income extends \App\Pages\Base {
         }
         $report = new \App\Report('report/income.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }

@@ -180,7 +180,7 @@ class OrderList extends \App\Pages\Base {
             $this->statuspan->statusform->binp->setVisible(false);
         }
 
-        if ($ttn || $inv)
+        if ($ttn  )
             $this->statuspan->statusform->bref->setVisible(false);
         if ($ref) {
             $this->statuspan->statusform->bclose->setVisible(false);
@@ -290,9 +290,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource {
         if ($status == 2) {
             $where .= " and  amount > payamount";
         }
-        if ($status == 3) {
-            
-        }
+
 
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {
