@@ -62,7 +62,7 @@ class Options extends \App\Pages\Base {
         }
 
 
-        - $this->setSuccess('connected');
+         $this->setSuccess('connected');
     }
 
     public function saveOnClick($sender) {

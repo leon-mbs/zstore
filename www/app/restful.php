@@ -28,19 +28,19 @@ abstract class RestFul {
         };
     }
 
-    public function get() {
+    public function get($params) {
         $this->FailAnswer();
     }
 
-    public function post() {
+    public function post($params) {
         $this->FailAnswer();
     }
 
-    public function put() {
+    public function put($params) {
         $this->FailAnswer();
     }
 
-    public function delete() {
+    public function delete($params) {
         $this->FailAnswer();
     }
 

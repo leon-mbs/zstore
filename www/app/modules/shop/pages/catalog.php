@@ -53,8 +53,6 @@ class Catalog extends Base {
         if ($id > 0 && $filter->group_id != $id) {
             $filter->clean(); //переключена  группа
             $filter->group_id = $id;
-        } else {
-            
         }
 
         $this->add(new Form('sortform'));

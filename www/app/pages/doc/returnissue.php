@@ -163,8 +163,8 @@ class ReturnIssue extends \App\Pages\Base {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-        $this->editdetail->editquantity->setText($stock->quantity);
-        $this->editdetail->editprice->setText($stock->price);
+        $this->editdetail->editquantity->setText($item->quantity);
+        $this->editdetail->editprice->setText($item->price);
 
 
         $this->editdetail->edittovar->setKey($item->item_id);

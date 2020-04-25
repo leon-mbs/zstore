@@ -140,7 +140,7 @@ class User extends \ZCL\DB\Entity {
      */
     public static function getByHash($md5hash) {
         //$conn = \ZDB\DB::getConnect();
-        $arr = User::find('md5hash=' . Entity::qstr($md5hash));
+        $arr = User::find('md5hash=' . User::qstr($md5hash));
         if (count($arr) == 0) {
             return null;
         }

@@ -275,7 +275,7 @@ class ABC extends \App\Pages\Base {
             if ($sum == 0)
                 continue;
             $_detail[$i]['perc'] = $_detail[$i]['value'] / $sum * 100;
-            $_detail[$i]['value'] = $_detail[$i]['value'];
+          //  $_detail[$i]['value'] = $_detail[$i]['value'];
             $_detail[$i]['percsum'] = $_detail[$i]['perc'] + $val;
             if ($_detail[$i]['percsum'] <= 80) {
                 $_detail[$i]['group'] = 'A';

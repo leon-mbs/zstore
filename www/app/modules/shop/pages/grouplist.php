@@ -17,6 +17,7 @@ use \App\Modules\Shop\Entity\ProductGroup;
 use \App\Modules\Shop\Entity\ProductAttribute;
 use \App\Modules\Shop\Helper;
 use \App\System;
+use \App\Application as App;
 
 class GroupList extends \App\Pages\Base {
 

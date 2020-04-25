@@ -390,7 +390,7 @@ class ServiceAct extends \App\Pages\Base {
 
         return !$this->isError();
 
-        $this->docform->detail->Reload();
+
     }
 
     public function backtolistOnClick($sender) {

@@ -137,7 +137,7 @@ class Document extends \ZCL\DB\Entity {
                 continue;
 
             if (strpos($value, '[CDATA[') !== false) {
-                \App\System::getWarnMsg('CDATA в  поле  обьекта');
+                \App\System::setWarnMsg('CDATA в  поле  обьекта');
                 \App\Helper::log(' CDATA в  поле  обьекта');
                 continue;
             }
@@ -160,7 +160,7 @@ class Document extends \ZCL\DB\Entity {
                     continue;
 
                 if (strpos($value, '[CDATA[') !== false) {
-                    \App\System::getWarnMsg('CDATA в  поле  обьекта');
+                    \App\System::setWarnMsg('CDATA в  поле  обьекта');
                     \App\Helper::log(' CDATA в  поле  обьекта');
                     continue;
                 }
@@ -306,7 +306,7 @@ class Document extends \ZCL\DB\Entity {
      *
      * @param mixed $classname
      */
-    public static function create($classname) {
+    public static function create($classname,$branch_id=0) {
         $arr = explode("\\", $classname);
         $classname = $arr[count($arr) - 1];
         $conn = \ZDB\DB::getConnect();
@@ -317,7 +317,11 @@ class Document extends \ZCL\DB\Entity {
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
 
-        $doc->branch_id = \App\Acl::checkCurrentBranch();
+        $doc->branch_id = $branch_id;
+        if($branch_id==0){
+           $doc->branch_id = \App\Acl::checkCurrentBranch();    
+        }
+        
         return $doc;
     }
 

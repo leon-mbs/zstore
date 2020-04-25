@@ -34,9 +34,7 @@ class ProdReceipt extends \App\Pages\Base {
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
-
         $common = System::getOptions("common");
-
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -55,7 +53,7 @@ class ProdReceipt extends \App\Pages\Base {
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
-        //$this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -75,11 +73,8 @@ class ProdReceipt extends \App\Pages\Base {
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
-            foreach ($this->_doc->unpackDetails('detaildata') as $item) {
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
-                $item->old = true;
-                $this->_itemlist[$item->item_id] = $item;
-            }
         } else {
             $this->_doc = Document::create('ProdReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -195,8 +190,25 @@ class ProdReceipt extends \App\Pages\Base {
         }
 
 
-        unset($this->_itemlist[$this->_rowid]);
-        $this->_itemlist[$item->item_id] = $item;
+         $tarr = array();
+ 
+        foreach($this->_itemlist as $k=>$value){
+               
+           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
+              $tarr[$item->item_id] = $item;    // заменяем
+           }   else {
+              $tarr[$k] = $value;    // старый
+           }
+                
+        }
+     
+        if($this->_rowid == 0) {        // в конец
+            $tarr[$item->item_id] = $item;
+        }
+        $this->_itemlist = $tarr;
+        $this->_rowid = 0;
+  
+        
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -332,7 +344,16 @@ class ProdReceipt extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
 
-        // $this->editdetail->editprice->setText($stock->partion);
+            $ilist = \App\Entity\ItemSet::find("pitem_id=" . $id );
+            $price=0;
+            if(count($ilist)>0  ) {
+                 foreach($ilist as  $iset) {
+                    $it = \App\Entity\Item::load($iset->item_id);
+                    $pr = $it->getLastPartion(0); 
+                    $price += ($iset->qty*$pr);
+                 }
+            }       
+            $this->editdetail->editprice->setText($price > 0 ? H::fa($price) :'' );
 
         $this->updateAjax(array(  'editprice'));
     }

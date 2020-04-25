@@ -126,10 +126,7 @@ class ProjectList extends \App\Pages\Base {
         $this->resetURL();
     }
 
-    public function listOnClick($sender) {
-
-        $id->owner->getDataItem()->project_id;
-    }
+    
 
     public function filterOnSubmit($sender) {
         $this->projectpanel->projectlist->Reload();
@@ -315,7 +312,7 @@ class ProjectDS implements \Zippy\Interfaces\DataSource {
         if (strlen($number) > 0) {
             $s = Project::qstr('%' . $number . '%');
 
-            $where = "   (details like {$s} or project_name like {$s} or issue_id=" . Project::qstr(project_name) . ")  ";
+            $where = "   (details like {$s} or project_name like {$s} or issue_id=" . Project::qstr($s) . ")  ";
         }
 
         return $where;

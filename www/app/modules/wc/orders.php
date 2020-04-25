@@ -88,7 +88,7 @@ class Orders extends \App\Pages\Base {
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("nofoundarticle_inorder",$product->name,$shoporder->order_id);
+                    $this->setWarn("nofoundarticle_inorder",$product->name,$wcorder->order_id);
                     continue;
                 }
                 $tovar->quantity = $product->quantity;

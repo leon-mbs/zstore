@@ -127,7 +127,7 @@ class EmpTask extends \App\Pages\Base {
         );
         $report = new \App\Report('report/emptask.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }
