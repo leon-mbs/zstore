@@ -22,7 +22,7 @@
         <th align="right" style="border: solid black 1px">Годин</th>
 
         <th align="right" style="border: solid black 1px">Сума</th>
-        <th align="right" style="border: solid black 1px">До оплати</th>
+    
 
         {{#_detail}}
     <tr>
@@ -34,7 +34,7 @@
         <td align="right">{{hours}}</td>
 
         <td align="right">{{amount}}</td>
-        <td align="right">{{amountpay}}</td>
+      
 
     </tr>
     {{/_detail}}
