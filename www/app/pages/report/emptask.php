@@ -115,7 +115,7 @@ class EmpTask extends \App\Pages\Base {
                     "name" => $emp->emp_name,
                     "cnt" => $emp->cnt,
                     "hours" => $emp->hours,
-                    "amountpay" => round($emp->amount), //todo расчет 
+            
                     "amount" => round($emp->amount)
                 );
             }
