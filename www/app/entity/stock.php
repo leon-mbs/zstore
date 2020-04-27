@@ -120,12 +120,12 @@ class Stock extends \ZCL\DB\Entity {
             } else {
                 return $stock->qty;
             }
-            return 0;
+
         }
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item) {
+    public static function pickup($store_id, $item,$snumber='') {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item->item_id} and qty > 0   ";
         if (strlen($item->snumber) > 0) {
@@ -168,7 +168,7 @@ class Stock extends \ZCL\DB\Entity {
                     if(strlen($item->snumber) > 0)$last->sdate = time();
                     
                 } else {
-                    $last->partion = $price;
+                    $last->partion = $item->price;
                 }
                 $last->save();
                 $last->quantity = $qty;

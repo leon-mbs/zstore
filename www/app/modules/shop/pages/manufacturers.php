@@ -8,6 +8,7 @@ use \Zippy\Binding\PropertyBinding as Bind;
 use \App\Modules\Shop\Entity\Manufacturer;
 use \App\Modules\Shop\Helper;
 use \App\System;
+use \App\Application as App;
 
 //список   производителей
 class Manufacturers extends \App\Pages\Base {

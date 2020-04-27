@@ -95,6 +95,7 @@ class ServiceAct extends Document {
             $header['gar'] = 'Гарантия: ' . $this->headerdata['gar'];
         }
         $detail = array();
+        $i=1;
         foreach ($this->unpackDetails('detaildata') as $ser) {
             $detail[] = array("no" => $i++,
                 "service_name" => $ser->service_name,

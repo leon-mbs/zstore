@@ -17,21 +17,7 @@ class TransItem extends Document {
     public function Execute() {
 
 
-
-        if ($item->st1 > 0 && $item->st1 > 0) {   //перемещение партий
-            $st1 = Stock::load($item->st1);
-            $st2 = Stock::load($item->st2);
-
-            $sc = new Entry($this->document_id, 0 - $item->quantity * $st1->partion, 0 - $item->quantity);
-            $sc->setStock($st1->stock_id);
-            $sc->save();
-
-            $sc = new Entry($this->document_id, $item->quantity * $st2->partion, $item->quantity);
-            $sc->setStock($st2->stock_id);
-            $sc->save();
-
-            return true;
-        }
+ 
 
         //списываем  со склада
         $fi = Stock::load($this->headerdata['fromitem']);

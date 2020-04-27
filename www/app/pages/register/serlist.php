@@ -46,7 +46,7 @@ class SerList extends \App\Pages\Base {
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'На выполнении', 3 => 'Все'), 0));
 
 
-        $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
@@ -241,7 +241,7 @@ class SerList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
+class SerListDataSource implements \Zippy\Interfaces\DataSource {
 
     private $page;
 
@@ -269,9 +269,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and state = " . Document::STATE_INPROCESS;
         }
 
-        if ($status == 3) {
-            
-        }
+
 
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {

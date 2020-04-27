@@ -4,7 +4,7 @@ namespace App\Modules\Shop\Pages;
 
 use \App\Modules\Shop\Comparelist;
 use \App\Modules\Shop\Helper;
-use \App\System\System;
+
 use \Zippy\WebApplication as App;
 
 //страница  сравнения  товаров

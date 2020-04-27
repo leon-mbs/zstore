@@ -63,7 +63,7 @@ class Order extends Base {
             }
 
             $this->sum = $this->sum + $product->price * $product->quantity;
-            $this->sum = $this->sum;
+
         }
         Basket::getBasket()->list = $this->basketlist;
         $this->listform->pitem->Reload();
@@ -109,8 +109,16 @@ class Order extends Base {
 
 
         try {
+            $op = System::getOptions("shop");
 
-            $order = Document::create('Order');
+            $store_id = (int) $op["defstore"] ;
+            $f=0;
+            
+            $store = \App\Entity\Store::load($store_id);
+            if($store != null){
+               $f  = $store->branch_id;
+            }
+            $order = Document::create('Order',$f);
             $order->document_number = $order->nextNumber();
             if (strlen($order->document_number) == 0)
                 $order->document_number = 'З0001';
@@ -136,12 +144,11 @@ class Order extends Base {
             $order->packDetails('detaildata', $itlist);
 
             
-            $op = System::getOptions("shop");
             $cust = \App\Entity\Customer::load($op["defcust"]);
             if ($cust instanceof \App\Entity\Customer) {
                 $order->customer_id = $cust->customer_id;
             }
-            $order->headerdata['store'] = $op["defstore"];
+            $order->headerdata['store'] = $store_id;
             $order->headerdata['pricetype'] = $op["defpricetype"];
 
             $order->notes = trim($this->orderform->contact->getText());

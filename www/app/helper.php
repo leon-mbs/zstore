@@ -23,7 +23,7 @@ class Helper {
      */
     public static function login($login, $password = null) {
 
-        $user = User::findOne("  userlogin=  " . User::qstr($login));
+        $user = User::getFirst("  userlogin=  " . User::qstr($login));
 
         if ($user == null)
             return false;
@@ -76,9 +76,7 @@ class Helper {
                 }
                 $groups[$meta_object['menugroup']][$meta_id] = $meta_object;
             }
-            if ($meta_object->smart == 1) {
-                
-            }
+
         }
         switch ($meta_type) {
             case 1 :

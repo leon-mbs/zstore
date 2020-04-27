@@ -42,9 +42,9 @@ class ProdAreaList extends \App\Pages\Base {
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditRef('ProdAreaList'))
             return;
+        $pa = $sender->owner->getDataItem();
 
-
-        $del = ProdArea::delete($pa_id);
+        $del = ProdArea::delete($pa->pa_id);
         if (strlen($del) > 0) {
             $this->setError($del);
             return;

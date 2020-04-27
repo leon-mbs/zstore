@@ -302,9 +302,6 @@ class OrderCustDataSource implements \Zippy\Interfaces\DataSource {
             $where .= " and  state <> 9 ";
         }
 
-        if ($status == 3) {
-            
-        }
 
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {

@@ -1,4 +1,4 @@
-﻿CKEDITOR.plugins.setLang('youtube', 'sk', {
+CKEDITOR.plugins.setLang('youtube', 'sk', {
 	button : 'Vložiť YouTube video',
 	title : 'Vložiť YouTube video',
 	txtEmbed : 'Vložiť Youtube Embed Video kódu',

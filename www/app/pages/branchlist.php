@@ -15,6 +15,7 @@ use \Zippy\Html\Link\ClickLink;
 use \Zippy\Html\Panel;
 use \App\Entity\Branch;
 use \App\System;
+use \App\Application  as App;
 
 //Филиалы
 class BranchList extends \App\Pages\Base {

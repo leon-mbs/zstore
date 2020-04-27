@@ -1,4 +1,4 @@
-﻿CKEDITOR.plugins.setLang('youtube', 'he', {
+CKEDITOR.plugins.setLang('youtube', 'he', {
 	button : 'שבץ וידאו של YouTube',
 	title : 'שבץ וידאו של YouTube',
 	txtEmbed : 'הדבק את קוד השיבוץ כאן',

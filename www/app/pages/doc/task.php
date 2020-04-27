@@ -43,8 +43,8 @@ class Task extends \App\Pages\Base {
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
-        $this->docform->add(new \ZCL\BT\DateTimePicker('start_date'))->setDate(time());
-        $this->docform->add(new \ZCL\BT\DateTimePicker('document_date'))->setDate(time());
+        $this->docform->add(new \ZCL\BT\DatePicker('start_date'))->setDate(time());
+        $this->docform->add(new \ZCL\BT\DatePicker('document_date'))->setDate(time());
 
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new TextInput('taskhours', "0"));
@@ -276,7 +276,7 @@ class Task extends \App\Pages\Base {
 
     public function delete4OnClick($sender) {
         $eq = $sender->owner->getDataItem();
-        $this->_emplist = array_diff_key($this->_eqlist, array($eq->eq_id => $this->_eqlist[$eq->eq_id]));
+        $this->_eqlist = array_diff_key($this->_eqlist, array($eq->eq_id => $this->_eqlist[$eq->eq_id]));
         $this->docform->detail4->Reload();
     }
 
@@ -367,7 +367,7 @@ class Task extends \App\Pages\Base {
 
         return !$this->isError();
 
-        $this->docform->detail->Reload();
+
     }
 
     public function backtolistOnClick($sender) {

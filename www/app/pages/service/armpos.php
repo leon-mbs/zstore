@@ -163,7 +163,7 @@ class ARMPos extends \App\Pages\Base {
 
         $mf = \App\Entity\MoneyFund::Load($this->pos->mf);
 
-        $this->form3->payment->setOptionList(array($mf->mf_id => $mf->mf_name,  \App\Entity\MoneyFund::PREPAID => 'Была предоплата', \App\Entity\MoneyFund::PREPAID => 'В кредит'));
+        $this->form3->payment->setOptionList(array($mf->mf_id => $mf->mf_name,  \App\Entity\MoneyFund::PREPAID => 'Была предоплата', \App\Entity\MoneyFund::CREDIT=> 'В кредит'));
         $this->form3->payment->setValue($mf->mf_id);
 
         $this->form1->setVisible(false);

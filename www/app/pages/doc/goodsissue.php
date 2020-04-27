@@ -678,7 +678,7 @@ class GoodsIssue extends \App\Pages\Base {
 
         $store_id = $this->docform->store->getValue();
 
-        $qty = $item->getQuantity($store);
+        $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
            
             $this->setError("noitemonstore",$item->itemname );
@@ -872,7 +872,7 @@ class GoodsIssue extends \App\Pages\Base {
                 return;
             }
         }
-        $cust->type = Customer::TYPE_SELLER;
+        $cust->type = Customer::TYPE_BAYER;
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);

@@ -286,12 +286,7 @@ class InvoiceCust extends \App\Pages\Base {
         }
 
         $common = System::getOptions("common");
-        foreach ($this->_itemlist as $item) {
-            if ($item->old == true)
-                continue;
-            if ($common['useval'] != true)
-                continue;
-        }
+ 
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 

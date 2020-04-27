@@ -3,13 +3,11 @@
         "php": ">=7.2",
         "phpmailer/phpmailer": "~5.2",
         "monolog/monolog": "1.25.3",
-
-        "nesbot/Carbon": "2.32.2",
+        "nesbot/carbon": "2.32.2",
         "timetoogo/pinq": "3.4.1",
         "jbzoo/image": "3.0.5",
         "dompdf/dompdf": "v0.8.3",
         "firebase/php-jwt": "v5.0.0",
-
         "roave/security-advisories": "dev-master",
         "picqer/php-barcode-generator": "v0.3",
         "endroid/qr-code": "3.7.5",
