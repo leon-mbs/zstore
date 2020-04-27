@@ -88,7 +88,7 @@ class TaskList extends \App\Pages\Base {
         $row->add(new Label('tasknumber', $task->document_number));
         $row->add(new Label('taskdesc', $task->notes));
 
-        $row->add(new Label('taskstartdate', date('Y-m-d H:i', $task->headerdata['start_date'])));
+        $row->add(new Label('taskstartdate', date('Y-m-d', $task->headerdata['start_date'])));
         $row->add(new Label('taskhours', $task->headerdata['taskhours']));
 
         $row->add(new Label('taskstatus', Document::getStateName($task->state)));

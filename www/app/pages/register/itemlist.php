@@ -265,7 +265,7 @@ class ItemList extends \App\Pages\Base {
         foreach ($list as $item) {
 
             $csv .= $item->itemname . ';';
-            $csv .= $st->item_code . ';';
+            $csv .= $item->item_code . ';';
 
             $csv .= $item->msr . ';';
             $csv .= $item->cat_name . ';';

@@ -186,7 +186,7 @@ class POSCheck extends \App\Pages\Base {
                         //проверяем  что уже есть продажа
                         $list = $order->getChildren('POSCheck');
 
-                        if (count($listyt) > 0) {
+                        if (count($list) > 0) {
                             
                             $this->setWarn('order_has_sell');
                         }
@@ -353,7 +353,7 @@ class POSCheck extends \App\Pages\Base {
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-            $slist = $item->getSerials($store_id);
+            $slist = $item->getSerials($this->docform->store->getValue());
 
             if (in_array($item->snumber, $slist) == false) {
                 

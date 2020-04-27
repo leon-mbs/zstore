@@ -23,7 +23,7 @@ use \Zippy\Html\DataList\Paginator;
 use \Zippy\Html\DataList\ArrayDataSource;
 use \App\Application as App;
 use \App\System;
-use \App\Modules\Issue\Helper;
+
 use \App\Filter;
 use \App\Modules\Issue\Entity\Project;
 use \App\Modules\Issue\Entity\Issue;
@@ -420,7 +420,7 @@ class IssueList extends \App\Pages\Base {
             $n->user_id = $this->_issue->user_id;
             $n->message = " На  вас перенаначена задача  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
             $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}\">Открыть</a> ";
-            $n->sender_name = $user->username;
+            $n->sender_name = System::getUser()->username;
             $n->save();
         }
     }
@@ -462,7 +462,7 @@ class IssueDS implements \Zippy\Interfaces\DataSource {
             $where .= " and status = " . $status;
         if ($project > 0)
             $where .= " and project_id = " . $project;
-        if ($assignedto > 0)
+        if ($emp > 0)
             $where .= " and user_id = " . $emp;
 
         if (strlen($number) > 0) {

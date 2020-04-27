@@ -19,6 +19,7 @@ class Item extends \ZCL\DB\Entity {
  
         $this->price = 0;
         $this->image_id = 0;
+        $this->pricelist = 1;
     }
 
     protected function afterLoad() {
@@ -167,13 +168,13 @@ class Item extends \ZCL\DB\Entity {
                 if ($_price_ == 'price1' && $cat->price1 > 0)
                     $price = $partion + (int) $partion / 100 * $cat->price1;
                 if ($_price_ == 'price2' && $cat->price2 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                    $price = $partion + (int) $partion / 100 * $cat->price2;
                 if ($_price_ == 'price3' && $cat->price3 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                    $price = $partion + (int) $partion / 100 * $cat->price3;
                 if ($_price_ == 'price4' && $cat->price4 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                    $price = $partion + (int) $partion / 100 * $cat->price4;
                 if ($_price_ == 'price5' && $cat->price5 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price1;
+                    $price = $partion + (int) $partion / 100 * $cat->price5;
             }
         }
 

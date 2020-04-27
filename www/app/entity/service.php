@@ -42,9 +42,9 @@ class Service extends \ZCL\DB\Entity {
     protected function beforeDelete() {
 
         $conn = \ZDB\DB::getConnect();
-        //    $sql = "  select count(*)  from  store_stock where   store_id = {$this->store_id}";
-        //     $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Нельзя удалять используемую услугу" : "";
+             $sql = "  select count(*)  from  entrylist where   service_id = {$this->service_id}";
+             $cnt = $conn->GetOne($sql);
+        return ($cnt > 0) ?  \App\Helper::l('nodelservice') : "";
     }
 
 }

@@ -96,7 +96,7 @@ class CustOrder extends \App\Pages\Base {
         }
 
 
-        $header = array('datefrom' => date('d.m.Y', $from),
+        $header = array(
             "_detail" => $detail,
             'total' => H::fa($total),
             'cust' => $cust > 0,
@@ -105,7 +105,7 @@ class CustOrder extends \App\Pages\Base {
         );
         $report = new \App\Report('report/custorder.tpl');
 
-        $html = $report->generate($header, $detail);
+        $html = $report->generate($header );
 
         return $html;
     }

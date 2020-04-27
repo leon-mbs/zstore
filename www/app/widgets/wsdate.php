@@ -39,7 +39,7 @@ class WSdate extends \Zippy\Html\PageFragment {
 
                 $data[$st->stock_id] = $st;
 
-                $item = $items[$st->item_id];
+
             }
         }
 

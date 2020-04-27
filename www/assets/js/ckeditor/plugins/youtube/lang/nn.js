@@ -1,4 +1,4 @@
-﻿CKEDITOR.plugins.setLang('youtube', 'nn', {
+CKEDITOR.plugins.setLang('youtube', 'nn', {
 	button : 'Bygg inn YouTube-video',
 	title : 'Bygg inn YouTube-video',
 	txtEmbed : 'Lim inn embed-kode her',

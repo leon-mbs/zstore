@@ -152,11 +152,11 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText($stock->quantity);
         
-        $this->editdetail->editserial->setText($item->serial);
+        $this->editdetail->editserial->setText($item->snumber);
 
 
-        $this->editdetail->edittovar->setKey($stock->stock_id);
-        $this->editdetail->edittovar->setText($stock->itemname);
+        $this->editdetail->edittovar->setKey($item->stock_id);
+        $this->editdetail->edittovar->setText($item->itemname);
 
         $st = Stock::load($stock->stock_id);  //для актуального 
 
@@ -176,6 +176,7 @@ class ProdIssue extends \App\Pages\Base {
 
         $item = Item::load($id);
         $item->quantity = $this->editdetail->editquantity->getText();
+        $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
         if ($item->quantity > $qstock) {
             $this->setWarn('inserted_extra_count');
@@ -196,7 +197,28 @@ class ProdIssue extends \App\Pages\Base {
             }
         }
 
-        $this->_itemlist[$item->item_id] = $item;
+        
+        $tarr = array();
+ 
+        foreach($this->_itemlist as $k=>$value){
+               
+           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
+              $tarr[$item->item_id] = $item;    // заменяем
+           }   else {
+              $tarr[$k] = $value;    // старый
+           }
+                
+        }
+     
+        if($this->_rowid == 0) {        // в конец
+            $tarr[$item->item_id] = $item;
+        }
+        $this->_itemlist = $tarr;
+        $this->_rowid = 0;        
+        
+        
+        
+      
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
