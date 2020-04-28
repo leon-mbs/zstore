@@ -61,7 +61,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
 
-        if ($docid > 0) {    //загружаем   содержимок  документа на страницу
+        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -121,6 +121,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
         $this->editdetail->qtystock->setText('');
+        $this->editdetail->editsnumber->setText('');
     }
 
     public function editOnClick($sender) {
@@ -149,20 +150,21 @@ class OutcomeItem extends \App\Pages\Base
             $this->setError("noselitem");
             return;
         }
-
+ 
         $item = Item::load($id);
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
-        //ищем  последню цену
-        $store_id = $this->docform->store->getValue();
-
-        $where = "store_id = {$store_id} and item_id = {$id}    ";
-        if (strlen($item->snumber) > 0) {
-            $where .= " and snumber=" . Stock::qstr($item->snumber);
+        if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
+            $this->setError("needs_serial");
+            return;
         }
-        $s = Stock::getFirst($where, ' stock_id  desc ');
-        if ($s instanceof Stock) {
-            $item->price = $s->partion;
+
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+            $slist = $item->getSerials($store_id);
+
+            if (in_array($item->snumber, $slist) == false) {
+                $this->setWarn('invalid_serialno');
+            }
         }
 
 

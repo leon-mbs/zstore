@@ -128,7 +128,7 @@ class Stock extends \ZCL\DB\Entity
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item, $snumber = '') {
+    public static function pickup($store_id, $item) {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item->item_id} and qty > 0   ";
         if (strlen($item->snumber) > 0) {
@@ -158,7 +158,7 @@ class Stock extends \ZCL\DB\Entity
             } else {
 
                 $where = "store_id = {$store_id} and item_id = {$item->item_id}   ";
-                if (strlen($snumber) > 0) {
+                if (strlen($item->snumber) > 0) {
                     $where .= " and snumber = " . Stock::qstr($item->snumber);
                 }
                 $last = self::getFirst($where, ' stock_id desc ');
@@ -169,7 +169,11 @@ class Stock extends \ZCL\DB\Entity
                     $last->partion = $item->price;
                     $last->snumber = $item->snumber;
                     if (strlen($item->snumber) > 0) {
-                        $last->sdate = time();
+                        if(strlen($item->sdate)==0 || $item->sdate==0)
+                           $last->sdate = time();
+                        else{
+                           $last->sdate = $item->sdate;
+                        }   
                     }
 
                 } else {

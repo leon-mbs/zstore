@@ -15,7 +15,7 @@
             <form zippy="filter" class="form-inline">
 
                 <label for="searchkey">Поиск</label>
-                <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                <input class="form-control mr-sm-2" type="text" zippy="searchkey"  onkeydown="onSearch()" >
                 <label for="searchcat">категория</label>
 
                 <select class="form-control mr-sm-2" zippy="searchcat">
@@ -144,14 +144,7 @@
                         товар появится в соответствующем виджете на главной странице</small>
                 </div>
             </div>
-            {{#usesnumber}}
-            <div class="form-check">
-                <input zippy="edituseserial" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="edituseserial">Учет партий производителя</label>
-            </div>
 
-
-            {{/usesnumber}}
             <div class="form-group row">
                 <label class="col-5 col-form-label" for="editcell">Номер ячейки на складе.</label>
                 <div class="col-7">
@@ -170,6 +163,14 @@
                     <input class="form-control" zippy="editmanufacturer"/>
                 </div>
             </div>
+              {{#usesnumber}}
+            <div class="form-check">
+                <input zippy="edituseserial" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="edituseserial">Учет партий производителя</label>
+            </div>
+
+
+            {{/usesnumber}}        
             <div class="form-check">
                 <input zippy="editpricelist" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="editpricelist">Показывать в прайсе</label>
@@ -275,7 +276,13 @@
 
     });
 
+       function onSearch(ele) {
 
+                if (event.key === 'Enter' || event.keyCode == 13) {
+                    // alert($('#barcode').val()); 
+                    $('#filter').Submit() ;
+                }
+        }
 </script>
 
 </body>

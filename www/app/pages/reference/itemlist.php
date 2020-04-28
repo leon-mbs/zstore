@@ -227,6 +227,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editmsr->setText('шт');
         $this->itemdetail->editimage->setVisible(false);
         $this->itemdetail->editdelimage->setVisible(false);
+        $this->itemdetail->editpricelist->setChecked(true);
         $this->_item = new Item();
 
         if (System::getOption("common", "autoarticle") == 1) {

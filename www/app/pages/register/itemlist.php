@@ -27,7 +27,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->filter->add(new TextInput('searchkey'));
+        $this->filter->add(new TextInput('searchkey')) ;
         $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->filter->add(new DropDownChoice('searchstore', Store::getList(), 0));
 
@@ -254,7 +254,7 @@ class ItemList extends \App\Pages\Base
         $doc->headerdata['storename'] = $store->storename;
         $doc->headerdata['fromquantity'] = $qty;
         $doc->headerdata['toquantity'] = $qty;
-        $doc->notes = "Перемещение партий";
+        $doc->notes = H::l('partmove');  
         $doc->save();
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);

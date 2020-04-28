@@ -147,21 +147,18 @@ class ProdIssue extends \App\Pages\Base
     }
 
     public function editOnClick($sender) {
-        $stock = $sender->getOwner()->getDataItem();
+        $item = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-        $this->editdetail->editquantity->setText($stock->quantity);
-
-        $this->editdetail->editserial->setText($item->snumber);
+        $this->editdetail->editquantity->setText($item->quantity);
 
 
-        $this->editdetail->edittovar->setKey($item->stock_id);
-        $this->editdetail->edittovar->setText($item->itemname);
+        $this->editdetail->edittovar->setKey($item->item_id);
+        $this->editdetail->edittovar->setValue($item->itemname);
+        $this->editdetail->editserial->setValue($item->snumber);
 
-        $st = Stock::load($stock->stock_id);  //для актуального 
-
-        $this->editdetail->qtystock->setText(H::fqty($st->qty));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
         $this->_rowid = $stock->stock_id;
     }
 

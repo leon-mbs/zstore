@@ -58,10 +58,10 @@ class ProdReceipt extends Document
 
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item );
 
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
+                $sc = new Entry($this->document_id,   $st->quantity * $item->price,   $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->save();
             }
