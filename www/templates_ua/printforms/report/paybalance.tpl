@@ -1,20 +1,19 @@
- 
-<table    border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table border="0" class="ctable" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
             Платіжний баланс
         </td>
-    </tr>            
+    </tr>
     <tr>
 
         <td align="center" colspan="2">
-            Період з {{datefrom}} по {{dateto}}  <br>
+            Період з {{datefrom}} по {{dateto}} <br>
         </td>
     </tr>
     <tr>
 
-        <td   colspan="2">
+        <td colspan="2">
             <b>Доходи</b> Д
         </td>
     </tr>
@@ -25,7 +24,7 @@
 
         <td>{{type}}</td>
 
-        <td  align="right">{{in}} </td>
+        <td align="right">{{in}} </td>
 
     </tr>
     {{/_detail}}
@@ -38,7 +37,7 @@
     </tr>
     <tr>
 
-        <td   colspan="2">
+        <td colspan="2">
             <b>Витрати</b>>
         </td>
     </tr>

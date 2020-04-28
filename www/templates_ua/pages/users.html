@@ -1,213 +1,224 @@
 <html>
 
-    <body>
-        <div class="row">
+<body>
+<div class="row">
 
 
+    <div zippy="listpan" class="col-12 col-md-8 col-xl-6">
+        <h3>Користувачі системи</h3>
+        <a zippy="addnew" class="btn btn-outline-success  ">Додати</a>
+        <table class="table table-bordered table-striped table-sm">
 
-            <div  zippy="listpan" class="col-12 col-md-8 col-xl-6">
-                <h3>Користувачі системи</h3>
-                <a zippy="addnew" class="btn btn-outline-success  ">Додати</a>
-                <table class="table table-bordered table-striped table-sm">
+            <thead align="center">
+            <tr>
+                <th>Логін</th>
+                <th>Дата реєс.</th>
 
-                    <thead align="center">
-                        <tr>
-                            <th>Логін</th>
-                            <th  >Дата реєс.</th>
+                <th>Email</th>
 
-                            <th  >Email</th>
+                <th width="24">&nbsp;</th>
+                <th width="24">&nbsp;</th>
+            </tr>
+            </thead>
 
-                            <th width="24">&nbsp;</th>
-                            <th width="24">&nbsp;</th>
-                        </tr>
-                    </thead>
+            <tbody>
+            <tr zippy="userrow">
+                <td zippy="userlogin"></td>
+                <td zippy="created" align="center" style="white-space:nowrap"></td>
 
-                    <tbody>
-                        <tr zippy="userrow">
-                            <td zippy="userlogin"></td>
-                            <td zippy="created" align="center" style="white-space:nowrap"></td>
+                <td zippy="email"></td>
 
-                            <td zippy="email"  ></td>
+                <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
+                <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
+            </tr>
+            </tbody>
+        </table>
 
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
-                            <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                    </tbody>
+    </div>
+
+
+    <div zippy="editpan" class="col-12 col-sm-10  col-md-8  col-lg-6">
+        <h4> Редагування користувача</h4>
+        <form zippy="editform" role="form">
+            <div class="form-group">
+                <label for="editlogin">Логін</label>
+                <input pattern="[_a-zA-Z0-9]+" style="width:200px" class="form-control" zippy="editlogin"
+                       required="required">
+                <small>Допускаються латинські букви, цифри і підкреслення</small>
+            </div>
+            <div class="form-group">
+                <label for="editpass">Пароль</label>
+                <input style="width:200px" class="form-control" zippy="editpass">
+                <span style="font-size:12px">Якщо не змінюється пароль існуючого користувача, залиште порожнім</span>
+            </div>
+            <div class="form-group">
+                <label for="editemail">Email</label>
+                <input style="width:200px" class="form-control" zippy="editemail">
+            </div>
+            <div class="form-group">
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editdisabled">
+                    <label class="form-check-label mr-sm-2 text-danger" for="editdisabled"> Деактивовано</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Віджети на головній сторінці</label>
+
+
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwplanned">
+                    <label class="form-check-label mr-sm-2" for="editwplanned"> Заплановані документи</label>
+                </div>
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwdebitors">
+                    <label class="form-check-label mr-sm-2" for="editwdebitors"> Документи до оплати</label>
+                </div>
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwnoliq">
+                    <label class="form-check-label mr-sm-2" for="editwnoliq"> Неліквідні товари</label>
+                </div>
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwminqty">
+                    <label class="form-check-label mr-sm-2" for="editwminqty"> Мінімальна кількість</label>
+                </div>
+                {{#usesnumber}}
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwsdate">
+                    <label class="form-check-label mr-sm-2" for="editwsdate"> Прострочені товари</label>
+                </div>
+                {{/usesnumber}}
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwrdoc">
+                    <label class="form-check-label mr-sm-2" for="editwrdoc"> Недавні документи </label>
+                </div>
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwopendoc">
+                    <label class="form-check-label mr-sm-2" for="editwopendoc"> Відкриті документи </label>
+                </div>
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwwaited">
+                    <label class="form-check-label mr-sm-2" for="editwwaited"> Очікувані товари </label>
+                </div>
+                <div class="form-check   ">
+                    <input class="form-check-input" type="checkbox" zippy="editwreserved">
+                    <label class="form-check-label mr-sm-2" for="editwreserved">Зарезервовані </label>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label>Доступ до модулів</label>
+
+                {{#ocstore}}
+                <div class="form-check   ">
+
+                    <input class="form-check-input" type="checkbox" zippy="editocstore">
+                    <label class="form-check-label mr-sm-2" for="editocstore"> Інтеграція з опенкарт</label>
+                </div>
+                {{/ocstore}}
+                {{#woocomerce}}
+                <div class="form-check   ">
+
+                    <input class="form-check-input" type="checkbox" zippy="editwoocomerce">
+                    <label class="form-check-label mr-sm-2" for="editwoocomerce"> Інтеграція з Woocommerce</label>
+                </div>
+                {{/woocomerce}}
+
+                {{#shop}}
+                <div class="form-check   ">
+
+                    <input class="form-check-input" type="checkbox" zippy="editshop">
+                    <label class="form-check-label mr-sm-2" for="editshop"> Онлайн каталог </label>
+                </div>
+                {{/shop}}
+                {{#note}}
+                <div class="form-check   ">
+
+                    <input class="form-check-input" type="checkbox" zippy="editnote">
+                    <label class="form-check-label mr-sm-2" for="editnote"> База знань </label>
+                </div>
+                {{/note}}
+                {{#issue}}
+                <div class="form-check   ">
+
+                    <input class="form-check-input" type="checkbox" zippy="editissue">
+                    <label class="form-check-label mr-sm-2" for="editissue"> Завдання </label>
+                </div>
+                {{/issue}}
+
+            </div>
+            {{#usebranch}}
+
+
+            <div class="form-group">
+                <label for="acl">Налаштування доступу до філій</label>
+                <table class="table table-sm table-striped">
+                    <tr zippy="brow">
+                        <td zippy="branch_name"></td>
+                        <td><input zippy="editbr" class="acl" type="checkbox"></td>
+                    </tr>
+
+                </table>
+            </div>
+            {{/usebranch}}
+            <div class="form-group">
+                <label for="acl">Права доступу до сторінок</label>
+                <div class="form-check   ">
+
+                    <input class="form-check-input" type="checkbox" zippy="editonlymy">
+                    <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ лише до власних документів</label>
+                </div>
+                <select style="width:200px" class="form-control" zippy="editacl">
+
+                    <option value="1">Повний доступ</option>
+                    <option value="2">Роздільний доступ</option>
+
+                </select>
+            </div>
+
+
+            <div class="form-group" zippy="metaaccess">
+
+                &nbsp;&nbsp;<span style="cursor:pointer" onclick=" $('.acl').prop('checked', true);"><i
+                    class="far fa-check-square"></i> Виставити всі</span> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <span
+                    style="cursor:pointer" onclick=" $('.acl').prop('checked', false);"><i class="far fa-square"></i> Зняти все</span>
+                <table class="table table-sm table-striped">
+                    <tr>
+                        <th>Сторінока</th>
+                        <th>Тип</th>
+                        <th style="width:30px" title="Перегляд"><i class="fa fa-search"></i></th>
+                        <th style="width:30px" title="Редагування"><i class="fa fa-edit"></i></th>
+                        <th style="width:30px" title="Утвердження і проведення"><i class="fa fa-gavel"></i></th>
+                    </tr>
+                    <tr zippy="metarow">
+
+                        <td zippy="description"></td>
+                        <td zippy="meta_name"></td>
+                        <td><input zippy="viewacc" class="acl" type="checkbox"></td>
+                        <td><input zippy="editacc" class="acl" type="checkbox"></td>
+                        <td><input zippy="exeacc" class="acl" type="checkbox"></td>
+                    </tr>
                 </table>
 
+
             </div>
 
 
+            <div class="form-group">
 
-            <div zippy="editpan" class="col-12 col-sm-10  col-md-8  col-lg-6">
-                <h4> Редагування користувача</h4>   
-                <form zippy="editform" role="form">
-                    <div class="form-group">
-                        <label for="editlogin">Логін</label>
-                        <input pattern="[_a-zA-Z0-9]+"  style="width:200px" class="form-control" zippy="editlogin" required="required">
-                        <small >Допускаються латинські букви, цифри і підкреслення</small>
-                    </div>  
-                    <div class="form-group">
-                        <label for="editpass">Пароль</label>
-                        <input  style="width:200px" class="form-control" zippy="editpass"  >
-                        <span style="font-size:12px">Якщо не змінюється пароль існуючого користувача, залиште порожнім</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="editemail">Email</label>
-                        <input  style="width:200px" class="form-control" zippy="editemail"  >
-                    </div>
-                    <div class="form-group">
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editdisabled">
-                            <label class="form-check-label mr-sm-2 text-danger" for="editdisabled"> Деактивовано</label>
-                        </div>  
-                    </div>   
-                    <div class="form-group">
-                        <label  >Віджети на головній сторінці</label>
-
-
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwplanned">
-                            <label class="form-check-label mr-sm-2" for="editwplanned"> Заплановані документи</label>
-                        </div>                  
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwdebitors">
-                            <label class="form-check-label mr-sm-2" for="editwdebitors"> Документи до оплати</label>
-                        </div>                  
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwnoliq">
-                            <label class="form-check-label mr-sm-2" for="editwnoliq"> Неліквідні товари</label>
-                        </div>                  
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwminqty">
-                            <label class="form-check-label mr-sm-2" for="editwminqty"> Мінімальна кількість</label>
-                        </div>                  
-                        {{#usesnumber}} 
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwsdate">
-                            <label class="form-check-label mr-sm-2" for="editwsdate"> Прострочені товари</label>
-                        </div> 
-                        {{/usesnumber}}                   
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwrdoc">
-                            <label class="form-check-label mr-sm-2" for="editwrdoc"> Недавні документи  </label>
-                        </div>                  
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwopendoc">
-                            <label class="form-check-label mr-sm-2" for="editwopendoc"> Відкриті документи  </label>
-                        </div>                  
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwwaited">
-                            <label class="form-check-label mr-sm-2" for="editwwaited"> Очікувані товари  </label>
-                        </div>                  
-                        <div class="form-check   ">
-                            <input class="form-check-input"  type="checkbox" zippy="editwreserved">
-                            <label class="form-check-label mr-sm-2" for="editwreserved">Зарезервовані  </label>
-                        </div>                  
-
-                    </div>
-                    <div class="form-group">
-                        <label  >Доступ до модулів</label>
-
-                        {{#ocstore}}   
-                        <div class="form-check   ">
-
-                            <input class="form-check-input"  type="checkbox" zippy="editocstore">
-                            <label class="form-check-label mr-sm-2" for="editocstore"> Інтеграція з опенкарт</label>
-                        </div> 
-                        {{/ocstore}}       
-                        {{#woocomerce}}   
-                        <div class="form-check   ">
-
-                            <input class="form-check-input"  type="checkbox" zippy="editwoocomerce">
-                            <label class="form-check-label mr-sm-2" for="editwoocomerce"> Інтеграція з Woocommerce</label>
-                        </div> 
-                        {{/woocomerce}}       
-
-                        {{#shop}}  
-                        <div class="form-check   ">
-
-                            <input class="form-check-input"  type="checkbox" zippy="editshop">
-                            <label class="form-check-label mr-sm-2" for="editshop"> Онлайн каталог </label>
-                        </div> 
-                        {{/shop}}       
-                        {{#note}}  
-                        <div class="form-check   ">
-
-                            <input class="form-check-input"  type="checkbox" zippy="editnote">
-                            <label class="form-check-label mr-sm-2" for="editnote"> База знань  </label>
-                        </div> 
-                        {{/note}}       
-                        {{#issue}}  
-                        <div class="form-check   ">
-
-                            <input class="form-check-input"  type="checkbox" zippy="editissue">
-                            <label class="form-check-label mr-sm-2" for="editissue"> Завдання  </label>
-                        </div> 
-                        {{/issue}}       
-
-                    </div>
-                    {{#usebranch}}
-
-
-                    <div class="form-group">
-                        <label for="acl">Налаштування доступу до філій</label>
-                        <table class="table table-sm table-striped">
-                            <tr zippy="brow"><td zippy="branch_name"> </td> <td><input zippy="editbr" class="acl" type="checkbox"></td></tr>
-
-                        </table>
-                    </div> 
-                    {{/usebranch}}
-                    <div class="form-group">
-                        <label for="acl">Права доступу до сторінок</label>
-                        <div class="form-check   ">
-
-                            <input class="form-check-input"  type="checkbox" zippy="editonlymy">
-                            <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ лише до власних документів</label>
-                        </div>            <select  style="width:200px"  class="form-control" zippy="editacl">
-
-                            <option value="1">Повний доступ </option>
-                            <option value="2">Роздільний доступ</option>
-
-                        </select>
-                    </div> 
-
-
-
-                    <div class="form-group" zippy="metaaccess"> 
-
-                        &nbsp;&nbsp;<span style="cursor:pointer" onclick=" $('.acl').prop('checked', true);"><i class="far fa-check-square"></i> Виставити всі</span> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <span  style="cursor:pointer" onclick=" $('.acl').prop('checked', false);"><i class="far fa-square"></i> Зняти все</span>  
-                        <table class="table table-sm table-striped">
-                            <tr> <th>Сторінока</th><th>Тип</th><th style="width:30px" title="Перегляд"><i class="fa fa-search"></i> </th><th style="width:30px" title="Редагування"><i class="fa fa-edit"></i> </th><th style="width:30px" title="Утвердження і проведення"><i class="fa fa-gavel"></i> </th></tr>
-                            <tr zippy="metarow">
-
-                                <td zippy="description"> </td><td zippy="meta_name"> </td> 
-                                <td><input zippy="viewacc" class="acl" type="checkbox"></td>
-                                <td><input zippy="editacc" class="acl" type="checkbox"></td>
-                                <td><input zippy="exeacc" class="acl" type="checkbox"></td>
-                            </tr>
-                        </table>
-
-
-                    </div> 
-
-
-                    <div class="form-group">
-
-                        <button type="submit" class="btn btn-primary   ">Зберегти</button>
-                        &nbsp; <a zippy="cancel" class="btn btn-light    ">Скасувати</a>
-                    </div>
-                </form> 
+                <button type="submit" class="btn btn-primary   ">Зберегти</button>
+                &nbsp; <a zippy="cancel" class="btn btn-light    ">Скасувати</a>
             </div>
+        </form>
+    </div>
 
-        </div>
-        <script>
-            function check_remove() {
+</div>
+<script>
+    function check_remove() {
 
-                return confirm("Видалити користувача?")
+        return confirm("Видалити користувача?")
 
-            }
+    }
 
-        </script>
-    </body>
+</script>
+</body>
 </html>

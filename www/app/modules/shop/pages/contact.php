@@ -2,11 +2,12 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
 
-class Contact extends Base {
+class Contact extends Base
+{
 
     public function __construct() {
         parent::__construct();
@@ -24,14 +25,13 @@ class Contact extends Base {
         $shop = \App\System::getOptions("shop");
 
 
-
         $message = "<br>Имя: " . $this->messageform->sname->getText();
         $message .= "<br>Контакт: " . $this->messageform->scontact->getText();
         $message .= "<br><br>Сообщение: " . $this->messageform->smessage->getText();
         $message .= "<br>";
 
         \App\Helper::sendLetter($message, $shop['email'], $shop['email'], 'Сообщение с каталога');
-        
+
         $this->setSuccess('sent');
     }
 

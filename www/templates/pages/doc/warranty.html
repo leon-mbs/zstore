@@ -1,119 +1,119 @@
 <html>
 
-    <body>
+<body>
 
 
-        <form zippy="docform">
-            <h3>Гарантийный талон</h3>
+<form zippy="docform">
+    <h3>Гарантийный талон</h3>
 
-            <div class="row">
-                <div class="col-3">
-                    <div class="form-group">
-                        <label for="document_number" >Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
-                    </div>
-                    <div class="form-group">
-                        <label for="document_date" > Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="customer" > Покупатель</label>
-                        <input class="form-control" type="text" zippy="customer"  >
-                    </div>
-                    <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
-
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>                    
-                </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label for="document_number">Номер документа</label>
+                <input class="form-control" type="text" zippy="document_number" required="required">
+            </div>
+            <div class="form-group">
+                <label for="document_date"> Дата</label>
+                <input class="form-control" type="text" zippy="document_date" required="required">
             </div>
 
-            <div class="row">
-                <div class="col-8">
-                    <a zippy="addrow">Добавить товар</a>
-                    <table class="table table-sm">
-                        <tr>
-
-                            <th>Название</th>
-                            <th>Ед.</th>
-                            <th  class="text-right" >Кол.</th>
-                            <th  class="text-right"  >Цена</th>
-                            <th  class="text-right"  >Сумма</th>
-                            <th>Серийный номер</th>
-                            <th>Гарантия </th>
-                            <th width="60"></th>
-                        </tr>
-                        <tr zippy="detail">
-
-                            <td zippy="tovar"></td>
-                            <td zippy="msr"></td>
-                            <td zippy="quantity" class="text-right" ></td>
-                            <td zippy="price" class="text-right" ></td>
-                            <td zippy="amount"  class="text-right" ></td>
-                            <td zippy="sn"  ></td>
-                            <td zippy="warranty"  ></td>
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
+            <div class="form-group">
+                <label for="customer"> Покупатель</label>
+                <input class="form-control" type="text" zippy="customer">
             </div>
-            <div class="row">
-                <div class="col-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
-                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Закрить" class="btn btn-outline-info  ">
+            <div class="form-group  ">
+                <label for="notes">Примечание </label>
 
-                </div>
+                <input class="form-control" type="text" zippy="notes">
+
             </div>
-        </form>
-        <form zippy="editdetail">
-            <h4>Ввод товара </h4>
-            <div class="row">
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="edittovar" >Название</label>
-                        <input placeholder="Начните вводить..." class="form-control "   zippy="edittovar" />
-                        Наличие : <span zippy="qtystock"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            <a zippy="addrow">Добавить товар</a>
+            <table class="table table-sm">
+                <tr>
+
+                    <th>Название</th>
+                    <th>Ед.</th>
+                    <th class="text-right">Кол.</th>
+                    <th class="text-right">Цена</th>
+                    <th class="text-right">Сумма</th>
+                    <th>Серийный номер</th>
+                    <th>Гарантия</th>
+                    <th width="60"></th>
+                </tr>
+                <tr zippy="detail">
+
+                    <td zippy="tovar"></td>
+                    <td zippy="msr"></td>
+                    <td zippy="quantity" class="text-right"></td>
+                    <td zippy="price" class="text-right"></td>
+                    <td zippy="amount" class="text-right"></td>
+                    <td zippy="sn"></td>
+                    <td zippy="warranty"></td>
+                    <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
+            <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+            &nbsp;<input zippy="execdoc" type="submit" value="Закрить" class="btn btn-outline-info  ">
+
+        </div>
+    </div>
+</form>
+<form zippy="editdetail">
+    <h4>Ввод товара </h4>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="edittovar">Название</label>
+                <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
+                Наличие : <span zippy="qtystock"></span>
 
 
-                    </div>
-                    <div class="form-group">
-                        <label for="editquantity" >Количество</label>
-                        <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"
-                               style="width: 70px;">
+            </div>
+            <div class="form-group">
+                <label for="editquantity">Количество</label>
+                <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"
+                       style="width: 70px;">
 
-                    </div>
-                    <div class="form-group">
-                        <label for="editprice" >Цена  </label>
-                        <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
-                               style="width: 70px;">
+            </div>
+            <div class="form-group">
+                <label for="editprice">Цена </label>
+                <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
+                       style="width: 70px;">
 
-                    </div>
-                    <div class="form-group">
-                        <label for="editsn" >Серийный номер</label>
-                        <input class="form-control" type="text" zippy="editsn">
+            </div>
+            <div class="form-group">
+                <label for="editsn">Серийный номер</label>
+                <input class="form-control" type="text" zippy="editsn">
 
-                    </div>
-                    <div class="form-group">
-                        <label for="editwarranty" >Гарантия</label>
-                        <input class="form-control" type="text" zippy="editwarranty">
+            </div>
+            <div class="form-group">
+                <label for="editwarranty">Гарантия</label>
+                <input class="form-control" type="text" zippy="editwarranty">
 
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-light ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-light ">
-                    </div>
-
-
-                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-light ">
+                &nbsp; <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-light ">
             </div>
 
-        </form>
+
+        </div>
+    </div>
+
+</form>
 
 
-    </body>
+</body>
 </html>

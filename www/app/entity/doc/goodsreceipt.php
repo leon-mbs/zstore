@@ -2,14 +2,15 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ приходная  накладая
  *
  */
-class GoodsReceipt extends Document {
+class GoodsReceipt extends Document
+{
 
     public function generateReport() {
 
@@ -44,14 +45,14 @@ class GoodsReceipt extends Document {
             "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
- 
+
         $header['isdisc'] = $this->headerdata["disc"] > 0;
-        $header['isnds']  = $this->headerdata["nds"] > 0;
-        $header['israte'] = ($this->headerdata["rate"] != 0 ) && ($this->headerdata["rate"] != 1 );
+        $header['isnds'] = $this->headerdata["nds"] > 0;
+        $header['israte'] = ($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1);
         $header['disc'] = H::fa($this->headerdata["disc"]);
-        $header['nds']  = H::fa($this->headerdata["nds"]);
-        $header['rate'] = $this->headerdata["rate"] ;
-        
+        $header['nds'] = H::fa($this->headerdata["nds"]);
+        $header['rate'] = $this->headerdata["rate"];
+
         $report = new \App\Report('doc/goodsreceipt.tpl');
 
         $html = $report->generate($header);
@@ -62,26 +63,28 @@ class GoodsReceipt extends Document {
     public function Execute() {
         $types = array();
         $common = \App\System::getOptions("common");
-        if($this->amount==0) return;
+        if ($this->amount == 0) {
+            return;
+        }
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
-         
-             
-            $total=$this->amount;
-             
-            if($this->headerdata["disc"] > 0) {
+
+
+            $total = $this->amount;
+
+            if ($this->headerdata["disc"] > 0) {
                 $total = $total - $this->headerdata["disc"];
-            }  
-            if($this->headerdata["nds"] > 0) {
+            }
+            if ($this->headerdata["nds"] > 0) {
                 $total = $total + $this->headerdata["nds"];
-            }  
-            if(($this->headerdata["rate"] != 0 ) && ($this->headerdata["rate"] != 1 )) {
+            }
+            if (($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1)) {
                 $total = $total * $this->headerdata["rate"];
-            }  
-            $k = $total / $this->amount; 
-            $item->price = $item->price*$k;
-               
-            $item->amount =   $item->price * $item->quantity;    
+            }
+            $k = $total / $this->amount;
+            $item->price = $item->price * $k;
+
+            $item->amount = $item->price * $item->quantity;
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
 
             $sc = new Entry($this->document_id, $item->amount, $item->quantity);
@@ -92,12 +95,11 @@ class GoodsReceipt extends Document {
             $sc->save();
 
 
- 
         }
 
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
 
 

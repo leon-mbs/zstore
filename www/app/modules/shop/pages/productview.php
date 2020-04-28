@@ -2,26 +2,23 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Zippy\Html\Label;
-use \Zippy\Binding\PropertyBinding;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Binding\PropertyBinding as Bind;
-use \App\Modules\Shop\Helper;
-use \Zippy\Html\Image;
-use \App\Modules\Shop\Entity\Product;
-use \App\Modules\Shop\Entity\ProductComment;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\BookmarkableLink;
-use \Zippy\Html\DataList\DataView;
-use \App\System;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \App\Application as App;
+use App\Application as App;
+use App\Modules\Shop\Entity\Product;
+use App\Modules\Shop\Entity\ProductComment;
+use App\Modules\Shop\Helper;
+use App\System;
+use Zippy\Binding\PropertyBinding;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\RedirectLink;
 
 //детализация  по товару, отзывы
-class ProductView extends Base {
+class ProductView extends Base
+{
 
     public $msg, $attrlist, $clist;
     protected $product_id, $gotocomment;
@@ -110,14 +107,16 @@ class ProductView extends Base {
         $datarow->add(new Label("attrname", $item->attributename));
         $meashure = "";
         $value = $item->attributevalue;
-        if ($item->attributetype == 2)
+        if ($item->attributetype == 2) {
             $meashure = $item->valueslist;
+        }
         if ($item->attributetype == 1) {
             $value = $item->attributevalue == 1 ? "Есть" : "Нет";
         }
         $value = $value . $meashure;
-        if ($item->attributevalue == '')
+        if ($item->attributevalue == '') {
             $value = "Н/Д";
+        }
         $datarow->add(new Label("attrvalue", $value));
     }
 
@@ -136,7 +135,7 @@ class ProductView extends Base {
         $product = Product::load($this->product_id);
         $comparelist = \App\Modules\Shop\CompareList::getCompareList();
         if (false == $comparelist->addProduct($product)) {
-            
+
             $this->setWarn('onlythesamecategory');
             return;
         }
@@ -159,7 +158,6 @@ class ProductView extends Base {
         $this->formcomment->rating->setText('0');
         $this->clist = ProductComment::findByProduct($this->product_id);
         $this->commentlist->Reload();
-
 
 
         $this->gotocomment = true;

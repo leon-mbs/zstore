@@ -2,13 +2,14 @@
 
 namespace App;
 
-use \Symfony\Polyfill\Mbstring\Mbstring;
-use \App\Helper as H;
+use App\Helper as H;
+use Symfony\Polyfill\Mbstring\Mbstring;
 
 /**
  * Класс   со  вспомагательными   функциями
  */
-class Util {
+class Util
+{
 
     /**
      * возвращает первые  буквы
@@ -35,8 +36,7 @@ class Util {
         $_data = "";
         $strlen = mb_strlen($string);
         while ($strlen) {
-            $_data .= (" " . mb_substr($string, 0, 1, 'UTF-8'));
-            ;
+            $_data .= (" " . mb_substr($string, 0, 1, 'UTF-8'));;
             $string = mb_substr($string, 1, $strlen, 'UTF-8');
             $strlen = mb_strlen($string, 'UTF-8');
         }
@@ -83,13 +83,14 @@ class Util {
 
         return money2str_ru($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
     }
-    
-    
+
+
 //гривна на  русском    
     public static function money2str_rugr($number) {
 
         return money2str_rugr($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
     }
+
     public static function money2str_ua($number) {
 
         return money2str_ua($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
@@ -131,7 +132,6 @@ define('M2S_KOPS_MANDATORY', 0x02);    // mandatory copecks
 define('M2S_KOPS_SHORT', 0x04);    // shorten copecks
 
 
-
 function money2str_rugr($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
@@ -163,7 +163,7 @@ function money2str_rugr($money, $options = 0) {
 
 // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
-                dec_digits_group($money, -1, 2);
+            dec_digits_group($money, -1, 2);
 
 // process the group if not empty
         if ($grp != 0) {
@@ -174,7 +174,7 @@ function money2str_rugr($money, $options = 0) {
                 $dig = $grp;
 
 // the main case
-            } else
+            } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
@@ -185,27 +185,29 @@ function money2str_rugr($money, $options = 0) {
                             $ret .= $numbers_m[$dig] . ' ';
                             break;
                         } // thousands and copecks are Feminine gender in Russian
-                        elseif (($i == 2 || $i == 0) && $j == 0 && ($dig == 1 || $dig == 2))
+                        elseif (($i == 2 || $i == 0) && $j == 0 && ($dig == 1 || $dig == 2)) {
                             $ret .= $numbers_f[$dig] . ' ';
-
-// the main case
-                        else
-                            $ret .= $numbers_m[(int) ($dig * pow(10, $j))] . ' ';
+                        } // the main case
+                        else {
+                            $ret .= $numbers_m[(int)($dig * pow(10, $j))] . ' ';
+                        }
                     }
                 }
+            }
             $ret .= $units_ru[$i][sk_plural_form($dig)] . ' ';
         } // roubles should be named in case of empty roubles group too
-        elseif ($i == 1 && $ret != '')
+        elseif ($i == 1 && $ret != '') {
             $ret .= $units_ru[1][2] . ' ';
-
-// mandatory copecks
-        elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY))
+        } // mandatory copecks
+        elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
             $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
-                    ' ' . $units_ru[0][2];
+                ' ' . $units_ru[0][2];
+        }
     }
 
     return trim($ret);
 }
+
 function money2str_ru($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
@@ -237,7 +239,7 @@ function money2str_ru($money, $options = 0) {
 
 // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
-                dec_digits_group($money, -1, 2);
+            dec_digits_group($money, -1, 2);
 
 // process the group if not empty
         if ($grp != 0) {
@@ -248,7 +250,7 @@ function money2str_ru($money, $options = 0) {
                 $dig = $grp;
 
 // the main case
-            } else
+            } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
@@ -259,30 +261,30 @@ function money2str_ru($money, $options = 0) {
                             $ret .= $numbers_m[$dig] . ' ';
                             break;
                         } // thousands and copecks are Feminine gender in Russian
-                        elseif (($i == 2 || $i == 0) && $j == 0 && ($dig == 1 || $dig == 2))
+                        elseif (($i == 2 || $i == 0) && $j == 0 && ($dig == 1 || $dig == 2)) {
                             $ret .= $numbers_f[$dig] . ' ';
-
-// the main case
-                        else
-                            $ret .= $numbers_m[(int) ($dig * pow(10, $j))] . ' ';
+                        } // the main case
+                        else {
+                            $ret .= $numbers_m[(int)($dig * pow(10, $j))] . ' ';
+                        }
                     }
                 }
+            }
             $ret .= $units_ru[$i][sk_plural_form($dig)] . ' ';
         } // roubles should be named in case of empty roubles group too
-        elseif ($i == 1 && $ret != '')
+        elseif ($i == 1 && $ret != '') {
             $ret .= $units_ru[1][2] . ' ';
-
-// mandatory copecks
-        elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY))
+        } // mandatory copecks
+        elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
             $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
-                    ' ' . $units_ru[0][2];
+                ' ' . $units_ru[0][2];
+        }
     }
 
     return trim($ret);
 }
 
 
- 
 function money2str_ua($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
@@ -291,7 +293,7 @@ function money2str_ua($money, $options = 0) {
         'вiciм', "дев'ять", 'десять', 'одинадцять', 'дванадцять', 'тринадцять',
         'чотирнадцять', "п'ятнадцять", 'шiстнадцять', 'сiмнадцять', 'вiсiмнадцять',
         "дев'ятнадцять", 'двадцять', 30 => 'тридцять', 40 => 'сорок', 50 => "п'ятдесять",
-        60 =>'шiстдесять', 70 => 'сiмдесять', 80 => 'вiсiмдесять', 90 => "дев'яносто",
+        60 => 'шiстдесять', 70 => 'сiмдесять', 80 => 'вiсiмдесять', 90 => "дев'яносто",
         100 => 'сто', 200 => 'двiстi', 300 => 'триста', 400 => 'чотириста',
         500 => "п'ятсот", 600 => 'шiстьсот', 700 => 'сiмсот', 800 => 'вiсiмсот',
         900 => "дев'ятьсот");
@@ -314,7 +316,7 @@ function money2str_ua($money, $options = 0) {
 
 // each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
-                dec_digits_group($money, -1, 2);
+            dec_digits_group($money, -1, 2);
 
 // process the group if not empty
         if ($grp != 0) {
@@ -325,7 +327,7 @@ function money2str_ua($money, $options = 0) {
                 $dig = $grp;
 
 // the main case
-            } else
+            } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
@@ -336,23 +338,24 @@ function money2str_ua($money, $options = 0) {
                             $ret .= $numbers_m[$dig] . ' ';
                             break;
                         } // thousands and copecks are Feminine gender in Russian
-                        elseif (($i == 2 || $i == 0) && $j == 0 && ($dig == 1 || $dig == 2))
+                        elseif (($i == 2 || $i == 0) && $j == 0 && ($dig == 1 || $dig == 2)) {
                             $ret .= $numbers_f[$dig] . ' ';
-
-// the main case
-                        else
-                            $ret .= $numbers_m[(int) ($dig * pow(10, $j))] . ' ';
+                        } // the main case
+                        else {
+                            $ret .= $numbers_m[(int)($dig * pow(10, $j))] . ' ';
+                        }
                     }
                 }
+            }
             $ret .= $units_ru[$i][sk_plural_form($dig)] . ' ';
         } // roubles should be named in case of empty roubles group too
-        elseif ($i == 1 && $ret != '')
+        elseif ($i == 1 && $ret != '') {
             $ret .= $units_ru[1][2] . ' ';
-
-// mandatory copecks
-        elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY))
+        } // mandatory copecks
+        elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
             $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
-                    ' ' . $units_ru[0][2];
+                ' ' . $units_ru[0][2];
+        }
     }
 
     return trim($ret);
@@ -361,20 +364,22 @@ function money2str_ua($money, $options = 0) {
 
 // service function to select the group of digits
 function dec_digits_group($number, $power, $digits = 1) {
-    return (int) bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
+    return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
 }
 
 // service function to get plural form for the number
 function sk_plural_form($d) {
     $d = $d % 100;
-    if ($d > 20)
+    if ($d > 20) {
         $d = $d % 10;
-    if ($d == 1)
+    }
+    if ($d == 1) {
         return 0;
-    elseif ($d > 0 && $d < 5)
+    } elseif ($d > 0 && $d < 5) {
         return 1;
-    else
+    } else {
         return 2;
+    }
 }
 
 /*

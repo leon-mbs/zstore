@@ -2,27 +2,23 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\MoneyFund;
-use \App\Entity\Pay;
-use \App\Application as App;
-use \App\Helper as H;
-use \App\System as System;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Entity\MoneyFund;
+use App\Entity\Pay;
+use App\Helper as H;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
 
 /**
  * Страница    приходный ордер
  */
-class IncomeMoney extends \App\Pages\Base {
+class IncomeMoney extends \App\Pages\Base
+{
 
     private $_doc;
 
@@ -60,13 +56,15 @@ class IncomeMoney extends \App\Pages\Base {
         }
 
 
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->notes = $this->docform->notes->getText();
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
@@ -89,8 +87,9 @@ class IncomeMoney extends \App\Pages\Base {
 
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -123,11 +122,11 @@ class IncomeMoney extends \App\Pages\Base {
         }
 
         if (($this->_doc->amount > 0) == false) {
-           
+
             $this->setError("noentersum");
         }
         if ($this->docform->mtype->getValue() == 0) {
-            
+
             $this->setError("noselincome");
         }
 

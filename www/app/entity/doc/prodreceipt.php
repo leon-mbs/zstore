@@ -2,14 +2,15 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ   оприходование  с  производства
  *
  */
-class ProdReceipt extends Document {
+class ProdReceipt extends Document
+{
 
     public function generateReport() {
 
@@ -68,7 +69,6 @@ class ProdReceipt extends Document {
         }
 
 
-
         return true;
     }
 
@@ -76,12 +76,11 @@ class ProdReceipt extends Document {
         return 'ОП-000000';
     }
 
-    
 
     public function getRelationBased() {
         $list = array();
         $list['ProdReceipt'] = 'Оприходование  с  производства';
-    
+
         return $list;
-    }    
+    }
 }

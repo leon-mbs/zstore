@@ -2,19 +2,18 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Helper as H;
+use App\Entity\Entry;
+use App\Entity\Stock;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ оприходование товаров
  *
  */
-class IncomeItem extends Document {
+class IncomeItem extends Document
+{
 
     public function Execute() {
-
 
 
         $conn = \ZDB\DB::getConnect();
@@ -32,9 +31,6 @@ class IncomeItem extends Document {
     }
 
     public function generateReport() {
-
-
-
 
 
         $i = 1;

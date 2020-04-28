@@ -2,13 +2,13 @@
 
 namespace App\Modules\Note;
 
-use \App\Entity\User;
-use \ZCL\DB\DB as DB;
+use ZCL\DB\DB as DB;
 
 /**
  * Вспомагательный  класс  для  работы  с  бизнес-данными
  */
-class Helper {
+class Helper
+{
 
     public static function addFile($file, $itemid) {
         $conn = DB::getConnect();

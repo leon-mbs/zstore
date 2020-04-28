@@ -2,14 +2,14 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ приходная  накладая
  *
  */
-class OrderCust extends Document {
+class OrderCust extends Document
+{
 
     public function generateReport() {
 
@@ -43,7 +43,6 @@ class OrderCust extends Document {
         return $html;
     }
 
-  
 
     protected function getNumberTemplate() {
         return 'ЗКП-000000';

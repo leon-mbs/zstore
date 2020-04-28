@@ -2,13 +2,14 @@
 
 namespace App;
 
-use \App\Entity\User;
+use App\Entity\User;
 
 /**
  * Класс  содержащи  методы  работы   с  наиболее  важными
  * системмными  данными
  */
-class System {
+class System
+{
 
     private static $_options = array();   //  для кеширования  
     private static $_cache = array();   //  для кеширования  
@@ -66,7 +67,7 @@ class System {
 
     /**
      * возвращает настройку
-     * 
+     *
      * @param mixed $group
      * @param mixed $option
      */
@@ -90,7 +91,7 @@ class System {
 
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
-        
+
     }
 
     public static function setCache($key, $data) {
@@ -137,7 +138,5 @@ class System {
         return Session::getSession()->imsg;
     }
 
- 
-   
-    
+
 }

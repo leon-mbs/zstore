@@ -8,7 +8,8 @@ namespace App\Entity;
  * @table=metadata
  * @keyfield=meta_id
  */
-class MetaData extends \ZCL\DB\Entity {
+class MetaData extends \ZCL\DB\Entity
+{
 
     const METATYPE_DOC = 1;
     const METATYPE_REP = 2;

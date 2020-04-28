@@ -7,9 +7,9 @@ namespace App\Entity;
  * @table=users
  * @view=users_view
  * @keyfield=user_id
-
  */
-class User extends \ZCL\DB\Entity {
+class User extends \ZCL\DB\Entity
+{
 
     /**
      * @see Entity
@@ -49,10 +49,11 @@ class User extends \ZCL\DB\Entity {
         $this->createdon = strtotime($this->createdon);
 
         $acl = @unserialize($this->acl);
-        if (!is_array($acl))
+        if (!is_array($acl)) {
             $acl = array();
-        $this->acltype = (int) $acl['acltype'];
-        $this->onlymy = (int) $acl['onlymy'];
+        }
+        $this->acltype = (int)$acl['acltype'];
+        $this->onlymy = (int)$acl['onlymy'];
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
         $this->aclexe = $acl['aclexe'];
@@ -61,15 +62,16 @@ class User extends \ZCL\DB\Entity {
         $this->modules = $acl['modules'];
 
         $options = @unserialize($this->options);
-        if (!is_array($options))
+        if (!is_array($options)) {
             $options = array();
+        }
         $this->smartmenu = $options['smartmenu'];
-        $this->defstore = (int) $options['defstore'];
-        $this->defmf = (int) $options['defmf'];
-        $this->pagesize = (int) $options['pagesize'];
-    
-        $this->popupmessage = (int) $options['popupmessage'];
-        $this->hidesidebar = (int) $options['hidesidebar'];
+        $this->defstore = (int)$options['defstore'];
+        $this->defmf = (int)$options['defmf'];
+        $this->pagesize = (int)$options['pagesize'];
+
+        $this->popupmessage = (int)$options['popupmessage'];
+        $this->hidesidebar = (int)$options['hidesidebar'];
 
         parent::afterLoad();
     }
@@ -99,7 +101,7 @@ class User extends \ZCL\DB\Entity {
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
         $options['popupmessage'] = $this->popupmessage;
-      
+
 
         $this->options = serialize($options);
 

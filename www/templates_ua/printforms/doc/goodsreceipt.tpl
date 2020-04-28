@@ -1,4 +1,3 @@
-
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
 
@@ -21,10 +20,10 @@
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
-        <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;"> </th>
-        <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
-        <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кол.</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
@@ -33,10 +32,10 @@
     {{#_detail}}
     <tr>
         <td align="right">{{no}}</td>
-        <td  >{{itemname}}</td>
-        <td  >{{itemcode}}</td>
-        <td align="right">{{snumber}}</td>        
-        <td  >{{msr}}</td>
+        <td>{{itemname}}</td>
+        <td>{{itemcode}}</td>
+        <td align="right">{{snumber}}</td>
+        <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
@@ -50,30 +49,30 @@
     {{^prepaid}}
     {{#isdisc}}
     <tr style="font-weight: bolder;">
-        <td   colspan="7" align="right">Знижка:</td>
-        <td   align="right">{{disc}}</td>
+        <td colspan="7" align="right">Знижка:</td>
+        <td align="right">{{disc}}</td>
     </tr>
-     {{/isdisc}}    
+    {{/isdisc}}
     {{#isnds}}
     <tr style="font-weight: bolder;">
-        <td   colspan="7" align="right">ПДВ:</td>
-        <td   align="right">{{nds}}</td>
+        <td colspan="7" align="right">ПДВ:</td>
+        <td align="right">{{nds}}</td>
     </tr>
-     {{/isnds}}    
+    {{/isnds}}
     {{#israte}}
     <tr style="font-weight: bolder;">
-        <td   colspan="7" align="right">Курс:</td>
-        <td   align="right">{{rate}}</td>
+        <td colspan="7" align="right">Курс:</td>
+        <td align="right">{{rate}}</td>
     </tr>
-     {{/israte}}    
+    {{/israte}}
 
-   <tr style="font-weight: bolder;">
-        <td  colspan="7" align="right">До оплати:</td>
-        <td   align="right">{{payamount}}</td>
+    <tr style="font-weight: bolder;">
+        <td colspan="7" align="right">До оплати:</td>
+        <td align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td   colspan="7" align="right">Оплата:</td>
-        <td   align="right">{{payed}}</td>
+        <td colspan="7" align="right">Оплата:</td>
+        <td align="right">{{payed}}</td>
     </tr>
     {{/prepaid}}
 

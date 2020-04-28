@@ -2,19 +2,18 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Helper as H;
+use App\Entity\Entry;
+use App\Entity\Stock;
+use App\Helper as H;
 
 /**
  * Класс-сущность  Инвентаризация    склада
  *
  */
-class Inventory extends Document {
+class Inventory extends Document
+{
 
     public function Execute() {
-
 
 
         $conn = \ZDB\DB::getConnect();
@@ -27,7 +26,7 @@ class Inventory extends Document {
             //списываем  со склада
             if ($item->quantity > $item->qfact) {
                 $item->quantity = $item->quantity - $item->qfact;
-                $listst = Stock::pickup($this->headerdata['store'], $item );
+                $listst = Stock::pickup($this->headerdata['store'], $item);
                 foreach ($listst as $st) {
                     $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                     $sc->setStock($st->stock_id);
@@ -48,7 +47,6 @@ class Inventory extends Document {
         }
 
 
-
         return true;
     }
 
@@ -61,8 +59,9 @@ class Inventory extends Document {
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
             $q = H::fqty($item->quantity);
-            if ($user->userlogin != 'admin')
+            if ($user->userlogin != 'admin') {
                 $q = '-';
+            }
             $detail[] = array("no" => $i++,
                 "item_name" => $name,
                 "qfact" => $item->qfact,

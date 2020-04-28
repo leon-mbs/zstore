@@ -2,18 +2,17 @@
 
 namespace App\Modules\Note\Pages;
 
-use \App\Application as App;
-use \App\Helper;
-use \App\System;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \App\Modules\Note\Entity\Topic;
-use \App\Modules\Note\Entity\Node;
+use App\Application as App;
+use App\Modules\Note\Entity\Node;
+use App\System;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
 
 /**
  * страница показа  топика  по  публичной ссылке
  */
-class ShowTopic extends \App\Pages\Base {
+class ShowTopic extends \App\Pages\Base
+{
 
     public $_topic;
 
@@ -43,7 +42,7 @@ class ShowTopic extends \App\Pages\Base {
         $node = Node::getFirst("user_id=" . $user->user_id, "node_id  ");
         if ($node == null) {
             $this->setError("noroot");
-           
+
             return;
         }
 

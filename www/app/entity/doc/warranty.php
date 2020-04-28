@@ -2,13 +2,14 @@
 
 namespace App\Entity\Doc;
 
-use \App\Helper as H;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ гарантийного талон
  *
  */
-class Warranty extends Document {
+class Warranty extends Document
+{
 
     public function generateReport() {
 
@@ -42,7 +43,6 @@ class Warranty extends Document {
         return $html;
     }
 
-  
 
     protected function getNumberTemplate() {
         return 'ГТ-000000';

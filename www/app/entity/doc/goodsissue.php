@@ -2,18 +2,18 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
-use \App\Util;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ расходная  накладная
  *
  */
-class GoodsIssue extends Document {
+class GoodsIssue extends Document
+{
 
     public function generateReport() {
-   
+
 
         $i = 1;
         $detail = array();
@@ -28,10 +28,10 @@ class GoodsIssue extends Document {
                     $s = ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
                 }
                 $name .= $s;
-                
+
             }
-            if($item->weight>0) {
-              $weight += $item->weight;  
+            if ($item->weight > 0) {
+                $weight += $item->weight;
             }
 
             $detail[] = array("no" => $i++,
@@ -45,13 +45,13 @@ class GoodsIssue extends Document {
         }
 
         $totalstr = H::sumstr($this->amount);
-     
-        
+
+
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "firmname" => $this->headerdata["firmname"],
             "customer_name" => $this->customer_name,
-            "weight" => $weight >0 ? H::l("allweight",$weight) :'',
+            "weight" => $weight > 0 ? H::l("allweight", $weight) : '',
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],
             "order" => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
@@ -101,14 +101,14 @@ class GoodsIssue extends Document {
             if ($customer->discount > 0) {
                 return; //процент
             } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0 );
+                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
                 $customer->save();
             }
         }
 
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;

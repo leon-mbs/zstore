@@ -2,15 +2,15 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
-use \App\Util;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ возвратная накладная
  *
  */
-class ReturnIssue extends Document {
+class ReturnIssue extends Document
+{
 
     public function generateReport() {
 
@@ -45,7 +45,7 @@ class ReturnIssue extends Document {
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed )
+            "payed" => H::fa($this->payed)
         );
 
         $report = new \App\Report('doc/returnissue.tpl');
@@ -71,7 +71,7 @@ class ReturnIssue extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL);
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL);
             $this->payamount = $this->amount;
         }
 

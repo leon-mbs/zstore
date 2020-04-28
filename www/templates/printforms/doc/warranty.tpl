@@ -1,14 +1,13 @@
- 
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
 
     <tr style="font-weight: bolder;">
         <td></td>
         <td colspan="4">
-            Гарантийный талон {{document_number}} 
+            Гарантийный талон {{document_number}}
         </td>
         <td colspan="3">
-            от {{date}} 
+            от {{date}}
         </td>
     </tr>
     <tr>
@@ -23,7 +22,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="140">Сер. номер</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="70">Гар., мес</th>
     </tr>
-    {{#_detail}} 
+    {{#_detail}}
     <tr>
         <td align="right">{{ no}}</td>
         <td colspan="2">{{tovar_name}}</td>
@@ -33,7 +32,7 @@
         <td align="right">{{sn}}</td>
         <td align="right">{{warranty}}</td>
     </tr>
-    {{/_detail}} 
+    {{/_detail}}
 
     <tr>
         <td colspan="8">&nbsp;</td>
@@ -44,10 +43,10 @@
     <tr>
         <td></td>
         <td colspan="3">
-            <b> Покупатель</b> {{customer_name}} 
+            <b> Покупатель</b> {{customer_name}}
         </td>
         <td colspan="4">
-            <b> Продавец</b> {{firmname}} 
+            <b> Продавец</b> {{firmname}}
         </td>
 
     </tr>

@@ -8,7 +8,8 @@ namespace App\Entity;
  * @table=employees
  * @keyfield=employee_id
  */
-class Employee extends \ZCL\DB\Entity {
+class Employee extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->employee_id = 0;
@@ -40,11 +41,11 @@ class Employee extends \ZCL\DB\Entity {
     protected function afterLoad() {
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->detail);
-        $this->balance = (int) ($xml->balance[0]);
-        $this->login = (string) ($xml->login[0]);
-        $this->email = (string) ($xml->email[0]);
-        $this->phone = (string) ($xml->phone[0]);
-        $this->comment = (string) ($xml->comment[0]);
+        $this->balance = (int)($xml->balance[0]);
+        $this->login = (string)($xml->login[0]);
+        $this->email = (string)($xml->email[0]);
+        $this->phone = (string)($xml->phone[0]);
+        $this->comment = (string)($xml->comment[0]);
         //  $this->ztype   = (int) ($xml->ztype[0]);
         //    $this->zmon    = (int) ($xml->zmon[0]);
         //    $this->advance = (int) ($xml->advance[0]);
@@ -55,8 +56,9 @@ class Employee extends \ZCL\DB\Entity {
 
     //найти  по  логину
     public static function getByLogin($login) {
-        if (strlen($login) == 0)
+        if (strlen($login) == 0) {
             return null;
+        }
         $login = Employee::qstr($login);
         return Employee::getFirst("login=" . $login);
     }

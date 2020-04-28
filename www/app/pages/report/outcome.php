@@ -2,26 +2,26 @@
 
 namespace App\Pages\Report;
 
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Item;
-use \App\Entity\Store;
-use \App\Helper as H;
+use App\Entity\Item;
+use App\Helper as H;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Panel;
 
 /**
  * Отчет по продажам
  */
-class Outcome extends \App\Pages\Base {
+class Outcome extends \App\Pages\Base
+{
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReport('Outcome'))
+        if (false == \App\ACL::checkShowReport('Outcome')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -61,7 +61,7 @@ class Outcome extends \App\Pages\Base {
         $reportname = "outcome";
 
 
-           $this->detail->word->pagename = $reportpage;
+        $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
@@ -82,8 +82,9 @@ class Outcome extends \App\Pages\Base {
 
         $u = "";
 
-        if ($user > 0)
+        if ($user > 0) {
             $u = " and d.user_id={$user} ";
+        }
 
         $detail = array();
         $conn = \ZDB\DB::getConnect();
@@ -158,7 +159,7 @@ class Outcome extends \App\Pages\Base {
                 "dt" => date('Y-m-d', strtotime($row['dt'])),
                 "qty" => H::fqty($row['qty']),
                 "navar" => H::fa($row['navar']),
-                "navarsign" =>  $row['navar']>0,
+                "navarsign" => $row['navar'] > 0,
                 "summa" => H::fa($row['summa'])
             );
         }

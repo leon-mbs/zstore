@@ -3,13 +3,14 @@
 namespace App;
 
 /**
- * Base class for RESTFul    
+ * Base class for RESTFul
  */
-abstract class RestFul {
+abstract class RestFul
+{
 
     /**
-     * 
-     * 
+     *
+     *
      * @param array $params
      */
     public function Execute($params) {

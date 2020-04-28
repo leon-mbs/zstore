@@ -1,8 +1,7 @@
- 
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
-    <tr  >
+    <tr>
         <td colspan="6" align="center">
-            <b> Оприбуткування ТМЦ № {{document_number}} від {{date}}</b> <br> 
+            <b> Оприбуткування ТМЦ № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
 
@@ -13,11 +12,10 @@
     </tr>
 
 
-
     <tr style="font-weight: bolder;">
-        <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Назва</th>
-        <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;"> </th>
-        <th  style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Назва</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
 
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
@@ -41,13 +39,14 @@
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="5" align="right">На суму:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
-    </tr>    
+    </tr>
     <tr>
         <td colspan="6">
-            {{notes}} 
+            {{notes}}
         </td>
 
-    </tr></table>
+    </tr>
+</table>
 
 
 

@@ -2,20 +2,20 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\MoneyFund;
-use \App\Entity\Pay;
-use \App\Helper as H;
+use App\Entity\Pay;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ приходный ордер
  *
  */
-class IncomeMoney extends Document {
+class IncomeMoney extends Document
+{
 
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id,$this->document_date, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
+        Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
 
 
         return true;

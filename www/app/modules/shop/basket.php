@@ -2,10 +2,11 @@
 
 namespace App\Modules\Shop;
 
-use \App\System;
+use App\System;
 
 //класс  корзины
-class Basket implements \Zippy\Interfaces\DataSource {
+class Basket implements \Zippy\Interfaces\DataSource
+{
 
     public $list = array();
 
@@ -28,8 +29,9 @@ class Basket implements \Zippy\Interfaces\DataSource {
         $this->list_ = array_values($this->list);
         $this->list = array();
         foreach ($this->list_ as $p) {
-            if ($p->product_id == $product_id)
+            if ($p->product_id == $product_id) {
                 continue;
+            }
             $this->list[$p->product_id] = $p;
         }
     }

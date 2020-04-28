@@ -2,32 +2,25 @@
 
 namespace App\Pages\Register;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Store;
-use \App\Entity\Stock;
-use \App\Entity\Item;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\Store;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
 
 /**
  * журнал движения  ТМЦ
  */
-class StockList extends \App\Pages\Base {
+class StockList extends \App\Pages\Base
+{
 
     private $_doc = null;
     private $_ptlist = null;
@@ -38,8 +31,9 @@ class StockList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('StockList'))
+        if (false == \App\ACL::checkShowReg('StockList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -75,7 +69,7 @@ class StockList extends \App\Pages\Base {
 
         $row->add(new Label('partion', H::fa($doc->partion)));
         $row->add(new Label('qty', H::fqty($doc->quantity)));
-        $row->add(new Label('price', H::fa($doc->quantity == 0 ? '' : round(abs($doc->amount / $doc->quantity)) )));
+        $row->add(new Label('price', H::fa($doc->quantity == 0 ? '' : round(abs($doc->amount / $doc->quantity)))));
 
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('snumber', $doc->snumber));
@@ -99,8 +93,9 @@ class StockList extends \App\Pages\Base {
 
         $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
 
-        if (false == \App\ACL::checkShowDoc($this->_doc, true))
+        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
+        }
 
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
@@ -111,7 +106,8 @@ class StockList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class StockListDataSource implements \Zippy\Interfaces\DataSource {
+class StockListDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -153,8 +149,9 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource {
         $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
         $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
-        if ($count > 0)
+        if ($count > 0) {
             $sql .= " limit {$start},{$count}";
+        }
 
         $docs = \App\Entity\Entry::findBySql($sql);
 
@@ -162,7 +159,7 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
 
 }

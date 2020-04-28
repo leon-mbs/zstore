@@ -2,21 +2,21 @@
 
 namespace App\Modules\OCStore;
 
-use \App\System;
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Label;
-use \Zippy\WebApplication as App;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \Zippy\Html\Link\ClickLink;
-use \App\Helper as H;
+use App\Entity\Item;
+use App\Helper as H;
+use App\System;
+use Zippy\Binding\PropertyBinding as Prop;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\WebApplication as App;
 
-class Items extends \App\Pages\Base {
+class Items extends \App\Pages\Base
+{
 
     public $_items = array();
 
@@ -34,7 +34,7 @@ class Items extends \App\Pages\Base {
         if (is_array($cats) == false) {
             $cats = array();
             $this->setWarn('do_connect');
-             
+
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -58,11 +58,12 @@ class Items extends \App\Pages\Base {
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url);
-        if ($json === false)
+        if ($json === false) {
             return;
+        }
         $data = json_decode($json, true);
         if (!isset($data)) {
-           
+
             $this->setError("invalidresponse");
             \App\Helper::log($json);
             return;
@@ -71,17 +72,22 @@ class Items extends \App\Pages\Base {
 
             $cat = $this->filter->searchcat->getValue();
             $where = "disabled <> 1   ";
-            if($cat>0) $where .= " and cat_id=".$cat ;
+            if ($cat > 0) {
+                $where .= " and cat_id=" . $cat;
+            }
             $items = Item::find($where, "itemname");
             foreach ($items as $item) {
-                if (strlen($item->item_code) == 0)
+                if (strlen($item->item_code) == 0) {
                     continue;
-                if (in_array($item->item_code, $data['articles']))
-                    continue; //уже  в  магазине
-               $item->qty   =  $item->getQuantity(); 
-                      
-                if (strlen($item->qty) == 0)
+                }
+                if (in_array($item->item_code, $data['articles'])) {
+                    continue;
+                } //уже  в  магазине
+                $item->qty = $item->getQuantity();
+
+                if (strlen($item->qty) == 0) {
                     $item->qty = 0;
+                }
                 $this->_items[] = $item;
             }
 
@@ -107,12 +113,13 @@ class Items extends \App\Pages\Base {
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $cat = $this->exportform->ecat->getValue();
- 
+
 
         $elist = array();
         foreach ($this->_items as $item) {
-            if ($item->ch == false)
+            if ($item->ch == false) {
                 continue;
+            }
             $elist[] = array('name' => $item->itemname,
                 'description' => $item->description,
                 'sku' => $item->item_code,
@@ -121,7 +128,7 @@ class Items extends \App\Pages\Base {
             );
         }
         if (count($elist) == 0) {
-          
+
             $this->setError('noselitem');
             return;
         }
@@ -135,8 +142,9 @@ class Items extends \App\Pages\Base {
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url, $fields);
-        if ($json === false)
+        if ($json === false) {
             return;
+        }
         $data = json_decode($json, true);
 
 
@@ -144,7 +152,7 @@ class Items extends \App\Pages\Base {
             $this->setError($data['error']);
             return;
         }
-        $this->setSuccess( 'exported_items', count($elist));
+        $this->setSuccess('exported_items', count($elist));
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -157,8 +165,9 @@ class Items extends \App\Pages\Base {
         $elist = array();
         $items = Item::find("disabled <> 1  ");
         foreach ($items as $item) {
-            if (strlen($item->item_code) == 0)
+            if (strlen($item->item_code) == 0) {
                 continue;
+            }
 
             $qty = $item->getQuantity();
             $elist[$item->item_code] = round($qty);
@@ -171,8 +180,9 @@ class Items extends \App\Pages\Base {
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url, $fields);
-        if ($json === false)
+        if ($json === false) {
             return;
+        }
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
@@ -189,8 +199,9 @@ class Items extends \App\Pages\Base {
         $elist = array();
         $items = Item::find("disabled <> 1  ");
         foreach ($items as $item) {
-            if (strlen($item->item_code) == 0)
+            if (strlen($item->item_code) == 0) {
                 continue;
+            }
             $elist[$item->item_code] = $item->getPrice($modules['ocpricetype']);
         }
 
@@ -201,8 +212,9 @@ class Items extends \App\Pages\Base {
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url, $fields);
-        if ($json === false)
+        if ($json === false) {
             return;
+        }
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
@@ -221,8 +233,9 @@ class Items extends \App\Pages\Base {
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url);
-        if ($json === false)
+        if ($json === false) {
             return;
+        }
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
@@ -233,33 +246,42 @@ class Items extends \App\Pages\Base {
         $i = 0;
         foreach ($data['products'] as $product) {
 
-            if (strlen($product['sku']) == 0)
+            if (strlen($product['sku']) == 0) {
                 continue;
+            }
             $cnt = Item::findCnt("item_code=" . Item::qstr($product['sku']));
-            if ($cnt > 0)
-                continue; //уже  есть с  таким  артикулом
+            if ($cnt > 0) {
+                continue;
+            } //уже  есть с  таким  артикулом
 
             $product['name'] = str_replace('&quot;', '"', $product['name']);
             $item = new Item();
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];
             $item->description = $product['description'];
-            $w = $product['weight'] ;
-            $w = str_replace(',','.',$w) ;
-            if($product['weight_class_id']==2) $w=$w/1000; //граммы
-            if($w>0){
-               $item->weight  =  floatval($w);
+            $w = $product['weight'];
+            $w = str_replace(',', '.', $w);
+            if ($product['weight_class_id'] == 2) {
+                $w = $w / 1000;
+            } //граммы
+            if ($w > 0) {
+                $item->weight = floatval($w);
             }
-            if ($modules['ocpricetype'] == 'price1')
+            if ($modules['ocpricetype'] == 'price1') {
                 $item->price1 = $product['price'];
-            if ($modules['ocpricetype'] == 'price2')
+            }
+            if ($modules['ocpricetype'] == 'price2') {
                 $item->price2 = $product['price'];
-            if ($modules['ocpricetype'] == 'price3')
+            }
+            if ($modules['ocpricetype'] == 'price3') {
                 $item->price3 = $product['price'];
-            if ($modules['ocpricetype'] == 'price4')
+            }
+            if ($modules['ocpricetype'] == 'price4') {
                 $item->price4 = $product['price'];
-            if ($modules['ocpricetype'] == 'price5')
+            }
+            if ($modules['ocpricetype'] == 'price5') {
                 $item->price5 = $product['price'];
+            }
 
 
             if ($common['useimages'] == 1) {
@@ -270,7 +292,7 @@ class Items extends \App\Pages\Base {
                     $image = new \App\Entity\Image();
                     $image->content = $im;
                     $image->mime = $imagedata['mime'];
-                    
+
                     $image->save();
                     $item->image_id = $image->image_id;
                 }
@@ -279,7 +301,7 @@ class Items extends \App\Pages\Base {
             $i++;
         }
 
-        $this->setSuccess("loaded_items",$i);
+        $this->setSuccess("loaded_items", $i);
     }
 
 }

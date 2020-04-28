@@ -8,7 +8,8 @@ namespace App\Modules\Shop\Entity;
  * @keyfield=attribute_id
  * @view=shop_attributes_view
  */
-class ProductAttribute extends \ZCL\DB\Entity {
+class ProductAttribute extends \ZCL\DB\Entity
+{
 
     public $searchvalue;
     public $nodata = 0;

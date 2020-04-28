@@ -2,34 +2,28 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Service;
-use \App\Entity\Store;
-use \App\Entity\Stock;
-use \App\Entity\Prodarea;
-use \App\Entity\Item;
-use \App\Entity\Employee;
-use \App\Entity\Equipment;
-use \App\Application as App;
-use \App\Helper as H;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Entity\Employee;
+use App\Entity\Equipment;
+use App\Entity\Prodarea;
+use App\Entity\Service;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода  наряда  на  работу
  */
-class Task extends \App\Pages\Base {
+class Task extends \App\Pages\Base
+{
 
     private $_doc;
     public $_servicelist = array();
@@ -81,7 +75,6 @@ class Task extends \App\Pages\Base {
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
 
-
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -125,8 +118,9 @@ class Task extends \App\Pages\Base {
         $this->docform->add(new DataView('detail4', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_eqlist')), $this, 'detail4OnRow'))->Reload();
 
 
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function cancelrowOnClick($sender) {
@@ -142,7 +136,6 @@ class Task extends \App\Pages\Base {
         $service = $row->getDataItem();
 
         $row->add(new Label('service', $service->service_name));
-
 
 
         $row->add(new Label('hours', $service->hours));
@@ -168,15 +161,15 @@ class Task extends \App\Pages\Base {
         $this->docform->setVisible(false);
 
 
-
         $this->editdetail->edithours->setText($service->hours);
 
         $this->editdetail->editservice->setValue($service->service_id);
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $service = $sender->owner->getDataItem();
 
         $this->_servicelist = array_diff_key($this->_servicelist, array($service->service_id => $this->_servicelist[$service->service_id]));
@@ -219,7 +212,7 @@ class Task extends \App\Pages\Base {
     public function saverow3OnClick($sender) {
         $id = $this->editdetail3->editemp->getValue();
         if ($id == 0) {
-          
+
             $this->setError("noselexecutor");
             return;
         }
@@ -255,7 +248,7 @@ class Task extends \App\Pages\Base {
     public function saverow4OnClick($sender) {
         $id = $this->editdetail4->editeq->getValue();
         if ($id == 0) {
-          
+
             $this->setError("noseleq");
             return;
         }
@@ -281,8 +274,9 @@ class Task extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
@@ -330,10 +324,11 @@ class Task extends \App\Pages\Base {
             }
 
             $conn->CommitTrans();
-            if ($isEdited)
+            if ($isEdited) {
                 App::RedirectBack();
-            else
+            } else {
                 App::Redirect("\\App\\Pages\\Register\\TaskList");
+            }
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -357,7 +352,7 @@ class Task extends \App\Pages\Base {
             $this->setError('nouniquedocnumber_created');
         }
         if (strlen($this->_doc->document_date) == 0) {
-           
+
             $this->setError('enterdatedoc');
         }
         if (count($this->_servicelist) == 0) {
@@ -378,7 +373,6 @@ class Task extends \App\Pages\Base {
         $id = $sender->getValue();
 
         $item = Service::load($id);
-
 
 
         //   $this->editdetail->editprice->setText($price);

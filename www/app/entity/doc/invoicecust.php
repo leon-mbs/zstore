@@ -2,14 +2,14 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ счет от поставщика
  *
  */
-class InvoiceCust extends Document {
+class InvoiceCust extends Document
+{
 
     public function generateReport() {
 
@@ -37,12 +37,12 @@ class InvoiceCust extends Document {
         );
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;
-        $header['isnds']  = $this->headerdata["nds"] > 0;
-        $header['israte'] = ($this->headerdata["rate"] != 0 ) && ($this->headerdata["rate"] != 1 );
+        $header['isnds'] = $this->headerdata["nds"] > 0;
+        $header['israte'] = ($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1);
         $header['disc'] = H::fa($this->headerdata["disc"]);
-        $header['nds']  = H::fa($this->headerdata["nds"]);
-        $header['rate'] = $this->headerdata["rate"] ;
-    
+        $header['nds'] = H::fa($this->headerdata["nds"]);
+        $header['rate'] = $this->headerdata["rate"];
+
         $report = new \App\Report('doc/invoicecust.tpl');
 
         $html = $report->generate($header);
@@ -53,7 +53,7 @@ class InvoiceCust extends Document {
     public function Execute() {
 
         if ($this->headerdata['payment'] > 0 && $this->payed) {
-            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
 
         return true;

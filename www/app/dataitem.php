@@ -3,7 +3,8 @@
 namespace App;
 
 // вспомагательный   класс  для   вывода  простых  списков
-class DataItem implements \Zippy\Interfaces\DataItem {
+class DataItem implements \Zippy\Interfaces\DataItem
+{
 
     public $id;
     protected $fields = array();
@@ -29,7 +30,7 @@ class DataItem implements \Zippy\Interfaces\DataItem {
 
     /**
      * возвращает  список DataItem заполненый с запроса
-     * 
+     *
      * @param mixed $sql
      */
     public static function query($sql) {

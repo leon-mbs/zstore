@@ -2,26 +2,28 @@
 
 namespace App\Pages\Report;
 
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Panel;
-use \App\Helper as H;
+use App\Helper as H;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Panel;
 
 /**
  * АВС анализ
  */
-class ABC extends \App\Pages\Base {
+class ABC extends \App\Pages\Base
+{
 
     private $typelist = array();
 
     public function __construct() {
         parent::__construct();
 
-        if (false == \App\ACL::checkShowReport('ABC'))
+        if (false == \App\ACL::checkShowReport('ABC')) {
             return;
+        }
 
         $this->typelist[1] = H::l('abc1');
         $this->typelist[2] = H::l('abc2');
@@ -42,7 +44,7 @@ class ABC extends \App\Pages\Base {
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-        
+
         $this->detail->add(new RedirectLink('excel', "abc"));
         $this->detail->add(new RedirectLink('pdf', "abc"));
         $this->detail->add(new Label('preview'));
@@ -75,7 +77,6 @@ class ABC extends \App\Pages\Base {
         $to = $this->filter->to->getDate();
 
 
-
         $detail = array();
 
         if ($type == 1) {
@@ -96,26 +97,32 @@ class ABC extends \App\Pages\Base {
 
         $detail = $this->calc($detail);
 
-        $total=0;
-        $totala=0;
-        $totalb=0;
-        $totalc=0;
-        foreach($detail as $d){
-            $total += $d['value'] ;
-            if($d['group']=='A') $totala += $d['value'] ;
-            if($d['group']=='B') $totalb += $d['value'] ;
-            if($d['group']=='C') $totalc += $d['value'] ;
+        $total = 0;
+        $totala = 0;
+        $totalb = 0;
+        $totalc = 0;
+        foreach ($detail as $d) {
+            $total += $d['value'];
+            if ($d['group'] == 'A') {
+                $totala += $d['value'];
+            }
+            if ($d['group'] == 'B') {
+                $totalb += $d['value'];
+            }
+            if ($d['group'] == 'C') {
+                $totalc += $d['value'];
+            }
         }
-        
-        
+
+
         $header = array('from' => date('d.m.Y', $from),
             "_detail" => $detail,
             'to' => date('d.m.Y', $to),
             "type" => $this->typelist[$type],
-            'totala'=>$totala,
-            'totalb'=>$totalb,
-            'totalc'=>$totalc,
-            'total'=>$total
+            'totala' => $totala,
+            'totalb' => $totalb,
+            'totalc' => $totalc,
+            'total' => $total
         );
         $report = new \App\Report('report/abc.tpl');
 
@@ -144,7 +151,7 @@ class ABC extends \App\Pages\Base {
         H::log($sql);
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $row['value'] = round($row['value']  );
+            $row['value'] = round($row['value']);
             $list[] = $row;
         }
 
@@ -248,8 +255,8 @@ class ABC extends \App\Pages\Base {
 
         return $list;
     }
-    
-    
+
+
     //выполняет расчет  АВС
     private function calc($detail) {
 
@@ -272,20 +279,23 @@ class ABC extends \App\Pages\Base {
         }
         $val = 0;
         for ($i = 0; $i < count($_detail); $i++) {
-            if ($sum == 0)
+            if ($sum == 0) {
                 continue;
+            }
             $_detail[$i]['perc'] = $_detail[$i]['value'] / $sum * 100;
-          //  $_detail[$i]['value'] = $_detail[$i]['value'];
+            //  $_detail[$i]['value'] = $_detail[$i]['value'];
             $_detail[$i]['percsum'] = $_detail[$i]['perc'] + $val;
             if ($_detail[$i]['percsum'] <= 80) {
                 $_detail[$i]['group'] = 'A';
                 $_detail[$i]['color'] = '#AAFFAA';
-            } else if ($_detail[$i]['percsum'] <= 95) {
-                $_detail[$i]['group'] = 'B';
-                $_detail[$i]['color'] = 'CCCCFF';
             } else {
-                $_detail[$i]['group'] = 'C';
-                $_detail[$i]['color'] = 'yellow';
+                if ($_detail[$i]['percsum'] <= 95) {
+                    $_detail[$i]['group'] = 'B';
+                    $_detail[$i]['color'] = 'CCCCFF';
+                } else {
+                    $_detail[$i]['group'] = 'C';
+                    $_detail[$i]['color'] = 'yellow';
+                }
             }
             $val = $_detail[$i]['percsum'];
             $_detail[$i]['perc'] = number_format($_detail[$i]['perc'], 2, '.', '');

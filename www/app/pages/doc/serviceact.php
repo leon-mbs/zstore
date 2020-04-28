@@ -2,31 +2,30 @@
 
 namespace App\Pages\Doc;
 
-use \App\Application as App;
-use \App\Entity\Customer;
-use \App\Entity\Doc\Document;
-use \App\Entity\Service;
-use \App\System;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\MoneyFund;
-use \App\Helper as H;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\MoneyFund;
+use App\Entity\Service;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода  акта выполненных работ
  */
-class ServiceAct extends \App\Pages\Base {
+class ServiceAct extends \App\Pages\Base
+{
 
     public $_servicelist = array();
     private $_doc;
@@ -46,7 +45,7 @@ class ServiceAct extends \App\Pages\Base {
         $this->docform->add(new TextInput('device'));
         $this->docform->add(new TextInput('devsn'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -200,7 +199,6 @@ class ServiceAct extends \App\Pages\Base {
         $this->editdetail->editdesc->setText('');
 
 
-
         $this->editdetail->editprice->setText("0");
     }
 
@@ -315,11 +313,13 @@ class ServiceAct extends \App\Pages\Base {
 
             if ($customer->discount > 0) {
                 $disc = round($total * ($customer->discount / 100));
-            } else if ($customer->bonus > 0) {
-                if ($total >= $customer->bonus) {
-                    $disc = $customer->bonus;
-                } else {
-                    $disc = $total;
+            } else {
+                if ($customer->bonus > 0) {
+                    if ($total >= $customer->bonus) {
+                        $disc = $customer->bonus;
+                    } else {
+                        $disc = $total;
+                    }
                 }
             }
         }

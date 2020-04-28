@@ -2,15 +2,16 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
  * Класс-сущность  локумент акт  о  выполненных работах
  *
  *
  */
-class ServiceAct extends Document {
+class ServiceAct extends Document
+{
 
     public function generateReport() {
 
@@ -57,7 +58,7 @@ class ServiceAct extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;
@@ -95,7 +96,7 @@ class ServiceAct extends Document {
             $header['gar'] = 'Гарантия: ' . $this->headerdata['gar'];
         }
         $detail = array();
-        $i=1;
+        $i = 1;
         foreach ($this->unpackDetails('detaildata') as $ser) {
             $detail[] = array("no" => $i++,
                 "service_name" => $ser->service_name,
