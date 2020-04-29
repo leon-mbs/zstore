@@ -2,30 +2,30 @@
 
 namespace App\Pages\Register;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SortLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Customer;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \App\Filter;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Filter;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SortLink;
+use Zippy\Html\Panel;
 
 /**
  * журнал  докуметов
  */
-class DocList extends \App\Pages\Base {
+class DocList extends \App\Pages\Base
+{
 
     public $_doc;
 
@@ -36,8 +36,9 @@ class DocList extends \App\Pages\Base {
      */
     public function __construct($docid = 0) {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('DocList'))
+        if (false == \App\ACL::checkShowReg('DocList')) {
             return;
+        }
 
 
         $filter = Filter::getFilter("doclist");
@@ -62,8 +63,9 @@ class DocList extends \App\Pages\Base {
         $this->filter->searchcust->setText($filter->customer_name);
         $this->filter->add(new TextInput('searchnumber', $filter->searchnumber));
 
-        if (strlen($filter->docgroup) > 0)
+        if (strlen($filter->docgroup) > 0) {
             $this->filter->docgroup->setValue($filter->docgroup);
+        }
 
 
         $this->add(new SortLink("sortdoc", "meta_desc", $this, "onSort"));
@@ -92,13 +94,12 @@ class DocList extends \App\Pages\Base {
             $this->filter->searchnumber->setText($dc->document_number);
             $doclist->Reload();
         }
-        $this->add(new Form('statusform'))->SetVisible(false);
-        ;
+        $this->add(new Form('statusform'))->SetVisible(false);;
         $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new TextInput('refcomment'));
 
-        $this->add(new ClickLink('csv', $this, 'oncsv'));     
+        $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
     public function onErase($sender) {
@@ -113,12 +114,9 @@ class DocList extends \App\Pages\Base {
         $filter->searchnumber = '';
 
         $this->filter->clean();
-        $this->filter->to->setDate(time());
-        ;
-        $this->filter->from->setDate(time() - (7 * 24 * 3600));
-        ;
-        $this->filterOnSubmit($this->filter);
-        ;
+        $this->filter->to->setDate(time());;
+        $this->filter->from->setDate(time() - (7 * 24 * 3600));;
+        $this->filterOnSubmit($this->filter);;
     }
 
     public function filterOnSubmit($sender) {
@@ -150,7 +148,7 @@ class DocList extends \App\Pages\Base {
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('branch', $doc->branch_name));
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
-        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
+        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
@@ -241,8 +239,9 @@ class DocList extends \App\Pages\Base {
 
     public function show($doc) {
         $this->_doc = $doc;
-        if (false == \App\ACL::checkShowDoc($this->_doc, true))
+        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
+        }
 
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
@@ -255,8 +254,9 @@ class DocList extends \App\Pages\Base {
     //редактирование
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkEditDoc($item, true))
+        if (false == \App\ACL::checkEditDoc($item, true)) {
             return;
+        }
         $type = H::getMetaType($item->meta_id);
         $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
         //   $item = $class::load($item->document_id);
@@ -271,19 +271,20 @@ class DocList extends \App\Pages\Base {
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkEditDoc($doc, true))
+        if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
+        }
 
 
         $user = System::getUser();
         if ($doc->user_id != $user->user_id && $user->userlogin != 'admin') {
-             
+
             $this->setError("candeleteadmin");
             return;
         }
         $f = $doc->checkStates(array(Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-           
+
             $this->setError("dochassentorrecieve");
             return;
         }
@@ -291,7 +292,7 @@ class DocList extends \App\Pages\Base {
         $list = $doc->getChildren();
         if (count($list) > 0) {
             $this->setError("dochaschilld");
-            
+
             return;
         }
 
@@ -316,8 +317,8 @@ class DocList extends \App\Pages\Base {
             if ($doc->state == Document::STATE_WA && $doc->user_id == $user->user_id) {
                 //свой может  отменить
             } else {
-       
-                $this->setError('notallowedcanceldoc' , $doc->meta_desc);
+
+                $this->setError('notallowedcanceldoc', $doc->meta_desc);
                 return;
             }
         }
@@ -325,11 +326,11 @@ class DocList extends \App\Pages\Base {
 
         $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
         if ($f) {
-           $this->setWarn("dochas_sent_rec_closed");
+            $this->setWarn("dochas_sent_rec_closed");
         }
         $list = $doc->getChildren('', true);
         if (count($list) > 0) {
-            
+
             $this->setError("dochasnocanceledchilld");
             return;
         }
@@ -350,7 +351,7 @@ class DocList extends \App\Pages\Base {
             $this->setError('notallowedexedoc');
             return;
         }
-        $this->_doc= $this->_doc->cast();
+        $this->_doc = $this->_doc->cast();
         if ($sender->id == "bap") {
             $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
             $this->_doc->updateStatus($newstate);
@@ -410,16 +411,17 @@ class DocList extends \App\Pages\Base {
         flush();
         die;
     }
-    
+
 }
 
 /**
  *  Источник  данных  для   списка  документов
  */
-class DocDataSource implements \Zippy\Interfaces\DataSource {
+class DocDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private function getWhere() {
-        $user = System::getUser();
+        //$user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");
@@ -441,7 +443,6 @@ class DocDataSource implements \Zippy\Interfaces\DataSource {
         }
 
 
-
         return $where;
     }
 
@@ -459,7 +460,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
-    
+
 }

@@ -1,160 +1,161 @@
 <html>
-    <head>
+<head>
 
-    </head>
-    <body>
+</head>
+<body>
 
 
-        <form zippy="docform">
-            <h3> Инвентаризация
-                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
-                   data-placement="bottom" data-content="Документ  позволяет  ввести текущие количества  на складе  и внести  корективы
+<form zippy="docform">
+    <h3> Инвентаризация
+        <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
+           data-placement="bottom" data-content="Документ  позволяет  ввести текущие количества  на складе  и внести  корективы
                    в зависимости от разницы  в ту или  иную  сторону. Фактическое  количество  может  
-                   видеть аддминистратор  при  просмотре документа"></i> 
-            </h3>
+                   видеть аддминистратор  при  просмотре документа"></i>
+    </h3>
 
-            <div class="row">
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="document_number" >Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" >
-                    </div>
-                    <div class="form-group">
-                        <label for="document_date" > Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
-                    </div>
-                    <div class="form-group  ">
-                        <label for="store" >Склад</label>
-                        <select class="form-control" zippy="store">
-                            <option value="0">Не выбран</option>                        
-                        </select>
-                    </div>
-
-                    <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
-
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>
-
-                </div>
+    <div class="row">
+        <div class="col-12 col-md-3">
+            <div class="form-group">
+                <label for="document_number">Номер документа</label>
+                <input class="form-control" type="text" zippy="document_number">
             </div>
-            <div class="row">
-                <div class="col-12 col-md-8 col-xl-6">
-                    {{#usescanner}} 
-                    <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off"  autofocus type="text" zippy="barcode"  onkeydown="onBarCode()"  > 
-                        &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm"  >+</a>
-
-                    </div>
-                    {{/usescanner}}
-                    &nbsp; <a zippy="addrow">Добавить товар</a>
-
-                    <table class="table table-sm">
-                        <tr>
-                            <th>Название</th>
-
-                            {{#usesnumber}} 
-                            <th  >Серия</th>
-                            <th  >Дата</th>
-                            {{/usesnumber}} 
-                            <!--     <th width="40"  class="text-right" >Кол. </th> -->
-                            <th   class="text-right" > </th>
-                            <th width="40"  class="text-center" >Кол.</th>
-                            <th   class="text-left" > </th>
-
-
-                            <th width="50"></th>
-                        </tr>
-                        <tr zippy="detail">
-                            <td zippy="item"></td>
-
-                            {{#usesnumber}} 
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}} 
-                            <!--    <td zippy="quantity"  class="text-right" ></td>-->
-                            <td   class="text-right" > 
-                                <a zippy="minus"><i class="fa fa-minus"></i></a>
-                            </td>
-                            <td   class="text-center" >
-                                <span zippy="qfact"></span>
-                            </td> 
-                            <td   class="text-left" > 
-                                <a zippy="plus"><i class="fa fa-plus"></i></a>
-                                &nbsp;</td>
-
-                            <td>  <a zippy="delete"><i class="fa fa-trash"></i></a></td>
-
-
-                        </tr>
-                    </table>
-
-
-                </div>
+            <div class="form-group">
+                <label for="document_date"> Дата</label>
+                <input class="form-control" type="text" zippy="document_date" required="required">
             </div>
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-light">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
-
-                </div>
+            <div class="form-group  ">
+                <label for="store">Склад</label>
+                <select class="form-control" zippy="store">
+                    <option value="0">Не выбран</option>
+                </select>
             </div>
 
+            <div class="form-group  ">
+                <label for="notes">Примечание </label>
 
-        </p>
+                <input class="form-control" type="text" zippy="notes">
 
-    </form>
-    <form zippy="editdetail">
-        <h4>Ввод товара </h4>
-        <div class="row">
-            <div class="col-12 col-md-4">
+            </div>
 
-                <div class="form-group">
-                    <label for="edititem" >Наименование</label>
-                    <input class="form-control" zippy="edititem"  placeholder="Начните вводить  ">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-8 col-xl-6">
+            {{#usescanner}}
+            <div class="navbar nav justify-content-start">
+                Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
+            </div>
+            {{/usescanner}}
+            &nbsp; <a zippy="addrow">Добавить товар</a>
+
+            <table class="table table-sm">
+                <tr>
+                    <th>Название</th>
+
+                    {{#usesnumber}}
+                    <th>Серия</th>
+                    <th>Дата</th>
+                    {{/usesnumber}}
+                    <!--     <th width="40"  class="text-right" >Кол. </th> -->
+                    <th class="text-right"></th>
+                    <th width="40" class="text-center">Кол.</th>
+                    <th class="text-left"></th>
+
+
+                    <th width="50"></th>
+                </tr>
+                <tr zippy="detail">
+                    <td zippy="item"></td>
+
+                    {{#usesnumber}}
+                    <td zippy="snumber"></td>
+                    <td zippy="sdate"></td>
+                    {{/usesnumber}}
+                    <!--    <td zippy="quantity"  class="text-right" ></td>-->
+                    <td class="text-right">
+                        <a zippy="minus"><i class="fa fa-minus"></i></a>
+                    </td>
+                    <td class="text-center">
+                        <span zippy="qfact"></span>
+                    </td>
+                    <td class="text-left">
+                        <a zippy="plus"><i class="fa fa-plus"></i></a>
+                        &nbsp;
+                    </td>
+
+                    <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
+
+
+                </tr>
+            </table>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-light">
+            &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
+            &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+
+        </div>
+    </div>
+
+
+    </p>
+
+</form>
+<form zippy="editdetail">
+    <h4>Ввод товара </h4>
+    <div class="row">
+        <div class="col-12 col-md-4">
+
+            <div class="form-group">
+                <label for="edititem">Наименование</label>
+                <input class="form-control" zippy="edititem" placeholder="Начните вводить  ">
+
+            </div>
+            {{#usesnumber}}
+            <div class="form-group">
+                <label for="editserial">Партия поставщика</label>
+                <div>
+                    <input type="text" zippy="editserial" class="form-control"
+                    ></input>
                 </div>
-                {{#usesnumber}} 
-                <div class="form-group">
-                    <label for="editserial" >Партия поставщика</label>
-                    <div>
-                        <input   type="text" zippy="editserial" class="form-control"
-                                 ></input>
-                    </div>
+            </div>
+            {{/usesnumber}}
+            <div class="form-group">
+                <label for="editquantity">Количество</label>
+                <div>
+                    <input style="width:100px;" type="text" zippy="editquantity" class="form-control"
+                           required="required" pattern="[0-9\.]+"></input>
                 </div>
-                {{/usesnumber}} 
-                <div class="form-group">
-                    <label for="editquantity" >Количество</label>
-                    <div>
-                        <input style="width:100px;" type="text" zippy="editquantity" class="form-control"
-                               required="required" pattern="[0-9\.]+"></input>
-                    </div>
-                </div>
+            </div>
 
-                <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Отменить" class="btn   btn-light">
-                </div>
+            <div class="form-group">
+                <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
+                    type="button" zippy="cancelrow" value="Отменить" class="btn   btn-light">
             </div>
         </div>
+    </div>
 
-    </form>
-    <script>
-        $(document).ready(function () {
+</form>
+<script>
+    $(document).ready(function () {
 
-            $('#barcode').focus();
-        });
+        $('#barcode').focus();
+    });
 
-        function onBarCode(ele) {
+    function onBarCode(ele) {
 
-            if (event.key === 'Enter' || event.keyCode == 13) {
-                // alert($('#barcode').val()); 
-                $('#addcode').click()
-            }
+        if (event.key === 'Enter' || event.keyCode == 13) {
+            // alert($('#barcode').val());
+            $('#addcode').click()
         }
-    </script>
+    }
+</script>
 
 </body>
 

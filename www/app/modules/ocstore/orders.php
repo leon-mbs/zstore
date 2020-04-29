@@ -2,20 +2,21 @@
 
 namespace App\Modules\OCStore;
 
-use \App\System;
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Label;
-use \Zippy\WebApplication as App;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \Zippy\Html\Link\ClickLink;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\System;
+use Zippy\Binding\PropertyBinding as Prop;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\WebApplication as App;
 
-class Orders extends \App\Pages\Base {
+class Orders extends \App\Pages\Base
+{
 
     public $_neworders = array();
     public $_eorders = array();
@@ -62,8 +63,9 @@ class Orders extends \App\Pages\Base {
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url, $fields);
-        if ($json === false)
+        if ($json === false) {
             return;
+        }
         $data = json_decode($json, true);
         if (!isset($data)) {
             $this->setError("invalidresponse");
@@ -71,7 +73,6 @@ class Orders extends \App\Pages\Base {
             return;
         }
         if ($data['error'] == "") {
-
 
 
             foreach ($data['orders'] as $ocorder) {
@@ -86,8 +87,8 @@ class Orders extends \App\Pages\Base {
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
                     if ($code == "") {
-                        $this->setWarn("noarticle_inorder",$product['name'],$ocorder['order_id']);
-                        
+                        $this->setWarn("noarticle_inorder", $product['name'], $ocorder['order_id']);
+
                     }
                 }
 
@@ -123,22 +124,24 @@ class Orders extends \App\Pages\Base {
 
             $neworder = Document::create('Order');
             $neworder->document_number = $neworder->nextNumber();
-            if (strlen($neworder->document_number) == 0)
+            if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'OC00001';
+            }
             $neworder->customer_id = $modules['occustomer_id'];
 
             //товары
             $tlist = array();
             foreach ($shoporder->_products_ as $product) {
                 //ищем по артикулу 
-                if (strlen($product['sku']) == 0)
+                if (strlen($product['sku']) == 0) {
                     continue;
+                }
                 $code = Item::qstr($product['sku']);
 
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
-                    
-                    $this->setWarn("nofoundarticle_inorder",$product['name'],$shoporder['order_id']);
+
+                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -155,10 +158,12 @@ class Orders extends \App\Pages\Base {
             $neworder->amount = round($shoporder->total);
             $neworder->notes = "OC номер:{$shoporder->order_id};";
             $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-            if (strlen($shoporder->email) > 0)
+            if (strlen($shoporder->email) > 0) {
                 $neworder->notes .= " Email:" . $shoporder->email . ";";
-            if (strlen($shoporder->telephone) > 0)
+            }
+            if (strlen($shoporder->telephone) > 0) {
                 $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
+            }
             $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Комментарий:" . $shoporder->comment . ";";
             $neworder->save();
@@ -167,7 +172,7 @@ class Orders extends \App\Pages\Base {
 
             $i++;
         }
-        $this->setInfo( 'imported_orders',$i)   ;
+        $this->setInfo('imported_orders', $i);
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -195,18 +200,19 @@ class Orders extends \App\Pages\Base {
 
         $st = $this->updateform->estatus->getValue();
         if ($st == 0) {
- 
+
             $this->setError('noselstatus');
             return;
         }
         $elist = array();
         foreach ($this->_eorders as $order) {
-            if ($order->ch == false)
+            if ($order->ch == false) {
                 continue;
+            }
             $elist[$order->headerdata['ocorder']] = $st;
         }
         if (count($elist) == 0) {
-           
+
             $this->setError('noselorder');
             return;
         }
@@ -217,21 +223,23 @@ class Orders extends \App\Pages\Base {
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateorder&' . System::getSession()->octoken;
         $json = Helper::do_curl_request($url, $fields);
-        if ($json === false)
+        if ($json === false) {
             return;
+        }
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
             $this->setError($data['error']);
             return;
         }
-        
-        $this->setSuccess("refrehed_orders",count($elist));
+
+        $this->setSuccess("refrehed_orders", count($elist));
 
 
         foreach ($this->_eorders as $order) {
-            if ($order->ch == false)
+            if ($order->ch == false) {
                 continue;
+            }
             $order->headerdata['ocorderback'] = 1;
             $order->save();
         }

@@ -2,37 +2,28 @@
 
 namespace App\Modules\Issue\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Image;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\BookmarkableLink;
-use \Zippy\Html\Link\SubmitLink;
-use \ZCL\DB\EntityDataSource;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \App\Application as App;
-use \App\System;
-
-use \App\Filter;
-use \App\Modules\Issue\Entity\Project;
-use \App\Modules\Issue\Entity\Issue;
-use \App\Entity\User;
+use App\Application as App;
+use App\Entity\User;
+use App\Modules\Issue\Entity\Issue;
+use App\Modules\Issue\Entity\Project;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\BookmarkableLink;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 /**
  * Главная страница
  */
-class IssueList extends \App\Pages\Base {
+class IssueList extends \App\Pages\Base
+{
 
     public $_user;
     public $_issue;
@@ -55,15 +46,17 @@ class IssueList extends \App\Pages\Base {
 
         $this->add(new Form('filter'))->onSubmit($this, 'onFilter');
         $where = 'status <>' . Project::STATUS_CLOSED;
-        if ($project_id > 0)
+        if ($project_id > 0) {
             $where .= " or project_id=" . $project_id;
+        }
         $projects = Project::findArray('project_name', $where, 'project_name');
         $this->filter->add(new DropDownChoice('searchproject', $projects, $project_id));
 
 
         $this->filter->add(new TextInput('searchnumber'));
-        if ($id > 0)
+        if ($id > 0) {
             $this->filter->searchnumber->setText($id);
+        }
 
         //пользователи ассоциированные с сотрудниками
 
@@ -169,10 +162,12 @@ class IssueList extends \App\Pages\Base {
         $issue = $row->getDataItem();
         $row->add(new Label('issue_number', '#' . $issue->issue_id));
         $row->issue_number->setAttribute('class', 'badge badge-success');
-        if ($issue->priority == Issue::PRIORITY_HIGH)
+        if ($issue->priority == Issue::PRIORITY_HIGH) {
             $row->issue_number->setAttribute('class', 'badge badge-danger');
-        if ($issue->priority == Issue::PRIORITY_LOW)
+        }
+        if ($issue->priority == Issue::PRIORITY_LOW) {
             $row->issue_number->setAttribute('class', 'badge badge-warning');
+        }
 
         $row->add(new BookmarkableLink('title', '/issue/' . $issue->issue_id))->setValue($issue->issue_name);
         $row->add(new Label('emp', \App\Util::getLabelName($issue->username)));
@@ -187,13 +182,13 @@ class IssueList extends \App\Pages\Base {
 
         if ($this->_issue->status == Issue::STATUS_CLOSED) {
             $this->setError('issueclosed');
-            
+
             return;
         }
 
 
         if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
-            
+
             $this->setError('editallowedaa');
             return;
         }
@@ -218,22 +213,24 @@ class IssueList extends \App\Pages\Base {
         $this->_issue->priority = $sender->editpr->getValue();
         $this->_issue->hours = $sender->edithours->getText();
         $this->_issue->user_id = $sender->editemp->getValue();
-        if ($this->_issue->user_id == 0)
+        if ($this->_issue->user_id == 0) {
             $this->_issue->user_id = $this->_user->user_id;
+        }
         if ($this->_issue->issue_id == 0) {
 
             $this->_issue->createdby = $this->_user->user_id;
             $this->_issue->createdbyname = $this->_user->username;
         }
         if ($this->_issue->project_id == 0) {
-          
+
             $this->setError('noselproject');
             return;
         }
         $idnew = $this->_issue->issue_id == 0;
         $this->_issue->save();
-        if ($idnew)
+        if ($idnew) {
             $this->_issue->addStatusLog();
+        }
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
         $this->listpan->list->Reload();
@@ -242,15 +239,17 @@ class IssueList extends \App\Pages\Base {
 
     public function openIssue($issue) {
         $this->_issue = $issue;
-        if ($this->_issue == null)
+        if ($this->_issue == null) {
             return;
+        }
         $this->listpan->msgpan->setVisible(true);
         $bd = "badge-success";
-        if ($this->_issue->priority == Issue::PRIORITY_HIGH)
+        if ($this->_issue->priority == Issue::PRIORITY_HIGH) {
             $bd = "badge-danger";
-        ;
-        if ($this->_issue->priority == Issue::PRIORITY_LOW)
-            $bd = "badge-warning";;
+        };
+        if ($this->_issue->priority == Issue::PRIORITY_LOW) {
+            $bd = "badge-warning";
+        };
         $this->listpan->msgpan->mtitle->setText('<span class="badge ' . $bd . '">#' . $this->_issue->issue_id . '</span> ' . $this->_issue->issue_name, true);
         $this->listpan->msgpan->mdesc->setText($this->_issue->desc, true);
         $this->listpan->msgpan->stform->ststatus->setValue($this->_issue->status);
@@ -280,7 +279,7 @@ class IssueList extends \App\Pages\Base {
 
         if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
             $this->setError('delallowedaa');
-           
+
             return;
         }
 
@@ -302,8 +301,9 @@ class IssueList extends \App\Pages\Base {
         $msg->user_id = $this->_user->user_id;
         $msg->item_id = $this->_issue->issue_id;
         $msg->item_type = \App\Entity\Message::TYPE_ISSUE;
-        if (strlen($msg->message) == 0)
+        if (strlen($msg->message) == 0) {
             return;
+        }
         $msg->save();
 
         $this->listpan->msgpan->addmsgform->msgdata->setText('');
@@ -315,8 +315,9 @@ class IssueList extends \App\Pages\Base {
         $names = $this->listpan->msgpan->addmsgform->edittags->getTags();
         foreach ($names as $n) {
             $u = User::getFirst('username=' . User::qstr($n));
-            if ($u instanceof User)
+            if ($u instanceof User) {
                 $not[] = $u->user_id;
+            }
         }
         foreach ($not as $u) {
 
@@ -324,7 +325,7 @@ class IssueList extends \App\Pages\Base {
             $n->user_id = $u;
             $n->message = " Коментарий к задаче  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
             $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}/#msgankor\">Ответить</a> ";
-            $n->sender_name = $user->username;
+            $n->sender_name = System::getUser()->getUserName();
             $n->save();
         }
 
@@ -363,7 +364,7 @@ class IssueList extends \App\Pages\Base {
 
         $file = $sender->addfile->getFile();
         if ($file['size'] > 10000000) {
-         
+
             $this->getOwnerPage()->setError("filemore10M");
             return;
         }
@@ -439,7 +440,8 @@ class IssueList extends \App\Pages\Base {
 
 }
 
-class IssueDS implements \Zippy\Interfaces\DataSource {
+class IssueDS implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -456,14 +458,18 @@ class IssueDS implements \Zippy\Interfaces\DataSource {
         $conn = \ZDB\DB::getConnect();
 
         $where = " 1=1 ";
-        if ($status == 0)
+        if ($status == 0) {
             $where .= " and status <> " . Issue::STATUS_CLOSED;
-        if ($status < 100 && $status > 0)
+        }
+        if ($status < 100 && $status > 0) {
             $where .= " and status = " . $status;
-        if ($project > 0)
+        }
+        if ($project > 0) {
             $where .= " and project_id = " . $project;
-        if ($emp > 0)
+        }
+        if ($emp > 0) {
             $where .= " and user_id = " . $emp;
+        }
 
         if (strlen($number) > 0) {
 
@@ -486,7 +492,7 @@ class IssueDS implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
 
 }

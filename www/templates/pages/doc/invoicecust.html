@@ -1,322 +1,331 @@
 <html>
-    <head>
+<head>
 
-    </head>
-    <body>
-
-
-        <form zippy="docform" enctype="multipart/form-data">
-            <h3> Счет входящий </h3>
-            <div class="row">
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="document_number" >Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
-                    </div>
-
-                    <div class="form-group  ">
-                        <label for="customer"  >Поставщик</label>
-                        <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
-
-                    </div>
-
-                    <div class="form-group  ">
-                        <label for="notes" >Примечание </label>
-
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="document_date" > Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
-                    </div> 
-                    <div class="form-group  ">
-                        <label for="payment" >Оплата</label>
-                        <select class="form-control" zippy="payment">
-                            <option value="0">Не  выбрано</option>
-
-                        </select>
-                    </div> 
+</head>
+<body>
 
 
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-10 col-lg-8">
-                    <a zippy="addrow">Добавить позицию</a>
-                    <table class="table  table-sm">
-                        <tr>
-
-                            <th>Наименование</th>
-                            <th  >Код</th>
-                            <th  >Ед.</th>
-                            <th   class="text-right">Кол.</th>
-                            <th   class="text-right">Цена</th>
-
-                            <th   class="text-right">Сумма</th>
-
-                            <th width="50"></th>
-                        </tr>
-                        <tr zippy="detail">
-
-                            <td zippy="item"></td>
-                            <td zippy="code"></td>
-                            <td zippy="msr"></td>
-                            <td zippy="quantity" class="text-right"></td>
-                            <td zippy="price" class="text-right"></td>
-
-                            <td zippy="amount" class="text-right"></td>
-
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr style="font-weight: bolder;">
-                            <td colspan="5" class="text-right">Всего:</td>
-                            <td zippy="total" class="text-right"></td>
-                            <td> </td>
-                        </tr>
-                         <tr style="font-weight: bolder;" id="tankor">
-                            <td data-label="nds" colspan="5" class="text-right">НДС:</td>
-                            <td  zippy="nds"  class="text-right"></td>
-                            <td  data-label="nds"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i class="fa fa-edit"></i></a></td>
-                        </tr>
-                        <tr style="font-weight: bolder;"  >
-                            <td data-label="disc" colspan="5" class="text-right">Скидка:</td>
-                            <td zippy="disc"   class="text-right"></td>
-                            <td  data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i class="fa fa-edit"></i></a></td>
-                        </tr>
-                        <tr style="font-weight: bolder;"  >
-                            <td data-label="rate" colspan="5" class="text-right">Курс валюты:</td>
-                            <td zippy="rate" class="text-right"></td>
-                            <td  data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i class="fa fa-edit"></i></a></td>
-                        </tr>
-                          <tr style="font-weight: bolder;">
-                            <td colspan="5" class="text-right">К оплате:</td>
-                            <td zippy="payamount" class="text-right"></td>
-                            <td><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i class="fa fa-edit"></i></a> </td>
-                        </tr>
-                     
-                        <tr style="font-weight: bolder;">
-                            <td colspan="5" class="text-right">Внесена оплата:</td>
-                            <td zippy="payed" class="text-right"></td>
-                            <td><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i class="fa fa-edit"></i></a> </td>
-                        </tr>
-
-                    </table>
-
-                </div>
-            </div>  
-            <div class="row">
-                <div class="col-12 col-md-4">
-                    <div class="form-group">
-                        <label for="scan" > &nbsp; &nbsp;Скан документа</label>
-                        <input class="form-control" type="file" zippy="scan"  >
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
-                    &nbsp;<input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
-
-
-                </div>
+<form zippy="docform" enctype="multipart/form-data">
+    <h3> Счет входящий </h3>
+    <div class="row">
+        <div class="col-12 col-md-3">
+            <div class="form-group">
+                <label for="document_number">Номер документа</label>
+                <input class="form-control" type="text" zippy="document_number" required="required">
             </div>
 
-            <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">К оплате</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">  
-                                <input class="form-control" type="text" zippy="editpayamount" pattern="[0-9\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+            <div class="form-group  ">
+                <label for="customer">Поставщик</label>
+                <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
 
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-  
-            <div id="modalnds" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">НДС</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">  
-                                <input class="form-control" type="text" zippy="editnds" pattern="[0-9\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bnds" class="ml-2 btn btn-info  ">
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
             </div>
 
-  
-          <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Скидка</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">  
-                                <input class="form-control" type="text" zippy="editdisc" pattern="[0-9\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bdisc" class="ml-2 btn btn-info  ">
+            <div class="form-group  ">
+                <label for="notes">Примечание </label>
 
-                                </div>
-                            </div>
-                        </div>
+                <input class="form-control" type="text" zippy="notes">
 
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="form-group">
+                <label for="document_date"> Дата</label>
+                <input class="form-control" type="text" zippy="document_date" required="required">
+            </div>
+            <div class="form-group  ">
+                <label for="payment">Оплата</label>
+                <select class="form-control" zippy="payment">
+                    <option value="0">Не выбрано</option>
+
+                </select>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 col-lg-8">
+            <a zippy="addrow">Добавить позицию</a>
+            <table class="table  table-sm">
+                <tr>
+
+                    <th>Наименование</th>
+                    <th>Код</th>
+                    <th>Ед.</th>
+                    <th class="text-right">Кол.</th>
+                    <th class="text-right">Цена</th>
+
+                    <th class="text-right">Сумма</th>
+
+                    <th width="50"></th>
+                </tr>
+                <tr zippy="detail">
+
+                    <td zippy="item"></td>
+                    <td zippy="code"></td>
+                    <td zippy="msr"></td>
+                    <td zippy="quantity" class="text-right"></td>
+                    <td zippy="price" class="text-right"></td>
+
+                    <td zippy="amount" class="text-right"></td>
+
+                    <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+                <tr style="font-weight: bolder;">
+                    <td colspan="5" class="text-right">Всего:</td>
+                    <td zippy="total" class="text-right"></td>
+                    <td></td>
+                </tr>
+                <tr style="font-weight: bolder;" id="tankor">
+                    <td data-label="nds" colspan="5" class="text-right">НДС:</td>
+                    <td zippy="nds" class="text-right"></td>
+                    <td data-label="nds"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i
+                            class="fa fa-edit"></i></a></td>
+                </tr>
+                <tr style="font-weight: bolder;">
+                    <td data-label="disc" colspan="5" class="text-right">Скидка:</td>
+                    <td zippy="disc" class="text-right"></td>
+                    <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
+                            class="fa fa-edit"></i></a></td>
+                </tr>
+                <tr style="font-weight: bolder;">
+                    <td data-label="rate" colspan="5" class="text-right">Курс валюты:</td>
+                    <td zippy="rate" class="text-right"></td>
+                    <td data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i
+                            class="fa fa-edit"></i></a></td>
+                </tr>
+                <tr style="font-weight: bolder;">
+                    <td colspan="5" class="text-right">К оплате:</td>
+                    <td zippy="payamount" class="text-right"></td>
+                    <td><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayamount"><i
+                            class="fa fa-edit"></i></a></td>
+                </tr>
+
+                <tr style="font-weight: bolder;">
+                    <td colspan="5" class="text-right">Внесена оплата:</td>
+                    <td zippy="payed" class="text-right"></td>
+                    <td><a href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i
+                            class="fa fa-edit"></i></a></td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <div class="form-group">
+                <label for="scan"> &nbsp; &nbsp;Скан документа</label>
+                <input class="form-control" type="file" zippy="scan">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
+            &nbsp;<input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+            &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
+
+
+        </div>
+    </div>
+
+    <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">К оплате</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group  ">
+                        <input class="form-control" type="text" zippy="editpayamount" pattern="[0-9\.]+">
+                        <div class="input-group-append">
+                            <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+
+                        </div>
                     </div>
                 </div>
+
             </div>
-             
-            
-            <div id="modalrate" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Курс валюты</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">  
-                                <input class="form-control" type="text" zippy="editrate" pattern="[0-9\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="brate" class="ml-2 btn btn-info  ">
+        </div>
+    </div>
 
-                                </div>
-                            </div>
-                        </div>
+    <div id="modalnds" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">НДС</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group  ">
+                        <input class="form-control" type="text" zippy="editnds" pattern="[0-9\.]+">
+                        <div class="input-group-append">
+                            <input type="submit" value="OK" zippy="bnds" class="ml-2 btn btn-info  ">
 
+                        </div>
                     </div>
                 </div>
+
             </div>
-             
-            
-            <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Оплата</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+        </div>
+    </div>
+
+
+    <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Скидка</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group  ">
+                        <input class="form-control" type="text" zippy="editdisc" pattern="[0-9\.]+">
+                        <div class="input-group-append">
+                            <input type="submit" value="OK" zippy="bdisc" class="ml-2 btn btn-info  ">
+
                         </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">  
-                                <input class="form-control" type="text" zippy="editpayed" pattern="[0-9\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
+                    </div>
+                </div>
 
-                                </div>
-                            </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="modalrate" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Курс валюты</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group  ">
+                        <input class="form-control" type="text" zippy="editrate" pattern="[0-9\.]+">
+                        <div class="input-group-append">
+                            <input type="submit" value="OK" zippy="brate" class="ml-2 btn btn-info  ">
+
                         </div>
-
                     </div>
                 </div>
+
             </div>
-        
-  
-  
-        </form>
+        </div>
+    </div>
 
 
-        <form zippy="editdetail">
-            <h4>Ввод товара </h4>
-            <div class="row">
-                <div class="col-4">
+    <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Оплата</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group  ">
+                        <input class="form-control" type="text" zippy="editpayed" pattern="[0-9\.]+">
+                        <div class="input-group-append">
+                            <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
 
-
-                    <div class="form-group">
-
-                        <label for="edititem">Название </label>
-                        <input placeholder="Начните вводить..." class="form-control "   zippy="edititem" />
-                        <a style="font-size:smaller" zippy="addnewitem">Добавить новый</a>
-
-
-
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editquantity">Количество</label>
-                        <input autocomplete="off" class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"
-                               style="width: 100px;"></input>
-                    </div>
-
-
-                    <div class="form-group">
-                        <label for="editprice">Цена  </label>
-                        <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
-                               style="width: 100px;">
-                    </div>
-
-                    <div class="form-group">
-                        <input zippy="saverow" type="submit" value="Сохранить" class="btn btn-outline-primary"> <input type="button" zippy="cancelrow" value="Отменить"       class="btn btn-light ">
+                        </div>
                     </div>
                 </div>
+
             </div>
-        </form>
+        </div>
+    </div>
 
-        <form zippy="editnewitem">
-            <h3>&nbsp;Новый товар </h3>
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
 
-                    <div class="form-group">
-                        <label for="editnewitemname">Название </label>
-                        <input  class="form-control "   zippy="editnewitemname" required="required" />       
-                    </div>
-                    <div class="form-group">
-                        <label for="editnewitemcode">Код</label>
-                        <input class="form-control" type="text" zippy="editnewitemcode"  ></input>
-                    </div>
-                    <div class="form-group  ">
-                        <label  for="editnewcat">Категория</label>
+</form>
 
-                        <select   class="form-control" zippy="editnewcat">
-                            <option value="0">Не задана</option>
-                        </select>
 
-                    </div>
+<form zippy="editdetail">
+    <h4>Ввод товара </h4>
+    <div class="row">
+        <div class="col-4">
 
-                    <div class="form-group">
-                        <input zippy="savenewitem" type="submit" value="Сохранить" class="btn btn-outline-primary">
-                        <input type="button"   zippy="cancelnewitem"          value="Отменить"                                                                                                            class="btn btn-light ">
-                    </div>
-                </div>
+
+            <div class="form-group">
+
+                <label for="edititem">Название </label>
+                <input placeholder="Начните вводить..." class="form-control " zippy="edititem"/>
+                <a style="font-size:smaller" zippy="addnewitem">Добавить новый</a>
+
+
             </div>
-        </form>
+
+            <div class="form-group">
+                <label for="editquantity">Количество</label>
+                <input autocomplete="off" class="form-control" type="text" zippy="editquantity" required="required"
+                       pattern="[0-9\.]+"
+                       style="width: 100px;"></input>
+            </div>
 
 
+            <div class="form-group">
+                <label for="editprice">Цена </label>
+                <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required"
+                       pattern="[0-9\.]+"
+                       style="width: 100px;">
+            </div>
 
-    </body>
+            <div class="form-group">
+                <input zippy="saverow" type="submit" value="Сохранить" class="btn btn-outline-primary"> <input
+                    type="button" zippy="cancelrow" value="Отменить" class="btn btn-light ">
+            </div>
+        </div>
+    </div>
+</form>
+
+<form zippy="editnewitem">
+    <h3>&nbsp;Новый товар </h3>
+    <div class="row">
+        <div class="col-12 col-md-4 col-xl-3">
+
+            <div class="form-group">
+                <label for="editnewitemname">Название </label>
+                <input class="form-control " zippy="editnewitemname" required="required"/>
+            </div>
+            <div class="form-group">
+                <label for="editnewitemcode">Код</label>
+                <input class="form-control" type="text" zippy="editnewitemcode"></input>
+            </div>
+            <div class="form-group  ">
+                <label for="editnewcat">Категория</label>
+
+                <select class="form-control" zippy="editnewcat">
+                    <option value="0">Не задана</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <input zippy="savenewitem" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                <input type="button" zippy="cancelnewitem" value="Отменить" class="btn btn-light ">
+            </div>
+        </div>
+    </div>
+</form>
+
+
+</body>
 </html>

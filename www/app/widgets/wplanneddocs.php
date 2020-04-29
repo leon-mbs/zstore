@@ -2,23 +2,20 @@
 
 namespace App\Widgets;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \App\Helper;
-use \App\System;
-use \App\Entity\Doc\Document;
-use \Carbon\Carbon;
+use App\Entity\Doc\Document;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
 
 /**
  * Виджет для  просмотра запланированых документов
  */
-class WPlannedDocs extends \Zippy\Html\PageFragment {
+class WPlannedDocs extends \Zippy\Html\PageFragment
+{
 
     public function __construct($id) {
         parent::__construct($id);
-
 
 
         $visible = (strpos(System::getUser()->widgets, 'wplanned') !== false || System::getUser()->userlogin == 'admin');

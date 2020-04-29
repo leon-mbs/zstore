@@ -1,23 +1,22 @@
- 
-<table class="ctable"   border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0" class="ctable" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="8">
-            Движение по складу 
+            Движение по складу
         </td>
-    </tr>            
+    </tr>
     <tr>
 
         <td align="center" colspan="8">
-            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Склад: <strong>{{store}}</strong> 
+            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; Склад: <strong>{{store}}</strong>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px"  >Дата</th>
-        <th style="border: solid black 1px" >Код</th>
-        <th style="border: solid black 1px" >Наименование</th>
+        <th style="border: solid black 1px">Дата</th>
+        <th style="border: solid black 1px">Код</th>
+        <th style="border: solid black 1px">Наименование</th>
 
         <th align="right" style="border: solid black 1px">Нач.</th>
         <th style="border: solid black 1px">Прих.</th>
@@ -41,16 +40,16 @@
     {{/_detail}}
     <tr>
 
-        <td> </td>
-        <td> </td>
-        <td align="right"><b>На  сумму</b></td>
+        <td></td>
+        <td></td>
+        <td align="right"><b>На сумму</b></td>
 
         <td align="right"><b>{{ba}}</b></td>
         <td align="right"><b>{{bain}}</b></td>
         <td align="right"><b>{{baout}}</b></td>
-        <td align="right"><b>{{baend}}</b> </td>
-        <th>  </th>
-    </tr>     
+        <td align="right"><b>{{baend}}</b></td>
+        <th></th>
+    </tr>
 </table>
 
 

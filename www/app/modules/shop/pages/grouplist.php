@@ -2,24 +2,25 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Link\SubmitLink;
-use \Zippy\Html\Link\ClickLink;
-use \ZCL\BT\Tree;
-use \App\Modules\Shop\Entity\Product;
-use \App\Modules\Shop\Entity\ProductGroup;
-use \App\Modules\Shop\Entity\ProductAttribute;
-use \App\Modules\Shop\Helper;
-use \App\System;
-use \App\Application as App;
+use App\Application as App;
+use App\Modules\Shop\Entity\Product;
+use App\Modules\Shop\Entity\ProductAttribute;
+use App\Modules\Shop\Entity\ProductGroup;
+use App\Modules\Shop\Helper;
+use App\System;
+use ZCL\BT\Tree;
+use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
+use Zippy\Html\Panel;
 
-class GroupList extends \App\Pages\Base {
+class GroupList extends \App\Pages\Base
+{
 
     private $group = null, $rootgroup;
     public $attrlist = array();
@@ -33,7 +34,6 @@ class GroupList extends \App\Pages\Base {
             App::RedirectHome();
             return;
         }
-
 
 
         $tree = $this->add(new Tree("tree"));
@@ -98,8 +98,9 @@ class GroupList extends \App\Pages\Base {
         foreach ($itemlist as $item) {
             $node = new \ZCL\BT\TreeNode($item->groupname, $item->group_id);
             $parentnode = @$nodelist[$item->parent_id];
-            if ($item->parent_id == 0)
+            if ($item->parent_id == 0) {
                 $parentnode = $root;
+            }
 
             $this->tree->addNode($node, $parentnode);
 
@@ -138,7 +139,7 @@ class GroupList extends \App\Pages\Base {
             $pcnt = Product::findCnt("group_id=" . $this->group->parent_id);
             if ($pcnt > 0) {
                 $this->setError('notallowedtotovgroup');
-           
+
                 return;
             }
         }
@@ -186,11 +187,11 @@ class GroupList extends \App\Pages\Base {
             }
 
             if ($imagedata[0] * $imagedata[1] > 1000000) {
-         
+
                 $this->setError('toobigimage');
                 return;
             }
-            $r = ((double) $imagedata[0]) / $imagedata[1];
+            $r = ((double)$imagedata[0]) / $imagedata[1];
             if ($r > 1.1 || $r < 0.9) {
                 $this->setError('');
                 $this->setError('squareimage');

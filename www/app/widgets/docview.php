@@ -2,26 +2,26 @@
 
 namespace App\Widgets;
 
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Link\BookmarkableLink;
-use \App\Entity\Doc\Document;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System;
+use App\Entity\Doc\Document;
+use App\Helper as H;
+use App\System;
+use Zippy\Binding\PropertyBinding as Prop;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\BookmarkableLink;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\RedirectLink;
 
 /**
  * Виджет для  просмотра  документов
  */
-class DocView extends \Zippy\Html\PageFragment {
+class DocView extends \Zippy\Html\PageFragment
+{
 
     private $_doc;
     private $_p = null;
@@ -50,11 +50,10 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->add(new Label('hfiles'));
 
 
-
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
 
         $this->add(new DataView('dw_paylist', new ArrayDataSource(new Prop($this, '_paylist')), $this, 'payListOnRow'));
-        
+
         $this->add(new DataView('dw_itemlist', new ArrayDataSource(new Prop($this, '_itemlist')), $this, 'itemListOnRow'));
 
         $this->add(new DataView('reldocs', new ArrayDataSource(new Prop($this, '_reldocs')), $this, 'relDoclistOnRow'));
@@ -96,7 +95,6 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->pdf->setVisible(in_array(Document::EX_PDF, $exportlist));
         $this->pos->setVisible(in_array(Document::EX_POS, $exportlist));
         $this->previewpos->setVisible(in_array(Document::EX_POS, $exportlist));
-
 
 
         $reportpage = "App/Pages/ShowDoc";
@@ -151,19 +149,20 @@ class DocView extends \Zippy\Html\PageFragment {
         $row->add(new Label('paydate', date('Y.m.d', $item->paydate)));
         $row->add(new Label('payamountp', H::fa($item->amount > 0 ? $item->amount : "")));
         $row->add(new Label('payamountm', H::fa($item->amount < 0 ? 0 - $item->amount : "")));
- 
+
         $row->add(new Label('paymf', $item->mf_name));
     }
+
     //вывод строки  проводок
     public function itemListOnRow($row) {
         $entry = $row->getDataItem();
         $stock = \App\Entity\Stock::load($entry->stock_id);;
-        $row->add(new Label('itname',   $stock->itemname)) ;
-        $row->add(new Label('itcode',   $stock->item_code)) ;
-        $row->add(new Label('itqty',    H::fqty(  $entry->quantity  )));
-        $row->add(new Label('itprice',  H::fa( $entry->amount/$entry->quantity   )));
-        $row->add(new Label('itamount', H::fa( $entry->amount  )));
-  
+        $row->add(new Label('itname', $stock->itemname));
+        $row->add(new Label('itcode', $stock->item_code));
+        $row->add(new Label('itqty', H::fqty($entry->quantity)));
+        $row->add(new Label('itprice', H::fa($entry->amount / $entry->quantity)));
+        $row->add(new Label('itamount', H::fa($entry->amount)));
+
     }
 
     /**
@@ -228,8 +227,9 @@ class DocView extends \Zippy\Html\PageFragment {
         $msg->user_id = $user->user_id;
         $msg->item_id = $this->_doc->document_id;
         $msg->item_type = \App\Entity\Message::TYPE_DOC;
-        if (strlen($msg->message) == 0)
+        if (strlen($msg->message) == 0) {
             return;
+        }
         $msg->save();
 
         $this->addmsgform->addmsg->setText('');
@@ -247,8 +247,9 @@ class DocView extends \Zippy\Html\PageFragment {
 
 
         foreach ($users as $adr) {
-            if ($adr == $user->user_id)
-                continue; //себе не  нужно
+            if ($adr == $user->user_id) {
+                continue;
+            } //себе не  нужно
 
             $n = new \App\Entity\Notify();
             $n->user_id = $adr;
@@ -292,8 +293,9 @@ class DocView extends \Zippy\Html\PageFragment {
         $this->reldocs->Reload();
 
         $cnt = count($this->_reldocs);
-        if ($this->_p != null)
+        if ($this->_p != null) {
             $cnt++;
+        }
         $this->hdocs->setText($cnt);
         $this->hdocs->setVisible($cnt > 0);
     }
@@ -329,12 +331,12 @@ class DocView extends \Zippy\Html\PageFragment {
     public function OnReldocSubmit($sender) {
 
         $id = $this->addrelform->addrel->getKey();
-        $child = Document::load($id) ;
-        if($child instanceof Document){
-           $child->parent_id = $this->_doc->document_id ;
-           $child->save();
+        $child = Document::load($id);
+        if ($child instanceof Document) {
+            $child->parent_id = $this->_doc->document_id;
+            $child->save();
         }
-        
+
         $this->updateDocs();
         $this->addrelform->addrel->setKey(0);
         $this->addrelform->addrel->setText('');

@@ -2,31 +2,30 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Customer;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
- 
-use \App\Entity\Store;
-use \App\Entity\MoneyFund;
-use \App\Helper as H;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\MoneyFund;
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  *  возвратная накладная
  */
-class ReturnIssue extends \App\Pages\Base {
+class ReturnIssue extends \App\Pages\Base
+{
 
     public $_tovarlist = array();
     private $_doc;
@@ -36,7 +35,7 @@ class ReturnIssue extends \App\Pages\Base {
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
-       
+
             $this->setWarn('return_basedon_goodsissue');
         }
         $this->add(new Form('docform'));
@@ -49,8 +48,7 @@ class ReturnIssue extends \App\Pages\Base {
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList( ), H::getDefMF()));
-
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
 
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -69,7 +67,6 @@ class ReturnIssue extends \App\Pages\Base {
         $this->editdetail->add(new TextInput('editprice'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-
 
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -93,7 +90,7 @@ class ReturnIssue extends \App\Pages\Base {
             $this->docform->total->setText(H::fa($this->_doc->amount));
 
             $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
- 
+
         } else {
             $this->_doc = Document::create('ReturnIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -108,18 +105,19 @@ class ReturnIssue extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
- 
+
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
- 
+
                     }
                 }
-                $this->calcTotal();                
+                $this->calcTotal();
             }
         }
-        
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -128,7 +126,7 @@ class ReturnIssue extends \App\Pages\Base {
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->snumber > 0 ? ($item->sdate > 0 ? date('Y-m-d', $item->sdate) : '')  :''   )   );
+        $row->add(new Label('sdate', $item->snumber > 0 ? ($item->sdate > 0 ? date('Y-m-d', $item->sdate) : '') : ''));
 
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
@@ -140,8 +138,9 @@ class ReturnIssue extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -171,12 +170,13 @@ class ReturnIssue extends \App\Pages\Base {
         $this->editdetail->edittovar->setText($item->itemname);
 
         $this->_rowid = $item->item_id;
- 
+
     }
 
     public function saverowOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("noselitem");
@@ -188,7 +188,7 @@ class ReturnIssue extends \App\Pages\Base {
 
         $item->price = $this->editdetail->editprice->getText();
 
-        unset($this->_itemlist[$this->_rowid]);        
+        unset($this->_itemlist[$this->_rowid]);
         $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -217,8 +217,9 @@ class ReturnIssue extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
@@ -234,10 +235,10 @@ class ReturnIssue extends \App\Pages\Base {
 
         $firm = H::getFirmData($this->_doc->branch_id);
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
-  
+
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-  
+
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->amount = $this->docform->total->getText();
@@ -254,8 +255,9 @@ class ReturnIssue extends \App\Pages\Base {
             }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
@@ -303,8 +305,8 @@ class ReturnIssue extends \App\Pages\Base {
             $this->goAnkor("tankor");
         }
     }
-    
-    
+
+
     /**
      * Валидация   формы
      *
@@ -320,7 +322,7 @@ class ReturnIssue extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("noenteritem");
         }
-        if (($this->docform->store->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
 
@@ -344,7 +346,7 @@ class ReturnIssue extends \App\Pages\Base {
     }
 
     public function OnAutoItem($sender) {
-        
+
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }

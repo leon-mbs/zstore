@@ -2,15 +2,15 @@
 
 namespace App\Modules\WC;
 
-use \App\System;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\WebApplication as App;
+use App\System;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\WebApplication as App;
 
-class Options extends \App\Pages\Base {
+class Options extends \App\Pages\Base
+{
 
     public function __construct() {
         parent::__construct();
@@ -44,15 +44,14 @@ class Options extends \App\Pages\Base {
         $site = trim($site, '/') . '/';
 
 
-
         $woocommerce = new \Automattic\WooCommerce\Client(
-                $site,
-                $keyc,
-                $keys,
-                [
-            'version' => 'wc/' . $api,
-            'wp_api' => true
-                ]
+            $site,
+            $keyc,
+            $keys,
+            [
+                'version' => 'wc/' . $api,
+                'wp_api' => true
+            ]
         );
         try {
             $woocommerce->get('');
@@ -62,7 +61,7 @@ class Options extends \App\Pages\Base {
         }
 
 
-         $this->setSuccess('connected');
+        $this->setSuccess('connected');
     }
 
     public function saveOnClick($sender) {

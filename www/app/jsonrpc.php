@@ -3,15 +3,15 @@
 namespace App;
 
 /**
- * Base class for Json RPC 
- * based  on https://github.com/datto/php-json-rpc    
+ * Base class for Json RPC
+ * based  on https://github.com/datto/php-json-rpc
  */
-abstract class JsonRPC {
+abstract class JsonRPC
+{
 
     const VERSION = '2.0';
 
     public function Execute() {
-
 
 
         $request = file_get_contents('php://input');
@@ -24,8 +24,9 @@ abstract class JsonRPC {
         }
 
 
-        if ($response != null)
+        if ($response != null) {
             echo json_encode($response);
+        }
     }
 
     /**
@@ -40,7 +41,6 @@ abstract class JsonRPC {
      * Returns null when no response is necessary.
      */
     private function processInput($input) {
-
 
 
         if (!is_array($input)) {

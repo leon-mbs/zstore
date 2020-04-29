@@ -3,12 +3,14 @@
 namespace App\Modules\Shop\Entity;
 
 //класс-сущность  заказа
+
 /**
  * @keyfield=order_id
  * @table=shop_orders
  * @view=shop_orders_view
  */
-class Order extends \ZCL\DB\Entity {
+class Order extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->order_id = 0;
@@ -32,16 +34,17 @@ class Order extends \ZCL\DB\Entity {
 
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->details);
-        $this->delivery = (int) ($xml->delivery[0]);
-        $this->payment = (int) ($xml->payment[0]);
+        $this->delivery = (int)($xml->delivery[0]);
+        $this->payment = (int)($xml->payment[0]);
 
         parent::afterLoad();
     }
 
     protected function afterSave($update) {
         parent::afterSave($update);
-        if ($update == false)
+        if ($update == false) {
             return;
+        }
         $conn = \ZCL\DB\DB::getConnect();
 
         $plist = OrderDetail::find("order_id =" . $this->order_id);

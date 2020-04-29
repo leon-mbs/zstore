@@ -8,7 +8,8 @@ namespace App\Modules\Note\Entity;
  * @view=note_topicnodeview
  * @keyfield=tn_id
  */
-class TopicNode extends \ZCL\DB\Entity {
+class TopicNode extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->tn_id = 0;
@@ -16,7 +17,7 @@ class TopicNode extends \ZCL\DB\Entity {
 
     /**
      * поиск по  тексту
-     * 
+     *
      * @param mixed $text
      */
     public static function searchByText($text, $type, $title) {
@@ -57,7 +58,7 @@ class TopicNode extends \ZCL\DB\Entity {
 
     /**
      * поиск по  тегу
-     * 
+     *
      * @param mixed $tag
      */
     public static function searchByTag($tag) {
@@ -81,7 +82,7 @@ class TopicNode extends \ZCL\DB\Entity {
 
     /**
      * цепочка  названий ущлов до  корня
-     * 
+     *
      */
     public function nodes() {
 

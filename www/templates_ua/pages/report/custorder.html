@@ -1,42 +1,47 @@
 <html>
-    <head>
+<head>
 
-    </head>
-    <body>
-        <div class="row">
-            <div class="col-12  col-xl-10">
-                <h3>Товари в дорозі
-                    <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
-                       data-placement="bottom" data-content="Товари в замовленнях зі статусом 'Виконується'"></i> 
-                </h3>
+</head>
+<body>
+<div class="row">
+    <div class="col-12  col-xl-10">
+        <h3>Товари в дорозі
+            <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
+               data-toggle="popover"
+               data-placement="bottom" data-content="Товари в замовленнях зі статусом 'Виконується'"></i>
+        </h3>
 
-                <div class="navbar nav">
-                    <form zippy="filter" class="form-inline">
+        <div class="navbar nav">
+            <form zippy="filter" class="form-inline">
 
-                        <label for="cust">Постачальник</label>
-                        <select class="form-control "   zippy="cust">
-                            <option value="0">По всім</option>
-                        </select>
+                <label for="cust">Постачальник</label>
+                <select class="form-control " zippy="cust">
+                    <option value="0">По всім</option>
+                </select>
 
-                        <input class="btn btn-outline-primary ml-2 " type="submit" value="ОК">
+                <input class="btn btn-outline-primary ml-2 " type="submit" value="ОК">
 
-                    </form>
-                </div>
-
-
-                <div zippy="detail">
-                    <div>
-                        <a zippy="print" onclick=" $('#preview').printThis();"   title="Печать"><img class="icon20"  src="/assets/images/print_32.png"></a>
-                        <a zippy="word" target="_blank" title="Експорт в Word"><img class="icon20"                                                                                    src="/assets/images/word_32.png"></a>
-                        <a zippy="excel" target="_blank" title="Експорт в Excel"><img class="icon20"                                                                                      src="/assets/images/excel_32.png"></a>
-                        <a zippy="pdf" target="_blank" title="Експорт в PDF"><img class="icon20"                                                                                      src="/assets/images/pdf_32.png"></a>
-
-                    </div>
-                    <div zippy="preview" class="table-responsive-sm" >
-                    </div> 
-
-                </div>
-            </div>
+            </form>
         </div>
-    </body>
+
+
+        <div zippy="detail">
+            <div>
+                <a zippy="print" onclick=" $('#preview').printThis();" title="Печать"><img class="icon20"
+                                                                                           src="/assets/images/print_32.png"></a>
+                <a zippy="word" target="_blank" title="Експорт в Word"><img class="icon20"
+                                                                            src="/assets/images/word_32.png"></a>
+                <a zippy="excel" target="_blank" title="Експорт в Excel"><img class="icon20"
+                                                                              src="/assets/images/excel_32.png"></a>
+                <a zippy="pdf" target="_blank" title="Експорт в PDF"><img class="icon20"
+                                                                          src="/assets/images/pdf_32.png"></a>
+
+            </div>
+            <div zippy="preview" class="table-responsive-sm">
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
 </html>

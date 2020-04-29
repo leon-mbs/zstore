@@ -2,15 +2,14 @@
 
 namespace App;
 
-use \App\Entity\User;
-use \App\System;
-use \App\Session;
-use \ZCL\DB\DB as DB;
+use App\Entity\User;
+use ZCL\DB\DB as DB;
 
 /**
  * Вспомагательный  класс  для  работы  с  бизнес-данными
  */
-class Helper {
+class Helper
+{
 
     private static $meta = array(); //кеширует метаданные
 
@@ -25,15 +24,18 @@ class Helper {
 
         $user = User::getFirst("  userlogin=  " . User::qstr($login));
 
-        if ($user == null)
+        if ($user == null) {
             return false;
+        }
 
-        if ($user->disabled == 1)
+        if ($user->disabled == 1) {
             return false;
+        }
 
 
-        if ($user->userpass == $password)
+        if ($user->userpass == $password) {
             return $user;
+        }
         if (strlen($password) > 0) {
             $b = password_verify($password, $user->userpass);
             return $b ? $user : false;
@@ -65,8 +67,9 @@ class Helper {
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
 
-            if (!in_array($meta_id, $aclview) && System::getUser()->acltype == 2)
+            if (!in_array($meta_id, $aclview) && System::getUser()->acltype == 2) {
                 continue;
+            }
 
             if (strlen($meta_object['menugroup']) == 0) {
                 $menu[$meta_id] = $meta_object;
@@ -110,7 +113,7 @@ class Helper {
 
                 $items[] = array('name' => $item['description'], 'link' => "/index.php?p=App/{$dir}/{$item['meta_name']}");
             }
-            $textmenu .= "</ul></li>";
+
 
             $arraymenu['groups'][] = array('grname' => $gname, 'items' => $items);
         }
@@ -123,8 +126,9 @@ class Helper {
 
         $smartmenu = System::getUser()->smartmenu;
 
-        if (strlen($smartmenu) == 0)
+        if (strlen($smartmenu) == 0) {
             return "";
+        }
 
         $rows = $conn->Execute("select *  from  metadata  where meta_id in ({$smartmenu})   ");
 
@@ -133,11 +137,12 @@ class Helper {
 
         foreach ($rows as $item) {
 
-            if (!in_array($item['meta_id'], $aclview) && System::getUser()->acltype == 2)
+            if (!in_array($item['meta_id'], $aclview) && System::getUser()->acltype == 2) {
                 continue;
+            }
 
 
-            switch ((int) $item['meta_type']) {
+            switch ((int)$item['meta_type']) {
                 case 1 :
                     $dir = "Pages/Doc";
                     break;
@@ -172,7 +177,6 @@ class Helper {
         }
 
 
-
         $template = @file_get_contents($templatepath);
 
         $m = new \Mustache_Engine();
@@ -183,8 +187,6 @@ class Helper {
     }
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
-
-
 
 
         $mail = new \PHPMailer();
@@ -323,7 +325,7 @@ class Helper {
 
     /**
      * логгирование
-     * 
+     *
      * @param mixed $msg
      */
     public static function log($msg) {
@@ -333,7 +335,7 @@ class Helper {
 
     /**
      * Возвращает склад  по  умолчанию
-     * 
+     *
      */
     public static function getDefStore() {
         $user = System::getUser();
@@ -350,7 +352,7 @@ class Helper {
 
     /**
      * Возвращает расчетный счет  по  умолчанию
-     * 
+     *
      */
     public static function getDefMF() {
         $user = System::getUser();
@@ -368,13 +370,14 @@ class Helper {
 
     /**
      * Форматирование количества
-     * 
+     *
      * @param mixed $qty
      * @return mixed
      */
     public static function fqty($qty) {
-        if (strlen($qty) == 0)
+        if (strlen($qty) == 0) {
             return '';
+        }
 
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
@@ -386,13 +389,14 @@ class Helper {
 
     /**
      * форматирование  сумм    с копейками
-     * 
+     *
      * @param mixed $am
      * @return mixed
      */
     public static function fa($am) {
-        if (strlen($am) == 0)
+        if (strlen($am) == 0) {
             return '';
+        }
 
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
@@ -418,12 +422,15 @@ class Helper {
         $data = \App\System::getOptions("firm");
         if ($id > 0) {
             $branch = \App\Entity\Branch::load($id);
-            if (strlen($branch->shopname) > 0)
+            if (strlen($branch->shopname) > 0) {
                 $data['shopname'] = $branch->shop_name;
-            if (strlen($branch->address) > 0)
+            }
+            if (strlen($branch->address) > 0) {
                 $data['address'] = $branch->address;
-            if (strlen($branch->phone) > 0)
+            }
+            if (strlen($branch->phone) > 0) {
                 $data['phone'] = $branch->phone;
+            }
         }
 
         return $data;
@@ -431,7 +438,7 @@ class Helper {
 
     /**
      * возвращает размер при пагинации
-     * 
+     *
      * @param mixed $pagesize
      * @return mixed
      */
@@ -449,65 +456,70 @@ class Helper {
     }
 
     /**
-    * Возвращает языковую метку
-    * 
-    * @param mixed $label    
-    * @param mixed $p1      
-    * @param mixed $p2
-    */
-    public static function l($label,$p1="",$p2="") {
-         global $_config; 
+     * Возвращает языковую метку
+     *
+     * @param mixed $label
+     * @param mixed $p1
+     * @param mixed $p2
+     */
+    public static function l($label, $p1 = "", $p2 = "") {
+        global $_config;
 
-         $label = trim($label);
-         $labels = System::getCache('labels') ;
-         if($labels==null){
+        $label = trim($label);
+        $labels = System::getCache('labels');
+        if ($labels == null) {
             $lang = $_config['common']['lang'];
-            $filename=_ROOT.'templates/lang.json' ;
-            if($lang=='ua')$filename=_ROOT.'templates_ua/lang.json';
+            $filename = _ROOT . 'templates/lang.json';
+            if ($lang == 'ua') {
+                $filename = _ROOT . 'templates_ua/lang.json';
+            }
             $file = @file_get_contents($filename);
-            
-            if(strlen($file)==0) {
-                echo "Не найден файл локализации  " .$filename;
-                die; 
+
+            if (strlen($file) == 0) {
+                echo "Не найден файл локализации  " . $filename;
+                die;
             }
-            $labels=@json_decode( $file,true)  ;
-            if($labels==null) {
-                echo "Неверный файл локализации  " .$filename;
-                die; 
+            $labels = @json_decode($file, true);
+            if ($labels == null) {
+                echo "Неверный файл локализации  " . $filename;
+                die;
             }
-            System::setCache('labels',$labels) ;
-            
-         }
-         if(isset($labels[$label])) {
-            $text =  $labels[$label] ;
-            $text = sprintf($text,$p1,$p2);
+            System::setCache('labels', $labels);
+
+        }
+        if (isset($labels[$label])) {
+            $text = $labels[$label];
+            $text = sprintf($text, $p1, $p2);
             return $text;
-             
-         }   else {
-             return $label;
-         }
-         
-         
-         
+
+        } else {
+            return $label;
+        }
+
+
     }
-    
+
     /**
-    * Сумма прописью
-    * 
-    */
-    public static function sumstr($amount){
-       global $_config; 
-       $curr = \App\System::getOption('common','curr') ;
- 
+     * Сумма прописью
+     *
+     */
+    public static function sumstr($amount) {
+        global $_config;
+        $curr = \App\System::getOption('common', 'curr');
+
         $totalstr = \App\Util::money2str_rugr($amount);
-        if($curr =='ru')$totalstr = \App\Util::money2str_ru($amount);
-        if(false)$totalstr= \App\Util::money2str_ru($this->amount);
-        
-        if($_config['common']['lang']=='ua')  $totalstr= \App\Util::money2str_ua($amount);
-      
-      
-      
-      
-      return $totalstr;
+        if ($curr == 'ru') {
+            $totalstr = \App\Util::money2str_ru($amount);
+        }
+        if (false) {
+            $totalstr = \App\Util::money2str_ru($amount);
+        }
+
+        if ($_config['common']['lang'] == 'ua') {
+            $totalstr = \App\Util::money2str_ua($amount);
+        }
+
+
+        return $totalstr;
     }
 }

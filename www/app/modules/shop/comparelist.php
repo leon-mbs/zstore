@@ -2,10 +2,11 @@
 
 namespace App\Modules\Shop;
 
-use \App\System;
+use App\System;
 
 //клаасс  списка сравоения
-class CompareList implements \Zippy\Interfaces\DataSource {
+class CompareList implements \Zippy\Interfaces\DataSource
+{
 
     public $list = array();
 
@@ -34,8 +35,9 @@ class CompareList implements \Zippy\Interfaces\DataSource {
         $this->list_ = array_values($this->list);
         $this->list = array();
         foreach ($this->list_ as $p) {
-            if ($p->product_id == $product_id)
+            if ($p->product_id == $product_id) {
                 continue;
+            }
             $this->list[$p->product_id] = $p;
         }
     }

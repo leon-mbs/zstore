@@ -1,4 +1,3 @@
- 
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
 
@@ -16,9 +15,9 @@
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th     style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
-        <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
-        <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кол.</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
@@ -27,9 +26,9 @@
     {{#_detail}}
     <tr>
         <td align="right">{{no}}</td>
-        <td  >{{itemname}}</td>
-        <td  >{{itemcode}}</td>
-        <td  >{{msr}}</td>
+        <td>{{itemname}}</td>
+        <td>{{itemcode}}</td>
+        <td>{{msr}}</td>
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
         <td align="right">{{amount}}</td>

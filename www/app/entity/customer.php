@@ -9,16 +9,17 @@ namespace App\Entity;
  * @view=customers_view
  * @keyfield=customer_id
  */
-class Customer extends \ZCL\DB\Entity {
+class Customer extends \ZCL\DB\Entity
+{
 
-    const STATUS_ACTUAL = 0;  //актуальный
+    const STATUS_ACTUAL   = 0;  //актуальный
     const STATUS_DISABLED = 1; //не используется
-    const STATUS_WAIT = 2; //потенциальный
+    const STATUS_WAIT     = 2; //потенциальный
 
-    
-    const TYPE_BAYER = 1; //покупатель
+
+    const TYPE_BAYER  = 1; //покупатель
     const TYPE_SELLER = 2; //поставщик
-    
+
     protected function init() {
         $this->customer_id = 0;
         $this->customer_name = '';
@@ -45,11 +46,11 @@ class Customer extends \ZCL\DB\Entity {
         $xml = simplexml_load_string($this->detail);
 
         $this->discount = doubleval($xml->discount[0]);
-        $this->bonus = (int) ($xml->bonus[0]);
-        $this->type = (int) ($xml->type[0]);
-        $this->jurid = (int) ($xml->jurid[0]);
-        $this->address = (string) ($xml->address[0]);
-        $this->comment = (string) ($xml->comment[0]);
+        $this->bonus = (int)($xml->bonus[0]);
+        $this->type = (int)($xml->type[0]);
+        $this->jurid = (int)($xml->jurid[0]);
+        $this->address = (string)($xml->address[0]);
+        $this->comment = (string)($xml->comment[0]);
 
         parent::afterLoad();
     }
@@ -60,14 +61,15 @@ class Customer extends \ZCL\DB\Entity {
 
         $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
         $cnt = $conn->GetOne($sql);
-        if ($cnt > 0)
+        if ($cnt > 0) {
             return "На  контрагента есть  ссылки  в  документах";
+        }
         return "";
     }
 
     /**
      * список   для комбо
-     * 
+     *
      */
     public static function getList() {
         return Customer::findArray("customer_name", "status=" . Customer::STATUS_ACTUAL);
@@ -85,15 +87,17 @@ class Customer extends \ZCL\DB\Entity {
     }
 
     public static function getByPhone($phone) {
-        if (strlen($phone) == 0)
+        if (strlen($phone) == 0) {
             return null;
+        }
         $conn = \ZDB\DB::getConnect();
         return Customer::getFirst(' phone = ' . $conn->qstr($phone));
     }
 
     public static function getByEmail($email) {
-        if (strlen($email) == 0)
+        if (strlen($email) == 0) {
             return null;
+        }
         $conn = \ZDB\DB::getConnect();
         return Customer::getFirst(' email = ' . $conn->qstr($email));
     }

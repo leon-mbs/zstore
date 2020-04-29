@@ -2,29 +2,31 @@
 
 namespace App\Pages\Report;
 
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Item;
-use \App\Entity\Store;
-use \App\Entity\Stock;
-use \App\Helper as H;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Item;
+use App\Entity\Stock;
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Panel;
 
 /**
  * Движение товара
  */
-class ItemActivity extends \App\Pages\Base {
+class ItemActivity extends \App\Pages\Base
+{
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReport('ItemActivity'))
+        if (false == \App\ACL::checkShowReport('ItemActivity')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -36,7 +38,7 @@ class ItemActivity extends \App\Pages\Base {
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
         $this->add(new Panel('detail'))->setVisible(false);
-         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
+        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
         $this->detail->add(new RedirectLink('word', "movereport"));
         $this->detail->add(new RedirectLink('excel', "movereport"));
         $this->detail->add(new RedirectLink('pdf', "movereport"));

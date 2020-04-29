@@ -2,19 +2,17 @@
 
 namespace App\Widgets;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \App\Helper;
-use \App\System;
-use \App\Entity\Doc\Document;
-use \Carbon\Carbon;
+use App\Helper;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
 
 /**
  * Виджет для  должников
  */
-class WDebitors extends \Zippy\Html\PageFragment {
+class WDebitors extends \Zippy\Html\PageFragment
+{
 
     public function __construct($id) {
         parent::__construct($id);
@@ -22,8 +20,9 @@ class WDebitors extends \Zippy\Html\PageFragment {
         $visible = (strpos(System::getUser()->widgets, 'wdebitors') !== false || System::getUser()->userlogin == 'admin');
 
         $cstr = \App\Acl::getBranchListConstraint();
-        if (strlen($cstr) > 0)
+        if (strlen($cstr) > 0) {
             $cstr = "  branch_id in({$cstr}) and ";
+        }
 
         $data = array();
 

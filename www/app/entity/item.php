@@ -9,14 +9,15 @@ namespace App\Entity;
  * @view=items_view
  * @keyfield=item_id
  */
-class Item extends \ZCL\DB\Entity {
+class Item extends \ZCL\DB\Entity
+{
 
     private $brprice = array(); //цены по  филиалам
 
     protected function init() {
         $this->item_id = 0;
         $this->cat_id = 0;
- 
+
         $this->price = 0;
         $this->image_id = 0;
         $this->pricelist = 1;
@@ -27,24 +28,25 @@ class Item extends \ZCL\DB\Entity {
 
         $xml = @simplexml_load_string($this->detail);
 
-        $this->price1 = (string) ($xml->price1[0]);
-        $this->price2 = (string) ($xml->price2[0]);
-        $this->price3 = (string) ($xml->price3[0]);
-        $this->price4 = (string) ($xml->price4[0]);
-        $this->price5 = (string) ($xml->price5[0]);
-        $this->pricelist = (int) $xml->pricelist[0];
-        $this->useserial = (int) $xml->useserial[0];
-        $this->image_id = (int) $xml->image_id[0];
-        $this->weight = (string) $xml->weight[0];
-        $this->manufacturer = (string) $xml->manufacturer[0];
+        $this->price1 = (string)($xml->price1[0]);
+        $this->price2 = (string)($xml->price2[0]);
+        $this->price3 = (string)($xml->price3[0]);
+        $this->price4 = (string)($xml->price4[0]);
+        $this->price5 = (string)($xml->price5[0]);
+        $this->pricelist = (int)$xml->pricelist[0];
+        $this->useserial = (int)$xml->useserial[0];
+        $this->image_id = (int)$xml->image_id[0];
+        $this->weight = (string)$xml->weight[0];
+        $this->manufacturer = (string)$xml->manufacturer[0];
 
-        $this->cell = (string) $xml->cell[0];
-      //  $this->octoreoptions = (string) $xml->octoreoptions[0];
-        $brprice = (string) $xml->brprice[0];
+        $this->cell = (string)$xml->cell[0];
+        //  $this->octoreoptions = (string) $xml->octoreoptions[0];
+        $brprice = (string)$xml->brprice[0];
 
         $this->brprice = @unserialize($brprice);
-        if (!is_array($this->brprice))
+        if (!is_array($this->brprice)) {
             $this->brprice = array();
+        }
 
         $id = \App\Session::getSession()->branch_id;
         if ($id > 0 && is_array($this->brprice[$id])) {
@@ -77,7 +79,7 @@ class Item extends \ZCL\DB\Entity {
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
 
         $this->detail .= "<cell>{$this->cell}</cell>";
-     //   $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
+        //   $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
@@ -127,20 +129,30 @@ class Item extends \ZCL\DB\Entity {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
-        if (strlen($common[$_price_]) == 0)
+        if (strlen($common[$_price_]) == 0) {
             return 0;
+        }
 
 
-        if ($_price_ == 'price1')
+        if ($_price_ == 'price1') {
             $_price = $this->price1;
-        else if ($_price_ == 'price2')
-            $_price = $this->price2;
-        else if ($_price_ == 'price3')
-            $_price = $this->price3;
-        else if ($_price_ == 'price4')
-            $_price = $this->price4;
-        else if ($_price_ == 'price5')
-            $_price = $this->price5;
+        } else {
+            if ($_price_ == 'price2') {
+                $_price = $this->price2;
+            } else {
+                if ($_price_ == 'price3') {
+                    $_price = $this->price3;
+                } else {
+                    if ($_price_ == 'price4') {
+                        $_price = $this->price4;
+                    } else {
+                        if ($_price_ == 'price5') {
+                            $_price = $this->price5;
+                        }
+                    }
+                }
+            }
+        }
 
 
         //если процент    
@@ -152,10 +164,12 @@ class Item extends \ZCL\DB\Entity {
                     //ищем последнюю закупочную  цену 
                     $partion = $this->getLastPartion($store);
                 }
-                $price = $partion + (int) $partion / 100 * $ret;
+                $price = $partion + (int)$partion / 100 * $ret;
             }
-        } else if ($_price > 0) {
-            $price = $_price; //задана  просто  цифра
+        } else {
+            if ($_price > 0) {
+                $price = $_price; //задана  просто  цифра
+            }
         }
 
         if ($price == 0 && $this->cat_id > 0) {
@@ -165,20 +179,24 @@ class Item extends \ZCL\DB\Entity {
                     //ищем последнюю закупочную  цену 
                     $partion = $this->getLastPartion($store);
                 }
-                if ($_price_ == 'price1' && $cat->price1 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price1;
-                if ($_price_ == 'price2' && $cat->price2 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price2;
-                if ($_price_ == 'price3' && $cat->price3 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price3;
-                if ($_price_ == 'price4' && $cat->price4 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price4;
-                if ($_price_ == 'price5' && $cat->price5 > 0)
-                    $price = $partion + (int) $partion / 100 * $cat->price5;
+                if ($_price_ == 'price1' && $cat->price1 > 0) {
+                    $price = $partion + (int)$partion / 100 * $cat->price1;
+                }
+                if ($_price_ == 'price2' && $cat->price2 > 0) {
+                    $price = $partion + (int)$partion / 100 * $cat->price2;
+                }
+                if ($_price_ == 'price3' && $cat->price3 > 0) {
+                    $price = $partion + (int)$partion / 100 * $cat->price3;
+                }
+                if ($_price_ == 'price4' && $cat->price4 > 0) {
+                    $price = $partion + (int)$partion / 100 * $cat->price4;
+                }
+                if ($_price_ == 'price5' && $cat->price5 > 0) {
+                    $price = $partion + (int)$partion / 100 * $cat->price5;
+                }
             }
         }
 
-  
 
         //если не  задано используем глобальную наценку
         if ($common['defprice'] > 0 && $price == 0) {
@@ -188,12 +206,10 @@ class Item extends \ZCL\DB\Entity {
                 $partion = $this->getLastPartion($store);
             }
 
-            $price = $partion + (int) $partion / 100 * $common['defprice'];
+            $price = $partion + (int)$partion / 100 * $common['defprice'];
         }
 
         //поправка  по  валюте
-
- 
 
 
         return \App\Helper::fa($price);
@@ -214,50 +230,58 @@ class Item extends \ZCL\DB\Entity {
 
         $common = \App\System::getOptions("common");
         $list = array();
-        if (strlen($common['price1']) > 0)
+        if (strlen($common['price1']) > 0) {
             $list['price1'] = $common['price1'];
-        if (strlen($common['price2']) > 0)
+        }
+        if (strlen($common['price2']) > 0) {
             $list['price2'] = $common['price2'];
-        if (strlen($common['price3']) > 0)
+        }
+        if (strlen($common['price3']) > 0) {
             $list['price3'] = $common['price3'];
-        if (strlen($common['price4']) > 0)
+        }
+        if (strlen($common['price4']) > 0) {
             $list['price4'] = $common['price4'];
-        if (strlen($common['price5']) > 0)
+        }
+        if (strlen($common['price5']) > 0) {
             $list['price5'] = $common['price5'];
+        }
 
         return $list;
     }
 
     /**
      * возвращает количество на складах
-     * 
+     *
      * @param mixed $item_id
      * @param mixed $store_id
-     * @param mixed $snumber   партия проиводителя
+     * @param mixed $snumber партия проиводителя
      */
     public function getQuantity($store_id = 0, $snumber = "") {
 
         $conn = \ZDB\DB::getConnect();
         $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock_view where   item_id = {$this->item_id} ";
-        if ($store_id > 0)
+        if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
-        if (strlen($snumber) > 0)
+        }
+        if (strlen($snumber) > 0) {
             $sql .= " and  snumber = " . $conn->qstr($snumber);
+        }
         $cnt = $conn->GetOne($sql);
         return $cnt;
     }
 
     /**
      * возвращает список скенрий производителя
-     * 
+     *
      * @param mixed $store_id
      */
     public function getSerials($store_id = 0) {
 
         $conn = \ZDB\DB::getConnect();
         $sql = "  select snumber  from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null ";
-        if ($store_id > 0)
+        if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
+        }
 
 
         $res = $conn->Execute($sql);
@@ -272,7 +296,7 @@ class Item extends \ZCL\DB\Entity {
 
     /**
      * возвращает сумму на складах
-     * 
+     *
      * @param mixed $item_id
      * @param mixed $store_id
      */
@@ -280,8 +304,9 @@ class Item extends \ZCL\DB\Entity {
 
         $conn = \ZDB\DB::getConnect();
         $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   item_id = {$this->item_id} ";
-        if ($store_id > 0)
+        if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
+        }
         $amount = $conn->GetOne($sql);
         return $amount;
     }
@@ -319,7 +344,7 @@ class Item extends \ZCL\DB\Entity {
 
     /**
      * генерирует новый артикул
-     * 
+     *
      */
     public static function getNextArticle() {
         $conn = \ZDB\DB::getConnect();

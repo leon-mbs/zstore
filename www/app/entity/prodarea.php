@@ -8,7 +8,8 @@ namespace App\Entity;
  * @table=parealist
  * @keyfield=pa_id
  */
-class ProdArea extends \ZCL\DB\Entity {
+class ProdArea extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->pa_id = 0;

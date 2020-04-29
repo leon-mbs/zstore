@@ -2,37 +2,30 @@
 
 namespace App\Modules\Note\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Image;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\BookmarkableLink;
-use \Zippy\Html\Link\SubmitLink;
-use \ZCL\DB\EntityDataSource;
-use \App\Application as App;
-use \App\System;
-use \App\Modules\Note\Helper;
-use \App\Filter;
-use \ZCL\BT\Tags;
-use \ZCL\BT\Tree;
-use \ZCL\BT\TreeNode;
-use \App\Modules\Note\Entity\Node;
-use \App\Modules\Note\Entity\Topic;
-use \App\Modules\Note\Entity\TopicNode;
+use App\Application as App;
+use App\Modules\Note\Entity\Node;
+use App\Modules\Note\Entity\Topic;
+use App\Modules\Note\Entity\TopicNode;
+use App\Modules\Note\Helper;
+use App\System;
+use ZCL\BT\Tree;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\BookmarkableLink;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
+use Zippy\Html\Panel;
 
 /**
  * Главная страница
  */
-class Main extends \App\Pages\Base {
+class Main extends \App\Pages\Base
+{
 
     private $_edited = 0;
     private $clipboard = array();
@@ -153,7 +146,7 @@ class Main extends \App\Pages\Base {
         $topic->ispublic = $this->editform->editispublic->isChecked();
         if (strlen($topic->title) == 0) {
             $this->setError('notitle');
-             
+
             return;
         }
         $topic->save();
@@ -181,8 +174,7 @@ class Main extends \App\Pages\Base {
 
     //вырезать узел  в клипборд
     public function onNodeCut($sender) {
-        $this->clipboard[0] = $this->tree->selectedNodeId();
-        ;
+        $this->clipboard[0] = $this->tree->selectedNodeId();;
         $this->clipboard[1] = 'node';
     }
 
@@ -194,8 +186,7 @@ class Main extends \App\Pages\Base {
         Topic::deleteByNode($id);
         $this->ReloadTree();
         $this->ReloadTopic(-1);
-        $this->tree->selectedNodeId(-1);
-        ;
+        $this->tree->selectedNodeId(-1);;
     }
 
     //вставить узел
@@ -208,7 +199,7 @@ class Main extends \App\Pages\Base {
             }
             $node = Node::load($this->clipboard[0]);
             if (strpos($dest->mpath, $node->mpath) === 0) {
-             
+
                 $this->setError("nomovedesc");
                 return;
             }
@@ -270,15 +261,17 @@ class Main extends \App\Pages\Base {
             $this->tree->addNode($node, $parentnode);
 
             $nodelist[$item->node_id] = $node;
-            if ($first == null)
+            if ($first == null) {
                 $first = $node;
+            }
         }
     }
 
     // загрузить список  топиков  для  выбранного узла
     public function ReloadTopic($nodeid = 0) {
-        if ($nodeid == 0)
+        if ($nodeid == 0) {
             $nodeid = $this->tree->selectedNodeId();
+        }
 
         $this->_tarr = Topic::findByNode($nodeid);
         $this->topiclist->Reload();
@@ -363,8 +356,9 @@ class Main extends \App\Pages\Base {
 
     //вставить  в  узел топик  или  шорткат
     public function onTopicPaste($sender) {
-        if ($this->clipboard[1] != 'topic')
+        if ($this->clipboard[1] != 'topic') {
             return;
+        }
 
 
         $topic = Topic::load($this->clipboard[0]);
@@ -399,12 +393,13 @@ class Main extends \App\Pages\Base {
         if (strlen($file['tmp_name']) > 0) {
             if (filesize($file['tmp_name']) / 1024 / 1024 > 10) {
 
-              
+
                 $this->setError("filetobig");
                 return;
             }
-        } else
+        } else {
             return;
+        }
 
         $topic_id = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
 
@@ -477,7 +472,7 @@ class Main extends \App\Pages\Base {
 
     /**
      * @see WebPage
-     * 
+     *
      */
     public function beforeRender() {
         parent::beforeRender();
@@ -550,10 +545,8 @@ class Main extends \App\Pages\Base {
                 $this->topiclink->setVisible(true);
                 $this->topiclink->setLink("/topic/" . $topicid);
             }
-            $this->tpanel->addfile->setVisible(true);
-            ;
-            $this->tpanel->setfav->setVisible(true);
-            ;
+            $this->tpanel->addfile->setVisible(true);;
+            $this->tpanel->setfav->setVisible(true);;
             if ($topic->favorites > 0) {
                 $this->tpanel->setfav->setAttribute("style", "color:brown;");
             } else {

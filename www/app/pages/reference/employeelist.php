@@ -2,31 +2,32 @@
 
 namespace App\Pages\Reference;
 
+use App\Entity\Employee;
+use App\Helper;
 use ZCL\DB\EntityDataSource as EDS;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Employee;
-use \App\Helper;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class EmployeeList extends \App\Pages\Base {
+class EmployeeList extends \App\Pages\Base
+{
 
     private $_employee;
     private $_blist;
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('EmployeeList'))
+        if (false == \App\ACL::checkShowRef('EmployeeList')) {
             return;
+        }
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
         $this->add(new Panel('employeetable'))->setVisible(true);
@@ -70,8 +71,9 @@ class EmployeeList extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('EmployeeList'))
+        if (false == \App\ACL::checkEditRef('EmployeeList')) {
             return;
+        }
 
         Employee::delete($sender->owner->getDataItem()->employee_id);
         $this->employeetable->employeelist->Reload();
@@ -103,8 +105,9 @@ class EmployeeList extends \App\Pages\Base {
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('EmployeeList'))
+        if (false == \App\ACL::checkEditRef('EmployeeList')) {
             return;
+        }
 
         $login = trim($this->employeedetail->editlogin->getText());
 
@@ -115,7 +118,7 @@ class EmployeeList extends \App\Pages\Base {
             }
             $_emp = Employee::getFirst("login = '{$login}'");
             if ($_emp != null && $_emp->employee_id != $this->_employee->employee_id) {
-                $this->setError('assignedlogin' , $_emp->emp_name());
+                $this->setError('assignedlogin', $_emp->emp_name());
                 return;
             }
             $user = \App\Entity\User::getByLogin($login);

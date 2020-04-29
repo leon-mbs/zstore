@@ -2,21 +2,20 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Zippy\Html\Label;
-use \Zippy\Html\Image;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\DropDownChoice;
-use \App\Modules\Shop\Helper;
-use \App\Modules\Shop\Basket;
-use \App\Application as App;
-use \App\Modules\Shop\Entity\Product;
-use \App\Entity\Doc\Document;
-use \App\System;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Modules\Shop\Basket;
+use App\System;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Image;
+use Zippy\Html\Label;
 
 //страница формирования заказа  пользователя
-class Order extends Base {
+class Order extends Base
+{
 
     public $sum = 0;
     public $basketlist;
@@ -57,7 +56,7 @@ class Order extends Base {
         foreach ($rows as $row) {
             $product = $row->GetDataItem();
             if (!is_numeric($product->quantity)) {
-              
+
                 $this->setError('invalidquantity');
                 break;
             }
@@ -83,8 +82,9 @@ class Order extends Base {
 
     //формирование  заказа
     public function OnSave($sender) {
-        if (count($this->basketlist) == 0)
+        if (count($this->basketlist) == 0) {
             return;
+        }
 
         $email = trim($this->orderform->email->getText());
         $phone = trim($this->orderform->phone->getText());
@@ -92,17 +92,17 @@ class Order extends Base {
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
-             
+
             $this->setError("enterdelivery");
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
-             
+
             $this->setError("enteraddress");
             return;
         }
         if (strlen($phone) == 0 && strlen($email) == 0) {
-            
+
             $this->setError("entertelemail");
             return;
         }
@@ -111,17 +111,18 @@ class Order extends Base {
         try {
             $op = System::getOptions("shop");
 
-            $store_id = (int) $op["defstore"] ;
-            $f=0;
-            
+            $store_id = (int)$op["defstore"];
+            $f = 0;
+
             $store = \App\Entity\Store::load($store_id);
-            if($store != null){
-               $f  = $store->branch_id;
+            if ($store != null) {
+                $f = $store->branch_id;
             }
-            $order = Document::create('Order',$f);
+            $order = Document::create('Order', $f);
             $order->document_number = $order->nextNumber();
-            if (strlen($order->document_number) == 0)
+            if (strlen($order->document_number) == 0) {
                 $order->document_number = 'З0001';
+            }
             $amount = 0;
             $itlist = array();
             foreach ($this->basketlist as $product) {
@@ -143,7 +144,7 @@ class Order extends Base {
             );
             $order->packDetails('detaildata', $itlist);
 
-            
+
             $cust = \App\Entity\Customer::load($op["defcust"]);
             if ($cust instanceof \App\Entity\Customer) {
                 $order->customer_id = $cust->customer_id;
@@ -159,7 +160,7 @@ class Order extends Base {
             //todo  покупатель по умолчанию
             //todo  отослаnь нотификацию
             //todo  отослаnь письмо
-        } catch (Exception $ee) {
+        } catch (\Exception $ee) {
             $this->setError($ee->getMessage());
         }
 
@@ -170,7 +171,7 @@ class Order extends Base {
 
         $this->orderform->setVisible(false);
         $this->listform->setVisible(false);
-       
+
         $this->setSuccess("order_sent");
         App::RedirectURI("/shop");
     }

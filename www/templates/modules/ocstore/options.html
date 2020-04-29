@@ -1,59 +1,60 @@
 <html>
 
-    <body>
+<body>
 
-        <div class="row  ">
-            <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-                <h4>Настройки соединения</h4>
-                <form  zippy="cform"    >
-                    <div class="form-group"  >
-                        <label for="site">Адрес сайта</label>
-                        <input type="text" zippy="site" class="form-control" required="required"   />
-                    </div> 
-                    <div class="form-group"  >
-                        <label for="apiname">Имя API</label>
-                        <input type="text" zippy="apiname" class="form-control" required="required"   />
-                    </div> 
-                    <div class="form-group"  >
-                        <label for="key">Код API</label>
-                        <textarea style="height:150px;" zippy="key" class="form-control" required="required"   ></textarea>
-                    </div> 
-                    <div class="form-group  "  >
-                        <label   for="defcust" >Покупатель по умолчанию</label>
+<div class="row  ">
+    <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
+        <h4>Настройки соединения</h4>
+        <form zippy="cform">
+            <div class="form-group">
+                <label for="site">Адрес сайта</label>
+                <input type="text" zippy="site" class="form-control" required="required"/>
+            </div>
+            <div class="form-group">
+                <label for="apiname">Имя API</label>
+                <input type="text" zippy="apiname" class="form-control" required="required"/>
+            </div>
+            <div class="form-group">
+                <label for="key">Код API</label>
+                <textarea style="height:150px;" zippy="key" class="form-control" required="required"></textarea>
+            </div>
+            <div class="form-group  ">
+                <label for="defcust">Покупатель по умолчанию</label>
 
-                        <select class="form-control select2" zippy="defcust">
+                <select class="form-control select2" zippy="defcust">
 
-                            <option value='0'>Не выбран</option>
-                        </select>
-                        <small class="form-text text-muted">Условный контрагент от имени  котрого будут  формироватся заказы</small>
+                    <option value='0'>Не выбран</option>
+                </select>
+                <small class="form-text text-muted">Условный контрагент от имени котрого будут формироватся
+                    заказы</small>
 
-                    </div> 
-                    <div class="form-group   "  >
-                        <label   for="defpricetype" >Тип  цены  </label>
+            </div>
+            <div class="form-group   ">
+                <label for="defpricetype">Тип цены </label>
 
-                        <select class="form-control" zippy="defpricetype">
-                            <option value='0'>Не выбран</option>
+                <select class="form-control" zippy="defpricetype">
+                    <option value='0'>Не выбран</option>
 
-                        </select>
+                </select>
 
-                    </div>   
-                    <div class="form-group"  >
-                        <input type="submit" value="Сохранить" zippy="save" class="btn   btn-primary mr-2"/>
-                        <input type="submit"     value="Соединиться" zippy="check" class="btn   btn-primary mr-2"/>
-                        <img id="loader" style="display:none" src="/assets/images/ajax-loader.gif">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" zippy="save" class="btn   btn-primary mr-2"/>
+                <input type="submit" value="Соединиться" zippy="check" class="btn   btn-primary mr-2"/>
+                <img id="loader" style="display:none" src="/assets/images/ajax-loader.gif">
 
-                    </div>              
-                </form>
-            </div>                
-        </div>  
-        <script>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
 
-            function check_check() {
+    function check_check() {
 
-                $('#loader').removeAttr('style');
-            }
+        $('#loader').removeAttr('style');
+    }
 
-        </script>              
+</script>
 
-    </body>
+</body>
 </html>

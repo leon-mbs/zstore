@@ -2,15 +2,14 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
-use \App\Util;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ счет фактура
  *
  */
-class Invoice extends \App\Entity\Doc\Document {
+class Invoice extends \App\Entity\Doc\Document
+{
 
     public function generateReport() {
 
@@ -35,7 +34,7 @@ class Invoice extends \App\Entity\Doc\Document {
         }
 
         $totalstr = H::sumstr($this->amount);
- 
+
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
@@ -65,13 +64,13 @@ class Invoice extends \App\Entity\Doc\Document {
             if ($customer->discount > 0) {
                 return; //процент
             } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0 );
+                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
                 $customer->save();
             }
         }
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);
         }
         return true;
     }
@@ -82,7 +81,7 @@ class Invoice extends \App\Entity\Doc\Document {
 
     public function getRelationBased() {
         $list = array();
-        $list['GoodsIssue'] ='Расходная накладная';
+        $list['GoodsIssue'] = 'Расходная накладная';
         $list['Invoice'] = 'Кассовый чек';
 
         return $list;

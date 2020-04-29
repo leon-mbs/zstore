@@ -1,33 +1,33 @@
 <html>
-    <body>
+<body>
 
-        <div  class="card p-3 mb-3 bg-white  " > 
-            <a   data-toggle="collapse" href="#collapseminqty"   aria-expanded="false" aria-controls="collapseExample">
-                <h4  >Минимальное количество <i style="font-size:smaller" class="fa fa-angle-down"></i></h4>
-            </a>
-            <small>Товары для которых задано минимальное количество на  складе  и актуальное количество меньше заданного</small>
-            <div class="collapse" id="collapseminqty">
-                <a zippy="csvminqty"  >Скачать  CSV</a>  
-                <table class="table   table-sm">
-                    <tr>
-                        <th>Склад</th>
-                        <th>Товар</th>
-                        <th>Код</th>
+<div class="card p-3 mb-3 bg-white  ">
+    <a data-toggle="collapse" href="#collapseminqty" aria-expanded="false" aria-controls="collapseExample">
+        <h4>Минимальное количество <i style="font-size:smaller" class="fa fa-angle-down"></i></h4>
+    </a>
+    <small>Товары для которых задано минимальное количество на складе и актуальное количество меньше заданного</small>
+    <div class="collapse" id="collapseminqty">
+        <a zippy="csvminqty">Скачать CSV</a>
+        <table class="table   table-sm">
+            <tr>
+                <th>Склад</th>
+                <th>Товар</th>
+                <th>Код</th>
 
-                        <th class="text-right">Факт</th>
-                        <th  class="text-right">Мин.</th>
-                    </tr>
-                    <tr zippy="mqlist">
-                        <td zippy="storename"></td>
-                        <td zippy="itemname"></td>
-                        <td zippy="item_code"></td>
-                        <td zippy="qty"  class="text-right"></td>
-                        <td zippy="minqty" class="text-right" ></td> 
-                    </tr>
-                </table>
-                <div zippy="mqpag"></div>
+                <th class="text-right">Факт</th>
+                <th class="text-right">Мин.</th>
+            </tr>
+            <tr zippy="mqlist">
+                <td zippy="storename"></td>
+                <td zippy="itemname"></td>
+                <td zippy="item_code"></td>
+                <td zippy="qty" class="text-right"></td>
+                <td zippy="minqty" class="text-right"></td>
+            </tr>
+        </table>
+        <div zippy="mqpag"></div>
 
-            </div>
-        </div>
-    </body>
+    </div>
+</div>
+</body>
 </html>

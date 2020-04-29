@@ -2,29 +2,26 @@
 
 namespace App\Modules\Issue\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\BookmarkableLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Customer;
-use \App\Modules\Issue\Entity\Project;
-use \App\Modules\Issue\Entity\Issue;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \App\System;
-use \App\Application as App;
-use \App\Helper as H;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Modules\Issue\Entity\Project;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class ProjectList extends \App\Pages\Base {
+class ProjectList extends \App\Pages\Base
+{
 
     public $_project = null;
     public $_msglist = array();
@@ -81,8 +78,9 @@ class ProjectList extends \App\Pages\Base {
         $this->showpan->add(new Form('statusform'))->onSubmit($this, 'onStatus');
         $this->showpan->statusform->add(new DropDownChoice('stlist', $this->_stlist, 0));
 
-        if ($id > 0)
+        if ($id > 0) {
             $this->open($id);
+        }
     }
 
     public function listOnRow($row) {
@@ -126,7 +124,6 @@ class ProjectList extends \App\Pages\Base {
         $this->resetURL();
     }
 
-    
 
     public function filterOnSubmit($sender) {
         $this->projectpanel->projectlist->Reload();
@@ -141,14 +138,15 @@ class ProjectList extends \App\Pages\Base {
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('StoreList'))
+        if (false == \App\ACL::checkEditRef('StoreList')) {
             return;
+        }
 
         $this->_project->project_name = $this->projectform->editname->getText();
         $this->_project->customer_id = $this->projectform->editcust->getKey();
         $this->_project->desc = $this->projectform->editdesc->getText();
         if ($this->_project->project_name == '') {
-        
+
             $this->setError("entername");
             return;
         }
@@ -178,8 +176,9 @@ class ProjectList extends \App\Pages\Base {
     public function open($id) {
 
         $this->_project = Project::load($id);
-        if ($this->_project == null)
+        if ($this->_project == null) {
             return;
+        }
         $this->showpan->mtitle->setText($this->_project->project_name);
         $this->showpan->mdesc->setText($this->_project->desc, true);
 
@@ -192,7 +191,7 @@ class ProjectList extends \App\Pages\Base {
     }
 
     public function toilistOnClick($sender) {
-       App::Redirect("\\App\\Modules\\Issue\\Pages\\IssueList",0,$this->_project->project_id); 
+        App::Redirect("\\App\\Modules\\Issue\\Pages\\IssueList", 0, $this->_project->project_id);
     }
 
     public function onAddMsg($sender) {
@@ -202,8 +201,9 @@ class ProjectList extends \App\Pages\Base {
         $msg->user_id = $this->_user->user_id;
         $msg->item_id = $this->_project->project_id;
         $msg->item_type = \App\Entity\Message::TYPE_PROJECT;
-        if (strlen($msg->message) == 0)
+        if (strlen($msg->message) == 0) {
             return;
+        }
         $msg->save();
 
         $this->showpan->addmsgform->msgdata->setText('');
@@ -283,7 +283,8 @@ class ProjectList extends \App\Pages\Base {
 
 }
 
-class ProjectDS implements \Zippy\Interfaces\DataSource {
+class ProjectDS implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -300,13 +301,15 @@ class ProjectDS implements \Zippy\Interfaces\DataSource {
         $conn = \ZDB\DB::getConnect();
 
 
-        if ($status == 0)
+        if ($status == 0) {
             $where = " status <>  " . Project::STATUS_CLOSED;
-        else
+        } else {
             $where = " status= " . $status;
+        }
 
-        if ($cust > 0)
+        if ($cust > 0) {
             $where .= " and customer_id = " . $cust;
+        }
 
 
         if (strlen($number) > 0) {
@@ -330,7 +333,7 @@ class ProjectDS implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
 
 }

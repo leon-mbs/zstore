@@ -8,7 +8,8 @@ namespace App\Entity;
  * @table=poslist
  * @keyfield=pos_id
  */
-class Pos extends \ZCL\DB\Entity {
+class Pos extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->pos_id = 0;
@@ -33,10 +34,10 @@ class Pos extends \ZCL\DB\Entity {
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->details);
 
-        $this->mf = (int) ($xml->mf[0]);
-        $this->pricetype = (string) ($xml->pricetype[0]);
-        $this->store = (int) ($xml->store[0]);
-        $this->comment = (string) ($xml->comment[0]);
+        $this->mf = (int)($xml->mf[0]);
+        $this->pricetype = (string)($xml->pricetype[0]);
+        $this->store = (int)($xml->store[0]);
+        $this->comment = (string)($xml->comment[0]);
 
         parent::afterLoad();
     }

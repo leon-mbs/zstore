@@ -1,8 +1,4 @@
- 
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
-
-
-
 
 
     <tr>
@@ -10,14 +6,15 @@
             <br><br> Возврат № {{document_number}} от {{date}} <br><br><br>
         </td>
     </tr>
-     <tr>
+    <tr>
         <td></td>
         <td>Покупатель</td>
         <td colspan="5">{{customer_name}}</td>
     </tr>
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование
+        </th>
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
@@ -37,11 +34,11 @@
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-     <tr style="font-weight: bolder;">
+    <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Оплачено:</td>
         <td style="border-top:1px #000 solid;" align="right">{{payed}}</td>
     </tr>
 
- 
+
 </table>
 

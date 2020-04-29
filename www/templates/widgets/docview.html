@@ -1,222 +1,235 @@
 <html>
-    <head>
-    </head>
-    <body>
-        <div  class="card  p-3 mb-3 bg-white  " > 
-            <div class="card">
+<head>
+</head>
+<body>
+<div class="card  p-3 mb-3 bg-white  ">
+    <div class="card">
 
 
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link  active" href="#printtab" data-toggle="tab"><i
+                    class="fa fa-print"></i> Форма для печати</a></li>
+            <li class="nav-item"><a class="nav-link" href="#messagetab" data-toggle="tab"><i class="fa fa-comments"></i>
+                Коментарии <span zippy="hmessages" class="badge badge-pill badge-info"></span> &nbsp;&nbsp;<i
+                        class="fa fa-paperclip"></i> файлы <span zippy="hfiles"
+                                                                 class="badge badge-pill badge-info"></span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#doctab" data-toggle="tab"><i
+                    class="fas fa-project-diagram"></i> Связанные документы <span zippy="hdocs"
+                                                                                  class="badge badge-pill badge-info"></span></a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#stattab" data-toggle="tab"><i
+                    class="fa fa-calendar-alt"></i> История изменений </a></li>
+        </ul>
 
-                <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link  active" href="#printtab" data-toggle="tab"><i class="fa fa-print"></i> Форма для печати</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#messagetab" data-toggle="tab"><i class="fa fa-comments"></i> Коментарии <span zippy="hmessages" class="badge badge-pill badge-info"></span> &nbsp;&nbsp;<i class="fa fa-paperclip"></i> файлы <span zippy="hfiles" class="badge badge-pill badge-info"></span></a> </li>
-                    <li class="nav-item"><a class="nav-link" href="#doctab"  data-toggle="tab"><i class="fas fa-project-diagram"></i> Связанные   документы <span zippy="hdocs" class="badge badge-pill badge-info"></span></a> </li>
-                    <li class="nav-item"><a class="nav-link" href="#stattab" data-toggle="tab"><i class="fa fa-calendar-alt"></i> История изменений   </a></li>
-                </ul>
+        <div class="tab-content">
+            <div id="printtab" class="tab-pane  active">
+                &nbsp; &nbsp; &nbsp;
+                <a zippy="print" onclick=" printform()" title="Печать"><img class="icon20"
+                                                                            src="/assets/images/print_32.png"></a>
+                <a zippy="html" target="_blank" title="Экспорт в HTML"><img class="icon20"
+                                                                            src="/assets/images/html.png"></a>
+                <a zippy="word" target="_blank" title="Экспорт в Word"><img class="icon20"
+                                                                            src="/assets/images/word_32.png"></a>
+                <a zippy="excel" target="_blank" title="Экспорт в Excel"><img class="icon20"
+                                                                              src="/assets/images/excel_32.png"></a>
+                <a zippy="pdf" target="_blank" title="Экспорт в PDF"><img class="icon20"
+                                                                          src="/assets/images/pdf_32.png"></a>
+                <a zippy="pos" onclick=" printpos()" title="Печать на  чековом принтере"><img class="icon20"
+                                                                                              src="/assets/images/pos-terminal-50.png"></a>
 
-                <div class="tab-content">
-                    <div id="printtab" class="tab-pane  active">
-                        &nbsp;  &nbsp;  &nbsp; 
-                        <a zippy="print" onclick=" printform()"   title="Печать"><img class="icon20" src="/assets/images/print_32.png"></a>
-                        <a zippy="html" target="_blank" title="Экспорт в HTML"><img class="icon20" src="/assets/images/html.png"></a>
-                        <a zippy="word" target="_blank" title="Экспорт в Word"><img class="icon20" src="/assets/images/word_32.png"></a>
-                        <a zippy="excel" target="_blank" title="Экспорт в Excel"><img class="icon20" src="/assets/images/excel_32.png"></a>
-                        <a zippy="pdf" target="_blank" title="Экспорт в PDF"><img class="icon20" src="/assets/images/pdf_32.png"></a>
-                        <a zippy="pos" onclick=" printpos()"   title="Печать на  чековом принтере"><img class="icon20" src="/assets/images/pos-terminal-50.png"></a>
+                <br>
+                <br>
 
-                        <br>
-                        <br>
+                <div zippy="preview" class="table-responsive-sm">
+                </div>
+                <div zippy="previewpos" style="display:none;">
+                </div>
 
-                        <div zippy="preview" class="table-responsive-sm" >
-                        </div> 
-                        <div zippy="previewpos"  style="display:none;"  >
-                        </div> 
+
+            </div>
+
+
+            <div id="messagetab" class="tab-pane">
+                <div class="row">
+                    <div class="col-auto ">
+
+
+                        <table class="table table-sm">
+                            <tr zippy="dw_msglist">
+                                <td>
+                                    <span><b zippy="msguser"></b> <span zippy="msgdate"
+                                                                        class="text-muted float-right"></span></span>
+
+                                    <br><span style="width:300px" zippy="msgdata"></span>
+                                </td>
+                                <td valign="top"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <form zippy="addmsgform">
+
+                            <div class="form-group">
+                                <label for="addmsg"> Коментарий: </label>
+                                <textarea class="form-control" required="required" zippy="addmsg"
+                                          style="width:300px;height:120px;"></textarea>
+                            </div>
+                            <input class="btn btn-light  " type="submit" value="Добавить">
+                        </form>
 
 
                     </div>
+                    <div class="col-auto ">
 
+                        <table class="table table-sm">
+                            <tr zippy="dw_files">
+                                <td style="width:200px"><a zippy="filename" target="_blank"></a></td>
+                                <td><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
 
-                    <div id="messagetab" class="tab-pane">
-                        <div class="row">
-                            <div class="col-auto ">
+                        <form zippy="addfileform" enctype="multipart/form-data">
 
-
-                                <table   class="table table-sm">
-                                    <tr zippy="dw_msglist">
-                                        <td>
-                                            <span><b   zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
-
-                                            <br><span style="width:300px" zippy="msgdata"></span>
-                                        </td>
-                                        <td valign="top"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
-                                    </tr>
-                                </table>
-                                <form zippy="addmsgform">
-
-                                    <div class="form-group">
-                                        <label for="addmsg"> Коментарий: </label>
-                                        <textarea class="form-control" required="required" zippy="addmsg" style="width:300px;height:120px;"></textarea>
-                                    </div> 
-                                    <input class="btn btn-light  " type="submit" value="Добавить">
-                                </form>
-
-
-
-
+                            <div class="form-group">
+                                <label for="addfile"> Выбрать файл: </label>
+                                <input class="form-control" type="file" required="required" zippy="addfile">
                             </div>
-                            <div class="col-auto ">
 
-                                <table   class="table table-sm">
-                                    <tr zippy="dw_files"  >
-                                        <td style="width:200px"><a zippy="filename" target="_blank"></a></td>
-                                        <td><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
-                                    </tr>
-                                </table>
-
-                                <form zippy="addfileform" enctype="multipart/form-data">
-
-                                    <div class="form-group">
-                                        <label for="addfile"> Выбрать файл: </label>
-                                        <input class="form-control" type="file" required="required" zippy="addfile">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="adddescfile">  Коментарий </label> 
-                                        <input class="form-control" type="text" zippy="adddescfile" style="width:200px">
-                                    </div>
-                                    <input class="btn btn-light  " type="submit" value="Добавить">
-                                    <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
-
-                                </form>
-
+                            <div class="form-group">
+                                <label for="adddescfile"> Коментарий </label>
+                                <input class="form-control" type="text" zippy="adddescfile" style="width:200px">
                             </div>
-                        </div>
+                            <input class="btn btn-light  " type="submit" value="Добавить">
+                            <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+
+                        </form>
+
                     </div>
+                </div>
+            </div>
 
-                    <div id="doctab" class="tab-pane">
-                        <div class="row">
+            <div id="doctab" class="tab-pane">
+                <div class="row">
 
-                            <div  class="col-auto ">
+                    <div class="col-auto ">
 
-                                <table class="table table-sm">
-                                    <tr><td colspan="2">
-                                            <span data-label="pdoc"><b>Родительский документ:</b></span> <a zippy="pdoc"></a>
-                                        </td></tr>
-                                    <tr zippy="reldocs">
-                                        <td><a zippy="docitem"></a></td>
-                                        <td><a zippy="deldoc"><i class="fa fa-trash"></i></a></td>
-                                    </tr>
-                                </table>
-                                <hr>
-                                <form zippy="addrelform">
+                        <table class="table table-sm">
+                            <tr>
+                                <td colspan="2">
+                                    <span data-label="pdoc"><b>Родительский документ:</b></span> <a zippy="pdoc"></a>
+                                </td>
+                            </tr>
+                            <tr zippy="reldocs">
+                                <td><a zippy="docitem"></a></td>
+                                <td><a zippy="deldoc"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <form zippy="addrelform">
 
-                                    <label for="addrel">Добавить дочерний документ:</label>
-                                    <div class="form-group">
-                                        <input class="form-control" placeholder="Начните ввод номера " style="width:200px" type="text"
-                                               required="required" zippy="addrel">
-                                    </div>                                            
-
-                                    <input class="btn btn-light  "  type="submit" value="Добавить">
-                                </form>
+                            <label for="addrel">Добавить дочерний документ:</label>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Начните ввод номера " style="width:200px"
+                                       type="text"
+                                       required="required" zippy="addrel">
                             </div>
 
-                        </div>
-
-                    </div>                 
-
-                    <div id="stattab" class="tab-pane">
-                        <div class="row">
-
-                            <div   class="col-auto " >
-                                <h5>История изменений статусов</h5>
-                                <table class="table table-sm">
-                                    <tr>
-                                        <th>Статус</th>
-                                        <th>Дата</th>
-                                        <th>Изменил</th>
-
-
-                                    </tr>
-                                    <tr zippy="dw_statelist" >
-                                        <td zippy="statename"></td>
-                                        <td  class="text-nowrap " zippy="statedate"></td>
-                                        <td zippy="stateuser"></td>
-
-
-                                    </tr>
-                                </table>
-                            </div>
-                            <div   class="col-auto " >
-                                <h5>История оплат</h5>
-                                <table class="table table-sm">
-                                    <tr>
-                                        <th>Дата</th>
-                                        <th>Счет</th>
-                                        <th class="text-right">Приход</th>
-                                        <th class="text-right">Расход</th>
-                                     
-
-                                    </tr>
-                                    <tr zippy="dw_paylist"  >
-                                        <td class="text-nowrap " zippy="paydate"></td>
-                                        <td zippy="paymf"></td>
-                                        <td class="text-right " zippy="payamountp"></td>
-                                        <td class="text-right " zippy="payamountm"></td>
-                                        <td zippy="payuser"></td>
-                                        <td zippy="paycomment"  ></td>
-
-                                    </tr>
-                                </table>
-                            </div>
-                            <div   class="col-auto " >
-                                <h5>Проводки по  складу</h5>
-                                <table class="table table-sm">
-                                    <tr>
-                                        <th>ТМЦ</th>
-                                        <th>Код</th>
-                                        <th class="text-right">Кол.</th>
-                                        <th class="text-right">Цена</th>
-                                        <th class="text-right">Сумма</th>
-    
-                                    </tr>
-                                    <tr zippy="dw_itemlist"  >
-                                        <td   zippy="itname"></td>
-                                        <td zippy="itcode"></td>
-                                        <td class="text-right " zippy="itqty"></td>
-                                        <td class="text-right " zippy="itprice"></td>
-                                        <td class="text-right " zippy="itamount"></td>
-                                     
-
-                                    </tr>
-                                </table>
-                            </div>                            
-                        </div>
-
-
+                            <input class="btn btn-light  " type="submit" value="Добавить">
+                        </form>
                     </div>
 
                 </div>
+
             </div>
+
+            <div id="stattab" class="tab-pane">
+                <div class="row">
+
+                    <div class="col-auto ">
+                        <h5>История изменений статусов</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Статус</th>
+                                <th>Дата</th>
+                                <th>Изменил</th>
+
+
+                            </tr>
+                            <tr zippy="dw_statelist">
+                                <td zippy="statename"></td>
+                                <td class="text-nowrap " zippy="statedate"></td>
+                                <td zippy="stateuser"></td>
+
+
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-auto ">
+                        <h5>История оплат</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Дата</th>
+                                <th>Счет</th>
+                                <th class="text-right">Приход</th>
+                                <th class="text-right">Расход</th>
+
+
+                            </tr>
+                            <tr zippy="dw_paylist">
+                                <td class="text-nowrap " zippy="paydate"></td>
+                                <td zippy="paymf"></td>
+                                <td class="text-right " zippy="payamountp"></td>
+                                <td class="text-right " zippy="payamountm"></td>
+                                <td zippy="payuser"></td>
+                                <td zippy="paycomment"></td>
+
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-auto ">
+                        <h5>Проводки по складу</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>ТМЦ</th>
+                                <th>Код</th>
+                                <th class="text-right">Кол.</th>
+                                <th class="text-right">Цена</th>
+                                <th class="text-right">Сумма</th>
+
+                            </tr>
+                            <tr zippy="dw_itemlist">
+                                <td zippy="itname"></td>
+                                <td zippy="itcode"></td>
+                                <td class="text-right " zippy="itqty"></td>
+                                <td class="text-right " zippy="itprice"></td>
+                                <td class="text-right " zippy="itamount"></td>
+
+
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
         </div>
+    </div>
+</div>
 
-            <script>
+<script>
 
-                function printform()
-                {
-                    $('#previewpos').attr('style', 'display:none');
-                    $('#preview').attr('style', 'display:block');
-                    $('#preview').printThis();
-                }
-                function printpos()
-                {
-                    $('#preview').attr('style', 'display:none');
-                    $('#previewpos').attr('style', 'display:block');
-                    $('#previewpos').printThis();
-                }
+    function printform() {
+        $('#previewpos').attr('style', 'display:none');
+        $('#preview').attr('style', 'display:block');
+        $('#preview').printThis();
+    }
 
+    function printpos() {
+        $('#preview').attr('style', 'display:none');
+        $('#previewpos').attr('style', 'display:block');
+        $('#previewpos').printThis();
+    }
 
 
-
-            </script>
-    </body>
+</script>
+</body>
 </html>

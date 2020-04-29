@@ -1,6 +1,3 @@
- 
-
-
 <table class="ctable" cellspacing="0" cellpadding="1">
     <tr colspan="4" style="font-weight: bolder;">
         <td colspan="4">
@@ -24,38 +21,38 @@
 
     </tr>
     {{/_detail}}
-          <tr>
+    <tr>
 
-            <td width="300px"   align="right"><b>Всього A:</b></td>
-            <td width="100px"   align="right"><b>{{totala}}</b> &nbsp;</td>
-            <td width="80px"   align="right">  &nbsp;</td>
-            <td width="30px" > </td>
+        <td width="300px" align="right"><b>Всього A:</b></td>
+        <td width="100px" align="right"><b>{{totala}}</b> &nbsp;</td>
+        <td width="80px" align="right"> &nbsp;</td>
+        <td width="30px"></td>
 
-        </tr>
-         <tr>
+    </tr>
+    <tr>
 
-            <td width="300px"   align="right"><b>Всього B:</b></td>
-            <td width="100px"   align="right"><b>{{totalb}}</b> &nbsp;</td>
-            <td width="80px"   align="right">  &nbsp;</td>
-            <td width="30px"  > </td>
+        <td width="300px" align="right"><b>Всього B:</b></td>
+        <td width="100px" align="right"><b>{{totalb}}</b> &nbsp;</td>
+        <td width="80px" align="right"> &nbsp;</td>
+        <td width="30px"></td>
 
-        </tr>
-         <tr>
+    </tr>
+    <tr>
 
-            <td width="300px"   align="right"><b>Всього C:</b></td>
-            <td width="100px"   align="right"><b>{{totalc}}</b> &nbsp;</td>
-            <td width="80px"   align="right">  &nbsp;</td>
-            <td width="30px"  > </td>
+        <td width="300px" align="right"><b>Всього C:</b></td>
+        <td width="100px" align="right"><b>{{totalc}}</b> &nbsp;</td>
+        <td width="80px" align="right"> &nbsp;</td>
+        <td width="30px"></td>
 
-        </tr>
-         <tr>
+    </tr>
+    <tr>
 
-            <td width="300px"   align="right"><b>Всього:</b></td>
-            <td width="100px"   align="right"><b>{{total}}</b> &nbsp;</td>
-            <td width="80px"   align="right">  &nbsp;</td>
-            <td width="30px"  > </td>
+        <td width="300px" align="right"><b>Всього:</b></td>
+        <td width="100px" align="right"><b>{{total}}</b> &nbsp;</td>
+        <td width="80px" align="right"> &nbsp;</td>
+        <td width="30px"></td>
 
-        </tr>
+    </tr>
 
 </table>
 

@@ -2,30 +2,29 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Customer;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Store;
-use \App\Helper as H;
-use \App\System;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода  счета  от  поставщика
  */
-class InvoiceCust extends \App\Pages\Base {
+class InvoiceCust extends \App\Pages\Base
+{
 
     public $_itemlist = array();
     private $_doc;
@@ -47,7 +46,7 @@ class InvoiceCust extends \App\Pages\Base {
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(  true), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
 
 
         $this->docform->add(new TextInput('editpayamount', "0"));
@@ -61,12 +60,12 @@ class InvoiceCust extends \App\Pages\Base {
         $this->docform->add(new SubmitButton('brate'))->onClick($this, 'onRate');
         $this->docform->add(new TextInput('editdisc', "0"));
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
-        
+
         $this->docform->add(new Label('nds', 0));
         $this->docform->add(new Label('rate', 1));
         $this->docform->add(new Label('disc', 0));
-       
-        
+
+
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
         $this->docform->add(new Label('total'));
@@ -110,10 +109,10 @@ class InvoiceCust extends \App\Pages\Base {
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->total->setText($this->_doc->amount);
-  
+
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
- 
+
         } else {
             $this->_doc = Document::create('InvoiceCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -139,8 +138,9 @@ class InvoiceCust extends \App\Pages\Base {
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -154,7 +154,7 @@ class InvoiceCust extends \App\Pages\Base {
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
- 
+
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -174,8 +174,9 @@ class InvoiceCust extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $item = $sender->owner->getDataItem();
         // unset($this->_itemlist[$item->item_id]);
 
@@ -210,18 +211,18 @@ class InvoiceCust extends \App\Pages\Base {
         }
 
         $tarr = array();
- 
-        foreach($this->_itemlist as $k=>$value){
-               
-           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
-              $tarr[$item->item_id] = $item;    // заменяем
-           }   else {
-              $tarr[$k] = $value;    // старый
-           }
-                
+
+        foreach ($this->_itemlist as $k => $value) {
+
+            if ($this->_rowid > 0 && $this->_rowid == $k) {
+                $tarr[$item->item_id] = $item;    // заменяем
+            } else {
+                $tarr[$k] = $value;    // старый
+            }
+
         }
-     
-        if($this->_rowid == 0) {        // в конец
+
+        if ($this->_rowid == 0) {        // в конец
             $tarr[$item->item_id] = $item;
         }
         $this->_itemlist = $tarr;
@@ -249,9 +250,9 @@ class InvoiceCust extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
-
+        }
 
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -259,12 +260,12 @@ class InvoiceCust extends \App\Pages\Base {
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = $this->docform->payed->getText();
-     
+
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
-     
-     
+
+
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
         }
@@ -286,7 +287,7 @@ class InvoiceCust extends \App\Pages\Base {
         }
 
         $common = System::getOptions("common");
- 
+
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
@@ -305,8 +306,9 @@ class InvoiceCust extends \App\Pages\Base {
 
 
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
@@ -321,10 +323,11 @@ class InvoiceCust extends \App\Pages\Base {
             $conn->CommitTrans();
 
 
-            if ($isEdited)
+            if ($isEdited) {
                 App::RedirectBack();
-            else
+            } else {
                 App::Redirect("\\App\\Pages\\Register\\GRList");
+            }
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -338,7 +341,7 @@ class InvoiceCust extends \App\Pages\Base {
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
-     
+
     }
 
     public function onPayed($sender) {
@@ -358,43 +361,47 @@ class InvoiceCust extends \App\Pages\Base {
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        
+
     }
 
     private function CalcPay() {
-         $total = $this->docform->total->getText();
-         $rate  = $this->docform->rate->getText();
-  
-        $nds   = $this->docform->nds->getText();
-        $disc  = $this->docform->disc->getText();
-        $total = $total + $nds - $disc;  
-        $rate  = $this->docform->rate->getText();
-        if($rate !=1 && $rate >0)   $total = $total * $rate;
-      
+        $total = $this->docform->total->getText();
+        $rate = $this->docform->rate->getText();
+
+        $nds = $this->docform->nds->getText();
+        $disc = $this->docform->disc->getText();
+        $total = $total + $nds - $disc;
+        $rate = $this->docform->rate->getText();
+        if ($rate != 1 && $rate > 0) {
+            $total = $total * $rate;
+        }
+
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
     }
 
-    
+
     public function onDisc($sender) {
         $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
-        $this->CalcPay() ;
+        $this->CalcPay();
         $this->goAnkor("tankor");
     }
+
     public function onNds($sender) {
         $this->docform->nds->setText(H::fa($this->docform->editnds->getText()));
-        $this->CalcPay() ;
+        $this->CalcPay();
         $this->goAnkor("tankor");
     }
+
     public function onRate($sender) {
         $this->docform->rate->setText(H::fa($this->docform->editrate->getText()));
-        $this->CalcPay() ;
+        $this->CalcPay();
         $this->goAnkor("tankor");
     }
-    
-    
+
+
     /**
      * Валидация   формы
      *

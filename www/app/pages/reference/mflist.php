@@ -2,22 +2,23 @@
 
 namespace App\Pages\Reference;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\MoneyFund;
+use App\Entity\MoneyFund;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 /**
  * Справочник  денежных счетов
  */
-class MFList extends \App\Pages\Base {
+class MFList extends \App\Pages\Base
+{
 
     private $_mf;
     private $_balance;
@@ -25,8 +26,9 @@ class MFList extends \App\Pages\Base {
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('MFList'))
+        if (false == \App\ACL::checkShowRef('MFList')) {
             return;
+        }
         $this->_balance = MoneyFund::Balance();
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
@@ -55,8 +57,9 @@ class MFList extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('MFList'))
+        if (false == \App\ACL::checkEditRef('MFList')) {
             return;
+        }
 
 
         $mf_id = $sender->owner->getDataItem()->mf_id;
@@ -91,8 +94,9 @@ class MFList extends \App\Pages\Base {
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('MFList'))
+        if (false == \App\ACL::checkEditRef('MFList')) {
             return;
+        }
 
         $this->_mf->mf_name = $this->mfdetail->editmf_name->getText();
 
@@ -102,10 +106,10 @@ class MFList extends \App\Pages\Base {
             return;
         }
         $this->_mf->branch_id = $this->mfdetail->editbranch->getValue();
-      //  if ($this->_tvars['usebranch'] == true && $this->_mf->branch_id == 0) {
-      //      $this->setError('Не выбран  филиал');
-      //      return;
-     //   }
+        //  if ($this->_tvars['usebranch'] == true && $this->_mf->branch_id == 0) {
+        //      $this->setError('Не выбран  филиал');
+        //      return;
+        //   }
 
         $this->_mf->Save();
         $this->mfdetail->setVisible(false);

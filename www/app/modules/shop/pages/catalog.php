@@ -2,25 +2,22 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Carbon\Carbon;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \ZCL\DB\EntityDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\BookmarkableLink;
-use \App\Modules\Shop\Entity\ProductGroup;
-use \App\Modules\Shop\Entity\Product;
-use \App\Modules\Shop\Helper;
-use \App\Filter;
-use \App\Helper as H;
+use App\Filter;
+use App\Modules\Shop\Entity\Product;
+use App\Modules\Shop\Helper;
+use ZCL\DB\EntityDataSource;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\BookmarkableLink;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class Catalog extends Base {
+class Catalog extends Base
+{
 
     public $group_id = 0;
 
@@ -45,8 +42,7 @@ class Catalog extends Base {
 
         $pr = Helper::getPriceRange($this->group_id);
         $this->sfilter->add(new TextInput('pricefrom'))->setText(floor($pr["minp"]));
-        $this->sfilter->add(new TextInput('priceto'))->setText(ceil($pr["maxp"]));
-        ;
+        $this->sfilter->add(new TextInput('priceto'))->setText(ceil($pr["maxp"]));;
 
         $this->sfilter->add(new TextInput('searchkey'));
 
@@ -65,8 +61,6 @@ class Catalog extends Base {
         $this->catlist->Reload();
 
 
-
-
         //недавно  просмотренные
         $ra = array();
         $recently = \App\Session::getSession()->recently;
@@ -74,8 +68,9 @@ class Catalog extends Base {
             $recently = array_reverse($recently);
             foreach ($recently as $r) {
                 $ra[] = $r;
-                if (count($ra) >= 4)
+                if (count($ra) >= 4) {
                     break;
+                }
             }
         }
         $this->add(new Panel("recentlyp"))->setVisible(count($ra) > 0);
@@ -127,8 +122,7 @@ class Catalog extends Base {
         $this->sfilter->clean();
         $pr = Helper::getPriceRange($this->group_id);
         $this->sfilter->pricefrom->setText(floor($pr["minp"] / 100));
-        $this->sfilter->priceto->setText(ceil($pr["maxp"] / 100));
-        ;
+        $this->sfilter->priceto->setText(ceil($pr["maxp"] / 100));;
 
         $this->catlist->Reload();
     }
@@ -138,7 +132,7 @@ class Catalog extends Base {
         $product = $sender->getOwner()->getDataItem();
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
-         
+
         $this->setSuccess("addedtocart");
 
         $this->resetURL();
@@ -164,7 +158,8 @@ class Catalog extends Base {
 
 }
 
-class CatDataSource implements \Zippy\Interfaces\DataSource {
+class CatDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -224,18 +219,24 @@ class CatDataSource implements \Zippy\Interfaces\DataSource {
 
         $order = "productname";
         $sort = $this->page->sortform->sortorder->getValue();
-        if ($sort == 0)
+        if ($sort == 0) {
             $order = "price asc";
-        if ($sort == 1)
+        }
+        if ($sort == 1) {
             $order = "price desc";
-        if ($sort == 2)
+        }
+        if ($sort == 2) {
             $order = "rating desc";
-        if ($sort == 3)
+        }
+        if ($sort == 3) {
             $order = "comments desc";
-        if ($sort == 4)
+        }
+        if ($sort == 4) {
             $order = "sold desc";
-        if ($sort == 5)
+        }
+        if ($sort == 5) {
             $order = "productname";
+        }
 
 
         return Product::find($this->getWhere(), $order, $count, $start);
@@ -245,7 +246,8 @@ class CatDataSource implements \Zippy\Interfaces\DataSource {
 
 //компонент атрибута  товара для фильтра
 //выводит  элементы  формы  ввода   в  зависимости  от  типа  атрибута
-class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest {
+class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest
+{
 
     public $productattribute = null;
     public $value = array();
@@ -292,10 +294,11 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
             foreach ($list as $value) {
                 $ret .= "<label>";
 
-                if (in_array($value, $this->value))
+                if (in_array($value, $this->value)) {
                     $checked = ' checked="on"';
-                else
+                } else {
                     $checked = "";
+                }
 
                 $name = $this->id;
                 $ret = $ret . "<input name=\"{$name}[]\" type=\"checkbox\" value=\"{$value}\"  {$checked}> {$value}";
@@ -311,10 +314,11 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
 
             foreach ($list as $value) {
                 $ret .= "<label>";
-                if (in_array($value, $this->value))
+                if (in_array($value, $this->value)) {
                     $checked = ' checked="on"';
-                else
+                } else {
                     $checked = "";
+                }
 
                 $name = $this->id;
                 $ret = $ret . "<input name=\"{$name}[]\" type=\"checkbox\"  value=\"{$value}\"  {$checked}> {$value}";
@@ -333,10 +337,11 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
             foreach ($list as $value) {
                 $ret .= "<label>";
 
-                if (in_array($value, $this->value))
+                if (in_array($value, $this->value)) {
                     $checked = ' checked="on"';
-                else
+                } else {
                     $checked = "";
+                }
 
                 $name = $this->id;
                 $ret = $ret . "<input name=\"{$name}[]\" type=\"checkbox\"  value=\"{$value}\"  {$checked}> {$value}";
@@ -360,8 +365,9 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
     public function getRequestData() {
 
         $this->value = @array_values($_POST[$this->id]);
-        if (!is_array($this->value))
+        if (!is_array($this->value)) {
             $this->value = array();
+        }
     }
 
     public function clean() {
@@ -370,7 +376,8 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
 
 }
 
-class ManufacturerList extends \Zippy\Html\Form\CheckBoxList {
+class ManufacturerList extends \Zippy\Html\Form\CheckBoxList
+{
 
     public function RenderItem($name, $checked, $caption = "", $attr = "", $delimiter = "") {
         return " 

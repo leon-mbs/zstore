@@ -2,31 +2,30 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Customer;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Helper as H;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода  заказа
  */
-class Order extends \App\Pages\Base {
+class Order extends \App\Pages\Base
+{
 
     public $_tovarlist = array();
     private $_doc;
@@ -57,7 +56,6 @@ class Order extends \App\Pages\Base {
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextInput('address'))->setVisible(false);
-
 
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
@@ -122,8 +120,9 @@ class Order extends \App\Pages\Base {
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -143,8 +142,9 @@ class Order extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -177,8 +177,9 @@ class Order extends \App\Pages\Base {
     }
 
     public function saverowOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("noselitem");
@@ -220,8 +221,9 @@ class Order extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
@@ -265,7 +267,7 @@ class Order extends \App\Pages\Base {
 
 
             if ($sender->id == 'execdoc') {
-                  $this->_doc->updateStatus(Document::STATE_INPROCESS);       
+                $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
 
 
@@ -275,10 +277,11 @@ class Order extends \App\Pages\Base {
                 return;
             }
 
-            if ($isEdited)
+            if ($isEdited) {
                 App::RedirectBack();
-            else
+            } else {
                 App::Redirect("\\App\\Pages\\Register\\OrderList");
+            }
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -320,7 +323,7 @@ class Order extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("noenteritem");
         }
-        if (($this->docform->store->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
 
@@ -404,7 +407,7 @@ class Order extends \App\Pages\Base {
                 return;
             }
         }
-      
+
         $cust->type = 1;
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);

@@ -2,34 +2,34 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Application as App;
-use \App\Helper as H;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода оприходование товаров
  */
-class IncomeItem extends \App\Pages\Base {
+class IncomeItem extends \App\Pages\Base
+{
 
     public $_itemlist = array();
     private $_doc;
     private $_rowid = 0;
-     private $_basedocid = 0;
+    private $_basedocid = 0;
+
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -57,7 +57,6 @@ class IncomeItem extends \App\Pages\Base {
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
-
 
 
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
@@ -91,8 +90,9 @@ class IncomeItem extends \App\Pages\Base {
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
 
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -117,10 +117,11 @@ class IncomeItem extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $item = $sender->owner->getDataItem();
-        $id = $item->item_id ;
+        $id = $item->item_id;
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
         $this->docform->detail->Reload();
@@ -149,13 +150,13 @@ class IncomeItem extends \App\Pages\Base {
         $this->editdetail->editsdate->setDate($item->sdate);
 
 
-
-        $this->_rowid = $item->item_id  ;
+        $this->_rowid = $item->item_id;
     }
 
     public function saverowOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
             $this->setError("noselitem");
@@ -163,7 +164,7 @@ class IncomeItem extends \App\Pages\Base {
         }
 
         $item = Item::load($id);
-       
+
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -178,33 +179,33 @@ class IncomeItem extends \App\Pages\Base {
             return;
         }
         $item->sdate = $this->editdetail->editsdate->getDate();
-        if ($item->sdate == false)
+        if ($item->sdate == false) {
             $item->sdate = '';
+        }
         if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0) {
             $this->setError("dateforserial");
             return;
         }
 
-         $tarr = array();
- 
-        foreach($this->_itemlist as $k=>$value){
-               
-           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
-              $tarr[$item->item_id] = $item;    // заменяем
-           }   else {
-              $tarr[$k] = $value;    // старый
-           }
-                
+        $tarr = array();
+
+        foreach ($this->_itemlist as $k => $value) {
+
+            if ($this->_rowid > 0 && $this->_rowid == $k) {
+                $tarr[$item->item_id] = $item;    // заменяем
+            } else {
+                $tarr[$k] = $value;    // старый
+            }
+
         }
-     
-        if($this->_rowid == 0) {        // в конец
+
+        if ($this->_rowid == 0) {        // в конец
             $tarr[$item->item_id] = $item;
         }
         $this->_itemlist = $tarr;
         $this->_rowid = 0;
-          
-        
-        
+
+
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -228,8 +229,9 @@ class IncomeItem extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -258,8 +260,9 @@ class IncomeItem extends \App\Pages\Base {
             }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -306,10 +309,9 @@ class IncomeItem extends \App\Pages\Base {
             $this->setError("noenteritem");
         }
 
-        if (($this->docform->store->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
-
 
 
         return !$this->isError();

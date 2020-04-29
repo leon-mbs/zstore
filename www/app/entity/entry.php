@@ -8,13 +8,14 @@ namespace App\Entity;
  * @table=entrylist
  * @keyfield=entry_id
  */
-class Entry extends \ZCL\DB\Entity {
+class Entry extends \ZCL\DB\Entity
+{
 
     /**
      *
      *
      * @param mixed $document Ссылка  на  документ
-     * @param mixed $amount Сумма. 
+     * @param mixed $amount Сумма.
      * @param mixed $quantity количество
      */
     public function __construct($document_id = 0, $amount = 0, $quantity = 0) {
@@ -57,9 +58,9 @@ class Entry extends \ZCL\DB\Entity {
 
     //типы  налогов, начислений  удержаний, прочая вспомагтельная  аналитика
     public function setExtCode($code) {
-    
-         $this->extcode = $code;
-    
+
+        $this->extcode = $code;
+
     }
 
     /**

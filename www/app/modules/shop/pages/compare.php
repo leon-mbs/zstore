@@ -2,13 +2,13 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \App\Modules\Shop\Comparelist;
-use \App\Modules\Shop\Helper;
-
-use \Zippy\WebApplication as App;
+use App\Modules\Shop\Comparelist;
+use App\Modules\Shop\Helper;
+use Zippy\WebApplication as App;
 
 //страница  сравнения  товаров
-class Compare extends Base {
+class Compare extends Base
+{
 
     public function __construct() {
         parent::__construct();
@@ -24,7 +24,8 @@ class Compare extends Base {
 }
 
 //класс  формирующий  таблицу  сравнения
-class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\Requestable {
+class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\Requestable
+{
 
     public function getContent($attributes) {
         $result = "<table class=\"table table-stripped table-responsive  \" >";
@@ -38,7 +39,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         ///цикл  по товарам
         foreach ($comparelist->list as $product) {
 
-            $result .= ( "<th ><img style=\"height:128px\" src=\"/loadimage.php?id={$product->image_id}&t=t\"><br><a href=\"/sp/{$product->product_id}\">" . $product->productname . "</a> <a href=\"{$url}:{$product->product_id}\"><i class=\"fa fa-trash text-danger\" ></a></th>");
+            $result .= ("<th ><img style=\"height:128px\" src=\"/loadimage.php?id={$product->image_id}&t=t\"><br><a href=\"/sp/{$product->product_id}\">" . $product->productname . "</a> <a href=\"{$url}:{$product->product_id}\"><i class=\"fa fa-trash text-danger\" ></a></th>");
             $attributes = Helper::getAttributeValuesByProduct($product);
             //цикл по  атрибутам для  получения значений
 
@@ -55,8 +56,9 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
                 if ($attr->attributetype == 1) {
                     $value = $attr->attributevalue == 1 ? "Ecть" : "Нет";
                 }
-                if ($attr->attributevalue == '')
+                if ($attr->attributevalue == '') {
                     $value = "Н/Д";
+                }
 
                 $attrvalues[$attr->attribute_id][$product->product_id] = $value;
             }
@@ -67,9 +69,9 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         //вывод атрибутов по  строкам
         foreach ($attrlist as $attribute_id) {
 
-            $result .= ( "<tr ><td style=\"font-weight:bolder;\">" . $attrnames[$attribute_id] . "</td>");
+            $result .= ("<tr ><td style=\"font-weight:bolder;\">" . $attrnames[$attribute_id] . "</td>");
             foreach ($comparelist->list as $product) {
-                $result .= ( "<td>" . $attrvalues[$attribute_id][$product->product_id] . "</td>");
+                $result .= ("<td>" . $attrvalues[$attribute_id][$product->product_id] . "</td>");
             }
             $result .= "</tr>";
             $i++;

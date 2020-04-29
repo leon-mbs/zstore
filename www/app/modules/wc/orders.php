@@ -2,20 +2,21 @@
 
 namespace App\Modules\WC;
 
-use \App\System;
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Label;
-use \Zippy\WebApplication as App;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \Zippy\Html\Link\ClickLink;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\System;
+use Zippy\Binding\PropertyBinding as Prop;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\WebApplication as App;
 
-class Orders extends \App\Pages\Base {
+class Orders extends \App\Pages\Base
+{
 
     public $_neworders = array();
     public $_eorders = array();
@@ -31,9 +32,9 @@ class Orders extends \App\Pages\Base {
         }
 
         $modules = System::getOptions("modules");
- 
+
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-       
+
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
@@ -43,52 +44,54 @@ class Orders extends \App\Pages\Base {
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', array('completed'=>'Выполнен','shipped'=>'Доставлен','canceled'=>'Отменен'), 'completed'));      
+        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Выполнен', 'shipped' => 'Доставлен', 'canceled' => 'Отменен'), 'completed'));
     }
 
     public function filterOnSubmit($sender) {
         $modules = System::getOptions("modules");
 
-        $client = \App\Modules\WC\Helper::getClient() ;
+        $client = \App\Modules\WC\Helper::getClient();
 
         $this->_neworders = array();
         $fields = array(
-            'status' => 'pending' 
+            'status' => 'pending'
         );
-        
-          
+
+
         try {
-            $data =    $client->get('orders',$fields) ;
+            $data = $client->get('orders', $fields);
         } catch (\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
-        }        
-  
-        foreach ($data  as $wcorder) {
- 
-             $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
-             if ($isorder > 0) { //уже импортирован
-               continue;
-             }
-             
+        }
+
+        foreach ($data as $wcorder) {
+
+            $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
+            if ($isorder > 0) { //уже импортирован
+                continue;
+            }
+
             $neworder = Document::create('Order');
             $neworder->document_number = $neworder->nextNumber();
-            if (strlen($neworder->document_number) == 0)
+            if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'WC00001';
+            }
             $neworder->customer_id = $modules['wccustomer_id'];
-               
-             //товары
-            $itlist=array();            
+
+            //товары
+            $itlist = array();
             foreach ($wcorder->line_items as $product) {
-                   //ищем по артикулу 
-                if (strlen($product->sku) == 0)
+                //ищем по артикулу 
+                if (strlen($product->sku) == 0) {
                     continue;
+                }
                 $code = Item::qstr($product->sku);
 
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("nofoundarticle_inorder",$product->name,$wcorder->order_id);
+                    $this->setWarn("nofoundarticle_inorder", $product->name, $wcorder->order_id);
                     continue;
                 }
                 $tovar->quantity = $product->quantity;
@@ -105,19 +108,21 @@ class Orders extends \App\Pages\Base {
             $neworder->document_date = time();
             $neworder->notes = "WC номер:{$wcorder->id};";
             $neworder->notes .= " Клиент:" . $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name . ";";
-            if (strlen($wcorder->billing->email) > 0)
+            if (strlen($wcorder->billing->email) > 0) {
                 $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
-            if (strlen($wcorder->billing->phone) > 0)
+            }
+            if (strlen($wcorder->billing->phone) > 0) {
                 $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
+            }
             $neworder->notes .= " Адрес:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
             $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
-      
+
 
             $this->_neworders[] = $neworder;
         }
 
         $this->neworderslist->Reload();
-    
+
     }
 
     public function noOnRow($row) {
@@ -134,15 +139,15 @@ class Orders extends \App\Pages\Base {
     public function onImport($sender) {
         $modules = System::getOptions("modules");
 
-    
+
         foreach ($this->_neworders as $shoporder) {
 
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
-   
+
         }
-       
-        $this->setInfo(  'imported_orders',count($this->_neworders))   ;
+
+        $this->setInfo('imported_orders', count($this->_neworders));
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -168,41 +173,42 @@ class Orders extends \App\Pages\Base {
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $st = $this->updateform->estatus->getValue();
- 
-        $client = \App\Modules\WC\Helper::getClient() ;
- 
+
+        $client = \App\Modules\WC\Helper::getClient();
+
         $elist = array();
         foreach ($this->_eorders as $order) {
-            if ($order->ch == false)
+            if ($order->ch == false) {
                 continue;
-            $elist[] =   $order;
+            }
+            $elist[] = $order;
         }
         if (count($elist) == 0) {
             $this->setError('noselorder');
             return;
         }
-    
-            $fields = array(
-                'status' => $st 
-            );
-        
-           foreach ($elist as $order) {
-              
-              
+
+        $fields = array(
+            'status' => $st
+        );
+
+        foreach ($elist as $order) {
+
+
             try {
-                $data =    $client->put('orders/'.$order->headerdata['wcorder'],$fields) ;
+                $data = $client->put('orders/' . $order->headerdata['wcorder'], $fields);
             } catch (\Exception $ee) {
                 $this->setError($ee->getMessage());
                 return;
-            }              
-               
-             $order->headerdata['wcorderback'] = 1;
-             $order->save();                
-           }
-        
-         
-        $this->setSuccess("refrehed_orders" , count($elist) );
-  
+            }
+
+            $order->headerdata['wcorderback'] = 1;
+            $order->save();
+        }
+
+
+        $this->setSuccess("refrehed_orders", count($elist));
+
         $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }

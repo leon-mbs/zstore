@@ -1,208 +1,206 @@
 <html>
 
-    <body>
+<body>
 
 
-        <form zippy="docform">
-            <h3> Наряд на виконання робіт
-                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
-                   data-html="true"    data-placement="bottom" data-content="Документ, що фіксує виконання виробничих завдань. 
+<form zippy="docform">
+    <h3> Наряд на виконання робіт
+        <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
+           data-html="true" data-placement="bottom" data-content="Документ, що фіксує виконання виробничих завдань.
                    <br><br>Для списання витратних матеріалів на підставі наряду, можна створити документ  
-                   'Списання на виробництво'."></i> 
+                   'Списання на виробництво'."></i>
 
-            </h3>
+    </h3>
 
-            <div class="row">
-                <div class="col-6 col-md-4 col-lg-3">
-                    <div class="form-group">
-                        <label for="document_number" >Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
-                    </div>           
-
-                    <div class="form-group  ">
-                        <label for="parea" >Виробнича ділянка</label>
-                        <select class="form-control" zippy="parea">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
-
-
-                    <div class="form-group  ">
-                        <label for="notes" >Примітка</label>
-
-                        <textarea class="form-control" type="text" zippy="notes"  ></textarea>
-
-                    </div> 
-
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-
-                    <div class="form-group">
-                        <label for="start_date" > Дата початку</label>
-                        <input minute-step="30" class="form-control" type="text" zippy="start_date" required="required">
-                    </div>
-                    <div class="form-group">
-                        <label for="document_date" > Дата закінчення</label>
-                        <input minute-step="30" class="form-control" type="text"  zippy="document_date"   />
-
-
-                    </div>  
-                    <div class="form-group">
-                        <label for="taskhours" >Кіл. годин</label>
-                        <input   style="width:100px;" pattern[0-9\.]+ class="form-control" type="text" zippy="taskhours" >
-                    </div>   
-
-
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-8 col-xl-6">
-
-                    <a class="btn btn-outline-primary btn-sm" zippy="addservice">Додати роботу</a> 
-
-                    <h5>Роботи</h5>
-                    <table class="table  table-sm">
-                        <tr>
-                            <th  >Назва</th>
-                            <th  class="text-right"  >Годин</th>
-
-                            <th width="75"></th>
-                        </tr>
-                        <tr zippy="detail">
-                            <td   zippy="service"></td>
-
-
-                            <td zippy="hours"  class="text-right"></td>
-
-
-
-                            <td  >
-                                <a zippy="edit"><i class="fa fa-edit"></i></a>
-                                <a zippy="delete"><i class="fa fa-trash"></i></a>
-
-                            </td>
-                        </tr>
-
-
-                    </table>             
-
-                    <a class="btn btn-outline-primary btn-sm" zippy="addemp">Додати виконавця</a>                     
-                    <h5>Виконавці</h5>
-                    <table class="table  table-sm">
-                        <tr>
-
-                            <th>ПІБ</th>
-                            <th width="50"></th>
-                        </tr> 
-                        <tr zippy="detail3">
-
-                            <td zippy="empname"></td>
-                            <td>
-                                <a zippy="delete3"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>                                        
-                    </table>                               
-                    <a class="btn btn-outline-primary btn-sm" zippy="addeq">Додати устаткування</a>                     
-                    <h5>Устаткування</h5>
-                    <table class="table  table-sm">
-                        <tr>
-
-                            <th>Найменування</th>
-                            <th  >Інв. номер</th>
-                            <th width="50"></th>
-                        </tr>
-                        <tr zippy="detail4">
-
-                            <td zippy="eq_name"></td>
-                            <td zippy="eq_code"></td>
-                            <td>
-                                <a zippy="delete4"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>                      
-                    </table>  
-
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-light  ">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="На виконання" class="btn btn-outline-primary  ">
-
-                </div>
+    <div class="row">
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="form-group">
+                <label for="document_number">Номер документа</label>
+                <input class="form-control" type="text" zippy="document_number" required="required">
             </div>
 
-        </form>
-
-
-
-        <form zippy="editdetail">
-            <h3>Редагування </h3>
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
-
-                    <div class="form-group">
-                        <label for="editservice">Робота </label>
-                        <select zippy="editservice"  class="form-control select2"  >
-                            <option>Не обрано</option>
-                        </select>                   
-                    </div>
-
-
-                    <div class="form-group">
-                        <label for="edithours">Планований час, годин
-                            <input class="form-control" type="text" zippy="edithours"   pattern="[0-9\.]+"  value="0"                                 style="width: 100px;">
-                            </div>
-
-                            <div class="form-group">
-                                <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                                <input type="button" zippy="cancelrow"    value="Скасувати" class="btn btn-light ">
-                            </div>
-                    </div>
-                </div>
-        </form>    
-
-
-        <form zippy="editdetail3">
-            <h3>Додати виконавця </h3>
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
-
-                    <div class="form-group">
-                        <label for="editemp">ПІБ </label>
-                        <select zippy="editemp"  class="form-control select2"  >
-                            <option>Не обрано</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <input zippy="saverow3" type="submit" value="Додати" class="btn btn-outline-primary"> 
-						<input type="button" zippy="cancelrow3" value="Скасувати" class="btn btn-light ">
-                    </div>
-                </div>
+            <div class="form-group  ">
+                <label for="parea">Виробнича ділянка</label>
+                <select class="form-control" zippy="parea">
+                    <option value="0">Не обрано</option>
+                </select>
             </div>
-        </form> 
-        <form zippy="editdetail4">
-            <h3>Додати устаткування </h3>
-            <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
 
-                    <div class="form-group">
-                        <label for="editeq">Найменування </label>
-                        <select zippy="editeq"  class="form-control select2"  >
-                            <option>Не вибрано</option>
-                        </select>
-                    </div>
 
-                    <div class="form-group">
-                        <input zippy="saverow4" type="submit" value="Додати" class="btn btn-outline-primary"> 
-                        <input type="button"   zippy="cancelrow4" value="Скасувати"    class="btn btn-light ">
-                    </div>
-                </div>
+            <div class="form-group  ">
+                <label for="notes">Примітка</label>
+
+                <textarea class="form-control" type="text" zippy="notes"></textarea>
+
             </div>
-        </form> 
 
-    </body>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3">
+
+            <div class="form-group">
+                <label for="start_date"> Дата початку</label>
+                <input minute-step="30" class="form-control" type="text" zippy="start_date" required="required">
+            </div>
+            <div class="form-group">
+                <label for="document_date"> Дата закінчення</label>
+                <input minute-step="30" class="form-control" type="text" zippy="document_date"/>
+
+
+            </div>
+            <div class="form-group">
+                <label for="taskhours">Кіл. годин</label>
+                <input style="width:100px;" pattern[0-9\.]+ class="form-control" type="text" zippy="taskhours">
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-8 col-xl-6">
+
+            <a class="btn btn-outline-primary btn-sm" zippy="addservice">Додати роботу</a>
+
+            <h5>Роботи</h5>
+            <table class="table  table-sm">
+                <tr>
+                    <th>Назва</th>
+                    <th class="text-right">Годин</th>
+
+                    <th width="75"></th>
+                </tr>
+                <tr zippy="detail">
+                    <td zippy="service"></td>
+
+
+                    <td zippy="hours" class="text-right"></td>
+
+
+                    <td>
+                        <a zippy="edit"><i class="fa fa-edit"></i></a>
+                        <a zippy="delete"><i class="fa fa-trash"></i></a>
+
+                    </td>
+                </tr>
+
+
+            </table>
+
+            <a class="btn btn-outline-primary btn-sm" zippy="addemp">Додати виконавця</a>
+            <h5>Виконавці</h5>
+            <table class="table  table-sm">
+                <tr>
+
+                    <th>ПІБ</th>
+                    <th width="50"></th>
+                </tr>
+                <tr zippy="detail3">
+
+                    <td zippy="empname"></td>
+                    <td>
+                        <a zippy="delete3"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            </table>
+            <a class="btn btn-outline-primary btn-sm" zippy="addeq">Додати устаткування</a>
+            <h5>Устаткування</h5>
+            <table class="table  table-sm">
+                <tr>
+
+                    <th>Найменування</th>
+                    <th>Інв. номер</th>
+                    <th width="50"></th>
+                </tr>
+                <tr zippy="detail4">
+
+                    <td zippy="eq_name"></td>
+                    <td zippy="eq_code"></td>
+                    <td>
+                        <a zippy="delete4"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            </table>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-light  ">
+            <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+            &nbsp;<input zippy="execdoc" type="submit" value="На виконання" class="btn btn-outline-primary  ">
+
+        </div>
+    </div>
+
+</form>
+
+
+<form zippy="editdetail">
+    <h3>Редагування </h3>
+    <div class="row">
+        <div class="col-12 col-md-4 col-xl-3">
+
+            <div class="form-group">
+                <label for="editservice">Робота </label>
+                <select zippy="editservice" class="form-control select2">
+                    <option>Не обрано</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="edithours">Планований час, годин
+                    <input class="form-control" type="text" zippy="edithours" pattern="[0-9\.]+" value="0"
+                           style="width: 100px;">
+            </div>
+
+            <div class="form-group">
+                <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-light ">
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<form zippy="editdetail3">
+    <h3>Додати виконавця </h3>
+    <div class="row">
+        <div class="col-12 col-md-4 col-xl-3">
+
+            <div class="form-group">
+                <label for="editemp">ПІБ </label>
+                <select zippy="editemp" class="form-control select2">
+                    <option>Не обрано</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input zippy="saverow3" type="submit" value="Додати" class="btn btn-outline-primary">
+                <input type="button" zippy="cancelrow3" value="Скасувати" class="btn btn-light ">
+            </div>
+        </div>
+    </div>
+</form>
+<form zippy="editdetail4">
+    <h3>Додати устаткування </h3>
+    <div class="row">
+        <div class="col-12 col-md-4 col-xl-3">
+
+            <div class="form-group">
+                <label for="editeq">Найменування </label>
+                <select zippy="editeq" class="form-control select2">
+                    <option>Не вибрано</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input zippy="saverow4" type="submit" value="Додати" class="btn btn-outline-primary">
+                <input type="button" zippy="cancelrow4" value="Скасувати" class="btn btn-light ">
+            </div>
+        </div>
+    </div>
+</form>
+
+</body>
 </html>

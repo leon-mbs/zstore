@@ -2,32 +2,32 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Customer;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Service;
-use \App\Entity\Store;
-use \App\Entity\MoneyFund;
-use \App\Helper as H;
-use \App\System;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\MoneyFund;
+use App\Entity\Service;
+use App\Entity\Store;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода  кассовый чек
  */
-class POSCheck extends \App\Pages\Base {
+class POSCheck extends \App\Pages\Base
+{
 
     public $_itemlist = array();
     public $_serlist = array();
@@ -45,7 +45,7 @@ class POSCheck extends \App\Pages\Base {
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(  true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -137,8 +137,9 @@ class POSCheck extends \App\Pages\Base {
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            if ($this->_doc->headerdata['exchange'] > 0)
-                $this->_doc->payed += $this->_doc->headerdata['exchange']; //учитываем  со  здачей
+            if ($this->_doc->headerdata['exchange'] > 0) {
+                $this->_doc->payed += $this->_doc->headerdata['exchange'];
+            } //учитываем  со  здачей
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->exchange->setText($this->_doc->headerdata['exchange']);
@@ -187,7 +188,7 @@ class POSCheck extends \App\Pages\Base {
                         $list = $order->getChildren('POSCheck');
 
                         if (count($list) > 0) {
-                            
+
                             $this->setWarn('order_has_sell');
                         }
                         $this->docform->total->setText($order->amount);
@@ -195,11 +196,11 @@ class POSCheck extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
-                     
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                        
+
                     }
-                 
+
                     if ($basedoc->meta_name == 'Invoice') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -207,7 +208,7 @@ class POSCheck extends \App\Pages\Base {
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-              
+
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
@@ -216,24 +217,25 @@ class POSCheck extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->calcPay();
 
- 
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                       
-                        
-                        if($invoice->payamount>0){
-                            $this->docform->payment->setValie(MoneyFund::PREPAID) ;// предоплата
+
+
+                        if ($invoice->payamount > 0) {
+                            $this->docform->payment->setValie(MoneyFund::PREPAID);// предоплата
                         }
                     }
- 
-                
+
+
                 }
             }
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         $this->docform->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -268,8 +270,9 @@ class POSCheck extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
 
         $tovar = $sender->owner->getDataItem();
         // unset($this->_itemlist[$tovar->tovar_id]);
@@ -281,8 +284,9 @@ class POSCheck extends \App\Pages\Base {
     }
 
     public function serdeleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
 
         $ser = $sender->owner->getDataItem();
         // unset($this->_itemlist[$tovar->tovar_id]);
@@ -356,7 +360,7 @@ class POSCheck extends \App\Pages\Base {
             $slist = $item->getSerials($this->docform->store->getValue());
 
             if (in_array($item->snumber, $slist) == false) {
-                
+
                 $this->setWarn('invalid_serialno');
             }
         }
@@ -383,7 +387,7 @@ class POSCheck extends \App\Pages\Base {
 
         $id = $this->editserdetail->editser->getKey();
         if ($id == 0) {
-            
+
             $this->setError("noselservice");
             return;
         }
@@ -425,8 +429,9 @@ class POSCheck extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -480,57 +485,60 @@ class POSCheck extends \App\Pages\Base {
             }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
 
-              // проверка на минус  в  количестве
-                $allowminus = System::getOption("common","allowminus") ;
-                if($allowminus != 1) {
-            
-                    foreach($this->_itemlist as $item) {
-                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                         if($qty<$item->quantity) {
-                            $this->setError("nominus",H::fqty($qty),$item->item_name);
+                // проверка на минус  в  количестве
+                $allowminus = System::getOption("common", "allowminus");
+                if ($allowminus != 1) {
+
+                    foreach ($this->_itemlist as $item) {
+                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
+                        if ($qty < $item->quantity) {
+                            $this->setError("nominus", H::fqty($qty), $item->item_name);
                             return;
-                         }
+                        }
                     }
-                }                    
-                    
-                    
-                    
+                }
+
+
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 $order = Document::load($this->_doc->headerdata['order_id']);
                 if ($order instanceof Document) {
                     $order->updateStatus(Document::STATE_DELIVERED);
                 }
-            } else
-            if ($sender->id == 'senddoc') {
-                if (!$isEdited)
-                    $this->_doc->updateStatus(Document::STATE_NEW);
-
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-                $this->_doc->headerdata['sent_date'] = time();
-                $this->_doc->save();
-
-                $order = Document::load($this->_doc->headerdata['order_id']);
-                if ($order instanceof Document) {
-                    $order->updateStatus(Document::STATE_INSHIPMENT);
-                }
             } else {
-                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-                if ($order instanceof Document) {
-                    $order->updateStatus(Document::STATE_INPROCESS);
+                if ($sender->id == 'senddoc') {
+                    if (!$isEdited) {
+                        $this->_doc->updateStatus(Document::STATE_NEW);
+                    }
+
+                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                    $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+                    $this->_doc->headerdata['sent_date'] = time();
+                    $this->_doc->save();
+
+                    $order = Document::load($this->_doc->headerdata['order_id']);
+                    if ($order instanceof Document) {
+                        $order->updateStatus(Document::STATE_INSHIPMENT);
+                    }
+                } else {
+                    $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+                    if ($order instanceof Document) {
+                        $order->updateStatus(Document::STATE_INPROCESS);
+                    }
                 }
             }
 
 
             $conn->CommitTrans();
-            if ($isEdited)
+            if ($isEdited) {
                 App::RedirectBack();
-            else
+            } else {
                 App::Redirect("\\App\\Pages\\Register\\GIList");
+            }
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -594,11 +602,13 @@ class POSCheck extends \App\Pages\Base {
 
             if ($customer->discount > 0) {
                 $disc = round($total * ($customer->discount / 100));
-            } else if ($customer->bonus > 0) {
-                if ($total >= $customer->bonus) {
-                    $disc = $customer->bonus;
-                } else {
-                    $disc = $total;
+            } else {
+                if ($customer->bonus > 0) {
+                    if ($total >= $customer->bonus) {
+                        $disc = $customer->bonus;
+                    } else {
+                        $disc = $total;
+                    }
                 }
             }
         }
@@ -637,8 +647,9 @@ class POSCheck extends \App\Pages\Base {
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-        if ($code == '')
+        if ($code == '') {
             return;
+        }
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
             $this->setError('noselstore');
@@ -650,21 +661,17 @@ class POSCheck extends \App\Pages\Base {
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_})");
 
 
-
         if ($item == null) {
-            $this->setError("noitemcode",$code);
+            $this->setError("noitemcode", $code);
             return;
         }
-
-
-
 
 
         $store = $this->docform->store->getValue();
 
         $qty = $item->getQuantity($store);
         if ($qty <= 0) {
-            $this->setError("noitemonstore",$item->itemname);
+            $this->setError("noitemonstore", $item->itemname);
         }
 
 
@@ -686,7 +693,6 @@ class POSCheck extends \App\Pages\Base {
                 }
 
 
-
                 if (strlen($serial) == 0) {
                     $this->setWarn('needs_serial');
                     $this->editdetail->setVisible(true);
@@ -698,7 +704,6 @@ class POSCheck extends \App\Pages\Base {
                     $this->editdetail->editserial->setText('');
                     $this->editdetail->editquantity->setText('1');
                     $this->editdetail->editprice->setText($item->price);
-
 
 
                     return;
@@ -730,7 +735,7 @@ class POSCheck extends \App\Pages\Base {
         if (count($this->_itemlist) == 0 && count($this->_serlist) == 0) {
             $this->setError("noenterpos");
         }
-        if (($this->docform->store->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
         $p = $this->docform->payment->getValue();
@@ -744,8 +749,6 @@ class POSCheck extends \App\Pages\Base {
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
         }
-
-
 
 
         return !$this->isError();
@@ -820,9 +823,11 @@ class POSCheck extends \App\Pages\Base {
             if ($customer->discount > 0) {
                 $this->docform->discount->setText("Постоянная скидка " . $customer->discount . '%');
                 $this->docform->discount->setVisible(true);
-            } else if ($customer->bonus > 0) {
-                $this->docform->discount->setText("Бонусы " . $customer->bonus);
-                $this->docform->discount->setVisible(true);
+            } else {
+                if ($customer->bonus > 0) {
+                    $this->docform->discount->setText("Бонусы " . $customer->bonus);
+                    $this->docform->discount->setVisible(true);
+                }
             }
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент

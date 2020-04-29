@@ -2,28 +2,26 @@
 
 namespace App\Pages\Register;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \App\Entity\Doc\Document;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 /**
  * журнал  закупок
  */
-class GRList extends \App\Pages\Base {
+class GRList extends \App\Pages\Base
+{
 
     private $_doc = null;
 
@@ -34,8 +32,9 @@ class GRList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('GRList'))
+        if (false == \App\ACL::checkShowReg('GRList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -53,15 +52,12 @@ class GRList extends \App\Pages\Base {
         $doclist->setPageSize(H::getPG());
 
 
-
-
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
-
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
@@ -85,7 +81,7 @@ class GRList extends \App\Pages\Base {
 
         $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
+        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('customer', $doc->customer_name));
 
@@ -101,8 +97,9 @@ class GRList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false)
+        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false) {
             return;
+        }
 
         $state = $this->_doc->state;
 
@@ -120,7 +117,7 @@ class GRList extends \App\Pages\Base {
 
 
             if (count($d) > 0) {
-            
+
                 $this->setWarn('return_exists');
             }
             App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
@@ -154,8 +151,9 @@ class GRList extends \App\Pages\Base {
     public function showOnClick($sender) {
 
         $this->_doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkShowDoc($this->_doc, true))
+        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
+        }
 
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
@@ -167,8 +165,9 @@ class GRList extends \App\Pages\Base {
 
     public function editOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
-        if (false == \App\ACL::checkEditDoc($doc, true))
+        if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
+        }
 
         App::Redirect("\\App\\Pages\\Doc\\" . $doc->meta_name, $doc->document_id);
     }
@@ -202,7 +201,8 @@ class GRList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
+class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -258,7 +258,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
 
 }
