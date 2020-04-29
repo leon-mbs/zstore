@@ -325,7 +325,7 @@ class IssueList extends \App\Pages\Base
             $n->user_id = $u;
             $n->message = " Коментарий к задаче  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
             $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}/#msgankor\">Ответить</a> ";
-            $n->sender_name = $user->username;
+            $n->sender_name = System::getUser()->getUserName();
             $n->save();
         }
 

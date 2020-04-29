@@ -91,7 +91,7 @@ class POSCheck extends Document
                 "amount" => H::fa($item->quantity * $item->price)
             );
         }
-
+        $i=1;
         foreach ($this->unpackDetails('services') as $ser) {
             $detail[] = array("no" => $i++,
                 "tovar_name" => $ser->service_name,

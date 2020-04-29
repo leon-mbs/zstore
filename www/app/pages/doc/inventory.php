@@ -159,7 +159,24 @@ class Inventory extends \App\Pages\Base
         $item->qfact = $this->editdetail->editquantity->getText();
         $item->snumber = $sn;
 
-        $this->_itemlist[$id . $sn] = $item;
+        $tarr = array();
+
+        foreach ($this->_itemlist as $k => $value) {
+
+            if ($this->_rowid > 0 && $this->_rowid == $k) {
+                $tarr[$item->item_id] = $item;    // заменяем
+            } else {
+                $tarr[$k] = $value;    // старый
+            }
+
+        }
+
+        if ($this->_rowid == 0) {        // в конец
+            $tarr[$item->item_id] = $item;
+        }
+        $this->_itemlist = $tarr;
+        $this->_rowid = 0;      
+      
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

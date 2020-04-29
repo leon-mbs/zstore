@@ -113,7 +113,7 @@ class Helper
 
                 $items[] = array('name' => $item['description'], 'link' => "/index.php?p=App/{$dir}/{$item['meta_name']}");
             }
-            $textmenu .= "</ul></li>";
+
 
             $arraymenu['groups'][] = array('grname' => $gname, 'items' => $items);
         }
@@ -512,7 +512,7 @@ class Helper
             $totalstr = \App\Util::money2str_ru($amount);
         }
         if (false) {
-            $totalstr = \App\Util::money2str_ru($this->amount);
+            $totalstr = \App\Util::money2str_ru($amount);
         }
 
         if ($_config['common']['lang'] == 'ua') {

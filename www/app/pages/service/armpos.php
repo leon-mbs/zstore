@@ -624,7 +624,7 @@ class ARMPos extends \App\Pages\Base
         //   $this->_doc->headerdata['pricetypename'] = $this->form1->pricetype->getValueName();
         $firm = H::getFirmData($this->_doc->branch_id);
 
-        $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
+      //  $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
         $this->_doc->headerdata["inn"] = $firm['inn'];

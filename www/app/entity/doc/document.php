@@ -506,7 +506,7 @@ class Document extends \ZCL\DB\Entity
      *
      */
     protected function afterDelete() {
-        global $logger;
+        //global $logger;
 
         $conn = \ZDB\DB::getConnect();
 

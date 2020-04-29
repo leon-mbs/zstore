@@ -18,7 +18,7 @@ class Application extends \Zippy\WebApplication
 
         $path = '';
         $name = ltrim($name, '\\');
-        $arr = explode('\\', $name);
+
 
         $templatepath = 'templates/';
         if ($_config['common']['lang'] == 'ua') {
@@ -93,7 +93,7 @@ class Application extends \Zippy\WebApplication
                 $params = array_slice($api, 3);
                 echo call_user_func_array(array($page, $api[2]), $params);
                 die;
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 global $logger;
                 $logger->error($e->getMessage());
 

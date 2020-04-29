@@ -5,7 +5,7 @@ namespace App\Pages\Doc;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
-use App\Entity\Stock;
+
 use App\Entity\Store;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
@@ -159,7 +159,7 @@ class ProdIssue extends \App\Pages\Base
         $this->editdetail->editserial->setValue($item->snumber);
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
-        $this->_rowid = $stock->stock_id;
+        $this->_rowid = $item->item_id;
     }
 
     public function saverowOnClick($sender) {
@@ -334,7 +334,7 @@ class ProdIssue extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
 
-        $qty = $item->getQuantity($store);
+        $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
             $this->setError("noitemonstore", $item->itemname);
         }

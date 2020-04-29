@@ -95,6 +95,7 @@ class Helper
         return $where;
     }
 
+    /*
     //список отфильтрованных товаров на  странице (используется  для  пагинатора)
     public static function getProductList($start, $count) {
 
@@ -119,7 +120,7 @@ class Helper
         }
         return $list;
     }
-
+    */
     //количество  отфильтрованных товаров (используется  для  пагинатора)
     public static function getProductCount($filter) {
 

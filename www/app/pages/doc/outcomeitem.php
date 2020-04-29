@@ -160,7 +160,7 @@ class OutcomeItem extends \App\Pages\Base
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-            $slist = $item->getSerials($store_id);
+            $slist = $item->getSerials($this->docform->store->getValue());
 
             if (in_array($item->snumber, $slist) == false) {
                 $this->setWarn('invalid_serialno');

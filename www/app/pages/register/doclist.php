@@ -421,7 +421,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private function getWhere() {
-        $user = System::getUser();
+        //$user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");

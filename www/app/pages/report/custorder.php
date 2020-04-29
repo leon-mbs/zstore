@@ -66,7 +66,6 @@ class CustOrder extends \App\Pages\Base
 
 
         $detail = array();
-        $conn = \ZDB\DB::getConnect();
 
         $where = "   meta_name='OrderCust'  and state= " . Document::STATE_INPROCESS;
         if ($cust > 0) {

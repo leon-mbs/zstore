@@ -14,15 +14,29 @@ class Inventory extends Document
 {
 
     public function Execute() {
-
-
+ 
         $conn = \ZDB\DB::getConnect();
-
-
+  
         foreach ($this->unpackDetails('detaildata') as $item) {
             if ($item->quantity == $item->qfact) {
                 continue;
             }
+            
+            //оприходуем
+            if ($item->quantity < $item->qfact) {
+                $qty = $item->qfact - $item->quantity;
+                $where = "store_id=" . $this->headerdata['store'] . " and item_id=" . $item->item_id;
+                $price=0;
+                $stp = Stock::getFirst($where, "stock_id desc");  //последняя цена
+                if($stp->partion>0)  $price = $stp->partion;
+                $stock = Stock::getStock($this->headerdata['store'],$item->item_id,$price,$item->snumber,time(),true);  //последняя цена
+
+                
+                $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
+                $sc->setStock($stock->stock_id);
+                $sc->save();
+            }            
+            
             //списываем  со склада
             if ($item->quantity > $item->qfact) {
                 $item->quantity = $item->quantity - $item->qfact;
@@ -32,21 +46,10 @@ class Inventory extends Document
                     $sc->setStock($st->stock_id);
                     $sc->save();
                 }
-            }
-            //оприходуем
-            if ($item->quantity < $item->qfact) {
-                $qty = $item->qfact - $item->quantity;
-                $where = "store_id=" . $this->headerdata['store'] . " and item_id=" . $item->item_id;
-
-                $stock = Stock::getFirst($where, "store_id desc");  //последняя цена
-
-                $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
-                $sc->setStock($stock->stock_id);
-                $sc->save();
-            }
+            }  
+          
         }
-
-
+  
         return true;
     }
 

@@ -350,16 +350,16 @@ class Import extends \App\Pages\Base
                 $c->customer_name = $name;
 
                 if (strlen($row[$colphone - 1]) > 0) {
-                    $item->phone = $row[$colphone - 1];
+                    $c->phone = $row[$colphone - 1];
                 }
                 if (strlen($row[$colemail - 1]) > 0) {
-                    $item->email = $row[$colemail - 1];
+                    $c->email = $row[$colemail - 1];
                 }
                 if (strlen($row[$colcity - 1]) > 0) {
-                    $item->city = $row[$colcity - 1];
+                    $c->city = $row[$colcity - 1];
                 }
                 if (strlen($row[$coladdress - 1]) > 0) {
-                    $item->address = $row[$coladdress - 1];
+                    $c->address = $row[$coladdress - 1];
                 }
 
 

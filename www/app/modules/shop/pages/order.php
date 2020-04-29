@@ -160,7 +160,7 @@ class Order extends Base
             //todo  покупатель по умолчанию
             //todo  отослаnь нотификацию
             //todo  отослаnь письмо
-        } catch (Exception $ee) {
+        } catch (\Exception $ee) {
             $this->setError($ee->getMessage());
         }
 
