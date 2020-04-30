@@ -1,40 +1,39 @@
-<html>
-<head>
-</head>
-<body>
-<div class="row">
+<html >
+    <head>
+    </head>
+    <body>
+        <div class="row" >
 
-    <div zippy="list" class="col-10">
-        <h3>Список виробників, брендів</h3>
-        <a zippy="addnew" class="btn    btn-primary">Додати</a>
-        <table class="table table-sm table-striped" style="width:500px;">
-            <tr zippy="manufacturerslist">
-                <td><span zippy="manufacturername"></span></td>
-                <td><a zippy="url"></a></td>
-                <td><a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;<a zippy="delete"><i
-                        class="fa fa-trash"></i></a></td>
-            </tr>
-        </table>
+            <div  zippy="list" class="col-10"> 
+                <h3>Список виробників, брендів</h3>
+                <a zippy="addnew" class ="btn    btn-primary">Додати</a> 
+                <table  class="table table-sm table-striped" style="width:500px;" >
+                    <tr zippy="manufacturerslist">
+                        <td><span zippy="manufacturername"></span></td>
+                        <td><a zippy="url"></a></td>
+                        <td><a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
 
-    </div>
-    <form zippy="editform" class="col-5">
+            </div>
+            <form zippy="editform" class="col-5">
 
-        <h3>Редагування</h3>
-        <div class="form-group">
-            <label for="manufacturername">Найменування</label>
-            <input type="text" zippy="manufacturername" class="form-control"/>
+                <h3>Редагування</h3> 
+                <div class="form-group"  >
+                    <label for="manufacturername">Найменування</label>
+                    <input type="text" zippy="manufacturername" class="form-control"   />
+                </div> 
+                <div class="form-group"  >
+                    <label for="url">Сайт</label>
+                    <input type="text" zippy="url" class="form-control"   />
+                </div> 
+                <div class="form-group"  >
+                    <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary"/>
+                    &nbsp;<input type="button" value="Скасувати" zippy="cancel" class="btn   btn-outline-primary"/>
+                </div> 
+                <input type="hidden" zippy="manufacturer_id"/>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="url">Сайт</label>
-            <input type="text" zippy="url" class="form-control"/>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary"/>
-            &nbsp;<input type="button" value="Скасувати" zippy="cancel" class="btn   btn-outline-primary"/>
-        </div>
-        <input type="hidden" zippy="manufacturer_id"/>
-    </form>
-</div>
 
-</body>
+    </body>
 </html>
