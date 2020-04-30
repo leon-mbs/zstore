@@ -2,19 +2,17 @@
 
 namespace App\Widgets;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \App\Helper;
-use \App\System;
-use \App\Entity\Doc\Document;
-use \Carbon\Carbon;
+use App\Helper;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
 
 /**
  * Виджет для  просмотра недавно использованных документов
  */
-class WRDoc extends \Zippy\Html\PageFragment {
+class WRDoc extends \Zippy\Html\PageFragment
+{
 
     public function __construct($id) {
         parent::__construct($id);
@@ -26,8 +24,9 @@ class WRDoc extends \Zippy\Html\PageFragment {
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
         $cstr = \App\Acl::getBranchListConstraint();
-        if (strlen($cstr) > 0)
+        if (strlen($cstr) > 0) {
             $cstr = " d.branch_id in({$cstr}) and ";
+        }
 
 
         if ($visible) {

@@ -2,21 +2,18 @@
 
 namespace App\Widgets;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \App\Helper;
-use \App\System;
-use \App\Entity\Doc\Document;
-use \Carbon\Carbon;
-use \App\Entity\Item;
-use \App\DataItem;
+use App\DataItem;
+use App\Helper;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
 
 /**
  * Виджет для минимального количества на  складе
  */
-class WMinQty extends \Zippy\Html\PageFragment {
+class WMinQty extends \Zippy\Html\PageFragment
+{
 
     private $data = array();
 
@@ -26,8 +23,9 @@ class WMinQty extends \Zippy\Html\PageFragment {
         $visible = (strpos(System::getUser()->widgets, 'wminqty') !== false || System::getUser()->userlogin == 'admin');
 
         $cstr = \App\Acl::getStoreBranchConstraint();
-        if (strlen($cstr) > 0)
+        if (strlen($cstr) > 0) {
             $cstr = " where  store_id in ({$cstr})  ";
+        }
 
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();

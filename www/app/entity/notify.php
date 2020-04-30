@@ -6,9 +6,9 @@ namespace App\Entity;
  *  Класс  уведомление
  * @table=notifies
  * @keyfield=notify_id
-
  */
-class Notify extends \ZCL\DB\Entity {
+class Notify extends \ZCL\DB\Entity
+{
 
     protected function init() {
 
@@ -32,7 +32,7 @@ class Notify extends \ZCL\DB\Entity {
 
     public static function markRead($user_id) {
         $conn = \ZCL\DB\DB::getConnect();
-        $sql= "update notifies set checked = 1 where dateshow <= ". $conn->DBTimeStamp(time())  ." and user_id =" . $user_id;
+        $sql = "update notifies set checked = 1 where dateshow <= " . $conn->DBTimeStamp(time()) . " and user_id =" . $user_id;
         $conn->Execute($sql);
     }
 

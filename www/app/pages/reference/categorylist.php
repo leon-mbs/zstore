@@ -2,32 +2,33 @@
 
 namespace App\Pages\Reference;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Category;
-use \App\System;
-use \App\Helper as H;
+use App\Entity\Category;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 /**
  * справочник категорийтоваров
  */
-class CategoryList extends \App\Pages\Base {
+class CategoryList extends \App\Pages\Base
+{
 
     private $_category;
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('CategoryList'))
+        if (false == \App\ACL::checkShowRef('CategoryList')) {
             return;
+        }
 
         $this->add(new Panel('categorytable'))->setVisible(true);
-        $this->categorytable->add(new DataView('categorylist', new \ZCL\DB\EntityDataSource('\App\Entity\Category','','cat_name'), $this, 'categorylistOnRow'))->Reload();
+        $this->categorytable->add(new DataView('categorylist', new \ZCL\DB\EntityDataSource('\App\Entity\Category', '', 'cat_name'), $this, 'categorylistOnRow'))->Reload();
         $this->categorytable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('categorydetail'))->setVisible(false);
         $this->categorydetail->add(new TextInput('editcat_name'));
@@ -84,8 +85,9 @@ class CategoryList extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('CategoryList'))
+        if (false == \App\ACL::checkEditRef('CategoryList')) {
             return;
+        }
 
 
         $cat_id = $sender->owner->getDataItem()->cat_id;
@@ -122,8 +124,9 @@ class CategoryList extends \App\Pages\Base {
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('CategoryList'))
+        if (false == \App\ACL::checkEditRef('CategoryList')) {
             return;
+        }
 
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
         if ($this->_category->cat_name == '') {

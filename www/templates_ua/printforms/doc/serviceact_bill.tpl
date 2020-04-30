@@ -1,4 +1,4 @@
-<table class="ctable"   border="0" cellpadding="1" cellspacing="0"  {{{printw}}}  >
+<table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}} >
     <tr>
         <td colspan="2">Квитанція {{document_number}}</td>
     </tr>
@@ -28,7 +28,6 @@
     </tr>
 
 
-
     {{#isdevice}}
     <tr>
         <td colspan="2"> Прийнято від клієнта</td>
@@ -42,37 +41,37 @@
     </tr>
     {{#slist}}
     <tr>
-        <td  >{{service_name}}</td>
-        <td align="right" >{{price}}</td>
+        <td>{{service_name}}</td>
+        <td align="right">{{price}}</td>
     </tr>
 
     {{/slist}}
     <tr>
         <td align="right">Всього:</td>
-        <td align="right" >{{total}}</td>
+        <td align="right">{{total}}</td>
     </tr>
-    {{#ispay}} 
+    {{#ispay}}
     <tr>
         <td colspan="2">Оплати:</td>
-    </tr>    
+    </tr>
     {{#plist}}
     <tr>
-        <td  >{{pdate}}</td>
-        <td align="right" >{{ppay}}</td>
+        <td>{{pdate}}</td>
+        <td align="right">{{ppay}}</td>
     </tr>
 
-    {{/plist}}  
-    {{/ispay}} 
+    {{/plist}}
+    {{/ispay}}
     <tr>
         <td colspan="2"> {{gar}}</td>
 
-    </tr>     
+    </tr>
     <tr>
-        <td  >Виконавець</td>
-        <td  >________</td>
-    </tr>     
+        <td>Виконавець</td>
+        <td>________</td>
+    </tr>
     <tr>
-        <td  >Клієнт</td>
-        <td  >________</td>
-    </tr>     
+        <td>Клієнт</td>
+        <td>________</td>
+    </tr>
 </table>

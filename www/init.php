@@ -64,7 +64,6 @@ spl_autoload_register('app_autoload');
 session_start();
 
 
-
 if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
 
     function mb_ucfirst($string) {

@@ -2,25 +2,24 @@
 
 namespace App\Pages\Report;
 
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Item;
-use \App\Helper as H;
+use App\Entity\Item;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Panel;
 
 /**
  * Прайсы
  */
-class Price extends \App\Pages\Base {
+class Price extends \App\Pages\Base
+{
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReport('ItemActivity'))
+        if (false == \App\ACL::checkShowReport('ItemActivity')) {
             return;
+        }
 
         $option = \App\System::getOptions('common');
 
@@ -48,7 +47,6 @@ class Price extends \App\Pages\Base {
     public function OnSubmit($sender) {
 
 
-
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
@@ -57,7 +55,7 @@ class Price extends \App\Pages\Base {
         $reportname = "price";
 
 
-          $this->detail->excel->pagename = $reportpage;
+        $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;
         $this->detail->pdf->params = array('pdf', $reportname);
@@ -82,7 +80,6 @@ class Price extends \App\Pages\Base {
             $qty = " and item_id in(select  item_id from store_stock where  qty >0 ) ";
         }
         $items = Item::find("disabled <>1 {$qty} and detail like '%<pricelist>1</pricelist>%'", "cat_name,itemname");
-
 
 
         foreach ($items as $item) {

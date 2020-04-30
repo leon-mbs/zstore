@@ -2,15 +2,15 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
-use \App\Util;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
- * Класс-сущность  документ  списание в  производство 
+ * Класс-сущность  документ  списание в  производство
  *
  */
-class ProdIssue extends Document {
+class ProdIssue extends Document
+{
 
     public function generateReport() {
 
@@ -34,20 +34,18 @@ class ProdIssue extends Document {
                     "tovar_code" => $item->item_code,
                     "msr" => $item->msr,
                     "quantity" => H::fqty($item->quantity)
-                  
-                    
-                    
+
+
                 );
             }
         }
-
 
 
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,
-           
+
             "notes" => $this->notes
         );
 
@@ -68,7 +66,7 @@ class ProdIssue extends Document {
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-               
+
                 $sc->save();
             }
         }
@@ -83,7 +81,7 @@ class ProdIssue extends Document {
     public function getRelationBased() {
         $list = array();
         $list['ProdIssue'] = 'Cписание в  производство';
-    
+
         return $list;
     }
 }

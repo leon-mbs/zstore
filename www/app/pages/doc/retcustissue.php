@@ -2,32 +2,30 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Customer;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-
-use \App\Entity\Store;
-use \App\Entity\MoneyFund;
-use \App\Helper as H;
-use \App\System;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\MoneyFund;
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода  возврат  поставщику
  */
-class RetCustIssue extends \App\Pages\Base {
+class RetCustIssue extends \App\Pages\Base
+{
 
     public $_tovarlist = array();
     private $_doc;
@@ -37,7 +35,7 @@ class RetCustIssue extends \App\Pages\Base {
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
-          
+
             $this->setWarn('return_basedon_receiptisssue');
         }
 
@@ -65,9 +63,8 @@ class RetCustIssue extends \App\Pages\Base {
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
-        
-        
-        
+
+
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -98,7 +95,7 @@ class RetCustIssue extends \App\Pages\Base {
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
- 
+
         } else {
             $this->_doc = Document::create('RetCustIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -112,18 +109,19 @@ class RetCustIssue extends \App\Pages\Base {
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-    
+
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
-                      
+
                     }
                 }
                 $this->calcTotal();
             }
         }
-       
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -144,8 +142,9 @@ class RetCustIssue extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
 
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
@@ -175,13 +174,13 @@ class RetCustIssue extends \App\Pages\Base {
 
         $this->editdetail->edittovar->setKey($item->stock_id);
         $this->editdetail->edittovar->setText($item->itemname);
-        
+
         $qty = $item->getQuantity();
         $this->editdetail->qtystock->setText(H::fqty($qty));
 
         $this->_rowid = $item->item_id;
 
-         
+
     }
 
     public function saverowOnClick($sender) {
@@ -199,7 +198,7 @@ class RetCustIssue extends \App\Pages\Base {
         $item->price = $this->editdetail->editprice->getText();
 
 
-        unset($this->_itemlist[$this->_rowid]);        
+        unset($this->_itemlist[$this->_rowid]);
         $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -228,8 +227,9 @@ class RetCustIssue extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -245,20 +245,20 @@ class RetCustIssue extends \App\Pages\Base {
             return;
         }
 
-      //  $this->calcTotal();
+        //  $this->calcTotal();
         $firm = H::getFirmData($this->_doc->branch_id);
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
-  
+
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
- 
+
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
         $this->_doc->payed = $this->docform->payed->getText();
 
         $isEdited = $this->_doc->document_id > 0;
- 
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -268,8 +268,9 @@ class RetCustIssue extends \App\Pages\Base {
             }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
@@ -278,10 +279,11 @@ class RetCustIssue extends \App\Pages\Base {
             }
 
             $conn->CommitTrans();
-            if ($isEdited)
+            if ($isEdited) {
                 App::RedirectBack();
-            else
+            } else {
                 App::Redirect("\\App\\Pages\\Register\\GIList");
+            }
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -310,18 +312,18 @@ class RetCustIssue extends \App\Pages\Base {
         $this->docform->editpayed->setText(H::fa($total));
     }
 
-       public function onPayed($sender) {
-            $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
-            $payed = $this->docform->payed->getText();
-            $total = $this->docform->total->getText();
-            if ($payed > $total) {
-                $this->setWarn('inserted_extrasum');
-            } else {
-                $this->goAnkor("tankor");
-            }
+    public function onPayed($sender) {
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $payed = $this->docform->payed->getText();
+        $total = $this->docform->total->getText();
+        if ($payed > $total) {
+            $this->setWarn('inserted_extrasum');
+        } else {
+            $this->goAnkor("tankor");
         }
-    
-    
+    }
+
+
     /**
      * Валидация   формы
      *
@@ -337,7 +339,7 @@ class RetCustIssue extends \App\Pages\Base {
         if (count($this->_tovarlist) == 0) {
             $this->setError("noenteritem");
         }
-        if (($this->docform->store->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
         if ($this->docform->customer->getKey() == 0 && trim($this->docform->customer->getText()) == '') {
@@ -361,8 +363,8 @@ class RetCustIssue extends \App\Pages\Base {
         $item = Item::load($id);
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
-       
-        $this->updateAjax(array('qtystock' ));
+
+        $this->updateAjax(array('qtystock'));
     }
 
     public function OnAutoCustomer($sender) {

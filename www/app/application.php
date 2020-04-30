@@ -6,22 +6,25 @@ namespace App;
  * Класс  приложения, выполняющий
  * жизненный  цикл  работы  сайта
  */
-class Application extends \Zippy\WebApplication {
+class Application extends \Zippy\WebApplication
+{
 
     /**
      * Возвращает  шаблон  страницы
      */
     public function getTemplate($name) {
-        global $_config; 
-        
-        
+        global $_config;
+
+
         $path = '';
         $name = ltrim($name, '\\');
-        $arr = explode('\\', $name);
-        
+
+
         $templatepath = 'templates/';
-        if($_config['common']['lang']=='ua') $templatepath = 'templates_ua/';
-        
+        if ($_config['common']['lang'] == 'ua') {
+            $templatepath = 'templates_ua/';
+        }
+
         $className = str_replace("\\", "/", ltrim($name, '\\'));
 
         if (strpos($className, 'App/') === 0) {
@@ -39,7 +42,7 @@ class Application extends \Zippy\WebApplication {
     }
 
     /**
-     * Роутер.   
+     * Роутер.
      *
      * @param mixed $uri
      */
@@ -90,7 +93,7 @@ class Application extends \Zippy\WebApplication {
                 $params = array_slice($api, 3);
                 echo call_user_func_array(array($page, $api[2]), $params);
                 die;
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 global $logger;
                 $logger->error($e->getMessage());
 
@@ -117,12 +120,14 @@ class Application extends \Zippy\WebApplication {
         if (strlen($pages[$arr[0]]) > 0) {
             if (strlen($arr[2]) > 0) {
                 self::$app->LoadPage($pages[$arr[0]], $arr[1], $arr[2]);
-            } else
-            if (strlen($arr[1]) > 0) {
-                self::$app->LoadPage($pages[$arr[0]], $arr[1]);
-            } else
-            if (strlen($arr[0]) > 0) {
-                self::$app->LoadPage($pages[$arr[0]]);
+            } else {
+                if (strlen($arr[1]) > 0) {
+                    self::$app->LoadPage($pages[$arr[0]], $arr[1]);
+                } else {
+                    if (strlen($arr[0]) > 0) {
+                        self::$app->LoadPage($pages[$arr[0]]);
+                    }
+                }
             }
         }
         if (strlen($pages[$uri]) > 0) {

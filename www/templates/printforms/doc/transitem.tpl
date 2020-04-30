@@ -1,46 +1,42 @@
- 
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
-    <tr  >
+    <tr>
         <td colspan="4" align="center">
             <b> Перекомплектация ТМЦ № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
     <tr>
-        <td  >
-            <b> Склад:</b>  
+        <td>
+            <b> Склад:</b>
         </td>
-        <td  >
+        <td>
             {{from}}
         </td>
 
     </tr>
     <tr>
-        <td  >
-            <b>Входной ТМЦ:</b> 
+        <td>
+            <b>Входной ТМЦ:</b>
         </td>
-        <td  >
+        <td>
             {{fromitemname}}
         </td>
     </tr>
     <tr>
-        <td  >
-            <b>Выходной ТМЦ:</b>  
+        <td>
+            <b>Выходной ТМЦ:</b>
         </td>
-        <td  >
+        <td>
             {{toitemname}}
         </td>
     </tr>
     <tr>
-        <td  >
-            <b>Сумма:</b>  
+        <td>
+            <b>Сумма:</b>
         </td>
-        <td  >
+        <td>
             {{amount}}
         </td>
     </tr>
-
-
-
 
 
 </table>

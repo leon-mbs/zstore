@@ -2,10 +2,11 @@
 
 namespace App\Pages;
 
-use \App\Entity\Doc\Document;
+use App\Entity\Doc\Document;
 
 //страница  для  загрузки  файла экпорта
-class ShowDoc extends \Zippy\Html\WebPage {
+class ShowDoc extends \Zippy\Html\WebPage
+{
 
     public function __construct($type, $docid) {
 
@@ -67,7 +68,7 @@ class ShowDoc extends \Zippy\Html\WebPage {
                 header("Content-Transfer-Encoding: binary");
 
 
-                $dompdf = new \Dompdf\Dompdf(array('defaultFont'=> 'DejaVu Sans'));
+                $dompdf = new \Dompdf\Dompdf(array('defaultFont' => 'DejaVu Sans'));
                 $dompdf->loadHtml($html);
 
                 // (Optional) Setup the paper size and orientation

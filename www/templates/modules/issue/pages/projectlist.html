@@ -1,170 +1,175 @@
 <html>
-    <head>
+<head>
 
-    </head>
+</head>
 
-    <body>
-
-
-        <div class="row"  zippy="projectpanel">
-            <div class="col-12  ">
-                <h2>Проекты</h2>
-                <div class="navbar nav  ">
-                    <form zippy="filter" class="form-inline ">
-                        <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"  >
-
-                        <label for="searchstate">статус </label>
-                        <select class="form-control  mr-2   " zippy="searchstate">
-                            <option value="0">Открытые</option>
-                        </select>
-                        <label for="searchcust">заказчик </label>
-                        <select class="form-control   select2 " zippy="searchcust">
-                            <option value="0">Не выбран</option>
-                        </select>
+<body>
 
 
+<div class="row" zippy="projectpanel">
+    <div class="col-12  ">
+        <h2>Проекты</h2>
+        <div class="navbar nav  ">
+            <form zippy="filter" class="form-inline ">
+                <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber">
 
-                        <input type="submit" class=" ml-2   btn btn-outline-success  " value="ОК">
-                    </form>              
+                <label for="searchstate">статус </label>
+                <select class="form-control  mr-2   " zippy="searchstate">
+                    <option value="0">Открытые</option>
+                </select>
+                <label for="searchcust">заказчик </label>
+                <select class="form-control   select2 " zippy="searchcust">
+                    <option value="0">Не выбран</option>
+                </select>
 
-                </div> 
-            </div>      <div class="col-12 col-xl-10 ">
-                <a zippy="padd" class="btn btn-primary  ">Новый проект</a>   
-                <table class="table table-bordered  table-sm"  >
-                    <tr>
-                        <th>Название</th>
-                        <th>Заказчик</th>
-                        <th>Статус</th>
-                        <th colspan="3" class="text-center"    >Задачи</th>
 
-                        <th  ></th>
-                    </tr>
-                    <tr zippy="projectlist">
-                        <td zippy="project_name"></td>
-                        <td zippy="customer_name"></td>
-                        <td zippy="status"></td>
-                        <td style="width:40px" ><span zippy="inew"    title="Новые"    class="badge badge-success  "></span></td>
-                        <td style="width:40px"  ><span zippy="iproc"   title="В работе" class="badge badge-primary"></span></td>
-                        <td style="width:40px"  ><span zippy="iclose"  title="Закрытые" class="badge badge-secondary"></span></td>
-
-                        <td  > 
-                            <a zippy="preview"><i class="fa fa-eye"></a>
-                            &nbsp;&nbsp;
-                            <a zippy="edit"   title="Редактировать"><i class="fa fa-edit"></i></a> 
-
-                            &nbsp;&nbsp; 
-                            <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                </table>
-                <div zippy="pag"></div>    
-            </div>  
+                <input type="submit" class=" ml-2   btn btn-outline-success  " value="ОК">
+            </form>
 
         </div>
-        <div class="row"   >
-            <form class="col-12 col-md-8  col-lg-6" zippy="projectform" method="post">
+    </div>
+    <div class="col-12 col-xl-10 ">
+        <a zippy="padd" class="btn btn-primary  ">Новый проект</a>
+        <table class="table table-bordered  table-sm">
+            <tr>
+                <th>Название</th>
+                <th>Заказчик</th>
+                <th>Статус</th>
+                <th colspan="3" class="text-center">Задачи</th>
+
+                <th></th>
+            </tr>
+            <tr zippy="projectlist">
+                <td zippy="project_name"></td>
+                <td zippy="customer_name"></td>
+                <td zippy="status"></td>
+                <td style="width:40px"><span zippy="inew" title="Новые" class="badge badge-success  "></span></td>
+                <td style="width:40px"><span zippy="iproc" title="В работе" class="badge badge-primary"></span></td>
+                <td style="width:40px"><span zippy="iclose" title="Закрытые" class="badge badge-secondary"></span></td>
+
+                <td>
+                    <a zippy="preview"><i class="fa fa-eye"></a>
+                    &nbsp;&nbsp;
+                    <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
+
+                    &nbsp;&nbsp;
+                    <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+            </tr>
+        </table>
+        <div zippy="pag"></div>
+    </div>
+
+</div>
+<div class="row">
+    <form class="col-12 col-md-8  col-lg-6" zippy="projectform" method="post">
 
 
-                <div class="form-group">
-                    <label for="editname" > Название</label>
-                    <input class="form-control" type="text" zippy="editname" required="required">
-                </div>
-                <div class="form-group">
-                    <label for="editcust"> Заказчик  </label>
-                    <input style="width:300px" placeholder="Начните вводить..." class="form-control mr-2" type="text" zippy="editcust"  >
-                </div>                
-                <div class="form-group">
-                    <label for="editdesc"> Описание  </label>
-                    <textarea style="height:400px"   class="form-control mr-2"   zippy="editdesc"  ></textarea>   
-                </div>                
+        <div class="form-group">
+            <label for="editname"> Название</label>
+            <input class="form-control" type="text" zippy="editname" required="required">
+        </div>
+        <div class="form-group">
+            <label for="editcust"> Заказчик </label>
+            <input style="width:300px" placeholder="Начните вводить..." class="form-control mr-2" type="text"
+                   zippy="editcust">
+        </div>
+        <div class="form-group">
+            <label for="editdesc"> Описание </label>
+            <textarea style="height:400px" class="form-control mr-2" zippy="editdesc"></textarea>
+        </div>
 
-                <div class="form-group">
-                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
-                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-light ">
-                </div>
+        <div class="form-group">
+            <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
+            <input zippy="cancel" type="button" value="Отменить" class="btn btn-light ">
+        </div>
+
+    </form>
+</div>
+<div class="row" zippy="showpan">
+    <div class="col-12 col-md-8 col-xl-6">
+        <a zippy="back"><i class="fa fa-arrow-circle-left"></i> К списку</a>
+        &nbsp; &nbsp; <a zippy="toilist"> К списку задач</a>
+        <h4 zippy="mtitle"></h4>
+
+        <a href="#q1" data-toggle="collapse"><b> Описание <i class="fa fa-chevron-down"></i></b> </a>
+
+        <div id="q1" class="collapse ">
+            <p zippy="mdesc"></p>
+        </div>
+
+        <hr>
+        <a id="afiles">
+            <form class="form-inline" zippy="addfileform" enctype="multipart/form-data">
+                <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+                <label> Выбрать файл: </label>
+
+                <input class="form-control mr-2" type="file" required="required" zippy="addfile">
+
+                <input class="btn btn-outline-info  " type="submit" value="Добавить">
 
             </form>
-        </div>
-        <div class="row" zippy="showpan">
-            <div class="col-12 col-md-8 col-xl-6">
-                <a  zippy="back" ><i class="fa fa-arrow-circle-left"></i> К списку</a>
-                &nbsp;  &nbsp;      <a   zippy="toilist"> К списку  задач</a> 
-                <h4 zippy="mtitle"></h4>   
 
-                <a href="#q1" data-toggle="collapse"  ><b> Описание  <i class="fa fa-chevron-down"></i></b> </a> 
+            <div zippy="filelist" style="float:left">
 
-                <div id="q1" class="collapse "  >
-                    <p zippy="mdesc"></p> 
+                <i class="fa fa-paperclip"></i> <a zippy="filename" target="_blank"></a>
+                &nbsp;<a zippy="delfile" class="text-danger  text-bold" title="Удалить">x</a>&nbsp;&nbsp;
+
+            </div>
+
+
+            <hr>
+            <h5>Коментарии</h5>
+            <table style="width:400px" class="table table-sm">
+                <tr zippy="msglist">
+                    <td>
+                        <span><b zippy="msguser"></b> <span zippy="msgdate"
+                                                            class="text-muted float-right"></span></span>
+
+                        <br><span zippy="msgdata"></span>
+
+                    </td>
+                    <td valign="top"><a zippy="delmsg" class="text-danger text-bold">x</a></td>
+                </tr>
+            </table>
+            <a id="amessages"></a>
+            <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
+                <label> Коментарий: </label>
+                <div class="form-group">
+                    <textarea class="form-control" required="required" zippy="msgdata"
+                              style="width:400px;height:120px;"></textarea>
                 </div>
+                <input class="btn btn-outline-success  " type="submit" value="Добавить">
+            </form>
 
-                <hr> <a id="afiles">
-                    <form class="form-inline" zippy="addfileform" enctype="multipart/form-data">
-                        <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
-                        <label> Выбрать файл: </label>
+    </div>
+    <div class="col-12 col-md-4 col-xl-3">
+        <form zippy="statusform">
+            <div class="form-group">
+                <label for="stlist">Статус </label>
+                <select class="form-control     " zippy="stlist">
 
-                        <input class="form-control mr-2" type="file" required="required" zippy="addfile">
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" class=" ml-2   btn btn-outline-success  " value="Сменить">
+            </div>
 
-                        <input class="btn btn-outline-info  " type="submit" value="Добавить">
+        </form>
 
-                    </form> 
+    </div>
+</div>
 
-                    <div zippy="filelist" style="float:left">
-
-                        <i class="fa fa-paperclip"></i> <a zippy="filename" target="_blank"></a>
-                        &nbsp;<a zippy="delfile" class="text-danger  text-bold" title="Удалить" >x</a>&nbsp;&nbsp;
-
-                    </div>
-
-
-                    <hr>
-                    <h5  >Коментарии</h5>
-                    <table style="width:400px" class="table table-sm">
-                        <tr zippy="msglist">
-                            <td> 
-                                <span><b   zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
-
-                                <br><span   zippy="msgdata"></span>
-
-                            </td>
-                            <td valign="top"><a zippy="delmsg"  class="text-danger text-bold">x</a></td> 
-                        </tr>
-                    </table>   <a id="amessages"></a>
-                        <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
-                            <label> Коментарий: </label>
-                            <div class="form-group">
-                                <textarea class="form-control" required="required" zippy="msgdata" style="width:400px;height:120px;"></textarea>
-                            </div> 
-                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
-                        </form>
-
-                        </div>
-                        <div class="col-12 col-md-4 col-xl-3">
-                            <form zippy="statusform"  >
-                                <div class="form-group">
-                                    <label for="stlist">Статус </label>
-                                    <select class="form-control     " zippy="stlist">
-
-                                    </select>       
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" class=" ml-2   btn btn-outline-success  " value="Сменить">
-                                </div>
-
-                            </form>
-
-                        </div>
-                        </div>
-
-                        <script src="/assets/js/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script src="/assets/js/ckeditor/ckeditor.js" type="text/javascript"></script>
 
 
-                        <script>
-                            if ($(' #editdesc').length) {
-                                CKEDITOR.replace('editdesc', {
-                                    language: "ru",
-                                    customConfig: '/assets/js/ckeditor/config.js',
-                                    filebrowserBrowseUrl: '', filebrowserUploadUrl: '/upload.php'
-                                });
-                            }
-                        </script>
-                        </body>
-                        </html>
+<script>
+    if ($(' #editdesc').length) {
+        CKEDITOR.replace('editdesc', {
+            language: "ru",
+            customConfig: '/assets/js/ckeditor/config.js',
+            filebrowserBrowseUrl: '', filebrowserUploadUrl: '/upload.php'
+        });
+    }
+</script>
+</body>
+</html>

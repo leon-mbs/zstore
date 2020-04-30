@@ -2,28 +2,24 @@
 
 namespace App\Pages\Report;
 
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Panel;
-use \App\Entity\MoneyFund;
-use \App\Entity\Pay;
-use \App\Helper as H;
-use \App\Application as App;
+use App\Helper as H;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Panel;
 
 /**
  * Плптежный  баланс
  */
-class PayBalance extends \App\Pages\Base {
+class PayBalance extends \App\Pages\Base
+{
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReport('PayBalance'))
+        if (false == \App\ACL::checkShowReport('PayBalance')) {
             return;
+        }
 
         $dt = new \Carbon\Carbon;
         $dt->subMonth();
@@ -36,10 +32,9 @@ class PayBalance extends \App\Pages\Base {
         $this->filter->add(new Date('to', $to));
 
 
-       
         $this->add(new Panel('detail'))->setVisible(false);
-         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-    
+        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
+
         $this->detail->add(new RedirectLink('word', "mfreport"));
         $this->detail->add(new RedirectLink('excel', "mfreport"));
         $this->detail->add(new RedirectLink('pdf', "mfreport"));
@@ -48,7 +43,6 @@ class PayBalance extends \App\Pages\Base {
     }
 
     public function OnSubmit($sender) {
-
 
 
         $html = $this->generateReport();
@@ -67,7 +61,7 @@ class PayBalance extends \App\Pages\Base {
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
-  
+
         \App\Session::getSession()->printform = "";
         \App\Session::getSession()->issubmit = true;
     }
@@ -84,8 +78,9 @@ class PayBalance extends \App\Pages\Base {
         $detail2 = array();
 
         $cstr = \App\Acl::getMFBranchConstraint();
-        if (strlen($cstr) > 0)
+        if (strlen($cstr) > 0) {
             $cstr = "  mf_id in ({$cstr}) and ";
+        }
 
         $pl = \App\Entity\Pay::getPayTypeList();
 
@@ -150,6 +145,5 @@ class PayBalance extends \App\Pages\Base {
         return $html;
     }
 
-  
 
 }

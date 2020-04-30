@@ -2,29 +2,29 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Store;
-use \App\Helper as H;
-use \App\System;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\Store;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода   оприходование с  производства
  */
-class ProdReceipt extends \App\Pages\Base {
+class ProdReceipt extends \App\Pages\Base
+{
 
     public $_itemlist = array();
     private $_doc;
@@ -85,18 +85,19 @@ class ProdReceipt extends \App\Pages\Base {
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-  
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
- 
+
                     }
                 }
             }
-            
+
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -137,8 +138,9 @@ class ProdReceipt extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $item = $sender->owner->getDataItem();
         // unset($this->_itemlist[$item->item_id]);
 
@@ -154,8 +156,9 @@ class ProdReceipt extends \App\Pages\Base {
     }
 
     public function saverowOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
 
 
         $id = $this->editdetail->edititem->getKey();
@@ -182,33 +185,34 @@ class ProdReceipt extends \App\Pages\Base {
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
         $item->sdate = $this->editdetail->editsdate->getDate();
-        if ($item->sdate == false)
+        if ($item->sdate == false) {
             $item->sdate = '';
+        }
         if (strlen($item->snumber) > 0 && strlen($item->sdate) == 0 && $this->_tvars["usesnumber"] == true) {
             $this->setError("dateforserial");
             return;
         }
 
 
-         $tarr = array();
- 
-        foreach($this->_itemlist as $k=>$value){
-               
-           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
-              $tarr[$item->item_id] = $item;    // заменяем
-           }   else {
-              $tarr[$k] = $value;    // старый
-           }
-                
+        $tarr = array();
+
+        foreach ($this->_itemlist as $k => $value) {
+
+            if ($this->_rowid > 0 && $this->_rowid == $k) {
+                $tarr[$item->item_id] = $item;    // заменяем
+            } else {
+                $tarr[$k] = $value;    // старый
+            }
+
         }
-     
-        if($this->_rowid == 0) {        // в конец
+
+        if ($this->_rowid == 0) {        // в конец
             $tarr[$item->item_id] = $item;
         }
         $this->_itemlist = $tarr;
         $this->_rowid = 0;
-  
-        
+
+
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -230,8 +234,9 @@ class ProdReceipt extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -252,7 +257,7 @@ class ProdReceipt extends \App\Pages\Base {
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->payamount = 0;
-   
+
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -264,14 +269,14 @@ class ProdReceipt extends \App\Pages\Base {
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
 
 
             $conn->CommitTrans();
@@ -316,10 +321,9 @@ class ProdReceipt extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");
         }
-        if (($this->docform->store->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
-
 
 
         return !$this->isError();
@@ -344,18 +348,18 @@ class ProdReceipt extends \App\Pages\Base {
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
 
-            $ilist = \App\Entity\ItemSet::find("pitem_id=" . $id );
-            $price=0;
-            if(count($ilist)>0  ) {
-                 foreach($ilist as  $iset) {
-                    $it = \App\Entity\Item::load($iset->item_id);
-                    $pr = $it->getLastPartion(0); 
-                    $price += ($iset->qty*$pr);
-                 }
-            }       
-            $this->editdetail->editprice->setText($price > 0 ? H::fa($price) :'' );
+        $ilist = \App\Entity\ItemSet::find("pitem_id=" . $id);
+        $price = 0;
+        if (count($ilist) > 0) {
+            foreach ($ilist as $iset) {
+                $it = \App\Entity\Item::load($iset->item_id);
+                $pr = $it->getLastPartion(0);
+                $price += ($iset->qty * $pr);
+            }
+        }
+        $this->editdetail->editprice->setText($price > 0 ? H::fa($price) : '');
 
-        $this->updateAjax(array(  'editprice'));
+        $this->updateAjax(array('editprice'));
     }
 
 }

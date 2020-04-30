@@ -5,7 +5,8 @@ namespace App\Modules\WC;
 /**
  * Вспомагательный  класс
  */
-class Helper {
+class Helper
+{
 
     public static function getClient() {
 
@@ -14,16 +15,16 @@ class Helper {
         $site = $modules['wcsite'];
         $keyc = $modules['wckeyc'];
         $keys = $modules['wckeys'];
-        $api  = $modules['wcapi'];
+        $api = $modules['wcapi'];
         $site = trim($site, '/') . '/';
 
         $woocommerce = new \Automattic\WooCommerce\Client(
-                $site,
-                $keyc,
-                $keys,
-                [
-                  'version' => 'wc/' . $api,
-                ]
+            $site,
+            $keyc,
+            $keys,
+            [
+                'version' => 'wc/' . $api,
+            ]
         );
 
 

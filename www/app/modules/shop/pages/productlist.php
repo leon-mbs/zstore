@@ -2,37 +2,27 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Image;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\File;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Link\SubmitLink;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\BookmarkableLink;
-use \ZCL\BT\Tree;
-use \App\Modules\Shop\Entity\ProductGroup;
-use \App\Modules\Shop\Entity\Product;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\Modules\Shop\Entity\ProductAttribute;
+use App\Application as App;
+use App\Entity\Item;
+use App\Modules\Shop\Entity\Product;
+use App\Modules\Shop\Entity\ProductGroup;
+use App\System;
+use ZCL\BT\Tree;
+use Zippy\Binding\PropertyBinding as PB;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-use \App\Modules\Shop\Helper;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \ZCL\DB\EntityDataSource;
-use \Zippy\Binding\PropertyBinding as PB;
-use \App\System;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \App\Application as App;
-
-class ProductList extends \App\Pages\Base {
+class ProductList extends \App\Pages\Base
+{
 
     private $rootgroup, $product;
     private $store = "";
@@ -49,7 +39,7 @@ class ProductList extends \App\Pages\Base {
 
         $this->op = System::getOptions("shop");
         if (strlen($this->op['defcust']) == 0 || strlen($this->op['defstore']) == 0 || strlen($this->op['defpricetype']) == 0) {
-            
+
             $this->setWarn('notsetoptionsmag');
         }
 
@@ -75,7 +65,6 @@ class ProductList extends \App\Pages\Base {
         $this->add(new Panel('editpanel'))->setVisible(false);
 
 
-
         $editform = $this->editpanel->add(new Form('editform'));
         $editform->add(new AutocompleteTextInput('eitem'))->onText($this, 'OnAutoItem');
         $editform->eitem->onChange($this, 'onChangeItem');
@@ -88,7 +77,6 @@ class ProductList extends \App\Pages\Base {
 
         $editform->add(new DropDownChoice('emanuf', \App\Modules\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
         $editform->add(new DropDownChoice('egroup', \App\Modules\Shop\Entity\ProductGroup::findArray('groupname', 'group_id not in (select parent_id from shop_productgroups)', 'groupname')));
-
 
 
         $editform->add(new DataView('attrlist', new ArrayDataSource(new PB($this, 'attrlist')), $this, 'attrlistOnRow'));
@@ -127,8 +115,9 @@ class ProductList extends \App\Pages\Base {
         foreach ($itemlist as $item) {
             $node = new \ZCL\BT\TreeNode($item->groupname, $item->group_id);
             $parentnode = @$nodelist[$item->parent_id];
-            if ($item->parent_id == 0)
+            if ($item->parent_id == 0) {
                 $parentnode = $root;
+            }
 
             $this->tree->addNode($node, $parentnode);
 
@@ -232,7 +221,6 @@ class ProductList extends \App\Pages\Base {
 //редактирование
 
     public function lnameOnClick($sender) {
-
 
 
         $this->editpanel->setVisible(true);
@@ -352,7 +340,7 @@ class ProductList extends \App\Pages\Base {
                 $this->setError('toobigimage');
                 return;
             }
-            $r = ((double) $imagedata[0]) / $imagedata[1];
+            $r = ((double)$imagedata[0]) / $imagedata[1];
             if ($r > 1.1 || $r < 0.9) {
                 $this->setError('squareimage');
                 return;
@@ -408,7 +396,8 @@ class ProductList extends \App\Pages\Base {
 
 }
 
-class ProductDataSource implements \Zippy\Interfaces\DataSource {
+class ProductDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -470,14 +459,15 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
 
 }
 
 //компонент атрибута  товара
 //выводит  элементы  формы  ввода   в  зависимости  от  типа  атрибута
-class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest {
+class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest
+{
 
     protected $productattribute = null;
 
@@ -505,7 +495,7 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
         }
         //'Список'
         if ($this->productattribute->attributetype == 3) {
-            $sel='';
+            $sel = '';
             $ret .= " <select style='width:250px;' name=\"{$this->id}\" class=\"form-control\" ><option value=\"-1\">Не выбран</option>";
             $list = explode(',', $this->productattribute->valueslist);
             foreach ($list as $key => $value) {
@@ -526,10 +516,11 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
             foreach ($list as $key => $value) {
 
                 $value = trim($value);
-                if (in_array($value, $values))
+                if (in_array($value, $values)) {
                     $checked = ' checked="on"';
-                else
+                } else {
                     $checked = "";
+                }
 
                 $name = $this->id . '_' . $i++;
                 $ret = $ret . "<input  name=\"{$name}\" type=\"checkbox\"  {$checked}> {$value}";

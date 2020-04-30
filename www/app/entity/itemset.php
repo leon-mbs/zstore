@@ -9,7 +9,8 @@ namespace App\Entity;
  * @view=item_set_view
  * @keyfield=set_id
  */
-class ItemSet extends \ZCL\DB\Entity {
+class ItemSet extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->set_id = 0;

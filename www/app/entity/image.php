@@ -7,10 +7,11 @@ namespace App\Entity;
  * @table=images
  * @keyfield=image_id
  */
-class Image extends \ZCL\DB\Entity {
+class Image extends \ZCL\DB\Entity
+{
 
     protected function init() {
-        
+
     }
 
 }

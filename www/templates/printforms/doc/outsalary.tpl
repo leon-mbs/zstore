@@ -1,8 +1,7 @@
- 
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
-    <tr  >
+    <tr>
         <td colspan="2" align="center">
-            <b> Выплата зарплаты  № {{document_number}} от {{date}}</b> <br>
+            <b> Выплата зарплаты № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
 
@@ -12,47 +11,47 @@
             <b>Со счета:</b> {{paymentname}}
         </td>
     </tr>
- 
+
     <tr>
         <td colspan="2">
             <b>Месяц:</b> {{month}} {{year}}
         </td>
     </tr>
- 
+
     <tr>
         <td colspan="2">
             {{notes}}
         </td>
     </tr>
-      <tr>
-        <td  >
-           <b>ФИО</b>
+    <tr>
+        <td>
+            <b>ФИО</b>
         </td>
-        <td class="text-right" >
-           <b>Сумма</b>
+        <td class="text-right">
+            <b>Сумма</b>
         </td>
     </tr>
-  
+
     {{#_detail}}
     <tr>
-        <td  >
+        <td>
             {{emp_name}}
         </td>
-       <td class="text-right" >
+        <td class="text-right">
             {{amount}}
         </td>
     </tr>
-   
+
     {{/_detail}}
-     <tr>
-        <td  >
-           <b>Всего:</b>
+    <tr>
+        <td>
+            <b>Всего:</b>
         </td>
-        <td class="text-right" >
-           <b>{{total}}</b>
+        <td class="text-right">
+            <b>{{total}}</b>
         </td>
     </tr>
- 
-   </table>
+
+</table>
 
 

@@ -2,36 +2,25 @@
 
 namespace App\Pages\Register;
 
-use \ZCL\DB\EntityDataSource as EDS;
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\File;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Customer;
-use \App\Entity\Stock;
-use \App\Entity\Item;
-use \App\Entity\Service;
-use \App\Entity\Employee;
-use \App\Entity\ProdArea;
-use \App\Entity\Doc\Document;
-use \App\Entity\Doc\Task;
-use \App\Helper as H;
-use \App\System;
-use \App\Application;
+use App\Application;
+use App\Entity\Doc\Document;
+use App\Entity\Doc\Task;
+use App\Entity\Employee;
+use App\Entity\ProdArea;
+use App\Helper as H;
+use App\System;
+use ZCL\DB\EntityDataSource as EDS;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class TaskList extends \App\Pages\Base {
+class TaskList extends \App\Pages\Base
+{
 
     private $_task;
     private $_taskds;
@@ -40,15 +29,16 @@ class TaskList extends \App\Pages\Base {
     public $_store_id = 0;
     public $_discount = 0;
     private $_taskscnt = array();
- 
+
 
     public function __construct() {
 
 
         parent::__construct();
 
-        if (false == \App\ACL::checkShowReg('TaskList'))
+        if (false == \App\ACL::checkShowReg('TaskList')) {
             return;
+        }
 
         $this->_taskds = new EDS('\App\Entity\Doc\Document', "", "document_date desc");
 
@@ -65,7 +55,7 @@ class TaskList extends \App\Pages\Base {
 
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
- 
+
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
@@ -73,7 +63,7 @@ class TaskList extends \App\Pages\Base {
         $this->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bitems'))->onClick($this, 'statusOnSubmit');
- 
+
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
@@ -93,28 +83,32 @@ class TaskList extends \App\Pages\Base {
 
         $row->add(new Label('taskstatus', Document::getStateName($task->state)));
 
-        if ($task->state == Document::STATE_EXECUTED)
+        if ($task->state == Document::STATE_EXECUTED) {
             $row->taskstatus->setText('<span class="badge badge-success">Выполнен</span>', true);
-        if ($task->state == Document::STATE_INPROCESS)
+        }
+        if ($task->state == Document::STATE_INPROCESS) {
             $row->taskstatus->setText('<span class="badge badge-info">Выполняется</span>', true);
-        if ($task->state == Document::STATE_SHIFTED)
+        }
+        if ($task->state == Document::STATE_SHIFTED) {
             $row->taskstatus->setText('<span class="badge badge-warning">Отложена</span>', true);
-        if ($task->state == Document::STATE_CLOSED)
+        }
+        if ($task->state == Document::STATE_CLOSED) {
             $row->taskstatus->setText('<span class="badge badge-default">Закончено</span>', true);
- 
+        }
+
         $emps = array();
         foreach ($task->unpackDetails('emplist') as $emp) {
-             $emps[] = $emp->emp_name;
+            $emps[] = $emp->emp_name;
         }
 
         $row->add(new Label('taskemps', implode(', ', $emps)));
         $sers = array();
         foreach ($task->unpackDetails('detaildata') as $ser) {
-             $sers[] = $ser->service_name;
+            $sers[] = $ser->service_name;
         }
 
         $row->add(new Label('taskservices', implode(', ', $sers)));
- 
+
         $row->add(new ClickLink('taskshow'))->onClick($this, 'taskshowOnClick');
         $row->add(new ClickLink('taskedit'))->onClick($this, 'taskeditOnClick');
         if ($task->state == Document::STATE_CLOSED || $task->state == Document::STATE_EXECUTED) {
@@ -125,8 +119,9 @@ class TaskList extends \App\Pages\Base {
     //панель кнопок
     public function taskshowOnClick($sender) {
         $this->_task = $sender->getOwner()->getDataItem();
-        if (false == \App\ACL::checkShowDoc($this->_task, true))
+        if (false == \App\ACL::checkShowDoc($this->_task, true)) {
             return;
+        }
 
 
         $this->statuspan->setVisible(true);
@@ -161,16 +156,18 @@ class TaskList extends \App\Pages\Base {
 
     public function taskeditOnClick($sender) {
         $task = $sender->getOwner()->getDataItem();
-        if (false == \App\ACL::checkEditDoc($task, true))
+        if (false == \App\ACL::checkEditDoc($task, true)) {
             return;
+        }
 
         Application::Redirect("\\App\\Pages\\Doc\\Task", $task->document_id);
     }
 
     public function statusOnSubmit($sender) {
 
-        if (\App\Acl::checkExeDoc($this->_task, true, true) == false)
+        if (\App\Acl::checkExeDoc($this->_task, true, true) == false) {
             return;
+        }
 
 
         $this->_task = $this->_task->cast();
@@ -188,7 +185,7 @@ class TaskList extends \App\Pages\Base {
         if ($sender->id == 'bitems') {    //списание материалов
             $d = $this->_task->getChildren('ProdIssue');
             if (count($d) > 0) {
-            
+
                 $this->setWarn('exists_prodissue');
             }
             Application::Redirect("\\App\\Pages\\Doc\\ProdIssue", 0, $this->_task->document_id);
@@ -202,7 +199,7 @@ class TaskList extends \App\Pages\Base {
 
     public function updateTasks() {
         $user = System::getUser();
- 
+
         $sql = "meta_name='Task' ";
         if ($this->filterform->filterfinished->isChecked() == false) {
             $sql = $sql . " and state<>9 ";
@@ -218,10 +215,10 @@ class TaskList extends \App\Pages\Base {
         if (strlen($c) > 0) {
             $sql = $sql . " and ({$c})";
         }
- 
+
         $this->_taskds->setWhere($sql);
         $this->tasklist->Reload();
- 
+
         $this->updateCal();
 
         $this->statuspan->setVisible(false);
@@ -236,17 +233,19 @@ class TaskList extends \App\Pages\Base {
         foreach ($items as $item) {
 
 
-            if ($item->state == Document::STATE_INPROCESS)
+            if ($item->state == Document::STATE_INPROCESS) {
                 $col = "#28a745";
-            if ($item->state == Document::STATE_SHIFTED)
+            }
+            if ($item->state == Document::STATE_SHIFTED) {
                 $col = "#ffc107";
-            if ($item->state == Document::STATE_CLOSED)
+            }
+            if ($item->state == Document::STATE_CLOSED) {
                 $col = "#dddddd";
+            }
 
 
             $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->headerdata['start_date'], $item->headerdata['end_date'], $col);
         }
-
 
 
         $this->calendar->setData($tasks);
@@ -281,8 +280,9 @@ class TaskList extends \App\Pages\Base {
         if ($action['action'] == 'move') {
             $task = Task::load($action['id']);
             $task->start_date = $task->start_date + $action['delta'];
-            if ($task->state == Document::STATE_CLOSED)
+            if ($task->state == Document::STATE_CLOSED) {
                 return;
+            }
             $task->save();
             $this->updateCal();
             $this->updateTasks();
@@ -293,8 +293,9 @@ class TaskList extends \App\Pages\Base {
             $task->end_date = $task->end_date + ($action['delta'] / 3600);
             $task->document_date = $task->end_date;
 
-            if ($task->state == Document::STATE_CLOSED)
+            if ($task->state == Document::STATE_CLOSED) {
                 return;
+            }
             $task->save();
             $this->updateCal();
             $this->updateTasks();

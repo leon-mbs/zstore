@@ -3,12 +3,14 @@
 namespace App\Modules\Shop\Entity;
 
 //класс-сущность  товара
+
 /**
  * @keyfield=product_id
  * @table=shop_products
  * @view=shop_products_view
  */
-class Product extends \ZCL\DB\Entity {
+class Product extends \ZCL\DB\Entity
+{
 
     public $attributevalues;
     public $images = array();
@@ -36,18 +38,18 @@ class Product extends \ZCL\DB\Entity {
 
         $xml = @simplexml_load_string($this->detail);
 
-        $this->item_id = (int) ($xml->item_id[0]);
-        $this->image_id = (int) ($xml->image_id[0]);
-        $images = (string) ($xml->images[0]);
-        $this->topsold = (int) ($xml->topsold[0]);
+        $this->item_id = (int)($xml->item_id[0]);
+        $this->image_id = (int)($xml->image_id[0]);
+        $images = (string)($xml->images[0]);
+        $this->topsold = (int)($xml->topsold[0]);
 
-        $this->item_code = (string) ($xml->item_code[0]);
-        $this->chprice = (string) ($xml->chprice[0]);
-        $this->description = (string) ($xml->description[0]);
-        $this->fulldescription = (string) ($xml->fulldescription[0]);
-        $this->aboutus = (string) ($xml->aboutus[0]);
-        $this->contact = (string) ($xml->contact[0]);
-        $this->delivery = (string) ($xml->delivery[0]);
+        $this->item_code = (string)($xml->item_code[0]);
+        $this->chprice = (string)($xml->chprice[0]);
+        $this->description = (string)($xml->description[0]);
+        $this->fulldescription = (string)($xml->fulldescription[0]);
+        $this->aboutus = (string)($xml->aboutus[0]);
+        $this->contact = (string)($xml->contact[0]);
+        $this->delivery = (string)($xml->delivery[0]);
 
         $this->rating = round($this->rating);
         $this->created = strtotime($this->created);
@@ -109,7 +111,7 @@ class Product extends \ZCL\DB\Entity {
 
     /**
      * Возвращает список аттрибутов  со значениями
-     * 
+     *
      */
     public function getAttrList() {
         $conn = \ZCL\DB\DB::getConnect();
@@ -127,8 +129,9 @@ class Product extends \ZCL\DB\Entity {
 
         foreach ($attrlist as $attr) {
             $attr->value = @$attrvalues[$attr->attribute_id];
-            if (strlen($attr->value) == 0)
+            if (strlen($attr->value) == 0) {
                 $attr->nodata = true;
+            }
             $ret[] = $attr;
         }
 
@@ -137,7 +140,7 @@ class Product extends \ZCL\DB\Entity {
 
     /**
      * Возвращает  ЧПУ  строку.  Если  не  задана,   возвращвет id
-     * 
+     *
      */
     public function getSEF() {
         return strlen($this->sef) > 0 ? $this->sef : $this->product_id;
@@ -145,7 +148,7 @@ class Product extends \ZCL\DB\Entity {
 
     /**
      * Загружает товар   по  ЧПУ коду
-     * 
+     *
      */
     public static function loadSEF($sef) {
         return self::findFirst("product_id={$sef} or sef='{$sef}'");

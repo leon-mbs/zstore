@@ -2,28 +2,26 @@
 
 namespace App\Pages\Register;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \App\Entity\Doc\Document;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 /**
  * журнал  продаж
  */
-class GIList extends \App\Pages\Base {
+class GIList extends \App\Pages\Base
+{
 
     private $_doc = null;
 
@@ -34,8 +32,9 @@ class GIList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('GIList'))
+        if (false == \App\ACL::checkShowReg('GIList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -53,8 +52,6 @@ class GIList extends \App\Pages\Base {
         $doclist->setPageSize(H::getPG());
 
 
-
-
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
@@ -65,8 +62,6 @@ class GIList extends \App\Pages\Base {
         $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new TextInput('ship_number'));
-
-
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
@@ -106,16 +101,18 @@ class GIList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false)
+        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false) {
             return;
+        }
 
         $state = $this->_doc->state;
 
         if ($sender->id == "bsend") {
             $dec = $this->statuspan->statusform->ship_number->getText();
             $this->_doc->headerdata['sentdate'] = date('Y-m-d', time());
-            if (strlen($dec) > 0)
+            if (strlen($dec) > 0) {
                 $this->_doc->headerdata['ship_number'] = $dec;
+            }
             $this->_doc->headerdata['document_date'] = time();
             $this->_doc->save();
 
@@ -124,10 +121,10 @@ class GIList extends \App\Pages\Base {
 
 
             $this->_doc->save();
-           // if ($order instanceof Document) {
-           //     $order = $order->cast();
-           //     $order->updateStatus(Document::STATE_INSHIPMENT);
-           // }
+            // if ($order instanceof Document) {
+            //     $order = $order->cast();
+            //     $order->updateStatus(Document::STATE_INSHIPMENT);
+            // }
             $this->statuspan->statusform->ship_number->setText('');
             $this->setSuccess('sent');
         }
@@ -137,12 +134,12 @@ class GIList extends \App\Pages\Base {
 
             if ($this->_doc->parent_id > 0) {   //закрываем заказ
                 if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
-                    
+
                 } else {
                     $order = Document::load($this->_doc->parent_id);
                     if ($order->state == Document::STATE_INPROCESS) {
                         $order->updateStatus(Document::STATE_CLOSED);
-                        $this->setSuccess("order_closed ",$order->document_number );
+                        $this->setSuccess("order_closed ", $order->document_number);
                     }
                 }
             }
@@ -156,7 +153,7 @@ class GIList extends \App\Pages\Base {
 
             if (count($d) > 0) {
                 $this->setWarn('goodsreceipt_exists');
-                 
+
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
         }
@@ -166,8 +163,6 @@ class GIList extends \App\Pages\Base {
         if ($sender->id == "bret") {
             App::Redirect("\\App\\Pages\\Doc\\ReturnIssue", 0, $this->_doc->document_id);
         }
-
-
 
 
         $this->doclist->Reload(false);
@@ -181,7 +176,6 @@ class GIList extends \App\Pages\Base {
     public function updateStatusButtons() {
 
 
-
         $this->statuspan->statusform->bdevivered->setVisible(true);
         $this->statuspan->statusform->bttn->setVisible(true);
         $this->statuspan->statusform->bret->setVisible(true);
@@ -190,7 +184,6 @@ class GIList extends \App\Pages\Base {
         $this->statuspan->statusform->ship_number->setVisible(true);
 
         $state = $this->_doc->state;
-
 
 
         //отправлен
@@ -243,8 +236,9 @@ class GIList extends \App\Pages\Base {
     public function showOnClick($sender) {
 
         $this->_doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkShowDoc($this->_doc, true))
+        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
+        }
 
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
@@ -256,8 +250,9 @@ class GIList extends \App\Pages\Base {
 
     public function editOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
-        if (false == \App\ACL::checkEditDoc($doc, true))
+        if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
+        }
 
         App::Redirect("\\App\\Pages\\Doc\\" . $doc->meta_name, $doc->document_id);
     }
@@ -294,7 +289,8 @@ class GIList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
+class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -355,7 +351,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
 
 }

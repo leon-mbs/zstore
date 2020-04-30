@@ -2,43 +2,41 @@
 
 namespace App\Pages\Report;
 
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\RedirectLink;
-use \Zippy\Html\Panel;
-use \App\Entity\MoneyFund;
-use \App\Entity\Pay;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System as System;
+use App\Application as App;
+use App\Entity\MoneyFund;
+use App\Helper as H;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
+use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Panel;
 
 /**
  * Движение по денежным счетам
  */
-class PayActivity extends \App\Pages\Base {
+class PayActivity extends \App\Pages\Base
+{
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReport('PayActivity'))
+        if (false == \App\ACL::checkShowReport('PayActivity')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
 
 
-        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList( ), H::getDefMF()));
+        $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(), H::getDefMF()));
 
 
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-  
+
         $this->detail->add(new RedirectLink('excel', "mfreport"));
         $this->detail->add(new RedirectLink('pdf', "mfreport"));
         $this->detail->add(new Label('preview'));
@@ -46,7 +44,6 @@ class PayActivity extends \App\Pages\Base {
     }
 
     public function OnSubmit($sender) {
-
 
 
         $html = $this->generateReport();
@@ -58,7 +55,7 @@ class PayActivity extends \App\Pages\Base {
         $reportname = "mfreport";
 
 
-            $this->detail->excel->pagename = $reportpage;
+        $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;
         $this->detail->pdf->params = array('pdf', $reportname);
@@ -73,7 +70,7 @@ class PayActivity extends \App\Pages\Base {
     private function generateReport() {
 
         $mf_id = $this->filter->mf->getValue();
- 
+
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
@@ -127,7 +124,7 @@ class PayActivity extends \App\Pages\Base {
 
             $detail[] = array(
                 "date" => date("Y-m-d", strtotime($row['dt'])),
-          
+
                 "in" => H::fa(strlen($row['begin_amount']) > 0 ? $row['begin_amount'] : 0),
                 "obin" => H::fa($row['obin']),
                 "obout" => H::fa($row['obout']),

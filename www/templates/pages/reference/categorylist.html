@@ -1,66 +1,66 @@
 <html>
-    <head>
-    </head>
+<head>
+</head>
 
-    <body>
-        <div class="row">
-            <div class="col-12 col-md-6 col-xl-4">
-                <div zippy="categorytable">
-                    <h3>Категории товаров 
-                        <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover" 
-                           data-placement="bottom" data-content="Категории предназначены для  групировки  товаров  в  прайте, а также  для  
-                           задания  наценки  по  умолчанию для товаров  где  цена или наценка не  указаны  явно"></i> 
+<body>
+<div class="row">
+    <div class="col-12 col-md-6 col-xl-4">
+        <div zippy="categorytable">
+            <h3>Категории товаров
+                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
+                   data-toggle="popover"
+                   data-placement="bottom" data-content="Категории предназначены для  групировки  товаров  в  прайте, а также  для
+                           задания  наценки  по  умолчанию для товаров  где  цена или наценка не  указаны  явно"></i>
 
-                    </h3>                    
-                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
-                    <table class="table table-bordered   table-sm"  >
-                        <tr>
-                            <th>Название</th>
+            </h3>
+            <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
+            <table class="table table-bordered   table-sm">
+                <tr>
+                    <th>Название</th>
 
-                            <th></th>
-                        </tr>
-                        <tr zippy="categorylist">
-                            <td zippy="cat_name"></td>
+                    <th></th>
+                </tr>
+                <tr zippy="categorylist">
+                    <td zippy="cat_name"></td>
 
-                            <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
-                                    zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                    </table>
-
-
-                </div>
+                    <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
+                            zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+                </tr>
+            </table>
 
 
-            </div> 
-        </div> 
-        <div class="row">
-            <div class="col-6 col-md-4">        
-
-                <form  zippy="categorydetail"  >
-                    <div class="form-group">
-                        <label for="editcat_name">Название</label>
-                        <input  required="required" class="form-control" zippy="editcat_name"/>
-                    </div>
-                    <div class="form-group  ">
-                        <label   for="editprice">Наценки  в  %</label>
-                        <div   > 
-                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice1"/>
-                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice2"/>
-                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice3"/>
-                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice4"/>
-                            <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice5"/>
-                            <small class="form-text text-muted">Типы цен задаются в настройках. </small>
-                        </div>
-                    </div>
-
-                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  "> 
-
-                </form>
-            </div>
         </div>
 
 
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 col-md-4">
 
-    </body>
+        <form zippy="categorydetail">
+            <div class="form-group">
+                <label for="editcat_name">Название</label>
+                <input required="required" class="form-control" zippy="editcat_name"/>
+            </div>
+            <div class="form-group  ">
+                <label for="editprice">Наценки в %</label>
+                <div>
+                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice1"/>
+                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice2"/>
+                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice3"/>
+                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice4"/>
+                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice5"/>
+                    <small class="form-text text-muted">Типы цен задаются в настройках. </small>
+                </div>
+            </div>
+
+            <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+            <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+
+        </form>
+    </div>
+</div>
+
+
+</body>
 </html>

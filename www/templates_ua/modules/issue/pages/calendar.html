@@ -1,134 +1,132 @@
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="/vendor/leon-mbs/zippy/zcl/gantt/jquery.ganttView.css"/>
+<head>
+    <link rel="stylesheet" type="text/css" href="/vendor/leon-mbs/zippy/zcl/gantt/jquery.ganttView.css"/>
 
-        <link href="/assets/css/ekko-lightbox.css" rel="stylesheet" type="text/css">
-        <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
-
-
-        <link rel="stylesheet" type="text/css" href="/assets/css/fullcalendar.css" />
+    <link href="/assets/css/ekko-lightbox.css" rel="stylesheet" type="text/css">
+    <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
 
 
-        <script language="javascript" src="/assets/js/moment.min.js"></script>        
-        <script language="javascript" src="/assets/js/fullcalendar.js"></script>        
-        <script language="javascript" src="/assets/js/ru.js"></script>        
+    <link rel="stylesheet" type="text/css" href="/assets/css/fullcalendar.css"/>
 
 
-
-    </head>
-    <body>
-
-
-        <div class="row">                           
+    <script language="javascript" src="/assets/js/moment.min.js"></script>
+    <script language="javascript" src="/assets/js/fullcalendar.js"></script>
+    <script language="javascript" src="/assets/js/ru.js"></script>
 
 
-            <div class="col-12  col-xl-10   " zippy="listpan" >
-                <h3>Календар робочого часу</h3>
-                <a  zippy="addtime" class="btn btn-info mt-2 mb-3">Додати</a>
-
-                <ul class="nav nav-tabs" >
-                    <li class="nav-item"><a class="nav-link  active" href="#caltab" data-toggle="tab">Календар</li>
-                    <li class="nav-item"><a class="nav-link " href="#tasktab" data-toggle="tab">Перелік</li>
+</head>
+<body>
 
 
-                </ul>
-                <div class="tab-content">
-                    <div id="caltab" class="tab-pane active  ">
-
-                        <div zippy='calendar'></div>
+<div class="row">
 
 
-                    </div>                    
+    <div class="col-12  col-xl-10   " zippy="listpan">
+        <h3>Календар робочого часу</h3>
+        <a zippy="addtime" class="btn btn-info mt-2 mb-3">Додати</a>
 
-                    <div id="tasktab" class="tab-pane  ">
-
-                        <div class="row">
-                            <div class="col-12  col-md-10  col-xl-8  " > 
-
-
-                                <table class="table   table-sm table-hover">
-                                    <tr>
-
-                                        <th>Дата</th>
-                                        <th>Час</th>
-
-                                        <th>Завдання</th>
-
-                                        <th>Проект</th>
-                                        <th>Коментар</th>
-
-                                        <th style="width:75px;"> </th>
-
-                                    </tr>
-                                    <tr zippy="timelist">
-
-                                        <td zippy="date"></td>
-                                        <td zippy="time"></td>
-
-                                        <td zippy="issue"   ></td>
-                                        <td zippy="project"   ></td>
-                                        <td zippy="notes"></td>
-
-                                        <td>
-
-                                            <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
-                                            &nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
-
-                                        </td>
-
-                                    </tr>
-
-                                </table>
-                                <div zippy="pag"></div>
-                                <a id="dankor"></a></div>  
-                        </div>       
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link  active" href="#caltab" data-toggle="tab">Календар</li>
+            <li class="nav-item"><a class="nav-link " href="#tasktab" data-toggle="tab">Перелік</li>
 
 
+        </ul>
+        <div class="tab-content">
+            <div id="caltab" class="tab-pane active  ">
 
-                    </div> <!-- tasktab -->
+                <div zippy='calendar'></div>
 
 
-                </div>  
+            </div>
+
+            <div id="tasktab" class="tab-pane  ">
+
+                <div class="row">
+                    <div class="col-12  col-md-10  col-xl-8  ">
 
 
-            </div> 
+                        <table class="table   table-sm table-hover">
+                            <tr>
 
-            <div class="clearfix"></div>
-            <div class="col-12  col-md-4 col-xl-3  "   >
-                <form zippy="editform">
-                    <div class="form-group  ">
-                        <label for="eproject" >Проект</label>
-                        <select class="form-control  " zippy="eproject">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>                  
-                    <div class="form-group  ">
-                        <label for="eissue" >Завдання</label>
-                        <select class="form-control   " zippy="eissue">
+                                <th>Дата</th>
+                                <th>Час</th>
 
-                        </select>
-                    </div>                  
-                    <div class="form-group  ">
-                        <label for="edate" >Дата</label>
-                        <input required="required" style="width:160px;" zippy="edate" class="form-control" >
-                    </div>                  
-                    <div class="form-group  ">
-                        <label for="etime" >Годин</label>
-                        <input required="required" pattern="[0-9\.]+" style="width:100px;" zippy="etime" class="form-control" >
-                    </div>                  
-                    <div class="form-group  ">
-                        <label for="enotes" >Коментар</label>
-                        <input  zippy="enotes" class="form-control" >
-                    </div>                  
-                    <div class="form-group  ">
-                        <a zippy="cancel" class="btn btn-default">Скасувати</a> 
-                        &nbsp;&nbsp;<input   type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+                                <th>Завдання</th>
 
-                    </div>                  
+                                <th>Проект</th>
+                                <th>Коментар</th>
 
-                </form>
-            </div>  
-        </div>    
+                                <th style="width:75px;"></th>
 
-    </body>
+                            </tr>
+                            <tr zippy="timelist">
+
+                                <td zippy="date"></td>
+                                <td zippy="time"></td>
+
+                                <td zippy="issue"></td>
+                                <td zippy="project"></td>
+                                <td zippy="notes"></td>
+
+                                <td>
+
+                                    <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
+                                    &nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
+
+                                </td>
+
+                            </tr>
+
+                        </table>
+                        <div zippy="pag"></div>
+                        <a id="dankor"></a></div>
+                </div>
+
+
+            </div> <!-- tasktab -->
+
+
+        </div>
+
+
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="col-12  col-md-4 col-xl-3  ">
+        <form zippy="editform">
+            <div class="form-group  ">
+                <label for="eproject">Проект</label>
+                <select class="form-control  " zippy="eproject">
+                    <option value="0">Не обрано</option>
+                </select>
+            </div>
+            <div class="form-group  ">
+                <label for="eissue">Завдання</label>
+                <select class="form-control   " zippy="eissue">
+
+                </select>
+            </div>
+            <div class="form-group  ">
+                <label for="edate">Дата</label>
+                <input required="required" style="width:160px;" zippy="edate" class="form-control">
+            </div>
+            <div class="form-group  ">
+                <label for="etime">Годин</label>
+                <input required="required" pattern="[0-9\.]+" style="width:100px;" zippy="etime" class="form-control">
+            </div>
+            <div class="form-group  ">
+                <label for="enotes">Коментар</label>
+                <input zippy="enotes" class="form-control">
+            </div>
+            <div class="form-group  ">
+                <a zippy="cancel" class="btn btn-default">Скасувати</a>
+                &nbsp;&nbsp;<input type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
 </html>

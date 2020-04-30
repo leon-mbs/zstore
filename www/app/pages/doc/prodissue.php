@@ -2,29 +2,29 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Helper as H;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода   списание  на производство
  */
-class ProdIssue extends \App\Pages\Base {
+class ProdIssue extends \App\Pages\Base
+{
 
     public $_itemlist = array();
     private $_doc;
@@ -41,7 +41,7 @@ class ProdIssue extends \App\Pages\Base {
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new TextInput('notes'));
-        
+
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
@@ -50,14 +50,13 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
-        
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
-   
+
         $this->editdetail->add(new TextInput('editserial'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
@@ -80,7 +79,7 @@ class ProdIssue extends \App\Pages\Base {
             $this->docform->notes->setText($this->_doc->notes);
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
-         
+
         } else {
             $this->_doc = Document::create('ProdIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -96,17 +95,18 @@ class ProdIssue extends \App\Pages\Base {
                     if ($basedoc->meta_name == 'ProdIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-                 
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                     }
                 }
             }
         }
-         
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -117,56 +117,55 @@ class ProdIssue extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        
+
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
 
-        
+
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $tovar = $sender->owner->getDataItem();
 
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
-       
+
         $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
-        
+
         $this->docform->setVisible(false);
         $this->_rowid = 0;
     }
 
     public function editOnClick($sender) {
-        $stock = $sender->getOwner()->getDataItem();
+        $item = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-        $this->editdetail->editquantity->setText($stock->quantity);
-        
-        $this->editdetail->editserial->setText($item->snumber);
+        $this->editdetail->editquantity->setText($item->quantity);
 
 
-        $this->editdetail->edittovar->setKey($item->stock_id);
-        $this->editdetail->edittovar->setText($item->itemname);
+        $this->editdetail->edittovar->setKey($item->item_id);
+        $this->editdetail->edittovar->setValue($item->itemname);
+        $this->editdetail->editserial->setValue($item->snumber);
 
-        $st = Stock::load($stock->stock_id);  //для актуального 
-
-        $this->editdetail->qtystock->setText(H::fqty($st->qty));
-        $this->_rowid = $stock->stock_id;
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
+        $this->_rowid = $item->item_id;
     }
 
     public function saverowOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("noselitem");
@@ -182,7 +181,6 @@ class ProdIssue extends \App\Pages\Base {
             $this->setWarn('inserted_extra_count');
         }
 
-        
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("needs_serial");
@@ -197,39 +195,37 @@ class ProdIssue extends \App\Pages\Base {
             }
         }
 
-        
+
         $tarr = array();
- 
-        foreach($this->_itemlist as $k=>$value){
-               
-           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
-              $tarr[$item->item_id] = $item;    // заменяем
-           }   else {
-              $tarr[$k] = $value;    // старый
-           }
-                
+
+        foreach ($this->_itemlist as $k => $value) {
+
+            if ($this->_rowid > 0 && $this->_rowid == $k) {
+                $tarr[$item->item_id] = $item;    // заменяем
+            } else {
+                $tarr[$k] = $value;    // старый
+            }
+
         }
-     
-        if($this->_rowid == 0) {        // в конец
+
+        if ($this->_rowid == 0) {        // в конец
             $tarr[$item->item_id] = $item;
         }
         $this->_itemlist = $tarr;
-        $this->_rowid = 0;        
-        
-        
-        
-      
+        $this->_rowid = 0;
+
+
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-        
+
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
 
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editserial->setText("");
-        
+
     }
 
     public function cancelrowOnClick($sender) {
@@ -241,12 +237,13 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->editdetail->editquantity->setText("1");
 
-        
+
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
@@ -254,7 +251,6 @@ class ProdIssue extends \App\Pages\Base {
             return;
         }
 
-    
 
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
@@ -265,7 +261,7 @@ class ProdIssue extends \App\Pages\Base {
 
         $this->_doc->amount = 0;
         $this->_doc->payamount = 0;
- 
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -277,21 +273,22 @@ class ProdIssue extends \App\Pages\Base {
             }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
-             
+                }
+
                 // проверка на минус  в  количестве
-                $allowminus = \App\System::getOption("common","allowminus") ;
-                if($allowminus != 1) {
-            
-                    foreach($this->_itemlist as $item) {
-                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                         if($qty<$item->quantity) {
-                            $this->setError("nominus",H::fqty($qty),$item->item_name);
+                $allowminus = \App\System::getOption("common", "allowminus");
+                if ($allowminus != 1) {
+
+                    foreach ($this->_itemlist as $item) {
+                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
+                        if ($qty < $item->quantity) {
+                            $this->setError("nominus", H::fqty($qty), $item->item_name);
                             return;
-                         }
+                        }
                     }
-                }                    
+                }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
@@ -311,13 +308,13 @@ class ProdIssue extends \App\Pages\Base {
         }
     }
 
- 
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-        if ($code == '')
+        if ($code == '') {
             return;
+        }
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
@@ -330,16 +327,16 @@ class ProdIssue extends \App\Pages\Base {
 
 
         if ($item == null) {
-            $this->setError("noitemcode",$code);
+            $this->setError("noitemcode", $code);
             return;
         }
- 
+
 
         $store_id = $this->docform->store->getValue();
 
-        $qty = $item->getQuantity($store);
+        $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
-            $this->setError("noitemonstore",$item->itemname);
+            $this->setError("noitemonstore", $item->itemname);
         }
 
 
@@ -359,7 +356,6 @@ class ProdIssue extends \App\Pages\Base {
                 }
 
 
-
                 if (strlen($serial) == 0) {
                     $this->setWarn('needs_serial');
                     $this->editdetail->setVisible(true);
@@ -370,8 +366,6 @@ class ProdIssue extends \App\Pages\Base {
                     $this->editdetail->edittovar->setText($item->itemname);
                     $this->editdetail->editserial->setText('');
                     $this->editdetail->editquantity->setText('1');
-                    
-
 
 
                     return;
@@ -382,7 +376,7 @@ class ProdIssue extends \App\Pages\Base {
             $this->_itemlist[$item->item_id] = $item;
         }
         $this->docform->detail->Reload();
-      
+
     }
 
     /**
@@ -400,7 +394,7 @@ class ProdIssue extends \App\Pages\Base {
         if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");
         }
-        if (($this->docform->store->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
 
@@ -422,11 +416,11 @@ class ProdIssue extends \App\Pages\Base {
         $id = $sender->getKey();
         $item = Item::load($id);
         $store_id = $this->docform->store->getValue();
-        
+
         $qty = $item->getQuantity($store_id);
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
-        
+
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $serial = '';
@@ -437,7 +431,7 @@ class ProdIssue extends \App\Pages\Base {
             $this->editdetail->editserial->setText($serial);
         }
 
-        $this->updateAjax(array('qtystock',   'editserial'));
+        $this->updateAjax(array('qtystock', 'editserial'));
     }
 
     public function OnAutoItem($sender) {

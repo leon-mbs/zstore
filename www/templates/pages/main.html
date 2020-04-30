@@ -1,73 +1,71 @@
 <html>
 
-    <body>
+<body>
 
-        <div class="row">
-            <div data-label="wrdoc" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
+<div class="row">
+    <div data-label="wrdoc" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
 
-                <div zippy="wrdoc"    ></div>      
-            </div> 
-            <div data-label="wopendoc" class="col-12 col-md-8  col-lg-6  col-xl-5  ">
+        <div zippy="wrdoc"></div>
+    </div>
+    <div data-label="wopendoc" class="col-12 col-md-8  col-lg-6  col-xl-5  ">
 
-                <div zippy="wopendoc"    ></div>      
-            </div> 
-            {{#usesnumber}} 
-            <div data-label="wsdate" class="col-12 col-md-8  col-lg-6  col-xl-5  ">
-                <div zippy="wsdate"    ></div>      
-            </div>
-            {{/usesnumber}} 
+        <div zippy="wopendoc"></div>
+    </div>
+    {{#usesnumber}}
+    <div data-label="wsdate" class="col-12 col-md-8  col-lg-6  col-xl-5  ">
+        <div zippy="wsdate"></div>
+    </div>
+    {{/usesnumber}}
 
-            <div data-label="wminqty" class="col-12 col-md-8  col-lg-6  col-xl-5  ">
+    <div data-label="wminqty" class="col-12 col-md-8  col-lg-6  col-xl-5  ">
 
-                <div zippy="wminqty"    ></div>      
-            </div>
-            <div data-label="wplanned" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
-                <div zippy="wplanned"  >
-                </div>      
-            </div>
+        <div zippy="wminqty"></div>
+    </div>
+    <div data-label="wplanned" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
+        <div zippy="wplanned">
+        </div>
+    </div>
 
-            <div data-label="wdebitors" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
-                <div zippy="wdebitors"  ></div>      
-            </div>
+    <div data-label="wdebitors" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
+        <div zippy="wdebitors"></div>
+    </div>
 
-            <div data-label="wnoliq" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
-                <div zippy="wnoliq"  ></div>      
-            </div>
+    <div data-label="wnoliq" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
+        <div zippy="wnoliq"></div>
+    </div>
 
-            <div data-label="wreserved" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
-                <div zippy="wreserved"  ></div>      
-            </div>
+    <div data-label="wreserved" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
+        <div zippy="wreserved"></div>
+    </div>
 
-            <div data-label="wwaited" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
-                <div zippy="wwaited"  ></div>      
-            </div>
-
-
+    <div data-label="wwaited" class="col-12 col-md-8  col-lg-6  col-xl-5 ">
+        <div zippy="wwaited"></div>
+    </div>
 
 
-        </div>  
-        <!--
-         <br>
-        <a   onclick="test()">JSON</a>
-        <br>
-      <textarea class="form-control"  id="send">
-      
-      </textarea> <br><br>
-      <div id="result">Результат</div>
-      <script>
-      
-       function test(){
-           var d = $('#send').val();
-        
-           $.post('/api/Orders',d,function(data) {
-                   
-        $('#result').html(data);
+</div>
+<!--
+ <br>
+<a   onclick="test()">JSON</a>
+<br>
+<textarea class="form-control"  id="send">
+
+</textarea> <br><br>
+<div id="result">Результат</div>
+<script>
+
+function test(){
+   var d = $('#send').val();
+
+   $.post('/api/Orders',d,function(data) {
+
+$('#result').html(data);
 
 });
-       }
-      </script>
-      
-      
-        -->
-    </body>
+}
+</script>
+
+
+-->
+</body>
 </html>

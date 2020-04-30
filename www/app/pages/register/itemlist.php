@@ -2,34 +2,32 @@
 
 namespace App\Pages\Register;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\Entity\Category;
-use \App\Entity\Store;
-use \App\Helper as H;
+use App\Entity\Category;
+use App\Entity\Item;
+use App\Entity\Stock;
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class ItemList extends \App\Pages\Base {
+class ItemList extends \App\Pages\Base
+{
 
     public $_item;
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('ItemList'))
+        if (false == \App\ACL::checkShowReg('ItemList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->filter->add(new TextInput('searchkey'));
+        $this->filter->add(new TextInput('searchkey')) ;
         $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
         $this->filter->add(new DropDownChoice('searchstore', Store::getList(), 0));
 
@@ -82,16 +80,21 @@ class ItemList extends \App\Pages\Base {
         $p3 = $item->getPrice('price3', $store);
         $p4 = $item->getPrice('price4', $store);
         $p5 = $item->getPrice('price5', $store);
-        if ($p1 > 0)
+        if ($p1 > 0) {
             $plist[] = $p1;
-        if ($p2 > 0)
+        }
+        if ($p2 > 0) {
             $plist[] = $p2;
-        if ($p3 > 0)
+        }
+        if ($p3 > 0) {
             $plist[] = $p3;
-        if ($p4 > 0)
+        }
+        if ($p4 > 0) {
             $plist[] = $p4;
-        if ($p5 > 0)
+        }
+        if ($p5 > 0) {
             $plist[] = $p5;
+        }
 
         $row->add(new Label('iprice', implode(', ', $plist)));
 
@@ -143,10 +146,10 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('snumber', $stock->snumber));
         $row->add(new Label('sdate', ''));
 
-    
+
         if (strlen($stock->snumber) > 0 && strlen($stock->sdate) > 0) {
             $row->sdate->setText(date('Y-m-d', $stock->sdate));
- 
+
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
 
@@ -160,16 +163,21 @@ class ItemList extends \App\Pages\Base {
         }
 
         $plist = array();
-        if ($item->price1 > 0)
+        if ($item->price1 > 0) {
             $plist[] = $item->getPrice('price1', 0, $stock->partion);
-        if ($item->price2 > 0)
+        }
+        if ($item->price2 > 0) {
             $plist[] = $item->getPrice('price2', 0, $stock->partion);
-        if ($item->price3 > 0)
+        }
+        if ($item->price3 > 0) {
             $plist[] = $item->getPrice('price3', 0, $stock->partion);
-        if ($item->price4 > 0)
+        }
+        if ($item->price4 > 0) {
             $plist[] = $item->getPrice('price4', 0, $stock->partion);
-        if ($item->price5 > 0)
+        }
+        if ($item->price5 > 0) {
             $plist[] = $item->getPrice('price5', 0, $stock->partion);
+        }
 
         $row->add(new Label('price', implode(',', $plist)));
     }
@@ -192,8 +200,9 @@ class ItemList extends \App\Pages\Base {
         foreach ($rows as $row) {
             $stock = $row->getDataItem();
             $name = $stock->itemname;
-            if (strlen($stock->snumber) > 0)
+            if (strlen($stock->snumber) > 0) {
                 $name = $name . " ({$stock->snumber})";
+            }
             $name = $name . ', ' . H::fa($stock->partion);
             $st[$stock->stock_id] = $name;
         }
@@ -207,7 +216,7 @@ class ItemList extends \App\Pages\Base {
         $st2 = $sender->topart->getValue();
         $qty = $sender->mqty->getText();
         if ($st1 == 0 || $st2 == 0) {
-            
+
             $this->setError('noselpartion');
 
             return;
@@ -231,11 +240,10 @@ class ItemList extends \App\Pages\Base {
         }
         $doc = \App\Entity\Doc\Document::create('TransItem');
         $doc->document_number = $doc->nextNumber();
-        if (strlen($doc->document_number) == 0)
+        if (strlen($doc->document_number) == 0) {
             $doc->document_number = "ПК-000001";
+        }
         $doc->document_date = time();
-
-
 
 
         $doc->headerdata['fromitem'] = $st1->stock_id;
@@ -246,13 +254,13 @@ class ItemList extends \App\Pages\Base {
         $doc->headerdata['storename'] = $store->storename;
         $doc->headerdata['fromquantity'] = $qty;
         $doc->headerdata['toquantity'] = $qty;
-        $doc->notes = "Перемещение партий";
+        $doc->notes = H::l('partmove');  
         $doc->save();
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
         $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
 
-        $this->setInfo(  'partion_moved',$doc->document_number);
-        
+        $this->setInfo('partion_moved', $doc->document_number);
+
         $sender->clean();
         $this->detailpanel->stocklist->Reload();
     }
@@ -273,17 +281,21 @@ class ItemList extends \App\Pages\Base {
 
             $csv .= H::fqty($qty) . ';';
             $plist = array();
-            if ($item->price1 > 0)
+            if ($item->price1 > 0) {
                 $plist[] = $item->getPrice('price1', $store);
-            if ($item->price2 > 0)
+            }
+            if ($item->price2 > 0) {
                 $plist[] = $item->getPrice('price2', $store);
-            if ($item->price3 > 0)
+            }
+            if ($item->price3 > 0) {
                 $plist[] = $item->getPrice('price3', $store);
-            if ($item->price4 > 0)
+            }
+            if ($item->price4 > 0) {
                 $plist[] = $item->getPrice('price4', $store);
-            if ($item->price5 > 0)
+            }
+            if ($item->price5 > 0) {
                 $plist[] = $item->getPrice('price5', $store);
-
+            }
 
 
             $csv .= implode(' ', $plist) . ';';
@@ -304,7 +316,8 @@ class ItemList extends \App\Pages\Base {
 
 }
 
-class ItemDataSource implements \Zippy\Interfaces\DataSource {
+class ItemDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -338,7 +351,6 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         }
 
 
-
         return $where;
     }
 
@@ -358,7 +370,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
 
 }
 
-class DetailDataSource implements \Zippy\Interfaces\DataSource {
+class DetailDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 

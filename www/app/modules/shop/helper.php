@@ -2,13 +2,14 @@
 
 namespace App\Modules\Shop;
 
-use \ZCL\DB\DB;
-use \App\Modules\Shop\Entity\Product;
-use \App\Modules\Shop\Entity\ProductGroup;
-use \App\Modules\Shop\Entity\ProductAttribute;
+use App\Modules\Shop\Entity\Product;
+use App\Modules\Shop\Entity\ProductAttribute;
+use App\Modules\Shop\Entity\ProductGroup;
+use ZCL\DB\DB;
 
 //класс  вспомагательных функций
-class Helper {
+class Helper
+{
 
     public static function getBreadScrumbs($id) {
 
@@ -44,7 +45,7 @@ class Helper {
     }
 
     //формирование  условий отбора   по  выбранным  критериям
-    private static function _getWhere( $filter) {
+    private static function _getWhere($filter) {
         $where = ' where deleted <> 1  ';
         if ($filter->group_id > 0) {
             // $where = $where . " and p.group_id in (select g.group_id  from  shop_productgroups g where  treeorder like '%" . sprintf('%08s', $filter->group_id) . "%') ";
@@ -94,14 +95,16 @@ class Helper {
         return $where;
     }
 
+    /*
     //список отфильтрованных товаров на  странице (используется  для  пагинатора)
     public static function getProductList($start, $count) {
 
         $filter = ProductSearchFilter::getFilter();
         $list = array();
 
-        if ($filter->group_id == 0)
+        if ($filter->group_id == 0) {
             return $list;
+        }
         $conn = DB::getConnect();
 
         $where = self::getWhere($filter);
@@ -117,13 +120,14 @@ class Helper {
         }
         return $list;
     }
-
+    */
     //количество  отфильтрованных товаров (используется  для  пагинатора)
-    public static function getProductCount(  $filter) {
+    public static function getProductCount($filter) {
 
 
-        if ($filter->group_id == 0)
+        if ($filter->group_id == 0) {
             return 0;
+        }
 
         $list = array();
         $conn = DB::getConnect();
@@ -169,7 +173,7 @@ class Helper {
 
     /**
      * список  значений атрибутов  товара
-     * 
+     *
      * @param mixed $product
      */
     public static function getAttributeValuesByProduct($product) {
@@ -187,13 +191,14 @@ class Helper {
 
     /**
      * Возвращает  список  атрибутов  для  группы
-     * 
-     * @param mixed $group_id   группа
+     *
+     * @param mixed $group_id группа
      */
     public static function getProductAttributeListByGroup($group_id) {
         $list = array();
-        if ($group_id == 0)
+        if ($group_id == 0) {
             return $list;
+        }
         $conn = DB::getConnect();
 
 
@@ -214,13 +219,14 @@ class Helper {
 
     /**
      * Возвращает  список атрибутов группы для  отбора
-     * 
-     * @param mixed $group_id   группа
+     *
+     * @param mixed $group_id группа
      */
     public static function getProductSearchAttributeListByGroup($group_id) {
         $list = array();
-        if ($group_id == 0)
+        if ($group_id == 0) {
             return $list;
+        }
         $conn = DB::getConnect();
 
         $gr = $conn->GetOne("select mpath  from  shop_productgroups  where group_id={$group_id}  ");

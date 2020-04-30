@@ -9,13 +9,14 @@ namespace App\Entity;
  * @view=messages_view
  * @keyfield=message_id
  */
-class Message extends \ZCL\DB\Entity {
+class Message extends \ZCL\DB\Entity
+{
 
-    const TYPE_DOC = 1;
-    const TYPE_CUST = 2;
-    const TYPE_EQ = 3;
-    const TYPE_NOTE = 4;
-    const TYPE_ISSUE = 5;
+    const TYPE_DOC     = 1;
+    const TYPE_CUST    = 2;
+    const TYPE_EQ      = 3;
+    const TYPE_NOTE    = 4;
+    const TYPE_ISSUE   = 5;
     const TYPE_PROJECT = 6;
 
     protected function afterLoad() {
@@ -24,7 +25,7 @@ class Message extends \ZCL\DB\Entity {
 
     /**
      * возвращает список сообщений
-     * 
+     *
      * @param mixed $type
      * @param mixed $item_d
      * @param mixed $sort

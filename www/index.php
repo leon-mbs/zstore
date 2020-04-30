@@ -11,8 +11,6 @@ if (strpos($_SERVER['REQUEST_URI'], 'index.php') > 1) {
 try {
 
 
-    
-    
     if ($_COOKIE['remember'] && \App\System::getUser()->user_id == 0) {
         $arr = explode('_', $_COOKIE['remember']);
         $_config = parse_ini_file(_ROOT . 'config/config.ini', true);

@@ -1,117 +1,113 @@
 <html>
-    <body>
-        <div class="row">
-            <div class="col-12 col-xl-10">
+<body>
+<div class="row">
+    <div class="col-12 col-xl-10">
 
-                <h3>Журнал продажів </h3>
-
-
-                <div class="navbar nav">
-                    <form zippy="filter" class="form-inline ">
+        <h3>Журнал продажів </h3>
 
 
-
-                        <label   for="from">З  </label>
-                        <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
-
-
-                        <label for="to">  по  </label>
-                        <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
-
-                        <label for="searchnumber"> № </label>
-
-                        <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
-
-                        <select class="form-control mr-2" zippy="status">
-                        </select>
-
-                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту"] >
+        <div class="navbar nav">
+            <form zippy="filter" class="form-inline ">
 
 
-                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
-
-                    </form>
-                </div>
-                <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-info mt-2 mb-3">Створити ВН</a>&nbsp;
-                <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-info mt-2 mb-3">Створити РФ</a>
-                <br> <a zippy="csv"  >Завантажити CSV</a>  
-
-                <table class="table   table-sm   ">
-                    <tr>
-
-                        <th>Номер</th>
-                        <th>Дата</th>
-                        <th>Замовлення</th>
-                        <th>Клієнт</th>
-                        <th class="text-right">Сума </th>
-
-                        <th>Статус</th>
+                <label for="from">З </label>
+                <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
 
 
+                <label for="to"> по </label>
+                <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
 
-                        <th>Примітка</th>
-                        <th></th>
+                <label for="searchnumber"> № </label>
 
+                <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
-                    </tr>  
-                    <tr zippy="doclist">
+                <select class="form-control mr-2" zippy="status">
+                </select>
 
-                        <td zippy="number"></td>
-                        <td class="text-nowrap" zippy="date"></td>
-                        <td zippy="order"   ></td>
-                        <td zippy="customer"    ></td>
-                        <td zippy="amount" class="text-right"  ></td>
+                <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
 
 
-                        <td class="text-nowrap"  zippy="state"> </td>
-                        <td   zippy="onotes"> </td>
+                <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
-                        <td class="text-nowrap" >
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+            </form>
+        </div>
+        <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-info mt-2 mb-3">Створити ВН</a>&nbsp;
+        <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-info mt-2 mb-3">Створити РФ</a>
+        <br> <a zippy="csv">Завантажити CSV</a>
 
-                            &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
+        <table class="table   table-sm   ">
+            <tr>
 
-                        </td>
+                <th>Номер</th>
+                <th>Дата</th>
+                <th>Замовлення</th>
+                <th>Клієнт</th>
+                <th class="text-right">Сума</th>
+
+                <th>Статус</th>
 
 
-                    </tr>
+                <th>Примітка</th>
+                <th></th>
 
-                </table>
 
-                <div zippy="pag">
-                </div> 
-                <a id="dankor"></a>
-            </div>
+            </tr>
+            <tr zippy="doclist">
 
+                <td zippy="number"></td>
+                <td class="text-nowrap" zippy="date"></td>
+                <td zippy="order"></td>
+                <td zippy="customer"></td>
+                <td zippy="amount" class="text-right"></td>
+
+
+                <td class="text-nowrap" zippy="state"></td>
+                <td zippy="onotes"></td>
+
+                <td class="text-nowrap">
+                    <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+
+                    &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
+
+                </td>
+
+
+            </tr>
+
+        </table>
+
+        <div zippy="pag">
+        </div>
+        <a id="dankor"></a>
+    </div>
+
+</div>
+
+
+<div class="row" zippy="statuspan">
+    <div class="col-12">
+
+        <div class="navbar nav">
+            <form zippy="statusform" class="form-inline ">
+
+                <input zippy="ship_number" style="width:250px;" placeholder="Номер декларації"
+                       class="form-control mr-sm-2">
+                <button zippy="bsend" type="submit" class="  btn btn-success  mr-2 ">Відправити</button>
+                <button zippy="bdevivered" type="submit" class="  btn btn-success  mr-2 ">Доставлено</button>
+                <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Створити накладну</button>
+                <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">Гарантійний талон</button>
+                <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Повернення</button>
+
+
+            </form>
         </div>
 
 
+        <div zippy="docview"></div>
 
-        <div class="row" zippy="statuspan">
-            <div class="col-12">
-
-                <div class="navbar nav">
-                    <form zippy="statusform" class="form-inline ">
-
-                        <input   zippy="ship_number"  style="width:250px;" placeholder="Номер декларації" class="form-control mr-sm-2">
-                        <button zippy="bsend"  type="submit" class="  btn btn-success  mr-2 " >Відправити</button>
-                        <button zippy="bdevivered"  type="submit" class="  btn btn-success  mr-2 " >Доставлено</button>
-                        <button zippy="bttn"  type="submit" class="  btn btn-success  mr-2 " >Створити накладну</button>
-                        <button zippy="bgar"  type="submit" class="  btn btn-success  mr-2 " >Гарантійний талон</button>
-                        <button zippy="bret"  type="submit" class="  btn btn-success  mr-2 " >Повернення</button>
+    </div>
+</div>
 
 
-
-                    </form>  
-                </div>         
-
-
-                <div zippy="docview"></div>
-
-            </div>
-        </div>
-
-
-
-    </body>
+</body>
 </html>

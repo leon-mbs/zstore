@@ -2,38 +2,38 @@
 
 namespace App\Entity\Doc;
 
-use \App\System;
-use \App\Helper;
-use \App\Util;
+use App\Helper;
+use App\System;
 
 /**
  * Класс-сущность документ
  *
  */
-class Document extends \ZCL\DB\Entity {
+class Document extends \ZCL\DB\Entity
+{
 
     // состояния  документа
-    const STATE_NEW = 1;     //Новый
-    const STATE_EDITED = 2;  //Отредактирован
-    const STATE_CANCELED = 3;      //Отменен
-    const STATE_EXECUTED = 5;      // Проведен 
-    const STATE_DELETED = 6;       //  Удален
-    const STATE_INPROCESS = 7; // в  работе
-    const STATE_WA = 8; // ждет подтверждения
-    const STATE_CLOSED = 9; // Закрыт , доставлен, выполнен
+    const STATE_NEW        = 1;     //Новый
+    const STATE_EDITED     = 2;  //Отредактирован
+    const STATE_CANCELED   = 3;      //Отменен
+    const STATE_EXECUTED   = 5;      // Проведен
+    const STATE_DELETED    = 6;       //  Удален
+    const STATE_INPROCESS  = 7; // в  работе
+    const STATE_WA         = 8; // ждет подтверждения
+    const STATE_CLOSED     = 9; // Закрыт , доставлен, выполнен
     const STATE_INSHIPMENT = 11; // Отгружен
-    const STATE_DELIVERED = 14; // доставлен
-    const STATE_REFUSED = 15; // отклонен
-    const STATE_SHIFTED = 16; // отложен
-    const STATE_FAIL = 17; // Аннулирован
-    const STATE_FINISHED = 18; // Закончен
-    const STATE_APPROVED = 19;      //  Готов к выполнению
+    const STATE_DELIVERED  = 14; // доставлен
+    const STATE_REFUSED    = 15; // отклонен
+    const STATE_SHIFTED    = 16; // отложен
+    const STATE_FAIL       = 17; // Аннулирован
+    const STATE_FINISHED   = 18; // Закончен
+    const STATE_APPROVED   = 19;      //  Готов к выполнению
     // const STATE_READYTOEXE = 20; // готов к выполнению    
     // типы  экспорта
-    const EX_WORD = 1; //  Word
+    const EX_WORD  = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
-    const EX_PDF = 3;    //  PDF
-    const EX_POS = 4;    //  POS терминал
+    const EX_PDF   = 3;    //  PDF
+    const EX_POS   = 4;    //  POS терминал
 
     // const EX_XML_GNAU = 4;
 
@@ -53,7 +53,7 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * документы должны создаватся методом create
-     * 
+     *
      * @param mixed $row
      */
     protected function __construct($row = null) {
@@ -62,7 +62,7 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * начальная инициализация. Вызывается автоматически  в  конструкторе  Entity
-     * 
+     *
      */
     protected function init() {
         $this->document_id = 0;
@@ -86,7 +86,7 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * возвращает метаданные  чтобы  работало в  дочерних классах
-     * 
+     *
      */
     protected static function getMetadata() {
         return array('table' => 'documents', 'view' => 'documents_view', 'keyfield' => 'document_id');
@@ -133,8 +133,9 @@ class Document extends \ZCL\DB\Entity {
         $this->content = "<doc><header>";
 
         foreach ($this->headerdata as $key => $value) {
-            if ($key > 0)
+            if ($key > 0) {
                 continue;
+            }
 
             if (strpos($value, '[CDATA[') !== false) {
                 \App\System::setWarnMsg('CDATA в  поле  обьекта');
@@ -156,8 +157,9 @@ class Document extends \ZCL\DB\Entity {
         foreach ($this->detaildata as $row) {
             $this->content .= "<row>";
             foreach ($row as $key => $value) {
-                if ($key > 0)
+                if ($key > 0) {
                     continue;
+                }
 
                 if (strpos($value, '[CDATA[') !== false) {
                     \App\System::setWarnMsg('CDATA в  поле  обьекта');
@@ -178,7 +180,6 @@ class Document extends \ZCL\DB\Entity {
             $this->content .= "</row>";
         }
         $this->content .= "</detail>";
-
 
 
         $this->content .= "</doc>";
@@ -203,7 +204,7 @@ class Document extends \ZCL\DB\Entity {
             return;
         }
         foreach ($xml->header->children() as $child) {
-            $this->headerdata[(string) $child->getName()] = (string) $child;
+            $this->headerdata[(string)$child->getName()] = (string)$child;
         }
         $this->detaildata = array();
 
@@ -211,7 +212,7 @@ class Document extends \ZCL\DB\Entity {
         foreach ($xml->detail->children() as $row) {
             $_row = array();
             foreach ($row->children() as $item) {
-                $_row[(string) $item->getName()] = (string) $item;
+                $_row[(string)$item->getName()] = (string)$item;
             }
             $this->detaildata[] = $_row;
         }
@@ -222,11 +223,13 @@ class Document extends \ZCL\DB\Entity {
             foreach ($this->detaildata as $row) {
                 if ($row['service_id'] > 0) {
                     $detaildata[$row['service_id']] = new \App\Entity\Service($row);
-                } else if ($row['stock_id'] > 0) {
-                    $detaildata[$row['stock_id']] = new \App\Entity\Stock($row);
                 } else {
-                    $id = $row['item_id'] . (strlen($row['item_id']) > 0 ? $row['item_id'] : '' );
-                    $detaildata[$id] = new \App\Entity\Item($row);
+                    if ($row['stock_id'] > 0) {
+                        $detaildata[$row['stock_id']] = new \App\Entity\Stock($row);
+                    } else {
+                        $id = $row['item_id'] . (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
+                        $detaildata[$id] = new \App\Entity\Item($row);
+                    }
                 }
             }
             $this->packDetails('detaildata', $detaildata);
@@ -254,7 +257,7 @@ class Document extends \ZCL\DB\Entity {
      *
      */
     public function Execute() {
-        
+
     }
 
     /**
@@ -272,9 +275,8 @@ class Document extends \ZCL\DB\Entity {
 
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
-            
- 
-          
+
+
             // возвращаем бонусы
             if ($this->headerdata['paydisc'] > 0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);
@@ -285,7 +287,6 @@ class Document extends \ZCL\DB\Entity {
                     $customer->save();
                 }
             }
-
 
 
             $conn->CompleteTrans();
@@ -306,7 +307,7 @@ class Document extends \ZCL\DB\Entity {
      *
      * @param mixed $classname
      */
-    public static function create($classname,$branch_id=0) {
+    public static function create($classname, $branch_id = 0) {
         $arr = explode("\\", $classname);
         $classname = $arr[count($arr) - 1];
         $conn = \ZDB\DB::getConnect();
@@ -318,10 +319,10 @@ class Document extends \ZCL\DB\Entity {
         $doc->meta_id = $meta['meta_id'];
 
         $doc->branch_id = $branch_id;
-        if($branch_id==0){
-           $doc->branch_id = \App\Acl::checkCurrentBranch();    
+        if ($branch_id == 0) {
+            $doc->branch_id = \App\Acl::checkCurrentBranch();
         }
-        
+
         return $doc;
     }
 
@@ -348,15 +349,17 @@ class Document extends \ZCL\DB\Entity {
     public function updateStatus($state) {
 
 
-        if ($this->document_id == 0)
+        if ($this->document_id == 0) {
             return false;
+        }
 
         //если нет права  выполнять    
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this, false, false) == false) {
 
             $this->headerdata['_state_before_approve_'] = $state;
-            if ($state == self::STATE_WA)
+            if ($state == self::STATE_WA) {
                 $this->headerdata['_state_before_approve_'] = self::STATE_APPROVED;
+            }
 
             $state = self::STATE_WA;
         }
@@ -389,45 +392,45 @@ class Document extends \ZCL\DB\Entity {
 
         switch ($state) {
             case Document::STATE_NEW:
-                return Helper::l('st_new') ;
+                return Helper::l('st_new');
             case Document::STATE_EDITED:
-                return Helper::l('st_edit') ;
+                return Helper::l('st_edit');
             case Document::STATE_CANCELED:
-                return Helper::l('st_canceled') ;
+                return Helper::l('st_canceled');
             case Document::STATE_EXECUTED:
-                return Helper::l('st_executed') ;
+                return Helper::l('st_executed');
             case Document::STATE_CLOSED:
-                return Helper::l('st_closed') ;
+                return Helper::l('st_closed');
             case Document::STATE_APPROVED:
-                return Helper::l('st_approved') ;
+                return Helper::l('st_approved');
             case Document::STATE_DELETED:
-                return Helper::l('st_deleted') ;
+                return Helper::l('st_deleted');
 
             case Document::STATE_WA:
-                return Helper::l('st_wa') ;
+                return Helper::l('st_wa');
             case Document::STATE_INSHIPMENT:
-                return Helper::l('st_inshipment') ;
+                return Helper::l('st_inshipment');
             case Document::STATE_FINISHED:
-                return Helper::l('st_finished') ;
+                return Helper::l('st_finished');
             case Document::STATE_DELIVERED:
-                return Helper::l('st_delivered') ;
+                return Helper::l('st_delivered');
             case Document::STATE_REFUSED:
-                return Helper::l('st_refused') ;
+                return Helper::l('st_refused');
             case Document::STATE_SHIFTED:
-                return Helper::l('st_shifted') ;
+                return Helper::l('st_shifted');
             case Document::STATE_FAIL:
-                return Helper::l('st_fail') ;
+                return Helper::l('st_fail');
             case Document::STATE_INPROCESS:
-                return Helper::l('st_inprocess') ;
+                return Helper::l('st_inprocess');
 
             default:
-                return Helper::l('st_unknow') ;
+                return Helper::l('st_unknow');
         }
     }
 
     /**
      * Возвращает  следующий  номер  при  автонумерации
-     *  
+     *
      * @return mixed
      */
     public function nextNumber() {
@@ -443,12 +446,13 @@ class Document extends \ZCL\DB\Entity {
         }
 
 
-
-        if (strlen($prevnumber) == 0)
+        if (strlen($prevnumber) == 0) {
             return '';
+        }
         $number = preg_replace('/[^0-9]/', '', $prevnumber);
-        if (strlen($number) == 0)
+        if (strlen($number) == 0) {
             $number = 0;
+        }
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
 
@@ -473,8 +477,7 @@ class Document extends \ZCL\DB\Entity {
      * @param mixed $header значения заголовка
      */
     public static function search($type, $from, $to, $header = array()) {
-        $conn = $conn = \ZDB\DB::getConnect();
-        ;
+        $conn = $conn = \ZDB\DB::getConnect();;
         $where = "state= " . Document::STATE_EXECUTED;
 
         if (strlen($type) > 0) {
@@ -485,10 +488,12 @@ class Document extends \ZCL\DB\Entity {
             }
         }
 
-        if ($from > 0)
+        if ($from > 0) {
             $where = $where . " and  document_date >= " . $conn->DBDate($from);
-        if ($to > 0)
+        }
+        if ($to > 0) {
             $where = $where . " and  document_date <= " . $conn->DBDate($to);
+        }
         foreach ($header as $key => $value) {
             $where = $where . " and  content like '%<{$key}>{$value}</{$key}>%'";
         }
@@ -498,10 +503,10 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * @see \ZDB\Entity
-     * 
+     *
      */
     protected function afterDelete() {
-        global $logger;
+        //global $logger;
 
         $conn = \ZDB\DB::getConnect();
 
@@ -561,12 +566,13 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      *  проверка  был ли документ в  таких состояниях
-     * 
+     *
      * @param mixed $states
      */
     public function checkStates(array $states) {
-        if (count($states) == 0)
+        if (count($states) == 0) {
             return false;
+        }
         $conn = \ZDB\DB::getConnect();
         $states = implode(',', $states);
 
@@ -586,8 +592,9 @@ class Document extends \ZCL\DB\Entity {
         $c = \App\ACL::getBranchConstraint();
         $user = System::getUser();
         if ($user->acltype == 2) {
-            if (strlen($c) == 0)
+            if (strlen($c) == 0) {
                 $c = "1=1 ";
+            }
             if ($user->onlymy == 1) {
 
                 $c .= " and user_id  = " . $user->user_id;
@@ -601,7 +608,7 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * возвращает  сумму  оптлат
-     * 
+     *
      */
     public function getPayAmount() {
         $conn = \ZDB\DB::getConnect();
@@ -611,7 +618,7 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * put your comment there...
-     * 
+     *
      */
     public function hasEntry() {
         $conn = \ZDB\DB::getConnect();
@@ -621,20 +628,21 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * список  дочерних
-     * 
-     * @param mixed $type    мета  тип
-     * @param mixed $executed  в  состоянии  выполнен и т.д.
+     *
+     * @param mixed $type мета  тип
+     * @param mixed $executed в  состоянии  выполнен и т.д.
      */
     public function getChildren($type = "", $executed = false) {
         $where = "parent_id=" . $this->document_id;
-        if (strlen($type) > 0)
+        if (strlen($type) > 0) {
             $where .= " and meta_name='{$type}'";
-        if ($executed)
+        }
+        if ($executed) {
             $where .= " and state not in(1,2,3,0) ";
+        }
         return Document::find($where);
     }
 
-  
 
     /**
      *  Возвращает  списки  документов которые  могут быть  созданы  на  основании
@@ -648,7 +656,7 @@ class Document extends \ZCL\DB\Entity {
 
     /**
      * распаковываем данные  детализации
-     * 
+     *
      */
     public function unpackDetails($dataname) {
         $list = @unserialize(@base64_decode($this->headerdata[$dataname]));

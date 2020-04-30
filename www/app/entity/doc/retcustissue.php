@@ -2,15 +2,15 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
-use \App\Util;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ возврат  поставщику
  *
  */
-class RetCustIssue extends Document {
+class RetCustIssue extends Document
+{
 
     public function generateReport() {
 
@@ -48,7 +48,7 @@ class RetCustIssue extends Document {
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed )
+            "payed" => H::fa($this->payed)
         );
 
 
@@ -65,7 +65,7 @@ class RetCustIssue extends Document {
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            
+
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
@@ -73,13 +73,12 @@ class RetCustIssue extends Document {
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price - $st->partion); //Для АВС 
                 $sc->save();
-            }            
-            
-        
+            }
+
 
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL_CUST);
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_CANCEL_CUST);
             $this->payamount = $this->amount;
         }
 

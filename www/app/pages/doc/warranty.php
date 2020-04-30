@@ -2,28 +2,26 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Label;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Helper as H;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница  ввода  гарантийного талона
  */
-class Warranty extends \App\Pages\Base {
+class Warranty extends \App\Pages\Base
+{
 
     public $_tovarlist = array();
     private $_doc;
@@ -87,8 +85,9 @@ class Warranty extends \App\Pages\Base {
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -106,8 +105,9 @@ class Warranty extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -122,7 +122,6 @@ class Warranty extends \App\Pages\Base {
 
 
         $this->editdetail->editprice->setText($item->price);
-
 
 
         $this->editdetail->editquantity->setText($item->quantity);
@@ -187,8 +186,9 @@ class Warranty extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         if ($this->checkForm() == false) {
             return;
         }

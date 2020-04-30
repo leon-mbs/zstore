@@ -1,130 +1,131 @@
 <html>
 
-    <body>
+<body>
 
-        <div class="row ">
-            <div class="col-10 col-lg-3 col-md-4">
+<div class="row ">
+    <div class="col-10 col-lg-3 col-md-4">
 
-                <h4>Мій профіль</h4>
-                <form role="form" zippy="profileform">
-                    <div class="form-group">
-                        <label for="userlogin">Логін</label>
-                        <span zippy="userlogin" class="form-control-plaintext"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" zippy="email"  >
-                    </div>
-                    <div class="form-group  ">
-                        <label for="defstore" >Склад за замовчуванням</label>
-
-                        <select class="form-control" zippy="defstore">
-                            <option value='0'>Не встановлено</option>
-                        </select>
-                    </div>  
-                    <div class="form-group  ">
-                        <label for="defmf" >Грошовий рахунок за замовчуванням</label>
-
-                        <select class="form-control" zippy="defmf">
-                            <option value='0'>Не встановлено</option>
-                        </select>
-                    </div> 
-                    <div class="form-group  ">
-                        <label for="pagesize" >Рядків в таблицях з посторінковим висновком </label>
-
-                        <select class="form-control" zippy="pagesize">
-
-                        </select>
-                    </div> 
-                    <div class="form-check">
-                        <input zippy="hidesidebar" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="hidesidebar">Ховати бокове меню </label>
-                        
-                    </div>
-                      <div class="form-check">
-                        <input zippy="popupmessage" type="checkbox" class="form-check-input"  >
-                        <label class="form-check-label" for="popupmessage">Спливаючi повiдомлення системи</label>
-                        
-                    </div>
-                  
-                    
-                    <div class="form-group  ">
-                        <a   data-toggle="collapse" href="#collapsesmartmenu"   aria-expanded="false" aria-controls="collapseExample">
-                            <b>Оперативне меню  <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
-                        </a>  <br>
-                        <div class="collapse" id="collapsesmartmenu">
-
-                            <table   class="table   table-sm">
-
-                                <tr zippy="mlist">
-                                    <td zippy="meta_desc">  </td>
-                                    <td zippy="meta_name"> </td>
-                                    <td ><input class="acl" zippy="mshow" type="checkbox"></td>
-
-                                </tr>
-                            </table>
-
-                        </div> 
-                    </div> 
-                    <div class="form-group  ">
-                        <button type="submit" zippy="submitpass" class="btn btn-primary">Зберегти</button>
-                    </div> 
-                </form>
+        <h4>Мій профіль</h4>
+        <form role="form" zippy="profileform">
+            <div class="form-group">
+                <label for="userlogin">Логін</label>
+                <span zippy="userlogin" class="form-control-plaintext"></span>
             </div>
-            <div class="col-10 col-lg-3 col-md-4">
 
-                <h4>Зміна пароля</h4>
-                <form role="form" zippy="passwordform">
-
-                    <div class="form-group">
-                        <label for="userpassword">Пароль</label>
-                        <input type="password" class="form-control" zippy="userpassword" required="required">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userpassword">Підтвердження</label>
-                        <input type="password" class="form-control " zippy="confirmpassword" required="required">
-                    </div>
-
-                    <button type="submit" zippy="submitpass" class="btn btn-primary">Зберегти</button>
-                </form>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" zippy="email">
             </div>
-            <div class="col-10 col-lg-3 col-md-4">        
+            <div class="form-group  ">
+                <label for="defstore">Склад за замовчуванням</label>
 
-                <h4>Повідомлення користувачу</h4>   
-                <form zippy="msgform" role="form">
-                    <div class="form-group  ">
-                        <label for="users" >Вибрати одержувача</label>
+                <select class="form-control" zippy="defstore">
+                    <option value='0'>Не встановлено</option>
+                </select>
+            </div>
+            <div class="form-group  ">
+                <label for="defmf">Грошовий рахунок за замовчуванням</label>
 
-                        <select class="form-control select2" zippy="users">
-                            <option value='0'>Не встановлено</option>
-                        </select>
-                    </div>  
-                    <div class="form-check">
-                        <input zippy="sendall" type="checkbox" class="form-check-input"  >
-                        <label  data-label="sendall" class="form-check-label" for="sendall">Всім користувачам</label>
+                <select class="form-control" zippy="defmf">
+                    <option value='0'>Не встановлено</option>
+                </select>
+            </div>
+            <div class="form-group  ">
+                <label for="pagesize">Рядків в таблицях з посторінковим висновком </label>
 
-                    </div>                 
-                    <div class="form-group">
-                        <label for="msgtext">Текст</label>
+                <select class="form-control" zippy="pagesize">
 
-                        <textarea  required="required"  class="form-control" zippy="msgtext"  ></textarea>
+                </select>
+            </div>
+            <div class="form-check">
+                <input zippy="hidesidebar" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="hidesidebar">Ховати бокове меню </label>
 
-                    </div>  
-                    <div class="form-group">
-
-                        <button type="submit" class="btn btn-primary   ">Відправити</button>
-
-                    </div>
-                </form> 
+            </div>
+            <div class="form-check">
+                <input zippy="popupmessage" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="popupmessage">Спливаючi повiдомлення системи</label>
 
             </div>
 
-        </div>
+
+            <div class="form-group  ">  <br>
+                <a data-toggle="collapse" href="#collapsesmartmenu" aria-expanded="false"
+                   aria-controls="collapseExample">
+                    <b>Оперативне меню <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
+                </a> <br>
+                <div class="collapse" id="collapsesmartmenu">
+
+                    <table class="table   table-sm">
+
+                        <tr zippy="mlist">
+                            <td zippy="meta_desc"></td>
+                            <td zippy="meta_name"></td>
+                            <td><input class="acl" zippy="mshow" type="checkbox"></td>
+
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+            <div class="form-group  ">
+                <button type="submit" zippy="submitpass" class="btn btn-primary">Зберегти</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-10 col-lg-3 col-md-4">
+
+        <h4>Зміна пароля</h4>
+        <form role="form" zippy="passwordform">
+
+            <div class="form-group">
+                <label for="userpassword">Пароль</label>
+                <input type="password" class="form-control" zippy="userpassword" required="required">
+            </div>
+
+            <div class="form-group">
+                <label for="userpassword">Підтвердження</label>
+                <input type="password" class="form-control " zippy="confirmpassword" required="required">
+            </div>
+
+            <button type="submit" zippy="submitpass" class="btn btn-primary">Зберегти</button>
+        </form>
+    </div>
+    <div class="col-10 col-lg-3 col-md-4">
+
+        <h4>Повідомлення користувачу</h4>
+        <form zippy="msgform" role="form">
+            <div class="form-group  ">
+                <label for="users">Вибрати одержувача</label>
+
+                <select class="form-control select2" zippy="users">
+                    <option value='0'>Не встановлено</option>
+                </select>
+            </div>
+            <div class="form-check">
+                <input zippy="sendall" type="checkbox" class="form-check-input">
+                <label data-label="sendall" class="form-check-label" for="sendall">Всім користувачам</label>
+
+            </div>
+            <div class="form-group">
+                <label for="msgtext">Текст</label>
+
+                <textarea required="required" class="form-control" zippy="msgtext"></textarea>
+
+            </div>
+            <div class="form-group">
+
+                <button type="submit" class="btn btn-primary   ">Відправити</button>
+
+            </div>
+        </form>
+
+    </div>
+
+</div>
 
 
-    </body>
+</body>
 
 </html>
 

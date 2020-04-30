@@ -2,15 +2,14 @@
 
 namespace App\Pages;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\Form\TextInput as TextInput;
-use \App\Application as App;
-use \App\Helper;
-use \App\System;
-use \App\Entity\User;
-use \Zippy\Html\Label;
+use App\Application as App;
+use App\Entity\User;
+use App\Helper;
+use App\System;
+use Zippy\Html\Form\TextInput as TextInput;
 
-class UserLogin extends \Zippy\Html\WebPage {
+class UserLogin extends \Zippy\Html\WebPage
+{
 
     public function __construct() {
         parent::__construct();
@@ -32,12 +31,13 @@ class UserLogin extends \Zippy\Html\WebPage {
         $login = $sender->userlogin->getText();
         $password = $sender->userpassword->getText();
         if ($login == '') {
-    
+
             $this->setError('enterlogin');
-        } else
-        if ($password == '') {
-             
-            $this->setError('enterpassword');
+        } else {
+            if ($password == '') {
+
+                $this->setError('enterpassword');
+            }
         }
 
         if (strlen($login) > 0 && strlen($password) > 0) {
@@ -63,7 +63,7 @@ class UserLogin extends \Zippy\Html\WebPage {
                 }
                 return;
             } else {
-                
+
                 $this->setError('invalidlogin');
             }
         }

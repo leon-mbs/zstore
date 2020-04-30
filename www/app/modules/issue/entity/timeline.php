@@ -7,9 +7,9 @@ namespace App\Modules\Issue\Entity;
  * @table=issue_time
  * @view=issue_time_view
  * @keyfield=id
-
  */
-class TimeLine extends \ZCL\DB\Entity {
+class TimeLine extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->issue_id = 0;

@@ -7,7 +7,8 @@ namespace App\Modules\Shop\Entity;
  * @table=shop_manufacturers
  * @keyfield=manufacturer_id
  */
-class Manufacturer extends \ZCL\DB\Entity {
+class Manufacturer extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->manufacturer_id = 0;

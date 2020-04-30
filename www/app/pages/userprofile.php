@@ -2,19 +2,20 @@
 
 namespace App\Pages;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Label;
-use \App\System;
-use \App\Application as App;
-use \Zippy\Html\DataList\DataView;
-use \App\Helper as H;
+use App\Application as App;
+use App\Helper as H;
+use App\System;
+use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
 
-class UserProfile extends \App\Pages\Base {
+class UserProfile extends \App\Pages\Base
+{
 
     public $user;
 
@@ -31,12 +32,12 @@ class UserProfile extends \App\Pages\Base {
         $form->onSubmit($this, 'onsubmit');
         $form->add(new Label('userlogin', $this->user->userlogin));
         $form->add(new TextInput('email', $this->user->email));
-        $form->add(new CheckBox('hidesidebar',$this->user->hidesidebar));
-        $form->add(new CheckBox('popupmessage',$this->user->popupmessage));
+        $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
+        $form->add(new CheckBox('popupmessage', $this->user->popupmessage));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
-        $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100 ), $this->user->pagesize));
- 
+        $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
+
         $w = "";
         if ($this->user->acltype == 2) {
             if (strlen($this->user->aclview) > 0) {
@@ -68,21 +69,21 @@ class UserProfile extends \App\Pages\Base {
     public function onsubmit($sender) {
 
         $this->user->email = $sender->email->getText();
-        $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1:0;
-        $this->user->popupmessage = $sender->popupmessage->isChecked() ? 1:0;
+        $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
+        $this->user->popupmessage = $sender->popupmessage->isChecked() ? 1 : 0;
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
-   
+
         $smartmenu = array();
 
         foreach ($sender->mlist->getDataRows() as $row) {
             $item = $row->getDataItem();
-            if ($item->mview == true)
+            if ($item->mview == true) {
                 $smartmenu[] = $item->meta_id;
+            }
         }
         $this->user->smartmenu = implode(',', $smartmenu);
-
 
 
         if (!$this->isError()) {
@@ -100,14 +101,16 @@ class UserProfile extends \App\Pages\Base {
 
         if ($pass == '') {
             $this->setError('enterpassword');
-        } else
-        if ($confirm == '') {
-            $this->setError('confirmpass');
-         
-        } else
-        if ($confirm != $pass) {
-       
-            $this->setError('invalidconfirm');
+        } else {
+            if ($confirm == '') {
+                $this->setError('confirmpass');
+
+            } else {
+                if ($confirm != $pass) {
+
+                    $this->setError('invalidconfirm');
+                }
+            }
         }
 
 
@@ -123,8 +126,8 @@ class UserProfile extends \App\Pages\Base {
             $n->user_id = $admin->user_id;
 
             $n->dateshow = time();
-            $n->message = H::l('passchanged',$this->user->username,$pass);
-            
+            $n->message = H::l('passchanged', $this->user->username, $pass);
+
 
             $n->save();
         }
@@ -137,8 +140,9 @@ class UserProfile extends \App\Pages\Base {
     public function OnSend($sender) {
         $msg = trim($sender->msgtext->getText());
 
-        if (strlen($msg) == 0)
+        if (strlen($msg) == 0) {
             return;
+        }
 
 
         $all = $sender->sendall->isChecked();
@@ -151,7 +155,7 @@ class UserProfile extends \App\Pages\Base {
         } else {
             $id = $sender->users->getValue();
             if ($id == 0) {
-             
+
                 $this->setError('noselreciever');
                 return;
             }
@@ -162,7 +166,7 @@ class UserProfile extends \App\Pages\Base {
         foreach ($list as $id) {
             $n = new \App\Entity\Notify();
             $n->user_id = $id;
-            $n->message  = $msg;
+            $n->message = $msg;
             $n->sender_name = $this->user->username;
             $n->save();
         }
@@ -174,7 +178,7 @@ class UserProfile extends \App\Pages\Base {
         $item = $row->getDataItem();
         switch ($item->meta_type) {
             case 1:
-                $title = H::l('md_doc') ;
+                $title = H::l('md_doc');
                 break;
             case 2:
                 $title = H::l('md_rep');

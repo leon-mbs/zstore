@@ -2,29 +2,28 @@
 
 namespace App\Pages\Reference;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Helper;
-use \App\Entity\Customer;
-use \Zippy\Binding\PropertyBinding as Bind;
-use \App\System;
-use \Zippy\Html\Link\BookmarkableLink;
+use App\Entity\Customer;
+use App\Helper;
+use App\System;
+use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 /**
  * Страница контрагентов
  */
-class CustomerList extends \App\Pages\Base {
+class CustomerList extends \App\Pages\Base
+{
 
     private $_customer = null;
     public $_fileslist = array();
@@ -33,8 +32,9 @@ class CustomerList extends \App\Pages\Base {
 
     public function __construct($id = 0) {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('CustomerList'))
+        if (false == \App\ACL::checkShowRef('CustomerList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
@@ -158,8 +158,9 @@ class CustomerList extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('CustomerList'))
+        if (false == \App\ACL::checkEditRef('CustomerList')) {
             return;
+        }
 
 
         $del = Customer::delete($sender->owner->getDataItem()->customer_id);
@@ -183,8 +184,9 @@ class CustomerList extends \App\Pages\Base {
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('CustomerList'))
+        if (false == \App\ACL::checkEditRef('CustomerList')) {
             return;
+        }
 
         $this->_customer->customer_name = $this->customerdetail->editcustomername->getText();
         if ($this->_customer->customer_name == '') {
@@ -299,8 +301,9 @@ class CustomerList extends \App\Pages\Base {
         $msg->user_id = System::getUser()->user_id;
         $msg->item_id = $this->_customer->customer_id;
         $msg->item_type = \App\Entity\Message::TYPE_CUST;
-        if (strlen($msg->message) == 0)
+        if (strlen($msg->message) == 0) {
             return;
+        }
         $msg->save();
 
         $this->contentview->addmsgform->addmsg->setText('');
@@ -342,8 +345,9 @@ class CustomerList extends \App\Pages\Base {
         $event->user_id = System::getUser()->user_id;
         $event->customer_id = $this->_customer->customer_id;
 
-        if (strlen($event->title) == 0)
+        if (strlen($event->title) == 0) {
             return;
+        }
         $event->save();
 
         $nt = $this->contentview->addeventform->addeventnotify->getValue();

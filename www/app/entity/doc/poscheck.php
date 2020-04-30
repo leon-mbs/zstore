@@ -2,16 +2,15 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
-use \App\System;
-use \App\Util;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ  кассовый ек
  *
  */
-class POSCheck extends Document {
+class POSCheck extends Document
+{
 
     public function generateReport() {
 
@@ -92,7 +91,7 @@ class POSCheck extends Document {
                 "amount" => H::fa($item->quantity * $item->price)
             );
         }
-
+        $i=1;
         foreach ($this->unpackDetails('services') as $ser) {
             $detail[] = array("no" => $i++,
                 "tovar_name" => $ser->service_name,
@@ -153,7 +152,7 @@ class POSCheck extends Document {
             if ($customer->discount > 0) {
                 //процент
             } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0 );
+                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
                 $customer->save();
             }
         }
@@ -170,7 +169,7 @@ class POSCheck extends Document {
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id,$this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;

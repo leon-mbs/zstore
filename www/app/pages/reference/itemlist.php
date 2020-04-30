@@ -2,26 +2,27 @@
 
 namespace App\Pages\Reference;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Item;
-use \App\Entity\ItemSet;
-use \App\Entity\Category;
-use \App\System;
-use \App\Helper as H;
+use App\Entity\Category;
+use App\Entity\Item;
+use App\Entity\ItemSet;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class ItemList extends \App\Pages\Base {
+class ItemList extends \App\Pages\Base
+{
 
     private $_item;
     private $_pitem_id = 0;
@@ -29,8 +30,9 @@ class ItemList extends \App\Pages\Base {
 
     public function __construct($add = false) {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('ItemList'))
+        if (false == \App\ACL::checkShowRef('ItemList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
@@ -117,8 +119,8 @@ class ItemList extends \App\Pages\Base {
         } else {
             $this->addOnClick(null);
         }
-        
-                
+
+
     }
 
     public function itemlistOnRow($row) {
@@ -130,16 +132,21 @@ class ItemList extends \App\Pages\Base {
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('cat_name', $item->cat_name));
         $plist = array();
-        if ($item->price1 > 0)
+        if ($item->price1 > 0) {
             $plist[] = H::fa($item->price1);
-        if ($item->price2 > 0)
+        }
+        if ($item->price2 > 0) {
             $plist[] = H::fa($item->price2);
-        if ($item->price3 > 0)
+        }
+        if ($item->price3 > 0) {
             $plist[] = H::fa($item->price3);
-        if ($item->price4 > 0)
+        }
+        if ($item->price4 > 0) {
             $plist[] = H::fa($item->price4);
-        if ($item->price5 > 0)
+        }
+        if ($item->price5 > 0) {
             $plist[] = H::fa($item->price5);
+        }
         $row->add(new Label('price', implode(', ', $plist)));
         $row->add(new Label('desc', htmlspecialchars_decode($item->description), true));
         $row->add(new Label('cell', $item->cell));
@@ -154,13 +161,14 @@ class ItemList extends \App\Pages\Base {
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-        
+
 
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ItemList'))
+        if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
+        }
 
         $item = $sender->owner->getDataItem();
 
@@ -219,6 +227,7 @@ class ItemList extends \App\Pages\Base {
         $this->itemdetail->editmsr->setText('шт');
         $this->itemdetail->editimage->setVisible(false);
         $this->itemdetail->editdelimage->setVisible(false);
+        $this->itemdetail->editpricelist->setChecked(true);
         $this->_item = new Item();
 
         if (System::getOption("common", "autoarticle") == 1) {
@@ -236,8 +245,9 @@ class ItemList extends \App\Pages\Base {
     }
 
     public function OnSubmit($sender) {
-        if (false == \App\ACL::checkEditRef('ItemList'))
+        if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
+        }
 
         $this->_item->itemname = $this->itemdetail->editname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
@@ -263,7 +273,6 @@ class ItemList extends \App\Pages\Base {
         $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
 
 
-
         //проверка  уникальности артикула
         if (strlen($this->_item->item_code) > 0) {
             $code = Item::qstr($this->_item->item_code);
@@ -276,7 +285,7 @@ class ItemList extends \App\Pages\Base {
 
                     $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
                     if ($cnt > 0) {
-                      
+
                         $this->setError('itemcode_exists');
                         return;
                     }
@@ -318,7 +327,7 @@ class ItemList extends \App\Pages\Base {
             }
 
             if ($imagedata[0] * $imagedata[1] > 1000000) {
-                
+
                 $this->setError('toobigimage');
                 return;
             }
@@ -418,20 +427,24 @@ class ItemList extends \App\Pages\Base {
         }
         $report = new \App\Report('item_tag.tpl');
         $header = array('printw' => $wp);
-        if ($printer['pname'] == 1)
+        if ($printer['pname'] == 1) {
             $header['name'] = $item->itemname;
-        if ($printer['pprice'] == 1)
+        }
+        if ($printer['pprice'] == 1) {
             $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
-        if ($printer['pcode'] == 1)
+        }
+        if ($printer['pcode'] == 1) {
             $header['article'] = $item->item_code;
+        }
 
         if ($printer['pbarcode'] == 1) {
             $barcode = $item->bar_code;
-            if (strlen($barcode) == 0)
+            if (strlen($barcode) == 0) {
                 $barcode = $item->item_code;
-            if( ($barcode>0)==false){
-               $this->updateAjax(array(), "  alert('Не цифровой  код')");
-               return; 
+            }
+            if (($barcode > 0) == false) {
+                $this->updateAjax(array(), "  alert('Не цифровой  код')");
+                return;
             }
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
@@ -446,7 +459,8 @@ class ItemList extends \App\Pages\Base {
 
 }
 
-class ItemDataSource implements \Zippy\Interfaces\DataSource {
+class ItemDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -454,7 +468,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
         $this->page = $page;
     }
 
-    private function getWhere($p=false) {
+    private function getWhere($p = false) {
 
         $form = $this->page->filter;
         $where = "1=1";
@@ -466,17 +480,17 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
             $where = $where . " and cat_id=" . $cat;
         }
         if ($showdis == true) {
-            
+
         } else {
             $where = $where . " and disabled <> 1";
         }
         if (strlen($text) > 0) {
-            if($p==false) {
-              $text = Item::qstr('%' . $text . '%');
-              $where = $where . " and (itemname like {$text} or item_code like {$text} )  ";
+            if ($p == false) {
+                $text = Item::qstr('%' . $text . '%');
+                $where = $where . " and (itemname like {$text} or item_code like {$text} )  ";
             } else {
-              $text = Item::qstr($text);
-              $where = $where . " and (itemname = {$text} or item_code = {$text} )  ";
+                $text = Item::qstr($text);
+                $where = $where . " and (itemname = {$text} or item_code = {$text} )  ";
             }
         }
         return $where;
@@ -487,10 +501,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $l= Item::find($this->getWhere( true), "itemname asc", $count, $start);
+        $l = Item::find($this->getWhere(true), "itemname asc", $count, $start);
         $f = Item::find($this->getWhere(), "itemname asc", $count, $start);
-        foreach($f as $k=>$v){
-            $l[$k]= $v;
+        foreach ($f as $k => $v) {
+            $l[$k] = $v;
         }
         return $l;
     }

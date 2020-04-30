@@ -5,7 +5,8 @@ namespace App\Pages;
 /**
  * Главная страница
  */
-class Main extends Base {
+class Main extends Base
+{
 
     public function __construct() {
         parent::__construct();

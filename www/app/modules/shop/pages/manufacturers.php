@@ -2,16 +2,15 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\DataRow;
-use \Zippy\Binding\PropertyBinding as Bind;
-use \App\Modules\Shop\Entity\Manufacturer;
-use \App\Modules\Shop\Helper;
-use \App\System;
-use \App\Application as App;
+use App\Application as App;
+use App\Modules\Shop\Entity\Manufacturer;
+use App\System;
+use Zippy\Html\DataList\DataRow;
+use Zippy\Html\DataList\DataView;
 
 //список   производителей
-class Manufacturers extends \App\Pages\Base {
+class Manufacturers extends \App\Pages\Base
+{
 
     public $msg;
 
@@ -71,8 +70,7 @@ class Manufacturers extends \App\Pages\Base {
         } else {
             $manufacturer = new Manufacturer();
         }
-        $manufacturer->manufacturername = $this->editform->manufacturername->getText();
-        ;
+        $manufacturer->manufacturername = $this->editform->manufacturername->getText();;
         $manufacturer->url = $this->editform->url->getText();
         $manufacturer->save();
         $this->list->manufacturerslist->Reload();

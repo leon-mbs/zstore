@@ -2,15 +2,16 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
+use App\Entity\Entry;
+use App\Helper as H;
 
 /**
  * Класс-сущность  наряд
  *
  *
  */
-class Task extends Document {
+class Task extends Document
+{
 
     public function generateReport() {
 

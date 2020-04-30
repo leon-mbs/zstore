@@ -2,25 +2,26 @@
 
 namespace App\Pages\Register;
 
-use \App\Application as App;
-use \App\Entity\Doc\Document;
-use \App\System;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Helper as H;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 /**
  * журнал  заказов
  */
-class OrderList extends \App\Pages\Base {
+class OrderList extends \App\Pages\Base
+{
 
     private $_doc = null;
 
@@ -95,8 +96,9 @@ class OrderList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false)
+        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false) {
             return;
+        }
 
         $state = $this->_doc->state;
 
@@ -113,19 +115,21 @@ class OrderList extends \App\Pages\Base {
         }
         if ($sender->id == "bref") {
             $this->_doc->updateStatus(Document::STATE_REFUSED);
-            
+
             $this->setWarn('order_canceled');
         }
 
         if ($sender->id == "bttn") {
-            if ($ttn)
+            if ($ttn) {
                 $this->setWarn('order_has_sent');
+            }
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "binv") {
-            if ($invoice)
+            if ($invoice) {
                 $this->setWarn('invoice_exists');
+            }
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
             return;
         }
@@ -180,8 +184,9 @@ class OrderList extends \App\Pages\Base {
             $this->statuspan->statusform->binp->setVisible(false);
         }
 
-        if ($ttn  )
+        if ($ttn) {
             $this->statuspan->statusform->bref->setVisible(false);
+        }
         if ($ref) {
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
@@ -194,7 +199,7 @@ class OrderList extends \App\Pages\Base {
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
-            
+
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
@@ -263,7 +268,8 @@ class OrderList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class OrderDataSource implements \Zippy\Interfaces\DataSource {
+class OrderDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -321,7 +327,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
 
 }

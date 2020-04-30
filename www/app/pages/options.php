@@ -2,22 +2,20 @@
 
 namespace App\Pages;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\System;
-use \App\Helper as H;
-use \App\Application as App;
+use App\Application as App;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class Options extends \App\Pages\Base {
+class Options extends \App\Pages\Base
+{
 
     private $metadatads;
     public $pricelist = array();
@@ -31,17 +29,16 @@ class Options extends \App\Pages\Base {
         }
 
 
-
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
-        $this->common->add(new DropDownChoice('curr',array('gr'=>'Гривна','ru'=>'Рубль'),'gr'));
+        $this->common->add(new DropDownChoice('curr', array('gr' => 'Гривна', 'ru' => 'Рубль'), 'gr'));
         $pt = array(
-            "1" =>H::l('opt_lastprice') ,
-            "2" => H::l('opt_partion') 
+            "1" => H::l('opt_lastprice'),
+            "2" => H::l('opt_partion')
         );
         $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
-        
+
 
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
@@ -60,14 +57,15 @@ class Options extends \App\Pages\Base {
 
 
         $common = System::getOptions("common");
-        if (!is_array($common))
+        if (!is_array($common)) {
             $common = array();
+        }
 
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->partiontype->setValue($common['partiontype']);
         $this->common->curr->setValue($common['curr']);
-        
+
 
         $this->common->price1->setText($common['price1']);
         $this->common->price2->setText($common['price2']);
@@ -86,7 +84,7 @@ class Options extends \App\Pages\Base {
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
         $this->common->allowminus->setChecked($common['allowminus']);
-   
+
 
         $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
         $this->firm->add(new TextInput('firmname'));
@@ -97,8 +95,9 @@ class Options extends \App\Pages\Base {
         $this->firm->add(new TextInput('inn'));
 
         $firm = System::getOptions("firm");
-        if (!is_array($firm))
+        if (!is_array($firm)) {
             $firm = array();
+        }
 
         $this->firm->firmname->setText($firm['firmname']);
         $this->firm->shopname->setText($firm['shopname']);
@@ -117,8 +116,9 @@ class Options extends \App\Pages\Base {
         $this->printer->add(new CheckBox('pprice'));
 
         $printer = System::getOptions("printer");
-        if (!is_array($printer))
+        if (!is_array($printer)) {
             $printer = array();
+        }
 
         $this->printer->pwidth->setText($printer['pwidth']);
         $this->printer->pricetype->setValue($printer['pricetype']);
@@ -155,7 +155,7 @@ class Options extends \App\Pages\Base {
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
     }
 
- 
+
     public function saveCommonOnClick($sender) {
         $common = array();
 
@@ -163,7 +163,7 @@ class Options extends \App\Pages\Base {
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
         $common['curr'] = $this->common->curr->getValue();
-      
+
         $common['price1'] = $this->common->price1->getText();
         $common['price2'] = $this->common->price2->getText();
         $common['price3'] = $this->common->price3->getText();
@@ -171,20 +171,20 @@ class Options extends \App\Pages\Base {
         $common['price5'] = $this->common->price5->getText();
         $common['defprice'] = $this->common->defprice->getText();
 
-        $common['autoarticle'] = $this->common->autoarticle->isChecked() ?1:0;
-        $common['useset'] = $this->common->useset->isChecked()?1:0;
+        $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
+        $common['useset'] = $this->common->useset->isChecked() ? 1 : 0;
 
-        $common['usesnumber'] = $this->common->usesnumber->isChecked()?1:0;
-        $common['usescanner'] = $this->common->usescanner->isChecked()?1:0;
-        $common['useimages'] = $this->common->useimages->isChecked()?1:0;
-        $common['usebranch'] = $this->common->usebranch->isChecked()?1:0;
-        $common['allowminus'] = $this->common->allowminus->isChecked()?1:0;
+        $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
+        $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
+        $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
+        $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
+        $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
 
-  
+
         System::setOptions("common", $common);
 
         $this->setSuccess('saved');
-        System::setCache('labels',null) ;
+        System::setCache('labels', null);
     }
 
     public function saveFirmOnClick($sender) {
@@ -232,7 +232,6 @@ class Options extends \App\Pages\Base {
         if ($this->listpan->filter->fser->isChecked()) {
             $where .= " or meta_type = 5";
         }
-
 
 
         $this->metadatads->setWhere($where);
@@ -295,7 +294,6 @@ class Options extends \App\Pages\Base {
         $form->edit_menugroup->setText($item->menugroup);
         $form->edit_meta_type->setValue($item->meta_type);
         $form->edit_disabled->setChecked($item->disabled == 1);
-
 
 
         $this->listpan->setVisible(false);

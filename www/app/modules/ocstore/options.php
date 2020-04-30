@@ -2,15 +2,16 @@
 
 namespace App\Modules\OCStore;
 
-use \App\System;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\WebApplication as App;
+use App\System;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\WebApplication as App;
 
-class Options extends \App\Pages\Base {
+class Options extends \App\Pages\Base
+{
 
     public function __construct() {
         parent::__construct();
@@ -55,21 +56,22 @@ class Options extends \App\Pages\Base {
         }
 
         $data = json_decode($json, true);
-        if ($data==null) {
+        if ($data == null) {
             $this->setError($json);
             return;
         }
         if (is_array($data) && count($data) == 0) {
-            
+
             $this->setError('nodataresponse');
             return;
         }
 
         if (is_array($data['error'])) {
             $this->setError(implode(' ', $data['error']));
-        } else
-        if (strlen($data['error']) > 0) {
-            $this->setError($data['error']);
+        } else {
+            if (strlen($data['error']) > 0) {
+                $this->setError($data['error']);
+            }
         }
 
         if (strlen($data['success']) > 0) {
@@ -81,7 +83,7 @@ class Options extends \App\Pages\Base {
                 System::getSession()->octoken = "token=" . $data['token'];
             }
 
- 
+
             $this->setSuccess('connected');
 
             //загружаем список статусов
@@ -116,12 +118,12 @@ class Options extends \App\Pages\Base {
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
         if ($customer_id == 0) {
-  
+
             $this->setError('noselcust');
             return;
         }
         if (strlen($pricetype) < 2) {
-       
+
             $this->setError('noselpricetype');
             return;
         }

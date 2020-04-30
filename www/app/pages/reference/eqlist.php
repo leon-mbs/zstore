@@ -2,35 +2,34 @@
 
 namespace App\Pages\Reference;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Equipment;
-use \App\Entity\Employee;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Binding\PropertyBinding as Bind;
-use \App\Helper;
-use \App\System;
-use \Zippy\Html\Link\BookmarkableLink;
+use App\Entity\Employee;
+use App\Entity\Equipment;
+use App\Helper;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 //справочник  оборудования
-class EqList extends \App\Pages\Base {
+class EqList extends \App\Pages\Base
+{
 
     private $_item;
     public $_uselist = array();
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('EqList'))
+        if (false == \App\ACL::checkShowRef('EqList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
@@ -79,19 +78,19 @@ class EqList extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('EqList'))
+        if (false == \App\ACL::checkEditRef('EqList')) {
             return;
+        }
 
         $item = $sender->owner->getDataItem();
         //проверка на партии
         if ($item->checkDelete()) {
             Equipment::delete($item->eq_id);
         } else {
-           
+
             $this->setError("nodelete");
             return;
         }
-
 
 
         $this->itemtable->eqlist->Reload();
@@ -163,8 +162,9 @@ class EqList extends \App\Pages\Base {
     }
 
     public function OnSubmit($sender) {
-        if (false == \App\ACL::checkEditRef('EqList'))
+        if (false == \App\ACL::checkEditRef('EqList')) {
             return;
+        }
 
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
@@ -186,7 +186,8 @@ class EqList extends \App\Pages\Base {
 
 }
 
-class EQDS implements \Zippy\Interfaces\DataSource {
+class EQDS implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -206,7 +207,7 @@ class EQDS implements \Zippy\Interfaces\DataSource {
             $where = $where . " and detail like '%<emp_id>{$emp}</emp_id>%' ";
         }
         if ($showdis > 0) {
-            
+
         } else {
             $where = $where . " and disabled <> 1";
         }

@@ -1,6 +1,6 @@
 <?php
 require_once 'init.php';
- 
+
 if (isset($_REQUEST['id']) > 0) {
 
     $image = \App\Entity\Image::load($_REQUEST['id']);

@@ -2,23 +2,23 @@
 
 namespace App\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Branch;
-use \App\System;
-use \App\Application  as App;
+use App\Application as App;
+use App\Entity\Branch;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 //Филиалы
-class BranchList extends \App\Pages\Base {
+class BranchList extends \App\Pages\Base
+{
 
     private $_branch;
 

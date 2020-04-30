@@ -2,29 +2,25 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Application as App;
-use \App\Helper as H;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\Stock;
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
 
 /**
  * Страница  ввода перекомплектация товаров
  */
-class TransItem extends \App\Pages\Base {
+class TransItem extends \App\Pages\Base
+{
 
     public $_itemlist = array();
     private $_doc;
@@ -71,8 +67,9 @@ class TransItem extends \App\Pages\Base {
         }
 
 
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function backtolistOnClick($sender) {
@@ -80,8 +77,9 @@ class TransItem extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
 
         $this->_doc->notes = $this->docform->notes->getText();
 
@@ -108,8 +106,9 @@ class TransItem extends \App\Pages\Base {
 
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -141,17 +140,17 @@ class TransItem extends \App\Pages\Base {
             $this->setError('nouniquedocnumber_created');
         }
         if ($this->_doc->headerdata['fromquantity'] > 0 && $this->_doc->headerdata['toquantity'] > 0) {
-            
-        } else {              
+
+        } else {
             $this->setError("invalidquantity");
         }
         if ($this->_doc->headerdata['fromitem'] > 0 && $this->_doc->headerdata['toitem'] > 0) {
-            
+
         } else {
             $this->setError("noenteritem");
         }
         if ($this->_doc->headerdata['fromitem'] == $this->_doc->headerdata['toitem']) {
-           
+
             $this->setError("thesameitems");
         }
 

@@ -2,22 +2,22 @@
 
 namespace App\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \App\Entity\User;
-use \App\System;
-use \App\Application as App;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \Zippy\Binding\PropertyBinding as Bind;
+use App\Application as App;
+use App\Entity\User;
+use App\System;
+use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class Users extends \App\Pages\Base {
+class Users extends \App\Pages\Base
+{
 
     public $user = null;
 
@@ -113,40 +113,52 @@ class Users extends \App\Pages\Base {
         $this->editpan->editform->brow->Reload();
 
 
-
-        if (strpos($this->user->widgets, 'wplanned') !== false)
+        if (strpos($this->user->widgets, 'wplanned') !== false) {
             $this->editpan->editform->editwplanned->setChecked(true);
-        if (strpos($this->user->widgets, 'wdebitors') !== false)
+        }
+        if (strpos($this->user->widgets, 'wdebitors') !== false) {
             $this->editpan->editform->editwdebitors->setChecked(true);
-        if (strpos($this->user->widgets, 'wnoliq') !== false)
+        }
+        if (strpos($this->user->widgets, 'wnoliq') !== false) {
             $this->editpan->editform->editwnoliq->setChecked(true);
-        if (strpos($this->user->widgets, 'wminqty') !== false)
+        }
+        if (strpos($this->user->widgets, 'wminqty') !== false) {
             $this->editpan->editform->editwminqty->setChecked(true);
-        if (strpos($this->user->widgets, 'wsdate') !== false)
+        }
+        if (strpos($this->user->widgets, 'wsdate') !== false) {
             $this->editpan->editform->editwsdate->setChecked(true);
-        if (strpos($this->user->widgets, 'wrdoc') !== false)
+        }
+        if (strpos($this->user->widgets, 'wrdoc') !== false) {
             $this->editpan->editform->editwrdoc->setChecked(true);
-        if (strpos($this->user->widgets, 'wopendoc') !== false)
+        }
+        if (strpos($this->user->widgets, 'wopendoc') !== false) {
             $this->editpan->editform->editwopendoc->setChecked(true);
-        if (strpos($this->user->widgets, 'wwaited') !== false)
+        }
+        if (strpos($this->user->widgets, 'wwaited') !== false) {
             $this->editpan->editform->editwwaited->setChecked(true);
-        if (strpos($this->user->widgets, 'wreserved') !== false)
+        }
+        if (strpos($this->user->widgets, 'wreserved') !== false) {
             $this->editpan->editform->editwreserved->setChecked(true);
+        }
 
-        if (strpos($this->user->modules, 'ocstore') !== false)
+        if (strpos($this->user->modules, 'ocstore') !== false) {
             $this->editpan->editform->editocstore->setChecked(true);
-        if (strpos($this->user->modules, 'woocomerce') !== false)
+        }
+        if (strpos($this->user->modules, 'woocomerce') !== false) {
             $this->editpan->editform->editwoocomerce->setChecked(true);
-        if (strpos($this->user->modules, 'shop') !== false)
+        }
+        if (strpos($this->user->modules, 'shop') !== false) {
             $this->editpan->editform->editshop->setChecked(true);
-        if (strpos($this->user->modules, 'note') !== false)
+        }
+        if (strpos($this->user->modules, 'note') !== false) {
             $this->editpan->editform->editnote->setChecked(true);
-        if (strpos($this->user->modules, 'issue') !== false)
+        }
+        if (strpos($this->user->modules, 'issue') !== false) {
             $this->editpan->editform->editissue->setChecked(true);
+        }
     }
 
     public function saveOnClick($sender) {
-
 
 
         $this->user->email = $this->editpan->editform->editemail->getText();
@@ -156,7 +168,7 @@ class Users extends \App\Pages\Base {
         if ($user instanceof User) {
             if ($user->user_id != $this->user->user_id) {
                 $this->setError('nouniquelogin');
-               
+
                 return;
             }
         }
@@ -164,7 +176,7 @@ class Users extends \App\Pages\Base {
             $user = User::getByEmail($this->user->email);
             if ($user instanceof User) {
                 if ($user->user_id != $this->user->user_id) {
-                
+
                     $this->setError('nouniqueemail');
                     return;
                 }
@@ -176,11 +188,10 @@ class Users extends \App\Pages\Base {
 
         $pass = $this->editpan->editform->editpass->getText();
         if (strlen($pass) > 0) {
-            $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
-            ;
+            $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));;
         }
         if ($this->user->user_id == 0 && strlen($pass) == 0) {
-            
+
             $this->setError("enterpassword");
             return;
         }
@@ -188,8 +199,9 @@ class Users extends \App\Pages\Base {
         $barr = array();
         foreach ($this->editpan->editform->brow->getDataRows() as $row) {
             $item = $row->getDataItem();
-            if ($item->editbr == true)
+            if ($item->editbr == true) {
                 $barr[] = $item->branch_id;
+            }
         }
         $this->user->aclbranch = implode(',', $barr);
 
@@ -216,39 +228,53 @@ class Users extends \App\Pages\Base {
 
         $widgets = "";
 
-        if ($this->editpan->editform->editwplanned->isChecked())
+        if ($this->editpan->editform->editwplanned->isChecked()) {
             $widgets = $widgets . ',wplanned';
-        if ($this->editpan->editform->editwdebitors->isChecked())
+        }
+        if ($this->editpan->editform->editwdebitors->isChecked()) {
             $widgets = $widgets . ',wdebitors';
-        if ($this->editpan->editform->editwnoliq->isChecked())
+        }
+        if ($this->editpan->editform->editwnoliq->isChecked()) {
             $widgets = $widgets . ',wnoliq';
-        if ($this->editpan->editform->editwminqty->isChecked())
+        }
+        if ($this->editpan->editform->editwminqty->isChecked()) {
             $widgets = $widgets . ',wminqty';
-        if ($this->editpan->editform->editwsdate->isChecked())
+        }
+        if ($this->editpan->editform->editwsdate->isChecked()) {
             $widgets = $widgets . ',wsdate';
-        if ($this->editpan->editform->editwrdoc->isChecked())
+        }
+        if ($this->editpan->editform->editwrdoc->isChecked()) {
             $widgets = $widgets . ',wrdoc';
-        if ($this->editpan->editform->editwopendoc->isChecked())
+        }
+        if ($this->editpan->editform->editwopendoc->isChecked()) {
             $widgets = $widgets . ',wopendoc';
-        if ($this->editpan->editform->editwwaited->isChecked())
+        }
+        if ($this->editpan->editform->editwwaited->isChecked()) {
             $widgets = $widgets . ',wwaited';
-        if ($this->editpan->editform->editwreserved->isChecked())
+        }
+        if ($this->editpan->editform->editwreserved->isChecked()) {
             $widgets = $widgets . ',wreserved';
+        }
 
 
         $this->user->widgets = trim($widgets, ',');
 
         $modules = "";
-        if ($this->editpan->editform->editshop->isChecked())
+        if ($this->editpan->editform->editshop->isChecked()) {
             $modules = $modules . ',shop';
-        if ($this->editpan->editform->editnote->isChecked())
+        }
+        if ($this->editpan->editform->editnote->isChecked()) {
             $modules = $modules . ',note';
-        if ($this->editpan->editform->editocstore->isChecked())
+        }
+        if ($this->editpan->editform->editocstore->isChecked()) {
             $modules = $modules . ',ocstore';
-        if ($this->editpan->editform->editwoocomerce->isChecked())
+        }
+        if ($this->editpan->editform->editwoocomerce->isChecked()) {
             $modules = $modules . ',woocomerce';
-        if ($this->editpan->editform->editissue->isChecked())
+        }
+        if ($this->editpan->editform->editissue->isChecked()) {
             $modules = $modules . ',issue';
+        }
 
         $this->user->modules = trim($modules, ',');
 
@@ -357,7 +383,8 @@ class Users extends \App\Pages\Base {
 
 }
 
-class UserDataSource implements \Zippy\Interfaces\DataSource {
+class UserDataSource implements \Zippy\Interfaces\DataSource
+{
 
     //private $model, $db;
 
