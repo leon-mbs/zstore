@@ -2,24 +2,18 @@
 
 namespace App\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \App\Entity\User;
-use \App\Entity\Notify;
-use \App\System;
-use \App\Helper as H;
-use \Zippy\WebApplication as App;
-use \ZCL\DB\EntityDataSource;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
+use App\Entity\Notify;
+use App\Helper as H;
+use App\System;
+use ZCL\DB\EntityDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\WebApplication as App;
 
-class NotifyList extends \App\Pages\Base {
+class NotifyList extends \App\Pages\Base
+{
 
     public $user = null;
     public $ds;
@@ -56,8 +50,9 @@ class NotifyList extends \App\Pages\Base {
 
     public function filterOnSubmit($sender) {
         $text = trim($sender->searchtext->getText());
-        if (strlen($text) == 0)
+        if (strlen($text) == 0) {
             return;
+        }
         $text = Notify::qstr('%' . $text . '%');
         $this->ds->setWhere("(sender_name like {$text} or message like {$text}) and user_id=" . System::getUser()->user_id);
         $this->nlist->Reload();

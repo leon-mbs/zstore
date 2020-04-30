@@ -2,18 +2,16 @@
 
 namespace App\Modules\Shop\Pages;
 
-use Carbon\Carbon;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Link\BookmarkableLink;
-use \App\Modules\Shop\Entity\ProductGroup;
-use \App\Modules\Shop\Helper;
-use \ZCL\DB\EntityDataSource;
-use \Zippy\Html\Link\ClickLink;
+use App\Modules\Shop\Entity\ProductGroup;
+use App\Modules\Shop\Helper;
+use ZCL\DB\EntityDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
+use Zippy\Html\Link\BookmarkableLink;
+use Zippy\Html\Panel;
 
-class Main extends Base {
+class Main extends Base
+{
 
     private $group_id = 0;
 
@@ -39,8 +37,9 @@ class Main extends Base {
 
         $this->subcatlistp->setVisible($id > 0);
         $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\ProductGroup", "parent_id=" . $id), $this, 'OnCatRow'));
-        if ($id > 0)
+        if ($id > 0) {
             $this->subcatlistp->subcatlist->Reload();
+        }
 
         $this->add(new Panel("newlistp"));
         $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "", "product_id desc", 12), $this, 'OnNewRow'))->Reload();

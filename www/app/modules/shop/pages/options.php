@@ -2,24 +2,19 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\File;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\System;
-use \App\Application as App;
-use \App\Modules\Shop\Entity\Product;
-use \App\Entity\Item;
+use App\Application as App;
+use App\Entity\Item;
+use App\Modules\Shop\Entity\Product;
+use App\System;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\File;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Link\ClickLink;
 
-class Options extends \App\Pages\Base {
+class Options extends \App\Pages\Base
+{
 
     public function __construct() {
         parent::__construct();
@@ -28,8 +23,6 @@ class Options extends \App\Pages\Base {
             App::RedirectHome();
             return;
         }
-
-
 
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
@@ -46,8 +39,9 @@ class Options extends \App\Pages\Base {
         $this->texts->add(new TextArea('delivery'));
 
         $shop = System::getOptions("shop");
-        if (!is_array($shop))
+        if (!is_array($shop)) {
             $shop = array();
+        }
 
         $this->shop->shopdefstore->setValue($shop['defstore']);
         $this->shop->shopdefcust->setValue($shop['defcust']);
@@ -110,10 +104,12 @@ class Options extends \App\Pages\Base {
             $item = Item::load($p->item_id);
             $price = $item->getPrice($shop['defpricetype']);
             $p->chprice = "";
-            if ($price > $p->price)
+            if ($price > $p->price) {
                 $p->chprice = "up";
-            if ($price < $p->price)
+            }
+            if ($price < $p->price) {
                 $p->chprice = "down";
+            }
             $p->price = $price;
             $p->save();
         }

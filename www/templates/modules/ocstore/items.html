@@ -1,117 +1,119 @@
 <html>
-    <head>
-    </head>
-    <body>
-        <div class="row">
-            <div class="col-12 col-xl-10">
+<head>
+</head>
+<body>
+<div class="row">
+    <div class="col-12 col-xl-10">
 
-                <h3>Экспорт новых товаров</h3>
-                &nbsp;&nbsp;&nbsp;<small><i class="fa fa-exclamation-triangle text-danger"></i> Наличие  спецсимволов  (типа <b> & ' " `</b>)  в названии или  описании  может  вызвать пробему с  выгрузкой</small>
-                <div class="navbar nav">
-                    <form zippy="filter" class="form-inline ">
+        <h3>Экспорт новых товаров</h3>
+        &nbsp;&nbsp;&nbsp;<small><i class="fa fa-exclamation-triangle text-danger"></i> Наличие спецсимволов (типа <b> &
+        ' " `</b>) в названии или описании может вызвать пробему с выгрузкой</small>
+        <div class="navbar nav">
+            <form zippy="filter" class="form-inline ">
 
-                        <label for="searchcat">Категория</label>
+                <label for="searchcat">Категория</label>
 
-                        <select   class="form-control mr-sm-2" zippy="searchcat">
-                            <option value="0">Не задана</option>
-                        </select>         
-
-
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  " value="Загрузить">
-                        <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
-
-                    </form>
-                </div>                
-
-                <form zippy="exportform"  >
-                     
-                     <table class="table   table-sm   ">
-                        <tr>
-
-                            <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"> </th>
-
-                            <th>Наименование</th>
-                            <th>Артикул</th>
-                            <th class="text-right" >Кол.</th>
-                            <th class="text-right" >Цена</th>
-                            <th> Описание</th>
+                <select class="form-control mr-sm-2" zippy="searchcat">
+                    <option value="0">Не задана</option>
+                </select>
 
 
+                <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+                       value="Загрузить">
+                <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
+
+            </form>
+        </div>
+
+        <form zippy="exportform">
+
+            <table class="table   table-sm   ">
+                <tr>
+
+                    <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
+
+                    <th>Наименование</th>
+                    <th>Артикул</th>
+                    <th class="text-right">Кол.</th>
+                    <th class="text-right">Цена</th>
+                    <th> Описание</th>
 
 
+                </tr>
+                <tr zippy="newitemlist">
+
+                    <td><input type="checkbox" zippy="ch" class="chc"></td>
+                    <td zippy="name"></td>
+                    <td zippy="code"></td>
+                    <td zippy="qty" class="text-right"></td>
+                    <td zippy="price" class="text-right"></td>
+                    <td zippy="desc"></td>
+
+                </tr>
+
+            </table>
+            <div zippy="pag"></div>
+            <div class="ml-2 form-group row  ">
+                <label for="ecat">Категория в магазине </label>
+
+                <select class="select2  mr-2" zippy="ecat">
+                    <option value="0">Не выбрана</option>
+                </select>
+
+                &nbsp;<input onclick="$('#loader2').removeAttr('style')" type="submit"
+                             class="  btn btn-outline-success btn-sm  " value="Отправить">
+                <img id="loader2" style="display:none" src="/assets/images/ajax-loader.gif">
+            </div>
+        </form>
+    </div>
+    <div class="col-12 col-md-8  ">
+
+        <h3>Обновление цен и количеств</h3>
+
+        <div class="navbar nav">
+            <a zippy="updateqty" class="  btn btn-outline-success  ">Обновить количества</a>
+            <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+            &nbsp;&nbsp;
+            <a zippy="updateprice" class="  btn btn-outline-success  ">Обновить цены</a>
+            <img id="loader4" style="display:none" src="/assets/images/ajax-loader.gif">
 
 
-                        </tr>  
-                        <tr zippy="newitemlist">
+        </div>
+    </div>
 
-                            <td  ><input type="checkbox" zippy="ch" class="chc"></td>
-                            <td zippy="name"></td>
-                            <td zippy="code"></td>
-                            <td zippy="qty"  class="text-right" ></td>
-                            <td zippy="price"  class="text-right" ></td>
-                            <td zippy="desc"   ></td>
+    <div class="col-12 col-md-8  ">
 
-                        </tr>
+        <h3>Загрузка товаров с магазина </h3>
 
-                    </table>
-                      <div zippy="pag"></div>
-                    <div class="ml-2 form-group row  ">
-                        <label   for="ecat">Категория в магазине </label>
-
-                        <select class="select2  mr-2" zippy="ecat">
-                            <option value="0">Не выбрана</option>
-                        </select>
-
-                        &nbsp;<input onclick="$('#loader2').removeAttr('style')" type="submit" class="  btn btn-outline-success btn-sm  " value="Отправить">
-                        <img id="loader2" style="display:none" src="/assets/images/ajax-loader.gif">
-                    </div>
-                </form>           
-            </div> 
-            <div class="col-12 col-md-8  ">
-
-                <h3>Обновление цен  и количеств</h3>
-
-                <div class="navbar nav">
-                    <a zippy="updateqty" class="  btn btn-outline-success  ">Обновить количества</a>
-                    <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
-                    &nbsp;&nbsp;      
-                    <a zippy="updateprice" class="  btn btn-outline-success  ">Обновить цены</a>
-                    <img id="loader4" style="display:none" src="/assets/images/ajax-loader.gif">
+        <div class="navbar nav">
+            <a zippy="getitems" class="  btn btn-outline-success  ">Загрузить</a>
+            <img id="loader6" style="display:none" src="/assets/images/ajax-loader.gif">
 
 
-                </div>              
-            </div> 
+        </div>
+    </div>
+</div>
+<script>
 
-            <div class="col-12 col-md-8  ">
+    function check_updateqty() {
 
-                <h3>Загрузка  товаров с магазина </h3>
+        $('#loader3').removeAttr('style');
+    }
 
-                <div class="navbar nav">
-                    <a zippy="getitems" class="  btn btn-outline-success  ">Загрузить</a>
-                    <img id="loader6" style="display:none" src="/assets/images/ajax-loader.gif">
+    function check_updateprice() {
 
+        $('#loader4').removeAttr('style');
+    }
 
-                </div>              
-            </div>             
-        </div> 
-        <script>
+    function check_getitems() {
 
-            function check_updateqty() {
+        $('#loader6').removeAttr('style');
+    }
 
-                $('#loader3').removeAttr('style');
-            }
-            function check_updateprice() {
-
-                $('#loader4').removeAttr('style');
-            }
-            function check_getitems() {
-
-                $('#loader6').removeAttr('style');
-            }
-            function chclick() {
-                var ch = $("#chall").prop('checked')
-                $('.chc').prop('checked', ch)
-            }
-        </script>  
-    </body>
+    function chclick() {
+        var ch = $("#chall").prop('checked');
+        $('.chc').prop('checked', ch)
+    }
+</script>
+</body>
 </html>

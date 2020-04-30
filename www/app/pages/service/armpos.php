@@ -2,33 +2,30 @@
 
 namespace App\Pages\Service;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Service;
-use \App\Entity\Customer;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\Service;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * АРМ кассира
  */
-class ARMPos extends \App\Pages\Base {
+class ARMPos extends \App\Pages\Base
+{
 
     public $_itemlist = array();
     public $_serlist = array();
@@ -39,8 +36,9 @@ class ARMPos extends \App\Pages\Base {
         parent::__construct();
 
 
-        if (false == \App\ACL::checkShowSer('ARMPos'))
+        if (false == \App\ACL::checkShowSer('ARMPos')) {
             return;
+        }
 
         //обшие настройки
         $this->add(new Form('form1'));
@@ -71,8 +69,7 @@ class ARMPos extends \App\Pages\Base {
 
         //оплата
         $this->add(new Form('form3'))->setVisible(false);
-        $this->form3->add(new DropDownChoice('payment'))->onChange($this, 'OnPayment');
-        ;
+        $this->form3->add(new DropDownChoice('payment'))->onChange($this, 'OnPayment');;
         $this->form3->add(new TextInput('document_number'));
 
         $this->form3->add(new Date('document_date'))->setDate(time());
@@ -163,7 +160,7 @@ class ARMPos extends \App\Pages\Base {
 
         $mf = \App\Entity\MoneyFund::Load($this->pos->mf);
 
-        $this->form3->payment->setOptionList(array($mf->mf_id => $mf->mf_name,  \App\Entity\MoneyFund::PREPAID => 'Была предоплата', \App\Entity\MoneyFund::CREDIT=> 'В кредит'));
+        $this->form3->payment->setOptionList(array($mf->mf_id => $mf->mf_name, \App\Entity\MoneyFund::PREPAID => 'Была предоплата', \App\Entity\MoneyFund::CREDIT => 'В кредит'));
         $this->form3->payment->setValue($mf->mf_id);
 
         $this->form1->setVisible(false);
@@ -241,17 +238,17 @@ class ARMPos extends \App\Pages\Base {
     public function addcodeOnClick($sender) {
         $code = trim($this->form2->barcode->getText());
         $this->form2->barcode->setText('');
-        if ($code == '')
+        if ($code == '') {
             return;
+        }
 
 
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$this->pos->store}) and  (item_code = {$code_} or bar_code = {$code_})");
 
 
-
         if ($item == null) {
-            $this->setError("noitemcode",$code);
+            $this->setError("noitemcode", $code);
             return;
         }
 
@@ -313,8 +310,9 @@ class ARMPos extends \App\Pages\Base {
     }
 
     public function serdeleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
 
         $ser = $sender->owner->getDataItem();
         // unset($this->_itemlist[$tovar->tovar_id]);
@@ -509,13 +507,15 @@ class ARMPos extends \App\Pages\Base {
                 $this->form3->discount->setText("Постоянная скидка " . $customer->discount . '%');
                 $this->form3->discount->setVisible(true);
                 $disc = round($total * ($customer->discount / 100));
-            } else if ($customer->bonus > 0) {
-                $this->form3->discount->setText("Бонусы " . $customer->bonus);
-                $this->form3->discount->setVisible(true);
-                if ($total >= $customer->bonus) {
-                    $disc = $customer->bonus;
-                } else {
-                    $disc = $total;
+            } else {
+                if ($customer->bonus > 0) {
+                    $this->form3->discount->setText("Бонусы " . $customer->bonus);
+                    $this->form3->discount->setVisible(true);
+                    if ($total >= $customer->bonus) {
+                        $disc = $customer->bonus;
+                    } else {
+                        $disc = $total;
+                    }
                 }
             }
         }
@@ -624,7 +624,7 @@ class ARMPos extends \App\Pages\Base {
         //   $this->_doc->headerdata['pricetypename'] = $this->form1->pricetype->getValueName();
         $firm = H::getFirmData($this->_doc->branch_id);
 
-        $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
+      //  $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
         $this->_doc->headerdata["firmname"] = $firm['firmname'];
         $this->_doc->headerdata["inn"] = $firm['inn'];
@@ -639,22 +639,21 @@ class ARMPos extends \App\Pages\Base {
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
-            
-                // проверка на минус  в  количестве
-                $allowminus = System::getOption("common","allowminus") ;
-                if($allowminus != 1) {
-            
-                    foreach($this->_itemlist as $item) {
-                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                         if($qty<$item->quantity) {
-                            $this->setError("nominus",H::fqty($qty),$item->item_name);
-                            return;
-                         }
+
+            // проверка на минус  в  количестве
+            $allowminus = System::getOption("common", "allowminus");
+            if ($allowminus != 1) {
+
+                foreach ($this->_itemlist as $item) {
+                    $qty = $item->getQuantity($this->_doc->headerdata['store']);
+                    if ($qty < $item->quantity) {
+                        $this->setError("nominus", H::fqty($qty), $item->item_name);
+                        return;
                     }
-                }                    
-        
-            
-            
+                }
+            }
+
+
             $this->_doc->save();
             $this->_doc->updateStatus(Document::STATE_NEW);
 

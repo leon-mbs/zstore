@@ -2,31 +2,30 @@
 
 namespace App\Pages\Doc;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\AutocompleteTextInput;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\SubmitLink;
-use \App\Entity\Customer;
-use \App\Entity\Doc\Document;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Helper as H;
-use \App\Application as App;
+use App\Application as App;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Entity\Store;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * Страница    счет фактура
  */
-class Invoice extends \App\Pages\Base {
+class Invoice extends \App\Pages\Base
+{
 
     public $_tovarlist = array();
     private $_doc;
@@ -54,7 +53,7 @@ class Invoice extends \App\Pages\Base {
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
 
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(  true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -142,8 +141,8 @@ class Invoice extends \App\Pages\Base {
                         $this->OnChangeCustomer($this->docform->customer);
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
-                        
-                        $this->docform->notes->setText("счет  к  заказу ".$basedoc->document_number);
+
+                        $this->docform->notes->setText("счет  к  заказу " . $basedoc->document_number);
                         $order = $basedoc->cast();
 
 
@@ -160,8 +159,9 @@ class Invoice extends \App\Pages\Base {
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
-        if (false == \App\ACL::checkShowDoc($this->_doc))
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
+        }
     }
 
     public function detailOnRow($row) {
@@ -181,8 +181,9 @@ class Invoice extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
@@ -216,8 +217,9 @@ class Invoice extends \App\Pages\Base {
     }
 
     public function saverowOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("noselitem");
@@ -230,24 +232,24 @@ class Invoice extends \App\Pages\Base {
 
         $item->price = $this->editdetail->editprice->getText();
 
-         $tarr = array();
- 
-        foreach($this->_tovarlist as $k=>$value){
-               
-           if( $this->_rowid > 0 &&  $this->_rowid == $k)  {
-              $tarr[$item->item_id] = $item;    // заменяем
-           }   else {
-              $tarr[$k] = $value;    // старый
-           }
-                
+        $tarr = array();
+
+        foreach ($this->_tovarlist as $k => $value) {
+
+            if ($this->_rowid > 0 && $this->_rowid == $k) {
+                $tarr[$item->item_id] = $item;    // заменяем
+            } else {
+                $tarr[$k] = $value;    // старый
+            }
+
         }
-     
-        if($this->_rowid == 0) {        // в конец
+
+        if ($this->_rowid == 0) {        // в конец
             $tarr[$item->item_id] = $item;
         }
         $this->_tovarlist = $tarr;
         $this->_rowid = 0;
- 
+
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -275,8 +277,9 @@ class Invoice extends \App\Pages\Base {
     }
 
     public function savedocOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc))
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
+        }
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
@@ -290,7 +293,6 @@ class Invoice extends \App\Pages\Base {
         if ($this->checkForm() == false) {
             return;
         }
-
 
 
         $this->_doc->payamount = $this->docform->payamount->getText();
@@ -324,8 +326,9 @@ class Invoice extends \App\Pages\Base {
 
 
             if ($sender->id == 'execdoc') {
-                if (!$isEdited)
+                if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
+                }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             }
@@ -337,10 +340,11 @@ class Invoice extends \App\Pages\Base {
                 //  return;
             }
 
-            if ($isEdited)
+            if ($isEdited) {
                 App::RedirectBack();
-            else
+            } else {
                 App::Redirect("\\App\\Pages\\Register\\GIList");
+            }
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -357,7 +361,6 @@ class Invoice extends \App\Pages\Base {
         $this->docform->paydisc->setVisible(true);
 
         $b = $sender->getValue();
-
 
 
         if ($b == \App\Entity\MoneyFund::CREDIT) {
@@ -407,11 +410,13 @@ class Invoice extends \App\Pages\Base {
 
             if ($customer->discount > 0) {
                 $disc = round($total * ($customer->discount / 100));
-            } else if ($customer->bonus > 0) {
-                if ($total >= $customer->bonus) {
-                    $disc = $customer->bonus;
-                } else {
-                    $disc = $total;
+            } else {
+                if ($customer->bonus > 0) {
+                    if ($total >= $customer->bonus) {
+                        $disc = $customer->bonus;
+                    } else {
+                        $disc = $total;
+                    }
                 }
             }
         }
@@ -449,7 +454,7 @@ class Invoice extends \App\Pages\Base {
         if ($this->docform->payment->getValue() == 0) {
             $this->setError("noselpaytype");
         }
-        if (($this->docform->store->getValue() > 0 ) == false) {
+        if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
 
@@ -491,9 +496,11 @@ class Invoice extends \App\Pages\Base {
             if ($customer->discount > 0) {
                 $this->docform->discount->setText("Постоянная скидка " . $customer->discount . '%');
                 $this->docform->discount->setVisible(true);
-            } else if ($customer->bonus > 0) {
-                $this->docform->discount->setText("Бонусы " . $customer->bonus);
-                $this->docform->discount->setVisible(true);
+            } else {
+                if ($customer->bonus > 0) {
+                    $this->docform->discount->setText("Бонусы " . $customer->bonus);
+                    $this->docform->discount->setVisible(true);
+                }
             }
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент

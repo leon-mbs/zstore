@@ -1,11 +1,10 @@
- 
-<table class="ctable"   border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0" class="ctable" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Оплата  по  нарядам 
+            Оплата по нарядам
         </td>
-    </tr>            
+    </tr>
     <tr>
 
         <td align="center" colspan="5">
@@ -16,13 +15,13 @@
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px" >Исполнитель</th>
+        <th style="border: solid black 1px">Исполнитель</th>
 
         <th align="right" style="border: solid black 1px">Нарядов</th>
         <th align="right" style="border: solid black 1px">Часов</th>
 
         <th align="right" style="border: solid black 1px">Сумма</th>
-      
+
 
         {{#_detail}}
     <tr>
@@ -34,7 +33,7 @@
         <td align="right">{{hours}}</td>
 
         <td align="right">{{amount}}</td>
-      
+
 
     </tr>
     {{/_detail}}

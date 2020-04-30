@@ -8,7 +8,8 @@ namespace App\Modules\Note\Entity;
  * @view=note_topicsview
  * @keyfield=topic_id
  */
-class Topic extends \ZCL\DB\Entity {
+class Topic extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->topic_id = 0;
@@ -17,7 +18,7 @@ class Topic extends \ZCL\DB\Entity {
 
     /**
      * список топиков  для  узла
-     * 
+     *
      * @param mixed $node_id
      */
     public static function findByNode($node_id) {
@@ -26,7 +27,7 @@ class Topic extends \ZCL\DB\Entity {
 
     /**
      * удаление  топиков узла
-     * 
+     *
      * @param mixed $node_id
      */
     public static function deleteByNode($node_id) {
@@ -41,7 +42,7 @@ class Topic extends \ZCL\DB\Entity {
 
     /**
      * добавить  к  узлу
-     * 
+     *
      * @param mixed $node_id
      */
     public function addToNode($node_id) {
@@ -51,7 +52,7 @@ class Topic extends \ZCL\DB\Entity {
 
     /**
      * удалить с  узла
-     * 
+     *
      * @param mixed $node_id
      */
     public function removeFromNode($node_id) {
@@ -61,7 +62,7 @@ class Topic extends \ZCL\DB\Entity {
 
     /**
      * @see Entity
-     * 
+     *
      */
     protected function beforeDelete() {
         $conn = \ZCL\DB\DB::getConnect();
@@ -73,7 +74,7 @@ class Topic extends \ZCL\DB\Entity {
 
     /**
      * возвращает количество  узлов  в  которых упоминается
-     * 
+     *
      */
     public function getNodesCnt() {
         $conn = \ZCL\DB\DB::getConnect();
@@ -83,7 +84,7 @@ class Topic extends \ZCL\DB\Entity {
 
     /**
      * записать тэги
-     * 
+     *
      * @param mixed $tags
      */
     public function saveTags($tags) {
@@ -97,22 +98,23 @@ class Topic extends \ZCL\DB\Entity {
 
     /**
      * получить теги
-     * 
+     *
      */
     public function getTags() {
         $tl = array();
         $conn = \ZCL\DB\DB::getConnect();
         $rc = $conn->GetCol("select distinct tagvalue from note_tags where topic_id=" . $this->topic_id);
         foreach ($rc as $k => $v) {
-            if (strlen($v))
+            if (strlen($v)) {
                 $tl[$k] = $v;
+            }
         }
         return $tl;
     }
 
     /**
      * получить  подсказки из существующих тегов
-     * 
+     *
      */
     public function getSuggestionTags() {
         $conn = \ZCL\DB\DB::getConnect();

@@ -7,21 +7,21 @@ namespace App\Modules\Issue\Entity;
  * @table=issue_issuelist
  * @view=issue_issuelist_view
  * @keyfield=issue_id
-
  */
-class Issue extends \ZCL\DB\Entity {
+class Issue extends \ZCL\DB\Entity
+{
 
-    const STATUS_NEW = 1;
+    const STATUS_NEW       = 1;
     const STATUS_INPROCESS = 2;
-    const STATUS_QA = 4;
-    const STATUS_REOPENED = 5;
-    const STATUS_RETURNED = 6;
-    const STATUS_WA = 7;
-    const STATUS_SHIFTED = 8;
-    const STATUS_CLOSED = 12;
-    const PRIORITY_HIGH = 1;
-    const PRIORITY_NORMAL = 2;
-    const PRIORITY_LOW = 3;
+    const STATUS_QA        = 4;
+    const STATUS_REOPENED  = 5;
+    const STATUS_RETURNED  = 6;
+    const STATUS_WA        = 7;
+    const STATUS_SHIFTED   = 8;
+    const STATUS_CLOSED    = 12;
+    const PRIORITY_HIGH    = 1;
+    const PRIORITY_NORMAL  = 2;
+    const PRIORITY_LOW     = 3;
 
     protected function init() {
         $this->issue_id = 0;
@@ -39,7 +39,7 @@ class Issue extends \ZCL\DB\Entity {
 
     /**
      * проверка на  право удаления
-     * 
+     *
      */
     protected function beforeDelete() {
 
@@ -78,27 +78,27 @@ class Issue extends \ZCL\DB\Entity {
         //распаковываем  данные из  
         $xml = simplexml_load_string($this->details);
 
-        $this->hours = (int) ($xml->hours[0]);
-        $this->price = (int) ($xml->price[0]);
-        $this->createdon = (int) ($xml->createdon[0]);
-        $this->createdby = (int) ($xml->createdby[0]);
-        $this->createdbyname = (string) ($xml->createdbyname[0]);
+        $this->hours = (int)($xml->hours[0]);
+        $this->price = (int)($xml->price[0]);
+        $this->createdon = (int)($xml->createdon[0]);
+        $this->createdby = (int)($xml->createdby[0]);
+        $this->createdbyname = (string)($xml->createdbyname[0]);
 
-        $this->desc = (string) ($xml->desc[0]);
+        $this->desc = (string)($xml->desc[0]);
 
         parent::afterLoad();
     }
 
     public static function getStatusList() {
         $list = array();
-        $list[self::STATUS_NEW] =  \App\Helper::l('is_new') ;
-        $list[self::STATUS_INPROCESS] = \App\Helper::l('is_inp') ;
-        $list[self::STATUS_QA] = \App\Helper::l('is_qa') ;
-        $list[self::STATUS_REOPENED] = \App\Helper::l('is_reopened') ;
-        $list[self::STATUS_RETURNED] = \App\Helper::l('is_ret') ;
-        $list[self::STATUS_WA] = \App\Helper::l('is_wa') ;
-        $list[self::STATUS_SHIFTED] = \App\Helper::l('is_shifted') ;
-        $list[self::STATUS_CLOSED] = \App\Helper::l('is_closed') ;
+        $list[self::STATUS_NEW] = \App\Helper::l('is_new');
+        $list[self::STATUS_INPROCESS] = \App\Helper::l('is_inp');
+        $list[self::STATUS_QA] = \App\Helper::l('is_qa');
+        $list[self::STATUS_REOPENED] = \App\Helper::l('is_reopened');
+        $list[self::STATUS_RETURNED] = \App\Helper::l('is_ret');
+        $list[self::STATUS_WA] = \App\Helper::l('is_wa');
+        $list[self::STATUS_SHIFTED] = \App\Helper::l('is_shifted');
+        $list[self::STATUS_CLOSED] = \App\Helper::l('is_closed');
 
         return $list;
     }

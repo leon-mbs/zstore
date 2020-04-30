@@ -7,9 +7,9 @@ namespace App\Entity;
  * @table=eventlist
  * @view=eventlist_view
  * @keyfield=event_id
-
  */
-class Event extends \ZCL\DB\Entity {
+class Event extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->event_id = 0;

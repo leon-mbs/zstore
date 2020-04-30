@@ -1,6 +1,5 @@
- 
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
-    <tr  >
+    <tr>
         <td colspan="4" align="center">
             <b> Расходный ордер № {{document_number}} от {{date}}</b> <br>
         </td>
@@ -27,8 +26,6 @@
             {{notes}}
         </td>
     </tr>
-
-
 
 
 </table>

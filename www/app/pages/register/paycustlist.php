@@ -2,29 +2,24 @@
 
 namespace App\Pages\Register;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Link\RedirectLink;
-use \App\Entity\Doc\Document;
-use \App\Entity\Pay;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System;
+use App\Entity\Pay;
+use App\Helper as H;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Panel;
 
 /**
- * журнал расчет с контрагентами 
+ * журнал расчет с контрагентами
  */
-class PayCustList extends \App\Pages\Base {
+class PayCustList extends \App\Pages\Base
+{
 
     private $_doc = null;
     private $_cust = null;
@@ -39,8 +34,9 @@ class PayCustList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('PayCustList'))
+        if (false == \App\ACL::checkShowReg('PayCustList')) {
             return;
+        }
 
         $this->add(new Panel("clist"));
 
@@ -59,10 +55,10 @@ class PayCustList extends \App\Pages\Base {
         $this->add(new Panel("paypan"))->setVisible(false);
         $this->paypan->add(new Label("pname"));
         $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()));
+        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
-        $this->paypan->payform->add(new Date('pdate',time()));
+        $this->paypan->payform->add(new Date('pdate', time()));
 
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
@@ -143,10 +139,9 @@ class PayCustList extends \App\Pages\Base {
         $row->add(new Label('date', date('d.m.Y', $doc->document_date)));
 
 
-        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : "" ))));
+        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('payamount', H::fa($doc->payamount - $doc->payed)));
-
 
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -157,8 +152,9 @@ class PayCustList extends \App\Pages\Base {
     public function showOnClick($sender) {
 
         $this->_doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkShowDoc($this->_doc, true))
+        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
+        }
         $this->plist->doclist->setSelectedRow($sender->getOwner());
         $this->plist->doclist->Reload(false);
         $this->docview->setVisible(true);
@@ -191,12 +187,9 @@ class PayCustList extends \App\Pages\Base {
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText($this->_doc->payamount - $this->_doc->payed);
-        ;
-        $this->paypan->payform->pcomment->setText("");
-        ;
-        $this->paypan->pname->setText($this->_doc->document_number);
-        ;
+        $this->paypan->payform->pamount->setText($this->_doc->payamount - $this->_doc->payed);;
+        $this->paypan->payform->pcomment->setText("");;
+        $this->paypan->pname->setText($this->_doc->document_number);;
 
         $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();
@@ -215,12 +208,13 @@ class PayCustList extends \App\Pages\Base {
         $form = $this->paypan->payform;
         $amount = $form->pamount->getText();
         $pdate = $form->pdate->getDate();
-        if ($amount == 0)
+        if ($amount == 0) {
             return;
+        }
 
 
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
-            
+
             $this->setError('sumoverpay');
             return;
         }
@@ -232,10 +226,9 @@ class PayCustList extends \App\Pages\Base {
             $type = Pay::PAY_BASE_OUTCOME;
         }
 
-        Pay::addPayment($this->_doc->document_id,$pdate, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
+        Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
 
- 
         $this->setSuccess('payment_added');
 
 

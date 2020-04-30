@@ -2,25 +2,23 @@
 
 namespace App\Modules\Issue\Pages;
 
-use \App\Application as App;
-use \App\System;
-use \ZCL\DB\DB as DB;
-use \Zippy\Html\Label;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Link\ClickLink;
-use \App\Modules\Issue\Entity\Project;
-use \App\Modules\Issue\Entity\Issue;
-use \App\Entity\User;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
+use App\Application as App;
+use App\Entity\User;
+use App\Modules\Issue\Entity\Project;
+use App\System;
+use ZCL\DB\DB as DB;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Label;
 
 /**
  * страница статистики
  */
-class Stat extends \App\Pages\Base {
+class Stat extends \App\Pages\Base
+{
 
     public $_list = array();
 
@@ -55,8 +53,7 @@ class Stat extends \App\Pages\Base {
 
 
         $this->add(new DataView('list', new ArrayDataSource($this, '_list'), $this, 'listOnRow'));
-        $this->add(new Label('total'))->setVisible(false);
-        ;
+        $this->add(new Label('total'))->setVisible(false);;
     }
 
     public function filterOnSubmit($sender) {
@@ -67,10 +64,12 @@ class Stat extends \App\Pages\Base {
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate(true);
         $where = "";
-        if ($searchproject > 0)
+        if ($searchproject > 0) {
             $where .= " and project_id = " . $searchproject;
-        if ($searchemp > 0)
+        }
+        if ($searchemp > 0) {
             $where .= " and user_id = " . $searchemp;
+        }
 
         $total = 0;
         $this->_list = array();

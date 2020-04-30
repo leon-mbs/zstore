@@ -2,29 +2,29 @@
 
 namespace App\Pages\Reference;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Store;
-use \App\Helper as H;
+use App\Entity\Store;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class StoreList extends \App\Pages\Base {
+class StoreList extends \App\Pages\Base
+{
 
     public $_store = null;
     private $_blist;
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('StoreList'))
+        if (false == \App\ACL::checkShowRef('StoreList')) {
             return;
+        }
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
         $storepanel = $this->add(new Panel('storetable'));
@@ -60,8 +60,9 @@ class StoreList extends \App\Pages\Base {
     }
 
     public function storedeleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('StoreList'))
+        if (false == \App\ACL::checkEditRef('StoreList')) {
             return;
+        }
 
 
         $del = Store::delete($sender->owner->getDataItem()->store_id);
@@ -85,8 +86,9 @@ class StoreList extends \App\Pages\Base {
     }
 
     public function storesaveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('StoreList'))
+        if (false == \App\ACL::checkEditRef('StoreList')) {
             return;
+        }
 
         $this->_store->storename = $this->storeform->storeeditname->getText();
         $this->_store->description = $this->storeform->storeeditdesc->getText();
@@ -97,7 +99,7 @@ class StoreList extends \App\Pages\Base {
         $this->_store->branch_id = $this->storeform->editbranch->getValue();
         if ($this->_tvars['usebranch'] == true && $this->_store->branch_id == 0) {
             $this->setError('selbranch');
-            
+
             return;
         }
 

@@ -9,15 +9,17 @@ namespace App\Entity;
  * @view=store_stock_view
  * @keyfield=stock_id
  */
-class Stock extends \ZCL\DB\Entity {
+class Stock extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->stock_id = 0;
     }
 
     protected function afterLoad() {
-        if (strlen($this->sdate) > 0)
+        if (strlen($this->sdate) > 0) {
             $this->sdate = strtotime($this->sdate);
+        }
     }
 
     /**
@@ -90,8 +92,9 @@ class Stock extends \ZCL\DB\Entity {
             $stock->item_id = $item_id;
             $stock->partion = $price;
             $stock->snumber = $snumber;
-            if ($sdate > 0)
+            if ($sdate > 0) {
                 $stock->sdate = $sdate;
+            }
 
             $stock->save();
         }
@@ -125,7 +128,7 @@ class Stock extends \ZCL\DB\Entity {
     }
 
     // Поиск партий
-    public static function pickup($store_id, $item,$snumber='') {
+    public static function pickup($store_id, $item) {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item->item_id} and qty > 0   ";
         if (strlen($item->snumber) > 0) {
@@ -148,14 +151,14 @@ class Stock extends \ZCL\DB\Entity {
             }
         }
         if ($qty > 0) {  // если не  достаточно
-             
-          
+
+
             if ($last != null) {
                 $last->quantity += $qty; //остаток  пишем  к  последней партии
             } else {
 
                 $where = "store_id = {$store_id} and item_id = {$item->item_id}   ";
-                if (strlen($snumber) > 0) {
+                if (strlen($item->snumber) > 0) {
                     $where .= " and snumber = " . Stock::qstr($item->snumber);
                 }
                 $last = self::getFirst($where, ' stock_id desc ');
@@ -165,8 +168,14 @@ class Stock extends \ZCL\DB\Entity {
                     $last->item_id = $item->item_id;
                     $last->partion = $item->price;
                     $last->snumber = $item->snumber;
-                    if(strlen($item->snumber) > 0)$last->sdate = time();
-                    
+                    if (strlen($item->snumber) > 0) {
+                        if(strlen($item->sdate)==0 || $item->sdate==0)
+                           $last->sdate = time();
+                        else{
+                           $last->sdate = $item->sdate;
+                        }   
+                    }
+
                 } else {
                     $last->partion = $item->price;
                 }

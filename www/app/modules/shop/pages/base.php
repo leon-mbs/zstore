@@ -2,24 +2,21 @@
 
 namespace App\Modules\Shop\Pages;
 
-use \Zippy\Binding\PropertyBinding;
-use \Zippy\Html\Label;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Link\ClickLink;
-use \App\Helper;
-use \App\Application as App;
-use \App\System;
-use \App\Entity\User;
+use App\Application as App;
+use App\Helper;
+use App\System;
 
-class Base extends \Zippy\Html\WebPage {
+class Base extends \Zippy\Html\WebPage
+{
 
     public function __construct($params = null) {
 
         \Zippy\Html\WebPage::__construct();
 
         $shop = System::getOptions("shop");
-        if (!is_array($shop))
+        if (!is_array($shop)) {
             $shop = array();
+        }
 
 
         $user = System::getUser();
@@ -34,27 +31,27 @@ class Base extends \Zippy\Html\WebPage {
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
-        
+
     }
 
     //вывод ошибки,  используется   в дочерних страницах
-    public function setError($msg,$p1="",$p2="") {
-        $msg = Helper::l($msg,$p1,$p2);
+    public function setError($msg, $p1 = "", $p2 = "") {
+        $msg = Helper::l($msg, $p1, $p2);
         System::setErrorMsg($msg);
     }
 
-    public function setSuccess($msg,$p1="",$p2="") {
-        $msg = Helper::l($msg,$p1,$p2);
+    public function setSuccess($msg, $p1 = "", $p2 = "") {
+        $msg = Helper::l($msg, $p1, $p2);
         System::setSuccesMsg($msg);
     }
 
-    public function setWarn($msg,$p1="",$p2="") {
-        $msg = Helper::l($msg,$p1,$p2);
+    public function setWarn($msg, $p1 = "", $p2 = "") {
+        $msg = Helper::l($msg, $p1, $p2);
         System::setWarnMsg($msg);
     }
 
-    public function setInfo($msg,$p1="",$p2="") {
-        $msg = Helper::l($msg,$p1,$p2);
+    public function setInfo($msg, $p1 = "", $p2 = "") {
+        $msg = Helper::l($msg, $p1, $p2);
         System::setInfoMsg($msg);
     }
 
@@ -63,25 +60,28 @@ class Base extends \Zippy\Html\WebPage {
     }
 
     protected function beforeRender() {
-        $basket = \App\Modules\Shop\Basket::getBasket() ;
+        $basket = \App\Modules\Shop\Basket::getBasket();
         $this->shopcart->setVisible($basket->isEmpty() == false);
         $this->showcompare->setVisible(\App\Modules\Shop\CompareList::getCompareList()->isEmpty() == false);
-  
+
         $this->_tvars["notcnt"] = $basket->getItemCount();
 
-    
+
     }
 
     protected function afterRender() {
-        if (strlen(System::getErrorMsg()) > 0)
+        if (strlen(System::getErrorMsg()) > 0) {
             App::$app->getResponse()->addJavaScript("toastr.error('" . System::getErrorMsg() . "')        ", true);
-        if (strlen(System::getWarnMsg()) > 0)
+        }
+        if (strlen(System::getWarnMsg()) > 0) {
             App::$app->getResponse()->addJavaScript("toastr.warning('" . System::getWarnMsg() . "')        ", true);
-        if (strlen(System::getSuccesMsg()) > 0)
+        }
+        if (strlen(System::getSuccesMsg()) > 0) {
             App::$app->getResponse()->addJavaScript("toastr.success('" . System::getSuccesMsg() . "')        ", true);
-        if (strlen(System::getInfoMsg()) > 0)
+        }
+        if (strlen(System::getInfoMsg()) > 0) {
             App::$app->getResponse()->addJavaScript("toastr.info('" . System::getInfoMsg() . "')        ", true);
-
+        }
 
 
         $this->setError('');

@@ -2,19 +2,18 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Entity\Stock;
-use \App\Entity\Store;
-use \App\Helper as H;
+use App\Entity\Entry;
+use App\Entity\Stock;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ списание товаров
  *
  */
-class OutcomeItem extends Document {
+class OutcomeItem extends Document
+{
 
     public function Execute() {
-
 
 
         $conn = \ZDB\DB::getConnect();

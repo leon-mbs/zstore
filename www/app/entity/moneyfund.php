@@ -8,11 +8,12 @@ namespace App\Entity;
  * @table=mfund
  * @keyfield=mf_id
  */
-class MoneyFund extends \ZCL\DB\Entity {
+class MoneyFund extends \ZCL\DB\Entity
+{
 
-  //  const BEZNAL = 10000;
+    //  const BEZNAL = 10000;
     const PREPAID = 10001;
-    const CREDIT = 10002;
+    const CREDIT  = 10002;
 
     protected function init() {
         $this->mf_id = 0;
@@ -32,7 +33,7 @@ class MoneyFund extends \ZCL\DB\Entity {
 
     /**
      * возвращает баланс на  денежных счетах
-     * 
+     *
      */
     public static function Balance() {
 
@@ -47,18 +48,20 @@ class MoneyFund extends \ZCL\DB\Entity {
 
     /**
      * список счетов для комбо
-     * 
-     * @param mixed $beznal   добавить пункт  Безналичный расчет
-     * @param mixed $prepaid  добавить пункт  Была предоплата
+     *
+     * @param mixed $beznal добавить пункт  Безналичный расчет
+     * @param mixed $prepaid добавить пункт  Была предоплата
      */
-    public static function getList(  $credit = false, $prepaid = false) {
+    public static function getList($credit = false, $prepaid = false) {
         $ml = array();
-        if ($credit)
+        if ($credit) {
             $ml[self::CREDIT] = \App\Helper::l("credit");
-   //     if ($beznal)
-      //      $ml[self::BEZNAL] = 'Безналичный расчет';
-        if ($prepaid)
-            $ml[self::PREPAID] = \App\Helper::l("prepaid") ;
+        }
+        //     if ($beznal)
+        //      $ml[self::BEZNAL] = 'Безналичный расчет';
+        if ($prepaid) {
+            $ml[self::PREPAID] = \App\Helper::l("prepaid");
+        }
         foreach (MoneyFund::findArray("mf_name", "") as $k => $v) {
             $ml[$k] = $v;
         }

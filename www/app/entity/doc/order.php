@@ -2,15 +2,14 @@
 
 namespace App\Entity\Doc;
 
-use \App\Entity\Entry;
-use \App\Helper as H;
-use \App\Util;
+use App\Helper as H;
 
 /**
  * Класс-сущность  документ расходная  накладая
  *
  */
-class Order extends \App\Entity\Doc\Document {
+class Order extends \App\Entity\Doc\Document
+{
 
     public function generateReport() {
 
@@ -45,7 +44,6 @@ class Order extends \App\Entity\Doc\Document {
         }
 
 
-
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
@@ -74,7 +72,6 @@ class Order extends \App\Entity\Doc\Document {
         return $html;
     }
 
-  
 
     protected function getNumberTemplate() {
         return 'ЗК-000000';

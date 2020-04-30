@@ -2,30 +2,27 @@
 
 namespace App\Widgets;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \App\Helper;
-use \App\System;
-use \App\Entity\Doc\Document;
-use \Carbon\Carbon;
-use \App\Entity\Item;
-use \App\Entity\Stock;
-use \App\DataItem;
+use App\Entity\Stock;
+use App\Helper;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
 
 /**
  * Виджет для просроченных товаров
  */
-class WSdate extends \Zippy\Html\PageFragment {
+class WSdate extends \Zippy\Html\PageFragment
+{
 
     public function __construct($id) {
         parent::__construct($id);
 
         $visible = (strpos(System::getUser()->widgets, 'wsdate') !== false || System::getUser()->userlogin == 'admin');
         $cstr = \App\Acl::getStoreBranchConstraint();
-        if (strlen($cstr) > 0)
+        if (strlen($cstr) > 0) {
             $cstr = "   store_id in ({$cstr}) and  ";
+        }
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
@@ -49,7 +46,6 @@ class WSdate extends \Zippy\Html\PageFragment {
         $sdlist->Reload();
 
 
-
         if (count($data) == 0 || $visible == false) {
             $this->setVisible(false);
         };
@@ -64,8 +60,9 @@ class WSdate extends \Zippy\Html\PageFragment {
         $row->add(new Label('edate', date('Y-m-d', $stock->sdate)));
         $row->add(new Label('qty', Helper::fqty($stock->qty)));
         $row->edate->setAttribute('class', 'badge badge-danger');
-        if ($stock->sdate > time())
+        if ($stock->sdate > time()) {
             $row->edate->setAttribute('class', 'badge badge-warning');
+        }
     }
 
 }

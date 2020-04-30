@@ -2,26 +2,28 @@
 
 namespace App\Pages\Reference;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\Service;
-use \App\Helper as H;
+use App\Entity\Service;
+use App\Helper as H;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
-class ServiceList extends \App\Pages\Base {
+class ServiceList extends \App\Pages\Base
+{
 
     private $_service;
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('ServiceList'))
+        if (false == \App\ACL::checkShowRef('ServiceList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
@@ -54,8 +56,9 @@ class ServiceList extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ServiceList'))
+        if (false == \App\ACL::checkEditRef('ServiceList')) {
             return;
+        }
 
         $service_id = $sender->owner->getDataItem()->service_id;
 
@@ -87,8 +90,9 @@ class ServiceList extends \App\Pages\Base {
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ServiceList'))
+        if (false == \App\ACL::checkEditRef('ServiceList')) {
             return;
+        }
 
         $this->_service->service_name = $this->servicedetail->editservice_name->getText();
         $this->_service->price = $this->servicedetail->editprice->getText();
@@ -116,7 +120,8 @@ class ServiceList extends \App\Pages\Base {
 
 }
 
-class ServiceDataSource implements \Zippy\Interfaces\DataSource {
+class ServiceDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -133,7 +138,7 @@ class ServiceDataSource implements \Zippy\Interfaces\DataSource {
 
 
         if ($showdis > 0) {
-            
+
         } else {
             $where = $where . " and disabled <> 1";
         }

@@ -2,21 +2,18 @@
 
 namespace App\Widgets;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \App\Helper;
-use \App\System;
-use \App\Entity\Doc\Document;
-use \Carbon\Carbon;
-use \App\Entity\Item;
-use \App\DataItem;
+use App\DataItem;
+use App\Helper;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
 
 /**
  * Виджет для  просмотра ожидаемых товаров
  */
-class WWaited extends \Zippy\Html\PageFragment {
+class WWaited extends \Zippy\Html\PageFragment
+{
 
     public function __construct($id) {
         parent::__construct($id);
@@ -27,17 +24,15 @@ class WWaited extends \Zippy\Html\PageFragment {
         $data = array();
 
         $cstr = \App\Acl::getStoreBranchConstraint();
-        if (strlen($cstr) > 0)
+        if (strlen($cstr) > 0) {
             $cstr = "   sv.store_id in ({$cstr}) and  ";
+        }
 
         $sql = "select sum( ev.quantity) as qty, sv.`item_id`, sv.`store_id`,  sv.`itemname`, sv.`storename` from
         `store_stock_view` sv  join entrylist_view ev on ev.stock_id = sv.stock_id
          where {$cstr}  ev.quantity < 0  and   ev.document_date > cast(now() as date)
          group by sv.`item_id`, sv.`store_id`,  sv.`itemname`, sv.`storename`
          order  by  sv.itemname";
-
-
-
 
 
         if ($visible) {

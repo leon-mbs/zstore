@@ -2,25 +2,27 @@
 
 namespace App\Pages\Reference;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \App\Entity\ProdArea;
+use App\Entity\ProdArea;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 //роизводственные  участвки
-class ProdAreaList extends \App\Pages\Base {
+class ProdAreaList extends \App\Pages\Base
+{
 
     private $_pa;
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('ProdAreaList'))
+        if (false == \App\ACL::checkShowRef('ProdAreaList')) {
             return;
+        }
 
         $this->add(new Panel('patable'))->setVisible(true);
         $this->patable->add(new DataView('palist', new \ZCL\DB\EntityDataSource('\App\Entity\ProdArea'), $this, 'palistOnRow'))->Reload();
@@ -40,8 +42,9 @@ class ProdAreaList extends \App\Pages\Base {
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ProdAreaList'))
+        if (false == \App\ACL::checkEditRef('ProdAreaList')) {
             return;
+        }
         $pa = $sender->owner->getDataItem();
 
         $del = ProdArea::delete($pa->pa_id);
@@ -69,8 +72,9 @@ class ProdAreaList extends \App\Pages\Base {
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ProdAreaList'))
+        if (false == \App\ACL::checkEditRef('ProdAreaList')) {
             return;
+        }
 
 
         $this->_pa->pa_name = $this->padetail->editpa_name->getText();

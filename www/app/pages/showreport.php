@@ -3,7 +3,8 @@
 namespace App\Pages;
 
 //страница  для  загрузки  файла отчета
-class ShowReport extends \Zippy\Html\WebPage {
+class ShowReport extends \Zippy\Html\WebPage
+{
 
     public function __construct($type, $filename) {
 
@@ -44,9 +45,9 @@ class ShowReport extends \Zippy\Html\WebPage {
             header("Content-Transfer-Encoding: binary");
 
 
-            $dompdf = new \Dompdf\Dompdf(array('defaultFont'=> 'DejaVu Sans'));
-            
-          //  $dompdf->set_option('defaultFont', 'DejaVu Sans');
+            $dompdf = new \Dompdf\Dompdf(array('defaultFont' => 'DejaVu Sans'));
+
+            //  $dompdf->set_option('defaultFont', 'DejaVu Sans');
             $dompdf->loadHtml($html);
 
             // (Optional) Setup the paper size and orientation

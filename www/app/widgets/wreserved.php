@@ -2,29 +2,27 @@
 
 namespace App\Widgets;
 
-use \Zippy\Binding\PropertyBinding as Bind;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\Label;
-use \App\Helper;
-use \App\System;
-use \App\Entity\Doc\Document;
-use \Carbon\Carbon;
-use \App\Entity\Item;
-use \App\DataItem;
+use App\DataItem;
+use App\Helper;
+use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Label;
 
 /**
  * Виджет для  просмотра зарезервированных товаров
  */
-class WReserved extends \Zippy\Html\PageFragment {
+class WReserved extends \Zippy\Html\PageFragment
+{
 
     public function __construct($id) {
         parent::__construct($id);
 
         $visible = (strpos(System::getUser()->widgets, 'wreserved') !== false || System::getUser()->userlogin == 'admin');
         $cstr = \App\Acl::getStoreBranchConstraint();
-        if (strlen($cstr) > 0)
+        if (strlen($cstr) > 0) {
             $cstr = "  sv.store_id in ({$cstr}) and  ";
+        }
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();

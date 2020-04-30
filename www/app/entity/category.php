@@ -8,7 +8,8 @@ namespace App\Entity;
  * @table=item_cat
  * @keyfield=cat_id
  */
-class Category extends \ZCL\DB\Entity {
+class Category extends \ZCL\DB\Entity
+{
 
     protected function init() {
         $this->cat_id = 0;
@@ -27,11 +28,11 @@ class Category extends \ZCL\DB\Entity {
 
         $xml = @simplexml_load_string($this->detail);
 
-        $this->price1 = (string) ($xml->price1[0]);
-        $this->price2 = (string) ($xml->price2[0]);
-        $this->price3 = (string) ($xml->price3[0]);
-        $this->price4 = (string) ($xml->price4[0]);
-        $this->price5 = (string) ($xml->price5[0]);
+        $this->price1 = (string)($xml->price1[0]);
+        $this->price2 = (string)($xml->price2[0]);
+        $this->price3 = (string)($xml->price3[0]);
+        $this->price4 = (string)($xml->price4[0]);
+        $this->price5 = (string)($xml->price5[0]);
 
 
         parent::afterLoad();

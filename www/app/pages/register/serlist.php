@@ -2,28 +2,26 @@
 
 namespace App\Pages\Register;
 
-use \Zippy\Html\DataList\DataView;
-use \Zippy\Html\DataList\Paginator;
-use \Zippy\Html\DataList\ArrayDataSource;
-use \Zippy\Binding\PropertyBinding as Prop;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\Date;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\SubmitButton;
-use \Zippy\Html\Panel;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \App\Entity\Doc\Document;
-use \App\Helper as H;
-use \App\Application as App;
-use \App\System;
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Helper as H;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
 
 /**
  * журнал  услуг
  */
-class SerList extends \App\Pages\Base {
+class SerList extends \App\Pages\Base
+{
 
     private $_doc = null;
 
@@ -34,8 +32,9 @@ class SerList extends \App\Pages\Base {
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('SerList'))
+        if (false == \App\ACL::checkShowReg('SerList')) {
             return;
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -51,8 +50,6 @@ class SerList extends \App\Pages\Base {
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
-
 
 
         $this->add(new Panel("statuspan"))->setVisible(false);
@@ -103,8 +100,9 @@ class SerList extends \App\Pages\Base {
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false)
+        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false) {
             return;
+        }
 
         $state = $this->_doc->state;
 
@@ -114,7 +112,7 @@ class SerList extends \App\Pages\Base {
 
         if ($sender->id == "btask") {
             if ($task) {
-              
+
                 $this->setWarn('task_exists');
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
@@ -127,7 +125,7 @@ class SerList extends \App\Pages\Base {
         }
         if ($sender->id == "bref") {
             if ($ttn || $task) {
-           
+
                 $this->setWarn('created_task_gi');
             }
             $this->_doc->updateStatus(Document::STATE_REFUSED);
@@ -189,8 +187,9 @@ class SerList extends \App\Pages\Base {
     public function showOnClick($sender) {
 
         $this->_doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkShowDoc($this->_doc, true))
+        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
+        }
 
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
@@ -202,8 +201,9 @@ class SerList extends \App\Pages\Base {
 
     public function editOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
-        if (false == \App\ACL::checkEditDoc($doc, true))
+        if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
+        }
 
 
         App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", $doc->document_id);
@@ -241,7 +241,8 @@ class SerList extends \App\Pages\Base {
 /**
  *  Источник  данных  для   списка  документов
  */
-class SerListDataSource implements \Zippy\Interfaces\DataSource {
+class SerListDataSource implements \Zippy\Interfaces\DataSource
+{
 
     private $page;
 
@@ -270,7 +271,6 @@ class SerListDataSource implements \Zippy\Interfaces\DataSource {
         }
 
 
-
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
@@ -297,7 +297,7 @@ class SerListDataSource implements \Zippy\Interfaces\DataSource {
     }
 
     public function getItem($id) {
-        
+
     }
 
 }

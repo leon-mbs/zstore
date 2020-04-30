@@ -1,66 +1,68 @@
 <html>
-    <head>
+<head>
 
-    </head>
+</head>
 
-    <body>
-
-
-        <div class="row"  zippy="storetable">
-            <div class="col-12 col-md-6">
-                <h2>Справочник складов</h2>
-                <table class="table table-bordered  table-sm">
-                    <tr>
-                        <th>Название</th>
-                        {{#usebranch}}  <th>Филиал</th>  {{/usebranch}}
-                        <th>Описание</th>
-                        <th style="width: 80px"></th>
-                    </tr>
-                    <tr zippy="storelist">
-                        <td zippy="storename"></td>
-                        {{#usebranch}}<td zippy="branch"></td>    {{/usebranch}}
-
-                        <td zippy="storedesc"></td>
-                        <td align="center"> 
-                            <a zippy="storeedit" title="Редактировать"><i class="fa fa-edit"></i></a> 
-                            <a        zippy="storedelete" title="Удалить"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                </table>
-
-                <a zippy="storeadd" class="btn btn-outline-primary  ">Добавить</a>
-            </div>
-        </div>
-        <div class="row"   >
-            <form class="col-12 col-md-4" zippy="storeform" method="post">
+<body>
 
 
-                <div class="form-group">
-                    <label for="storeeditname" > Название</label>
-                    <input class="form-control" type="text" zippy="storeeditname" required="required">
-                </div>
+<div class="row" zippy="storetable">
+    <div class="col-12 col-md-6">
+        <h2>Справочник складов</h2>
+        <table class="table table-bordered  table-sm">
+            <tr>
+                <th>Название</th>
                 {{#usebranch}}
-                <div class="form-group">
-                    <label for="editbranch">Филиал</label>
-                    <select    class="form-control" zippy="editbranch">
-                        <option value="0">Не выбран</option>                                                                                                          
-                    </select>
-                </div>
-                {{/usebranch}} 
-                <div class="form-group">
-                    <label for="storeeditdesc" > Описание</label>
-                    <textarea class="form-control" type="text" zippy="storeeditdesc"></textarea>
-                </div>
-                <div class="form-group">
-                    <input zippy="storesave" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
-                    <input zippy="storecancel" type="button" value="Отменить" class="btn btn-light ">
-                </div>
+                <th>Филиал</th>
+                {{/usebranch}}
+                <th>Описание</th>
+                <th style="width: 80px"></th>
+            </tr>
+            <tr zippy="storelist">
+                <td zippy="storename"></td>
+                {{#usebranch}}
+                <td zippy="branch"></td>
+                {{/usebranch}}
+
+                <td zippy="storedesc"></td>
+                <td align="center">
+                    <a zippy="storeedit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                    <a zippy="storedelete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+            </tr>
+        </table>
+
+        <a zippy="storeadd" class="btn btn-outline-primary  ">Добавить</a>
+    </div>
+</div>
+<div class="row">
+    <form class="col-12 col-md-4" zippy="storeform" method="post">
 
 
-
-            </form>
+        <div class="form-group">
+            <label for="storeeditname"> Название</label>
+            <input class="form-control" type="text" zippy="storeeditname" required="required">
+        </div>
+        {{#usebranch}}
+        <div class="form-group">
+            <label for="editbranch">Филиал</label>
+            <select class="form-control" zippy="editbranch">
+                <option value="0">Не выбран</option>
+            </select>
+        </div>
+        {{/usebranch}}
+        <div class="form-group">
+            <label for="storeeditdesc"> Описание</label>
+            <textarea class="form-control" type="text" zippy="storeeditdesc"></textarea>
+        </div>
+        <div class="form-group">
+            <input zippy="storesave" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
+            <input zippy="storecancel" type="button" value="Отменить" class="btn btn-light ">
         </div>
 
 
+    </form>
+</div>
 
-    </body>
+
+</body>
 </html>

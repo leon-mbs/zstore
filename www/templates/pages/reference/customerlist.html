@@ -1,224 +1,223 @@
 <html>
-    <head>
-    </head>
+<head>
+</head>
 
-    <body>
-        <div class="row">
-            <div class="col-12   col-xl-10  ">
-                <div zippy="customertable">
-                    <h2>Справочник контрагентов </h2>
-                    <div class="navbar nav  ">
-                        <form zippy="filter" class="form-inline ">
+<body>
+<div class="row">
+    <div class="col-12   col-xl-10  ">
+        <div zippy="customertable">
+            <h2>Справочник контрагентов </h2>
+            <div class="navbar nav  ">
+                <form zippy="filter" class="form-inline ">
 
-                            <label for="searchkey">Поиск</label>
-                            <input class="form-control mr-sm-2" type="text" zippy="searchkey">
-                            <label for="searchtype">Тип</label>
-                            <select zippy="searchtype" class="form-control mr-sm-2">
-                                <option value="0">Все</option>
-                            </select>
-                            <label for="searchstatus">статус</label>
-                            <select zippy="searchstatus" class="form-control mr-sm-2">
+                    <label for="searchkey">Поиск</label>
+                    <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                    <label for="searchtype">Тип</label>
+                    <select zippy="searchtype" class="form-control mr-sm-2">
+                        <option value="0">Все</option>
+                    </select>
+                    <label for="searchstatus">статус</label>
+                    <select zippy="searchstatus" class="form-control mr-sm-2">
 
-                            </select>
+                    </select>
 
-                            <input class="btn btn-outline-success   " type="submit" value="ОК">
+                    <input class="btn btn-outline-success   " type="submit" value="ОК">
 
-                        </form>
-                    </div>             
-                    <a zippy="addnew" class="btn btn-primary"   >Добавить контрагента</a>  
-                    <br>
-                    <table class="table table-bordered   table-sm"  >
-
-                        <tr zippy="customerlist">
-                            <td zippy="customername" class="text-nowrap"></td>
-                            <td zippy="customerphone" class="text-nowrap"></td>
-                            <td zippy="customeremail" class="text-nowrap"></td>
-                            <td zippy="customercomment"></td>
-                            <td  ><i zippy="isplanned" class="fa fa-calendar-alt"  title="Запланированные события"></i></td>
-                            <td  ><i zippy="hasmsg"    class="fa fa-comments"      title="Комментарии"></i></td>
-                            <td  ><i zippy="hasfiles"  class="fa fa-paperclip"     title="Прикрепленные  файлы  "></i></td>
-
-                            <td style="white-space:  nowrap"> &nbsp;&nbsp;
-                                <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                                &nbsp;<a zippy="contentlist" title="Редактировать дополнительные данные"><i class="fa fa-eye"></i></a>
-                                &nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    </table>
-                    <div zippy="pag"></div>
-                </div>
-
-
+                </form>
             </div>
+            <a zippy="addnew" class="btn btn-primary">Добавить контрагента</a>
+            <br>
+            <table class="table table-bordered   table-sm">
+
+                <tr zippy="customerlist">
+                    <td zippy="customername" class="text-nowrap"></td>
+                    <td zippy="customerphone" class="text-nowrap"></td>
+                    <td zippy="customeremail" class="text-nowrap"></td>
+                    <td zippy="customercomment"></td>
+                    <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланированные события"></i></td>
+                    <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарии"></i></td>
+                    <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикрепленные  файлы  "></i></td>
+
+                    <td style="white-space:  nowrap"> &nbsp;&nbsp;
+                        <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                        &nbsp;<a zippy="contentlist" title="Редактировать дополнительные данные"><i
+                                class="fa fa-eye"></i></a>
+                        &nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            </table>
+            <div zippy="pag"></div>
         </div>
 
 
-
-        <form class="row" zippy="customerdetail" method="post">
-            <h4>&nbsp; Редактировать контрагента</h4>
-            <div class="w-100"></div>
-            <div class="col-12 col-md-4 ">
-
-                <div class="form-group">
-                    <label for="editcustomername">Контрагент</label>
-                    <input required="required" class="form-control" zippy="editcustomername"/>
-                </div>
-
-                <div class="form-group">
-                    <label   for="editemail">E-Mail</label>
-                    <input class="form-control" zippy="editemail"/>
-                </div>
-                <div class="form-group">
-                    <label   for="editphone">Телефон</label>
-                    <input class="form-control" zippy="editphone"/>
-                </div>
+    </div>
+</div>
 
 
-                <div class="form-group">
-                    <label   for="editstatus">Статус</label>
-                    <select   class="form-control" zippy="editstatus">
+<form class="row" zippy="customerdetail" method="post">
+    <h4>&nbsp; Редактировать контрагента</h4>
+    <div class="w-100"></div>
+    <div class="col-12 col-md-4 ">
 
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="edittype">Тип</label>
-                    <select zippy="edittype" class="form-control">
-                        <option value="0">Не  указан</option>
-                    </select>
-                </div>
+        <div class="form-group">
+            <label for="editcustomername">Контрагент</label>
+            <input required="required" class="form-control" zippy="editcustomername"/>
+        </div>
+
+        <div class="form-group">
+            <label for="editemail">E-Mail</label>
+            <input class="form-control" zippy="editemail"/>
+        </div>
+        <div class="form-group">
+            <label for="editphone">Телефон</label>
+            <input class="form-control" zippy="editphone"/>
+        </div>
 
 
+        <div class="form-group">
+            <label for="editstatus">Статус</label>
+            <select class="form-control" zippy="editstatus">
 
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="edittype">Тип</label>
+            <select zippy="edittype" class="form-control">
+                <option value="0">Не указан</option>
+            </select>
+        </div>
+
+
+    </div>
+    <div class="col-12 col-md-4 ">
+        <div class="form-group">
+            <label for="editcity">Город</label>
+            <input class="form-control" zippy="editcity"/>
+        </div>
+        <div class="form-group">
+            <label for="editaddress">Полный адрес</label>
+            <input class="form-control" zippy="editaddress"/>
+        </div>
+        <div class="form-group">
+            <label for="discount">Постоянная скидка,%</label>
+            <input value="0" class="form-control" pattern="[0-9\.]+" zippy="discount">
+        </div>
+        <div class="form-group">
+            <label for="bonus">Бонусы</label>
+            <input value="0" class="form-control" pattern="[0-9\.]+" zippy="bonus">
+        </div>
+
+        <div class="form-check">
+            <input zippy="editjurid" type="checkbox" class="form-check-input">
+            <label class="form-check-label" for="editjurid">Юр. лицо</label>
+        </div>
+        <div class="form-group">
+            <label for="editcomment">Примечание</label>
+            <textarea class="form-control" zippy="editcomment"></textarea>
+        </div>
+    </div>
+    <div class="w-100"></div>
+    <div class="col-12 col-md-4 ">
+        <div class="form-group">
+            <button zippy="save" type="submit" class="btn btn-primary ">Сохранить</button> &nbsp;&nbsp;
+            <button zippy="cancel" type="button" class="btn btn-light">Отменить</button>
+
+        </div>
+    </div>
+</form>
+
+
+<a name="contentviewlink"></a>
+<div class="row mt-2" zippy="contentview">
+    <div class="col-4 col-xl-3 ">
+        <h5> Расписание событий </h5>
+        <table class="table table-sm">
+            <tr zippy="dw_eventlist">
+                <td><span zippy="eventdate"></span><br>
+                    <b zippy="eventtitle"></b>
+                    <p zippy="eventdesc">
+                    </p>
+                </td>
+
+                <td valign="top" style="width: 30px;"><a zippy="delevent"><i class="fa fa-trash"></i></a></td>
+            </tr>
+        </table>
+        <div zippy="eventpag"></div>
+        <hr>
+
+        <form zippy="addeventform">
+            <div class="form-group">
+                <label for="addeventdate">Дата, время</label>
+                <input class="form-control" zippy="addeventdate">
             </div>
-            <div class="col-12 col-md-4 ">
-                <div class="form-group">
-                    <label   for="editcity">Город</label>
-                    <input class="form-control" zippy="editcity"/>
-                </div>
-                <div class="form-group">
-                    <label   for="editaddress">Полный адрес</label>
-                    <input class="form-control" zippy="editaddress"/>
-                </div>            
-                <div class="form-group">
-                    <label for="discount">Постоянная скидка,%</label>
-                    <input value="0" class="form-control"  pattern="[0-9\.]+"  zippy="discount">
-                </div>
-                <div class="form-group">
-                    <label for="bonus">Бонусы</label>
-                    <input value="0" class="form-control"  pattern="[0-9\.]+"  zippy="bonus">
-                </div>
-
-                <div class="form-check">
-                    <input zippy="editjurid" type="checkbox" class="form-check-input"  >
-                    <label class="form-check-label" for="editjurid">Юр. лицо</label>
-                </div>   
-                <div class="form-group">
-                    <label for="editcomment">Примечание</label>
-                    <textarea class="form-control" zippy="editcomment"></textarea>
-                </div>
+            <div class="form-group">
+                <label for="addeventtitle">Заголовок, тип события</label>
+                <input required="required" class="form-control" zippy="addeventtitle">
             </div>
-            <div class="w-100"></div>
-            <div class="col-12 col-md-4 ">
-                <div class="form-group">
-                    <button zippy="save" type="submit"   class="btn btn-primary ">Сохранить</button> &nbsp;&nbsp;
-                    <button zippy="cancel" type="button"   class="btn btn-light"  >Отменить</button> 
-
-                </div>
+            <div class="form-group">
+                <label for="addeventdesc">Коментарий</label>
+                <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
             </div>
+            <div class="form-group">
+                <label for="addeventnotify">Напомнить оповещением за</label>
+                <select class="form-control" zippy="addeventnotify">
+                    <option value="0">Не напоминать</option>
+                </select>
+            </div>
+            <input class="btn btn-outline-success  " type="submit" value="Добавить">
         </form>
+    </div>
+    <div class="col-4 col-xl-3 ">
+        <h5> Коментарии </h5>
+        <table class="table table-sm">
+            <tr zippy="dw_msglist">
+                <td>
+                    <span><b zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
 
-
-        <a name="contentviewlink"></a>
-        <div class="row mt-2" zippy="contentview">
-            <div class="col-4 col-xl-3 ">  
-                <h5> Расписание событий </h5>
-                <table class="table table-sm">
-                    <tr zippy="dw_eventlist">
-                        <td> <span zippy="eventdate"></span><br>
-                            <b  zippy="eventtitle"  ></b>
-                            <p   zippy="eventdesc" > 
-                            </p>
-                        </td>
-
-                        <td valign="top" style="width: 30px;"><a zippy="delevent"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                </table>
-                <div zippy="eventpag"></div>
-                <hr>
-
-                <form zippy="addeventform">
-                    <div class="form-group">
-                        <label for="addeventdate">Дата, время</label>
-                        <input class="form-control" zippy="addeventdate" >
-                    </div>
-                    <div class="form-group">
-                        <label for="addeventtitle">Заголовок, тип события</label>
-                        <input required="required" class="form-control" zippy="addeventtitle" >
-                    </div>
-                    <div class="form-group">
-                        <label for="addeventdesc">Коментарий</label>
-                        <textarea   class="form-control" zippy="addeventdesc"  style=" height:120px;"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="addeventnotify">Напомнить оповещением за</label>
-                        <select   class="form-control" zippy="addeventnotify">
-                            <option value="0">Не напоминать</option>
-                        </select>
-                    </div>
-                    <input class="btn btn-outline-success  " type="submit" value="Добавить">
-                </form>
+                    <p zippy="msgdata"></p>
+                </td>
+                <td valign="top" style="width: 30px;"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
+            </tr>
+        </table>
+        <hr>
+        <form zippy="addmsgform">
+            <div class="form-group">
+                <label for="addmsg">Коментарий</label>
+                <textarea required="required" class="form-control" zippy="addmsg"
+                          style=" height:120px;"></textarea>
             </div>
-            <div class="col-4 col-xl-3 ">  
-                <h5> Коментарии </h5>
-                <table class="table table-sm">
-                    <tr zippy="dw_msglist">
-                        <td>
-                            <span><b   zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
+            <input class="btn btn-outline-success  " type="submit" value="Добавить">
+        </form>
+    </div>
+    <div class="col-4 col-xl-3 ">
+        <h5> Прикрепленные файлы </h5>
+        <table class="table table-sm">
+            <tr zippy="dw_files">
+                <td><a zippy="filename" target="_blank"></a></td>
+                <td style="width: 30px;"><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
+            </tr>
+        </table>
+        <hr>
+        <form zippy="addfileform" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="addfile">Выбрать файл</label>
+                <input type="file" class="form-control" required="required" zippy="addfile">
 
-                            <p zippy="msgdata"></p>
-                        </td>
-                        <td valign="top" style="width: 30px;"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                </table>
-                <hr>
-                <form zippy="addmsgform">
-                    <div class="form-group">
-                        <label for="addmsg">Коментарий</label>
-                        <textarea required="required" class="form-control" zippy="addmsg"
-                                  style=" height:120px;"></textarea>
-                    </div>
-                    <input class="btn btn-outline-success  " type="submit" value="Добавить">
-                </form>
-            </div>
-            <div class="col-4 col-xl-3 ">  
-                <h5> Прикрепленные файлы </h5>
-                <table class="table table-sm">
-                    <tr zippy="dw_files"  >
-                        <td><a zippy="filename" target="_blank"></a></td>
-                        <td style="width: 30px;"><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                </table>
-                <hr>
-                <form zippy="addfileform" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="addfile">Выбрать файл</label>
-                        <input type="file" class="form-control" required="required" zippy="addfile">
-
-                    </div>
-
-                    <div class="form-group">
-                        <label for="adddescfile">Описание</label>
-                        <input class="form-control" zippy="adddescfile" class="form-control">
-                    </div>
-
-
-                    <input class="btn btn-outline-success  " type="submit" value="Добавить">
-
-                </form>
             </div>
 
-        </div>
+            <div class="form-group">
+                <label for="adddescfile">Описание</label>
+                <input class="form-control" zippy="adddescfile" class="form-control">
+            </div>
 
 
-    </body>
+            <input class="btn btn-outline-success  " type="submit" value="Добавить">
+
+        </form>
+    </div>
+
+</div>
+
+
+</body>
 </html>

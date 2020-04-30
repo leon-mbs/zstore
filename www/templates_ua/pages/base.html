@@ -1,648 +1,654 @@
-<html   >
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Zippy Склад</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="/assets/css/adminlte.css">
-        <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
-        <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.min.css">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Zippy Склад</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="/assets/css/adminlte.css">
+    <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
+    <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.min.css">
 
-        <link rel="stylesheet" href="/assets/css/select2.css">
-        <link rel="stylesheet" href="/assets/css/select2-bootstrap.css">
-        <link rel="stylesheet" href="/assets/css/app.css">
-        <script src="/vendor/leon-mbs/zippy/assets/js/jquery/jquery.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/assets/css/select2.css">
+    <link rel="stylesheet" href="/assets/css/select2-bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/vendor/leon-mbs/zippy/assets/js/jquery/jquery.js" type="text/javascript"></script>
 
-        <script src="/vendor/leon-mbs/zippy/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
-        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.min.js" type="text/javascript"></script>
-        <script src="/assets/js/select2.js" type="text/javascript"></script>
-        <script src="/assets/js/printThis.js" type="text/javascript"></script>
-        <script src="/assets/js/app.js" type="text/javascript"></script>
+    <script src="/vendor/leon-mbs/zippy/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
+    <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.min.js" type="text/javascript"></script>
+    <script src="/assets/js/select2.js" type="text/javascript"></script>
+    <script src="/assets/js/printThis.js" type="text/javascript"></script>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
 
-        <script src="/assets/js/adminlte.js" type="text/javascript"></script>
+    <script src="/assets/js/adminlte.js" type="text/javascript"></script>
 
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-        <!-- Google Font -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
-    </head>
-    <body class="{{hidesidebar}}">
+</head>
+<body class="{{hidesidebar}}">
 
-        <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
-        <a id="top"></a>
-        <div class="wrapper">
-            <!-- Navbar -->
-            <nav class="main-header navbar navbar-expand navbar-white  ">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+<div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
+<a id="top"></a>
+<div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white  ">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+            </li>
+
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+            {{#usebranch}}
+            <li class="nav-item">
+                <form zippy="nbform" class="form-inline ">
+                    Філія
+                    <select zippy="nbbranch" class="form-control ml-1 ">
+                        <option value="0">Всі доступні</option>
+                    </select>
+
+
+                </form>
+            </li>
+            {{/usebranch}}
+            <li class="nav-item  ">
+                <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
+                    <i class="fa fa-bell "></i>
+                    {{#notcnt}}
+                    <span class="badge badge-danger  navbar-badge">{{notcnt}}</span>
+                    {{/notcnt}}
+                </a>
+            </li>
+            <li class="nav-item dropdown  ">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <span
+                        zippy="username"></span> </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile">Мій профіль</a>
                     </li>
-
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item  " zippy="logout"> Вийти</a>
+                    </li>
                 </ul>
-
-                <ul class="navbar-nav ml-auto">
-                    {{#usebranch}}
-                    <li class="nav-item">
-                        <form zippy="nbform" class="form-inline ">
-                            Філія 
-                            <select zippy="nbbranch" class="form-control ml-1 "  >
-                                <option value="0">Всі доступні</option>
-                            </select>
+            </li>
+        </ul>
 
 
-                        </form>    
-                    </li>  
-                    {{/usebranch}}
+    </nav>
+
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Brand Logo -->
+        <a href="/index.php" class="brand-link">
+
+            <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy  Склад</span>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <nav class="mt-2">
+                <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    {{#shop}}
                     <li class="nav-item  ">
-                        <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
-                            <i class="fa fa-bell "></i>
-                            {{#notcnt}}
-                            <span class="badge badge-danger  navbar-badge">{{notcnt}}</span>
-                            {{/notcnt}}
+                        <a href="/index.php" class="nav-link">
+                            <i class="nav-icon fa fa-shopping-cart"></i>
+                            <p>
+                                Головна Магазин
+
+                            </p>
                         </a>
                     </li>
-                    <li class="nav-item dropdown  ">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <span zippy="username"></span> </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile">Мій профіль</a>
-                            </li>
-                            <li class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item  " zippy="logout">  Вийти</a>
-                            </li>
-                        </ul>
+
+                    <li class="nav-item  ">
+                        <a href="/store" class="nav-link">
+                            <i class="nav-icon fa fa-home"></i>
+                            <p>
+                                Головна Склад
+
+                            </p>
+                        </a>
                     </li>
-                </ul>
+                    {{/shop}}
+                    {{^shop}}
+                    <li class="nav-item  ">
+                        <a href="/index.php" class="nav-link">
+                            <i class="nav-icon fa fa-home"></i>
+                            <p>
+                                Головна
+                            </p>
+                        </a>
+                    </li>
+                    {{/shop}}
 
 
-            </nav>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-file"></i>
+                            <p>
+                                Документи
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
 
-            <aside class="main-sidebar sidebar-dark-primary elevation-4">
-                <!-- Brand Logo -->
-                <a href="/index.php" class="brand-link">
-
-                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy  Склад</span>
-                </a>
-
-                <!-- Sidebar -->
-                <div class="sidebar">    
-                    <nav class="mt-2">
-                        <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-						{{#shop}} 
-                            <li class="nav-item  ">
-                                <a href="/index.php" class="nav-link">
-                                    <i class="nav-icon fa fa-shopping-cart"></i>
-                                    <p>
-                                        Головна Магазин
-
-                                    </p>
-                                </a>
-							</li>
-						  							
-							<li class="nav-item  ">
-							<a href="/store" class="nav-link">
-                                    <i class="nav-icon fa fa-home"></i>
-                                    <p>
-                                        Головна Склад
-
-                                    </p>
-                                </a>
-							</li>	
-							{{/shop}} 
-							{{^shop}} 							
-							<li class="nav-item  ">
-							<a href="/index.php" class="nav-link">
-                                    <i class="nav-icon fa fa-home"></i>
-                                    <p>
-                                        Головна
-                                    </p>
-                                </a>
-							</li>	
-							{{/shop}} 
-									
-							
+                            {{#docmenu}}
+                            {{#groups}}
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-file"></i>
-                                    <p>
-                                        Документи
+                                    <i class="fa    nav-icon"></i>
+                                    <p>{{grname}}
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
+
                                 </a>
                                 <ul class="nav nav-treeview">
-
-                                    {{#docmenu}} 
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>{{grname}} 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>  
-                                        <ul class="nav nav-treeview"> 
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link" >
-                                                    <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>     
-                                            {{/items}}
-                                        </ul>
-
-                                        </il>
-                                        {{/groups}}                                    
-
-                                        {{#items}}
+                                    {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link" >
-                                            <i class="fa    nav-icon"></i> 
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>     
-                                    {{/items}}                                     
-                                    {{/docmenu}} 
-                                </ul>           
-
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-chart-bar"></i>
-                                    <p>
-                                        Звіти
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-
-                                    {{#repmenu}} 
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>{{grname}} 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>  
-                                        <ul class="nav nav-treeview"> 
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link" >
-                                                    <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>     
-                                            {{/items}}
-                                        </ul>
-
-                                        </il>
-                                        {{/groups}}                                    
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link" >
-                                            <i class="fa    nav-icon"></i> 
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>     
-                                    {{/items}}                                     
-                                    {{/repmenu}} 
-
-                                </ul>           
-
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-list"></i>
-                                    <p>
-                                        Журнали документів
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    {{#regmenu}} 
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>{{grname}} 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>  
-                                        <ul class="nav nav-treeview"> 
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link" >
-                                                    <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>     
-                                            {{/items}}
-                                        </ul>
-
-                                        </il>
-                                        {{/groups}}                                    
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link" >
-                                            <i class="fa    nav-icon"></i> 
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>     
-                                    {{/items}}
-                                    {{/regmenu}} 
-                                </ul>           
-
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-book"></i>
-                                    <p>
-                                        Довідники
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    {{#refmenu}}
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>{{grname}} 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>  
-                                        <ul class="nav nav-treeview"> 
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link" >
-                                                    <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>     
-                                            {{/items}}
-                                        </ul>
-
-                                        </il>
-                                        {{/groups}}                                    
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link" >
-                                            <i class="fa    nav-icon"></i> 
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>     
-                                    {{/items}}
-
-
-                                    {{/refmenu}}
-
-                                </ul>           
-
-                            </li>
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-project-diagram"></i>
-                                    <p>
-                                        Сервісні сторінки
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    {{#sermenu}} 
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>{{grname}} 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>  
-                                        <ul class="nav nav-treeview"> 
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link" >
-                                                    <i class="fa    nav-icon"></i> 
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>     
-                                            {{/items}}
-                                        </ul>
-
-                                        </il>
-                                        {{/groups}}                                    
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link" >
-                                            <i class="fa    nav-icon"></i> 
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>     
-                                    {{/items}}
-                                    {{/sermenu}} 
-                                </ul>           
-
-                            </li>
-
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-puzzle-piece"></i>
-                                    <p>
-                                        Модулі   
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>   
-                                <ul class="nav nav-treeview">
-                                    {{#note}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
-                                            <i class="fa    nav-icon"></i> 
-                                            <p>База знань</p>
-                                        </a>
-                                    </li>  
-                                    {{/note}}  
-                                    {{#shop}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>Онлайн каталог 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/GroupList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Категорії товарів</p>
-                                                </a>
-                                            </li> 
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/ProductList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Товари</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Manufacturers" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Бренди</p>
-                                                </a>
-                                            </li>                         <li>
-                                                <h6 class="text-center text-white-50">_______________</h6>
-                                            </li>
-
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Налаштування</p>
-                                                </a>
-                                            </li>
-                                        </ul>                  
-
-                                    </li>  
-                                    {{/shop}}            
-                                    {{#ocstore}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>Обмін з ОпенКарт 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/OCStore/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Налаштування</p>
-                                                </a>
-                                            </li> 
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/OCStore/Orders" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Замовлення</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/OCStore/Items" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Товари</p>
-                                                </a>
-                                            </li>
-                                        </ul>                  
-
-                                    </li>  
-                                    {{/ocstore}}            
-                                    {{#woocomerce}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>Обмін з Woocommerce 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/WC/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Налаштування</p>
-                                                </a>
-                                            </li> 
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/WC/Orders" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Замовлення</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/WC/Items" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Товари</p>
-                                                </a>
-                                            </li>
-                                        </ul>                  
-
-                                    </li>  
-                                    {{/woocomerce}}            
-
-                                    {{#issue}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  
-                                            <p>Проекти і завдання 
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/Issue/Pages/ProjectList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Проекти</p>
-                                                </a>
-                                                <a href="/index.php?p=App/Modules/Issue/Pages/IssueList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Завдання</p>
-                                                </a>
-                                                <a href="/index.php?p=App/Modules/Issue/Pages/Calendar" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Календар</p>
-                                                </a>
-
-                                                <a href="/index.php?p=App/Modules/Issue/Pages/Stat" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>    
-                                                    <p>Статистика</p>
-                                                </a>
-
-                                            </li>
-                                        </ul>                  
-
-                                    </li>  
-                                    {{/issue}}            
-
-                                </ul>  
-
-                            </li>           
-                            {{#isadmin}}
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-cog"></i>
-                                    <p>
-                                        Система
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Users" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Користувачі</p>
-                                        </a>
-                                    </li> 
-
-                     
-                                    {{#usebranch}}
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/BranchList" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Філії</p>
-                                        </a>
-                                    </li> 
-                                    {{/usebranch}}
-
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/PosList" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;POS термінали</p>
+                                        <a href='{{link}}' class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                         </a>
                                     </li>
-                               
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Options" class="nav-link">
-                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Налаштування</p>
-                                        </a>
-                                    </li>
-                                </ul>  
+                                    {{/items}}
+                                </ul>
 
-                            </li>  
-                            {{/isadmin}}
+                                </il>
+                                {{/groups}}
+
+                                {{#items}}
+                            <li class="nav-item  has-treeview">
+                                <a href='{{link}}' class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                </a>
+                            </li>
+                            {{/items}}
+                            {{/docmenu}}
                         </ul>
-                    </nav>
-                </div>
-                <!-- /.sidebar -->
-            </aside>   
 
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper mb-4"  >
-                <!-- Main content -->
-                <section class="content">
-                    <div class="row justify-content-center mt-2 mb-1">
-                        <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
+                    </li>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-chart-bar"></i>
+                            <p>
+                                Звіти
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
 
-                            {{#alerterror}}
-                            <div class="alert alert-danger" role="alert">
-                                {{{alerterror}}}
-                            </div>
-                            {{/alerterror}}
-                            {{#alertwarning}}
-                            <div class="alert alert-warning" role="alert">
-                                {{{alertwarning}}}
-                            </div>
-                            {{/alertwarning}}
-                            {{#alertinfo}}
-                            <div class="alert alert-info" role="alert">
-                                {{{alertinfo}}}
-                            </div>
-                            {{/alertinfo}}
-                            {{#alertsuccess}}
-                            <div class="alert alert-success" role="alert">
-                                {{{alertsuccess}}}
-                            </div>
-                            {{/alertsuccess}}
-                        </div>
-                    </div>
-                    <div class="row"   >
-                        <div class="col-12    ">
+                            {{#repmenu}}
+                            {{#groups}}
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>{{grname}}
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
 
-                            {{#smart}}
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>
+                                    {{/items}}
+                                </ul>
 
-                            <div class=" card navbar nav justify-content-start d-none d-md-block">
-                                {{{smart}}}
-                            </div>
+                                </il>
+                                {{/groups}}
 
-                            {{/smart}}
+                                {{#items}}
+                            <li class="nav-item  has-treeview">
+                                <a href='{{link}}' class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                </a>
+                            </li>
+                            {{/items}}
+                            {{/repmenu}}
+
+                        </ul>
+
+                    </li>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-list"></i>
+                            <p>
+                                Журнали документів
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            {{#regmenu}}
+                            {{#groups}}
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>{{grname}}
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>
+                                    {{/items}}
+                                </ul>
+
+                                </il>
+                                {{/groups}}
+
+                                {{#items}}
+                            <li class="nav-item  has-treeview">
+                                <a href='{{link}}' class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                </a>
+                            </li>
+                            {{/items}}
+                            {{/regmenu}}
+                        </ul>
+
+                    </li>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-book"></i>
+                            <p>
+                                Довідники
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            {{#refmenu}}
+                            {{#groups}}
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>{{grname}}
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>
+                                    {{/items}}
+                                </ul>
+
+                                </il>
+                                {{/groups}}
+
+                                {{#items}}
+                            <li class="nav-item  has-treeview">
+                                <a href='{{link}}' class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                </a>
+                            </li>
+                            {{/items}}
 
 
-                            <childpage/>
-                        </div>
-                    </div>
-                </section>
-                <!-- /.content -->
-            </div>
-            <!-- /.content-wrapper -->
+                            {{/refmenu}}
 
+                        </ul>
+
+                    </li>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-project-diagram"></i>
+                            <p>
+                                Сервісні сторінки
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            {{#sermenu}}
+                            {{#groups}}
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>{{grname}}
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    {{#items}}
+                                    <li class="nav-item  has-treeview">
+                                        <a href='{{link}}' class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
+                                        </a>
+                                    </li>
+                                    {{/items}}
+                                </ul>
+
+                                </il>
+                                {{/groups}}
+
+                                {{#items}}
+                            <li class="nav-item  has-treeview">
+                                <a href='{{link}}' class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;{{name}}</p>
+                                </a>
+                            </li>
+                            {{/items}}
+                            {{/sermenu}}
+                        </ul>
+
+                    </li>
+
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-puzzle-piece"></i>
+                            <p>
+                                Модулі
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            {{#note}}
+                            <li class="nav-item  has-treeview">
+                                <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>База знань</p>
+                                </a>
+                            </li>
+                            {{/note}}
+                            {{#shop}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Онлайн каталог
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/Shop/Pages/GroupList" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Категорії товарів</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/index.php?p=App/Modules/Shop/Pages/ProductList" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Товари</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/index.php?p=App/Modules/Shop/Pages/Manufacturers" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Бренди</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <h6 class="text-center text-white-50">_______________</h6>
+                                    </li>
+
+                                    <li>
+                                        <a href="/index.php?p=App/Modules/Shop/Pages/Options" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Налаштування</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            {{/shop}}
+                            {{#ocstore}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Обмін з ОпенКарт
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/OCStore/Options" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Налаштування</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/index.php?p=App/Modules/OCStore/Orders" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Замовлення</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/index.php?p=App/Modules/OCStore/Items" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Товари</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            {{/ocstore}}
+                            {{#woocomerce}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Обмін з Woocommerce
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/WC/Options" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Налаштування</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/index.php?p=App/Modules/WC/Orders" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Замовлення</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/index.php?p=App/Modules/WC/Items" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Товари</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            {{/woocomerce}}
+
+                            {{#issue}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Проекти і завдання
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/Issue/Pages/ProjectList" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Проекти</p>
+                                        </a>
+                                        <a href="/index.php?p=App/Modules/Issue/Pages/IssueList" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Завдання</p>
+                                        </a>
+                                        <a href="/index.php?p=App/Modules/Issue/Pages/Calendar" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Календар</p>
+                                        </a>
+
+                                        <a href="/index.php?p=App/Modules/Issue/Pages/Stat" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Статистика</p>
+                                        </a>
+
+                                    </li>
+                                </ul>
+
+                            </li>
+                            {{/issue}}
+
+                        </ul>
+
+                    </li>
+                    {{#isadmin}}
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-cog"></i>
+                            <p>
+                                Система
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/Users" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;Користувачі</p>
+                                </a>
+                            </li>
+
+
+                            {{#usebranch}}
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/BranchList" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;Філії</p>
+                                </a>
+                            </li>
+                            {{/usebranch}}
+
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/PosList" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;POS термінали</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/Options" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    {{/isadmin}}
+                </ul>
+            </nav>
         </div>
-        <!-- ./wrapper -->
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper mb-4">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row justify-content-center mt-2 mb-1">
+                <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
+
+                    {{#alerterror}}
+                    <div class="alert alert-danger" role="alert">
+                        {{{alerterror}}}
+                    </div>
+                    {{/alerterror}}
+                    {{#alertwarning}}
+                    <div class="alert alert-warning" role="alert">
+                        {{{alertwarning}}}
+                    </div>
+                    {{/alertwarning}}
+                    {{#alertinfo}}
+                    <div class="alert alert-info" role="alert">
+                        {{{alertinfo}}}
+                    </div>
+                    {{/alertinfo}}
+                    {{#alertsuccess}}
+                    <div class="alert alert-success" role="alert">
+                        {{{alertsuccess}}}
+                    </div>
+                    {{/alertsuccess}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12    ">
+
+                    {{#smart}}
+
+                    <div class=" card navbar nav justify-content-start d-none d-md-block">
+                        {{{smart}}}
+                    </div>
+
+                    {{/smart}}
 
 
+                    <childpage/>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
 
-        <script>
-
-$(function () {
-    $('[data-toggle="popover"]').popover()
-    $('[data-toggle="tooltip"]').tooltip()
-})
+</div>
+<!-- ./wrapper -->
 
 
-$('.select2').select2();
+<script>
 
-$(window).scroll(function () {
-    if ($(this).scrollTop() > 600) {
-        if ($('#upbutton').is(':hidden')) {
-            $('#upbutton').css({
-                opacity: 0.7
-            }).fadeIn('slow');
+    $(function () {
+        $('[data-toggle="popover"]').popover();
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+
+
+    $('.select2').select2();
+
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 600) {
+            if ($('#upbutton').is(':hidden')) {
+                $('#upbutton').css({
+                    opacity: 0.7
+                }).fadeIn('slow');
+            }
+        } else {
+            $('#upbutton').stop(true, false).fadeOut('fast');
         }
-    } else {
-        $('#upbutton').stop(true, false).fadeOut('fast');
-    }
-});
+    });
 
-        </script>
+</script>
 
-    </body>
+</body>
 </html>

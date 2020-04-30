@@ -8,7 +8,8 @@ namespace App\Entity;
  * @table=stores
  * @keyfield=store_id
  */
-class Store extends \ZCL\DB\Entity {
+class Store extends \ZCL\DB\Entity
+{
 
     protected function init() {
 
@@ -26,7 +27,7 @@ class Store extends \ZCL\DB\Entity {
 
     /**
      * список складов для комбо
-     * 
+     *
      */
     public static function getList() {
         return Store::findArray("storename", "");
