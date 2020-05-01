@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
         <td colspan="4" align="center">
-            Наряд № {{document_number}} с {{startdate}} по {{date}}
+            Наряд № {{document_number}} от {{document_date}}  
         </td>
     </tr>
     {{#pareaname}}
