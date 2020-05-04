@@ -31,6 +31,10 @@ body .fc {
   /* will inherit .fc-bgevent's styles */
   background: #d7d7d7; }
 
+.fc-widget-header {
+	background: #778898;
+	border-radius: 30px 30px 30px 30px;
+}
 
 .fc-day {
 	border-radius: 30px 30px 30px 30px;
@@ -606,7 +610,7 @@ TODO: more distinction between this file and common.css
 .fc-unthemed .fc-popover,
 .fc-unthemed .fc-list-view,
 .fc-unthemed .fc-list-heading td {
-  border-color: #ddd; }
+  border-color: #f4f6f9; }
 
 .fc-unthemed .fc-popover {
   background-color: #fff; }
