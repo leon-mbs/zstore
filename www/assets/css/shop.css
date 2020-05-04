@@ -110,6 +110,10 @@ a:hover {
     color:black; 
 
  }
+ 
+ .fa-star{
+	 color: #ffd600; 
+ }
 
 .card-body {
 	padding: 0; 
