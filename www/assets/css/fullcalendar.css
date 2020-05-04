@@ -31,8 +31,15 @@ body .fc {
   /* will inherit .fc-bgevent's styles */
   background: #d7d7d7; }
 
+
+.fc-day {
+	border-radius: 30px 30px 30px 30px;
+	background: #bdbec0;
+}
+
 /* Buttons (styled <button> tags, normalized to work cross-browser)
 --------------------------------------------------------------------------------------------------*/
+
 .fc button {
   /* force height to include the border and padding */
   -moz-box-sizing: border-box;
@@ -613,7 +620,7 @@ TODO: more distinction between this file and common.css
   color: #666; }
 
 .fc-unthemed td.fc-today {
-  background: #fcf8e3; }
+  background: #e0e6da; }
 
 .fc-unthemed .fc-disabled-day {
   background: #d7d7d7;
@@ -889,7 +896,7 @@ NOTE: use percentage font sizes or else old IE chokes
 
 .fc-basic-view .fc-week-number,
 .fc-basic-view .fc-day-number {
-  padding: 2px; }
+  padding: 5px; }
 
 .fc-basic-view th.fc-week-number,
 .fc-basic-view th.fc-day-number {
