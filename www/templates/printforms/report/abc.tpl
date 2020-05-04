@@ -1,5 +1,5 @@
 <table class="ctable" cellspacing="0" cellpadding="1">
-    <tr colspan="4" style="font-weight: bolder;">
+    <tr   style="font-weight: bolder;">
         <td colspan="4">
             <h3 style="font-size: 16px;">АВС анализ '{{type}}' c {{from}} по {{to}}</h3>
         </td>

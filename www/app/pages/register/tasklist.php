@@ -69,6 +69,7 @@ class TaskList extends \App\Pages\Base
         $this->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
         $this->updateTasks();
+        $this->updateCal();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
     }
 
@@ -78,7 +79,7 @@ class TaskList extends \App\Pages\Base
         $row->add(new Label('tasknumber', $task->document_number));
         $row->add(new Label('taskdesc', $task->notes));
 
-        $row->add(new Label('taskstartdate', date('Y-m-d', $task->headerdata['start_date'])));
+        $row->add(new Label('taskdocument_date', date('Y-m-d', $task->document_date)) );
         $row->add(new Label('taskhours', $task->headerdata['taskhours']));
 
         $row->add(new Label('taskstatus', Document::getStateName($task->state)));
@@ -232,7 +233,7 @@ class TaskList extends \App\Pages\Base
         $items = $this->_taskds->getItems();
         foreach ($items as $item) {
 
-
+            $col= "#aaa";
             if ($item->state == Document::STATE_INPROCESS) {
                 $col = "#28a745";
             }
@@ -242,9 +243,11 @@ class TaskList extends \App\Pages\Base
             if ($item->state == Document::STATE_CLOSED) {
                 $col = "#dddddd";
             }
-
-
-            $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->headerdata['start_date'], $item->headerdata['end_date'], $col);
+            if(strlen($item->headerdata['taskhours'])==0) $item->headerdata['taskhours'] =0;
+            $d = floor($item->headerdata['taskhours'] / 8);
+            $end_date =  $item->document_date + (3600*24*$d);
+            
+            $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->document_date, $end_date, $col);
         }
 
 
@@ -279,7 +282,7 @@ class TaskList extends \App\Pages\Base
         }
         if ($action['action'] == 'move') {
             $task = Task::load($action['id']);
-            $task->start_date = $task->start_date + $action['delta'];
+            $task->document_date = $task->document_date + $action['delta'];
             if ($task->state == Document::STATE_CLOSED) {
                 return;
             }
@@ -291,7 +294,7 @@ class TaskList extends \App\Pages\Base
             $task = Document::load($action['id']);
             $task->hours = $task->hours + ($action['delta'] / 3600);
             $task->end_date = $task->end_date + ($action['delta'] / 3600);
-            $task->document_date = $task->end_date;
+             
 
             if ($task->state == Document::STATE_CLOSED) {
                 return;
@@ -316,7 +319,7 @@ class TaskList extends \App\Pages\Base
             $csv .= $task->document_number . ',';
 
             $csv .= str_replace(',', '', $task->notes) . ';';
-            $csv .= date('Y-m-d H:i', $task->headerdata['start_date']) . ';';
+            $csv .= date('Y-m-d H:i', $task->document_date) . ';';
             $csv .= $task->headerdata['taskhours'] . ';';
             $csv .= Document::getStateName($task->state) . ';';
             $csv .= $task->amount . ';';
