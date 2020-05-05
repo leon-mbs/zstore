@@ -356,12 +356,12 @@ class Document extends \ZCL\DB\Entity
         //если нет права  выполнять    
         if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this, false, false) == false) {
 
-            $this->headerdata['_state_before_approve_'] = $state;
-            if ($state == self::STATE_WA) {
+            $this->headerdata['_state_before_approve_'] = $state;  //целевой статус
+            if ($state == self::STATE_WA) {   //если на утверждение   то  ждем  утверждения
                 $this->headerdata['_state_before_approve_'] = self::STATE_APPROVED;
             }
 
-            $state = self::STATE_WA;
+            $state = self::STATE_WA;   //переводим на   ожидание  утверждения
         }
 
         if ($state == self::STATE_CANCELED) {
@@ -370,7 +370,7 @@ class Document extends \ZCL\DB\Entity
         if ($state == self::STATE_EXECUTED) {
             if (false === $this->Execute()) {
                 $this->Cancel();
-                return;
+                return false;
             }
         }
         $this->state = $state;
