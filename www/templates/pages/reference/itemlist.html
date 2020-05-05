@@ -41,11 +41,15 @@
 
                 <th>Артикул</th>
                 <th>Категория</th>
+                <th>Бренд</th>
                 <th>Ед.</th>
 
                 <th class="text-right">Отп. цена</th>
                 <th>Ячейка</th>
-                <th>Примечание</th>
+                <th><i title="В прайсе" class="fa fa-list-alt"></i> </th>
+               {{#usesnumber}}     <th><i title="Учет серий производителя" class="fa fa-calendar-check"></i> </th> {{/usesnumber}}  
+                <th> </th>
+           
 
 
                 <th style="width:150px"></th>
@@ -63,11 +67,15 @@
 
                 <td zippy="code"></td>
                 <td zippy="cat_name"></td>
+                <td zippy="manufacturer"></td>
                 <td zippy="msr"></td>
 
                 <td zippy="price" class="text-right"></td>
                 <td zippy="cell"></td>
-                <td zippy="desc"></td>
+              
+                <td><i zippy="inprice" class="fa fa-check"><i/></td>                
+              {{#usesnumber}}   <td><i zippy="inseria" class="fa fa-check"><i/></td>         {{/usesnumber}}             
+                <td><i zippy="hasnotes" class="far fa-sticky-note"   data-toggle="tooltip" data-placement="left" data-html="true"></i></td>
 
 
                 <td aling="center">
@@ -158,7 +166,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-5 col-form-label" for="editmanufacturer">Производитель (страна-производитель) </label>
+                <label class="col-5 col-form-label" for="editmanufacturer">Бренд, производитель (страна) </label>
                 <div class="col-7">
                     <input class="form-control" zippy="editmanufacturer"/>
                 </div>
