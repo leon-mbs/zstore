@@ -131,6 +131,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('cat_name', $item->cat_name));
+        $row->add(new Label('manufacturer', $item->manufacturer));
         $plist = array();
         if ($item->price1 > 0) {
             $plist[] = H::fa($item->price1);
@@ -148,8 +149,14 @@ class ItemList extends \App\Pages\Base
             $plist[] = H::fa($item->price5);
         }
         $row->add(new Label('price', implode(', ', $plist)));
-        $row->add(new Label('desc', htmlspecialchars_decode($item->description), true));
+        $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0)   ;
+        $row->hasnotes->setAttribute('title', htmlspecialchars_decode($item->description));
+        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+       
+        
         $row->add(new Label('cell', $item->cell));
+        $row->add(new Label('inprice' ))->setVisible($item->pricelist);
+        $row->add(new Label('inseria' ))->setVisible($item->useserial);
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -217,6 +224,8 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editdelimage->setVisible(false);
             $this->itemdetail->editimage->setVisible(false);
         }
+        
+        $this->updateman() ;
     }
 
     public function addOnClick($sender) {
@@ -233,6 +242,7 @@ class ItemList extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
+        $this->updateman() ;        
     }
 
     public function cancelOnClick($sender) {
@@ -457,6 +467,15 @@ class ItemList extends \App\Pages\Base
         $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
     }
 
+    public  function updateman(){
+        $this->_tvars['manlist'] = array();
+        
+        foreach(Item::getManufacturers() as  $man){
+           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
+        }
+         
+    }    
+    
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
@@ -513,4 +532,6 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         return Item::load($id);
     }
 
+    
+   
 }

@@ -20,6 +20,7 @@ class Helper
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_COOKIEJAR, _ROOT . 'upload/apicookie.txt');
         curl_setopt($ch, CURLOPT_COOKIEFILE, _ROOT . 'upload/apicookie.txt');
+      //  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $params_string = '';
         if (is_array($params) && count($params)) {

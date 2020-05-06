@@ -66,6 +66,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["smart"] = Helper::generateSmartMenu();
 
 
+        
+        $this->_tvars["shopmenu"] = $_config['modules']['shop'] == 1;
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
         $this->_tvars["woocomerce"] = $_config['modules']['woocomerce'] == 1;
@@ -87,7 +89,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->userlogin != 'admin') {
             $this->_tvars["woocomerce"] = false;
         }
-
+           
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         //для скрытия блока разметки  в  шаблоне страниц                           

@@ -35,6 +35,8 @@ class Issue extends \ZCL\DB\Entity
 
         $this->createdon = time();
         $this->lastupdate = time();
+        $this->notes = ''  ;
+        
     }
 
     /**

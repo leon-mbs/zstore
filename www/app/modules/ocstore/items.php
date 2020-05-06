@@ -259,6 +259,7 @@ class Items extends \App\Pages\Base
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];
             $item->description = $product['description'];
+            $item->manufacturer = $product['manufacturer'];
             $w = $product['weight'];
             $w = str_replace(',', '.', $w);
             if ($product['weight_class_id'] == 2) {

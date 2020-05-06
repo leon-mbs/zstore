@@ -472,7 +472,7 @@ class Invoice extends \App\Pages\Base
 
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
-        $this->editdetail->editprice->setText(round($price));
+        $this->editdetail->editprice->setText(H::fa($price));
 
         $this->updateAjax(array('qtystock', 'editprice'));
     }

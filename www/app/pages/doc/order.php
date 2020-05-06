@@ -305,7 +305,7 @@ class Order extends \App\Pages\Base
 
             $total = $total + $item->amount;
         }
-        $this->docform->total->setText(round($total));
+        $this->docform->total->setText(H::fa($total));
     }
 
     /**

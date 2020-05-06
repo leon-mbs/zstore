@@ -161,7 +161,7 @@ class DocList extends \App\Pages\Base
 
         $row->add(new Label('hasnotes'))->setVisible(strlen($doc->notes) > 0 && $doc->notes == strip_tags($doc->notes));
         $row->hasnotes->setAttribute('title', $doc->notes);
-
+ 
         $row->add(new ClickLink('parentdoc', $this, 'basedOnClick'))->setVisible($doc->parent_id > 0);
         $row->parentdoc->setValue($doc->headerdata['parent_number']);
 

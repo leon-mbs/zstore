@@ -180,7 +180,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->clean();
         $this->_customer = new Customer();
 
-        $this->contentview->setVisible(false);
+        $this->contentview->setVisible(false); 
     }
 
     public function saveOnClick($sender) {
@@ -394,4 +394,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->customerlist->Reload(false);
     }
 
+    
+ 
+    
 }

@@ -37,7 +37,6 @@ class Task extends \App\Pages\Base
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
-        $this->docform->add(new \ZCL\BT\DatePicker('start_date'))->setDate(time());
         $this->docform->add(new \ZCL\BT\DatePicker('document_date'))->setDate(time());
 
         $this->docform->add(new TextArea('notes'));
@@ -81,9 +80,7 @@ class Task extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->taskhours->setText($this->_doc->headerdata['taskhours']);
 
-            $this->docform->start_date->setDate($this->_doc->headerdata['start_date']);
-
-
+      
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 
@@ -284,7 +281,6 @@ class Task extends \App\Pages\Base
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
-        $this->_doc->headerdata['start_date'] = $this->docform->start_date->getDate();
         $this->_doc->document_date = $this->docform->document_date->getDate();
 
 
