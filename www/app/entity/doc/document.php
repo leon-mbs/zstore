@@ -433,26 +433,27 @@ class Document extends \ZCL\DB\Entity
      *
      * @return mixed
      */
-    public function nextNumber() {
+    public function nextNumber($branch_id=0) {
 
 
         $class = explode("\\", get_called_class());
         $metaname = $class[count($class) - 1];
         $doc = Document::getFirst("meta_name='" . $metaname . "'", "document_id desc");
-        if ($doc == null) {
+        $conn = \ZDB\DB::getConnect();
+        $branch="";
+        if($branch_id>0)   $branch=" and branch_id=".$branch_id;
+        
+        $sql = "select document_number from  documents_view where   meta_name='{$metaname}'   {$branch}  order  by document_id desc limit 0,1";
+        $prevnumber = $conn->GetOne($sql);
+        if (strlen($lastnumber) == 0) {
             $prevnumber = $this->getNumberTemplate();
-        } else {
-            $prevnumber = $doc->document_number;
-        }
-
-
-        if (strlen($prevnumber) == 0) {
+        }  
+  
+        if (strlen($prevnumber) == 0)
             return '';
-        }
         $number = preg_replace('/[^0-9]/', '', $prevnumber);
-        if (strlen($number) == 0) {
+        if (strlen($number) == 0)
             $number = 0;
-        }
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
 

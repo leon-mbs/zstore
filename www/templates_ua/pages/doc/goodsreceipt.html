@@ -380,7 +380,15 @@
 
             </div>
             {{/usesnumber}}
-            <div class="form-group">
+              <div class="form-group">
+                <label for="editnewmanufacturer">Бренд, виробник </label>
+                <input list="manlist" class="form-control " zippy="editnewmanufacturer"/>
+                <datalist id="manlist">
+                      {{#manlist}}
+                          <option label='{{mitem}}' value='{{mitem}}'>
+                      {{/manlist}}  
+                </datalist>  
+            </div>             <div class="form-group">
                 <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
                 <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-light ">
             </div>

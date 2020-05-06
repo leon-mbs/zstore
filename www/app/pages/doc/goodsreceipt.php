@@ -105,6 +105,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->add(new TextInput('editnewitembarcode'));
         $this->editnewitem->add(new TextInput('editnewitemsnumber'));
         $this->editnewitem->add(new TextInput('editnewitemsdate'));
+        $this->editnewitem->add(new TextInput('editnewmanufacturer'));
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::findArray("cat_name", "", "cat_name"), 0));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
@@ -642,6 +643,12 @@ class GoodsReceipt extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->editnewitem->editnewitemcode->setText(Item::getNextArticle());
         }
+        $this->_tvars['manlist'] = array();
+        
+        foreach(Item::getManufacturers() as  $man){
+           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
+        }        
+        
     }
 
     public function savenewitemOnClick($sender) {
@@ -664,6 +671,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
 
+        $item->manufacturer = $this->editnewitem->editnewmanufacturer->getText();
         $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
         $item->snumber = $this->editnewitem->editnewitemsnumber->getText();
         if (strlen($item->snumber) > 0) {

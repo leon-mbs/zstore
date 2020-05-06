@@ -355,4 +355,19 @@ class Item extends \ZCL\DB\Entity
         return "ID" . sprintf("%04d", ++$id);
     }
 
+    
+    public static function getManufacturers() {
+         
+        $conn = \ZDB\DB::getConnect();
+       
+        $sql = "  select distinct manufacturer from  items    order  by manufacturer";
+        $res = $conn->Execute($sql);                           
+        $list = array();
+        foreach($res as $v) {
+            if(strlen($v['manufacturer'])>0)  $list[]=  $v['manufacturer'];
+        }
+        return  $list;
+         
+    }    
+    
 }

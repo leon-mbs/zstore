@@ -171,8 +171,13 @@
             <div class="form-group row">
                 <label class="col-5 col-form-label" for="editmanufacturer">Бренд, виробник (краiна-виробник) </label>
                 <div class="col-7">
-                    <input class="form-control" zippy="editmanufacturer"/>
-                </div>
+                    <input list="manlist" class="form-control" zippy="editmanufacturer"/>
+                     <datalist id="manlist">
+                            {{#manlist}}
+                            <option label='{{mitem}}' value='{{mitem}}'>
+                           {{/manlist}}  
+                          
+                    </datalist>                 </div>
             </div>
              {{#usesnumber}}
             <div class="form-check">

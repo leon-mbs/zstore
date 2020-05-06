@@ -224,6 +224,8 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editdelimage->setVisible(false);
             $this->itemdetail->editimage->setVisible(false);
         }
+        
+        $this->updateman() ;
     }
 
     public function addOnClick($sender) {
@@ -240,6 +242,7 @@ class ItemList extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
+        $this->updateman() ;        
     }
 
     public function cancelOnClick($sender) {
@@ -464,6 +467,15 @@ class ItemList extends \App\Pages\Base
         $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
     }
 
+    public  function updateman(){
+        $this->_tvars['manlist'] = array();
+        
+        foreach(Item::getManufacturers() as  $man){
+           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
+        }
+         
+    }    
+    
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
@@ -520,4 +532,6 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         return Item::load($id);
     }
 
+    
+   
 }
