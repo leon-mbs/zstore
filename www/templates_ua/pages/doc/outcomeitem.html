@@ -122,7 +122,7 @@
             <div class="form-group">
                 <label for="editquantity">Кількість</label>
 
-                <input style="width:100px;" type="text" zippy="editquantity" class="form-control"
+                <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control"
                        required="required" pattern="[0-9\.]+"/>
 
             </div>
@@ -148,6 +148,14 @@
             $('#addcode').click()
         }
     }
+    
+       function onItem(ele) {
+
+            if (event.key === 'Enter' || event.keyCode == 13) {
+                // alert($('#barcode').val()); 
+                $('#saverow').click()
+            }
+        }      
 </script>
 
 </body>
