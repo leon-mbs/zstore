@@ -111,6 +111,9 @@ class ProjectList extends \App\Pages\Base
         $this->projectform->setVisible(true);
         $this->projectform->editname->setText($this->_project->project_name);
         $this->projectform->editdesc->setText($this->_project->desc);
+        $this->projectform->editcust->setKey($this->_project->customer_id) ;       
+        $this->projectform->editcust->setText($this->_project->customer_name) ;       
+        
     }
 
     public function deleteOnClick($sender) {

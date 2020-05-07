@@ -44,6 +44,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->itemtable->itemlist->setPageSize(H::getPG());
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->itemlist));
+        $this->itemtable->itemlist->setSelectedClass('table-success');
 
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
@@ -224,6 +225,10 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editdelimage->setVisible(false);
             $this->itemdetail->editimage->setVisible(false);
         }
+        
+        $this->itemtable->itemlist->setSelectedRow($sender->getOwner());
+        $this->itemtable->itemlist->Reload(false);
+        
         
         $this->updateman() ;
     }

@@ -445,7 +445,7 @@ class Document extends \ZCL\DB\Entity
         
         $sql = "select document_number from  documents_view where   meta_name='{$metaname}'   {$branch}  order  by document_id desc limit 0,1";
         $prevnumber = $conn->GetOne($sql);
-        if (strlen($lastnumber) == 0) {
+        if (strlen($prevnumber) == 0) {
             $prevnumber = $this->getNumberTemplate();
         }  
   
