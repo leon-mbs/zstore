@@ -319,7 +319,7 @@ class ACL
         if (strlen($user->aclbranch) == 0) {
             return " (0)";
         } //нет доступа  ни  к  одному филиалу
-        return "select stacl.store_id  from stores stacl where branch_id in {$user->aclbranch} ";
+        return "select stacl.store_id  from stores stacl where branch_id in ({$user->aclbranch} ) ";
     }
 
     /**
@@ -345,7 +345,7 @@ class ACL
         if (strlen($user->aclbranch) == 0) {
             return " (0)";
         } //нет доступа  ни  к  одному филиалу
-        return "select stacl.mf_id  from mfund stacl where branch_id in {$user->aclbranch} ";
+        return "select stacl.mf_id  from mfund stacl where branch_id in ({$user->aclbranch}) ";
     }
 
     /**
@@ -371,7 +371,7 @@ class ACL
         if (strlen($user->aclbranch) == 0) {
             return " (0)";
         } //нет доступа  ни  к  одному филиалу
-        return "select stacl.employee_id  from employees stacl where branch_id in {$user->aclbranch} ";
+        return "select stacl.employee_id  from employees stacl where branch_id in ({$user->aclbranch}) ";
     }
 
     /**
@@ -397,7 +397,7 @@ class ACL
         if (strlen($user->aclbranch) == 0) {
             return " (0)";
         } //нет доступа  ни  к  одному филиалу
-        return "select stacl.document_id  from documents stacl where branch_id in {$user->aclbranch} ";
+        return "select stacl.document_id  from documents stacl where branch_id in ({$user->aclbranch})";
     }
 
     /**
