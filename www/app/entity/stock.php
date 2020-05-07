@@ -92,6 +92,7 @@ class Stock extends \ZCL\DB\Entity
             $stock->item_id = $item_id;
             $stock->partion = $price;
             $stock->snumber = $snumber;
+            $stock->sdate =  null;
             if ($sdate > 0) {
                 $stock->sdate = $sdate;
             }
