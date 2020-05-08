@@ -90,7 +90,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->setVisible(true);
         // Очищаем  форму
         $this->posdetail->clean();
-        $b = \App\Session::getSession()->branch_id;
+        $b = \App\System::getBranch();
         $this->posdetail->editbranch->setValue($b > 0 ? $b : 0);
         $this->_pos = new Pos();
     }

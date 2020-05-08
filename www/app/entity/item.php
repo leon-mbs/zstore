@@ -48,7 +48,7 @@ class Item extends \ZCL\DB\Entity
             $this->brprice = array();
         }
 
-        $id = \App\Session::getSession()->branch_id;
+        $id = \App\System::getBranch();
         if ($id > 0 && is_array($this->brprice[$id])) {
             $this->price1 = $this->brprice[$id]['price1'];
             $this->price2 = $this->brprice[$id]['price2'];
@@ -63,7 +63,7 @@ class Item extends \ZCL\DB\Entity
 
     protected function beforeSave() {
         parent::beforeSave();
-        $fid = \App\Session::getSession()->branch_id;
+        $fid = \App\System::getBranch();
         if ($fid > 0) {
             $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
             $prev = self::load($this->item_id); //востанавливаем  предыдущую цену

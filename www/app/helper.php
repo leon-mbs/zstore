@@ -415,6 +415,22 @@ class Helper
     }
 
     /**
+     * форматирование дат
+     *
+     * @param timestamp $date
+     * @return mixed
+     */
+    public static function fd($date) {
+        if ($date > 0) {
+            $common = System::getOptions("common");
+            return date($common['dateformat'],$date) ;
+        }
+
+        return ''; 
+    }    
+    
+    
+    /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
     public static function getFirmData($id = 0) {

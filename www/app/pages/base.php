@@ -28,11 +28,11 @@ class Base extends \Zippy\Html\WebPage
         }
 
 
-        $this->branch_id = Session::getSession()->branch_id;
+        $this->branch_id = System::getBranch();
         $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
         if (count($blist) == 1) {      //если  одна
             $this->branch_id = array_pop(array_keys($blist));
-            Session::getSession()->branch_id = $this->branch_id;
+            System::setBranch($this->branch_id)   ;
         }
         //форма  филиалов       
         $this->add(new \Zippy\Html\Form\Form('nbform'));
@@ -61,7 +61,7 @@ class Base extends \Zippy\Html\WebPage
 
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
-            Session::getSession()->branch_id = 0;
+            System::setBranch( 0)    ;
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
 
@@ -110,8 +110,8 @@ class Base extends \Zippy\Html\WebPage
 
     public function onnbFirm($sender) {
         $branch_id = $sender->getValue();
-        Session::getSession()->branch_id = $branch_id;
-
+        System::setBranch($branch_id)  ;
+        
         $page = get_class($this);
         App::Redirect($page);
     }

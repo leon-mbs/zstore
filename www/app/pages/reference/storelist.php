@@ -78,7 +78,7 @@ class StoreList extends \App\Pages\Base
         $this->storeform->setVisible(true);
         $this->storeform->storeeditname->setText('');
         $this->storeform->storeeditdesc->setText('');
-        $b = \App\Session::getSession()->branch_id;
+        $b = \App\System::getBranch();
         $this->storeform->editbranch->setValue($b > 0 ? $b : 0);
 
 
