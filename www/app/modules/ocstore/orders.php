@@ -42,6 +42,7 @@ class Orders extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('status', $statuses, 0));
         $this->add(new Form('filter2'))->onSubmit($this, 'onOutcome');
         $this->filter2->add(new DropDownChoice('store', \App\Entity\Store::getList(), 0));
+        $this->filter2->add(new DropDownChoice('kassa', \App\Entity\MoneyFund::getList(), \App\Helper::getDefMF()));
         $this->filter2->setVisible($modules['ocoutcome']==1);
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
@@ -83,7 +84,7 @@ class Orders extends \App\Pages\Base
 
     
 
-                $isorder = Document::findCnt(" (meta_name='Order' or meta_name='OutcomeItem') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
+                $isorder = Document::findCnt(" (meta_name='Order' or meta_name='GoodsIssue') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
                 if ($isorder > 0) { //уже импортирован
                     continue;
                 }
@@ -184,6 +185,7 @@ class Orders extends \App\Pages\Base
     public function onOutcome($sender) {
         $modules = System::getOptions("modules"); 
         $store = $this->filter2->store->getValue();
+        $kassa = $this->filter2->kassa->getValue();
         if($store==0){
             $this->setError("noselstore");
             return;
@@ -224,10 +226,10 @@ class Orders extends \App\Pages\Base
         foreach ($this->_neworders as $shoporder) {
 
 
-            $neworder = Document::create('OutcomeItem');
+            $neworder = Document::create('GoodsIssue');
             $neworder->document_number = $neworder->nextNumber();
             if (strlen($neworder->document_number) == 0) {
-                $neworder->document_number = 'ОТ00001';
+                $neworder->document_number = 'РН-00001';
             }
             $neworder->headerdata['store']  = $store;
 
@@ -255,10 +257,22 @@ class Orders extends \App\Pages\Base
             $neworder->packDetails('detaildata', $tlist);
 
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
+            $neworder->headerdata['payment'] = $kassa;
          
             
             $neworder->amount = round($shoporder->total);
+            $neworder->payamount = round($shoporder->total);
+            $neworder->payed = round($shoporder->total);
             $neworder->notes = "OC номер:{$shoporder->order_id};";
+            $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+            if (strlen($shoporder->email) > 0) {
+                $neworder->notes .= " Email:" . $shoporder->email . ";";
+            }
+            if (strlen($shoporder->telephone) > 0) {
+                $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
+            }
+            $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+            $neworder->notes .= " Комментарий:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
             $neworder->updateStatus(Document::STATE_EXECUTED);

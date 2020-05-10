@@ -42,7 +42,11 @@
         <td><b>Відповідальний</b></td>
         <td colspan="5"> {{emp_name}}</td>
     </tr>
-    {{/isdelivery}}
+     <tr>
+        <td></td>
+        <td><b>Вартiсть  доставки</b></td>
+        <td colspan="5"> {{delivery_cost}}</td>
+    </tr>   {{/isdelivery}}
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             Накладна № {{document_number}} від {{date}} <br>

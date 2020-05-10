@@ -49,7 +49,7 @@ class MoneyFund extends \ZCL\DB\Entity
     /**
      * список счетов для комбо
      *
-     * @param mixed $beznal добавить пункт  Безналичный расчет
+     * @param mixed $beznal добавить пункт  В  кредит
      * @param mixed $prepaid добавить пункт  Была предоплата
      */
     public static function getList($credit = false, $prepaid = false) {

@@ -63,8 +63,11 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+        $this->docform->add(new TextInput('editdelivery_cost', "0"));
+        $this->docform->add(new SubmitButton('bdelivery_cost'))->onClick($this, 'onDelivery_cost');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
+        $this->docform->add(new Label('delivery_cost', 0));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -122,7 +125,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
-        if ($docid > 0) {    //загружаем   содержимок  документа настраницу
+        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -138,6 +141,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
+            $this->docform->delivery_cost->setText($this->_doc->headerdata['delivery_cost']);
+            $this->docform->editdelivery_cost->setText($this->_doc->headerdata['delivery_cost']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
@@ -451,6 +456,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
+        $this->_doc->headerdata['delivery_cost'] = $this->docform->delivery_cost->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
@@ -565,8 +571,13 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->goAnkor("tankor");
     }
+    public function onDelivery_cost($sender) {
+        $this->docform->delivery_cost->setText($this->docform->editdelivery_cost->getText());
+        $this->goAnkor("tankor");
+        $this->calcPay();
+    }
 
-    public function onPayed($sender) {
+     public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
         $payed = $this->docform->payed->getText();
         $payamount = $this->docform->payamount->getText();
@@ -633,11 +644,13 @@ class GoodsIssue extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
-
-        $this->docform->editpayamount->setText(H::fa($total - $disc));
-        $this->docform->payamount->setText(H::fa($total - $disc));
-        $this->docform->editpayed->setText(H::fa($total - $disc));
-        $this->docform->payed->setText(H::fa($total - $disc));
+        $delivery_cost = $this->docform->delivery_cost->getText();
+        if($disc>0)$total -=  $disc;
+        if($delivery_cost>0)$total +=  $delivery_cost;
+        $this->docform->editpayamount->setText(H::fa($total  ));
+        $this->docform->payamount->setText(H::fa($total  ));
+        $this->docform->editpayed->setText(H::fa($total  ));
+        $this->docform->payed->setText(H::fa($total  ));
     }
 
     public function OnPayment($sender) {
@@ -904,6 +917,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->sent_date->setVisible(true);
             $this->docform->delivery_date->setVisible(true);
             $this->docform->emp->setVisible(true);
+            $this->docform->delivery_cost->setVisible(true);
         } else {
             $this->docform->senddoc->setVisible(false);
             $this->docform->execdoc->setVisible(true);
@@ -913,7 +927,9 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->sent_date->setVisible(false);
             $this->docform->delivery_date->setVisible(false);
             $this->docform->emp->setVisible(false);
+            $this->docform->delivery_cost->setVisible(false);
         }
+        $this->calcPay();
     }
 
     public function onOpenItemSel($sender) {
