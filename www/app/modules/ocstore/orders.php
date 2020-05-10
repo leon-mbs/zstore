@@ -40,10 +40,14 @@ class Orders extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('status', $statuses, 0));
+        $this->add(new Form('filter2'))->onSubmit($this, 'onOutcome');
+        $this->filter2->add(new DropDownChoice('store', \App\Entity\Store::getList(), 0));
+        $this->filter2->setVisible($modules['ocoutcome']==1);
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
-        $this->add(new ClickLink('importbtn'))->onClick($this, 'onImport');
+        $this->add(new ClickLink('importbtn',$this, 'onImport'))->setVisible($modules['ocoutcome']!=1);
+        
 
 
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
@@ -77,10 +81,9 @@ class Orders extends \App\Pages\Base
 
             foreach ($data['orders'] as $ocorder) {
 
-                //$ocorder  =unserialize(base64_decode($o )) ; 
+    
 
-
-                $isorder = Document::findCnt("meta_name='Order' and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
+                $isorder = Document::findCnt(" (meta_name='Order' or meta_name='OutcomeItem') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
                 if ($isorder > 0) { //уже импортирован
                     continue;
                 }
@@ -176,6 +179,98 @@ class Orders extends \App\Pages\Base
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
+    }
+
+    public function onOutcome($sender) {
+        $modules = System::getOptions("modules"); 
+        $store = $this->filter2->store->getValue();
+        if($store==0){
+            $this->setError("noselstore");
+            return;
+        }
+        $allowminus = \App\System::getOption("common", "allowminus");
+        
+        if ($allowminus != 1) {
+           foreach ($this->_neworders as $shoporder) {
+     
+            foreach ($shoporder->_products_ as $product) {
+                //ищем по артикулу 
+                if (strlen($product['sku']) == 0) {
+                    continue;
+                }
+                $code = Item::qstr($product['sku']);
+
+                $tovar = Item::getFirst('item_code=' . $code);
+                if ($tovar == null) {
+
+                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                    continue;
+                }
+                $tovar->quantity = $product['quantity'];
+                
+                $qty = $tovar->getQuantity($store);
+                if ($qty < $tovar->quantity) {
+                    $this->setError("nominus", \App\Helper::fqty($qty), $tovar->item_name);
+                    return;
+                }                
+
+                 
+              }            
+           }
+        }
+      
+      
+        
+        foreach ($this->_neworders as $shoporder) {
+
+
+            $neworder = Document::create('OutcomeItem');
+            $neworder->document_number = $neworder->nextNumber();
+            if (strlen($neworder->document_number) == 0) {
+                $neworder->document_number = 'ОТ00001';
+            }
+            $neworder->headerdata['store']  = $store;
+
+            //товары
+            $tlist = array();
+            foreach ($shoporder->_products_ as $product) {
+                //ищем по артикулу 
+                if (strlen($product['sku']) == 0) {
+                    continue;
+                }
+                $code = Item::qstr($product['sku']);
+
+                $tovar = Item::getFirst('item_code=' . $code);
+                if ($tovar == null) {
+
+                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                    continue;
+                }
+                $tovar->quantity = $product['quantity'];
+                $tovar->price = round($product['price']);
+             
+
+                $tlist[] = $tovar;
+            }
+            $neworder->packDetails('detaildata', $tlist);
+
+            $neworder->headerdata['ocorder'] = $shoporder->order_id;
+         
+            
+            $neworder->amount = round($shoporder->total);
+            $neworder->notes = "OC номер:{$shoporder->order_id};";
+            $neworder->save();
+            $neworder->updateStatus(Document::STATE_NEW);
+            $neworder->updateStatus(Document::STATE_EXECUTED);
+
+            $i++;
+        }
+      
+      
+        $this->setInfo('imported_orders', $i);
+
+        $this->_neworders = array();
+        $this->neworderslist->Reload();       
     }
 
     public function onRefresh($sender) {

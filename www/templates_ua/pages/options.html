@@ -47,6 +47,20 @@
 
                 </select>
             </div>
+          <div class="form-group  ">
+                <label for="dateformat">Формат дати</label>
+
+                <select class="form-control" zippy="dateformat">
+                    <option value='d.m.Y'>dd.mm.yyyy</option>
+                    <option value='d-m-Y'>dd-mm-yyyy</option>
+                    <option value='d/m/Y'>dd/mm/yyyy</option>
+                    <option value='Y.m.d'>yyyy.mm.dd </option>                   
+                    <option value='Y-m-d'>yyyy-mm-dd </option>                   
+                    <option value='Y/m/d'>yyyy/mm/dd </option>                   
+
+                </select>
+            </div>
+            
             <div class="form-group">
                 <label for="defprice">Націнка за замовчуванням, у відсотках</label>
                 <input style="width:100px" pattern="[0-9]+" class="form-control" type="text" zippy="defprice">

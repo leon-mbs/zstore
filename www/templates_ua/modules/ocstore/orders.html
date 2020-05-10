@@ -56,6 +56,22 @@
         </table>
         <div class="navbar nav">
             <a zippy="importbtn" class="  btn btn-outline-success  ">Імпортувати</a>
+              <form zippy="filter2" class="form-inline ">
+
+   
+
+                <label for="store" data-label="store">Оприходувати на </label>
+
+                <select class="form-control mr-2" zippy="store">
+                    <option value="0">Не обрано</option>
+                </select>
+
+               
+                <input   type="submit" class=" mr-2 btn btn-outline-success  "
+                       value="Списать">
+                
+
+            </form>          
 
         </div>
     </div>
@@ -100,6 +116,11 @@
                 <label for="estatus">Статус в магазині </label>
 
                 <select class="  mr-2" zippy="estatus">
+                    <option value="0">Не обрано</option>
+                </select>
+                <label for="store" data-label="store">оприходувати на </label>
+
+                <select class="form-control mr-2" zippy="store">
                     <option value="0">Не обрано</option>
                 </select>
 

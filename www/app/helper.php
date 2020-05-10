@@ -423,6 +423,8 @@ class Helper
     public static function fd($date) {
         if ($date > 0) {
             $common = System::getOptions("common");
+            if(strlen($common['dateformat'])==0) $common['dateformat'] = 'd.m.Y';
+            
             return date($common['dateformat'],$date) ;
         }
 

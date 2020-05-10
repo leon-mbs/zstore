@@ -94,7 +94,7 @@ class Stock extends \ZCL\DB\Entity
             $stock->snumber = $snumber;
             $stock->sdate =  $sdate;
  
-
+            \App\Helper::log(serialize($stock)) ;
             $stock->save();
         }
         if ($partiontype == '1') {    //учет  по  последней цене
@@ -167,13 +167,8 @@ class Stock extends \ZCL\DB\Entity
                     $last->item_id = $item->item_id;
                     $last->partion = $item->price;
                     $last->snumber = $item->snumber;
-                    if (strlen($item->snumber) > 0) {
-                        if(strlen($item->sdate)==0 || $item->sdate==0)
-                           $last->sdate = time();
-                        else{
-                           $last->sdate = $item->sdate;
-                        }   
-                    }
+                    $last->sdate   = $item->sdate; 
+                    
 
                 } else {
                     $last->partion = $item->price;
@@ -187,3 +182,4 @@ class Stock extends \ZCL\DB\Entity
     }
 
 }
+ 

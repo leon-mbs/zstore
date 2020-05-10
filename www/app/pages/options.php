@@ -32,6 +32,7 @@ class Options extends \App\Pages\Base
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
+        $this->common->add(new DropDownChoice('dateformat'));
         $this->common->add(new DropDownChoice('curr', array('gr' => 'Гривна', 'ru' => 'Рубль'), 'gr'));
         $pt = array(
             "1" => H::l('opt_lastprice'),
@@ -63,6 +64,7 @@ class Options extends \App\Pages\Base
 
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
+        $this->common->dateformat->setValue($common['dateformat']);
         $this->common->partiontype->setValue($common['partiontype']);
         $this->common->curr->setValue($common['curr']);
 
@@ -161,6 +163,7 @@ class Options extends \App\Pages\Base
 
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
+        $common['dateformat'] = $this->common->dateformat->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
         $common['curr'] = $this->common->curr->getValue();
 
