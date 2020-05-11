@@ -1,4 +1,4 @@
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(78, 2, 'Движение  по  контрагентам', 'CustActivity', 'Платежи', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Р”РІРёР¶РµРЅРёРµ  РїРѕ  РєРѕРЅС‚СЂР°РіРµРЅС‚Р°Рј', 'CustActivity', 'РџР»Р°С‚РµР¶Рё', 0);
 
 
 ALTER  VIEW `paylist_view` AS
