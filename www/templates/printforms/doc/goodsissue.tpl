@@ -6,6 +6,11 @@
         <td valign="top"><b>Покупатель</b></td>
         <td colspan="5">{{customer_name}}</td>
     </tr>
+   <tr>
+        <td></td>
+        <td valign="top"><b>Списано с</b></td>
+        <td colspan="5">{{store_name}}</td>
+    </tr>
 
     {{#order}}
     <tr>
@@ -42,11 +47,7 @@
         <td><b>Ответственный</b></td>
         <td colspan="5"> {{emp_name}}</td>
     </tr>
-    <tr>
-        <td></td>
-        <td><b>Стоимость доставки</b></td>
-        <td colspan="5"> {{delivery_cost}}</td>
-    </tr>
+  
     {{/isdelivery}}
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
@@ -89,6 +90,15 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
+   {{#isdelivery}}
+    <tr style="font-weight: bolder;">
+        <td colspan="6" align="right">Стоимость доставки:</td>
+        <td align="right">{{delivery_cost}}</td>
+    </tr>
+    {{/isdelivery}}
+    
+    
+    
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>

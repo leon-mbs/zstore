@@ -51,6 +51,7 @@ class GoodsIssue extends Document
             "_detail" => $detail,
             "firmname" => $this->headerdata["firmname"],
             "customer_name" => $this->customer_name,
+            "store_name" => $this->headerdata["store_name"],
             "weight" => $weight > 0 ? H::l("allweight", $weight) : '',
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],

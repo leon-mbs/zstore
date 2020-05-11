@@ -187,6 +187,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->ship_address->setText($basedoc->headerdata['address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
+                        
                         $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
                         $this->docform->delivery_date->setDate($basedoc->headerdata['delivery']);
 
@@ -479,6 +480,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['ship_number'] = $this->docform->ship_number->getText();
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
@@ -944,3 +946,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->OnChangeItem($this->editdetail->edittovar);
     }
 }
+
+
+
+
+

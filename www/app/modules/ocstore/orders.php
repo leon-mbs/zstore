@@ -231,9 +231,9 @@ class Orders extends \App\Pages\Base
             if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'РН-00001';
             }
-            $neworder->headerdata['store']  = $store;
-
+         
             //товары
+            $totalpr=0;
             $tlist = array();
             foreach ($shoporder->_products_ as $product) {
                 //ищем по артикулу 
@@ -250,17 +250,25 @@ class Orders extends \App\Pages\Base
                 }
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = round($product['price']);
-             
+                $totalpr += ($tovar->quantity *$tovar->price);
 
                 $tlist[] = $tovar;
             }
             $neworder->packDetails('detaildata', $tlist);
 
+            $neworder->headerdata['store'] = $store;
+            $neworder->headerdata['store_name'] = $this->filter2->store->getValueName();
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['payment'] = $kassa;
-         
-            
-            $neworder->amount = round($shoporder->total);
+            $neworder->customer_id = $modules['occustomer_id'];
+       
+            $neworder->amount = round($totalpr);
+             
+            if($shoporder->total > $totalpr)  {
+               $neworder->headerdata['delivery_cost'] = $shoporder->total - $totalpr; 
+               $neworder->headerdata['delivery'] = 2; 
+            }          
+           
             $neworder->payamount = round($shoporder->total);
             $neworder->payed = round($shoporder->total);
             $neworder->notes = "OC номер:{$shoporder->order_id};";

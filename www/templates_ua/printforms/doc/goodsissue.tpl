@@ -6,6 +6,11 @@
         <td valign="top"><b>Покупець</b></td>
         <td colspan="5">{{customer_name}}</td>
     </tr>
+    <tr>
+        <td></td>
+        <td valign="top"><b>Зписано з</b></td>
+        <td colspan="5">{{store_name}}</td>
+    </tr>
 
     {{#order}}
     <tr>
@@ -42,11 +47,9 @@
         <td><b>Відповідальний</b></td>
         <td colspan="5"> {{emp_name}}</td>
     </tr>
-     <tr>
-        <td></td>
-        <td><b>Вартiсть  доставки</b></td>
-        <td colspan="5"> {{delivery_cost}}</td>
-    </tr>   {{/isdelivery}}
+    
+    
+     {{/isdelivery}}
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             Накладна № {{document_number}} від {{date}} <br>
@@ -89,6 +92,13 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
+   {{#isdelivery}}
+    <tr style="font-weight: bolder;">
+        <td colspan="6" align="right">Вартiсть  доставки:</td>
+        <td align="right">{{delivery_cost}}</td>
+    </tr>
+    {{/isdelivery}}    
+    
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">До оплати:</td>
         <td align="right">{{payamount}}</td>
