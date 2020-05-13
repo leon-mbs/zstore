@@ -420,12 +420,28 @@ class Helper
      * @param timestamp $date
      * @return mixed
      */
-    public static function fd($date) {
+    public static function fd($date ) {
         if ($date > 0) {
-            $common = System::getOptions("common");
-            if(strlen($common['dateformat'])==0) $common['dateformat'] = 'd.m.Y';
-            
-            return date($common['dateformat'],$date) ;
+            $dateformat = System::getOption("common",'dateformat');
+            if(strlen($dateformat)==0) $dateformat = 'd.m.Y';
+            if($time)  $dateformat .= ' H:i';
+            return date($dateformat,$date) ;
+        }
+
+        return ''; 
+    }    
+   /**
+   * форматирование  даты и времени
+   *  
+   * @param mixed $date
+   * @return mixed
+   */
+   public static function fdt($date ) {
+        if ($date > 0) {
+            $dateformat = System::getOption("common",'dateformat');
+            if(strlen($dateformat)==0) $dateformat = 'd.m.Y';
+ 
+            return date($dateformat . ' H:i',$date) ;
         }
 
         return ''; 

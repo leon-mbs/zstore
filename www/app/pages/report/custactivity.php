@@ -49,7 +49,7 @@ class CustActivity extends \App\Pages\Base
 
     public function OnSubmit($sender) {
         if($this->filter->cust->getKey()==0) {
-            $this->setError('Не задан контрагент') ;
+            $this->setError(H::l('noselcust')) ;
             return;
         }
 
