@@ -23,6 +23,15 @@
                     <option value="0">Не выбран</option>
                 </select>
             </div>
+            <div class="form-group  ">
+                        <label for="tostore" >Оприходовать на  склад</label>
+                        <select class="form-control" zippy="tostore">
+                            <option value="0">Не оприходовать</option>                        
+                        </select>
+                        <small>При проведении  сформируется документ  Оприходование  товара.
+                        Если  включена  поддержка  филиалов документ не  будет проведен и ему  не  будет  присвоен автор  пока  пользовтель,
+                         имеющий права работы  с целевым филиалом, не  откроет и не  сохранит или  проведет  созданый документ.  </small> 
+            </div>
 
             <div class="form-group  ">
                 <label for="notes">Примечание </label>
@@ -43,7 +52,7 @@
 
             </div>
             {{/usescanner}}
-            <a class="btn btn-info btn-sm" zippy="addrow">Добавить позицию</a>
+            <a zippy="addrow">Добавить товар</a>
             <table class="table table-sm">
                 <tr>
                     <th>Название</th>

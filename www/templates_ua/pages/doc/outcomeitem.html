@@ -18,12 +18,20 @@
                 <input class="form-control" type="text" zippy="document_date" required="required">
             </div>
             <div class="form-group  ">
-                <label for="store">З складу</label>
+                <label for="store">Зi складу</label>
                 <select class="form-control" zippy="store">
                     <option value="0">Не обрано</option>
                 </select>
             </div>
-
+             <div class="form-group  ">
+                        <label for="tostore" >Оприходувати на  склад</label>
+                        <select class="form-control" zippy="tostore">
+                            <option value="0">Не оприходувати</option>                        
+                        </select>
+                        <small>При проведеннi буде створено документ 'Оприходування  на  склад'.
+                        Якщо ввiмкнена  пiдтримка  фiлiй, документ не  буде проведено и йому  не  буде присвоено  автора  поки  користувач,
+                         який мае право  роботи  з цiльоввою фiлiею, не  збереже новостворений документ.  </small> 
+            </div>
             <div class="form-group  ">
                 <label for="notes">Примітка </label>
 
@@ -43,7 +51,7 @@
 
             </div>
             {{/usescanner}}
-            <a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
+            <a zippy="addrow">Додати товар</a>
             <table class="table table-sm">
                 <tr>
                     <th>Назва</th>
