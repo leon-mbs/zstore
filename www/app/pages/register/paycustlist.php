@@ -77,14 +77,15 @@ class PayCustList extends \App\Pages\Base
             $br = " {$c} and ";
         }
 
-        $sql = "select c.customer_name,c.phone, c.customer_id,sam, fl from (
-        select customer_id,   coalesce(sum(payamount - payed),0) as sam,
+        $sql = "select c.customer_name,c.phone, c.customer_id,sum(sam) as sam, fl from (
+        select customer_id,   coalesce( (payamount - payed),0) as sam,  
         (case when
-         (SELECT coalesce(sum(amount),0)  FROM `paylist` WHERE documents.document_id = paylist.document_id )>0
-         then 1 else -1 end ) as fl
-            from `documents`  
+          meta_name in('GoodsReceipt','ReturnIssue')
+         then -1 else 1 end ) as fl
+            from `documents_view`  
             where {$br}  payamount > 0 and payamount > payed  and state not in (1,2,3,17,8)   
-            group by customer_id, fl ) t join customers c  on t.customer_id = c.customer_id order by c.customer_name ";
+            ) t join customers c  on t.customer_id = c.customer_id 
+             group by c.customer_name,c.phone, c.customer_id, fl order by c.customer_name ";
         $this->_custlist = \App\DataItem::query($sql);
         $this->clist->custlist->Reload();
     }
@@ -93,8 +94,8 @@ class PayCustList extends \App\Pages\Base
         $cust = $row->getDataItem();
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
-        $row->add(new Label('credit', H::fa($cust->fl == -1 ? $cust->sam : "")));
-        $row->add(new Label('debet', H::fa($cust->fl == 1 ? $cust->sam : "")));
+        $row->add(new Label('credit', H::fa($cust->fl == -1 ? H::fa($cust->sam) : "")));
+        $row->add(new Label('debet', H::fa($cust->fl == 1 ? H::fa($cust->sam) : "")));
 
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
     }
