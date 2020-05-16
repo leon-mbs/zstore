@@ -242,7 +242,7 @@ class ACL
 
     /**
      * возвращает ограничение  для  ресурсов  по филиалам
-     *
+     * @param mixed $nul  вкючая  те  у котрых филиал не  задан
      */
     public static function getBranchConstraint($nul = false) {
         $options = \App\System::getOptions('common');
@@ -297,7 +297,7 @@ class ACL
     }
 
     /**
-     * Возвращает  список складов для подстьановки  в запрос по текущим  филиалам
+     * Возвращает  список складов для подстановки  в запрос по текущим  филиалам
      *
      */
     public static function getStoreBranchConstraint() {
@@ -402,10 +402,10 @@ class ACL
     }
 
     /**
-     * Возвращает  список филиалов для подстановки  в запрос по текущим  филиалам
-     *
+     * Возвращает  список филиалов для подстановки  в запрос  в  виде  списка  цифр
+     *                            
      */
-    public static function getBranchListConstraint() {
+    public static function getBranchIDsConstraint() {
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1) {
             return '';

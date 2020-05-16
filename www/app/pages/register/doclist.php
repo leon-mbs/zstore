@@ -81,7 +81,7 @@ class DocList extends \App\Pages\Base
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-        $filter->page = $this->doclist->setCurrentPage($filter->page);
+        $this->doclist->setCurrentPage($filter->page);
         $this->doclist->setSorting('document_id', 'desc');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);

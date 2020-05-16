@@ -23,9 +23,9 @@ class WRDoc extends \Zippy\Html\PageFragment
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();
-        $cstr = \App\Acl::getBranchListConstraint();
+        $cstr = \App\Acl::getBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = " d.branch_id in({$cstr}) and ";
+            $cstr .= " and ";
         }
 
 
