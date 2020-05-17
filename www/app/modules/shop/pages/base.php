@@ -17,10 +17,17 @@ class Base extends \Zippy\Html\WebPage
         if (!is_array($shop)) {
             $shop = array();
         }
-
-
         $user = System::getUser();
-        $this->_tvars["islogined"] = $user->user_id > 0;
+        if($shop["uselogin"]==1) {
+           if($user->user_id==0) {
+             App::Redirect("\\App\\Modules\\Shop\\Pages\\Userlogin");
+             return;
+              
+           }
+        }
+
+        
+      //  $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["currencyname"] = $shop["currencyname"];
         $this->_tvars["notcnt"] = false;
 

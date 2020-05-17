@@ -12,6 +12,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Form\CheckBox;
 
 class Options extends \App\Pages\Base
 {
@@ -19,7 +20,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('Нет права доступа к  этой странице');
+            System::setErrorMsg('noaccesstopage');  
             App::RedirectHome();
             return;
         }
@@ -32,6 +33,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new TextInput('email'));
         $this->shop->add(new TextInput('currencyname'));
         $this->shop->add(new File('logo'));
+        $this->shop->add(new CheckBox('uselogin'));
 
         $this->add(new Form('texts'))->onSubmit($this, 'saveTextsOnClick');
         $this->texts->add(new TextArea('aboutus'));
@@ -47,6 +49,7 @@ class Options extends \App\Pages\Base
         $this->shop->shopdefcust->setValue($shop['defcust']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->currencyname->setText($shop['currencyname']);
+        $this->shop->uselogin->setChecked($shop['uselogin']);
 
         $this->add(new ClickLink('updateprices'))->onClick($this, 'updatePriceOnClick');
 
@@ -71,6 +74,8 @@ class Options extends \App\Pages\Base
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();
+        $shop['uselogin'] = $this->shop->uselogin->isChecked() ? 1:0;
+ 
 
         $file = $sender->logo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
