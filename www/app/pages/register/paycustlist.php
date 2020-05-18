@@ -137,7 +137,7 @@ class PayCustList extends \App\Pages\Base
 
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
-        $row->add(new Label('date', date('d.m.Y', $doc->document_date)));
+        $row->add(new Label('date', H::fd( $doc->document_date)));
 
 
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
@@ -200,7 +200,7 @@ class PayCustList extends \App\Pages\Base
         $pay = $row->getDataItem();
         $row->add(new Label('plamount', H::fa($pay->amount)));
         $row->add(new Label('pluser', $pay->username));
-        $row->add(new Label('pldate', date('Y-m-d', $pay->paydate)));
+        $row->add(new Label('pldate', H::fd( $pay->paydate)));
         $row->add(new Label('plmft', $pay->mf_name));
         $row->add(new Label('plcomment', $pay->notes));
     }
@@ -259,7 +259,7 @@ class PayCustList extends \App\Pages\Base
 
 
             foreach ($list as $d) {
-                $csv .= date('Y.m.d', $d->document_date) . ';';
+                $csv .= H::fd( $d->document_date) . ';';
                 $csv .= $d->document_number . ';';
 
                 $csv .= H::fa($d->amount) . ';';

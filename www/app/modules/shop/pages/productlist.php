@@ -6,6 +6,8 @@ use App\Application as App;
 use App\Entity\Item;
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Entity\ProductGroup;
+use App\Modules\Shop\Entity\Manufacturer;
+use App\Modules\Shop\Entity\ProductGroup;
 use App\System;
 use ZCL\BT\Tree;
 use Zippy\Binding\PropertyBinding as PB;
@@ -53,7 +55,7 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->add(new Form('searchform'))->onSubmit($this, 'searchformOnSubmit');
         $this->listpanel->searchform->add(new TextInput('skeyword'));
         $this->listpanel->searchform->add(new CheckBox('sstatus'));
-        $this->listpanel->searchform->add(new DropDownChoice('smanuf', \App\Modules\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
+        $this->listpanel->searchform->add(new DropDownChoice('smanuf',  Manufacturer::findArray('manufacturername', '', 'manufacturername')));
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
         $this->listpanel->add(new Form('sortform'));
         $this->listpanel->sortform->add(new DropDownChoice('sorting'))->onChange($this, 'sortingOnChange');
@@ -75,8 +77,8 @@ class ProductList extends \App\Pages\Base
         $editform->add(new TextArea('edescshort'));
         $editform->add(new TextArea('edescdet'));
 
-        $editform->add(new DropDownChoice('emanuf', \App\Modules\Shop\Entity\Manufacturer::findArray('manufacturername', '', 'manufacturername')));
-        $editform->add(new DropDownChoice('egroup', \App\Modules\Shop\Entity\ProductGroup::findArray('groupname', 'group_id not in (select parent_id from shop_productgroups)', 'groupname')));
+        $editform->add(new DropDownChoice('emanuf',  Manufacturer::findArray('manufacturername', '', 'manufacturername')));
+        $editform->add(new DropDownChoice('egroup',  ProductGroup::findArray('groupname', 'group_id not in (select parent_id from shop_productgroups)', 'groupname')));
 
 
         $editform->add(new DataView('attrlist', new ArrayDataSource(new PB($this, 'attrlist')), $this, 'attrlistOnRow'));
@@ -185,13 +187,24 @@ class ProductList extends \App\Pages\Base
 
     //выбран товар 
     public function onChangeItem($sender) {
-        //todo      проверить
+         
         $item = Item::load($sender->getKey());
         $this->product->productname = $item->itemname;
         $this->product->item_code = $item->item_code;
+        
         $this->editpanel->editform->ename->setText($this->product->productname);
         $this->editpanel->editform->ecode->setText($this->product->item_code);
         $this->editpanel->editform->eprice->setText($item->getPrice($this->op['defpricetype'], $this->op['defstore']));
+        
+        //подтягиваем бренд если  совпадает имя
+        if(strlen($item->manufacturer)>0){
+            $m = Manufacturer::getFirst('manufacturername ='.Manufacturer::qstr($item->manufacturer) )  ;
+            if($m  instanceof Manufacturer) {
+                $this->editpanel->editform->emanuf->setValue($m->manufacturer_id);
+            }
+        }
+       
+        
     }
 
     public function OnAutoItem($sender) {
@@ -214,7 +227,7 @@ class ProductList extends \App\Pages\Base
         $row->add(new Label("lcode", $item->item_code));
         $row->add(new Label("lprice", $item->price));
         //$qty=\App\Entity\Item::getQuantity($item->item_id) ;
-        $row->add(new Label("lcnt", $item->qty));
+        $row->add(new Label("lcnt", $item->getQuantity($this->op['defstore'])));
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadimage.php?id=' . $item->image_id . '&t=t');
     }
 

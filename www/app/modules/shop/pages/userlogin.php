@@ -39,9 +39,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 $this->setError('enterpassword');
             }
         }
-
-         
- 
+  
         
         if (strlen($login) > 0 && strlen($password) > 0) {
 
@@ -49,11 +47,11 @@ class UserLogin extends \Zippy\Html\WebPage
 
             if ($user instanceof User) {
                 
-            if (strpos($user->modules, 'shop') === false && $user->userlogin != 'admin') {
-                System::setErrorMsg('invalidlogin');  
-                App::RedirectHome();
-                return;
-            }                
+                if (strpos($user->modules, 'shop') === false && $user->userlogin != 'admin') {
+                    System::setErrorMsg('invalidlogin');  
+                    App::RedirectHome();
+                    return;
+                }                
                 
                 $user->lastlogin = time();
                 $user->save();

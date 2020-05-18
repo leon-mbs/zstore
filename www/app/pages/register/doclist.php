@@ -392,7 +392,7 @@ class DocList extends \App\Pages\Base
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= H::fd($d->document_date) . ';';
             $csv .= $d->document_number . ';';
             $csv .= $d->meta_desc . ';';
             $csv .= $d->customer_name . ';';

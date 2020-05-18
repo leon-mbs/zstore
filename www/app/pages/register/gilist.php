@@ -83,7 +83,7 @@ class GIList extends \App\Pages\Base
 
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
+        $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
         $row->add(new Label('order', $doc->headerdata['order']));
@@ -109,7 +109,7 @@ class GIList extends \App\Pages\Base
 
         if ($sender->id == "bsend") {
             $dec = $this->statuspan->statusform->ship_number->getText();
-            $this->_doc->headerdata['sentdate'] = date('Y-m-d', time());
+            $this->_doc->headerdata['sentdate'] = H::fd( time());
             if (strlen($dec) > 0) {
                 $this->_doc->headerdata['ship_number'] = $dec;
             }
@@ -264,7 +264,7 @@ class GIList extends \App\Pages\Base
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= H::fd( $d->document_date) . ';';
             $csv .= $d->document_number . ';';
             $csv .= $d->headerdata['order'] . ';';
             $csv .= $d->customer_name . ';';
