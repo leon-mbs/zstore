@@ -82,7 +82,7 @@ class GoodsReceipt extends Document
                 $total = $total * $this->headerdata["rate"];
             }
             $k = $total / $this->amount;
-            $item->price = $item->price * $k;
+            $item->price = H::fa($item->price * $k);
 
             $item->amount = $item->price * $item->quantity;
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);

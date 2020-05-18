@@ -242,7 +242,7 @@ class ACL
 
     /**
      * возвращает ограничение  для  ресурсов  по филиалам
-     *
+     * @param mixed $nul  вкючая  те  у котрых филиал не  задан
      */
     public static function getBranchConstraint($nul = false) {
         $options = \App\System::getOptions('common');
@@ -250,7 +250,7 @@ class ACL
             return '';
         }
 
-        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        $id = \App\System::getBranch(); //если  выбран  конкретный
         if ($id > 0) {
             if ($nul == true) {
                 return "branch_id in (0,{$id})";
@@ -288,7 +288,7 @@ class ACL
         if ($options['usebranch'] != 1) {
             return 0;
         }
-        $id = \App\Session::getSession()->branch_id;
+        $id = \App\System::getBranch();
         if ($id > 0) {
             return $id;
         }
@@ -297,7 +297,7 @@ class ACL
     }
 
     /**
-     * Возвращает  список складов для подстьановки  в запрос по текущим  филиалам
+     * Возвращает  список складов для подстановки  в запрос по текущим  филиалам
      *
      */
     public static function getStoreBranchConstraint() {
@@ -306,7 +306,8 @@ class ACL
             return '';
         }
 
-        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        $id = \App\System::getBranch(); //если  выбран  конкретный
+         
         if ($id > 0) {
             return "select stacl.store_id  from stores stacl where stacl.branch_id={$id} ";
         }
@@ -332,7 +333,7 @@ class ACL
             return '';
         }
 
-        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        $id = \App\System::getBranch(); //если  выбран  конкретный
         if ($id > 0) {
             return "select stacl.mf_id  from mfund stacl where stacl.branch_id={$id} ";
         }
@@ -358,7 +359,7 @@ class ACL
             return '';
         }
 
-        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        $id = \App\System::getBranch(); //если  выбран  конкретный
         if ($id > 0) {
             return "select stacl.employee_id  from employees stacl where stacl.branch_id={$id} ";
         }
@@ -384,7 +385,7 @@ class ACL
             return '';
         }
 
-        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        $id = \App\System::getBranch(); //если  выбран  конкретный
         if ($id > 0) {
             return "select stacl.document_id  from documents stacl where stacl.branch_id={$id} ";
         }
@@ -401,16 +402,16 @@ class ACL
     }
 
     /**
-     * Возвращает  список филиалов для подстановки  в запрос по текущим  филиалам
-     *
+     * Возвращает  список филиалов для подстановки  в запрос  в  виде  списка  цифр
+     *                            
      */
-    public static function getBranchListConstraint() {
+    public static function getBranchIDsConstraint() {
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1) {
             return '';
         }
 
-        $id = \App\Session::getSession()->branch_id; //если  выбран  конкретный
+        $id = \App\System::getBranch(); //если  выбран  конкретный
         if ($id > 0) {
             return "{$id}";
         }

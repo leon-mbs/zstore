@@ -154,4 +154,23 @@ class Product extends \ZCL\DB\Entity
         return self::findFirst("product_id={$sef} or sef='{$sef}'");
     }
 
+    
+    /**
+     * возвращает количество на складе
+     *
+     * @param mixed $item_id
+     * @param mixed $store_id
+      */
+    public function getQuantity($store_id = 0 ) {
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select coalesce(sum(qty),0) as qty  from  store_stock  where   item_id = {$this->item_id} ";
+        if ($store_id > 0) {
+            $sql .= " and store_id = " . $store_id;
+        }
+  
+        $cnt = $conn->GetOne($sql);
+        return $cnt;
+    }    
+    
 }

@@ -87,7 +87,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->setVisible(true);
         // Очищаем  форму
         $this->mfdetail->clean();
-        $b = \App\Session::getSession()->branch_id;
+        $b = \App\System::getBranch();
         $this->mfdetail->editbranch->setValue($b > 0 ? $b : 0);
 
         $this->_mf = new MoneyFund();

@@ -415,6 +415,40 @@ class Helper
     }
 
     /**
+     * форматирование дат
+     *
+     * @param timestamp $date
+     * @return mixed
+     */
+    public static function fd($date ) {
+        if ($date > 0) {
+            $dateformat = System::getOption("common",'dateformat');
+            if(strlen($dateformat)==0) $dateformat = 'd.m.Y';
+            if($time)  $dateformat .= ' H:i';
+            return date($dateformat,$date) ;
+        }
+
+        return ''; 
+    }    
+   /**
+   * форматирование  даты и времени
+   *  
+   * @param mixed $date
+   * @return mixed
+   */
+   public static function fdt($date ) {
+        if ($date > 0) {
+            $dateformat = System::getOption("common",'dateformat');
+            if(strlen($dateformat)==0) $dateformat = 'd.m.Y';
+ 
+            return date($dateformat . ' H:i',$date) ;
+        }
+
+        return ''; 
+    }    
+    
+    
+    /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
     public static function getFirmData($id = 0) {

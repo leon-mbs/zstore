@@ -46,6 +46,19 @@
 
                 </select>
             </div>
+           <div class="form-group  ">
+                <label for="dateformat">Формат даты</label>
+
+                <select class="form-control" zippy="dateformat">
+                    <option value='d.m.Y'>dd.mm.yyyy</option>
+                    <option value='d-m-Y'>dd-mm-yyyy</option>
+                    <option value='d/m/Y'>dd/mm/yyyy</option>
+                    <option value='Y.m.d'>yyyy.mm.dd </option>                   
+                    <option value='Y-m-d'>yyyy-mm-dd </option>                   
+                    <option value='Y/m/d'>yyyy/mm/dd </option>                   
+
+                </select>
+            </div>
             <div class="form-group">
                 <label for="defprice">Наценка по умолчению, в процентах</label>
                 <input style="width:100px" pattern="[0-9]+" class="form-control" type="text" zippy="defprice">
@@ -62,7 +75,7 @@
                 <input zippy="autoarticle" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="autoarticle"> Автоматически создавать артикулы</label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                   title="Автоматическая  генерация номеров  артикулов длЯ товаров"></i>
+                   title="Автоматическая  генерация номеров  артикулов для товаров"></i>
             </div>
 
             <div class="form-check">

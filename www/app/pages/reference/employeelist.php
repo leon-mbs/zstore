@@ -97,7 +97,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->setVisible(true);
         // Очищаем  форму
         $this->employeedetail->clean();
-        $b = \App\Session::getSession()->branch_id;
+        $b = \App\System::getBranch();
         $this->employeedetail->editbranch->setValue($b > 0 ? $b : 0);
 
 

@@ -273,7 +273,7 @@ class DocView extends \Zippy\Html\PageFragment
     public function msgListOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label("msgdata", $item->message));
+        $row->add(new Label("msgdata", nl2br($item->message) ,true ));
         $row->add(new Label("msgdate", date("Y-m-d H:i", $item->created)));
         $row->add(new Label("msguser", $item->username));
 

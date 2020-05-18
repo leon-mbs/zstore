@@ -82,8 +82,18 @@ class IncomeItem extends \App\Pages\Base
                     if ($basedoc->meta_name == 'OutcomeItem') {
 
 
-                        $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
+                       
+                       foreach($basedoc->unpackDetails('detaildata') as $it){
+                          
+                          //последняя партия 
+                          $stock =  \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$basedoc->headerdata['store'] }",'stock_id desc') ;
+                          $it->price = $stock->partion;
+                           
+                          
+                          $this->_itemlist[] = $it; 
+                       }
+                        
+                        
                     }
                 }
             }

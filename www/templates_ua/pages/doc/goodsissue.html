@@ -104,7 +104,7 @@
             <a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
             <table class="table table-sm">
                 <tr>
-                     <th> </th>
+                    <th> </th>
                     <th>Назва</th>
                     <th>Код</th>
                     <th>Од.</th>
@@ -121,8 +121,8 @@
                     <th width="70"></th>
                 </tr>
                 <tr zippy="detail">
-                   <td zippy="num"></td>
-                     <td zippy="tovar"></td>
+                    <td zippy="num"></td>
+                    <td zippy="tovar"></td>
                     <td zippy="code"></td>
                     <td zippy="msr"></td>
                     {{#usesnumber}}
@@ -140,8 +140,9 @@
 
                 </tr>
                 <tr style="font-weight: bolder;" id="tankor">
-
+             
                     <td><span zippy="weight"></span></td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     {{#usesnumber}}
@@ -150,8 +151,7 @@
                     {{/usesnumber}}
 
 
-                    <td class="text-right"></td>
-
+                      <td class="text-right"></td>
                     <td class="text-right">Всього:</td>
 
 
@@ -166,6 +166,15 @@
 
                     <td zippy="paydisc" class="text-right"></td>
                     <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
+                            class="fa fa-edit"></i></a></td>
+                </tr>
+               <tr style="font-weight: bolder;">
+
+                    <td colspan={{colspan}} class="text-right"><span data-label="delivery_cost">Вартість доставки:</span></td>
+
+
+                    <td zippy="delivery_cost" class="text-right"></td>
+                    <td><a data-label="delivery_cost" href="javascript:void(0);" data-toggle="modal" data-target="#modaldelivery_cost"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
                 <tr style="font-weight: bolder;">
@@ -270,18 +279,42 @@
             </div>
         </div>
     </div>
-</form>
+    <div id="modaldelivery_cost" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Доставка</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group  ">
+                        <input class="form-control" type="text" zippy="editdelivery_cost" pattern="[0-9\.]+">
+                        <div class="input-group-append">
+                            <input type="submit" value="OK" zippy="bdelivery_cost" class="ml-2 btn btn-info  ">
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    </form>
 <div class="row">
     <div class="col-12 col-md-4 col-xl-3">
-
         <form zippy="editdetail">
             <h4>Введення товару </h4>
+
 
             <div class="form-group">
                 <label for="edittovar">Назва</label>
                 <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
-                <a zippy="openitemsel">Вiдкрити довiдник</a>
-                <br> Наявність: <span zippy="qtystock"></span>
+                <a zippy="openitemsel">Відкрити довідник</a>
+                <br>Наявність: <span zippy="qtystock"></span>
 
             </div>
             {{#usesnumber}}

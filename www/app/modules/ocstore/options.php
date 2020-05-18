@@ -4,6 +4,7 @@ namespace App\Modules\OCStore;
 
 use App\System;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\CheckBox ;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
@@ -28,6 +29,7 @@ class Options extends \App\Pages\Base
         $form = $this->add(new Form("cform"));
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
+        $form->add(new CheckBox('outcome', $modules['ocoutcome']));
         $form->add(new TextArea('key', $modules['ockey']));
         $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['occustomer_id'] > 0 ? $modules['occustomer_id'] : 0));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
@@ -117,6 +119,7 @@ class Options extends \App\Pages\Base
         $key = $this->cform->key->getText();
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
+        $outcome = $this->cform->outcome->isChecked();
         if ($customer_id == 0) {
 
             $this->setError('noselcust');
@@ -137,6 +140,7 @@ class Options extends \App\Pages\Base
         $modules['ockey'] = $key;
         $modules['occustomer_id'] = $customer_id;
         $modules['ocpricetype'] = $pricetype;
+        $modules['ocoutcome'] = $outcome;
 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');

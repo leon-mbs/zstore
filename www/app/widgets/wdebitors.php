@@ -19,9 +19,9 @@ class WDebitors extends \Zippy\Html\PageFragment
 
         $visible = (strpos(System::getUser()->widgets, 'wdebitors') !== false || System::getUser()->userlogin == 'admin');
 
-        $cstr = \App\Acl::getBranchListConstraint();
+        $cstr = \App\Acl::getBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = "  branch_id in({$cstr}) and ";
+            $cstr .= " and ";
         }
 
         $data = array();
@@ -29,8 +29,8 @@ class WDebitors extends \Zippy\Html\PageFragment
 
         $conn = $conn = \ZDB\DB::getConnect();
         $sql = "select * from (
-            select meta_desc,document_number, customer_name,  abs( amount - payamount)  as am 
-            from `documents_view` where {$cstr} amount > 0 and amount <> payamount  and state not in (1,2,3,17)  and meta_name in('GoodsReceipt','GoodsIssue','Task','ServiceAct') 
+            select meta_desc,document_number, customer_name,  abs( payamount - payed)  as am 
+            from `documents_view` where {$cstr} payamount > 0 and payamount <> payed  and state not in (1,2,3,17)  and meta_name in('GoodsReceipt','GoodsIssue','Task','ServiceAct') 
               
             ) t  order by am desc  ";
 

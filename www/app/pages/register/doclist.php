@@ -81,7 +81,7 @@ class DocList extends \App\Pages\Base
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-        $filter->page = $this->doclist->setCurrentPage($filter->page);
+        $this->doclist->setCurrentPage($filter->page);
         $this->doclist->setSorting('document_id', 'desc');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -147,7 +147,7 @@ class DocList extends \App\Pages\Base
 
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('branch', $doc->branch_name));
-        $row->add(new Label('date', date('d-m-Y', $doc->document_date)));
+        $row->add(new Label('date', H::fd( $doc->document_date)));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
@@ -392,7 +392,7 @@ class DocList extends \App\Pages\Base
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= date('Y.m.d', $d->document_date) . ';';
+            $csv .= H::fd($d->document_date) . ';';
             $csv .= $d->document_number . ';';
             $csv .= $d->meta_desc . ';';
             $csv .= $d->customer_name . ';';

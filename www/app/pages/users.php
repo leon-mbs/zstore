@@ -5,6 +5,7 @@ namespace App\Pages;
 use App\Application as App;
 use App\Entity\User;
 use App\System;
+
 use Zippy\Binding\PropertyBinding as Bind;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Button;
@@ -33,7 +34,7 @@ class Users extends \App\Pages\Base
 
         $this->add(new Panel("listpan"));
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
-        $this->listpan->add(new DataView("userrow", new UserDataSource(), $this, 'OnAddUserRow'))->Reload();
+        $this->listpan->add(new DataView("userrow", new UserDataSource(), $this, 'OnUserRow'))->Reload();
 
 
         $this->add(new Panel("editpan"))->setVisible(false);
@@ -316,12 +317,12 @@ class Users extends \App\Pages\Base
         $this->listpan->userrow->Reload();
     }
 
-    public function OnAddUserRow($datarow) {
+    public function OnUserRow($datarow) {
         $item = $datarow->getDataItem();
         $datarow->add(new \Zippy\Html\Label("userlogin", $item->userlogin));
         $datarow->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
-        $datarow->add(new \Zippy\Html\Label("created", date('d.m.Y', $item->createdon)));
+        $datarow->add(new \Zippy\Html\Label("created", \App\Helper::fd($item->createdon)));
         $datarow->add(new \Zippy\Html\Label("email", $item->email));
         $datarow->add(new \Zippy\Html\Link\ClickLink("edit", $this, "OnEdit"))->setVisible($item->userlogin != 'admin');
         $datarow->add(new \Zippy\Html\Link\ClickLink("remove", $this, "OnRemove"))->setVisible($item->userlogin != 'admin');

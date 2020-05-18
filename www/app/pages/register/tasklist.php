@@ -79,7 +79,7 @@ class TaskList extends \App\Pages\Base
         $row->add(new Label('tasknumber', $task->document_number));
         $row->add(new Label('taskdesc', $task->notes));
 
-        $row->add(new Label('taskdocument_date', date('Y-m-d', $task->document_date)) );
+        $row->add(new Label('taskdocument_date', H::fd( $task->document_date)) );
         $row->add(new Label('taskhours', $task->headerdata['taskhours']));
 
         $row->add(new Label('taskstatus', Document::getStateName($task->state)));
@@ -319,7 +319,7 @@ class TaskList extends \App\Pages\Base
             $csv .= $task->document_number . ',';
 
             $csv .= str_replace(',', '', $task->notes) . ';';
-            $csv .= date('Y-m-d H:i', $task->document_date) . ';';
+            $csv .= H::fdt(  $task->document_date) . ';';
             $csv .= $task->headerdata['taskhours'] . ';';
             $csv .= Document::getStateName($task->state) . ';';
             $csv .= $task->amount . ';';

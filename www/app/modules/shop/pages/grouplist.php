@@ -30,7 +30,7 @@ class GroupList extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('Нет права доступа к  этой странице');
+            System::setErrorMsg('noaccesstopage');  
             App::RedirectHome();
             return;
         }
@@ -127,6 +127,10 @@ class GroupList extends \App\Pages\Base
             $this->groupform->group_image->setUrl('/loadimage.php?id=' . $this->group->image_id);
         }
         $this->UpdateAttrList();
+        //у верхнего  уровня  нет картинок
+        $this->groupform->group_image->setVisible($this->group->parent_id>0);
+        $this->groupform->photo->setVisible($this->group->parent_id>0);
+        $this->groupform->savegroup->setVisible($this->group->parent_id>0);
     }
 
     public function OnNewGroup($sender) {
@@ -166,7 +170,7 @@ class GroupList extends \App\Pages\Base
     public function OnDelGroup($sender) {
 
         $del = ProductGroup::delete($this->group->group_id);
-        if (strlen($del) > 0) {
+        if (strlen($del) > 0 && is_string($del)) {
             $this->setError($del);
             return;
         }

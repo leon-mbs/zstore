@@ -148,7 +148,7 @@ class ItemList extends \App\Pages\Base
 
 
         if (strlen($stock->snumber) > 0 && strlen($stock->sdate) > 0) {
-            $row->sdate->setText(date('Y-m-d', $stock->sdate));
+            $row->sdate->setText(H::fd( $stock->sdate));
 
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
