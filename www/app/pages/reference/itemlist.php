@@ -197,11 +197,11 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->setVisible(true);
 
         $this->itemdetail->editname->setText($this->_item->itemname);
-        $this->itemdetail->editprice1->setText(H::fa($this->_item->price1));
-        $this->itemdetail->editprice2->setText(H::fa($this->_item->price2));
-        $this->itemdetail->editprice3->setText(H::fa($this->_item->price3));
-        $this->itemdetail->editprice4->setText(H::fa($this->_item->price4));
-        $this->itemdetail->editprice5->setText(H::fa($this->_item->price5));
+        $this->itemdetail->editprice1->setText($this->_item->price1);
+        $this->itemdetail->editprice2->setText($this->_item->price2);
+        $this->itemdetail->editprice3->setText($this->_item->price3);
+        $this->itemdetail->editprice4->setText($this->_item->price4);
+        $this->itemdetail->editprice5->setText($this->_item->price5);
         $this->itemdetail->editcat->setValue($this->_item->cat_id);
 
         $this->itemdetail->editmanufacturer->setText($this->_item->manufacturer);
