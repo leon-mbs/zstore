@@ -123,7 +123,7 @@ class PayActivity extends \App\Pages\Base
 
 
             $detail[] = array(
-                "date" => date("Y-m-d", strtotime($row['dt'])),
+                "date" => \App\Helper::fd( strtotime($row['dt'])),
 
                 "in" => H::fa(strlen($row['begin_amount']) > 0 ? $row['begin_amount'] : 0),
                 "obin" => H::fa($row['obin']),
@@ -136,13 +136,13 @@ class PayActivity extends \App\Pages\Base
         }
         $tb = $tend - $tin + $tout;
 
-        $header = array('datefrom' => date('d.m.Y', $from),
+        $header = array('datefrom' => \App\Helper::fd( $from),
             "_detail" => $detail,
             'tb' => H::fa($tb),
             'tin' => H::fa($tin),
             'tout' => H::fa($tout),
             'tend' => H::fa($tend),
-            'dateto' => date('d.m.Y', $to),
+            'dateto' => \App\Helper::fd( $to),
             "mf_name" => MoneyFund::load($mf_id)->mf_name
         );
         $report = new \App\Report('report/payactivity.tpl');

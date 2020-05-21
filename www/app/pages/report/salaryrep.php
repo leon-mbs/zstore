@@ -86,9 +86,9 @@ class SalaryRep extends \App\Pages\Base
 
             $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
 
-            $d1 = date("Y-m-d H:i", $from);
-            $d2 = date("Y-m-d H:i", $to);
-            $d3 = date("Y-m-d H:i", $date);
+            $d1 = \App\Helper::fdt( $from);
+            $d2 = \App\Helper::fdt( $to);
+            $d3 = \App\Helper::fdt( $date);
 
             if ($date < $from || $date > $to) {
                 continue;

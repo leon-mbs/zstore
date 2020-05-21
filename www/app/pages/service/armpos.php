@@ -213,7 +213,7 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd( $item->sdate) : ''));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));

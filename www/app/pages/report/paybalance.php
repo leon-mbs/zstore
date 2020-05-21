@@ -130,8 +130,8 @@ class PayBalance extends \App\Pages\Base
         $total = $tin - $tout;
 
         $header = array(
-            'datefrom' => date('d.m.Y', $from),
-            'dateto' => date('d.m.Y', $to),
+            'datefrom' => \App\Helper::fd( $from),
+            'dateto' => \App\Helper::fd( $to),
             "_detail" => $detail,
             "_detail2" => $detail2,
             'tin' => H::fa($tin),

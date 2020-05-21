@@ -121,9 +121,9 @@ class EmpTask extends \App\Pages\Base
             }
         }
 
-        $header = array('datefrom' => date('d.m.Y', $from),
+        $header = array('datefrom' => \App\Helper::fd( $from),
             "_detail" => $detail,
-            'dateto' => date('d.m.Y', $to)
+            'dateto' => \App\Helper::fd( $to)
         );
         $report = new \App\Report('report/emptask.tpl');
 

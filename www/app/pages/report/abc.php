@@ -115,9 +115,9 @@ class ABC extends \App\Pages\Base
         }
 
 
-        $header = array('from' => date('d.m.Y', $from),
+        $header = array('from' => \App\Helper::fd( $from),
             "_detail" => $detail,
-            'to' => date('d.m.Y', $to),
+            'to' => \App\Helper::fd( $to),
             "type" => $this->typelist[$type],
             'totala' => $totala,
             'totalb' => $totalb,
