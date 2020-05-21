@@ -59,12 +59,12 @@
         <td align="right">{{nds}}</td>
     </tr>
     {{/isnds}}
-    {{#israte}}
+    {{#isval}}
     <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">Курс:</td>
+        <td colspan="7" align="right">Курс {{val}}:</td>
         <td align="right">{{rate}}</td>
     </tr>
-    {{/israte}}
+    {{/isval}}
 
     <tr style="font-weight: bolder;">
         <td colspan="7" align="right">До оплати:</td>

@@ -57,6 +57,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
+        $this->_tvars["useval"] = $options['useval'] == 1;
 
 
         if ($this->_tvars["usebranch"] == false) {

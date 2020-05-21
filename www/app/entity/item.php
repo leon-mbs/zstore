@@ -33,6 +33,9 @@ class Item extends \ZCL\DB\Entity
         $this->price3 = (string)($xml->price3[0]);
         $this->price4 = (string)($xml->price4[0]);
         $this->price5 = (string)($xml->price5[0]);
+        $this->rate   = (string)($xml->rate[0]);
+        $this->val    = (string)($xml->val[0]);
+        
         $this->pricelist = (int)$xml->pricelist[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
@@ -87,6 +90,8 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<price3>{$this->price3}</price3>";
         $this->detail .= "<price4>{$this->price4}</price4>";
         $this->detail .= "<price5>{$this->price5}</price5>";
+        $this->detail .= "<val>{$this->val}</val>";
+        $this->detail .= "<rate>{$this->rate}</rate>";
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<weight>{$this->weight}</weight>";
@@ -165,6 +170,17 @@ class Item extends \ZCL\DB\Entity
                     $partion = $this->getLastPartion($store);
                 }
                 $price = $partion + (int)$partion / 100 * $ret;
+                //курсовая разница
+                $opv = \App\System::getOptions("val");
+                if(strlen($this->val)>1 && $opv['valprice']==1){
+                     $k =  $opv[$this->val] / $this->rate;
+                     $price = $price*$k;
+                }
+                
+                
+                
+                
+                
             }
         } else {
             if ($_price > 0) {
@@ -194,6 +210,14 @@ class Item extends \ZCL\DB\Entity
                 if ($_price_ == 'price5' && $cat->price5 > 0) {
                     $price = $partion + (int)$partion / 100 * $cat->price5;
                 }
+                
+               //курсовая разница
+                $opv = \App\System::getOptions("val");
+                if(strlen($this->val)>1 && $opv['valprice']==1){
+                     $k =  $opv[$this->val] / $this->rate;
+                     $price = $price*$k;
+                }
+                
             }
         }
 
@@ -206,10 +230,17 @@ class Item extends \ZCL\DB\Entity
                 $partion = $this->getLastPartion($store);
             }
 
-            $price = $partion + (int)$partion / 100 * $common['defprice'];
+            $price = $partion + (int)$partion / 100 * $common['defprice'];  
+               //курсовая разница
+                $opv = \App\System::getOptions("val");
+                if(strlen($this->val)>1 && $opv['valprice']==1){
+                     $k =  $opv[$this->val] / $this->rate;
+                     $price = $price*$k;
+                }
+            
         }
 
-        //поправка  по  валюте
+         
 
 
         return \App\Helper::fa($price);

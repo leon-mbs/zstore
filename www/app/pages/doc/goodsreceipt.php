@@ -40,7 +40,6 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 8 : 6;
 
-
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
@@ -54,6 +53,9 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+       
+        
+        $this->docform->add(new DropDownChoice('val',H::getValList() , '0'))->onChange($this, 'OnVal');
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -133,6 +135,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->nds->setText($this->_doc->headerdata['nds']);
             $this->docform->editnds->setText($this->_doc->headerdata['nds']);
+            $this->docform->val->setValue($this->_doc->headerdata['val']);
             $this->docform->rate->setText($this->_doc->headerdata['rate']);
             $this->docform->editrate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText($this->_doc->headerdata['disc']);
@@ -405,6 +408,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['val'] = $this->docform->val->getValue();
+        $this->_doc->headerdata['valname'] = $this->docform->val->getValueName();
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
@@ -467,6 +472,18 @@ class GoodsReceipt extends \App\Pages\Base
                         }
                     }
                 }
+                
+                //обновляем  курс
+                if(strlen($this->_doc->headerdata['val'])>1) {
+                  $optval =   \App\System::getOptions("val" );  
+                  if(strlen($optval[$this->_doc->headerdata['val']])>0){
+                      $optval[$this->_doc->headerdata['val']] = $this->_doc->headerdata['rate']    ;
+                       \App\System::setOptions("val", $optval);
+                  }
+                       
+                }
+                
+                
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -546,13 +563,13 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onNds($sender) {
-        $this->docform->nds->setText(H::fa($this->docform->editnds->getText()));
+        $this->docform->nds->setText( $this->docform->editnds->getText() );
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
 
     public function onRate($sender) {
-        $this->docform->rate->setText(H::fa($this->docform->editrate->getText()));
+        $this->docform->rate->setText( $this->docform->editrate->getText() );
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
@@ -630,6 +647,19 @@ class GoodsReceipt extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and   (customer_name like {$text}  or phone like {$text} ) and   (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )");
+    }
+    
+    public function OnVal($sender) {
+        $val = $sender->getValue();
+        if(strlen($val)>1){
+          $optval = \App\System::getOptions("val" ); 
+          $rate =  $optval[$val];
+        }  else {
+           $rate =1;         
+        }
+        $this->docform->rate->setText($rate);       
+        $this->docform->editrate->setText($rate); 
+        $this->CalcPay();      
     }
 
     //добавление нового товара
