@@ -216,6 +216,13 @@ class GoodsReceipt extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+        
+        $this->_tvars['manlist'] = array();
+        
+        foreach(Item::getManufacturers() as  $man){
+           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
+        }         
+        
     }
 
 
@@ -673,11 +680,7 @@ class GoodsReceipt extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->editnewitem->editnewitemcode->setText(Item::getNextArticle());
         }
-        $this->_tvars['manlist'] = array();
-        
-        foreach(Item::getManufacturers() as  $man){
-           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
-        }        
+       
         
     }
 

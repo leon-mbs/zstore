@@ -279,6 +279,12 @@ class GoodsIssue extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+       
+        $this->_tvars['manlist'] = array();
+        
+        foreach(Item::getManufacturers() as  $man){
+           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
+        }         
 
         $this->OnDelivery($this->docform->delivery);
     }

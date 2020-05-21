@@ -348,7 +348,7 @@
         </form>
     </div>
 
-    <div class="col-12 col-md-8 col-xl-6">
+    <div class="col-12 col-md-8 col-xl-8">
         <div zippy="wselitem"></div>
 
 
@@ -393,7 +393,7 @@
             {{/usesnumber}}
              <div class="form-group">
                 <label for="editnewmanufacturer">Бренд, производитель </label>
-                <input list="manlist" class="form-control " zippy="editnewmanufacturer"/>
+                <input autocomplete="off" list="manlist" class="form-control " zippy="editnewmanufacturer"/>
                 <datalist id="manlist">
                       {{#manlist}}
                           <option label='{{mitem}}' value='{{mitem}}'>
