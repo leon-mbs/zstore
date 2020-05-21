@@ -35,7 +35,7 @@ class OutSalary extends Document
         $header = array(
             "_detail" => $detail,
             'total' => H::fa($this->amount),
-            'date' => date('d.m.Y', $this->document_date),
+            'date' => H::fd( $this->document_date),
             "notes" => $this->notes,
             "month" => $this->headerdata["monthname"],
             "year" => $this->headerdata["year"],

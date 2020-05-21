@@ -261,7 +261,7 @@ class IssueList extends \App\Pages\Base
 
         $this->listpan->list->Reload(false);
 
-        $this->listpan->msgpan->mcreate->setText('Создан ' . $this->_issue->createdbyname . ' ' . date('Y-m-d', $this->_issue->createdon) . '&nbsp;Проект&nbsp;<a href="/project/' . $this->_issue->project_id . '">' . $this->_issue->project_name . '</a> ', true);
+        $this->listpan->msgpan->mcreate->setText('Создан ' . $this->_issue->createdbyname . ' ' . \App\Helper::fd( $this->_issue->createdon) . '&nbsp;Проект&nbsp;<a href="/project/' . $this->_issue->project_id . '">' . $this->_issue->project_name . '</a> ', true);
 
         $this->listpan->msgpan->addmsgform->edittags->setTags(array());
         $users = User::findArray('username', 'user_id <>' . System::getUser()->user_id);
@@ -342,7 +342,7 @@ class IssueList extends \App\Pages\Base
 
     public function msgListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('msgdate', date("Y-m-d H:i", $item->created)));
+        $row->add(new Label('msgdate', \App\Helper::fdt( $item->created)));
         $row->add(new Label('msguser', $item->username));
         $row->add(new Label('msgdata', $item->message));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
@@ -428,7 +428,7 @@ class IssueList extends \App\Pages\Base
 
     public function stlistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('sttime', date('Y-m-d', $item->createdon)));
+        $row->add(new Label('sttime', \App\Helper::fd( $item->createdon)));
         $row->add(new Label('stuser', $item->username));
         $row->add(new Label('stname', $item->statusname));
     }

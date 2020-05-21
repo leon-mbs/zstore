@@ -26,7 +26,7 @@ class ServiceAct extends Document
             );
         }
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "gar" => $this->headerdata['gar'],
@@ -81,7 +81,7 @@ class ServiceAct extends Document
             $wp = 'style="width:' . $printer['pwidth'] . 'mm"';
         }
 
-        $header = array('printw' => $wp, 'date' => date('d.m.Y', time()),
+        $header = array('printw' => $wp, 'date' => H::fd( time()),
             "document_number" => $this->document_number,
             "firmname" => $firm['firmname'],
             "shopname" => strlen($firm['shopname']) > 0 ? $firm['shopname'] : false,
@@ -109,7 +109,7 @@ class ServiceAct extends Document
         if (count($pays) > 0) {
             $header['plist'] = array();
             foreach ($pays as $pay) {
-                $header['plist'][] = array('pdate' => date('d.m.Y', $pay->paydate), 'ppay' => H::fa($pay->amount));
+                $header['plist'][] = array('pdate' => H::fd( $pay->paydate), 'ppay' => H::fa($pay->amount));
             }
         }
         $header['ispay'] = count($pays) > 0;

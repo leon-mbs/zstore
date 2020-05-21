@@ -362,12 +362,15 @@ class Item extends \ZCL\DB\Entity
             $criteria .= "  and  (itemname like {$like} or item_code = {$partname}   or   bar_code = {$partname} )";
         }
 
-        $entitylist = self::find($criteria);
+        $itemlist = self::find($criteria);
 
         $list = array();
-        foreach ($entitylist as $key => $value) {
+        foreach ($itemlist as $key => $value) {
 
             $list[$key] = $value->itemname;
+            if(strlen($value->manufacturer)>0) {
+                $list[$key] = $value->itemname . ' ('.$value->manufacturer.')';
+            }
         }
 
         return $list;

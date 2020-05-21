@@ -25,7 +25,7 @@ class ProdIssue extends Document
             } else {
                 $name = $item->itemname;
                 if (strlen($item->snumber) > 0) {
-                    $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
+                    $name .= ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
                 }
 
 
@@ -41,7 +41,7 @@ class ProdIssue extends Document
         }
 
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
             "pareaname" => $this->headerdata["pareaname"],
             "document_number" => $this->document_number,

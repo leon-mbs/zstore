@@ -225,7 +225,7 @@ class ProjectList extends \App\Pages\Base
 
     public function msgListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('msgdate', date("Y-m-d H:i", $item->created)));
+        $row->add(new Label('msgdate', \App\Helper::fdt( $item->created)));
         $row->add(new Label('msguser', $item->username));
         $row->add(new Label('msgdata', $item->message));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
