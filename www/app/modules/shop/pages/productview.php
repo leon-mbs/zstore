@@ -76,8 +76,8 @@ class ProductView extends Base
             $this->onstore = "Снят с продажи";
             $this->buy->setVisible(false);
         } else {
-
-            if ($product->qty > 0) {
+            $op = \App\System::getOptions("shop");   
+            if ($product->getQuantity($op['defstore']) > 0) {
                 $this->onstore->setText("В наличии");
                 $this->buy->setValue("Купить");
             } else {

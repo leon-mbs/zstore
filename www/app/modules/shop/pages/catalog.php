@@ -93,7 +93,10 @@ class Catalog extends Base
         $row->add(new Label("sprice", $item->price));
         $row->add(new TextInput('srated'))->setText($item->rating);
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
-        if ($item->qty > 0) {
+        
+        $op = \App\System::getOptions("shop");        
+        
+        if ($item->getQuantity($op['defstore']) > 0) {
             $row->sbuy->setValue("Купить");
         } else {
             $row->sbuy->setValue("Заказать");
