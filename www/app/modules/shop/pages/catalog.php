@@ -97,9 +97,9 @@ class Catalog extends Base
         $op = \App\System::getOptions("shop");        
         
         if ($item->getQuantity($op['defstore']) > 0) {
-            $row->sbuy->setValue("Купить");
+            $row->sbuy->setValue( \App\Helper::l('tobay') );
         } else {
-            $row->sbuy->setValue("Заказать");
+            $row->sbuy->setValue(\App\Helper::l('toorder') );
         }
         $row->add(new Label('arrowup'))->setVisible($item->chprice == 'up');
         $row->add(new Label('arrowdown'))->setVisible($item->chprice == 'down');
