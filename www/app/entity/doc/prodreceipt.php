@@ -80,6 +80,7 @@ class ProdReceipt extends Document
     public function getRelationBased() {
         $list = array();
         $list['ProdReceipt'] = 'Оприходование  с  производства';
+        $list['ProdIssue']   = 'Списание в  производство';
 
         return $list;
     }

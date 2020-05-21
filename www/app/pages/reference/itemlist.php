@@ -162,6 +162,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
+        
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");

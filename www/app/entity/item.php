@@ -246,7 +246,7 @@ class Item extends \ZCL\DB\Entity
         return \App\Helper::fa($price);
     }
 
-    private function getLastPartion($store) {
+    public function getLastPartion($store) {
         $conn = \ZDB\DB::getConnect();
         $sql = "  select coalesce(partion,0)  from  store_stock where    item_id = {$this->item_id}   ";
         if ($store > 0) {
