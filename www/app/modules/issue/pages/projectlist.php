@@ -141,9 +141,7 @@ class ProjectList extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('StoreList')) {
-            return;
-        }
+     
 
         $this->_project->project_name = $this->projectform->editname->getText();
         $this->_project->customer_id = $this->projectform->editcust->getKey();
