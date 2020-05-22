@@ -124,7 +124,7 @@ class ServiceAct extends Document
     public function getRelationBased() {
         $list = array();
         $list['Task'] = 'Наряд';
-        $list['GoodsIssue'] = 'Расходная накладная';
+        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
 
         return $list;
     }

@@ -79,9 +79,9 @@ class Order extends \App\Entity\Doc\Document
 
     public function getRelationBased() {
         $list = array();
-        $list['GoodsIssue'] = 'Расходная накладная';
-        $list['Invoice'] = 'Счет-фактура';
-        $list['POSCheck'] = 'Чек';
+        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+        $list['Invoice'] = self::getDesc('Invoice');
+        $list['POSCheck'] = self::getDesc('POSCheck');
 
 
         return $list;

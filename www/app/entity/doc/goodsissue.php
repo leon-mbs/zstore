@@ -118,9 +118,9 @@ class GoodsIssue extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['Warranty'] = 'Гарантийный талон';
-        $list['ReturnIssue'] = 'Возвратная накладная';
-        $list['GoodsIssue'] = 'Расходная накладная';
+        $list['Warranty'] = self::getDesc('Warranty');
+        $list['ReturnIssue'] = self::getDesc('ReturnIssue');
+        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
 
         return $list;
     }

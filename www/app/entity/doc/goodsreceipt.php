@@ -130,8 +130,8 @@ class GoodsReceipt extends Document
     public function getRelationBased() {
         $list = array();
 
-        $list['RetCustIssue'] = 'Возврат  поставщику';
-        $list['GoodsReceipt'] = 'Приходная  накладная';
+        $list['RetCustIssue'] = self::getDesc('RetCustIssue');
+        $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
 
         return $list;
     }

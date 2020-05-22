@@ -4,15 +4,23 @@ namespace App\Pages\Service;
 
 use App\Entity\Customer;
 use App\Entity\Item;
+use App\Entity\Doc\Document;
 use App\Entity\Store;
 use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\Date;
+use Zippy\Binding\PropertyBinding as Prop;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Label;
 
 class Export extends \App\Pages\Base
 {
-
+    public $_docs = array();
+    
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowSer('Export')) {
@@ -21,7 +29,7 @@ class Export extends \App\Pages\Base
 
         $form = $this->add(new Form("iform"));
 
-        $form->add(new DropDownChoice("itype", array(0 => 'Только справочник', 1 => 'Данные склада'), 0))->onChange($this, "onType");
+        $form->add(new DropDownChoice("itype", array( ), 0))->onChange($this, "onType");
         $form->add(new DropDownChoice("encode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new DropDownChoice("price", Item::getPriceTypeList()));
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
@@ -33,13 +41,25 @@ class Export extends \App\Pages\Base
 
         $form = $this->add(new Form("cform"));
 
-        $form->add(new DropDownChoice("ctype", array(0 => 'Все', 1 => 'Поставщики', 2 => 'Покупатели'), 0));
+        $form->add(new DropDownChoice("ctype", array(  ), 0));
         $form->add(new DropDownChoice("cencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new TextInput("csep", ';'));
 
         $form->onSubmit($this, "onCExport");
 
+        $form = $this->add(new Form("dform"));
+        
+        $form->add(new DropDownChoice("dtype", array( 'GoodsReceipt'=>Document::getDesc('GoodsReceipt'),'GoodsIssue'=>Document::getDesc('GoodsIssue')), 'GoodsReceipt'));
+        $form->add(new DropDownChoice("dencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
+        $form->add(new TextInput("dsep", ';'));
+        $form->add(new Date('dfrom', time() - (7 * 24 * 3600)));
+        $form->add(new Date('dto', time() + (1 * 24 * 3600)));
 
+        $form->onSubmit($this, "onDPreview");
+
+        $form = $this->add(new Form("dformlist"));
+        $form->add(new DataView('doclist', new ArrayDataSource(new Prop($this, '_docs')), $this, 'expDRow'));
+        $form->onSubmit($this, "onDExport");
     }
 
     public function onType($sender) {
@@ -147,4 +167,56 @@ class Export extends \App\Pages\Base
 
     }
 
+    
+    public function onDPreview($sender) {
+        $dt = $sender->dtype->getValue() ;
+ 
+        $conn = \ZDB\DB::getConnect();
+        
+        $sql = "meta_name='{$dt}' and date(document_date) >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  date(document_date) <= " . $conn->DBDate($sender->dto->getDate())    ;
+        $this->_docs = Document::find($sql);
+        $this->dformlist->doclist->Reload();
+
+    }
+    public function expDRow($row) {
+        $doc = $row->getDataItem();
+        $row->add(new CheckBox('dch', new Prop($doc, 'ch')));
+        $row->add(new Label('dnumber', $doc->document_number));
+        $row->add(new Label('ddate', \App\Helper::fd( $doc->document_date)));
+        $row->add(new Label('damount',  \App\Helper::fa($doc->amount)));
+        $row->add(new Label('dcustomer', $doc->customer_name));
+        
+    } 
+    
+   public function onDExport($sender) {
+        $encode = $this->dform->encode->getValue();
+
+        $sep = $this->dform->sep->getText();
+
+        if ($encode == 0) {
+            $this->setError('noselencode');
+            return;
+        }
+        $csv="";
+        
+        foreach ($this->_docs as $doc) {
+            if ($doc->ch == false) {
+                continue;
+            }
+            
+            
+            
+             
+        }
+        
+        header("Content-type: text/csv");
+        header("Content-Disposition: attachment;Filename=exportdoc_" . date('Y_m_d', time()) . ".csv");
+        header("Content-Transfer-Encoding: binary");
+
+        echo $csv;
+        flush();
+        die;        
+   }
+    
+       
 }

@@ -51,6 +51,9 @@ class Document extends \ZCL\DB\Entity
      */
     public $detaildata = array();
 
+    private static $_metalist = array();    
+    
+    
     /**
      * документы должны создаватся методом create
      *
@@ -673,4 +676,23 @@ class Document extends \ZCL\DB\Entity
         $this->headerdata[$dataname] = $data;
     }
 
+    /**
+    * Название документа  по  мета имени
+    * 
+    * @param mixed $meta_name
+    */
+    public static function getDesc($meta_name){
+        if (isset(self::$_metalist[$meta_name])) {
+            return self::$_metalist[$meta_name];
+        }
+        $conn = \ZDB\DB::getConnect();
+
+        $rs = $conn->Execute("select description, meta_name from metadata ");
+        foreach ($rs  as $m) {
+            self::$_metalist[$m['meta_name']] = $m['description'];
+        }
+
+        return self::$_metalist[$meta_name];           
+    }
+    
 }

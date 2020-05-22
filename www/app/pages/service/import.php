@@ -26,7 +26,7 @@ class Import extends \App\Pages\Base
         //ТМЦ
         $form = $this->add(new Form("iform"));
 
-        $form->add(new DropDownChoice("itype", array('Только справочник', 'С оприходованием на склад'), 0))->onChange($this, "onType");
+        $form->add(new DropDownChoice("itype", array( ), 0))->onChange($this, "onType");
         $form->add(new DropDownChoice("encode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new DropDownChoice("price", Item::getPriceTypeList()));
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
@@ -70,7 +70,7 @@ class Import extends \App\Pages\Base
         //контрагенты
         $form = $this->add(new Form("cform"));
 
-        $form->add(new DropDownChoice("ctype", array(0 => 'Не указано', 1 => 'Поставщики', 2 => 'Покупатели'), 0));
+        $form->add(new DropDownChoice("ctype", array( ), 0));
         $form->add(new DropDownChoice("cencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new TextInput("csep", ';'));
         $form->add(new CheckBox("cpreview"));

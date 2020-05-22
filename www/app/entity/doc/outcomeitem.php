@@ -72,7 +72,7 @@ class OutcomeItem extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['IncomeItem'] = 'Оприходование товаров';
+        $list['IncomeItem'] = self::getDesc('IncomeItem');
         return $list;
     }
 

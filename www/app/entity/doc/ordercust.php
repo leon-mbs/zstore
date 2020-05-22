@@ -50,8 +50,8 @@ class OrderCust extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['GoodsReceipt'] = 'Приходная накладная';
-        $list['InvoiceCust'] = 'Счет от поставщика';
+        $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
+        $list['InvoiceCust'] = self::getDesc('InvoiceCust');
 
         return $list;
     }
