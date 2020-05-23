@@ -189,9 +189,9 @@ class Export extends \App\Pages\Base
     } 
     
    public function onDExport($sender) {
-        $encode = $this->dform->encode->getValue();
+        $encode = $this->dform->dencode->getValue();
 
-        $sep = $this->dform->sep->getText();
+        $sep = $this->dform->dsep->getText();
 
         if ($encode == 0) {
             $this->setError('noselencode');
@@ -204,11 +204,28 @@ class Export extends \App\Pages\Base
                 continue;
             }
             
+            $csv .=   $doc->document_number . $sep;
+            $csv .=   H::fd($doc->document_date) . $sep;
+            $csv .=   $doc->customer_name . $sep;
+            $csv .= "\n";
+            $n=1;
             
-            
-             
+            foreach($doc->unpackDetails('detaildata') as $item) {
+              $csv .= $sep. $n . $sep;
+              $csv .= $item->itemname . $sep;
+              $csv .= $item->item_code . $sep;
+              $csv .= H::fqty($item->quantity) . $sep;
+              $csv .= H::fa($item->price) . $sep;
+              $csv .= "\n";
+            }
+            $csv .=  "Итого: " . $sep;
+            $csv .= H::fa($doc->amount) . $sep. $sep. $sep. $sep. $sep;
+            $csv .= "\n";
+               
         }
-        
+        if ($encode == 2) {
+            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
+        }       
         header("Content-type: text/csv");
         header("Content-Disposition: attachment;Filename=exportdoc_" . date('Y_m_d', time()) . ".csv");
         header("Content-Transfer-Encoding: binary");

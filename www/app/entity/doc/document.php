@@ -604,8 +604,11 @@ class Document extends \ZCL\DB\Entity
                 $c .= " and user_id  = " . $user->user_id;
             }
 
-            $c .= " and meta_id in({$user->aclview}) ";
-        }
+            if(strlen($user->aclview)>0)
+               $c .= " and meta_id in({$user->aclview}) ";
+            else 
+               $c .= " and meta_id in(0) ";
+         }
 
         return $c;
     }
