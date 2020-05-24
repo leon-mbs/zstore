@@ -45,7 +45,7 @@ class WPlannedDocs extends \Zippy\Html\PageFragment
     public function doclistOnRow($row) {
         $item = $row->getDataItem();
         $item = $item->cast();
-        $dt = date('d-m-Y', $item->document_date);
+        $dt = \App\Helper::fd( $item->document_date);
         $row->add(new \Zippy\Html\Link\RedirectLink("number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
 
         $row->add(new Label('date', $dt));

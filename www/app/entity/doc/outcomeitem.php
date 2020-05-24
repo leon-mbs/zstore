@@ -54,7 +54,7 @@ class OutcomeItem extends Document
 
         $header = array(
             "_detail" => $detail,
-            'date' => date('d.m.Y', $this->document_date),
+            'date' => H::fd( $this->document_date),
             "from" => $this->headerdata["storename"],
             "notes" => $this->notes,
             "document_number" => $this->document_number
@@ -72,7 +72,7 @@ class OutcomeItem extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['IncomeItem'] = 'Оприходование товаров';
+        $list['IncomeItem'] = self::getDesc('IncomeItem');
         return $list;
     }
 

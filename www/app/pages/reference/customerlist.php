@@ -323,7 +323,7 @@ class CustomerList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label("msgdata", $item->message));
-        $row->add(new Label("msgdate", date("Y-m-d H:i", $item->created)));
+        $row->add(new Label("msgdate", \App\Helper::fdt( $item->created)));
         $row->add(new Label("msguser", $item->username));
 
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMsgOnClick');
@@ -381,7 +381,7 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('eventtitle', $event->title));
 
         $row->add(new Label("eventdesc"))->setText($event->description);
-        $row->add(new Label("eventdate", date("Y-m-d H:i", $event->eventdate)));
+        $row->add(new Label("eventdate", \App\Helper::fdt( $event->eventdate)));
 
         $row->add(new ClickLink('delevent'))->onClick($this, 'deleteEventOnClick');
     }

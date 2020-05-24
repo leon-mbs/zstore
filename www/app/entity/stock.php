@@ -45,7 +45,7 @@ class Stock extends \ZCL\DB\Entity
         $list = array();
         foreach ($entitylist as $key => $value) {
             if (strlen($value->snumber) > 0) {
-                $value->itemname .= ' (' . $value->snumber . ',' . date('Y-m-d', $value->sdate) . ')';
+                $value->itemname .= ' (' . $value->snumber . ',' . \App\Helper::fd( $value->sdate) . ')';
             }
 
             if ($partiontype == "1") { //отдельно  по входным  ценам

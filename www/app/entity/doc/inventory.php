@@ -75,7 +75,7 @@ class Inventory extends Document
 
         $header = array(
             "_detail" => $detail,
-            'date' => date('d.m.Y', $this->document_date),
+            'date' => H::fd( $this->document_date),
             "store" => $this->headerdata["storename"],
             "document_number" => $this->document_number
         );

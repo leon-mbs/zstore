@@ -22,7 +22,7 @@ class ProdReceipt extends Document
 
             $name = $item->itemname;
             if (strlen($item->snumber) > 0) {
-                $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
+                $name .= ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
             }
 
 
@@ -36,7 +36,7 @@ class ProdReceipt extends Document
             );
         }
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
             "document_number" => $this->document_number,
             "pareaname" => $this->headerdata["pareaname"],
@@ -79,7 +79,8 @@ class ProdReceipt extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['ProdReceipt'] = 'Оприходование  с  производства';
+        $list['ProdReceipt'] = self::getDesc('ProdReceipt');
+        $list['ProdIssue']   = self::getDesc('ProdIssue');
 
         return $list;
     }

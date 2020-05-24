@@ -35,7 +35,7 @@ class Invoice extends \App\Entity\Doc\Document
 
         $totalstr = H::sumstr($this->amount);
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "phone" => $this->headerdata["phone"],
@@ -81,8 +81,8 @@ class Invoice extends \App\Entity\Doc\Document
 
     public function getRelationBased() {
         $list = array();
-        $list['GoodsIssue'] = 'Расходная накладная';
-        $list['Invoice'] = 'Кассовый чек';
+        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+        $list['Invoice'] = self::getDesc('Invoice');
 
         return $list;
     }

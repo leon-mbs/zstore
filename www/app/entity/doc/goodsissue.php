@@ -25,7 +25,7 @@ class GoodsIssue extends Document
             if (strlen($item->snumber) > 0) {
                 $s = ' (' . $item->snumber . ' )';
                 if (strlen($item->sdate) > 0) {
-                    $s = ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
+                    $s = ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
                 }
                 $name .= $s;
 
@@ -47,7 +47,7 @@ class GoodsIssue extends Document
         $totalstr = H::sumstr($this->amount);
 
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
             "firmname" => $this->headerdata["firmname"],
             "customer_name" => $this->customer_name,
@@ -68,10 +68,10 @@ class GoodsIssue extends Document
             "payamount" => H::fa($this->payamount)
         );
         if ($this->headerdata["sent_date"] > 0) {
-            $header['sent_date'] = date('d.m.Y', $this->headerdata["sent_date"]);
+            $header['sent_date'] = H::fd( $this->headerdata["sent_date"]);
         }
         if ($this->headerdata["delivery_date"] > 0) {
-            $header['delivery_date'] = date('d.m.Y', $this->headerdata["delivery_date"]);
+            $header['delivery_date'] = H::fd( $this->headerdata["delivery_date"]);
         }
         $header["isdelivery"] = $this->headerdata["delivery"] > 1;
 
@@ -118,9 +118,9 @@ class GoodsIssue extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['Warranty'] = 'Гарантийный талон';
-        $list['ReturnIssue'] = 'Возвратная накладная';
-        $list['GoodsIssue'] = 'Расходная накладная';
+        $list['Warranty'] = self::getDesc('Warranty');
+        $list['ReturnIssue'] = self::getDesc('ReturnIssue');
+        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
 
         return $list;
     }

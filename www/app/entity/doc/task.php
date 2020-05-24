@@ -45,9 +45,9 @@ class Task extends Document
             );
         }
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => H::fd( $this->document_date),
             "pareaname" => strlen($this->headerdata["pareaname"]) > 0 ? $this->headerdata["pareaname"] : false,
-            "document_date" => date('d.m.Y', $this->document_date),
+            "document_date" => H::fd( $this->document_date),
             "document_number" => $this->document_number,
             "notes" => $this->notes,
             "baseddoc" => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
@@ -84,7 +84,7 @@ class Task extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['ProdIssue'] = 'Cписание в  производство ';
+        $list['ProdIssue'] = self::getDesc('ProdIssue');
 
         return $list;
     }

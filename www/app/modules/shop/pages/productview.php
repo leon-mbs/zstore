@@ -73,16 +73,16 @@ class ProductView extends Base
         $this->commentlist->Reload();
 
         if ($product->deleted == 1) {
-            $this->onstore = "Снят с продажи";
+            $this->onstore = \App\Helper::l('cancelsell')  ;
             $this->buy->setVisible(false);
         } else {
-
-            if ($product->qty > 0) {
-                $this->onstore->setText("В наличии");
-                $this->buy->setValue("Купить");
+            $op = \App\System::getOptions("shop");   
+            if ($product->getQuantity($op['defstore']) > 0) {
+                $this->onstore->setText(\App\Helper::l('isonstore'));
+                $this->buy->setValue(\App\Helper::l('tobay') );
             } else {
-                $this->onstore->setText("Под заказ");
-                $this->buy->setValue("Заказать");
+                $this->onstore->setText(\App\Helper::l('fororder'));
+                $this->buy->setValue(\App\Helper::l('toorder'));
             }
         }
 
@@ -187,7 +187,7 @@ class ProductView extends Base
         }
         $datarow->add(new Label("nick", $item->author));
         $datarow->add(new Label("comment", $item->comment));
-        $datarow->add(new Label("created", date('Y-m-d H:i', $item->created)));
+        $datarow->add(new Label("created", \App\Helper::fdt( $item->created)));
         $datarow->add(new TextInput("rate"))->setText($item->rating);
         $datarow->add(new ClickLink('deletecomment', $this, 'OnDeleteComment'))->SetVisible(System::getUser()->userlogin == "admin" && $item->moderated != 1);
     }

@@ -44,6 +44,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
+        $this->common->add(new CheckBox('useval'));
 
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('useimages'));
@@ -86,6 +87,7 @@ class Options extends \App\Pages\Base
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
         $this->common->allowminus->setChecked($common['allowminus']);
+        $this->common->useval->setChecked($common['useval']);
 
 
         $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
@@ -108,6 +110,24 @@ class Options extends \App\Pages\Base
         $this->firm->inn->setText($firm['inn']);
 
 
+        $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
+        $this->valform->add(new TextInput('valuan'));
+        $this->valform->add(new TextInput('valusd'));
+        $this->valform->add(new TextInput('valeuro'));
+        $this->valform->add(new TextInput('valrub'));
+        $this->valform->add(new CheckBox('valprice'));        
+        
+        $val = System::getOptions("val");
+        if (!is_array($val)) {
+            $val = array();
+        }        
+        $this->valform->valuan->setText($val['valuan']);
+        $this->valform->valusd->setText($val['valusd']);
+        $this->valform->valeuro->setText($val['valeuro']);
+        $this->valform->valrub->setText($val['valrub']);
+        $this->valform->valprice->setChecked($val['valprice']);
+        
+        
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
         $this->printer->add(new TextInput('pwidth'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
@@ -116,6 +136,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new CheckBox('pcode'));
         $this->printer->add(new CheckBox('pbarcode'));
         $this->printer->add(new CheckBox('pprice'));
+        
 
         $printer = System::getOptions("printer");
         if (!is_array($printer)) {
@@ -182,10 +203,13 @@ class Options extends \App\Pages\Base
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
+        $common['useval'] = $this->common->useval->isChecked() ? 1 : 0;
 
 
         System::setOptions("common", $common);
-
+        
+        $this->_tvars["useval"] = $common['useval'] == 1;
+        
         $this->setSuccess('saved');
         System::setCache('labels', null);
     }
@@ -200,6 +224,18 @@ class Options extends \App\Pages\Base
         $firm['inn'] = $this->firm->inn->getText();
 
         System::setOptions("firm", $firm);
+        $this->setSuccess('saved');
+    }
+  
+    public function saveValOnClick($sender) {
+        $val = array();
+        $val['valuan']   = $this->valform->valuan->getText();
+        $val['valusd']   = $this->valform->valusd->getText();
+        $val['valeuro']  = $this->valform->valeuro->getText();
+        $val['valrub']   = $this->valform->valrub->getText();
+        $val['valprice'] = $this->valform->valprice->isChecked() ?1:0;
+ 
+        System::setOptions("val", $val);
         $this->setSuccess('saved');
     }
 

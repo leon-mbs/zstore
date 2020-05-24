@@ -51,7 +51,7 @@ class IncomeItem extends Document
 
         $header = array(
             "_detail" => $detail,
-            'date' => date('d.m.Y', $this->document_date),
+            'date' => H::fd( $this->document_date),
             "total" => H::fa($this->amount),
             "to" => $this->headerdata["storename"],
             "notes" => $this->notes,

@@ -116,7 +116,7 @@ class Orders extends \App\Pages\Base
         $row->add(new Label('customer', $order->firstname . ' ' . $order->lastname));
         $row->add(new Label('amount', round($order->total)));
         $row->add(new Label('comment', $order->comment));
-        $row->add(new Label('date', date('Y-m-d H:i', strtotime($order->date_modified))));
+        $row->add(new Label('date', \App\Helper::fdt( strtotime($order->date_modified))));
     }
 
     public function onImport($sender) {
@@ -306,7 +306,7 @@ class Orders extends \App\Pages\Base
         $row->add(new CheckBox('ch', new Prop($order, 'ch')));
         $row->add(new Label('number2', $order->document_number));
         $row->add(new Label('number3', $order->headerdata['ocorder']));
-        $row->add(new Label('date2', date('Y-m-d', $order->document_date)));
+        $row->add(new Label('date2', \App\Helper::fd( $order->document_date)));
         $row->add(new Label('amount2', $order->amount));
         $row->add(new Label('customer2', $order->headerdata['occlient']));
         $row->add(new Label('state', Document::getStateName($order->state)));

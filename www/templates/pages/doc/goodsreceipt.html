@@ -48,7 +48,17 @@
                 </select>
 
             </div>
+          {{#useval}}
+             
+            <div class="form-group  ">
+                <label for="val">Валюта</label>
+                <select class="form-control" zippy="val">
+                    <option value="0">В нац. валюте</option>
+                </select>
 
+            </div>
+          {{/useval}}
+             
             <div class="form-group  ">
                 <label for="notes">Примечание </label>
 
@@ -121,13 +131,13 @@
                     <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
+                {{#useval}}
                 <tr style="font-weight: bolder;">
                     <td data-label="rate" colspan={{colspan}} class="text-right">Курс валюты:</td>
                     <td zippy="rate" class="text-right"></td>
-                    <td data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i
-                            class="fa fa-edit"></i></a></td>
+                    <td data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i class="fa fa-edit"></i></a></td>
                 </tr>
-
+                {{/useval}}
                 <tr style="font-weight: bolder;">
                     <td data-label="payamount" colspan={{colspan}} class="text-right">К оплате:</td>
                     <td zippy="payamount" class="text-right"></td>
@@ -235,7 +245,7 @@
         </div>
     </div>
 
-
+    
     <div id="modalrate" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-sm">
@@ -338,7 +348,7 @@
         </form>
     </div>
 
-    <div class="col-12 col-md-8 col-xl-6">
+    <div class="col-12 col-md-8 col-xl-8">
         <div zippy="wselitem"></div>
 
 
@@ -383,7 +393,7 @@
             {{/usesnumber}}
              <div class="form-group">
                 <label for="editnewmanufacturer">Бренд, производитель </label>
-                <input list="manlist" class="form-control " zippy="editnewmanufacturer"/>
+                <input autocomplete="off" list="manlist" class="form-control " zippy="editnewmanufacturer"/>
                 <datalist id="manlist">
                       {{#manlist}}
                           <option label='{{mitem}}' value='{{mitem}}'>

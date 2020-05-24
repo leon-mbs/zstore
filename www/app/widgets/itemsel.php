@@ -41,14 +41,16 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $this->wisfilter->add(new TextInput('wissearchkey'));
         $this->wisfilter->add(new DropDownChoice('wissearchcat', Category::findArray("cat_name", "", "cat_name"), 0));
+        $this->wisfilter->add(new TextInput('wissearchmanufacturer' ));
 
 
         $ds = new ArrayDataSource($this, '_list');
 
         $table = $this->add(new   DataTable('witemselt', $ds, true, true));
         $table->setPageSize(H::getPG());
-        $table->AddColumn(new Column('itemname', 'Наименование', true, true, true));
-        $table->AddColumn(new Column('item_code', 'Артикул', true, true, false));
+        $table->AddColumn(new Column('itemname', H::l('name'), true, true, true));
+        $table->AddColumn(new Column('item_code',  H::l('code'), true, true, false));
+        $table->AddColumn(new Column('manufacturer',  H::l('brand'), true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');
 
@@ -88,6 +90,7 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $where = "disabled <> 1";
         $text = trim($this->wisfilter->wissearchkey->getText());
+        $man = trim($this->wisfilter->wissearchmanufacturer->getText());
         $cat = $this->wisfilter->wissearchcat->getValue();
 
         if ($cat > 0) {
@@ -98,6 +101,12 @@ class ItemSel extends \Zippy\Html\PageFragment
 
             $text = Item::qstr('%' . $text . '%');
             $where = $where . " and (itemname like {$text} or item_code like {$text} )  ";
+
+        }
+       if (strlen($man) > 0) {
+
+            $man = Item::qstr(  $man  );
+            $where = $where . " and  manufacturer like {$man}      ";
 
         }
 

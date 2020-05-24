@@ -119,7 +119,7 @@ class CustActivity extends \App\Pages\Base
 
 
             $detail[] = array(
-                "date" => date("Y-m-d", strtotime($row['dt'])),
+                "date" => \App\Helper::fd( strtotime($row['dt'])),
 
                 
                 "document_number" => $row['document_number'],
@@ -133,14 +133,14 @@ class CustActivity extends \App\Pages\Base
         }
         $tb = $tend - $tin + $tout;
 
-        $header = array('datefrom' => date('d.m.Y', $from),
+        $header = array('datefrom' => \App\Helper::fd( $from),
             "_detail" => $detail,
           
             'tin' => H::fa($tin),
             'tout' => H::fa($tout),
     
-            'datefrom' => date('d.m.Y', $from),
-            'dateto' => date('d.m.Y', $to),
+            'datefrom' => \App\Helper::fd( $from),
+            'dateto' => \App\Helper::fd( $to),
             "cust_name" => $this->filter->cust->getText()
         );
         $report = new \App\Report('report/custactivity.tpl');

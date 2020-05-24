@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Entity\Entry;
+use App\Entity\Item;
 use App\Helper as H;
 
 /**
@@ -21,7 +22,7 @@ class GoodsReceipt extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
             if (strlen($item->snumber) > 0) {
-                $name .= ' (' . $item->snumber . ',' . date('d.m.Y', $item->sdate) . ')';
+                $name .= ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
             }
 
             $detail[] = array("no" => $i++,
@@ -35,9 +36,10 @@ class GoodsReceipt extends Document
             );
         }
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
             "basedoc" => $this->headerdata["basedoc"],
+            "isval" =>  ($this->_doc->headerdata['val'])>1  ,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
@@ -48,10 +50,14 @@ class GoodsReceipt extends Document
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
-        $header['israte'] = ($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1);
+        $header['isval'] =  strlen($this->headerdata['val'])>1;
+        
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
         $header['rate'] = $this->headerdata["rate"];
+        if($header['rate']==0 || $header['rate']==1) $header['isval']=false;
+        $val = H::getValList();  
+        $header['val'] =  $val[$this->headerdata['val']];
 
         $report = new \App\Report('doc/goodsreceipt.tpl');
 
@@ -82,7 +88,7 @@ class GoodsReceipt extends Document
                 $total = $total * $this->headerdata["rate"];
             }
             $k = $total / $this->amount;
-            $item->price = H::fa($item->price * $k);
+            $item->price = H::fa($item->price * $k); //пересчитываем  учетную цену
 
             $item->amount = $item->price * $item->quantity;
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
@@ -94,6 +100,17 @@ class GoodsReceipt extends Document
 
             $sc->save();
 
+            
+            //запоминаем  курс
+            if(strlen($this->headerdata['val'])>1 && $this->headerdata['rate']!=0 && $this->headerdata['rate'] !=1 ){
+                $it = Item::load($item->item_id);
+                $it->val=$this->headerdata['val'];
+                $it->rate=$this->headerdata['rate'];
+                $it->save();
+            }
+            
+            
+            
 
         }
 
@@ -113,8 +130,8 @@ class GoodsReceipt extends Document
     public function getRelationBased() {
         $list = array();
 
-        $list['RetCustIssue'] = 'Возврат  поставщику';
-        $list['GoodsReceipt'] = 'Приходная  накладная';
+        $list['RetCustIssue'] = self::getDesc('RetCustIssue');
+        $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
 
         return $list;
     }

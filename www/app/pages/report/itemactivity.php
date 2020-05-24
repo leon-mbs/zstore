@@ -178,7 +178,7 @@ class ItemActivity extends \App\Pages\Base
             $detail[] = array(
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
-                "date" => date("Y-m-d", strtotime($row['dt'])),
+                "date" => \App\Helper::fd( strtotime($row['dt'])),
                 "documents" => $row['docs'],
                 "in" => H::fqty(strlen($row['begin_quantity']) > 0 ? $row['begin_quantity'] : 0),
                 "obin" => H::fqty($row['obin']),
@@ -190,9 +190,9 @@ class ItemActivity extends \App\Pages\Base
             $baout = $baout + $row['oboutamount'];
         }
 
-        $header = array('datefrom' => date('d.m.Y', $from),
+        $header = array('datefrom' => \App\Helper::fd( $from),
             "_detail" => $detail,
-            'dateto' => date('d.m.Y', $to),
+            'dateto' => \App\Helper::fd( $to),
             "store" => Store::load($storeid)->storename
         );
         $header['ba'] = H::fa($ba);

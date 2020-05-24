@@ -99,6 +99,35 @@ class ProdIssue extends \App\Pages\Base
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                     }
+                    if ($basedoc->meta_name == 'ProdReceipt') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
+
+                        $parts = array();
+                        foreach($basedoc->unpackDetails('detaildata') as $tovar){
+                            $plist = \App\Entity\ItemSet::find('pitem_id='.$tovar->item_id) ;
+                            foreach($plist as $p) {
+                               if(isset($parts[$p->item_id]) ) {
+                                  $parts[$p->item_id]->qty += ($tovar->quantity* $p->qty);   
+                               }  else {
+                                  $parts[$p->item_id] = Item::load($p->item_id);
+                                  $parts[$p->item_id]->qty =  ($tovar->quantity* $p->qty); 
+                               }
+                            }
+                                
+                        }
+                        foreach($parts as $p) {
+                           $it = Item::load($p->item_id); 
+                           $it->quantity = $p->qty; 
+ 
+                            
+                           $this->_itemlist[$it->item_id]= $it;
+                        }
+
+                    }
+                    
+                    
+                    
                 }
             }
         }
@@ -119,7 +148,7 @@ class ProdIssue extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
 
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? date('Y-m-d', $item->sdate) : ''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd( $item->sdate) : ''));
 
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');

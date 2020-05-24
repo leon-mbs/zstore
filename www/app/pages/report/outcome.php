@@ -156,7 +156,7 @@ class Outcome extends \App\Pages\Base
             $detail[] = array(
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
-                "dt" => date('Y-m-d', strtotime($row['dt'])),
+                "dt" => \App\Helper::fd( strtotime($row['dt'])),
                 "qty" => H::fqty($row['qty']),
                 "navar" => H::fa($row['navar']),
                 "navarsign" => $row['navar'] > 0,
@@ -164,9 +164,9 @@ class Outcome extends \App\Pages\Base
             );
         }
 
-        $header = array('datefrom' => date('d.m.Y', $from),
+        $header = array('datefrom' => \App\Helper::fd( $from),
             "_detail" => $detail,
-            'dateto' => date('d.m.Y', $to)
+            'dateto' => \App\Helper::fd( $to)
         );
         if ($type == 1) {
             $header['_type1'] = true;

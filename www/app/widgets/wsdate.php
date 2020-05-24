@@ -57,7 +57,7 @@ class WSdate extends \Zippy\Html\PageFragment
         $row->add(new Label('storename', $stock->storename));
         $row->add(new Label('itemname', $stock->itemname));
         $row->add(new Label('snumber', $stock->snumber));
-        $row->add(new Label('edate', date('Y-m-d', $stock->sdate)));
+        $row->add(new Label('edate', \App\Helper::fd( $stock->sdate)));
         $row->add(new Label('qty', Helper::fqty($stock->qty)));
         $row->edate->setAttribute('class', 'badge badge-danger');
         if ($stock->sdate > time()) {

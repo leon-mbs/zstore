@@ -242,7 +242,7 @@ class ACL
 
     /**
      * возвращает ограничение  для  ресурсов  по филиалам
-     * @param mixed $nul  вкючая  те  у котрых филиал не  задан
+     * @param mixed $nul  включая  те  у которых филиал не  задан
      */
     public static function getBranchConstraint($nul = false) {
         $options = \App\System::getOptions('common');

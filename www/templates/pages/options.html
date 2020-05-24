@@ -115,14 +115,53 @@
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title=" Разрешение на  списывание  количества  при  котором  на  складе  появляется  отрицательное  значение "></i>
             </div>
-
+            <div class="form-check">
+                <input zippy="useval" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="useval">Валюта  в закупках</label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title=" Возможность  ввода  приходной накладной в валюте и пересчета  курса  при  продаже.  "></i>
+            </div>
+     
 
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
 
         </form>
+          {{#useval}}
+          <h4>Курсы валют </h4>
+         <form zippy="valform"> 
+            <div class="form-group">
+                <label for="valuan">Гривна</label>
+                <input zippy="valuan" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text" >
+             </div>    
+            <div class="form-group">
+                <label for="valusd">Доллар</label>
+                <input zippy="valusd" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text" >
+             </div>    
+            <div class="form-group">
+                <label for="valeuro">Евро</label>
+                <input zippy="valeuro" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text" >
+                
+            </div>
+           <div class="form-group">
+                <label for="valrub">Рубль</label>
+                <input zippy="valrub" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text" >
+                
+            </div>
+           <div class="form-check">
+                <input zippy="valprice" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="valprice">Учитывать курсовую разницу при продаже </label>
+                
+            </div>
 
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+            </div>        
+         </form> 
+          {{/useval}}
+      
+      
         <h4>Данные о компании</h4>
         <form zippy="firm">
 
@@ -155,6 +194,9 @@
             </div>
 
         </form>
+        
+
+        
         <h4>Настройка принтера</h4>
         <small>Настройки узкого принтера для печати чеков и этикеток</small>
         <form zippy="printer">

@@ -51,7 +51,7 @@ class Calendar extends \App\Pages\Base
 
     public function OnTimeRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('date', date('Y-m-d', $item->createdon)));
+        $row->add(new Label('date', \App\Helper::fd( $item->createdon)));
         $row->add(new Label('time', $item->duration));
         $row->add(new Label('issue', '#' . $item->issue_id . ' ' . $item->issue_name));
         $row->add(new Label('project', $item->project_name));

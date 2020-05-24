@@ -7,7 +7,7 @@ use App\Entity\Item;
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Entity\ProductGroup;
 use App\Modules\Shop\Entity\Manufacturer;
-use App\Modules\Shop\Entity\ProductGroup;
+ 
 use App\System;
 use ZCL\BT\Tree;
 use Zippy\Binding\PropertyBinding as PB;

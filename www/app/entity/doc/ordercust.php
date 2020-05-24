@@ -28,7 +28,7 @@ class OrderCust extends Document
             );
         }
 
-        $header = array('date' => date('d.m.Y', $this->document_date),
+        $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
@@ -50,8 +50,8 @@ class OrderCust extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['GoodsReceipt'] = 'Приходная накладная';
-        $list['InvoiceCust'] = 'Счет от поставщика';
+        $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
+        $list['InvoiceCust'] = self::getDesc('InvoiceCust');
 
         return $list;
     }

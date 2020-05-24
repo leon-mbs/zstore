@@ -556,4 +556,17 @@ class Helper
 
         return $totalstr;
     }
+    
+    public static function getValList(){
+         $val = \App\System::getOptions("val" );        
+         $list = array();
+         if($val['valuan']>0 && $val['valuan']!=1) $list['valuan'] = 'Гривна';
+         if($val['valusd']>0 && $val['valusd']!=1) $list['valusd'] = 'Доллар';
+         if($val['valeuro']>0 && $val['valeuro']!=1) $list['valeuro'] = 'Евро';
+         if($val['valrub']>0 && $val['valrub']!=1) $list['valrub'] = 'Рубль';
+         
+         return $list;
+    }
+    
+    
 }
