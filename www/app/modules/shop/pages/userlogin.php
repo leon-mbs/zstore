@@ -47,7 +47,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
             if ($user instanceof User) {
                 
-                if (strpos($user->modules, 'shop') === false && $user->userlogin != 'admin') {
+                if (strpos($user->modules, 'shop') === false && $user->rolename != 'admins') {
                     System::setErrorMsg('invalidlogin');  
                     App::RedirectHome();
                     return;

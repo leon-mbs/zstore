@@ -29,7 +29,7 @@ class ACL
     //проверка  на  доступ  к  отчету
     public static function checkShowReport($rep, $showerror = true) {
 
-        if (System::getUser()->acltype != 2) {
+        if (System::getUser()->rolename == 'admins') {
             return true;
         }
 
@@ -51,7 +51,7 @@ class ACL
 
     //проверка  на  доступ  к  справочнику 
     public static function checkShowRef($ref) {
-        if (System::getUser()->acltype != 2) {
+        if (System::getUser()->rolename == 'admins') {
             return true;
         }
 
@@ -71,7 +71,7 @@ class ACL
 
     //проверка  на  доступ  к   редактированю справочника
     public static function checkEditRef($ref, $showerror = true) {
-        if (System::getUser()->acltype != 2) {
+        if (System::getUser()->rolename == 'admins') {
             return true;
         }
 
@@ -92,7 +92,7 @@ class ACL
 
     //проверка  на  доступ  к  журналу 
     public static function checkShowReg($reg, $showerror = true) {
-        if (System::getUser()->acltype != 2) {
+        if (System::getUser()->rolename == 'admins') {
             return true;
         }
 
@@ -115,7 +115,7 @@ class ACL
     //проверка  на  доступ  к просмотру документа
     public static function checkShowDoc($doc, $inreg = false, $showerror = true) {
         $user = System::getUser();
-        if ($user->acltype != 2) {
+        if ($user->rolename == 'admins') {
             return true;
         }
 
@@ -152,7 +152,7 @@ class ACL
     //проверка  на  доступ  к   редактированию документа
     public static function checkEditDoc($doc, $inreg = false, $showerror = true) {
         $user = System::getUser();
-        if ($user->acltype != 2) {
+        if ($user->rolename == 'admins') {
             return true;
         }
 
@@ -196,7 +196,7 @@ class ACL
      */
     public static function checkExeDoc($doc, $inreg = false, $showerror = true) {
         $user = System::getUser();
-        if ($user->acltype != 2) {
+        if ($user->rolename == 'admins') {
             return true;
         }
 
@@ -217,9 +217,38 @@ class ACL
         return false;
     }
 
+    
+    /**
+    * проверка  на  доступ  к отмене документа.
+    * 
+    * @param mixed $doc  документ
+    * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
+    */
+    public static function checkCancelDoc($doc, $inreg = true, $showerror = true) {
+        $user = System::getUser();
+        if ($user->rolename =='admins')
+            return true;
+      
+        self::load();
+          
+        $aclcancel = explode(',', $user->aclcancel);
+
+        if (in_array($doc->meta_id, $aclcancel)) {
+            return true;
+        }
+        if ($showerror == true) {
+            System::setErrorMsg('Нет права  отмены документа ' . self::$_metasdesc[$doc]);
+            if ($inreg == false)
+                App::RedirectHome();
+        }
+
+        return false;
+    }
+    
+    
     //проверка  на  доступ  к  сервисным станицам
     public static function checkShowSer($ser, $showerror = true) {
-        if (System::getUser()->acltype != 2) {
+        if (System::getUser()->rolename == 'admins') {
             return true;
         }
 
@@ -261,7 +290,7 @@ class ACL
 
 
         $user = \App\System::getUser();
-        if ($user->username == 'admin') {
+        if ($user->rolename == 'admins') {
             return '';
         }
 
@@ -313,7 +342,7 @@ class ACL
         }
 
         $user = \App\System::getUser();
-        if ($user->username == 'admin') {
+        if ($user->rolename == 'admins') {
             return '';
         }
 
@@ -339,7 +368,7 @@ class ACL
         }
 
         $user = \App\System::getUser();
-        if ($user->username == 'admin') {
+        if ($user->rolename == 'admins') {
             return '';
         }
 
@@ -365,7 +394,7 @@ class ACL
         }
 
         $user = \App\System::getUser();
-        if ($user->username == 'admin') {
+        if ($user->rolename == 'admins') {
             return '';
         }
 
@@ -391,7 +420,7 @@ class ACL
         }
 
         $user = \App\System::getUser();
-        if ($user->username == 'admin') {
+        if ($user->rolename == 'admins') {
             return '';
         }
 
@@ -418,7 +447,7 @@ class ACL
 
 
         $user = \App\System::getUser();
-        if ($user->username == 'admin') {
+        if ($user->rolename == 'admins') {
             return '';
         }
 

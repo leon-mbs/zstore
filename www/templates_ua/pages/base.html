@@ -523,7 +523,7 @@
                         </ul>
 
                     </li>
-                    {{#isadmin}}
+                    {{#isadmins}}
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-cog"></i>
@@ -539,7 +539,15 @@
                                     <p>&nbsp;&nbsp;Користувачі</p>
                                 </a>
                             </li>
-
+                                 {{#isadmin}}
+                                
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/Roles" class="nav-link">
+                                            <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Ролі</p>
+                                        </a>
+                                    </li> 
+                                                                     
+                                    {{/isadmin}} 
 
                             {{#usebranch}}
                             <li class="nav-item">
@@ -556,17 +564,17 @@
                                     <p>&nbsp;&nbsp;POS термінали</p>
                                 </a>
                             </li>
-
+                                {{#isadmin}}
                             <li class="nav-item">
                                 <a href="/index.php?p=App/Pages/Options" class="nav-link">
                                     <i class="fa    nav-icon"></i>
                                     <p>&nbsp;&nbsp;Налаштування</p>
                                 </a>
-                            </li>
+                            </li>    {{/isadmin}} 
                         </ul>
 
                     </li>
-                    {{/isadmin}}
+                    {{/isadmins}}
                 </ul>
             </nav>
         </div>

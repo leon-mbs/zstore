@@ -62,7 +62,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=978 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=998 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -103,7 +103,7 @@ CREATE TABLE `documents` (
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`),
   KEY `branch_id` (`branch_id`)
-)  AUTO_INCREMENT=258 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=262 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -157,7 +157,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-)  AUTO_INCREMENT=730 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=740 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -168,7 +168,7 @@ CREATE TABLE `entrylist` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/  /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
+/*!50003 CREATE*/   /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -422,7 +422,7 @@ CREATE TABLE `item_set` (
   `pitem_id` int(11) DEFAULT '0',
   `qty` decimal(11,3) DEFAULT '0.000',
   PRIMARY KEY (`set_id`)
-)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `item_set_view`;
 /*!50001 DROP VIEW IF EXISTS `item_set_view`*/;
@@ -655,7 +655,7 @@ CREATE TABLE `paylist` (
   `paytype` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=243 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=249 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -687,6 +687,26 @@ CREATE TABLE `poslist` (
   PRIMARY KEY (`pos_id`)
 )  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roles` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `rolename` varchar(255) DEFAULT NULL,
+  `acl` mediumtext,
+  PRIMARY KEY (`role_id`)
+)  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `roles_view`;
+/*!50001 DROP VIEW IF EXISTS `roles_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `roles_view` AS SELECT 
+ 1 AS `role_id`,
+ 1 AS `rolename`,
+ 1 AS `acl`,
+ 1 AS `cnt`*/;
+SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -855,7 +875,7 @@ CREATE TABLE `store_stock` (
   `sdate` date DEFAULT NULL,
   PRIMARY KEY (`stock_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=566 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=569 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `store_stock_view`;
 /*!50001 DROP VIEW IF EXISTS `store_stock_view`*/;
@@ -901,6 +921,7 @@ CREATE TABLE `users` (
   `acl` mediumtext NOT NULL,
   `disabled` int(1) NOT NULL DEFAULT '0',
   `options` longtext,
+  `role_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `userlogin` (`userlogin`)
 )  AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
@@ -918,6 +939,9 @@ SET character_set_client = utf8;
  1 AS `acl`,
  1 AS `options`,
  1 AS `disabled`,
+ 1 AS `rolename`,
+ 1 AS `role_id`,
+ 1 AS `roleacl`,
  1 AS `employee_id`,
  1 AS `username`*/;
 SET character_set_client = @saved_cs_client;
@@ -1116,6 +1140,19 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `roles_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
+/*!50001 CREATE  */
+/*!50013  */
+/*!50001 VIEW `roles_view` AS select `roles`.`role_id` AS `role_id`,`roles`.`rolename` AS `rolename`,`roles`.`acl` AS `acl`,(select coalesce(count(0),0) from `users` where (`users`.`role_id` = `roles`.`role_id`)) AS `cnt` from `roles` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!50001 DROP VIEW IF EXISTS `shop_attributes_view`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -1172,12 +1209,12 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = latin1 */;
-/*!50001 SET character_set_results     = latin1 */;
-/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `users_view` AS select `users`.`user_id` AS `user_id`,`users`.`userlogin` AS `userlogin`,`users`.`userpass` AS `userpass`,`users`.`createdon` AS `createdon`,`users`.`email` AS `email`,`users`.`acl` AS `acl`,`users`.`options` AS `options`,`users`.`disabled` AS `disabled`,coalesce(`employees`.`employee_id`,0) AS `employee_id`,(case when isnull(`employees`.`emp_name`) then `users`.`userlogin` else `employees`.`emp_name` end) AS `username` from (`users` left join `employees` on(((`users`.`userlogin` = `employees`.`login`) and (`employees`.`disabled` <> 1)))) */;
+/*!50001 VIEW `users_view` AS select `users`.`user_id` AS `user_id`,`users`.`userlogin` AS `userlogin`,`users`.`userpass` AS `userpass`,`users`.`createdon` AS `createdon`,`users`.`email` AS `email`,`users`.`acl` AS `acl`,`users`.`options` AS `options`,`users`.`disabled` AS `disabled`,`roles`.`rolename` AS `rolename`,`users`.`role_id` AS `role_id`,`roles`.`acl` AS `roleacl`,coalesce(`employees`.`employee_id`,0) AS `employee_id`,(case when isnull(`employees`.`emp_name`) then `users`.`userlogin` else `employees`.`emp_name` end) AS `username` from ((`users` left join `employees` on(((`users`.`userlogin` = `employees`.`login`) and (`employees`.`disabled` <> 1)))) left join `roles` on((`users`.`role_id` = `roles`.`role_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

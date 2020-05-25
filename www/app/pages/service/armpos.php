@@ -44,7 +44,7 @@ class ARMPos extends \App\Pages\Base
         $this->add(new Form('form1'));
         $plist = \App\Entity\Pos::findArray('pos_name');
         $cc = $_COOKIE['posterminal'] > 0 ? $_COOKIE['posterminal'] : 0;
-        if (System::getUser()->username != 'admin') {
+        if (System::getUser()->rolename != 'admins') {
             $plist = \App\Entity\Pos::findArray('pos_name', 'pos_id=' . $cc);
         }
         $this->form1->add(new DropDownChoice('pos', $plist, $cc));

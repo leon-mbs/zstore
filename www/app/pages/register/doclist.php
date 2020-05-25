@@ -277,7 +277,7 @@ class DocList extends \App\Pages\Base
 
 
         $user = System::getUser();
-        if ($doc->user_id != $user->user_id && $user->userlogin != 'admin') {
+        if ($doc->user_id != $user->user_id && $user->rolename != 'admins') {
 
             $this->setError("candeleteadmin");
             return;

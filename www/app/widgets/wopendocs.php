@@ -18,7 +18,7 @@ class WOpenDocs extends \Zippy\Html\PageFragment
     public function __construct($id) {
         parent::__construct($id);
 
-        $visible = (strpos(System::getUser()->widgets, 'wopendoc') !== false || System::getUser()->userlogin == 'admin');
+        $visible = (strpos(System::getUser()->widgets, 'wopendoc') !== false || System::getUser()->rolename == 'admins');
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();

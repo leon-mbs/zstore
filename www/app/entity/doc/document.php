@@ -595,7 +595,7 @@ class Document extends \ZCL\DB\Entity
     public static function getConstraint() {
         $c = \App\ACL::getBranchConstraint();
         $user = System::getUser();
-        if ($user->acltype == 2) {
+        if ($user->rolename != 'admins') {
             if (strlen($c) == 0) {
                 $c = "1=1 ";
             }

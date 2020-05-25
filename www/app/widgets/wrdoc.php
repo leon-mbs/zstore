@@ -19,7 +19,7 @@ class WRDoc extends \Zippy\Html\PageFragment
 
         $user = System::getUser();
 
-        $visible = (strpos($user->widgets, 'wrdoc') !== false || System::getUser()->userlogin == 'admin');
+        $visible = (strpos($user->widgets, 'wrdoc') !== false || System::getUser()->rolename == 'admins');
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();

@@ -49,6 +49,7 @@ class Base extends \Zippy\Html\WebPage
 
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
+        $this->_tvars["isadmins"] = $user->rolename == 'admins';
 
         $options = System::getOptions('common');
 
@@ -58,16 +59,13 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
-
-
+ 
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
             System::setBranch( 0)    ;
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
-
-
-        
+         
         $this->_tvars["shopmenu"] = $_config['modules']['shop'] == 1;
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
@@ -75,19 +73,19 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
 
-        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->userlogin != 'admin') {
+        if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
         }
-        if (strpos(System::getUser()->modules, 'note') === false && System::getUser()->userlogin != 'admin') {
+        if (strpos(System::getUser()->modules, 'note') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["note"] = false;
         }
-        if (strpos(System::getUser()->modules, 'issue') === false && System::getUser()->userlogin != 'admin') {
+        if (strpos(System::getUser()->modules, 'issue') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["issue"] = false;
         }
-        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
+        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ocstore"] = false;
         }
-        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->userlogin != 'admin') {
+        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["woocomerce"] = false;
         }
            

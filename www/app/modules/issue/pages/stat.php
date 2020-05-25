@@ -13,6 +13,7 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
+use App\Helper as H;
 
 /**
  * страница статистики
@@ -28,9 +29,9 @@ class Stat extends \App\Pages\Base
 
         $user = System::getUser();
 
-        $allow = (strpos($user->modules, 'issue') !== false || $user->userlogin == 'admin');
+        $allow = (strpos($user->modules, 'issue') !== false || $user->rolename == 'admins');
         if (!$allow) {
-            System::setErrorMsg('Нет права  доступа  к   модулю ');
+            $this->setError( H::l('noaccesstopage'));
             App::RedirectHome();
             return;
         }

@@ -20,6 +20,7 @@ use Zippy\Html\Link\BookmarkableLink;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Panel;
+use App\Helper as H;
 
 /**
  * Главная страница

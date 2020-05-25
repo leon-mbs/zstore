@@ -18,6 +18,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\BookmarkableLink;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use App\Helper as H;
 
 /**
  * Главная страница
@@ -36,9 +37,9 @@ class IssueList extends \App\Pages\Base
 
         $this->_user = System::getUser();
 
-        $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->userlogin == 'admin');
+        $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->rolename == 'admins');
         if (!$allow) {
-            System::setErrorMsg('Нет права  доступа  к   модулю ');
+            System::setErrorMsg(H::l('noaccesstopage'));
             App::RedirectHome();
             return;
         }
@@ -187,7 +188,7 @@ class IssueList extends \App\Pages\Base
         }
 
 
-        if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
+        if ($this->_user->rolename != 'admins' && $this->_user->user_id != $this->_issue->createdby) {
 
             $this->setError('editallowedaa');
             return;
@@ -277,7 +278,7 @@ class IssueList extends \App\Pages\Base
         }
 
 
-        if ($this->_user->username != 'admin' && $this->_user->user_id != $this->_issue->createdby) {
+        if ($this->_user->rolename != 'admins' && $this->_user->user_id != $this->_issue->createdby) {
             $this->setError('delallowedaa');
 
             return;
@@ -346,7 +347,7 @@ class IssueList extends \App\Pages\Base
         $row->add(new Label('msguser', $item->username));
         $row->add(new Label('msgdata', $item->message));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
-        if ($this->_user->username == 'admin' || $this->_user->user_id == $item->user_id) {
+        if ($this->_user->rolename == 'admins' || $this->_user->user_id == $item->user_id) {
             $row->delmsg->setVisible(true);
         } else {
             $row->delmsg->setVisible(false);
@@ -384,7 +385,7 @@ class IssueList extends \App\Pages\Base
 
         $row->add(new ClickLink('delfile'))->onClick($this, 'deleteFileOnClick');
 
-        if ($this->_user->username == 'admin' || $this->_user->user_id == $this->_issue->createdby) {
+        if ($this->_user->rolename == 'admins' || $this->_user->user_id == $this->_issue->createdby) {
             $row->delfile->setVisible(true);
         } else {
             $row->delfile->setVisible(false);
