@@ -24,8 +24,8 @@ class Orders extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('Нет права доступа к странице');
+        if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
+            System::setErrorMsg(H::l('noaccesstopage'));
 
             App::RedirectHome();
             return;

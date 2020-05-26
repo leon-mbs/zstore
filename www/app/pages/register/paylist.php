@@ -95,7 +95,7 @@ class PayList extends \App\Pages\Base
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $user = \App\System::getUser();
-        $row->add(new ClickLink('del'))->setVisible($user->username == 'admin');
+        $row->add(new ClickLink('del'))->setVisible($user->rolename == 'admins');
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
     }
 
@@ -215,7 +215,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and " . $c;
         }
 
-        if ($user->acltype == 2) {
+        if ($user->rolename != 'admins') {
             if ($user->onlymy == 1) {
 
                 $where .= " and d.user_id  = " . $user->user_id;

@@ -48,24 +48,29 @@ class User extends \ZCL\DB\Entity
     protected function afterLoad() {
         $this->createdon = strtotime($this->createdon);
 
-        $acl = @unserialize($this->acl);
-        if (!is_array($acl)) {
-            $acl = array();
-        }
-        $this->acltype = (int)$acl['acltype'];
-        $this->onlymy = (int)$acl['onlymy'];
-        $this->aclview = $acl['aclview'];
-        $this->acledit = $acl['acledit'];
-        $this->aclexe = $acl['aclexe'];
-        $this->aclbranch = $acl['aclbranch'];
-        $this->widgets = $acl['widgets'];
-        $this->modules = $acl['modules'];
-
+        $acl = @unserialize($this->roleacl);
+        if(!is_array($acl))$acl = @unserialize($this->acl); //для  обратно   совместимости
+        if(!is_array($acl))$acl = array();
+        
+       
+        $this->aclview =    $acl['aclview'];
+        $this->acledit =    $acl['acledit'];
+        $this->aclexe =     $acl['aclexe'];
+        $this->aclcancel =  $acl['aclcancel'];
+        
+        $this->widgets =    $acl['widgets'];
+        $this->modules =    $acl['modules'];
+        $this->smartmenu =  $acl['smartmenu'];        
+        
+ 
+        $this->aclbranch =  $acl['aclbranch'];
+        $this->onlymy =  $acl['onlymy'];
+  
         $options = @unserialize($this->options);
         if (!is_array($options)) {
             $options = array();
         }
-        $this->smartmenu = $options['smartmenu'];
+    
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
         $this->pagesize = (int)$options['pagesize'];
@@ -84,25 +89,19 @@ class User extends \ZCL\DB\Entity
         parent::beforeSave();
 
         $acl = array();
-        $acl['acltype'] = $this->acltype;
-        $acl['onlymy'] = $this->onlymy;
-        $acl['aclview'] = $this->aclview;
-        $acl['acledit'] = $this->acledit;
-        $acl['aclexe'] = $this->aclexe;
-        $acl['aclbranch'] = $this->aclbranch;
-        $acl['widgets'] = $this->widgets;
-        $acl['modules'] = $this->modules;
-        $this->acl = serialize($acl);
+ 
+        $acl['aclbranch'] =  $this->aclbranch ;
+        $acl['onlymy'] =  $this->onlymy ;
+     
+        $this->acl  = serialize($acl);
 
         $options = array();
-        $options['smartmenu'] = $this->smartmenu;
-        $options['defstore'] = $this->defstore;
-        $options['defmf'] = $this->defmf;
-        $options['pagesize'] = $this->pagesize;
-        $options['hidesidebar'] = $this->hidesidebar;
-        $options['popupmessage'] = $this->popupmessage;
-
-
+        
+        $options['defstore']= $this->defstore;
+        
+        $options['defmf']= $this->defmf;
+        $options['pagesize']= $this->pagesize;
+        
         $this->options = serialize($options);
 
         return true;

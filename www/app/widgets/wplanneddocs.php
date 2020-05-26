@@ -18,7 +18,7 @@ class WPlannedDocs extends \Zippy\Html\PageFragment
         parent::__construct($id);
 
 
-        $visible = (strpos(System::getUser()->widgets, 'wplanned') !== false || System::getUser()->userlogin == 'admin');
+        $visible = (strpos(System::getUser()->widgets, 'wplanned') !== false || System::getUser()->rolename == 'admins');
 
         $conn = $conn = \ZDB\DB::getConnect();
         $data = array();

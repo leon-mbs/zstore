@@ -20,7 +20,7 @@ class WNoliq extends \Zippy\Html\PageFragment
     public function __construct($id) {
         parent::__construct($id);
         $this->add(new \Zippy\Html\Link\ClickLink('csvnoliq', $this, 'oncsv'));
-        $visible = (strpos(System::getUser()->widgets, 'wnoliq') !== false || System::getUser()->userlogin == 'admin');
+        $visible = (strpos(System::getUser()->widgets, 'wnoliq') !== false || System::getUser()->rolename == 'admins');
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = " and st.store_id in ({$cstr})    ";

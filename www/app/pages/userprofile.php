@@ -38,19 +38,10 @@ class UserProfile extends \App\Pages\Base
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
 
-        $w = "";
-        if ($this->user->acltype == 2) {
-            if (strlen($this->user->aclview) > 0) {
-                $w = " and meta_id in ({$this->user->aclview})";
-            } else {
-                $w = " and meta_id in (0)";
-            }
-        }
-
-        $form->add(new DataView('mlist', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "disabled<>1  {$w}", "meta_type,description"), $this, 'metarowOnRow'));
-
+ 
+    
         $this->add($form);
-        $form->mlist->Reload();
+      
 
         //форма   пароля
 
@@ -63,7 +54,7 @@ class UserProfile extends \App\Pages\Base
         $this->add(new Form('msgform'))->onSubmit($this, 'OnSend');
         $this->msgform->add(new TextArea('msgtext'));
         $this->msgform->add(new DropDownChoice('users', \App\Entity\User::findArray('username', 'disabled <> 1 and user_id <>' . $this->user->user_id, 'username'), 0));
-        $this->msgform->add(new CheckBox('sendall'))->setVisible($this->user->username == 'admin');
+        $this->msgform->add(new CheckBox('sendall'))->setVisible($this->user->rolename == 'admins');
     }
 
     public function onsubmit($sender) {
@@ -75,16 +66,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->defmf = $sender->defmf->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
 
-        $smartmenu = array();
-
-        foreach ($sender->mlist->getDataRows() as $row) {
-            $item = $row->getDataItem();
-            if ($item->mview == true) {
-                $smartmenu[] = $item->meta_id;
-            }
-        }
-        $this->user->smartmenu = implode(',', $smartmenu);
-
+ 
 
         if (!$this->isError()) {
             $this->user->save();
@@ -174,35 +156,5 @@ class UserProfile extends \App\Pages\Base
         $sender->clean();
     }
 
-    public function metarowOnRow($row) {
-        $item = $row->getDataItem();
-        switch ($item->meta_type) {
-            case 1:
-                $title = H::l('md_doc');
-                break;
-            case 2:
-                $title = H::l('md_rep');
-                break;
-            case 3:
-                $title = H::l('md_reg');
-                break;
-            case 4:
-                $title = H::l('md_ref');
-                break;
-            case 5:
-                $title = H::l('md_ser');
-                break;
-        }
-        $smartmenu = @explode(',', $this->user->smartmenu);
-        if (is_array($smartmenu)) {
-            $item->mview = in_array($item->meta_id, $smartmenu);
-        }
-
-
-        $row->add(new Label('meta_desc', $item->description));
-        $row->add(new Label('meta_name', $title));
-
-        $row->add(new CheckBox('mshow', new Bind($item, 'mview')));
-    }
-
+    
 }

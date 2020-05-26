@@ -81,7 +81,7 @@ class Branch extends \ZCL\DB\Entity
         $where = "disabled<>1";
         if ($user_id > 0) {
             $user = \App\Entity\User::load($user_id);
-            if ($user->username != 'admin') {
+            if ($user->rolename != 'admins') {
                 if (strlen($user->aclbranch) == 0) {
                     return array();
                 } else {

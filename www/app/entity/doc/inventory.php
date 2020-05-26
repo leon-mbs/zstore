@@ -62,7 +62,7 @@ class Inventory extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
             $q = H::fqty($item->quantity);
-            if ($user->userlogin != 'admin') {
+            if ($user->rolename != 'admins') {
                 $q = '-';
             }
             $detail[] = array("no" => $i++,

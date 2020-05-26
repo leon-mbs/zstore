@@ -205,6 +205,9 @@
   "isonstore":  "В наявностi",
   "fororder":  "Для замовлення",
   "cancelsell": "Знятий з  продажу",
+  "onlyadminaccess": "До сторiнки має доступ тiльки користувач admin",
+  "onlyadminsaccess": "До сторiнки мають доступ тiльки користувачi з  admins  ",
+  "onlyadminsuser": "Користувачами може керувати тiльки    користувач з admins  ",
 
   "refreshed": "Оновлено",
   "sent": "Відправлено",

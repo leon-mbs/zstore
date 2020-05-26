@@ -22,7 +22,7 @@ class Items extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->userlogin != 'admin') {
+        if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg('Нет права доступа к странице');
 
             App::RedirectHome();

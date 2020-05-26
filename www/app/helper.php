@@ -67,7 +67,7 @@ class Helper
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
 
-            if (!in_array($meta_id, $aclview) && System::getUser()->acltype == 2) {
+            if (!in_array($meta_id, $aclview) && System::getUser()->rolename != 'admins') {
                 continue;
             }
 
@@ -137,7 +137,7 @@ class Helper
 
         foreach ($rows as $item) {
 
-            if (!in_array($item['meta_id'], $aclview) && System::getUser()->acltype == 2) {
+            if (!in_array($item['meta_id'], $aclview) && System::getUser()->rolename != 'admins') {
                 continue;
             }
 

@@ -18,7 +18,7 @@ class WSdate extends \Zippy\Html\PageFragment
     public function __construct($id) {
         parent::__construct($id);
 
-        $visible = (strpos(System::getUser()->widgets, 'wsdate') !== false || System::getUser()->userlogin == 'admin');
+        $visible = (strpos(System::getUser()->widgets, 'wsdate') !== false || System::getUser()->rolename == 'admins');
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "   store_id in ({$cstr}) and  ";

@@ -205,9 +205,11 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->total->setText($order->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                        $this->calcPay();
+                         
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->calcTotal();
+                        $this->calcPay();
 
                     }
                     if ($basedoc->meta_name == 'Invoice') {
@@ -230,15 +232,17 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->total->setText($invoice->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                        $this->calcPay();
-
+   
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-
+                        $this->calcTotal();
+                        $this->calcPay();
 
                         if ($invoice->payamount > 0) {
                             $this->docform->payment->setValue(MoneyFund::PREPAID);// предоплата
                         }
+                        
+                        
                     }
 
 
