@@ -59,7 +59,7 @@ class Users extends \App\Pages\Base
 
     public function onAdd($sender) {
 
-        if (System::getUser()->rolename !== 'admin') {
+        if (System::getUser()->rolename !== 'admins') {
             $this->setError( \App\Helper::l('onlyadminsuser'));
 
             return;
@@ -69,7 +69,7 @@ class Users extends \App\Pages\Base
         $this->editpan->setVisible(true);
         // Очищаем  форму
         $this->editpan->editform->clean();
-        $this->editpan->editform->editwopendoc->setChecked(true);
+        
 
         $this->user = new User();
     }
