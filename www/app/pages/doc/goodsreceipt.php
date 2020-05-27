@@ -32,6 +32,7 @@ class GoodsReceipt extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
+     
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -259,7 +260,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->edititem->setText($item->itemname);
 
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid = $item->rowid;
     }
 
     public function deleteOnClick($sender) {
@@ -267,9 +268,11 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$item->item_id]);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
+
+        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+      
+       
         $this->calcTotal();
         $this->calcPay();
 
@@ -350,23 +353,16 @@ class GoodsReceipt extends \App\Pages\Base
         if ($item->sdate == false) {
             $item->sdate = '';
         }
+      
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
-
+        if ($this->_rowid > 0) {    
+            $item->rowid = $this->_rowid;
+        }else {   
+            $next = count($this->_itemlist) >0? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid=$next+1 ;
         }
+        $this->_itemlist[$item->rowid] = $item;
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
         $this->_rowid = 0;
 
 
@@ -791,4 +787,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->edititem->setText($itemname);
 
     }
+
+ 
+     
 }
