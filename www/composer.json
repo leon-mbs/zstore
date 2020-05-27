@@ -1,7 +1,7 @@
 {
   "require": {
     "php": ">=7.2",
-    "phpmailer/phpmailer": "~5.2",
+    "phpmailer/phpmailer": "~6.1",
     "monolog/monolog": "1.25.3",
     "nesbot/carbon": "2.32.2",
     "timetoogo/pinq": "3.4.1",
