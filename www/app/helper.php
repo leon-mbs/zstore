@@ -451,11 +451,11 @@ class Helper
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData($id = 0) {
+    public static function getFirmData($branch_id = 0) {
 
         $data = \App\System::getOptions("firm");
-        if ($id > 0) {
-            $branch = \App\Entity\Branch::load($id);
+        if ($branch_id > 0) {
+            $branch = \App\Entity\Branch::load($branch_id);
             if (strlen($branch->shopname) > 0) {
                 $data['shopname'] = $branch->shop_name;
             }

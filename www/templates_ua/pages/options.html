@@ -113,6 +113,13 @@
                    title="Філії (наприклад торгові точки) використовуються для поділу доступу до ресурсів. Сотпруднікі філії мають доступ до документів, складах і кас тільки даного філіала. Отпускние ціни товарів запам'ятовуються в прив'язці до поточного філії.Філії (наприклад торгові точки) використовуються для поділу доступу до ресурсів. Співробітники філії мають доступ до документів, складах і кас тільки даного філіалу. Відпускні ціни товарів запам'ятовуються в прив'язці до поточного філії.    "></i>
             </div>
             <div class="form-check">
+                <input zippy="usefirms" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usefirms">Облiк в  кiлькох компанiях </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Використовуется якщо раъунки та накладнi треба  вести в  розрiзi кiлькох компанiй  "></i>
+            </div>
+            
+            <div class="form-check">
                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="allowminus">Дозволити списання в мiнус </label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -163,6 +170,8 @@
             </div>        
          </form> 
           {{/useval}}
+          
+        {{^usefirms}}  
         <h4>Дані про компанію</h4>
         <form zippy="firm">
 
@@ -195,6 +204,8 @@
             </div>
 
         </form>
+        {{/usefirms}}        
+        
         <h4>Налаштування принтера</h4>
         <small>Налаштування вузького принтера для друку чеків і етикеток</small>
         <form zippy="printer">

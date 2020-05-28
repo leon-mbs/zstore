@@ -314,7 +314,7 @@ class CustomerList extends \App\Pages\Base
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type = 2 and item_id=' . $this->_customer->customer_id);
+        $this->_msglist = \App\Entity\Message::find('item_type = 2 and item_id=' . $this->_customer->customer_id,'message_id');
         $this->contentview->dw_msglist->Reload();
     }
 
@@ -322,7 +322,7 @@ class CustomerList extends \App\Pages\Base
     public function msgListOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label("msgdata", $item->message));
+        $row->add(new Label("msgdata",nl2br($item->message)));
         $row->add(new Label("msgdate", \App\Helper::fdt( $item->created)));
         $row->add(new Label("msguser", $item->username));
 

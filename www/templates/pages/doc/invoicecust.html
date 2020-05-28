@@ -32,6 +32,16 @@
                 <label for="document_date"> Дата</label>
                 <input class="form-control" type="text" zippy="document_date" required="required">
             </div>
+          {{#useval}}
+             
+            <div class="form-group  ">
+                <label for="val">Валюта</label>
+                <select class="form-control" zippy="val">
+                    <option value="0">В нац. валюте</option>
+                </select>
+
+            </div>
+          {{/useval}}            
             <div class="form-group  ">
                 <label for="payment">Оплата</label>
                 <select class="form-control" zippy="payment">

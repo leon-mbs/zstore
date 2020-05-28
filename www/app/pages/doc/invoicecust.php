@@ -41,7 +41,9 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new DropDownChoice('val',H::getValList() , '0'))->onChange($this, 'OnVal');
 
+        
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -311,6 +313,19 @@ class InvoiceCust extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                
+                
+                //обновляем  курс
+                if(strlen($this->_doc->headerdata['val'])>1) {
+                  $optval =   \App\System::getOptions("val" );  
+                  if(strlen($optval[$this->_doc->headerdata['val']])>0){
+                      $optval[$this->_doc->headerdata['val']] = $this->_doc->headerdata['rate']    ;
+                       \App\System::setOptions("val", $optval);
+                  }
+                       
+                }
+                
+                
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -401,6 +416,19 @@ class InvoiceCust extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
+    public function OnVal($sender) {
+        $val = $sender->getValue();
+        if(strlen($val)>1){
+          $optval = \App\System::getOptions("val" ); 
+          $rate =  $optval[$val];
+        }  else {
+           $rate =1;         
+        }
+        $this->docform->rate->setText($rate);       
+        $this->docform->editrate->setText($rate); 
+        $this->CalcPay();      
+    }
+    
 
     /**
      * Валидация   формы

@@ -46,8 +46,9 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('useset'));
         $this->common->add(new CheckBox('useval'));
 
-        $this->common->add(new CheckBox('usescanner'));
+        $this->common->add(new CheckBox('usefirms'));
         $this->common->add(new CheckBox('useimages'));
+        $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('allowminus'));
         $this->common->add(new TextInput('price1'));
@@ -83,6 +84,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
+        $this->common->usefirms->setChecked($common['usefirms']);
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
@@ -201,6 +203,7 @@ class Options extends \App\Pages\Base
         $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
+        $common['usefirms'] = $this->common->usefirms->isChecked() ? 1 : 0;
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
         $common['useval'] = $this->common->useval->isChecked() ? 1 : 0;

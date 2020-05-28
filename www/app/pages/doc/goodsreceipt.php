@@ -259,6 +259,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
+        if($item->rowid>0) ;               //для совместимости
+        else $item->rowid = $item->item_id ;
 
         $this->_rowid = $item->rowid;
     }
@@ -269,7 +271,9 @@ class GoodsReceipt extends \App\Pages\Base
         }
         $item = $sender->owner->getDataItem();
 
-
+        if($item->rowid>0) ;               //для совместимости
+        else $item->rowid = $item->item_id ;
+        
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
       
        
@@ -286,9 +290,9 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
 
-        foreach ($this->_itemlist as $_item) {
+        foreach ($this->_itemlist as $ri=>$_item ) {
             if ($_item->bar_code == $code) {
-                $this->_itemlist[$_item->item_id]->quantity += 1;
+                $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();
                 $this->CalcPay();

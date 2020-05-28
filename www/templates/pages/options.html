@@ -110,6 +110,12 @@
                    title="Филиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала. Отпускные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
             </div>
             <div class="form-check">
+                <input zippy="usefirms" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usefirms">Учет в нескольких компаниях </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Используется  если  счета  и накладные  нужно  вести  в разрезе нескольких компаний. Данные о  компании вместо  формы  в  настройках заносятся в справочнике  компаний  "></i>
+            </div>
+            <div class="form-check">
                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="allowminus">Разрешить списывать ТМЦ в минус </label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -161,7 +167,7 @@
          </form> 
           {{/useval}}
       
-      
+        {{^usefirms}}
         <h4>Данные о компании</h4>
         <form zippy="firm">
 
@@ -194,7 +200,7 @@
             </div>
 
         </form>
-        
+         {{/usefirms}}
 
         
         <h4>Настройка принтера</h4>

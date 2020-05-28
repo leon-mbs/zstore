@@ -340,7 +340,7 @@ class IssueList extends \App\Pages\Base
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type = ' . \App\Entity\Message::TYPE_ISSUE . ' and item_id=' . $this->_issue->issue_id);
+        $this->_msglist = \App\Entity\Message::find('item_type = ' . \App\Entity\Message::TYPE_ISSUE . ' and item_id=' . $this->_issue->issue_id,'message_id');
         $this->listpan->msgpan->msglist->Reload();
         $this->_fileslist = \App\Helper::getFileList($this->_issue->issue_id, \App\Entity\Message::TYPE_ISSUE);
         $this->listpan->msgpan->filelist->Reload();
@@ -350,7 +350,7 @@ class IssueList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new Label('msgdate', \App\Helper::fdt( $item->created)));
         $row->add(new Label('msguser', $item->username));
-        $row->add(new Label('msgdata', $item->message));
+        $row->add(new Label('msgdata', nl2br($item->message)));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
         if ($this->_user->rolename == 'admins' || $this->_user->user_id == $item->user_id) {
             $row->delmsg->setVisible(true);

@@ -216,7 +216,7 @@ class ProjectList extends \App\Pages\Base
     }
 
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type =6 and item_id=' . $this->_project->project_id);
+        $this->_msglist = \App\Entity\Message::find('item_type =6 and item_id=' . $this->_project->project_id,'message_id');
         $this->showpan->msglist->Reload();
         $this->_fileslist = \App\Helper::getFileList($this->_project->project_id, 6);
         $this->showpan->filelist->Reload();
@@ -226,7 +226,7 @@ class ProjectList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new Label('msgdate', \App\Helper::fdt( $item->created)));
         $row->add(new Label('msguser', $item->username));
-        $row->add(new Label('msgdata', $item->message));
+        $row->add(new Label('msgdata', nl2br($item->message)));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
         if ($this->_user->rolename == 'admins' || $this->_user->user_id == $item->user_id) {
             $row->delmsg->setVisible(true);

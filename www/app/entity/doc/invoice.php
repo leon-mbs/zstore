@@ -43,7 +43,7 @@ class Invoice extends \App\Entity\Doc\Document
             "notes" => $this->notes,
             "document_number" => $this->document_number,
             "totalstr" => $totalstr,
-            "total" => $this->amount,
+            "total" => H::fa($this->amount),
             "payamount" => H::fa($this->payamount),
             "payed" => H::fa($this->payed),
             "paydisc" => H::fa($this->headerdata["paydisc"])

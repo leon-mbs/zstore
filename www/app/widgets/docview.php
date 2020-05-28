@@ -263,7 +263,7 @@ class DocView extends \Zippy\Html\PageFragment
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::getMessages(1, $this->_doc->document_id);
+        $this->_msglist = \App\Entity\Message::getMessages(1, $this->_doc->document_id );
         $this->dw_msglist->Reload();
         $this->hmessages->setText(count($this->_msglist));
         $this->hmessages->setVisible(count($this->_msglist) > 0);
