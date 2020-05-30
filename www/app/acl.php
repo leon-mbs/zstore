@@ -273,7 +273,7 @@ class ACL
      * возвращает ограничение  для  ресурсов  по филиалам
      * @param mixed $nul  включая  те  у которых филиал не  задан
      */
-    public static function getBranchConstraint($nul = false) {
+    public static function getBranchConstraint( ) {
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1) {
             return '';
@@ -281,11 +281,9 @@ class ACL
 
         $id = \App\System::getBranch(); //если  выбран  конкретный
         if ($id > 0) {
-            if ($nul == true) {
-                return "branch_id in (0,{$id})";
-            } else {
-                return "branch_id in ({$id})";
-            }
+            
+             return "branch_id in (0,{$id})";
+              
         }
 
 
@@ -295,14 +293,12 @@ class ACL
         }
 
         if (strlen($user->aclbranch) == 0) {
-            return '1=2';
+             return "branch_id in (0 )";
         } //нет доступа  ни  к  одному филиалу
 
-        if ($nul == true) {
-            return "branch_id in (0,{$user->aclbranch})";
-        } else {
-            return "branch_id in ({$user->aclbranch})";
-        }
+        
+        return "branch_id in (0,{$user->aclbranch})";
+          
 
 
     }

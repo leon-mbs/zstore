@@ -3,16 +3,16 @@
 namespace App\Entity;
 
 /**
- * Клас-сущность  работа, услуга
+ * Класс-сущность  компания 
  *
- * @table=services
- * @keyfield=service_id
+ * @table=firms
+ * @keyfield=firm_id
  */
-class Service extends \ZCL\DB\Entity
+class Firm extends \ZCL\DB\Entity
 {
 
     protected function init() {
-        $this->service_id = 0;
+        $this->firm_id = 0;
     }
 
     protected function afterLoad() {

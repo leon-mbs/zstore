@@ -265,10 +265,10 @@ class Options extends \App\Pages\Base
         if ($this->listpan->filter->frep->isChecked()) {
             $where .= " or meta_type = 2";
         }
-        if ($this->listpan->filter->fref->isChecked()) {
+        if ($this->listpan->filter->freg->isChecked()) {
             $where .= " or meta_type = 3";
         }
-        if ($this->listpan->filter->freg->isChecked()) {
+        if ($this->listpan->filter->fref->isChecked()) {
             $where .= " or meta_type = 4";
         }
         if ($this->listpan->filter->fser->isChecked()) {
@@ -308,10 +308,10 @@ class Options extends \App\Pages\Base
                 $title = H::l('md_rep');
                 break;
             case 3:
-                $title = H::l('md_ref');
+                $title = H::l('md_reg');
                 break;
             case 4:
-                $title = H::l('md_reg');
+                $title = H::l('md_ref');
                 break;
             case 5:
                 $title = H::l('md_ser');
