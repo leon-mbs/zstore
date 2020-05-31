@@ -111,7 +111,7 @@ class ContractList extends \App\Pages\Base
          
         $this->_contract->contract_number = $this->contractdetail->editcontract_number->getText();
         if ($this->_contract->contract_number == '') {
-            $this->setError("entername");
+            $this->setError("notnumber");
             return;
         }
         $this->_contract->customer_id = $this->contractdetail->editcust->getKey();

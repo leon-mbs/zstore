@@ -37,7 +37,6 @@ class Contract extends \ZCL\DB\Entity
         $this->details .= "<shortdesc><![CDATA[{$this->shortdesc}]]></shortdesc>";
         $this->details .= "<payname><![CDATA[{$this->payname}]]></payname>";
         $this->details .= "<pay>{$this->pay}</pay>";
-
         $this->details .= "</details>";
 
         return true;
@@ -45,11 +44,10 @@ class Contract extends \ZCL\DB\Entity
 
     public  static  function PayList(){
         return array(
-          1=>'Нал',
-          2=>'Безнал',
-          3=>'Кредит',
-          4=>'Под реализацию'
+            1=>\App\Helper::l('cnal'),
+            2=>\App\Helper::l('cbeznal'),
+            3=>\App\Helper::l('ckredit'),
+            4=>\App\Helper::l('creal')
         );
     }
-
 }
