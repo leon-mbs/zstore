@@ -34,6 +34,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<bonus>{$this->bonus}</bonus>";
         $this->detail .= "<type>{$this->type}</type>";
         $this->detail .= "<jurid>{$this->jurid}</jurid>";
+        $this->detail .= "<shopcust_id>{$this->shopcust_id}</shopcust_id>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->detail .= "</detail>";
@@ -49,6 +50,7 @@ class Customer extends \ZCL\DB\Entity
         $this->bonus = (int)($xml->bonus[0]);
         $this->type = (int)($xml->type[0]);
         $this->jurid = (int)($xml->jurid[0]);
+        $this->shopcust_id = (int)($xml->shopcust_id[0]);
         $this->address = (string)($xml->address[0]);
         $this->comment = (string)($xml->comment[0]);
 
