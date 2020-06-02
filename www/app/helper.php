@@ -240,6 +240,7 @@ class Helper
         $data = $conn->qstr($data);
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
         $conn->Execute($sql);
+        return $id;
     }
 
     /**

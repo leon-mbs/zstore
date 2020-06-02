@@ -5,45 +5,25 @@
 <body>
 <div class="row">
     <div class="col-12 col-md-8 col-xl-6">
-        <div zippy="servicetable">
+        <div zippy="firmtable">
             <h3>Список компаний </h3>
-            <div class="navbar nav">
-
-                <form zippy="filter" class="form-inline">
-
-                    <label for="searchkey">Поиск</label>
-                    <input class="form-control mr-sm-2" type="text" zippy="searchkey">
-
-                    <div class="form-check">
-
-                        <input title="Показать неактуальные" class="form-check-input" type="checkbox" zippy="showdis">
-                        <label class="form-check-label mr-sm-3" for="showdis">Все</label>
-                    </div>
-
-                    <input class="btn btn-outline-success  " type="submit" value="ОК">
-
-                </form>
-            </div>
+        
             <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
             <table class="table table-bordered   table-sm">
                 <tr>
                     <th>Название</th>
-                    <th style="text-align: right;">Стоимость</th>
-                    <th style="text-align: right;">Нормо-часы</th>
-
+    
                     <th></th>
                 </tr>
-                <tr zippy="servicelist">
-                    <td zippy="service_name"></td>
-                    <td style="text-align: right;" zippy="price"></td>
-                    <td style="text-align: right;" zippy="hours"></td>
-
+                <tr zippy="firmlist">
+                    <td zippy="firm_name"></td>
+    
 
                     <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
                             zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                 </tr>
             </table>
-            <div zippy="pag"></div>
+         
 
         </div>
 
@@ -51,23 +31,12 @@
     </div>
 </div>
 <div class="row">
-    <form class="col-6 col-md-4" zippy="servicedetail">
+    <form class="col-6 col-md-4" zippy="firmdetail">
         <div class="form-group">
-            <label for="editservice_name">Название</label>
-            <input required="required" class="form-control" zippy="editservice_name"/>
+            <label for="editfirm_name">Название</label>
+            <input required="required" class="form-control" zippy="editfirm_name"/>
         </div>
-        <div class="form-group  ">
-            <label for="editprice">Стоимость</label>
-            <div class="form-group">
-                <input zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group  ">
-            <label for="edithours">Нормо-часы</label>
-            <div class="form-group">
-                <input zippy="edithours" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
-            </div>
-        </div>
+   
         <div class="form-check">
             <input zippy="editdisabled" type="checkbox" class="form-check-input">
             <label class="form-check-label" for="editdisabled">Не используется</label>

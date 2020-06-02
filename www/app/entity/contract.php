@@ -26,6 +26,7 @@ class Contract extends \ZCL\DB\Entity
         $this->shortdesc = (string)($xml->shortdesc[0]);
         $this->payname = (string)($xml->payname[0]);
         $this->pay = (int)($xml->pay[0]);
+        $this->file_id = (int)($xml->file_id[0]);
 
         parent::afterLoad();
     }
@@ -37,6 +38,7 @@ class Contract extends \ZCL\DB\Entity
         $this->details .= "<shortdesc><![CDATA[{$this->shortdesc}]]></shortdesc>";
         $this->details .= "<payname><![CDATA[{$this->payname}]]></payname>";
         $this->details .= "<pay>{$this->pay}</pay>";
+        $this->details .= "<file_id>{$this->file_id}</file_id>";
         $this->details .= "</details>";
 
         return true;

@@ -28,6 +28,7 @@ ALTER  VIEW `documents_view` AS
     `d`.`parent_id` AS `parent_id`,
     `d`.`branch_id` AS `branch_id`,
     `b`.`branch_name` AS `branch_name`,
+    `f`.`firm_id` AS `firm_id`,
     `f`.`firm_name` AS `firm_name`,
     `metadata`.`meta_name` AS `meta_name`,
     `metadata`.`description` AS `meta_desc` 

@@ -30,6 +30,7 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
         $form->add(new CheckBox('outcome', $modules['ocoutcome']));
+        $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
         $form->add(new TextArea('key', $modules['ockey']));
         $form->add(new DropDownChoice('defcust', \App\Entity\Customer::getList(), $modules['occustomer_id'] > 0 ? $modules['occustomer_id'] : 0));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
@@ -119,7 +120,8 @@ class Options extends \App\Pages\Base
         $key = $this->cform->key->getText();
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
-        $outcome = $this->cform->outcome->isChecked();
+        $outcome = $this->cform->outcome->isChecked() ?1:0;
+        $insertcust = $this->cform->insertcust->isChecked()?1:0;
         if ($customer_id == 0) {
 
             $this->setError('noselcust');
@@ -141,6 +143,7 @@ class Options extends \App\Pages\Base
         $modules['occustomer_id'] = $customer_id;
         $modules['ocpricetype'] = $pricetype;
         $modules['ocoutcome'] = $outcome;
+        $modules['ocinsertcust'] = $insertcust;
 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');

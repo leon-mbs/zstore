@@ -18,23 +18,21 @@ class Firm extends \ZCL\DB\Entity
     protected function afterLoad() {
 
 
-        $xml = @simplexml_load_string($this->detail);
+        $xml = @simplexml_load_string($this->details);
 
         $this->hours = (string)($xml->hours[0]);
-        $this->price = (string)($xml->price[0]);
-
+   
 
         parent::afterLoad();
     }
 
     protected function beforeSave() {
         parent::beforeSave();
-        $this->detail = "<detail>";
-        //упаковываем  данные в detail
-        $this->detail .= "<price>{$this->price}</price>";
-        $this->detail .= "<hours>{$this->hours}</hours>";
+        $this->details = "<details>";
+       
+       
 
-        $this->detail .= "</detail>";
+        $this->details .= "</details>";
 
         return true;
     }

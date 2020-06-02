@@ -5,6 +5,7 @@ namespace App\Pages\Register;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Helper as H;
+use App\Entity\Firm;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
@@ -43,6 +44,7 @@ class GRList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Все', 1 => 'Не проведенные', 2 => 'Неоплаченые'), 0));
+         $this->filter->add(new DropDownChoice('searchcomp',Firm::findArray('firm_name','disabled<>1','firm_name'),0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
@@ -228,6 +230,10 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and  (payamount > 0 and payamount > payed)";
         }
 
+        $comp = $this->page->filter->searchcomp->getValue();
+        if ($comp > 0) {
+            $where = $where . " and firm_id = ". $comp;
+        }
 
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {

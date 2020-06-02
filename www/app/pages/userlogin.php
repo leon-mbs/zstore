@@ -13,7 +13,8 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function __construct() {
         parent::__construct();
-
+        global $_config;
+        
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userpassword'));
@@ -22,6 +23,30 @@ class UserLogin extends \Zippy\Html\WebPage
 
         $this->add($form);
         $this->setError('');
+        
+        
+        $curver =  'v4.4.0';
+        $this->_tvars['curversion']  = $curver ;
+        
+        //проверка  новой версии        
+        $this->_tvars['isnewversion']  = false;
+        
+        $v = @file_get_contents("https://zippy.com.ua/version.json");
+        $v = @json_decode($v,true)  ;
+        if(strlen( $v['version'])>0){
+           $c = (int) str_replace(".","",str_replace("v","",$curver )) ;
+           $n = (int)str_replace(".","",str_replace("v","",$v['version'] )) ;
+           if($n>$c) {
+              $this->_tvars['isnewversion'] = true;    
+              $url  =  "https://zippy.com.ua/zstore#";
+              $lang = $_config['common']['lang'];
+              if ($lang == 'ua') {
+                  $url  =  "https://zippy.com.ua/ua/zstore#";  
+              }
+              $url = $url . $v['ankor'];
+           }
+           $this->_tvars['newversion'] = "<a style=\"color:#fff\" href=\"{$url}\">{$v['version']}</a>";    
+        }
     }
 
     public function onsubmit($sender) {

@@ -18,6 +18,7 @@ class Message extends \ZCL\DB\Entity
     const TYPE_NOTE    = 4;
     const TYPE_ISSUE   = 5;
     const TYPE_PROJECT = 6;
+    const TYPE_CONTRACT = 7;
 
     protected function afterLoad() {
         $this->created = strtotime($this->created);

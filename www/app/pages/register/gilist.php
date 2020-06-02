@@ -5,6 +5,7 @@ namespace App\Pages\Register;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Helper as H;
+use App\Entity\Firm;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
@@ -43,6 +44,7 @@ class GIList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('searchcomp',Firm::findArray('firm_name','disabled<>1','firm_name'),0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
@@ -90,6 +92,7 @@ class GIList extends \App\Pages\Base
         $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
+        $row->add(new Label('firm', $item->firm_name));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -319,6 +322,10 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         }
         if ($status == 4) {
             $where .= " and  amount > payamount";
+        }
+        $comp = $this->page->filter->searchcomp->getValue();
+        if ($comp > 0) {
+            $where = $where . " and firm_id = ". $comp;
         }
 
 

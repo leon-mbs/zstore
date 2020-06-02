@@ -26,7 +26,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg(\App\Helper::l('noaccesstopage'));
 
             App::RedirectHome();
             return;
@@ -166,7 +166,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
            
-            if($shoporder->customer_id>0){
+            if($shoporder->customer_id>0 && $modules['ocinsertcust'] == 1){
                 $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'") ;
                 if($cust == null) {
                     $cust = new Customer();
@@ -180,7 +180,7 @@ class Orders extends \App\Pages\Base
                     $cust->save();
                     
                 }
-                $neworder->customer_id =   $cust->customer_id;
+                $neworder->customer_id = $cust->customer_id;
             }
            
            
