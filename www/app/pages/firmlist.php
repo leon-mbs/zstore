@@ -25,7 +25,6 @@ class FirmList extends \App\Pages\Base
         if (false == \App\ACL::checkShowRef('FirmList')) {
             return;
         }
-
  
         $this->add(new Panel('firmtable'))->setVisible(true);
         $this->firmtable->add(new DataView('firmlist', new \ZCL\DB\EntityDataSource('\App\Entity\Firm', '', 'disabled,firm_name'), $this, 'firmlistOnRow'))->Reload();
@@ -33,6 +32,10 @@ class FirmList extends \App\Pages\Base
 
         $this->add(new Form('firmdetail'))->setVisible(false);
         $this->firmdetail->add(new TextInput('editfirm_name'));
+        $this->firmdetail->add(new TextInput('editinn'));
+        $this->firmdetail->add(new TextInput('editaddress'));
+        $this->firmdetail->add(new TextInput('editphone'));
+        $this->firmdetail->add(new TextInput('editshopname'));
         $this->firmdetail->add(new CheckBox('editdisabled'));
 
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -68,6 +71,10 @@ class FirmList extends \App\Pages\Base
         $this->firmtable->setVisible(false);
         $this->firmdetail->setVisible(true);
         $this->firmdetail->editfirm_name->setText($this->_firm->firm_name);
+        $this->firmdetail->editinn->setText($this->_firm->inn);
+        $this->firmdetail->editaddress->setText($this->_firm->address);
+        $this->firmdetail->editphone->setText($this->_firm->phone);
+        $this->firmdetail->editshopname->setText($this->_firm->shopname);
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
     }
 
@@ -86,11 +93,16 @@ class FirmList extends \App\Pages\Base
         }
 
         $this->_firm->firm_name = $this->firmdetail->editfirm_name->getText();
+        $this->_firm->inn = $this->firmdetail->editinn->getText();
+        $this->_firm->address = $this->firmdetail->editaddress->getText();
+        $this->_firm->phone = $this->firmdetail->editphone->getText();
+        $this->_firm->shopname = $this->firmdetail->editshopname->getText();
         
         if ($this->_firm->firm_name == '') {
             $this->setError("entername");
             return;
         }
+        
         $this->_firm->disabled = $this->firmdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_firm->Save();

@@ -41,7 +41,7 @@ class ReturnIssue extends Document
 
         $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
-            "firmname" => $this->headerdata["firmname"],
+            "firm_name" => $this->headerdata["firm_name"],
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),

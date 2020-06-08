@@ -12,6 +12,7 @@ class InvoiceCust extends Document
 {
 
     public function generateReport() {
+        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
 
         $i = 1;
 
@@ -31,10 +32,18 @@ class InvoiceCust extends Document
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
+            "firm_name" => $firm['firm_name'],
+             "isfirm" => strlen($firm["firm_name"]) > 0,
+            "iscontract" => $this->headerdata["contract_id"] > 0,
+           "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),
             "payamount" => H::fa($this->payamount)
         );
+        if ($this->headerdata["contract_id"] > 0) {
+            $contract=\App\Entity\Contract::load($this->headerdata["contract_id"]);
+            $header['contract'] = $contract->contract_number ;
+            $header['createdon'] = H::fd($contract->createdon) ;
+        }
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;

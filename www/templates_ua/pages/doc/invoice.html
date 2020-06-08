@@ -31,13 +31,24 @@
                 <input zippy="email" class="form-control">
 
             </div>
-            <div class="form-group  ">
-                <label for="payment">Оплата</label>
-                <select class="form-control" zippy="payment">
-                    <option value="0">Не вибрано</option>
+            {{#usefirms}}
+               <div class="form-group  ">
+                    <label for="firm" >Компанiя</label>
+                    <select class="form-control" zippy="firm">
+                        <option value="0">Не вибрана</option>                           
+                    </select>
+                </div>                  
+            {{/usefirms}}
+                <div class="form-group  ">
+                    <label for="contract" data-label="contract" >Контракт</label>
+                    <select class="form-control" zippy="contract">
+                         <option value="0">Не вибраний</option>                          
+                    </select>
+                    
 
-                </select>
-            </div>
+                </div>              
+            
+         
 
         </div>
         <div class="col-12 col-md-3">
@@ -56,7 +67,13 @@
                 <select class="form-control" zippy="pricetype">
                 </select>
             </div>
+            <div class="form-group  ">
+                <label for="payment">Оплата</label>
+                <select class="form-control" zippy="payment">
+                    <option value="0">Не вибрано</option>
 
+                </select>
+            </div>
 
             <div class="form-group  ">
                 <label for="notes">Примітка </label>

@@ -626,7 +626,7 @@ class ARMPos extends \App\Pages\Base
 
       //  $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
-        $this->_doc->headerdata["firmname"] = $firm['firmname'];
+        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];

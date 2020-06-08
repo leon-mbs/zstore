@@ -10,15 +10,21 @@ use Zippy\Html\Form\TextInput as TextInput;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
-
+    private $cntlogin=0;
+    
     public function __construct() {
         parent::__construct();
         global $_config;
+  
+        $common = System::getOptions('common');
+  
         
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userpassword'));
+        $form->add(new TextInput('capchacode'));
         $form->add(new \Zippy\Html\Form\CheckBox('remember'));
+        $form->add(new  \ZCL\Captcha\Captcha('capcha'));
         $form->onSubmit($this, 'onsubmit');
 
         $this->add($form);
@@ -38,15 +44,12 @@ class UserLogin extends \Zippy\Html\WebPage
            $n = (int)str_replace(".","",str_replace("v","",$v['version'] )) ;
            if($n>$c) {
               $this->_tvars['isnewversion'] = true;    
-              $url  =  "https://zippy.com.ua/zstore#";
-              $lang = $_config['common']['lang'];
-              if ($lang == 'ua') {
-                  $url  =  "https://zippy.com.ua/ua/zstore#";  
-              }
-              $url = $url . $v['ankor'];
            }
-           $this->_tvars['newversion'] = "<a style=\"color:#fff\" href=\"{$url}\">{$v['version']}</a>";    
+            
+           $this->_tvars['newversion'] = $v['version'] ;    
         }
+        
+        $this->_tvars['capcha'] = $common['capcha'] == 1;
     }
 
     public function onsubmit($sender) {
@@ -55,6 +58,17 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->setError('');
         $login = $sender->userlogin->getText();
         $password = $sender->userpassword->getText();
+        $sender->userpassword->setText('') ;      
+        if($this->_tvars['capcha']==true){
+            $entercode = $sender->capchacode->getText();
+            $capchacode = $sender->capcha->getCode();
+            if(strlen($entercode)==0 || $entercode != $capchacode) {
+                $this->setError("invalidcapcha") ;
+                $this->counter() ;
+                
+                return;
+            }
+        }
         if ($login == '') {
 
             $this->setError('enterlogin');
@@ -90,6 +104,8 @@ class UserLogin extends \Zippy\Html\WebPage
             } else {
 
                 $this->setError('invalidlogin');
+ 
+                $this->counter() ;
             }
         }
 
@@ -106,12 +122,38 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function setError($msg) {
 
-
+        $msg = Helper::l($msg);
         $this->_tvars['alerterror'] = $msg;
     }
 
     protected function afterRender() {
 
+        //  $this->_tvars['alerterror'] = ''; 
+    }
+    
+    private function counter() {
+         $this->cntlogin++;
+         if($this->cntlogin==5){
+             $msg  = Helper::l("extralogin");  
+             $msg .= '<br>'.$this->loginform->userlogin->getText() .', ';
+             $msg .= $_SERVER['HTTP_HOST'] .' '. $_SERVER['SERVER_ADDR'];
+             $admin = \App\Entity\User::getByLogin('admin');
+             $n = new \App\Entity\Notify();
+             $n->user_id  = $admin->user_id;
+
+             $n->dateshow = time();
+             $n->message  = $msg;
+  
+             $n->save(); 
+             
+             $this->setError('invalidloginalert');
+             $this->loginform->setVisible(false);
+             if(strlen($admin->email)>0) {
+                Helper::sendLetter($msg,$admin->email,$admin->email,"Zippy Store alert") ;   
+             }
+             
+         }
+          
         //  $this->_tvars['alerterror'] = ''; 
     }
 

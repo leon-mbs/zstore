@@ -45,6 +45,9 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        $this->docform->customer->onChange($this,'OnCustomerFirm') ;
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this,'OnCustomerFirm'  );
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false); ; 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
@@ -145,6 +148,10 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->firm->setValue($this->_doc->headerdata['firm_id']);
+            $this->OnCustomerFirm($this->docform->customer);
+
+            $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
 
             $this->OnPayment($this->docform->payment);
@@ -186,6 +193,11 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->editrate->setText($invoice->headerdata['rate']);
                         $this->docform->disc->setText($invoice->headerdata['disc']);
                         $this->docform->editdisc->setText($invoice->headerdata['disc']);
+                        $this->docform->firm->setValue($invoice->headerdata['firm_id']);
+                        $this->OnCustomerFirm($this->docform->customer);
+
+                        $this->docform->contract->setValue($invoice->headerdata['contract_id']);
+
 
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -200,6 +212,10 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $basedoc = $basedoc->cast();
+                        $this->docform->firm->setValue($basedoc->headerdata['firm_id']);
+                        $this->OnCustomerFirm($this->docform->customer);
+
+                        $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
 
                         $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
 
@@ -402,7 +418,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->goAnkor("");
 
         $firm = H::getFirmData($this->_doc->branch_id);
-        $this->_doc->headerdata["firmname"] = $firm['firmname'];
+        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -412,6 +428,12 @@ class GoodsReceipt extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
+        $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
+        $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
+        if($this->_doc->headerdata['firm_id']>0){
+           $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();    
+        }
+        
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
@@ -792,6 +814,21 @@ class GoodsReceipt extends \App\Pages\Base
 
     }
 
+   public function OnCustomerFirm($sender) {
+        $c=$this->docform->customer->getKey();
+        $f=$this->docform->firm->getValue(); 
+    
+        $ar = \App\Entity\Contract::getList($c,$f) ;
+        
+        $this->docform->contract->setOptionList($ar);
+        if(count($ar)>0){
+           $this->docform->contract->setVisible(true);    
+        }  else {
+           $this->docform->contract->setVisible(false);
+           $this->docform->contract->setValue(0);
+        }
+   
+    }
  
      
 }

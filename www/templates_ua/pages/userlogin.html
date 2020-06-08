@@ -83,7 +83,15 @@
                     <!-- /.col -->
                 </div>
             </form>
-  
+                 {{#isnewversion}} 
+                  <div class="row">
+                    <div class="col-12">
+                    <span> Доступна нова версiя </span>  <span class="badge badge-info"> {{newversion}} </span> <a href="https://zippy.com.ua/zstore#newver">Перейти...</a> 
+                    
+                    </div>
+                  </div>
+                  {{/isnewversion}}         
+ 
         </div>
         <!-- /.login-card-body -->
     </div>
@@ -91,7 +99,7 @@
 <div class="row justify-content-center">
     <div class="w-100"></div>
     <div class="col-12 " style="margin-top:200px;">
-       {{curversion}} {{#isnewversion}} <span title="Нова версiя. Переглянути  опис..." class="badge badge-info" >{{{newversion}}}  </span>{{/isnewversion}}  © <a href="http://zippy.com.ua/">zippy.com.ua</a>
+       {{curversion}} © <a href="http://zippy.com.ua/">zippy.com.ua</a>
     </div>
 </div>
 

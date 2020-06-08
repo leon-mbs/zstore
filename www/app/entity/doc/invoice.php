@@ -13,6 +13,8 @@ class Invoice extends \App\Entity\Doc\Document
 
     public function generateReport() {
 
+        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
+
 
         $i = 1;
         $detail = array();
@@ -38,6 +40,9 @@ class Invoice extends \App\Entity\Doc\Document
         $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
+            "firm_name" => $firm['firm_name'],
+            "isfirm" => strlen($firm["firm_name"]) > 0,
+            "iscontract" => $this->headerdata["contract_id"] > 0,
             "phone" => $this->headerdata["phone"],
             "email" => $this->headerdata["email"],
             "notes" => $this->notes,
@@ -48,6 +53,11 @@ class Invoice extends \App\Entity\Doc\Document
             "payed" => H::fa($this->payed),
             "paydisc" => H::fa($this->headerdata["paydisc"])
         );
+        if ($this->headerdata["contract_id"] > 0) {
+            $contract=\App\Entity\Contract::load($this->headerdata["contract_id"]);
+            $header['contract'] = $contract->contract_number ;
+            $header['createdon'] = H::fd($contract->createdon) ;
+        }
 
 
         $report = new \App\Report('doc/invoice.tpl');

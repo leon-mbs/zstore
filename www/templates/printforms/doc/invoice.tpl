@@ -16,7 +16,24 @@
         <td>Email</td>
         <td colspan="7">{{email}}</td>
     </tr>
+    {{#isfirm}}
+    <tr>
+         
+        <td></td>
+        <td  > Продавец </td>
+        <td colspan="7">{{firm_name}}</td>
 
+    </tr>
+    {{/isfirm}}
+   {{#iscontract}}
+    <tr>
+        
+        <td></td>
+        <td  > Договор </td>
+        <td colspan="7">{{contract}}  от {{createdon}}</td>
+
+    </tr>
+    {{/iscontract}}  
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
             Счет-фактура № {{document_number}} от {{date}}

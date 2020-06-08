@@ -39,7 +39,11 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        $this->docform->customer->onChange($this,'OnCustomerFirm') ;
 
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this,'OnCustomerFirm'  );
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false); ; 
+        
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('gar'));
         $this->docform->add(new TextInput('device'));
@@ -111,7 +115,9 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-
+            $this->docform->firm->setValue($this->_doc->headerdata['firm_id']);
+            $this->OnCustomerFirm(null);
+            $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
         } else {
@@ -222,6 +228,12 @@ class ServiceAct extends \App\Pages\Base
         }
         $this->_doc->headerdata['device'] = $this->docform->device->getText();
         $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
+        $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
+        $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
+        if($this->_doc->headerdata['firm_id']>0){
+           $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();    
+        }
+        
 
         $this->calcTotal();
 
@@ -414,6 +426,22 @@ class ServiceAct extends \App\Pages\Base
         $this->updateAjax(array('editprice'));
     }
 
+    public function OnCustomerFirm($sender) {
+        $c=$this->docform->customer->getKey();
+        $f=$this->docform->firm->getValue(); 
+    
+        $ar = \App\Entity\Contract::getList($c,$f) ;
+        
+        $this->docform->contract->setOptionList($ar);
+        if(count($ar)>0){
+           $this->docform->contract->setVisible(true);    
+        }  else {
+           $this->docform->contract->setVisible(false);
+           $this->docform->contract->setValue(0);
+        }
+   
+    }
+    
     //добавление нового контрагента
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
@@ -449,7 +477,7 @@ class ServiceAct extends \App\Pages\Base
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);
-
+        $this->OnCustomerFirm(null) ;
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }

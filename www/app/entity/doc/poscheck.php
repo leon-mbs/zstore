@@ -52,7 +52,7 @@ class POSCheck extends Document
 
         $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
-            "firmname" => $firm["firmname"],
+            "firm_name" => $firm["firm_name"],
             "shopname" => $firm["shopname"],
             "address" => $firm["address"],
             "phone" => $firm["phone"],
@@ -104,7 +104,7 @@ class POSCheck extends Document
 
         $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
-            "firmname" => $firm["firmname"],
+            "firm_name" => $firm["firm_name"],
             "shopname" => strlen($firm["shopname"]) > 0 ? $firm["shopname"] : false,
             "address" => $firm["address"],
             "phone" => $firm["phone"],

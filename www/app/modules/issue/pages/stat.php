@@ -45,7 +45,7 @@ class Stat extends \App\Pages\Base
 
         $user_id = 0;
 
-        if ($user->username != 'admin') {
+        if ($user->userlogin != 'admin') {
             $user_id = $user->user_id;
             $users = User::findArray('username', 'user_id=' . $user_id, 'username');
         }

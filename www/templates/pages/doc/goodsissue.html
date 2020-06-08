@@ -31,8 +31,23 @@
                 <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
 
             </div>
+           {{#usefirms}}
+               <div class="form-group  ">
+                    <label for="firm" >Продавец</label>
+                    <select class="form-control" zippy="firm">
+                        <option value="0">Не выбрана</option>                           
+                    </select>
+                </div>                  
+            {{/usefirms}}
+                <div class="form-group  ">
+                    <label for="contract" data-label="contract" >Договор</label>
+                    <select class="form-control" zippy="contract">
+                         <option value="0">Не выбран</option>                          
+                    </select>
+                    
 
-
+                </div>                    
+ 
         </div>
         <div class="col-12 col-md-4  col-xl-3">
             <div class="form-group">

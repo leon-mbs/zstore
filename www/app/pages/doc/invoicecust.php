@@ -40,6 +40,10 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        $this->docform->customer->onChange($this,'OnCustomerFirm') ;
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this,'OnCustomerFirm'  );
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false); ; 
+        
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new DropDownChoice('val',H::getValList() , '0'))->onChange($this, 'OnVal');
 
@@ -110,6 +114,11 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
+            $this->docform->firm->setValue($this->_doc->headerdata['firm_id']);
+            $this->OnCustomerFirm($this->docform->customer);
+
+            $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
+    
             $this->docform->total->setText($this->_doc->amount);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -276,6 +285,12 @@ class InvoiceCust extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
+        $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
+        $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
+        if($this->_doc->headerdata['firm_id']>0){
+           $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();    
+        }
+        
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
         if ($this->checkForm() == false) {
@@ -502,4 +517,20 @@ class InvoiceCust extends \App\Pages\Base
         $this->editdetail->setVisible(true);
     }
 
+    public function OnCustomerFirm($sender) {
+        $c=$this->docform->customer->getKey();
+        $f=$this->docform->firm->getValue(); 
+    
+        $ar = \App\Entity\Contract::getList($c,$f) ;
+        
+        $this->docform->contract->setOptionList($ar);
+        if(count($ar)>0){
+           $this->docform->contract->setVisible(true);    
+        }  else {
+           $this->docform->contract->setVisible(false);
+           $this->docform->contract->setValue(0);
+        }
+   
+    }
+    
 }

@@ -51,5 +51,21 @@ class Contract extends \ZCL\DB\Entity
             3=>\App\Helper::l('ckredit'),
             4=>\App\Helper::l('creal')
         );
+    } 
+    public  static  function  getList($c,$f=0){
+        
+        $ar = array();
+        if(strlen($f)==0)$f=0;
+        if($c>0  ) {  
+           $where="disabled <> 1 and customer_id={$c} and coalesce(firm_id,0) = {$f} "  ;
+             
+           $res = Contract::find($where,'contract_number');    
+           foreach($res as $k=>$v) {
+              $ar[$k] = $v->contract_number .' '. $v->shortdesc ;
+           }
+           
+        }       
+        
+        return $ar;
     }
 }

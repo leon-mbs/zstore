@@ -43,7 +43,7 @@ class ContractList extends \App\Pages\Base
         $this->contracttable->add(new \Zippy\Html\DataList\Paginator('pag', $this->contracttable->contractlist));
 
         $this->add(new Form('contractdetail'))->setVisible(false);
-        $this->contractdetail->add(new Date('editcreatedon'));
+        $this->contractdetail->add(new Date('editcreatedon',time()));
         $this->contractdetail->add(new TextInput('editshortdesc'));
         $this->contractdetail->add(new TextInput('editcontract_number'));
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
@@ -113,6 +113,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->setVisible(true);
         // Очищаем  форму
         $this->contractdetail->clean();
+        $this->contractdetail->editcreatedon->setDate(time());
 
         $this->_contract = new Contract();
     }

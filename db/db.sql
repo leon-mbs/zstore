@@ -20,6 +20,35 @@ CREATE TABLE `branches` (
   PRIMARY KEY (`branch_id`)
 )  AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `contracts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contracts` (
+  `contract_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) DEFAULT '0',
+  `firm_id` int(11) DEFAULT '0',
+  `createdon` date NOT NULL,
+  `contract_number` varchar(64) NOT NULL,
+  `disabled` tinyint(1) DEFAULT '0',
+  `details` longtext NOT NULL,
+  PRIMARY KEY (`contract_id`)
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `contracts_view`;
+/*!50001 DROP VIEW IF EXISTS `contracts_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `contracts_view` AS SELECT 
+ 1 AS `contract_id`,
+ 1 AS `customer_id`,
+ 1 AS `firm_id`,
+ 1 AS `createdon`,
+ 1 AS `contract_number`,
+ 1 AS `disabled`,
+ 1 AS `details`,
+ 1 AS `customer_name`,
+ 1 AS `firm_name`*/;
+SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `customers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -32,7 +61,7 @@ CREATE TABLE `customers` (
   `status` smallint(4) NOT NULL DEFAULT '0',
   `city` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
-)  AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `customers_view`;
 /*!50001 DROP VIEW IF EXISTS `customers_view`*/;
@@ -62,7 +91,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1022 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -98,14 +127,12 @@ CREATE TABLE `documents` (
   `payed` decimal(11,2) DEFAULT '0.00',
   `branch_id` int(11) DEFAULT '0',
   `parent_id` bigint(20) DEFAULT '0',
-  `firm_id` int(11) DEFAULT '0',
   PRIMARY KEY (`document_id`),
   KEY `document_date` (`document_date`),
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`),
-  KEY `branch_id` (`branch_id`),
-  KEY `firm_id` (`firm_id`)
-)  AUTO_INCREMENT=263 DEFAULT CHARSET=utf8;
+  KEY `branch_id` (`branch_id`)
+)  AUTO_INCREMENT=272 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -129,7 +156,6 @@ SET character_set_client = utf8;
  1 AS `parent_id`,
  1 AS `branch_id`,
  1 AS `branch_name`,
- 1 AS `firm_name`,
  1 AS `meta_name`,
  1 AS `meta_desc`*/;
 SET character_set_client = @saved_cs_client;
@@ -281,7 +307,7 @@ CREATE TABLE `files` (
   `mime` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`file_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `filesdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -301,7 +327,7 @@ CREATE TABLE `firms` (
   `details` longtext NOT NULL,
   `disabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`firm_id`)
-)  DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `images`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -527,7 +553,7 @@ CREATE TABLE `metadata` (
   `menugroup` varchar(255) DEFAULT NULL,
   `disabled` tinyint(4) NOT NULL,
   PRIMARY KEY (`meta_id`)
-)  AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `mfund`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -635,7 +661,7 @@ CREATE TABLE `notifies` (
   `sender_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -669,7 +695,7 @@ CREATE TABLE `paylist` (
   `paytype` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=250 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=251 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -959,6 +985,19 @@ SET character_set_client = utf8;
  1 AS `employee_id`,
  1 AS `username`*/;
 SET character_set_client = @saved_cs_client;
+/*!50001 DROP VIEW IF EXISTS `contracts_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 CREATE  */
+/*!50013  */
+/*!50001 VIEW `contracts_view` AS select `co`.`contract_id` AS `contract_id`,`co`.`customer_id` AS `customer_id`,`co`.`firm_id` AS `firm_id`,`co`.`createdon` AS `createdon`,`co`.`contract_number` AS `contract_number`,`co`.`disabled` AS `disabled`,`co`.`details` AS `details`,`cu`.`customer_name` AS `customer_name`,`f`.`firm_name` AS `firm_name` from ((`contracts` `co` join `customers` `cu` on((`co`.`customer_id` = `cu`.`customer_id`))) left join `firms` `f` on((`co`.`firm_id` = `f`.`firm_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!50001 DROP VIEW IF EXISTS `customers_view`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -994,7 +1033,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`payamount` AS `payamount`,`d`.`payed` AS `payed`,`d`.`parent_id` AS `parent_id`,`d`.`branch_id` AS `branch_id`,`b`.`branch_name` AS `branch_name`,`f`.`firm_name` AS `firm_name`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc` from (((((`documents` `d` left join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) left join `branches` `b` on((`d`.`branch_id` = `b`.`branch_id`))) left join `firms` `f` on((`d`.`firm_id` = `f`.`firm_id`))) */;
+/*!50001 VIEW `documents_view` AS select `d`.`document_id` AS `document_id`,`d`.`document_number` AS `document_number`,`d`.`document_date` AS `document_date`,`d`.`user_id` AS `user_id`,`d`.`content` AS `content`,`d`.`amount` AS `amount`,`d`.`meta_id` AS `meta_id`,`u`.`username` AS `username`,`c`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name`,`d`.`state` AS `state`,`d`.`notes` AS `notes`,`d`.`payamount` AS `payamount`,`d`.`payed` AS `payed`,`d`.`parent_id` AS `parent_id`,`d`.`branch_id` AS `branch_id`,`b`.`branch_name` AS `branch_name`,`metadata`.`meta_name` AS `meta_name`,`metadata`.`description` AS `meta_desc` from ((((`documents` `d` left join `users_view` `u` on((`d`.`user_id` = `u`.`user_id`))) left join `customers` `c` on((`d`.`customer_id` = `c`.`customer_id`))) join `metadata` on((`metadata`.`meta_id` = `d`.`meta_id`))) left join `branches` `b` on((`d`.`branch_id` = `b`.`branch_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

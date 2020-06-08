@@ -51,6 +51,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('allowminus'));
+        $this->common->add(new CheckBox('capcha'));
         $this->common->add(new TextInput('price1'));
         $this->common->add(new TextInput('price2'));
         $this->common->add(new TextInput('price3'));
@@ -89,6 +90,7 @@ class Options extends \App\Pages\Base
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
         $this->common->allowminus->setChecked($common['allowminus']);
+        $this->common->capcha->setChecked($common['capcha']);
         $this->common->useval->setChecked($common['useval']);
 
 
@@ -105,7 +107,7 @@ class Options extends \App\Pages\Base
             $firm = array();
         }
 
-        $this->firm->firmname->setText($firm['firmname']);
+        $this->firm->firmname->setText($firm['firm_name']);
         $this->firm->shopname->setText($firm['shopname']);
         $this->firm->phone->setText($firm['phone']);
         $this->firm->address->setText($firm['address']);
@@ -207,6 +209,7 @@ class Options extends \App\Pages\Base
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
         $common['useval'] = $this->common->useval->isChecked() ? 1 : 0;
+        $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
 
 
         System::setOptions("common", $common);
@@ -219,7 +222,7 @@ class Options extends \App\Pages\Base
 
     public function saveFirmOnClick($sender) {
         $firm = array();
-        $firm['firmname'] = $this->firm->firmname->getText();
+        $firm['firm_name'] = $this->firm->firmname->getText();
         $firm['shopname'] = $this->firm->shopname->getText();
         $firm['phone'] = $this->firm->phone->getText();
 
