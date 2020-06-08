@@ -6,6 +6,24 @@
         <td>Поставщик</td>
         <td colspan="6">{{customer_name}}</td>
     </tr>
+    {{#isfirm}}
+    <tr>
+         
+        <td></td>
+        <td  ><b>Покупатель</b></td>
+        <td colspan="6">{{firm_name}}</td>
+
+    </tr>
+    {{/isfirm}}
+   {{#iscontract}}
+    <tr>
+        
+        <td></td>
+        <td  ><b>Договор</b></td>
+        <td colspan="6">{{contract}}  от {{createdon}}</td>
+
+    </tr>
+    {{/iscontract}}     
     <tr>
         <td></td>
         <td>Основание</td>

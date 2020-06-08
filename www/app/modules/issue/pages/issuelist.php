@@ -161,7 +161,8 @@ class IssueList extends \App\Pages\Base
 
     public function listOnRow($row) {
         $issue = $row->getDataItem();
-        $row->add(new Label('issue_number', '#' . $issue->issue_id));
+        $row->add(new RedirectLink('issue_number', "\\App\\Modules\\Issue\\Pages\\IssueList", array($issue->issue_id) ))->setValue('#' . $issue->issue_id);        
+        
         $row->issue_number->setAttribute('class', 'badge badge-success');
         if ($issue->priority == Issue::PRIORITY_HIGH) {
             $row->issue_number->setAttribute('class', 'badge badge-danger');
@@ -170,7 +171,8 @@ class IssueList extends \App\Pages\Base
             $row->issue_number->setAttribute('class', 'badge badge-warning');
         }
 
-        $row->add(new BookmarkableLink('title', '/issue/' . $issue->issue_id))->setValue($issue->issue_name);
+        $row->add(new ClickLink('title', $this , 'OnIssue'  ))->setValue($issue->issue_name);
+        
         $row->add(new Label('emp', \App\Util::getLabelName($issue->username)));
         $row->emp->setAttribute('title', $issue->username);
         if ($this->_issue->issue_id == $issue) {
@@ -236,6 +238,9 @@ class IssueList extends \App\Pages\Base
         $this->editpan->setVisible(false);
         $this->listpan->list->Reload();
         $this->openIssue($this->_issue);
+    }
+    public function OnIssue($sender) {
+        $this->openIssue($sender->getOwner()->getDataItem());
     }
 
     public function openIssue($issue) {
@@ -335,7 +340,7 @@ class IssueList extends \App\Pages\Base
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type = ' . \App\Entity\Message::TYPE_ISSUE . ' and item_id=' . $this->_issue->issue_id);
+        $this->_msglist = \App\Entity\Message::find('item_type = ' . \App\Entity\Message::TYPE_ISSUE . ' and item_id=' . $this->_issue->issue_id,'message_id');
         $this->listpan->msgpan->msglist->Reload();
         $this->_fileslist = \App\Helper::getFileList($this->_issue->issue_id, \App\Entity\Message::TYPE_ISSUE);
         $this->listpan->msgpan->filelist->Reload();
@@ -345,7 +350,7 @@ class IssueList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new Label('msgdate', \App\Helper::fdt( $item->created)));
         $row->add(new Label('msguser', $item->username));
-        $row->add(new Label('msgdata', $item->message));
+        $row->add(new Label('msgdata', nl2br($item->message)));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
         if ($this->_user->rolename == 'admins' || $this->_user->user_id == $item->user_id) {
             $row->delmsg->setVisible(true);

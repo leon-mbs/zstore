@@ -6,6 +6,26 @@
         <td valign="top"><b>Покупець</b></td>
         <td colspan="5">{{customer_name}}</td>
     </tr>
+    {{#isfirm}}
+    <tr>  
+      <td></td> 
+        
+        <td valign="top"><b>Продавец</b></td>
+        <td colspan="5">{{firm_name}}</td>
+
+    </tr>
+    {{/isfirm}}
+   {{#iscontract}}
+    <tr>  
+        
+        <td></td> 
+        
+        <td valign="top"><b>Угода</b></td>
+        <td colspan="5">{{contract}} вiд {{createdon}}</td>
+
+
+    </tr>
+    {{/iscontract}}
     <tr>
         <td></td>
         <td valign="top"><b>Зписано з</b></td>

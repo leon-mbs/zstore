@@ -6,6 +6,22 @@
 
 
     </tr>
+    {{#isfirm}}
+    <tr>
+        <td colspan="4">
+            Виконавець: {{firm_name}}
+        </td>
+
+    </tr>
+    {{/isfirm}}
+   {{#iscontract}}
+    <tr>
+        <td colspan="4">
+            Угода: {{contract}} вiд {{createdon}}
+        </td>
+
+    </tr>
+    {{/iscontract}}
 
     {{#isdevice}}
     <tr>

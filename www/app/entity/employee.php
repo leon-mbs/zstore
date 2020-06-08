@@ -28,11 +28,8 @@ class Employee extends \ZCL\DB\Entity
         $this->detail .= "<balance>{$this->balance}</balance>";
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<phone>{$this->phone}</phone>";
-        $this->detail .= "<comment>{$this->comment}</comment>";
-        //   $this->detail .= "<ztype>{$this->ztype}</ztype>";
-        //    $this->detail .= "<zhour>{$this->zhour}</zhour>";
-        //    $this->detail .= "<zmon>{$this->zmon}</zmon>";
-        //    $this->detail .= "<advance>{$this->advance}</advance>";
+        $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
+ 
         $this->detail .= "</detail>";
 
         return true;

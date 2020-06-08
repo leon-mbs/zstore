@@ -7,6 +7,22 @@
 
     </tr>
 
+    {{#isfirm}}
+    <tr>
+        <td colspan="4">
+            Исполнитель: {{firm_name}}
+        </td>
+
+    </tr>
+    {{/isfirm}}
+   {{#iscontract}}
+    <tr>
+        <td colspan="4">
+            Договор: {{contract}}  от {{createdon}}
+        </td>
+
+    </tr>
+    {{/iscontract}}
     {{#isdevice}}
     <tr>
         <td colspan="4">

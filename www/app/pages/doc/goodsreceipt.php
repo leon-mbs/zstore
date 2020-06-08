@@ -32,6 +32,7 @@ class GoodsReceipt extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
+     
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -44,6 +45,9 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        $this->docform->customer->onChange($this,'OnCustomerFirm') ;
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this,'OnCustomerFirm'  );
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false); ; 
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
@@ -144,6 +148,10 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->firm->setValue($this->_doc->headerdata['firm_id']);
+            $this->OnCustomerFirm($this->docform->customer);
+
+            $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
 
             $this->OnPayment($this->docform->payment);
@@ -185,6 +193,11 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->editrate->setText($invoice->headerdata['rate']);
                         $this->docform->disc->setText($invoice->headerdata['disc']);
                         $this->docform->editdisc->setText($invoice->headerdata['disc']);
+                        $this->docform->firm->setValue($invoice->headerdata['firm_id']);
+                        $this->OnCustomerFirm($this->docform->customer);
+
+                        $this->docform->contract->setValue($invoice->headerdata['contract_id']);
+
 
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -199,6 +212,10 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $basedoc = $basedoc->cast();
+                        $this->docform->firm->setValue($basedoc->headerdata['firm_id']);
+                        $this->OnCustomerFirm($this->docform->customer);
+
+                        $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
 
                         $this->docform->payment->setValue(\App\Entity\MoneyFund::PREPAID);
 
@@ -258,8 +275,10 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
+        if($item->rowid>0) ;               //для совместимости
+        else $item->rowid = $item->item_id ;
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid = $item->rowid;
     }
 
     public function deleteOnClick($sender) {
@@ -267,9 +286,13 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$item->item_id]);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
+        if($item->rowid>0) ;               //для совместимости
+        else $item->rowid = $item->item_id ;
+        
+        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+      
+       
         $this->calcTotal();
         $this->calcPay();
 
@@ -283,9 +306,9 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
 
-        foreach ($this->_itemlist as $_item) {
+        foreach ($this->_itemlist as $ri=>$_item ) {
             if ($_item->bar_code == $code) {
-                $this->_itemlist[$_item->item_id]->quantity += 1;
+                $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();
                 $this->CalcPay();
@@ -350,23 +373,16 @@ class GoodsReceipt extends \App\Pages\Base
         if ($item->sdate == false) {
             $item->sdate = '';
         }
+      
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
-
+        if ($this->_rowid > 0) {    
+            $item->rowid = $this->_rowid;
+        }else {   
+            $next = count($this->_itemlist) >0? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid=$next+1 ;
         }
+        $this->_itemlist[$item->rowid] = $item;
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
         $this->_rowid = 0;
 
 
@@ -402,7 +418,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->goAnkor("");
 
         $firm = H::getFirmData($this->_doc->branch_id);
-        $this->_doc->headerdata["firmname"] = $firm['firmname'];
+        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -412,6 +428,12 @@ class GoodsReceipt extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
+        $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
+        $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
+        if($this->_doc->headerdata['firm_id']>0){
+           $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();    
+        }
+        
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
@@ -791,4 +813,22 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->edititem->setText($itemname);
 
     }
+
+   public function OnCustomerFirm($sender) {
+        $c=$this->docform->customer->getKey();
+        $f=$this->docform->firm->getValue(); 
+    
+        $ar = \App\Entity\Contract::getList($c,$f) ;
+        
+        $this->docform->contract->setOptionList($ar);
+        if(count($ar)>0){
+           $this->docform->contract->setVisible(true);    
+        }  else {
+           $this->docform->contract->setVisible(false);
+           $this->docform->contract->setValue(0);
+        }
+   
+    }
+ 
+     
 }

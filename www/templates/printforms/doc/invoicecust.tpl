@@ -6,7 +6,24 @@
         <td>Поставщик</td>
         <td colspan="5">{{customer_name}}</td>
     </tr>
+    {{#isfirm}}
+    <tr>
+         
+        <td></td>
+        <td  ><b>Покупатель</b></td>
+        <td colspan="5">{{firm_name}}</td>
 
+    </tr>
+    {{/isfirm}}
+   {{#iscontract}}
+    <tr>
+        
+        <td></td>
+        <td  ><b>Договор</b></td>
+        <td colspan="5">{{contract}}  от {{createdon}}</td>
+
+    </tr>
+    {{/iscontract}}  
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             <br> Счет входящий № {{document_number}} от {{date}} <br><br>

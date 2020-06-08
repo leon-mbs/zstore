@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Клас-сущность  категория товара
+ * Клас-сущность  работа, услуга
  *
  * @table=services
  * @keyfield=service_id

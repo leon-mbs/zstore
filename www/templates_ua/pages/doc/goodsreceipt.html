@@ -24,6 +24,22 @@
                 <a style="font-size:smaller" zippy="addcust">Додати нового</a>
 
             </div>
+            {{#usefirms}}
+               <div class="form-group  ">
+                    <label for="firm" >Покупець</label>
+                    <select class="form-control" zippy="firm">
+                        <option value="0">Не вибрана</option>                           
+                    </select>
+                </div>                  
+            {{/usefirms}}
+            <div class="form-group  ">
+                <label for="contract" data-label="contract" >Контракт</label>
+                <select class="form-control" zippy="contract">
+                     <option value="0">Не вибраний</option>                          
+                </select>
+                
+
+            </div>              
             <div class="form-group  ">
                 <label for="basedoc">Підстава </label>
 

@@ -175,29 +175,25 @@ class Helper
             $logger->error($templatepath . " is wrong");
             return "";
         }
-
-
+ 
         $template = @file_get_contents($templatepath);
 
         $m = new \Mustache_Engine();
         $template = $m->render($template, $keys);
-
-
+ 
         return $template;
     }
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
-
-
-        $mail = new \PHPMailer();
-        $mail->setFrom($emailfrom, 'Онлайн каталог');
+                     
+        $mail = new \PHPMailer\PHPMailer\PHPMailer();
+        $mail->setFrom($emailfrom);
         $mail->addAddress($emailto);
         $mail->Subject = $subject;
         $mail->msgHTML($template);
         $mail->CharSet = "UTF-8";
         $mail->IsHTML(true);
-
-
+ 
         $mail->send();
 
         /*
@@ -240,6 +236,7 @@ class Helper
         $data = $conn->qstr($data);
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
         $conn->Execute($sql);
+        return $id;
     }
 
     /**
@@ -430,13 +427,14 @@ class Helper
 
         return ''; 
     }    
-   /**
+ 
+    /**
    * форматирование  даты и времени
    *  
    * @param mixed $date
    * @return mixed
    */
-   public static function fdt($date ) {
+    public static function fdt($date ) {
         if ($date > 0) {
             $dateformat = System::getOption("common",'dateformat');
             if(strlen($dateformat)==0) $dateformat = 'd.m.Y';
@@ -447,15 +445,24 @@ class Helper
         return ''; 
     }    
     
-    
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData($id = 0) {
-
-        $data = \App\System::getOptions("firm");
-        if ($id > 0) {
-            $branch = \App\Entity\Branch::load($id);
+    public static function getFirmData($branch_id = 0,$firm_id=0) {
+        $usefirms = System::getOption('common','usefirms');
+        if($firm_id>0) {
+           $firm = \App\Entity\Firm::load($firm_id);
+           $data = $firm->getData();
+        }
+        else {
+           if($usefirms==true )  return array();
+            
+           $data = \App\System::getOptions("firm");    
+        }
+          
+        
+        if ($branch_id > 0) {
+            $branch = \App\Entity\Branch::load($branch_id);
             if (strlen($branch->shopname) > 0) {
                 $data['shopname'] = $branch->shop_name;
             }

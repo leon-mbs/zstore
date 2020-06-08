@@ -6,7 +6,26 @@
         <td>Постачальник</td>
         <td colspan="5">{{customer_name}}</td>
     </tr>
+     {{#isfirm}}
+    <tr>  
+      <td></td> 
+        
+        <td valign="top"><b>Покупець</b></td>
+        <td colspan="5">{{firm_name}}</td>
 
+    </tr>
+    {{/isfirm}}
+   {{#iscontract}}
+    <tr>  
+        
+        <td></td> 
+        
+        <td valign="top"><b>Угода</b></td>
+        <td colspan="5">{{contract}} вiд {{createdon}}</td>
+
+
+    </tr>
+    {{/iscontract}} 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             <br> Рахунок вхідний № {{document_number}} від {{date}} <br><br>

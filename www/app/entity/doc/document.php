@@ -321,11 +321,12 @@ class Document extends \ZCL\DB\Entity
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
 
+ 
         $doc->branch_id = $branch_id;
-        if ($branch_id == 0) {
+        if ($branch_id == 0 ) {
             $doc->branch_id = \App\Acl::checkCurrentBranch();
         }
-
+        
         return $doc;
     }
 

@@ -59,6 +59,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
+        $this->_tvars["usefirms"] = $options['usefirms'] == 1;
  
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
@@ -197,6 +198,10 @@ class Base extends \Zippy\Html\WebPage
     //например для  сброса  адресной строки  после  команды удаления
     protected final function resetURL() {
         \App\Application::$app->setReloadPage();
+    }
+
+    public function tm($p,$post) {  
+        return "Привет" ;
     }
 
 

@@ -189,7 +189,7 @@ class ProductView extends Base
         $datarow->add(new Label("comment", $item->comment));
         $datarow->add(new Label("created", \App\Helper::fdt( $item->created)));
         $datarow->add(new TextInput("rate"))->setText($item->rating);
-        $datarow->add(new ClickLink('deletecomment', $this, 'OnDeleteComment'))->SetVisible(System::getUser()->userlogin == "admin" && $item->moderated != 1);
+        $datarow->add(new ClickLink('deletecomment', $this, 'OnDeleteComment'))->SetVisible(System::getUser()->userlogin == 'admin' && $item->moderated != 1);
     }
 
     //удалить коментарий

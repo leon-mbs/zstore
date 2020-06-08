@@ -25,6 +25,24 @@
                 <span zippy="discount" style="display:block;font-size:smaller"></span>
                 <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
             </div>
+            {{#usefirms}}
+               <div class="form-group  ">
+                    <label for="firm" >Компания</label>
+                    <select class="form-control" zippy="firm">
+                        <option value="0">Не выбрана</option>                           
+                    </select>
+                </div>                  
+            {{/usefirms}}
+                <div class="form-group  ">
+                    <label for="contract" data-label="contract" >Договор</label>
+                    <select class="form-control" zippy="contract">
+                         <option value="0">Не выбран</option>                          
+                    </select>
+                    
+
+                </div>                    
+            
+            
             <div class="form-group">
                 <label for="device"> Изделие, материалы принятые от заказчика</label>
                 <input class="form-control" type="text" zippy="device"/>

@@ -46,11 +46,14 @@ class GoodsIssue extends Document
 
         $totalstr = H::sumstr($this->amount);
 
+        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
 
         $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
-            "firmname" => $this->headerdata["firmname"],
+            "firm_name" => $firm['firm_name'],
             "customer_name" => $this->customer_name,
+            "isfirm" => strlen($firm["firm_name"]) > 0,
+            "iscontract" => $this->headerdata["contract_id"] > 0,
             "store_name" => $this->headerdata["store_name"],
             "weight" => $weight > 0 ? H::l("allweight", $weight) : '',
             "ship_address" => $this->headerdata["ship_address"],
@@ -67,6 +70,14 @@ class GoodsIssue extends Document
             "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
+        
+        if ($this->headerdata["contract_id"] > 0) {
+            $contract=\App\Entity\Contract::load($this->headerdata["contract_id"]);
+            $header['contract'] = $contract->contract_number ;
+            $header['createdon'] = H::fd($contract->createdon) ;
+        }
+        
+        
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = H::fd( $this->headerdata["sent_date"]);
         }

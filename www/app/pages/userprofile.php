@@ -102,7 +102,7 @@ class UserProfile extends \App\Pages\Base
             $this->setSuccess('saved');
         }
 
-        if ($this->user->username != 'admin') {
+        if ($this->user->userlogin != 'admin') {
             $admin = \App\Entity\User::getByLogin('admin');
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;

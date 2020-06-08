@@ -65,9 +65,9 @@
                 <small>Используется если не задана цена в товаре или в категории товара</small>
             </div>
             <div class="form-group">
-                <label for="curr">Национальная валюта</label>
+                <label for="curr">Название валюты учета</label>
                 <select class="form-control" zippy="curr"> </select>
-                <small>Используется для сумм  прописью в  печатных формах</small>
+                <small>Используется для сумм  прописью в  печатных формах.</small>
             </div>
 
 
@@ -110,6 +110,12 @@
                    title="Филиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала. Отпускные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
             </div>
             <div class="form-check">
+                <input zippy="usefirms" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usefirms">Учет в нескольких компаниях </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Используется  если  счета  и накладные  нужно  вести  в разрезе нескольких компаний. Данные о  компании вместо  формы  в  настройках заносятся в справочнике  компаний  "></i>
+            </div>
+            <div class="form-check">
                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="allowminus">Разрешить списывать ТМЦ в минус </label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -120,6 +126,12 @@
                 <label class="form-check-label" for="useval">Валюта  в закупках</label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title=" Возможность  ввода  приходной накладной в валюте и пересчета  курса  при  продаже.  "></i>
+            </div>
+            <div class="form-check">
+                <input zippy="capcha" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="capcha">Капча на  форме логина</label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title=" Дополнительная защита  от несанкционированого доступа "></i>
             </div>
      
 
@@ -161,7 +173,7 @@
          </form> 
           {{/useval}}
       
-      
+        {{^usefirms}}
         <h4>Данные о компании</h4>
         <form zippy="firm">
 
@@ -184,7 +196,6 @@
                 <input class="form-control" type="text" zippy="phone">
             </div>
 
-
             <div class="form-group">
                 <label for="address">Адрес </label>
                 <input class="form-control" type="text" zippy="address">
@@ -194,7 +205,7 @@
             </div>
 
         </form>
-        
+         {{/usefirms}}
 
         
         <h4>Настройка принтера</h4>

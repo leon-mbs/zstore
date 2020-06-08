@@ -112,10 +112,7 @@ class EmployeeList extends \App\Pages\Base
         $login = trim($this->employeedetail->editlogin->getText());
 
         if (strlen($login) > 0) {
-            if ($login == "admin") {
-                $this->setError('invalidlogin');
-                return;
-            }
+             
             $_emp = Employee::getFirst("login = '{$login}'");
             if ($_emp != null && $_emp->employee_id != $this->_employee->employee_id) {
                 $this->setError('assignedlogin', $_emp->emp_name());

@@ -247,7 +247,7 @@ class RetCustIssue extends \App\Pages\Base
 
         //  $this->calcTotal();
         $firm = H::getFirmData($this->_doc->branch_id);
-        $this->_doc->headerdata["firmname"] = $firm['firmname'];
+        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 

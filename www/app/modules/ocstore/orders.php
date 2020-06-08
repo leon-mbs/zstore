@@ -4,6 +4,7 @@ namespace App\Modules\OCStore;
 
 use App\Entity\Doc\Document;
 use App\Entity\Item;
+use App\Entity\Customer;
 use App\System;
 use Zippy\Binding\PropertyBinding as Prop;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -25,7 +26,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg(\App\Helper::l('noaccesstopage'));
 
             App::RedirectHome();
             return;
@@ -145,7 +146,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder->order_id);
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -155,13 +156,34 @@ class Orders extends \App\Pages\Base
                 $tlist[] = $tovar;
             }
             $neworder->packDetails('detaildata', $tlist);
-
+            $neworder->amount = round($shoporder->total);
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
-            $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
-            $neworder->amount = round($shoporder->total);
+            
             $neworder->notes = "OC номер:{$shoporder->order_id};";
+            
+
+            $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+           
+            if($shoporder->customer_id>0 && $modules['ocinsertcust'] == 1){
+                $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'") ;
+                if($cust == null) {
+                    $cust = new Customer();
+                    $cust->shopcust_id = $shoporder->customer_id;
+                    $cust->customer_name = $shoporder->firstname . ' ' . $shoporder->lastname; 
+                    $cust->address = $shoporder->shipping_city   . ' ' . $shoporder->shipping_address_1 ; 
+                    $cust->type    = Customer::TYPE_BAYER  ;
+                    $cust->phone   = $shoporder->telephone ;
+                    $cust->email   = $shoporder->email ;
+                    $cust->comment = "Клиент ИМ" ;
+                    $cust->save();
+                    
+                }
+                $neworder->customer_id = $cust->customer_id;
+            }
+           
+           
             if (strlen($shoporder->email) > 0) {
                 $neworder->notes .= " Email:" . $shoporder->email . ";";
             }
