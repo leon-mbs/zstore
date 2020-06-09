@@ -48,7 +48,7 @@ class POSCheck extends Document
         }
 
 
-        $firm = H::getFirmData($this->branch_id);
+        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
 
         $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
@@ -100,7 +100,7 @@ class POSCheck extends Document
             );
         }
 
-        $firm = H::getFirmData($this->branch_id);
+        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
 
         $header = array('date' => H::fd( $this->document_date),
             "_detail" => $detail,
