@@ -188,7 +188,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $item->price = $this->editdetail->editprice->getText();
 
-        unset($this->_itemlist[$this->_rowid]);
+        unset($this->_tovarlist[$this->_rowid]);
         $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
