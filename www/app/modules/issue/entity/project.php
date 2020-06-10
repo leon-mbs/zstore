@@ -19,9 +19,12 @@ class Project extends \ZCL\DB\Entity
     const STATUS_WAITPAIMENT = 6;
     const STATUS_CLOSED      = 12;
 
+    public $users = array();
+    
     protected function init() {
         $this->project_id = 0;
         $this->status = 1;
+        $this->createddate = time();
     }
 
     protected function beforeDelete() {
@@ -43,6 +46,10 @@ class Project extends \ZCL\DB\Entity
         //упаковываем  данные  
         $this->details = "<details>";
         $this->details .= "<desc><![CDATA[{$this->desc}]]></desc>";
+        $this->details .= "<creator><![CDATA[{$this->creator}]]></creator>";
+        $this->details .= "<users><![CDATA[". serialize($this->users)  ."]]></users>";
+        $this->details .= "<creator_id>{$this->creator_id}</creator_id>";
+        $this->details .= "<createddate>{$this->createddate}</createddate>";
 
         $this->details .= "</details>";
 
@@ -51,11 +58,17 @@ class Project extends \ZCL\DB\Entity
 
     protected function afterLoad() {
 
-        $this->lastupdate = strtotime($this->lastupdate);
-
+    
         //распаковываем  данные из  
         $xml = simplexml_load_string($this->details);
         $this->desc = (string)($xml->desc[0]);
+        $users = (string) ($xml->users[0]);
+        $users  =  @unserialize($users) ;
+        if(is_array($users))  $this->users = $users;
+        $this->creator = (string) ($xml->creator[0]);
+        $this->createddate = (int) ($xml->createddate[0]);
+        $this->creator_id = (int) ($xml->creator_id[0]);
+
         parent::afterLoad();
     }
 
