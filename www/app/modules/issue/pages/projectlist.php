@@ -61,7 +61,10 @@ class ProjectList extends \App\Pages\Base
         $this->projectform->add(new TextArea('editdesc'));
         $this->projectform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->projectform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->projectform->add(new \Zippy\Html\Form\CheckBoxList('userlist','<br>') );
 
+        
+        
         $this->add(new Panel("showpan"))->setVisible(false);
         $this->showpan->add(new ClickLink('back', $this, 'cancelOnClick'));
         $this->showpan->add(new ClickLink('toilist', $this, 'toilistOnClick'));
@@ -114,6 +117,7 @@ class ProjectList extends \App\Pages\Base
         $this->projectform->editdesc->setText($this->_project->desc);
         $this->projectform->editcust->setKey($this->_project->customer_id) ;       
         $this->projectform->editcust->setText($this->_project->customer_name) ;       
+        $this->updateUsers();
         
     }
 
@@ -139,6 +143,13 @@ class ProjectList extends \App\Pages\Base
         $this->projectform->editname->setText('');
         $this->projectform->editdesc->setText('');
         $this->_project = new Project();
+        $user = System::getUser() ;
+        $this->_project->creator_id = $user->user_id;
+        $this->_project->creator = $user->username;
+        
+        
+        $this->updateUsers();
+        
     }
 
     public function saveOnClick($sender) {
@@ -152,7 +163,10 @@ class ProjectList extends \App\Pages\Base
             $this->setError("entername");
             return;
         }
-
+        $this->_project->users  = $this->projectform->userlist->getCheckedList() ;       
+        if(in_array($this->_project->creator_id,$this->_project->users)==false) {
+              array_push($this->_project->users,$this->_project->creator_id) ;
+        }
         $this->_project->Save();
         $this->projectform->setVisible(false);
         $this->projectpanel->setVisible(true);
@@ -283,6 +297,20 @@ class ProjectList extends \App\Pages\Base
         $this->projectpanel->projectlist->Reload();
     }
 
+    public function updateUsers(){
+        $user = System::getUser() ;
+        $this->projectform->userlist->clean();
+ 
+        $users = \App\Entity\User::find( " user_id <>".$user->user_id ,'username');
+        foreach($users as $k=>$v ){
+            if($v->rolename != 'admins' && strpos($v->modules, 'issue') === false)  {
+                continue;
+            }
+            $inlist = in_array($k,$this->_project->users);
+            $this->projectform->userlist->AddCheckBox($k,$inlist,$v->username); 
+        }        
+    }    
+    
 }
 
 class ProjectDS implements \Zippy\Interfaces\DataSource

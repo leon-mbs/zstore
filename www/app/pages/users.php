@@ -187,8 +187,8 @@ class Users extends \App\Pages\Base
 
         $datarow->add(new \Zippy\Html\Label("created", \App\Helper::fd($item->createdon)));
         $datarow->add(new \Zippy\Html\Label("email", $item->email));
-        $datarow->add(new \Zippy\Html\Link\ClickLink("edit", $this, "OnEdit"))->setVisible($item->rolename != 'admins');
-        $datarow->add(new \Zippy\Html\Link\ClickLink("remove", $this, "OnRemove"))->setVisible($item->rolename != 'admins');
+        $datarow->add(new \Zippy\Html\Link\ClickLink("edit", $this, "OnEdit"))->setVisible($item->userlogin != 'admin');
+        $datarow->add(new \Zippy\Html\Link\ClickLink("remove", $this, "OnRemove"))->setVisible($item->userlogin != 'admin');
     }
 
     public function branchOnRow($row) {

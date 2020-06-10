@@ -61,8 +61,10 @@
 
 </div>
 <div class="row">
-    <form class="col-12 col-md-8  col-lg-6" zippy="projectform" method="post">
-
+<div class="col-12">
+    <form  zippy="projectform" method="post">
+         <div class="row">
+         <div class="col-12 col-md-8  col-xl-6">
 
         <div class="form-group">
             <label for="editname"> Название</label>
@@ -77,13 +79,22 @@
             <label for="editdesc"> Описание </label>
             <textarea style="height:400px" class="form-control mr-2" zippy="editdesc"></textarea>
         </div>
-
+        </div>
+       <div class="col-12 col-md-4  col-xl-4">
+         <div class="form-group">
+              <label  > Список участников </label> 
+             <div zippy="userlist"></div>
+        </div>      
+       </div>
+       <div class="col-12 col-md-4  col-xl-4">
         <div class="form-group">
             <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
             <input zippy="cancel" type="button" value="Отменить" class="btn btn-light ">
         </div>
-
+       </div>
+       </div>
     </form>
+</div>
 </div>
 <div class="row" zippy="showpan">
     <div class="col-12 col-md-8 col-xl-6">
