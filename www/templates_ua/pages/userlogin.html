@@ -67,6 +67,16 @@
                         </div>
                     </div>
                 </div>
+               {{#capcha}}
+                <div class="input-group mb-3">
+                    <input zippy="capchacode" required="required"  class="form-control mr-4"
+                           placeholder="Введiть код"  >
+                    <div class="input-group-append">
+                         <img zippy="capcha" style="cursor:pointer" title="Оновити..."  />
+                    </div>
+                </div>
+                {{/capcha}}
+                
                 <div class="row">
                     <div class="col-8">
                         <div class="icheck-primary">
