@@ -320,7 +320,7 @@ class Task extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-            if ($isEdited) {
+            if ($this->_doc->state < 4) {
                 App::RedirectBack();
             } else {
                 App::Redirect("\\App\\Pages\\Register\\TaskList");
@@ -371,7 +371,6 @@ class Task extends \App\Pages\Base
         $item = Service::load($id);
 
 
-        //   $this->editdetail->editprice->setText($price);
         $this->editdetail->edithours->setText($item->hours);
         $this->updateAjax(array('edithours'));
     }

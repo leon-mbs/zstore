@@ -133,7 +133,8 @@ class ServiceAct extends \App\Pages\Base
                    
                 }
                 
-            }        }
+            }      
+        }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();

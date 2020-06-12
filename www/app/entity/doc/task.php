@@ -24,7 +24,7 @@ class Task extends Document
 
             $detail[] = array("no" => $i++,
                 "service_name" => $ser->service_name,
-                "price" => H::fa($ser->price),
+                "cost" => H::fa($ser->cost),
                 "hours" => $ser->hours
             );
         }

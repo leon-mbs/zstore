@@ -205,7 +205,7 @@ class TaskList extends \App\Pages\Base
             Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, $this->_task->document_id);
             return;
         }
-        if ($sender->id == 'bitems') {    //Акт выполненых работ
+        if ($sender->id == 'bact') {    //Акт выполненых работ
             $d = $this->_task->getChildren('ServiceAct');
             if (count($d) > 0) {
 
