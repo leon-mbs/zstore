@@ -90,6 +90,12 @@ class ProdReceipt extends \App\Pages\Base
 
                     }
                 }
+                if ($basedoc->meta_name == 'Task') {
+
+                    $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                    $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                }
+                
             }
 
         }

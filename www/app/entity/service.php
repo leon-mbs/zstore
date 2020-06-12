@@ -22,6 +22,7 @@ class Service extends \ZCL\DB\Entity
 
         $this->hours = (string)($xml->hours[0]);
         $this->price = (string)($xml->price[0]);
+        $this->cost = (string)($xml->cost[0]);
 
 
         parent::afterLoad();
@@ -31,6 +32,7 @@ class Service extends \ZCL\DB\Entity
         parent::beforeSave();
         $this->detail = "<detail>";
         //упаковываем  данные в detail
+        $this->detail .= "<cost>{$this->cost}</cost>";
         $this->detail .= "<price>{$this->price}</price>";
         $this->detail .= "<hours>{$this->hours}</hours>";
 

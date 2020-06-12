@@ -85,6 +85,8 @@ class Task extends Document
     public function getRelationBased() {
         $list = array();
         $list['ProdIssue'] = self::getDesc('ProdIssue');
+        $list['ProdReceipt'] = self::getDesc('ProdReceipt');
+        $list['ServiceAct'] = self::getDesc('ServiceAct');
 
         return $list;
     }

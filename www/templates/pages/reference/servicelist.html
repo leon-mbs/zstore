@@ -28,14 +28,16 @@
             <table class="table table-bordered   table-sm">
                 <tr>
                     <th>Название</th>
-                    <th style="text-align: right;">Стоимость</th>
-                    <th style="text-align: right;">Нормо-часы</th>
+                    <th style="text-align: right;">Цена</th>
+                    <th style="text-align: right;">Расценка</th>
+                    <th style="text-align: right;">Нормочасы</th>
 
                     <th></th>
                 </tr>
                 <tr zippy="servicelist">
                     <td zippy="service_name"></td>
                     <td style="text-align: right;" zippy="price"></td>
+                    <td style="text-align: right;" zippy="cost"></td>
                     <td style="text-align: right;" zippy="hours"></td>
 
 
@@ -60,13 +62,22 @@
             <label for="editprice">Стоимость</label>
             <div class="form-group">
                 <input zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                 <small class="form-text text-muted">Стоимость работ  для  заказчика</small>
             </div>
+        </div>
+        <div class="form-group  ">
+            <label for="editcost">Расценка</label>
+            <div class="form-group">
+                <input zippy="editcost" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                  <small class="form-text text-muted">Расценки  для  начисления зарплат</small>
+           </div>
         </div>
         <div class="form-group  ">
             <label for="edithours">Нормо-часы</label>
             <div class="form-group">
                 <input zippy="edithours" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
-            </div>
+                  <small class="form-text text-muted">Ориентировочное время  при  почасовой оплате</small>
+           </div>
         </div>
         <div class="form-check">
             <input zippy="editdisabled" type="checkbox" class="form-check-input">

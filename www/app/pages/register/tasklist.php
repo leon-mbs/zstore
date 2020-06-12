@@ -63,6 +63,8 @@ class TaskList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bitems'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bgoods'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bact'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -147,6 +149,8 @@ class TaskList extends \App\Pages\Base
             $this->statuspan->statusform->bshifted->setVisible(true);
         }
         $this->statuspan->statusform->bitems->setVisible($this->_task->state != Document::STATE_CLOSED);
+        $this->statuspan->statusform->bgoods->setVisible($this->_task->state != Document::STATE_CLOSED);
+        $this->statuspan->statusform->bact->setVisible($this->_task->state != Document::STATE_CLOSED);
 
 
         $this->statuspan->docview->setDoc($this->_task);
@@ -190,6 +194,24 @@ class TaskList extends \App\Pages\Base
                 $this->setWarn('exists_prodissue');
             }
             Application::Redirect("\\App\\Pages\\Doc\\ProdIssue", 0, $this->_task->document_id);
+            return;
+        }
+        if ($sender->id == 'bgoods') {    //Оприходование гоотовой продукции
+            $d = $this->_task->getChildren('ProdReceipt');
+            if (count($d) > 0) {
+
+                $this->setWarn('exists_prodreceipt');
+            }
+            Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, $this->_task->document_id);
+            return;
+        }
+        if ($sender->id == 'bitems') {    //Акт выполненых работ
+            $d = $this->_task->getChildren('ServiceAct');
+            if (count($d) > 0) {
+
+                $this->setWarn('exists_serviceact');
+            }
+            Application::Redirect("\\App\\Pages\\Doc\\ServiceAct", 0, $this->_task->document_id);
             return;
         }
 

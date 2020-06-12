@@ -89,7 +89,7 @@ class ProdIssue extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Task') {
 
-                        $this->docform->notes->setText('Материалы  для наряда ' . $basedoc->document_number);
+                        $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                     }
                     if ($basedoc->meta_name == 'ProdIssue') {

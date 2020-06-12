@@ -123,7 +123,17 @@ class ServiceAct extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('ServiceAct');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-        }
+            if ($basedocid > 0) {  //создание на  основании
+                $basedoc = Document::load($basedocid);
+ 
+                if ($basedoc->meta_name == 'Task') {
+
+                    $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                    $this->_servicelist = $basedoc->unpackDetails('detaildata');
+                   
+                }
+                
+            }        }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
