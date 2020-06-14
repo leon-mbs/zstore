@@ -105,12 +105,12 @@ class Issue extends \ZCL\DB\Entity
         return $list;
     }
 
-    public function addStatusLog() {
+    public function addStatusLog($desc) {
         $user = \App\System::getUser();
         $conn = \ZCL\DB\DB::getConnect();
         $createdon = $conn->DBDate(time());
-
-        $sql = "insert  into issue_history (issue_id,createdon,user_id, status) values ({$this->issue_id},{$createdon},{$user->user_id},  {$this->status}) ";
+        $desc = Issue::qstr($desc) ;
+        $sql = "insert  into issue_history (issue_id,createdon,user_id ,description  ) values ({$this->issue_id},{$createdon},{$user->user_id} ,{$desc}) ";
         $conn->Execute($sql);
     }
 
@@ -125,7 +125,7 @@ class Issue extends \ZCL\DB\Entity
 
             $item->createdon = strtotime($v['createdon']);
             $item->username = $v['username'];
-            $item->statusname = $stlist[$v['status']];
+            $item->description = $v['description'];
 
             $list[] = $item;
         }

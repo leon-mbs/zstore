@@ -27,14 +27,14 @@ class Income extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => 'По товарам', 2 => 'По поставщикам', 3 => 'По датам'), 1));
+        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 =>H::l('repbysellers')  , 3 => H::l('repbydates'), 1));
 
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-        $this->detail->add(new RedirectLink('word', "movereport"));
-        $this->detail->add(new RedirectLink('excel', "movereport"));
-        $this->detail->add(new RedirectLink('pdf', "abc"));
+        $this->detail->add(new RedirectLink('word', "income"));
+        $this->detail->add(new RedirectLink('excel', "income"));
+        $this->detail->add(new RedirectLink('pdf', "income"));
         $this->detail->add(new Label('preview'));
     }
 

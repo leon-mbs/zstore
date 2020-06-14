@@ -4,12 +4,17 @@ namespace App\Pages;
 
 use App\Entity\Doc\Document;
 
-//страница  для  загрузки  файла экпорта
+//страница  для  загрузки  файла экcпорта
 class ShowDoc extends \Zippy\Html\WebPage
 {
 
     public function __construct($type, $docid) {
-
+ 
+        $user = \App\System::getUser();
+        if ($user->user_id == 0) {
+            die;
+        }        
+        
         $doc = Document::load($docid);
         if ($doc == null) {
             echo "Не задан  документ";

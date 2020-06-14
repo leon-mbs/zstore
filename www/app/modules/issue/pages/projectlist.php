@@ -50,7 +50,7 @@ class ProjectList extends \App\Pages\Base
         $projectpanel->filter->add(new TextInput('searchnumber'));
 
         $list = $projectpanel->add(new DataView('projectlist', new ProjectDS($this), $this, 'listOnRow'));
-        $list->setPageSize(25);
+        $list->setPageSize(15);
         $this->projectpanel->add(new Paginator('pag', $list));
         $this->projectpanel->projectlist->Reload();
 
@@ -62,18 +62,19 @@ class ProjectList extends \App\Pages\Base
         $this->projectform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->projectform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         $this->projectform->add(new \Zippy\Html\Form\CheckBoxList('userlist','<br>') );
-
-        
-        
+          
         $this->add(new Panel("showpan"))->setVisible(false);
         $this->showpan->add(new ClickLink('back', $this, 'cancelOnClick'));
         $this->showpan->add(new ClickLink('toilist', $this, 'toilistOnClick'));
+        $this->showpan->add(new ClickLink('newissue', $this, 'newissueOnClick'));
 
         $this->showpan->add(new Label('mtitle'));
         $this->showpan->add(new Label('mdesc'));
         $this->showpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
         $this->showpan->addmsgform->add(new TextArea('msgdata'));
         $this->showpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
+        $this->showpan->msglist->setPageSize(15);
+        $this->showpan->add(new Paginator('pagmsg', $this->showpan->msglist));
 
         $this->showpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $this->showpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
@@ -100,9 +101,18 @@ class ProjectList extends \App\Pages\Base
 
 
         $row->add(new ClickLink('preview'))->onClick($this, 'previewOnClick');
+        $user = System::getUser() ;
+                             
+        
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
+        if($user->rolename  !='admins'  && $user->user_id != $pr->creator_id ) {
+            $row->edit->setVisible(false) ;
+            $row->delete->setVisible(false) ;
+        }       
+        
+        
         if ($pr->status == Project::STATUS_CLOSED) {
             $row->edit->setVisible(false);
             $row->delete->setVisible(false);
@@ -111,6 +121,10 @@ class ProjectList extends \App\Pages\Base
 
     public function editOnClick($sender) {
         $this->_project = $sender->owner->getDataItem();
+        
+        $user = System::getUser() ;
+        
+          
         $this->projectpanel->setVisible(false);
         $this->projectform->setVisible(true);
         $this->projectform->editname->setText($this->_project->project_name);
@@ -163,10 +177,14 @@ class ProjectList extends \App\Pages\Base
             $this->setError("entername");
             return;
         }
-        $this->_project->users  = $this->projectform->userlist->getCheckedList() ;       
-        if(in_array($this->_project->creator_id,$this->_project->users)==false) {
-              array_push($this->_project->users,$this->_project->creator_id) ;
+        $users = $this->projectform->userlist->getCheckedList();
+        
+        if(in_array($this->_project->creator_id,$users)==false) {
+              array_push($users,$this->_project->creator_id) ;
         }
+        $this->_project->setUsers($users)   ;       
+        
+        
         $this->_project->Save();
         $this->projectform->setVisible(false);
         $this->projectpanel->setVisible(true);
@@ -230,9 +248,12 @@ class ProjectList extends \App\Pages\Base
     }
 
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type =6 and item_id=' . $this->_project->project_id,'message_id');
+        $this->_msglist = \App\Entity\Message::find('item_type = 6 and item_id=' . $this->_project->project_id,'message_id');
         $this->showpan->msglist->Reload();
-        $this->_fileslist = \App\Helper::getFileList($this->_project->project_id, 6);
+        $ocnt = $this->showpan->msglist->getPageCount();
+        $this->showpan->msglist->setCurrentPage($ocnt);
+        $this->showpan->msglist->Reload(false);
+        $this->_fileslist = \App\Helper::getFileList($this->_project->project_id, \App\Entity\Message::TYPE_PROJECT);
         $this->showpan->filelist->Reload();
     }
 
@@ -240,7 +261,7 @@ class ProjectList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new Label('msgdate', \App\Helper::fdt( $item->created)));
         $row->add(new Label('msguser', $item->username));
-        $row->add(new Label('msgdata', nl2br($item->message)));
+        $row->add(new Label('msgdata', nl2br($item->message),true));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
         if ($this->_user->rolename == 'admins' || $this->_user->user_id == $item->user_id) {
             $row->delmsg->setVisible(true);
@@ -300,17 +321,22 @@ class ProjectList extends \App\Pages\Base
     public function updateUsers(){
         $user = System::getUser() ;
         $this->projectform->userlist->clean();
- 
+        
+        $pusers = $this->_project->getUsers() ;
         $users = \App\Entity\User::find( " user_id <>".$user->user_id ,'username');
         foreach($users as $k=>$v ){
             if($v->rolename != 'admins' && strpos($v->modules, 'issue') === false)  {
                 continue;
             }
-            $inlist = in_array($k,$this->_project->users);
+            $inlist = in_array($k,  $pusers  );
             $this->projectform->userlist->AddCheckBox($k,$inlist,$v->username); 
         }        
     }    
-    
+   
+    public function newissueOnClick($sender) {
+       App::Redirect("\\App\\Modules\\Issue\\Pages\\IssueList",0,$this->_project->project_id,true); 
+       
+    }
 }
 
 class ProjectDS implements \Zippy\Interfaces\DataSource
@@ -340,12 +366,16 @@ class ProjectDS implements \Zippy\Interfaces\DataSource
         if ($cust > 0) {
             $where .= " and customer_id = " . $cust;
         }
+        $user = System::getUser();
 
-
+        if($user->rolename != 'admins') {
+             $where .= " and project_id in (select project_id from issue_projectacc where user_id = {$user->user_id} )   "   ;
+        }
+        
         if (strlen($number) > 0) {
             $s = Project::qstr('%' . $number . '%');
 
-            $where = "   (details like {$s} or project_name like {$s} or issue_id=" . Project::qstr($s) . ")  ";
+            $where = "   (details like {$s} or project_name like {$s}  )  ";
         }
 
         return $where;

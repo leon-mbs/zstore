@@ -138,3 +138,34 @@
 </table>
 {{/_type4}}
 
+{{#_type5}}
+<tr style="font-size:larger; font-weight: bolder;">
+    <td align="center" colspan="5">
+        Продажи  по категориям  <br> <br>
+    </td>
+</tr> 
+<tr style="font-weight: bolder;">
+    <th colspan="3" style="border: solid black 1px" >Наименование</th>
+
+
+
+    <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
+    <th align="right" style="border: solid black 1px">Прибыль</th>
+
+    <th  > </th>
+</tr>
+{{#_detail}}
+<tr>
+
+
+    <td colspan="3">{{name}}</td>
+
+
+
+    <td align="right">{{summa}} </td>
+    <td align="right">{{navar}} </td>
+    <td  >  </td>
+</tr>
+{{/_detail}}
+</table>
+{{/_type5}}
