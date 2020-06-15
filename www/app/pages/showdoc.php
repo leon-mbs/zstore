@@ -73,7 +73,7 @@ class ShowDoc extends \Zippy\Html\WebPage
                 header("Content-Transfer-Encoding: binary");
 
 
-                $dompdf = new \Dompdf\Dompdf(array('defaultFont' => 'DejaVu Sans'));
+                $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' =>  true,'defaultFont' => 'DejaVu Sans'));
                 $dompdf->loadHtml($html);
 
                 // (Optional) Setup the paper size and orientation

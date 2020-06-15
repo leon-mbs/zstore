@@ -1,5 +1,11 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
+    <tr>
+    
+        <td colspan="9"> 
+        <img  style="height:100px;" src="http://local.zstore/upload/logo.png" />
+        </td>
+    </tr>
 
     <tr>
         <td></td>

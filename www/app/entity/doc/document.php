@@ -34,6 +34,7 @@ class Document extends \ZCL\DB\Entity
     const EX_EXCEL = 2;    //  Excel
     const EX_PDF   = 3;    //  PDF
     const EX_POS   = 4;    //  POS терминал
+    const EX_MAIL   = 5;    //  Отправка  email
 
     // const EX_XML_GNAU = 4;
 
@@ -698,5 +699,41 @@ class Document extends \ZCL\DB\Entity
 
         return self::$_metalist[$meta_name];           
     }
+    
+    
+   /**
+     * Отправка  документа  по  почте
+     *
+     */
+    public function sendEmail() {
+        $doc = $this->cast();
+    
+        $filename = strtolower($doc->meta_name).".pdf";
+        $html = $doc->generateReport();
+ 
+        $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' =>  true,'defaultFont' => 'DejaVu Sans'));
+        $dompdf->loadHtml($html);
+    
+        $dompdf->render();
+   
+        $data = $dompdf->output();       
+       
+        $f = tempnam(sys_get_temp_dir())  ;
+        file_put_contents($f,$data) ;
+        
+        $mail = new \PHPMailer\PHPMailer\PHPMailer();
+        $mail->setFrom($emailfrom);
+        $mail->addAddress($emailto);
+        $mail->Subject = $subject;
+        $mail->msgHTML($body);
+        $mail->CharSet = "UTF-8";
+        $mail->IsHTML(true);
+        $mail->AddAttachment($f, $filename, 'base64', 'application/pdf'); 
+        $mail->send();        
+        
+        @unlink($f);
+       
+    }
+    
     
 }

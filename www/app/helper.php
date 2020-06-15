@@ -193,7 +193,7 @@ class Helper
         $mail->msgHTML($template);
         $mail->CharSet = "UTF-8";
         $mail->IsHTML(true);
- 
+       // $mail->AddAttachment($_SERVER['DOCUMENT_ROOT'].'/facturen/test.pdf', $name = 'test',  $encoding = 'base64', $type = 'application/pdf'); 
         $mail->send();
 
         /*
