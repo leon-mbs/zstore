@@ -5,7 +5,6 @@ namespace App\Modules\Note\Entity;
 /**
  *  Класс  инкапсулирующий топик
  * @table=note_topics
- * @view=note_topicsview
  * @keyfield=topic_id
  */
 class Topic extends \ZCL\DB\Entity
@@ -13,7 +12,7 @@ class Topic extends \ZCL\DB\Entity
 
     protected function init() {
         $this->topic_id = 0;
-        $this->ispublic = 0;
+        $this->acctype  = 0;
     }
 
     /**
@@ -22,7 +21,9 @@ class Topic extends \ZCL\DB\Entity
      * @param mixed $node_id
      */
     public static function findByNode($node_id) {
-        return self::find("topic_id in (select topic_id from note_topicnode where node_id={$node_id})");
+       $user_id = \App\System::getUser()->user_id;
+        
+       return self::find("  (user_id={$user_id} or acctype>0) and topic_id in (select topic_id from note_topicnode where  node_id={$node_id})");
     }
 
     /**

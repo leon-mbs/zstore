@@ -115,17 +115,20 @@
                         <input type="text" required="required" class="form-control" zippy="edittitle">
                     </div>
                     <div class="form-group">
-                        <label for="editcontent">Утримання </label>
+                        <label for="editcontent">Змiст </label>
                         <textarea style="height:200px;" class="form-control" zippy="editcontent"></textarea>
                     </div>
+                    <div class="form-group "  >
+                        <label  for="editacctype">Доступ</label>
+                        <select  zippy="editacctype" class="form-control">
+                           
+                        </select>
+                    </div> 
                     <div class="form-group">
                         <label for="edittags">Теги</label>
                         <div zippy="edittags"></div>
                     </div>
-                    <div class="form-check">
-                        <input zippy="editispublic" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editispublic">Публічний</label>
-                    </div>
+            
                     <a zippy="editcancel" class="btn btn-light">Скасувати</a>&nbsp;
                     <a zippy="editsave" class="btn btn-primary">Зберегти</a>
                 </form>
@@ -183,6 +186,10 @@
                     <div class="form-group">
                         <label for="editnodetitle">Назва вузла</label>
                         <input required="required" zippy="editnodetitle" class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <input zippy="editnodepublic" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="editnodepublic">Доступний для всiх</label>
                     </div>
                 </div>
                 <div class="modal-footer">

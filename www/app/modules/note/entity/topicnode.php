@@ -73,7 +73,7 @@ class TopicNode extends \ZCL\DB\Entity
     // поиск избранных 
     public static function searchFav() {
 
-        $sql = "  select * from note_topicnodeview   where topic_id in (select topic_id from note_topics where favorites  = 1  ) and  user_id=" . \App\System::getUser()->user_id;
+        $sql = "  select * from note_topicnodeview   where topic_id in (select  topic_id from note_fav where user_id = ".\App\System::getUser()->user_id.") "  ;
 
         $list = TopicNode::findBySql($sql);
 

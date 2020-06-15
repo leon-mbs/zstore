@@ -7,7 +7,6 @@ use ZCL\DB\TreeEntity;
 /**
  *  Класс  инкапсулирующий   узел дерева
  * @table=note_nodes
- * @view=note_nodesview
  * @keyfield=node_id
  * @parentfield=pid
  * @pathfield=mpath
@@ -17,6 +16,7 @@ class Node extends TreeEntity
 
     protected function init() {
         $this->node_id = 0;
+        $this->ispublic = 0;
         $this->pid = 0;
         $this->mpath = '';
     }

@@ -33,6 +33,8 @@ class Main extends \App\Pages\Base
     public $_tarr = array();
     public $_sarr = array();
     public $_farr = array();
+    public $_favorites = array();
+     
 
     public function __construct() {
         parent::__construct();
@@ -46,6 +48,7 @@ class Main extends \App\Pages\Base
         // редактирование  узла
         $this->add(new Form("nodeform"))->onSubmit($this, "OnNodeTitle");
         $this->nodeform->add(new TextInput("editnodetitle"));
+        $this->nodeform->add(new CheckBox("editnodepublic"));
         $this->nodeform->add(new TextInput("opname"));
 
         //тулбар дерева
@@ -81,7 +84,7 @@ class Main extends \App\Pages\Base
         $this->editform->add(new TextArea("editcontent"));
         $this->editform->add(new ClickLink("editcancel", $this, "onTopicCancel"));
         $this->editform->add(new SubmitLink("editsave"))->onClick($this, "onTopicSave");
-        $this->editform->add(new CheckBox("editispublic"));
+        $this->editform->add(new DropDownChoice("editacctype",array(0=>'Приватный',1=>'Публичный',2=>'С общим редактированием',3=>'Доступен  вне системы',),0));
 
 
         //аплоад файла
@@ -107,6 +110,7 @@ class Main extends \App\Pages\Base
         $this->tpanel->add(new Label("addfile"));
 
         $this->_tvars['editor'] = false;
+        $this->reloadfav();
     }
 
     //добавить топик
@@ -133,7 +137,7 @@ class Main extends \App\Pages\Base
         $this->editform->edittags->setTags($topic->getTags());
         $this->editform->edittags->setSuggestions($topic->getSuggestionTags());
         $this->editform->editcontent->setText($topic->content);
-        $this->editform->editispublic->setChecked($topic->ispublic);
+        $this->editform->editacctype->setValue($topic->acctype);
 
         $this->_tvars['editor'] = true;
     }
@@ -141,10 +145,16 @@ class Main extends \App\Pages\Base
     //сохраниение топика
     public function onTopicSave($sender) {
 
-        $topic = $this->_edited > 0 ? Topic::load($this->_edited) : new Topic();
+        $topic = $this->_edited > 0 ?  : ;
+        if($this->_edited > 0) {
+           $topic = Topic::load($this->_edited) ;
+        }  else {
+           $topic = new Topic() ;
+           $topic->user_id = System::getUser()->user_id; 
+        }
         $topic->title = $this->editform->edittitle->getText();
         $topic->content = $this->editform->editcontent->getText();
-        $topic->ispublic = $this->editform->editispublic->isChecked();
+        $topic->acctype = $this->editform->editacctype->getValue();
         if (strlen($topic->title) == 0) {
             $this->setError('notitle');
 
@@ -222,12 +232,25 @@ class Main extends \App\Pages\Base
             $node->pid = $id;
             $node->user_id = System::getUser()->user_id;
             $node->title = $form->editnodetitle->getText();
+            $node->ispublic = $form->editnodepublic->isChecked() ?1:0;
+            if($parent->ispublic==0 && $node->ispublic==1) {
+                $this->setError('Нельзя добавлять публичный узел на приватный');
+                return;
+            }
+            
             $node->save();
             $this->ReloadTopic($node->node_id);
         }
         if ($op == 'edit') {
             $node = Node::load($id);
             $node->title = $form->editnodetitle->getText();
+            $node->ispublic = $form->editnodepublic->isChecked() ?1:0;
+            $parent = Node::load($node->pid);
+            if($parent->ispublic==0 && $node->ispublic==1) {
+                $this->setError('Нельзя добавлять публичный узел на приватный');
+                return;
+            }
+           
             $node->save();
         }
         // $form->editnodetitle->setText('');
@@ -236,27 +259,27 @@ class Main extends \App\Pages\Base
         $this->tree->selectedNodeId($node->node_id);
     }
 
-    //загрузить дереаво
+    //загрузить дерево
     public function ReloadTree() {
 
         $this->tree->removeNodes();
         $user_id = System::getUser()->user_id;
 
 
-        $itemlist = Node::find('user_id=' . $user_id, "pid,mpath,title");
+        $itemlist = Node::find("ispublic = 1 or  user_id={$user_id} ", "pid,mpath,title");
         if (count($itemlist) == 0) { //добавляем  корень
             $root = new Node();
             $root->title = "//";
             $root->user_id = $user_id;
             $root->save();
 
-            $itemlist = Node::find('user_id=' . $user_id, "pid,mpath,title");
+            $itemlist = Node::find("ispublic = 1 or  user_id={$user_id} ", "pid,mpath,title");
         }
         $first = null;
         $nodelist = array();
         foreach ($itemlist as $item) {
             $node = new \ZCL\BT\TreeNode($item->title, $item->node_id);
-            $node->tag = $item->tcnt;  //количество  топиков в ветке
+           // $node->tags = $item->tcnt;  //количество  топиков в ветке
             $parentnode = @$nodelist[$item->pid];
 
             $this->tree->addNode($node, $parentnode);
@@ -293,7 +316,7 @@ class Main extends \App\Pages\Base
         $row->add(new Label('title', $topic->title));
         //$row->add(new ClickLink('title', $this,'onTopic'));
         $fav = $row->add(new Label('fav'));
-        $fav->setVisible($topic->favorites > 0);
+        $fav->setVisible(in_array($topic->topic_id,$this->_favorites));
     }
 
     //клик по топику
@@ -309,13 +332,27 @@ class Main extends \App\Pages\Base
     //избранное
     public function onFav($sender) {
         $topic = Topic::load($this->topiclist->getSelectedRow()->getDataItem()->topic_id);
+  
+        $conn = \ZCL\DB\DB::getConnect();
+        if(in_array($topic->topic_id,$this->_favorites)){
+            $conn->Execute("delete from note_fav where topic_id={$topic->topic_id} and  user_id= ".System::getUser()->user_id )  ;
+        } else {
+            $conn->Execute("insert into note_fav (topic_id,user_id) values ({$topic->topic_id},".System::getUser()->user_id.") " ) ;
+        }
 
-        $topic->favorites = $topic->favorites == 1 ? 0 : 1;
-        $topic->save();
-        //$this->ReloadTopic($this->tree->selectedNodeId());
+        $this->reloadfav();
         $this->ReloadTopic();
     }
 
+    private function reloadfav(){
+        $conn = \ZCL\DB\DB::getConnect();
+        $res  = $conn->Execute("select topic_id from note_fav where user_id= ".System::getUser()->user_id);
+        $this->_favorites = array();
+        foreach($res as $r){
+            $this->_favorites[] = $r['topic_id']; 
+        }
+    }
+    
     //вырезать топик в  клипборд
     public function onTopicCut($sender) {
         $this->clipboard[0] = $this->topiclist->getSelectedRow()->getDataItem()->topic_id;
@@ -548,7 +585,7 @@ class Main extends \App\Pages\Base
             }
             $this->tpanel->addfile->setVisible(true);;
             $this->tpanel->setfav->setVisible(true);;
-            if ($topic->favorites > 0) {
+            if ($topic->fav > 0) {
                 $this->tpanel->setfav->setAttribute("style", "color:brown;");
             } else {
                 $this->tpanel->setfav->setAttribute("style", "color:gray;");

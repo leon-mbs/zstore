@@ -278,8 +278,8 @@ class IssueList extends \App\Pages\Base
         $user_id= System::getUser()->user_id;
         $project = Project::load( $this->_issue->project_id); 
         $this->listpan->msgpan->mcreate->setText('Автор ' . $this->_issue->createdbyname . ' ' . \App\Helper::fd( $this->_issue->createdon) . '&nbsp;Проект&nbsp;<a href="/project/' . $project->project_id . '">' . $project->project_name . '</a> ', true);
-        $uk = implode(',', $project->getUsers()) ;
-        $users = \App\Entity\User::findArray('username',"user_id <> {$user_id}  and user_id in ({$uk})",'username')  ;
+
+        $users = \App\Entity\User::findArray('username',"user_id <> {$user_id}  and user_id in (select user_id from issue_projectacc where project_id={$project->project_id} )",'username')  ;
         foreach($users as $k=>$v ){
             $this->listpan->msgpan->addmsgform->userlist->AddCheckBox($k,false,$v ); 
         }        

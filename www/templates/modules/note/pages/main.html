@@ -119,14 +119,17 @@
                         <textarea style="height:200px;" class="form-control" zippy="editcontent"></textarea>
                     </div>
                     <div class="form-group">
+                        <label  for="editacctype">Доступ</label>
+                        <select zippy="editacctype" class="form-control">
+                           
+                        </select>
+                        
+                    </div>                    <div class="form-group">
                         <label for="edittags">Тэги</label>
                         <div zippy="edittags"></div>
                     </div>
-                    <div class="form-check">
-                        <input zippy="editispublic" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editispublic">Публичный</label>
-                    </div>
-                    <a zippy="editcancel" class="btn btn-light">Отмена</a>&nbsp;
+                   
+                    <a zippy="editcancel" class="btn btn-outline-light">Отмена</a>&nbsp;
                     <a zippy="editsave" class="btn btn-primary">Сохранить</a>
                 </form>
             </div>
@@ -184,6 +187,10 @@
                     <div class="form-group">
                         <label for="editnodetitle">Название узла</label>
                         <input required="required" zippy="editnodetitle" class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <input zippy="editnodepublic" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="editnodepublic">Доступный всем</label>
                     </div>
                 </div>
                 <div class="modal-footer">

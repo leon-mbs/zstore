@@ -180,7 +180,7 @@ class ProjectList extends \App\Pages\Base
         $users = $this->projectform->userlist->getCheckedList();
         
         if(in_array($this->_project->creator_id,$users)==false) {
-              array_push($users,$this->_project->creator_id) ;
+           $users[]=$this->_project->creator_id; 
         }
         $this->_project->setUsers($users)   ;       
         
