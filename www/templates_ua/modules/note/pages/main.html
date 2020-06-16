@@ -62,7 +62,7 @@
             <div class="col-12">
 
 
-                <div zippy="content" style="border-radius:4px;                            background-color: #FFFF00">
+                <div zippy="detail" style="border-radius:4px;                            background-color: #FFFF00">
 
                 </div>
             </div>
@@ -79,7 +79,7 @@
                         <td><span zippy="taglist"></span></td>
 
                         <td style="width:20px;">
-                            <i title="Прикріплені файли" class="fa                                        fa-paperclip"
+                            <i title="Прикріплені файли" class="fa           fa-paperclip"
                                style="font-weight:                                         bolder;font-size:16px;"></i>
                         </td>
                         <td>
@@ -115,15 +115,20 @@
                         <input type="text" required="required" class="form-control" zippy="edittitle">
                     </div>
                     <div class="form-group">
-                        <label for="editcontent">Змiст </label>
-                        <textarea style="height:200px;" class="form-control" zippy="editcontent"></textarea>
+                        <label for="editdetail">Змiст </label>
+                        <textarea style="height:200px;" class="form-control" zippy="editdetail"></textarea>
                     </div>
                     <div class="form-group "  >
-                        <label  for="editacctype">Доступ</label>
+                        <label  for="editacctype">Тип доступу</label>
                         <select  zippy="editacctype" class="form-control">
                            
                         </select>
                     </div> 
+                    <div class="form-check"">
+                        <input zippy="editisout" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="editisout">Доступний зовнi системи</label>
+                    </div>                  
+                    
                     <div class="form-group">
                         <label for="edittags">Теги</label>
                         <div zippy="edittags"></div>
@@ -271,8 +276,8 @@
         return confirm('Удалить узел');
     }
 
-    if ($('#editcontent').length) {
-        CKEDITOR.replace('editcontent', {
+    if ($('#editdetail').length) {
+        CKEDITOR.replace('editdetail', {
             language: "ru",
             customConfig: '/assets/js/ckeditor/config.js',
             filebrowserBrowseUrl: '',

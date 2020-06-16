@@ -15,6 +15,30 @@ class Topic extends \ZCL\DB\Entity
         $this->acctype  = 0;
     }
 
+    protected function beforeSave() {
+        parent::beforeSave();
+        //упаковываем  данные в detail
+        $this->content = "<content>";
+        $this->content .= "<isout>{$this->isout}</isout>";
+        $this->content  .= "<detail><![CDATA[{$this->detail}]]></detail>";
+        $this->content .= "</content>";
+
+        return true;
+    }
+
+    protected function afterLoad() {
+        //распаковываем  данные из detail
+        $xml = @simplexml_load_string($this->content);
+
+        
+        $this->isout = (int)($xml->isout[0]);
+       
+        $this->detail = (string)($xml->detail[0]);
+
+        parent::afterLoad();
+    }
+
+    
     /**
      * список топиков  для  узла
      *

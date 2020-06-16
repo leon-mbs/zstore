@@ -75,16 +75,17 @@ class Main extends \App\Pages\Base
         $topiclist->setSelectedClass('table-success');
 
         //содержимое топика
-        $this->add(new Label("content"));
+        $this->add(new Label("detail"));
 
         //редактирование  топика
         $this->add(new Form("editform"));
         $this->editform->add(new TextInput("edittitle"));
         $this->editform->add(new \ZCL\BT\Tags("edittags"));
-        $this->editform->add(new TextArea("editcontent"));
+        $this->editform->add(new TextArea("editdetail"));
+        $this->editform->add(new CheckBox("editisout"));
         $this->editform->add(new ClickLink("editcancel", $this, "onTopicCancel"));
+        $this->editform->add(new DropDownChoice("editacctype",array(0=>'Приватный',1=>'Публичный',2=>'С общим редактированием'),0));
         $this->editform->add(new SubmitLink("editsave"))->onClick($this, "onTopicSave");
-        $this->editform->add(new DropDownChoice("editacctype",array(0=>'Приватный',1=>'Публичный',2=>'С общим редактированием',3=>'Доступен  вне системы',),0));
 
 
         //аплоад файла
@@ -118,7 +119,10 @@ class Main extends \App\Pages\Base
 
         $this->_edited = 0;
         $this->editform->edittitle->setText('');
-        $this->editform->editcontent->setText('');
+        $this->editform->editdetail->setText('');
+        $this->editform->editacctype->setValue(0);
+        $this->editform->editisout->setChecked(false);
+        $this->editform->editdetail->setText('');
         $this->editform->edittags->setTags(array());
         $topic = new Topic();
         $this->editform->edittags->setSuggestions($topic->getSuggestionTags());
@@ -136,8 +140,9 @@ class Main extends \App\Pages\Base
         $this->editform->edittitle->setText($topic->title);
         $this->editform->edittags->setTags($topic->getTags());
         $this->editform->edittags->setSuggestions($topic->getSuggestionTags());
-        $this->editform->editcontent->setText($topic->content);
+        $this->editform->editdetail->setText($topic->detail);
         $this->editform->editacctype->setValue($topic->acctype);
+        $this->editform->editisout->setChecked($topic->isout);
 
         $this->_tvars['editor'] = true;
     }
@@ -145,7 +150,7 @@ class Main extends \App\Pages\Base
     //сохраниение топика
     public function onTopicSave($sender) {
 
-        $topic = $this->_edited > 0 ?  : ;
+        
         if($this->_edited > 0) {
            $topic = Topic::load($this->_edited) ;
         }  else {
@@ -153,19 +158,30 @@ class Main extends \App\Pages\Base
            $topic->user_id = System::getUser()->user_id; 
         }
         $topic->title = $this->editform->edittitle->getText();
-        $topic->content = $this->editform->editcontent->getText();
+        $topic->detail = $this->editform->editdetail->getText();
         $topic->acctype = $this->editform->editacctype->getValue();
+        $topic->isout = $this->editform->editisout->isChecked() ? 1:0;
         if (strlen($topic->title) == 0) {
             $this->setError('notitle');
 
             return;
         }
+        
+        $nodeid = $this->tree->selectedNodeId();
+        if ($this->_edited == 0) {
+            $node = Node::load($nodeid);
+            if($topic->acctype == 0 && $node->ispublic != 0){
+              $this->setError('Нельзя добавить  публичный топик  к  приватному узлу');
+
+              return;              
+            }
+        }        
+        
         $topic->save();
         $tags = $this->editform->edittags->getTags();
         $topic->saveTags($tags);
         // $this->topiclist->setSelectedRow($topic->topic_id);
 
-        $nodeid = $this->tree->selectedNodeId();
         if ($this->_edited == 0) {
             $topic->addToNode($nodeid);
         }
@@ -408,11 +424,12 @@ class Main extends \App\Pages\Base
         }
         if ($this->clipboard[2] == 'copy') {
             $newtopic = new Topic();
+            $newtopic->user_id = System::getUser()->user_id;
             $newtopic->title = $topic->title;
             if ($this->tree->selectedNodeId() == $this->clipboard[3]) {
                 $newtopic->title = $topic->title . " (копия)";
             }
-            $newtopic->content = $topic->content;
+            $newtopic->detail = $topic->detail;
             $newtopic->save();
             $newtopic->addToNode($this->tree->selectedNodeId());
         }
@@ -568,11 +585,11 @@ class Main extends \App\Pages\Base
             $this->topicpaste->setVisible(true);
         }
 
-        $this->content->setText('');
+        $this->detail->setText('');
         $this->tpanel->taglist->Clear();
         if ($topicid > 0) {
             $this->tpanel->setVisible(true);
-            $this->content->setText($topic->content, true);
+            $this->detail->setText($topic->detail, true);
 
             $this->topicedit->setVisible(true);
             $this->topiccut->setVisible(true);
