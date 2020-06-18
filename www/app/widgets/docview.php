@@ -41,7 +41,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new RedirectLink('excel', ""));
         $this->add(new RedirectLink('pdf', ""));
         $this->add(new BookmarkableLink('pos', ""));
-        $this->add(new BookmarkableLink('email', ""))->setVisible(false);
+        $this->add(new ClickLink('email', $this,"onMail"))->setVisible(true);
 
         $this->add(new Label('preview'));
         $this->add(new Label('previewpos'));
@@ -356,4 +356,8 @@ class DocView extends \Zippy\Html\PageFragment
         return $answer;
     }
 
+    public function onMail($sender) {
+        $this->_doc->sendEmail()  ;
+    }
+    
 }

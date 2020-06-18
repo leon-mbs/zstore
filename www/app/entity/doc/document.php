@@ -682,7 +682,7 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-    * Название документа  по  мета имени
+    * Локализованное название документа  по  мета имени
     * 
     * @param mixed $meta_name
     */
@@ -718,18 +718,30 @@ class Document extends \ZCL\DB\Entity
    
         $data = $dompdf->output();       
        
-        $f = tempnam(sys_get_temp_dir())  ;
+        $f = tempnam(sys_get_temp_dir(),"email")  ;
         file_put_contents($f,$data) ;
         
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
-        $mail->setFrom($emailfrom);
-        $mail->addAddress($emailto);
-        $mail->Subject = $subject;
-        $mail->msgHTML($body);
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = 587;
+        $mail->Username = 'leon.mbs@gmail.com';
+        $mail->Password = 'leon123qwe*';        
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        
+        $mail->setFrom('leon.mbs@gmail.com','ZStore');
+        $mail->addAddress('softman@ukr.net');
+        $mail->Subject = "test";
+        $mail->msgHTML("Hi");
         $mail->CharSet = "UTF-8";
         $mail->IsHTML(true);
         $mail->AddAttachment($f, $filename, 'base64', 'application/pdf'); 
-        $mail->send();        
+        if($mail->send()===false){
+           System::setErrorMsg($mail->ErrorInfo);    
+        } else {
+           System::setSuccessMsg(Helper::l('email_sent')); 
+        }       
         
         @unlink($f);
        
