@@ -170,7 +170,7 @@ class Main extends \App\Pages\Base
         $nodeid = $this->tree->selectedNodeId();
         if ($this->_edited == 0) {
             $node = Node::load($nodeid);
-            if($topic->acctype == 0 && $node->ispublic != 0){
+            if($topic->acctype == 0 && $node->ispublic != 1){
               $this->setError('Нельзя добавить  публичный топик  к  приватному узлу');
 
               return;              
@@ -253,7 +253,7 @@ class Main extends \App\Pages\Base
                 $this->setError('Нельзя добавлять публичный узел на приватный');
                 return;
             }
-            
+             $form->editnodepublic->setChecked(false);
             $node->save();
             $this->ReloadTopic($node->node_id);
         }
@@ -282,11 +282,12 @@ class Main extends \App\Pages\Base
         $user_id = System::getUser()->user_id;
 
 
-        $itemlist = Node::find("ispublic = 1 or  user_id={$user_id} ", "pid,mpath,title");
+        $itemlist = Node::find("ispublic = 1 or  user_id={$user_id}  ", "pid,mpath,title");
         if (count($itemlist) == 0) { //добавляем  корень
             $root = new Node();
             $root->title = "//";
-            $root->user_id = $user_id;
+            $root->user_id = 0;
+            $root->ispublic = 1;
             $root->save();
 
             $itemlist = Node::find("ispublic = 1 or  user_id={$user_id} ", "pid,mpath,title");
@@ -577,7 +578,13 @@ class Main extends \App\Pages\Base
 
             if ($node->pid > 0) {   //не корень
                 $this->treecut->setVisible(true);
+                $this->treeedit->setVisible(true);
                 $this->treedelete->setVisible(true);
+            }  else {
+                 $this->treecut->setVisible(false);
+                 $this->treeedit->setVisible(false);
+                 $this->treedelete->setVisible(false);
+               
             }
         }
 

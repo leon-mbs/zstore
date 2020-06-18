@@ -1,10 +1,11 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
     <tr>
-    
+        {{#islogo}}
         <td colspan="9"> 
-        <img  style="height:100px;" src="http://local.zstore/upload/logo.png" />
+        <img  style="height:100px;" src='http://local.zstore/{{logo}}' />
         </td>
+        {{/islogo}}
     </tr>
 
     <tr>
@@ -88,7 +89,24 @@
         <td align="right">{{payed}}</td>
     </tr>
     <tr>
-        <td colspan="7">На сумму <b>{{totalstr}}<b></td>
+        <td colspan="9">На сумму <b>{{totalstr}}<b></td>
+
+    </tr>
+   <tr>
+        <td colspan="5">
+        {{#isstamp}}
+        <img  style="height:100px;" src='http://local.zstore/{{stamp}}' />
+        {{/isstamp}}
+        
+        
+         </td>
+       <td colspan="4">
+        {{#issign}}
+        <img  style="height:100px;" src='http://local.zstore/{{sign}}' />
+        {{/issign}}
+        
+        
+         </td>
 
     </tr>
 </table>
