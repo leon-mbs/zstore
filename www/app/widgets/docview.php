@@ -41,7 +41,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new RedirectLink('excel', ""));
         $this->add(new RedirectLink('pdf', ""));
         $this->add(new BookmarkableLink('pos', ""));
-        $this->add(new ClickLink('email', $this, "onMail"))->setVisible(true);
+        $this->add(new ClickLink('email', $this, "onMail")) ;
 
         $this->add(new Label('preview'));
         $this->add(new Label('previewpos'));
@@ -96,7 +96,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->pdf->setVisible(in_array(Document::EX_PDF, $exportlist));
         $this->pos->setVisible(in_array(Document::EX_POS, $exportlist));
         $this->previewpos->setVisible(in_array(Document::EX_POS, $exportlist));
-
+        $this->email->setVisible(in_array(Document::EX_MAIL, $exportlist));
 
         $reportpage = "App/Pages/ShowDoc";
 

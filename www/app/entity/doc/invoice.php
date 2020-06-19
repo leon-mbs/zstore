@@ -130,4 +130,9 @@ class Invoice extends \App\Entity\Doc\Document
         return H::l('emailinvsub', $this->document_number);
     }
 
+    public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_PDF,self::EX_MAIL);
+    }
+    
+    
 }
