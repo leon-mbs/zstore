@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
         <td colspan="4" align="center">
-            Наряд № {{document_number}} вiд {{document_date}}  
+            Наряд № {{document_number}} вiд {{document_date}}
         </td>
     </tr>
     {{#pareaname}}
@@ -76,7 +76,7 @@
 
         <td colspan="2">{{eq_name}}</td>
 
-        <td colspan="2">{{code}} </td>
+        <td colspan="2">{{code}}</td>
 
     </tr>
     {{/_detail2}}

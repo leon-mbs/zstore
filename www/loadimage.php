@@ -2,7 +2,10 @@
 require_once 'init.php';
 
 if (isset($_REQUEST['id']) > 0) {
-
+    $user = \App\System::getUser();
+    if ($user->user_id == 0) {
+        die;
+    }
     $image = \App\Entity\Image::load($_REQUEST['id']);
     if ($image instanceof \App\Entity\Image) {
 

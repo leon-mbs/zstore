@@ -19,8 +19,7 @@ class Project extends \ZCL\DB\Entity
     const STATUS_WAITPAIMENT = 6;
     const STATUS_CLOSED      = 12;
 
-    public $users = array();
-    
+
     protected function init() {
         $this->project_id = 0;
         $this->status = 1;
@@ -36,7 +35,8 @@ class Project extends \ZCL\DB\Entity
 
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from issue_issuelist where   project_id=" . $this->project_id);
-        $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_PROJECT . " and item_id=" . $this->project_id);
+        $conn->Execute("delete from issue_projectacc where project_id=" . $this->project_id);
+        $conn->Execute("delete from messages  where item_type=" . \App\Entity\Message::TYPE_PROJECT . " and item_id=" . $this->project_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_PROJECT . " and item_id=" . $this->project_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
     }
@@ -47,7 +47,6 @@ class Project extends \ZCL\DB\Entity
         $this->details = "<details>";
         $this->details .= "<desc><![CDATA[{$this->desc}]]></desc>";
         $this->details .= "<creator><![CDATA[{$this->creator}]]></creator>";
-        $this->details .= "<users><![CDATA[". serialize($this->users)  ."]]></users>";
         $this->details .= "<creator_id>{$this->creator_id}</creator_id>";
         $this->details .= "<createddate>{$this->createddate}</createddate>";
 
@@ -58,18 +57,33 @@ class Project extends \ZCL\DB\Entity
 
     protected function afterLoad() {
 
-    
+
         //распаковываем  данные из  
         $xml = simplexml_load_string($this->details);
         $this->desc = (string)($xml->desc[0]);
-        $users = (string) ($xml->users[0]);
-        $users  =  @unserialize($users) ;
-        if(is_array($users))  $this->users = $users;
-        $this->creator = (string) ($xml->creator[0]);
-        $this->createddate = (int) ($xml->createddate[0]);
-        $this->creator_id = (int) ($xml->creator_id[0]);
+        $this->creator = (string)($xml->creator[0]);
+        $this->createddate = (int)($xml->createddate[0]);
+        $this->creator_id = (int)($xml->creator_id[0]);
 
         parent::afterLoad();
+    }
+
+    public function getUsers() {
+        $list = array();
+        $conn = \ZDB\DB::getConnect();
+        $res = $conn->Execute("select  user_id  from issue_projectacc   where   project_id={$this->project_id}   ");
+        foreach ($res as $r) {
+            $list[] = $r['user_id'];
+        }
+        return $list;
+    }
+
+    public function setUsers($users) {
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from issue_projectacc where   project_id=" . $this->project_id);
+        foreach ($users as $u) {
+            $conn->Execute("insert into issue_projectacc  (project_id,user_id) value ({$this->project_id},{$u}) ");
+        }
     }
 
     public static function getStatusList() {

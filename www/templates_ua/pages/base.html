@@ -544,24 +544,25 @@
                                     <i class="fa    nav-icon"></i>
                                     <p>&nbsp;&nbsp;POS термінали</p>
                                 </a>
-                            </li>                            
-                            
-                             {{#isadmin}}
-                            
-                                <li class="nav-item">
-                                    <a href="/index.php?p=App/Pages/Roles" class="nav-link">
-                                        <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Ролі</p>
-                                    </a>
-                                </li> 
-                               {{#usefirms}}
-                                <li class="nav-item">
-                                    <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
-                                        <i class="fa    nav-icon"></i>
-                                        <p>&nbsp;&nbsp;Компанії</p>
-                                    </a>
-                                </li>
-                                {{/usefirms}}                                                       
-                          
+                            </li>
+
+                            {{#isadmin}}
+
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/Roles" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;Ролі</p>
+                                </a>
+                            </li>
+                            {{#usefirms}}
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;Компанії</p>
+                                </a>
+                            </li>
+                            {{/usefirms}}
+
 
                             {{#usebranch}}
                             <li class="nav-item">
@@ -571,14 +572,14 @@
                                 </a>
                             </li>
                             {{/usebranch}}
-                       
+
                             <li class="nav-item">
                                 <a href="/index.php?p=App/Pages/Options" class="nav-link">
                                     <i class="fa    nav-icon"></i>
                                     <p>&nbsp;&nbsp;Налаштування</p>
                                 </a>
-                            </li>  
-                            {{/isadmin}} 
+                            </li>
+                            {{/isadmin}}
                         </ul>
 
                     </li>

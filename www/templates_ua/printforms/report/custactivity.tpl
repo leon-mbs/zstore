@@ -23,30 +23,28 @@
         <th align="right" style="border: solid black 1px">Кін.</th>
 
     </tr>
-      {{#_detail}}
+    {{#_detail}}
     <tr>
 
         <td>{{document_number}}</td>
         <td>{{date}}</td>
 
 
-     
         <td align="right">{{obin}}</td>
         <td align="right">{{obout}}</td>
-       
+
 
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right"> </td>
+        <td align="right"></td>
         <td align="right">Разом:</td>
 
 
-     
         <td align="right">{{tin}}</td>
         <td align="right">{{tout}}</td>
-      
+
         <td></td>
     </tr>
 

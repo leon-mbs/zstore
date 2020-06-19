@@ -48,7 +48,7 @@ class ARMPos extends \App\Pages\Base
             $plist = \App\Entity\Pos::findArray('pos_name', 'pos_id=' . $cc);
         }
         $this->form1->add(new DropDownChoice('pos', $plist, $cc));
-        $this->form1->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))  ;
+        $this->form1->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0));
 
 
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
@@ -214,7 +214,7 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd( $item->sdate) : ''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
@@ -623,10 +623,10 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->pos->store;
         $this->_doc->headerdata['pricetype'] = $this->pos->pricetype;
         //   $this->_doc->headerdata['pricetypename'] = $this->form1->pricetype->getValueName();
-      
+
         $this->_doc->headerdata['firm_id'] = $this->form1->firm->getValue();
- 
-        $firm = H::getFirmData($this->_doc->branch_id,$this->_doc->headerdata['firm_id']);
+
+        $firm = H::getFirmData($this->_doc->branch_id, $this->_doc->headerdata['firm_id']);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];

@@ -24,22 +24,22 @@
                 <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
 
             </div>
-           {{#usefirms}}
-               <div class="form-group  ">
-                    <label for="firm" >Покупатель</label>
-                    <select class="form-control" zippy="firm">
-                        <option value="0">Не выбрана</option>                           
-                    </select>
-                </div>                  
+            {{#usefirms}}
+            <div class="form-group  ">
+                <label for="firm">Покупатель</label>
+                <select class="form-control" zippy="firm">
+                    <option value="0">Не выбрана</option>
+                </select>
+            </div>
             {{/usefirms}}
-                <div class="form-group  ">
-                    <label for="contract" data-label="contract" >Договор</label>
-                    <select class="form-control" zippy="contract">
-                         <option value="0">Не выбран</option>                          
-                    </select>
-                    
+            <div class="form-group  ">
+                <label for="contract" data-label="contract">Договор</label>
+                <select class="form-control" zippy="contract">
+                    <option value="0">Не выбран</option>
+                </select>
 
-                </div>             
+
+            </div>
             <div class="form-group  ">
                 <label for="basedoc">Основание </label>
 
@@ -64,8 +64,8 @@
                 </select>
 
             </div>
-          {{#useval}}
-             
+            {{#useval}}
+
             <div class="form-group  ">
                 <label for="val">Валюта</label>
                 <select class="form-control" zippy="val">
@@ -73,8 +73,8 @@
                 </select>
 
             </div>
-          {{/useval}}
-             
+            {{/useval}}
+
             <div class="form-group  ">
                 <label for="notes">Примечание </label>
 
@@ -96,7 +96,7 @@
             <table class="table  table-sm" id="lankor">
                 <tr>
 
-                    <th> </th>
+                    <th></th>
                     <th>Наименование</th>
                     <th>Код</th>
                     <th>Ед.</th>
@@ -151,7 +151,8 @@
                 <tr style="font-weight: bolder;">
                     <td data-label="rate" colspan={{colspan}} class="text-right">Курс валюты:</td>
                     <td zippy="rate" class="text-right"></td>
-                    <td data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i class="fa fa-edit"></i></a></td>
+                    <td data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i
+                            class="fa fa-edit"></i></a></td>
                 </tr>
                 {{/useval}}
                 <tr style="font-weight: bolder;">
@@ -261,7 +262,7 @@
         </div>
     </div>
 
-    
+
     <div id="modalrate" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-sm">
@@ -407,16 +408,16 @@
 
             </div>
             {{/usesnumber}}
-             <div class="form-group">
+            <div class="form-group">
                 <label for="editnewmanufacturer">Бренд, производитель </label>
                 <input autocomplete="off" list="manlist" class="form-control " zippy="editnewmanufacturer"/>
                 <datalist id="manlist">
-                      {{#manlist}}
-                          <option label='{{mitem}}' value='{{mitem}}'>
-                      {{/manlist}}  
-                </datalist>  
-            </div>            
-            
+                    {{#manlist}}
+                    <option label='{{mitem}}' value='{{mitem}}'>
+                        {{/manlist}}
+                </datalist>
+            </div>
+
             <div class="form-group">
                 <input zippy="savenewitem" type="submit" value="Сохранить" class="btn btn-outline-primary">
                 <input type="button" zippy="cancelnewitem" value="Отменить" class="btn btn-light ">

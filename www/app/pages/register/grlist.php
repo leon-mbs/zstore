@@ -44,7 +44,7 @@ class GRList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Все', 1 => 'Не проведенные', 2 => 'Неоплаченые'), 0));
-         $this->filter->add(new DropDownChoice('searchcomp',Firm::findArray('firm_name','disabled<>1','firm_name'),0));
+        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
@@ -81,7 +81,7 @@ class GRList extends \App\Pages\Base
 
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('date', H::fd( $doc->document_date)));
+        $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
@@ -179,7 +179,7 @@ class GRList extends \App\Pages\Base
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= H::fd( $d->document_date) . ';';
+            $csv .= H::fd($d->document_date) . ';';
             $csv .= $d->document_number . ';';
             $csv .= $d->customer_name . ';';
             $csv .= $d->amount . ';';
@@ -232,7 +232,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
 
         $comp = $this->page->filter->searchcomp->getValue();
         if ($comp > 0) {
-            $where = $where . " and firm_id = ". $comp;
+            $where = $where . " and firm_id = " . $comp;
         }
 
         $st = trim($this->page->filter->searchtext->getText());

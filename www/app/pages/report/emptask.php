@@ -91,7 +91,7 @@ class EmpTask extends \App\Pages\Base
             $total = 0;
             $hours = 0;
             foreach ($doc->unpackDetails('detaildata') as $service) {
-                $total += $service->price;
+                $total += $service->cost;
                 $hours += $service->hours;
             }
             if ($doc->headerdata['hours'] > 0) {
@@ -121,9 +121,9 @@ class EmpTask extends \App\Pages\Base
             }
         }
 
-        $header = array('datefrom' => \App\Helper::fd( $from),
+        $header = array('datefrom' => \App\Helper::fd($from),
             "_detail" => $detail,
-            'dateto' => \App\Helper::fd( $to)
+            'dateto' => \App\Helper::fd($to)
         );
         $report = new \App\Report('report/emptask.tpl');
 

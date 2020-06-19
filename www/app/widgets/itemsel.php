@@ -41,7 +41,7 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $this->wisfilter->add(new TextInput('wissearchkey'));
         $this->wisfilter->add(new DropDownChoice('wissearchcat', Category::findArray("cat_name", "", "cat_name"), 0));
-        $this->wisfilter->add(new TextInput('wissearchmanufacturer' ));
+        $this->wisfilter->add(new TextInput('wissearchmanufacturer'));
 
 
         $ds = new ArrayDataSource($this, '_list');
@@ -49,8 +49,8 @@ class ItemSel extends \Zippy\Html\PageFragment
         $table = $this->add(new   DataTable('witemselt', $ds, true, true));
         $table->setPageSize(H::getPG());
         $table->AddColumn(new Column('itemname', H::l('name'), true, true, true));
-        $table->AddColumn(new Column('item_code',  H::l('code'), true, true, false));
-        $table->AddColumn(new Column('manufacturer',  H::l('brand'), true, true, false));
+        $table->AddColumn(new Column('item_code', H::l('code'), true, true, false));
+        $table->AddColumn(new Column('manufacturer', H::l('brand'), true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');
 
@@ -103,9 +103,9 @@ class ItemSel extends \Zippy\Html\PageFragment
             $where = $where . " and (itemname like {$text} or item_code like {$text} )  ";
 
         }
-       if (strlen($man) > 0) {
+        if (strlen($man) > 0) {
 
-            $man = Item::qstr(  $man  );
+            $man = Item::qstr($man);
             $where = $where . " and  manufacturer like {$man}      ";
 
         }

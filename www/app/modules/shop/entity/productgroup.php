@@ -24,7 +24,7 @@ class ProductGroup extends \ZCL\DB\TreeEntity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  shop_products where   group_id = {$this->group_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ?  \App\Helper::l('nodelusedfroup')  : "";
+        return ($cnt > 0) ? \App\Helper::l('nodelusedfroup') : "";
     }
 
     protected function afterDelete() {

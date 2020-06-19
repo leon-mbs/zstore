@@ -27,8 +27,8 @@ class Users extends \App\Pages\Base
         parent::__construct();
 
         if (System::getUser()->rolename != 'admins') {
-          
-            $this->setError('onlyadmisaccess');            
+
+            $this->setError('onlyadmisaccess');
             App::RedirectHome();
             return false;
         }
@@ -44,23 +44,23 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('editlogin'));
         $this->editpan->editform->add(new TextInput('editpass'));
         $this->editpan->editform->add(new TextInput('editemail'));
-        $this->editpan->editform->add(new DropDownChoice('editrole',UserRole::findArray('rolename','','rolename')));
+        $this->editpan->editform->add(new DropDownChoice('editrole', UserRole::findArray('rolename', '', 'rolename')));
 
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
 
- 
+
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
- 
+
         $this->editpan->editform->add(new DataView('brow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Branch", "disabled<>1", "branch_name"), $this, 'branchOnRow'));
     }
 
     public function onAdd($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError( \App\Helper::l('onlyadminsuser'));
+            $this->setError(\App\Helper::l('onlyadminsuser'));
 
             return;
         }
@@ -69,7 +69,7 @@ class Users extends \App\Pages\Base
         $this->editpan->setVisible(true);
         // Очищаем  форму
         $this->editpan->editform->clean();
-        
+
 
         $this->user = new User();
     }
@@ -77,7 +77,7 @@ class Users extends \App\Pages\Base
     public function onEdit($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-             $this->setError( \App\Helper::l('onlyadminsuser'));
+            $this->setError(\App\Helper::l('onlyadminsuser'));
 
             return;
         }
@@ -95,7 +95,7 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->editdisabled->setChecked($this->user->disabled);
 
         $this->editpan->editform->brow->Reload();
- 
+
     }
 
     public function saveOnClick($sender) {
@@ -145,7 +145,7 @@ class Users extends \App\Pages\Base
         }
         $this->user->aclbranch = implode(',', $barr);
 
- 
+
         $this->user->save();
         $this->listpan->userrow->Reload();
         $this->listpan->setVisible(true);
@@ -158,13 +158,13 @@ class Users extends \App\Pages\Base
         $this->editpan->setVisible(false);
     }
 
-  
+
     //удаление  юзера
 
     public function OnRemove($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError( \App\Helper::l('onlyadminsuser'));
+            $this->setError(\App\Helper::l('onlyadminsuser'));
 
             return;
         }
@@ -202,7 +202,7 @@ class Users extends \App\Pages\Base
         $row->add(new CheckBox('editbr', new Bind($item, 'editbr')));
     }
 
-    
+
 }
 
 class UserDataSource implements \Zippy\Interfaces\DataSource

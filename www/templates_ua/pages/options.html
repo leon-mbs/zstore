@@ -47,31 +47,30 @@
 
                 </select>
             </div>
-          <div class="form-group  ">
+            <div class="form-group  ">
                 <label for="dateformat">Формат дати</label>
 
                 <select class="form-control" zippy="dateformat">
                     <option value='d.m.Y'>dd.mm.yyyy</option>
                     <option value='d-m-Y'>dd-mm-yyyy</option>
                     <option value='d/m/Y'>dd/mm/yyyy</option>
-                    <option value='Y.m.d'>yyyy.mm.dd </option>                   
-                    <option value='Y-m-d'>yyyy-mm-dd </option>                   
-                    <option value='Y/m/d'>yyyy/mm/dd </option>                   
+                    <option value='Y.m.d'>yyyy.mm.dd</option>
+                    <option value='Y-m-d'>yyyy-mm-dd</option>
+                    <option value='Y/m/d'>yyyy/mm/dd</option>
 
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label for="defprice">Націнка за замовчуванням, у відсотках</label>
                 <input style="width:100px" pattern="[0-9]+" class="form-control" type="text" zippy="defprice">
                 <small>Використовується якщо не задана ціна в товарі або в категорії товару</small>
             </div>
-           <div class="form-group">
-                <label for="curr">Назва  валюти  обліку</label>
+            <div class="form-group">
+                <label for="curr">Назва валюти обліку</label>
                 <select class="form-control" zippy="curr"> </select>
-                <small>Для сум  прописом  в друкованих формах</small>
+                <small>Для сум прописом в друкованих формах</small>
             </div>
-
 
 
             <div class="form-check">
@@ -114,11 +113,11 @@
             </div>
             <div class="form-check">
                 <input zippy="usefirms" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="usefirms">Облiк в  кiлькох компанiях </label>
+                <label class="form-check-label" for="usefirms">Облiк в кiлькох компанiях </label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Використовуется якщо раъунки та накладнi треба  вести в  розрiзi кiлькох компанiй  "></i>
             </div>
-            
+
             <div class="form-check">
                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="allowminus">Дозволити списання в мiнус </label>
@@ -126,15 +125,15 @@
                    title=" Дозвiл  списувати таку  кiлькiсть  що призводить до  мiнусового залишку  на  складi  "></i>
             </div>
 
-           <div class="form-check">
+            <div class="form-check">
                 <input zippy="useval" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="useval">Валюта  в закупiвлi</label>
+                <label class="form-check-label" for="useval">Валюта в закупiвлi</label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title=" Можливiсть вводити накладну в  валютi  та  перерахунку  курсовоi рiзнимцi при  продажу.  "></i>
             </div>
-          <div class="form-check">
+            <div class="form-check">
                 <input zippy="capcha" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="capcha">Капча на  формi логiну</label>
+                <label class="form-check-label" for="capcha">Капча на формi логiну</label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title=" Додатковий захист вiд несанкцiонованого доступу "></i>
             </div>
@@ -144,40 +143,40 @@
             </div>
 
         </form>
-           {{#useval}}
-          <h4>Курси валют </h4>
-         <form zippy="valform"> 
+        {{#useval}}
+        <h4>Курси валют </h4>
+        <form zippy="valform">
             <div class="form-group">
                 <label for="valuan">Гривня</label>
-                <input zippy="valuan" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text" >
-             </div>    
+                <input zippy="valuan" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text">
+            </div>
             <div class="form-group">
                 <label for="valusd">Долар</label>
-                <input zippy="valusd" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text" >
-             </div>    
+                <input zippy="valusd" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text">
+            </div>
             <div class="form-group">
                 <label for="valeuro">Евро</label>
-                <input zippy="valeuro" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text" >
-                
+                <input zippy="valeuro" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text">
+
             </div>
-           <div class="form-group">
+            <div class="form-group">
                 <label for="valrub">Рубль</label>
-                <input zippy="valrub" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text" >
-                
+                <input zippy="valrub" style="width:100px" pattern="[0-9\.]+" class="form-control" type="text">
+
             </div>
-           <div class="form-check">
+            <div class="form-check">
                 <input zippy="valprice" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="valprice">Враховувати курсову  рiзницю при  продажу </label>
-                
+                <label class="form-check-label" for="valprice">Враховувати курсову рiзницю при продажу </label>
+
             </div>
 
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Зберегти</button>
-            </div>        
-         </form> 
-          {{/useval}}
-          
-        {{^usefirms}}  
+            </div>
+        </form>
+        {{/useval}}
+
+        {{^usefirms}}
         <h4>Дані про компанію</h4>
         <form zippy="firm">
 
@@ -206,12 +205,37 @@
                 <input class="form-control" type="text" zippy="address">
             </div>
             <div class="form-group">
+                <label for="bank">Банк, МФО </label>
+                <input class="form-control" type="text" zippy="bank">
+            </div>
+            <div class="form-group">
+                <label for="bankacc">Розрахунковий рахунок</label>
+                <input class="form-control" type="text" zippy="bankacc">
+            </div>
+            <div class="form-group">
+                <label for="logo">Логотип </label>
+                <input class="form-control" type="text" zippy="logo">
+                <small class="form-text text-muted">Шлях до файлу логотипа вiдносно кореня  сайту. Наприклад
+                    '/upload/logo.png'</small>
+            </div>
+            <div class="form-group">
+                <label for="stamp">Печать </label>
+                <input class="form-control" type="text" zippy="stamp">
+                <small class="form-text text-muted">Шлях до файла зображення   вiдносно кореня сайту . </small>
+            </div>
+            <div class="form-group">
+                <label for="sign">Пiдпис (факсимiле) </label>
+                <input class="form-control" type="text" zippy="sign">
+                <small class="form-text text-muted">Шлях до зображення   вiдносно кореня сайту . </small>
+            </div>            
+            
+            <div class="form-group">
                 <button class="btn btn-primary" type="submit">Зберегти</button>
             </div>
 
         </form>
-        {{/usefirms}}        
-        
+        {{/usefirms}}
+
         <h4>Налаштування принтера</h4>
         <small>Налаштування вузького принтера для друку чеків і етикеток</small>
         <form zippy="printer">

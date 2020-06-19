@@ -22,15 +22,16 @@
                 <select class="form-control" zippy="store">
                     <option value="0">Не обрано</option>
                 </select>
-             </div>
-             <div class="form-group  ">
-                        <label for="tostore" >Оприходувати на  склад</label>
-                        <select class="form-control" zippy="tostore">
-                            <option value="0">Не оприходувати</option>                        
-                        </select>
-                        <small class="form-text text-muted">При проведеннi буде створено документ 'Оприходування  на  склад'.
-                        Якщо ввiмкнена  пiдтримка  фiлiй, документ не  буде проведено и йому  не  буде присвоено  автора  поки  користувач,
-                         який мае право  роботи  з цiльоввою фiлiею, не  збереже новостворений документ.  </small> 
+            </div>
+            <div class="form-group  ">
+                <label for="tostore">Оприходувати на склад</label>
+                <select class="form-control" zippy="tostore">
+                    <option value="0">Не оприходувати</option>
+                </select>
+                <small class="form-text text-muted">При проведеннi буде створено документ 'Оприходування на склад'.
+                    Якщо ввiмкнена пiдтримка фiлiй, документ не буде проведено и йому не буде присвоено автора поки
+                    користувач,
+                    який мае право роботи з цiльоввою фiлiею, не збереже новостворений документ. </small>
             </div>
             <div class="form-group  ">
                 <label for="notes">Примітка </label>
@@ -156,14 +157,14 @@
             $('#addcode').click()
         }
     }
-    
-       function onItem(ele) {
 
-            if (event.key === 'Enter' || event.keyCode == 13) {
-                // alert($('#barcode').val()); 
-                $('#saverow').click()
-            }
-        }      
+    function onItem(ele) {
+
+        if (event.key === 'Enter' || event.keyCode == 13) {
+            // alert($('#barcode').val());
+            $('#saverow').click()
+        }
+    }
 </script>
 
 </body>

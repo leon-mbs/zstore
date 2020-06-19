@@ -53,20 +53,20 @@
                 <input style="width:200px" class="form-control" zippy="editpass">
                 <span style="font-size:12px">Если не  меняется  пароль существующего  пользолвателя, оставте пустым</span>
             </div>
-            
+
             <div class="form-group">
                 <label for="editrole">Роль</label>
-                <select    class="form-control" zippy="editrole"  >
-                  <option value='0'>Не указана</option>
-                </select>  
+                <select class="form-control" zippy="editrole">
+                    <option value='0'>Не указана</option>
+                </select>
             </div>
-            
-            
+
+
             <div class="form-group">
                 <label for="editemail">Email</label>
                 <input style="width:200px" class="form-control" zippy="editemail">
             </div>
-             {{#usebranch}}
+            {{#usebranch}}
 
 
             <div class="form-group">
@@ -80,15 +80,16 @@
                 </table>
             </div>
             {{/usebranch}}
-             <div class="form-group">
-                 <div class="form-check   ">
+            <div class="form-group">
+                <div class="form-check   ">
 
-                    <input class="form-check-input"  type="checkbox" zippy="editonlymy">
-                    <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ только  к  собственным документам</label>
-                </div>  
-            </div> 
-      
-           <div class="form-group">
+                    <input class="form-check-input" type="checkbox" zippy="editonlymy">
+                    <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ только к собственным
+                        документам</label>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="form-check   ">
                     <input class="form-check-input" type="checkbox" zippy="editdisabled">
                     <label class="form-check-label mr-sm-2 text-danger" for="editdisabled"> Деактивирован</label>

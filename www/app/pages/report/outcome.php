@@ -26,15 +26,26 @@ class Outcome extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => 'По товарам', 2 => 'По покупателям', 3 => 'По датам', 4 => 'Услуги, работы'), 1));
+        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 5 => H::l('repbycat'), 2 => H::l('repbybyers'), 3 => H::l('repbydates'), 4 => H::l('repbyservices')), 1))->onChange($this, "OnType");
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
+        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
         $this->detail->add(new RedirectLink('word', "outcome"));
         $this->detail->add(new RedirectLink('excel', "outcome"));
-        $this->detail->add(new RedirectLink('pdf', "abc"));
+        $this->detail->add(new RedirectLink('pdf', "outcome"));
         $this->detail->add(new Label('preview'));
+    }
+
+    public function OnType($sender) {
+        $type = $this->filter->type->getValue();
+        $this->filter->cat->setValue(0);
+        if ($type == 5) {
+            $this->filter->cat->setVisible(true);
+        } else {
+            $this->filter->cat->setVisible(false);
+        }
     }
 
     public function OnAutoItem($sender) {
@@ -75,6 +86,7 @@ class Outcome extends \App\Pages\Base
 
         $type = $this->filter->type->getValue();
         $user = $this->filter->emp->getValue();
+        $cat_id = $this->filter->cat->getValue();
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
@@ -88,15 +100,19 @@ class Outcome extends \App\Pages\Base
 
         $detail = array();
         $conn = \ZDB\DB::getConnect();
+        $cat = "";
+        if ($type == 5 && $cat_id > 0) {
+            $cat = " and cat_id=" . $cat_id;
+        }
 
-        if ($type == 1) {    //по товарам
+        if ($type == 1 || strlen($cat) > 0) {    //по товарам
             $sql = "
           select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
-              join `items` i on e.`item_id` = i.`item_id`
+              join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0 {$u} and e.`quantity` <0
+               where e.`item_id` >0 {$u} and e.`quantity` < 0   {$cat}
                and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck')
  
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
@@ -150,13 +166,31 @@ class Outcome extends \App\Pages\Base
                order  by s.`service_name`      ";
         }
 
+        if ($type == 5 && strlen($cat) == 0) {    //по категориях
+            $sql = "
+            select  i.`cat_name` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+              from `entrylist_view`  e
+
+              join `items_view` i on e.`item_id` = i.`item_id`
+             join `documents_view` d on d.`document_id` = e.`document_id`
+               where e.`item_id` >0 {$u} and e.`quantity` <0
+               and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck')
+ 
+              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                group by    i.`cat_name`
+               order  by i.`cat_name`
+        ";
+        }
+
+
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {
             $detail[] = array(
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
-                "dt" => \App\Helper::fd( strtotime($row['dt'])),
+                "dt" => \App\Helper::fd(strtotime($row['dt'])),
                 "qty" => H::fqty($row['qty']),
                 "navar" => H::fa($row['navar']),
                 "navarsign" => $row['navar'] > 0,
@@ -164,34 +198,47 @@ class Outcome extends \App\Pages\Base
             );
         }
 
-        $header = array('datefrom' => \App\Helper::fd( $from),
+        $header = array('datefrom' => \App\Helper::fd($from),
             "_detail" => $detail,
-            'dateto' => \App\Helper::fd( $to)
+            'dateto' => \App\Helper::fd($to)
         );
-        if ($type == 1) {
+        if ($type == 1 || strlen($cat) > 0) {
             $header['_type1'] = true;
             $header['_type2'] = false;
             $header['_type3'] = false;
             $header['_type4'] = false;
+            $header['_type5'] = false;
         }
         if ($type == 2) {
             $header['_type1'] = false;
             $header['_type2'] = true;
             $header['_type3'] = false;
             $header['_type4'] = false;
+            $header['_type5'] = false;
         }
         if ($type == 3) {
             $header['_type1'] = false;
             $header['_type2'] = false;
             $header['_type3'] = true;
             $header['_type4'] = false;
+            $header['_type5'] = false;
         }
         if ($type == 4) {
             $header['_type1'] = false;
             $header['_type2'] = false;
             $header['_type3'] = false;
             $header['_type4'] = true;
+            $header['_type5'] = false;
         }
+        if ($type == 5 && strlen($cat) == 0) {
+            $header['_type1'] = false;
+            $header['_type2'] = false;
+            $header['_type3'] = false;
+            $header['_type4'] = false;
+            $header['_type5'] = true;
+        }
+
+
         $report = new \App\Report('report/outcome.tpl');
 
         $html = $report->generate($header);

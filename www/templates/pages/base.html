@@ -540,31 +540,32 @@
                                     <p>&nbsp;&nbsp;Пользователи</p>
                                 </a>
                             </li>
-  
+
                             <li class="nav-item">
                                 <a href="/index.php?p=App/Pages/PosList" class="nav-link">
                                     <i class="fa    nav-icon"></i>
                                     <p>&nbsp;&nbsp;POS терминалы</p>
                                 </a>
-                            </li>                            
-                                {{#isadmin}}
-                            
-                                <li class="nav-item">
-                                    <a href="/index.php?p=App/Pages/Roles" class="nav-link">
-                                        <i class="fa    nav-icon"></i>  <p>&nbsp;&nbsp;Роли</p>
-                                    </a>
-                                </li> 
-                                                                     
-                                  
+                            </li>
+                            {{#isadmin}}
+
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/Roles" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;Роли</p>
+                                </a>
+                            </li>
+
+
                             {{#usefirms}}
-                                <li class="nav-item">
-                                    <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
-                                        <i class="fa    nav-icon"></i>
-                                        <p>&nbsp;&nbsp;Компании</p>
-                                    </a>
-                                </li>
-                                {{/usefirms}}                                                       
-        
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;Компании</p>
+                                </a>
+                            </li>
+                            {{/usefirms}}
+
                             {{#usebranch}}
                             <li class="nav-item">
                                 <a href="/index.php?p=App/Pages/BranchList" class="nav-link">
@@ -574,14 +575,14 @@
                             </li>
                             {{/usebranch}}
 
-                
+
                             <li class="nav-item">
                                 <a href="/index.php?p=App/Pages/Options" class="nav-link">
                                     <i class="fa    nav-icon"></i>
                                     <p>&nbsp;&nbsp;Настройки</p>
                                 </a>
-                            </li>   
-                            {{/isadmin}} 
+                            </li>
+                            {{/isadmin}}
                         </ul>
 
                     </li>
@@ -644,7 +645,7 @@
 </div>
 <!-- ./wrapper -->
 
-  
+
 <script>
 
     toastr.options = {
@@ -685,30 +686,28 @@
             $('#upbutton').stop(true, false).fadeOut('fast');
         }
     });
- 
-function test(){
-    var  url=   '{{_baseurl}}' +'::tm&ajax=true'
-  
-     
-    data = "test";
-   
-    $.ajax({
-        url: url,
-        data: data,
-        type: 'GET',
-        dataType: "text",
-        success: function(data, textStatus) {
-             alert(data);
-        }  
-        
 
-    });
-    
-}    
+    function test() {
+        var url = '{{_baseurl}}' + '::tm&ajax=true'
 
- 
 
- 
+        data = "test";
+
+        $.ajax({
+            url: url,
+            data: data,
+            type: 'GET',
+            dataType: "text",
+            success: function (data, textStatus) {
+                alert(data);
+            }
+
+
+        });
+
+    }
+
+
 </script>
 
 </body>

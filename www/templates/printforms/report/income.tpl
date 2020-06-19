@@ -1,22 +1,21 @@
- 
-<table class="ctable"  border="0"   cellpadding="2" cellspacing="0">
+<table class="ctable" border="0" cellpadding="2" cellspacing="0">
 
 
     <tr>
 
         <td align="center" colspan="4">
-            Период с {{datefrom}} по {{dateto}}    <br> <br>
+            Период с {{datefrom}} по {{dateto}} <br> <br>
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Закупки  по товарам  <br><br>
+            Закупки по товарам <br><br>
         </td>
-    </tr> 
+    </tr>
     <tr style="font-weight: bolder;">
-        <th style="border: solid black 1px" >Наименование</th>
-        <th style="border: solid black 1px" >Код</th>
+        <th style="border: solid black 1px">Наименование</th>
+        <th style="border: solid black 1px">Код</th>
 
         <th align="right" style="border: solid black 1px">Кол.</th>
         <th align="right" style="border: solid black 1px">На сумму</th>
@@ -30,7 +29,7 @@
         <td>{{code}}</td>
 
         <td align="right">{{qty}}</td>
-        <td align="right">{{summa}} </td>
+        <td align="right">{{summa}}</td>
 
     </tr>
     {{/_detail}}
@@ -39,16 +38,15 @@
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупки  по поставщикам  <br> <br>
+        Закупки по поставщикам <br> <br>
     </td>
-</tr> 
+</tr>
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px" >Наименование</th>
-
+    <th colspan="2" style="border: solid black 1px">Наименование</th>
 
 
     <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
-    <th  > </th>
+    <th></th>
 </tr>
 {{#_detail}}
 <tr>
@@ -57,9 +55,8 @@
     <td colspan="2">{{name}}</td>
 
 
-
-    <td align="right">{{summa}} </td>
-    <td  >  </td>
+    <td align="right">{{summa}}</td>
+    <td></td>
 </tr>
 {{/_detail}}
 </table>
@@ -67,28 +64,27 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупки  по датам  <br> <br>
+        Закупки по датам <br> <br>
     </td>
-</tr> 
+</tr>
 <tr style="font-weight: bolder;">
-    <th  style="border: solid black 1px;width:120px;" >Дата</th>
+    <th style="border: solid black 1px;width:120px;">Дата</th>
 
     <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
-    <th  > </th>
-    <th  > </th>
+    <th></th>
+    <th></th>
 
 </tr>
 {{#_detail}}
 <tr>
 
 
-    <td  >{{dt}}</td>
+    <td>{{dt}}</td>
 
 
-
-    <td align="right">{{summa}} </td>
-    <td  >  </td>
-    <td  >  </td>
+    <td align="right">{{summa}}</td>
+    <td></td>
+    <td></td>
 
 </tr>
 {{/_detail}}

@@ -87,7 +87,7 @@ class Inventory extends \App\Pages\Base
         $row->add(new Label('item', $item->itemname));
 
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd( $item->sdate) : ''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         //  $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('qfact', H::fqty($item->qfact)));
@@ -175,8 +175,8 @@ class Inventory extends \App\Pages\Base
             $tarr[$item->item_id] = $item;
         }
         $this->_itemlist = $tarr;
-        $this->_rowid = 0;      
-      
+        $this->_rowid = 0;
+
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

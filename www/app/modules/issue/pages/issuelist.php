@@ -33,7 +33,7 @@ class IssueList extends \App\Pages\Base
     public $_msglist = array();
     public $_fileslist = array();
 
-    public function __construct($id = 0, $project_id = 0) {
+    public function __construct($id = 0, $project_id = 0, $new = false) {
         parent::__construct();
 
         $this->_user = System::getUser();
@@ -76,8 +76,8 @@ class IssueList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchemp', $users, $user_id));
 
         $stlist = Issue::getStatusList();
-        $stlist[0] = 'Открытые';
-        $stlist[100] = 'Все';
+        $stlist[0] = H::l('mopen');
+        $stlist[100] = H::l('mall');
         $this->filter->add(new DropDownChoice('searchstatus', $stlist, 0));
 
         $this->add(new ClickLink('addnew', $this, 'onNew'));
@@ -86,7 +86,7 @@ class IssueList extends \App\Pages\Base
 
         $list = $this->listpan->add(new DataView('list', new IssueDS($this), $this, 'listOnRow'));
         $list->setSelectedClass('table-success');
-        $list->setPageSize(25);
+        $list->setPageSize(15);
         $this->listpan->add(new Paginator('pag', $list));
 
         $msgpan = $this->listpan->add(new Panel("msgpan"));
@@ -101,8 +101,10 @@ class IssueList extends \App\Pages\Base
 
         $msgpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
         $msgpan->addmsgform->add(new TextArea('msgdata'));
-        $msgpan->addmsgform->add(new \ZCL\BT\Tags("edittags"));
+        $msgpan->addmsgform->add(new \Zippy\Html\Form\CheckBoxList('userlist', '<br>'));
         $msgpan->add(new DataView('msglist', new ArrayDataSource($this, '_msglist'), $this, 'msgListOnRow'));
+        $msgpan->msglist->setPageSize(15);
+        $msgpan->add(new Paginator('pagmsg', $msgpan->msglist));
 
         $msgpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $msgpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
@@ -135,7 +137,11 @@ class IssueList extends \App\Pages\Base
         if ($issue instanceof Issue) {
             $this->openIssue($issue);
         }
+        if ($new == true) {
+            $this->onNew(null);
+        }
     }
+
 
     public function onNew($sender) {
         $this->editpan->editform->clean();
@@ -162,8 +168,8 @@ class IssueList extends \App\Pages\Base
 
     public function listOnRow($row) {
         $issue = $row->getDataItem();
-        $row->add(new RedirectLink('issue_number', "\\App\\Modules\\Issue\\Pages\\IssueList", array($issue->issue_id) ))->setValue('#' . $issue->issue_id);        
-        
+        $row->add(new RedirectLink('issue_number', "\\App\\Modules\\Issue\\Pages\\IssueList", array($issue->issue_id)))->setValue('#' . $issue->issue_id);
+
         $row->issue_number->setAttribute('class', 'badge badge-success');
         if ($issue->priority == Issue::PRIORITY_HIGH) {
             $row->issue_number->setAttribute('class', 'badge badge-danger');
@@ -172,8 +178,8 @@ class IssueList extends \App\Pages\Base
             $row->issue_number->setAttribute('class', 'badge badge-warning');
         }
 
-        $row->add(new ClickLink('title', $this , 'OnIssue'  ))->setValue($issue->issue_name);
-        
+        $row->add(new ClickLink('title', $this, 'OnIssue'))->setValue($issue->issue_name);
+
         $row->add(new Label('emp', \App\Util::getLabelName($issue->username)));
         $row->emp->setAttribute('title', $issue->username);
         if ($this->_issue->issue_id == $issue) {
@@ -233,13 +239,14 @@ class IssueList extends \App\Pages\Base
         $idnew = $this->_issue->issue_id == 0;
         $this->_issue->save();
         if ($idnew) {
-            $this->_issue->addStatusLog();
+            $this->_issue->addStatusLog(H::l("iscreated"));
         }
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
         $this->listpan->list->Reload();
         $this->openIssue($this->_issue);
     }
+
     public function OnIssue($sender) {
         $this->openIssue($sender->getOwner()->getDataItem());
     }
@@ -267,13 +274,14 @@ class IssueList extends \App\Pages\Base
         $this->updateMessages();
 
         $this->listpan->list->Reload(false);
+        $user_id = System::getUser()->user_id;
+        $project = Project::load($this->_issue->project_id);
+        $this->listpan->msgpan->mcreate->setText('Автор ' . $this->_issue->createdbyname . ' ' . \App\Helper::fd($this->_issue->createdon) . '&nbsp;Проект&nbsp;<a href="/project/' . $project->project_id . '">' . $project->project_name . '</a> ', true);
 
-        $this->listpan->msgpan->mcreate->setText('Создан ' . $this->_issue->createdbyname . ' ' . \App\Helper::fd( $this->_issue->createdon) . '&nbsp;Проект&nbsp;<a href="/project/' . $this->_issue->project_id . '">' . $this->_issue->project_name . '</a> ', true);
-
-        $this->listpan->msgpan->addmsgform->edittags->setTags(array());
-        $users = User::findArray('username', 'user_id <>' . System::getUser()->user_id);
-
-        $this->listpan->msgpan->addmsgform->edittags->setSuggestions(array_values($users));
+        $users = \App\Entity\User::findArray('username', "user_id <> {$user_id}  and user_id in (select user_id from issue_projectacc where project_id={$project->project_id} )", 'username');
+        foreach ($users as $k => $v) {
+            $this->listpan->msgpan->addmsgform->userlist->AddCheckBox($k, false, $v);
+        }
     }
 
     public function deleteOnClick($sender) {
@@ -316,22 +324,19 @@ class IssueList extends \App\Pages\Base
         $this->listpan->msgpan->addmsgform->msgdata->setText('');
         $this->updateMessages();
 
-        $not = array();
-        $not[] = $this->_issue->user_id;
-
-        $names = $this->listpan->msgpan->addmsgform->edittags->getTags();
-        foreach ($names as $n) {
-            $u = User::getFirst('username=' . User::qstr($n));
-            if ($u instanceof User) {
-                $not[] = $u->user_id;
-            }
+        $recievers = $this->listpan->msgpan->addmsgform->userlist->getCheckedList();
+        if (!in_array($this->_issue->user_id, $recievers)) {
+            $recievers[] = $this->_issue->user_id;
         }
-        foreach ($not as $u) {
 
+        foreach ($recievers as $u) {
+            if ($u == System::getUser()->userid) {
+                continue;
+            }
             $n = new \App\Entity\Notify();
             $n->user_id = $u;
-            $n->message = " Коментарий к задаче  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
-            $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}/#msgankor\">Ответить</a> ";
+            $n->message = H::l('msgtask') . "  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
+            $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}/#msgankor\">" . H::l('msgreply') . "</a> ";
             $n->sender_name = System::getUser()->getUserName();
             $n->save();
         }
@@ -341,17 +346,20 @@ class IssueList extends \App\Pages\Base
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type = ' . \App\Entity\Message::TYPE_ISSUE . ' and item_id=' . $this->_issue->issue_id,'message_id');
+        $this->_msglist = \App\Entity\Message::find('item_type = ' . \App\Entity\Message::TYPE_ISSUE . ' and item_id=' . $this->_issue->issue_id, 'message_id');
         $this->listpan->msgpan->msglist->Reload();
+        $ocnt = $this->listpan->msgpan->msglist->getPageCount();
+        $this->listpan->msgpan->msglist->setCurrentPage($ocnt);
+        $this->listpan->msgpan->msglist->Reload(false);
         $this->_fileslist = \App\Helper::getFileList($this->_issue->issue_id, \App\Entity\Message::TYPE_ISSUE);
         $this->listpan->msgpan->filelist->Reload();
     }
 
     public function msgListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('msgdate', \App\Helper::fdt( $item->created)));
+        $row->add(new Label('msgdate', \App\Helper::fdt($item->created)));
         $row->add(new Label('msguser', $item->username));
-        $row->add(new Label('msgdata', nl2br($item->message)));
+        $row->add(new Label('msgdata', nl2br($item->message), true));
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMmsOnClick');
         if ($this->_user->rolename == 'admins' || $this->_user->user_id == $item->user_id) {
             $row->delmsg->setVisible(true);
@@ -409,6 +417,7 @@ class IssueList extends \App\Pages\Base
 
         $olduser = $this->_issue->user_id;
         $oldstatus = $this->_issue->status;
+        $oldpriority = $this->_issue->priority;
 
         $this->_issue->status = $sender->ststatus->getValue();
         $this->_issue->user_id = $sender->stuser->getValue();
@@ -417,17 +426,24 @@ class IssueList extends \App\Pages\Base
         $this->_issue->save();
 
         if ($oldstatus != $this->_issue->status) {
-            $this->_issue->addStatusLog();
+            $this->_issue->addStatusLog(H::l("isstchanged") . " <b>" . $sender->ststatus->getValueName() . "</b>");
+        }
+
+        if ($oldpriority != $this->_issue->priority) {
+            $this->_issue->addStatusLog(H::l("isprchanged") . " <b>" . $sender->stpr->getValueName() . "</b>");
         }
 
         $this->updateStList();
         $this->listpan->list->Reload(false);
 
         if ($olduser != $this->_issue->user_id) {
+
+            $this->_issue->addStatusLog(H::l("isuserchanged") . " <b>" . $sender->stuser->getValueName() . "</b>");
+
             $n = new \App\Entity\Notify();
             $n->user_id = $this->_issue->user_id;
-            $n->message = " На  вас перенаначена задача  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
-            $n->message .= "<br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}\">Открыть</a> ";
+            $n->message = "  #{$this->_issue->issue_id} {$this->_issue->issue_name} ";
+            $n->message .= H::l("isassigned") . "#{$this->_issue->issue_id}  <br>  <a href=\"/issue/{$this->_issue->issue_id}/{$this->_issue->project_id}\">" . H::l("msgopen") . "</a> ";
             $n->sender_name = System::getUser()->username;
             $n->save();
         }
@@ -435,15 +451,16 @@ class IssueList extends \App\Pages\Base
 
     public function stlistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('sttime', \App\Helper::fd( $item->createdon)));
+        $row->add(new Label('sttime', \App\Helper::fd($item->createdon)));
         $row->add(new Label('stuser', $item->username));
-        $row->add(new Label('stname', $item->statusname));
+        $row->add(new Label('stdesc', $item->description, true));
     }
 
     public function updateStList() {
         $this->_stlist = $this->_issue->getLogList();
         $this->listpan->msgpan->stlist->Reload();
     }
+
 
 }
 
@@ -458,7 +475,7 @@ class IssueDS implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
         $status = $this->page->filter->searchstatus->getValue();
-        $number = trim($this->page->filter->searchnumber->getText());
+        // $number = trim($this->page->filter->searchnumber->getText());
         $emp = $this->page->filter->searchemp->getValue();
         $project = $this->page->filter->searchproject->getValue();
 

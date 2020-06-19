@@ -7,17 +7,17 @@
     <div class="col-12 col-md-8 col-xl-6">
         <div zippy="firmtable">
             <h3>Список компаний </h3>
-        
+
             <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
             <table class="table table-bordered   table-sm">
                 <tr>
                     <th>Название</th>
-    
+
                     <th></th>
                 </tr>
                 <tr zippy="firmlist">
                     <td zippy="firm_name"></td>
-    
+
 
                     <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
                             zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
@@ -32,12 +32,12 @@
             <label for="editfirm_name">Название</label>
             <input required="required" class="form-control" zippy="editfirm_name"/>
         </div>
-            <div class="form-group">
-                <label for="editshopname">Название торговой точки </label>
-                <input class="form-control" type="text" zippy="editshopname">
-                <small>Вводится если название магазина отличается от названия компании</small>
-            </div>
-       <div class="form-group">
+        <div class="form-group">
+            <label for="editshopname">Название торговой точки </label>
+            <input class="form-control" type="text" zippy="editshopname">
+            <small>Вводится если название магазина отличается от названия компании</small>
+        </div>
+        <div class="form-group">
             <label for="editinn">ИНН </label>
             <input class="form-control" type="text" zippy="editinn">
         </div>
@@ -48,7 +48,33 @@
         <div class="form-group">
             <label for="editaddress">Адрес </label>
             <input class="form-control" type="text" zippy="editaddress">
-        </div>  
+        </div>
+            <div class="form-group">
+                <label for="editbank">Банк, МФО </label>
+                <input class="form-control" type="text" zippy="editbank">
+            </div>
+            <div class="form-group">
+                <label for="editbankacc">Расчетный счет </label>
+                <input class="form-control" type="text" zippy="editbankacc">
+            </div>
+            <div class="form-group">
+                <label for="editlogo">Логотип </label>
+                <input class="form-control" type="text" zippy="editlogo">
+                <small class="form-text text-muted">Путь к файлу логотипа относительно корня сайта. Например
+                    '/upload/logo.png'</small>
+            </div>
+            <div class="form-group">
+                <label for="editstamp">Печать </label>
+                <input class="form-control" type="text" zippy="editstamp">
+                <small class="form-text text-muted">Путь к изображению печати относительно корня сайта. </small>
+            </div>
+            <div class="form-group">
+                <label for="editsign">Подпись (факсимиле) </label>
+                <input class="form-control" type="text" zippy="editsign">
+                <small class="form-text text-muted">Путь к изображению относительно корня сайта. </small>
+            </div>        
+        
+        
         <div class="form-check">
             <input zippy="editdisabled" type="checkbox" class="form-check-input">
             <label class="form-check-label" for="editdisabled">Не используется</label>

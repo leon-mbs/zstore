@@ -1,9 +1,16 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
+    {{#islogo}}
+    <tr>
 
+        <td colspan="9">
+            <img style="height:100px;" src='{{logo}}'/>
+        </td>
 
+    </tr>
+    {{/islogo}}
     <tr>
         <td></td>
-        <td>Заказчик</td>
+        <td>Покупатель</td>
         <td colspan="7">{{customer_name}}</td>
     </tr>
     <tr>
@@ -16,24 +23,34 @@
         <td>Email</td>
         <td colspan="7">{{email}}</td>
     </tr>
+    {{#iscontract}}
+    <tr>
+
+        <td></td>
+        <td> Договор</td>
+        <td colspan="7">{{contract}} от {{createdon}}</td>
+
+    </tr>
+    {{/iscontract}}    
     {{#isfirm}}
     <tr>
-         
+
         <td></td>
-        <td  > Продавец </td>
+        <td> Продавец</td>
         <td colspan="7">{{firm_name}}</td>
 
     </tr>
     {{/isfirm}}
-   {{#iscontract}}
+
+    {{#isbank}}
     <tr>
-        
+
         <td></td>
-        <td  > Договор </td>
-        <td colspan="7">{{contract}}  от {{createdon}}</td>
+        <td> р/с</td>
+        <td colspan="7">{{bankacc}} в {{bank}}</td>
 
     </tr>
-    {{/iscontract}}  
+    {{/isbank}}
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
             Счет-фактура № {{document_number}} от {{date}}
@@ -82,7 +99,24 @@
         <td align="right">{{payed}}</td>
     </tr>
     <tr>
-        <td colspan="7">На сумму <b>{{totalstr}}<b></td>
+        <td colspan="9">На сумму <b>{{totalstr}}<b></td>
+
+    </tr>
+    <tr>
+        <td colspan="5">
+            {{#isstamp}}
+            <img style="height:100px;" src='{{stamp}}'/>
+            {{/isstamp}}
+
+
+        </td>
+        <td colspan="4">
+            {{#issign}}
+            <img style="height:100px;" src='{{sign}}'/>
+            {{/issign}}
+
+
+        </td>
 
     </tr>
 </table>

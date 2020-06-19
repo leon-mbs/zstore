@@ -41,6 +41,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new RedirectLink('excel', ""));
         $this->add(new RedirectLink('pdf', ""));
         $this->add(new BookmarkableLink('pos', ""));
+        $this->add(new ClickLink('email', $this, "onMail"))->setVisible(true);
 
         $this->add(new Label('preview'));
         $this->add(new Label('previewpos'));
@@ -138,7 +139,7 @@ class DocView extends \Zippy\Html\PageFragment
     public function stateListOnRow($row) {
         $item = $row->getDataItem();
         //  $row->add(new Label('statehost', $item->hostname));
-        $row->add(new Label('statedate', \App\Helper::fdt( $item->createdon)));
+        $row->add(new Label('statedate', \App\Helper::fdt($item->createdon)));
         $row->add(new Label('stateuser', $item->username));
         $row->add(new Label('statename', Document::getStateName($item->docstate)));
     }
@@ -146,7 +147,7 @@ class DocView extends \Zippy\Html\PageFragment
     //вывод строки  оплат
     public function payListOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new Label('paydate', \App\Helper::fd( $item->paydate)));
+        $row->add(new Label('paydate', \App\Helper::fd($item->paydate)));
         $row->add(new Label('payamountp', H::fa($item->amount > 0 ? $item->amount : "")));
         $row->add(new Label('payamountm', H::fa($item->amount < 0 ? 0 - $item->amount : "")));
 
@@ -263,7 +264,7 @@ class DocView extends \Zippy\Html\PageFragment
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::getMessages(1, $this->_doc->document_id );
+        $this->_msglist = \App\Entity\Message::getMessages(1, $this->_doc->document_id);
         $this->dw_msglist->Reload();
         $this->hmessages->setText(count($this->_msglist));
         $this->hmessages->setVisible(count($this->_msglist) > 0);
@@ -273,8 +274,8 @@ class DocView extends \Zippy\Html\PageFragment
     public function msgListOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label("msgdata", nl2br($item->message) ,true ));
-        $row->add(new Label("msgdate", \App\Helper::fdt( $item->created)));
+        $row->add(new Label("msgdata", nl2br($item->message), true));
+        $row->add(new Label("msgdate", \App\Helper::fdt($item->created)));
         $row->add(new Label("msguser", $item->username));
 
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMsgOnClick');
@@ -353,6 +354,10 @@ class DocView extends \Zippy\Html\PageFragment
             $answer[$row['document_id']] = $row['document_number'];
         }
         return $answer;
+    }
+
+    public function onMail($sender) {
+        $this->_doc->sendEmail();
     }
 
 }

@@ -33,9 +33,9 @@ class Item extends \ZCL\DB\Entity
         $this->price3 = (string)($xml->price3[0]);
         $this->price4 = (string)($xml->price4[0]);
         $this->price5 = (string)($xml->price5[0]);
-        $this->rate   = (string)($xml->rate[0]);
-        $this->val    = (string)($xml->val[0]);
-        
+        $this->rate = (string)($xml->rate[0]);
+        $this->val = (string)($xml->val[0]);
+
         $this->pricelist = (int)$xml->pricelist[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
@@ -172,15 +172,12 @@ class Item extends \ZCL\DB\Entity
                 $price = $partion + (int)$partion / 100 * $ret;
                 //курсовая разница
                 $opv = \App\System::getOptions("val");
-                if(strlen($this->val)>1 && $opv['valprice']==1){
-                     $k =  $opv[$this->val] / $this->rate;
-                     $price = $price*$k;
+                if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
+                    $k = $opv[$this->val] / $this->rate;
+                    $price = $price * $k;
                 }
-                
-                
-                
-                
-                
+
+
             }
         } else {
             if ($_price > 0) {
@@ -210,14 +207,14 @@ class Item extends \ZCL\DB\Entity
                 if ($_price_ == 'price5' && $cat->price5 > 0) {
                     $price = $partion + (int)$partion / 100 * $cat->price5;
                 }
-                
-               //курсовая разница
+
+                //курсовая разница
                 $opv = \App\System::getOptions("val");
-                if(strlen($this->val)>1 && $opv['valprice']==1){
-                     $k =  $opv[$this->val] / $this->rate;
-                     $price = $price*$k;
+                if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
+                    $k = $opv[$this->val] / $this->rate;
+                    $price = $price * $k;
                 }
-                
+
             }
         }
 
@@ -230,17 +227,15 @@ class Item extends \ZCL\DB\Entity
                 $partion = $this->getLastPartion($store);
             }
 
-            $price = $partion + (int)$partion / 100 * $common['defprice'];  
-               //курсовая разница
-                $opv = \App\System::getOptions("val");
-                if(strlen($this->val)>1 && $opv['valprice']==1){
-                     $k =  $opv[$this->val] / $this->rate;
-                     $price = $price*$k;
-                }
-            
-        }
+            $price = $partion + (int)$partion / 100 * $common['defprice'];
+            //курсовая разница
+            $opv = \App\System::getOptions("val");
+            if (strlen($this->val) > 1 && $opv['valprice'] == 1) {
+                $k = $opv[$this->val] / $this->rate;
+                $price = $price * $k;
+            }
 
-         
+        }
 
 
         return \App\Helper::fa($price);
@@ -368,8 +363,8 @@ class Item extends \ZCL\DB\Entity
         foreach ($itemlist as $key => $value) {
 
             $list[$key] = $value->itemname;
-            if(strlen($value->manufacturer)>0) {
-                $list[$key] = $value->itemname . ' ('.$value->manufacturer.')';
+            if (strlen($value->manufacturer) > 0) {
+                $list[$key] = $value->itemname . ' (' . $value->manufacturer . ')';
             }
         }
 
@@ -389,19 +384,21 @@ class Item extends \ZCL\DB\Entity
         return "ID" . sprintf("%04d", ++$id);
     }
 
-    
+
     public static function getManufacturers() {
-         
+
         $conn = \ZDB\DB::getConnect();
-       
+
         $sql = "  select distinct manufacturer from  items    order  by manufacturer";
-        $res = $conn->Execute($sql);                           
+        $res = $conn->Execute($sql);
         $list = array();
-        foreach($res as $v) {
-            if(strlen($v['manufacturer'])>0)  $list[]=  $v['manufacturer'];
+        foreach ($res as $v) {
+            if (strlen($v['manufacturer']) > 0) {
+                $list[] = $v['manufacturer'];
+            }
         }
-        return  $list;
-         
-    }    
-    
+        return $list;
+
+    }
+
 }

@@ -22,7 +22,7 @@ class ProdReceipt extends Document
 
             $name = $item->itemname;
             if (strlen($item->snumber) > 0) {
-                $name .= ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
+                $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
             }
 
 
@@ -36,7 +36,7 @@ class ProdReceipt extends Document
             );
         }
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "document_number" => $this->document_number,
             "pareaname" => $this->headerdata["pareaname"],
@@ -58,10 +58,10 @@ class ProdReceipt extends Document
 
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item );
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id,   $st->quantity * $item->price,   $st->quantity);
+                $sc = new Entry($this->document_id, $st->quantity * $item->price, $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->save();
             }
@@ -80,7 +80,7 @@ class ProdReceipt extends Document
     public function getRelationBased() {
         $list = array();
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
-        $list['ProdIssue']   = self::getDesc('ProdIssue');
+        $list['ProdIssue'] = self::getDesc('ProdIssue');
 
         return $list;
     }

@@ -80,8 +80,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this,'OnCustomerFirm'  );
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false); ; 
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this, 'OnCustomerFirm');
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
@@ -195,7 +195,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->ship_address->setText($basedoc->headerdata['address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
-                        
+
                         $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
                         $this->docform->delivery_date->setDate($basedoc->headerdata['delivery']);
 
@@ -213,7 +213,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->total->setText($order->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                         
+
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
@@ -239,10 +239,10 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->total->setText($invoice->amount);
                         $this->docform->firm->setValue($basedoc->headerdata['firm_id']);
- 
+
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
-   
+
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
@@ -251,8 +251,8 @@ class GoodsIssue extends \App\Pages\Base
                         if ($invoice->payamount > 0) {
                             $this->docform->payment->setValue(MoneyFund::PREPAID);// предоплата
                         }
-                        
-                        
+
+
                     }
 
 
@@ -269,7 +269,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
                         $this->docform->firm->setValue($basedoc->headerdata['firm_id']);
- 
+
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
 
@@ -295,12 +295,12 @@ class GoodsIssue extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
-       
+
         $this->_tvars['manlist'] = array();
-        
-        foreach(Item::getManufacturers() as  $man){
-           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
-        }         
+
+        foreach (Item::getManufacturers() as $man) {
+            $this->_tvars['manlist'][] = array('mitem' => $man);
+        }
 
         $this->OnDelivery($this->docform->delivery);
     }
@@ -477,10 +477,10 @@ class GoodsIssue extends \App\Pages\Base
         }
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
-        if($this->_doc->headerdata['firm_id']>0){
-           $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();    
+        if ($this->_doc->headerdata['firm_id'] > 0) {
+            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
-         
+
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
@@ -601,13 +601,14 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->goAnkor("tankor");
     }
+
     public function onDelivery_cost($sender) {
         $this->docform->delivery_cost->setText($this->docform->editdelivery_cost->getText());
         $this->goAnkor("tankor");
         $this->calcPay();
     }
 
-     public function onPayed($sender) {
+    public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
         $payed = $this->docform->payed->getText();
         $payamount = $this->docform->payamount->getText();
@@ -675,12 +676,16 @@ class GoodsIssue extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
         $delivery_cost = $this->docform->delivery_cost->getText();
-        if($disc>0)$total -=  $disc;
-        if($delivery_cost>0)$total +=  $delivery_cost;
-        $this->docform->editpayamount->setText(H::fa($total  ));
-        $this->docform->payamount->setText(H::fa($total  ));
-        $this->docform->editpayed->setText(H::fa($total  ));
-        $this->docform->payed->setText(H::fa($total  ));
+        if ($disc > 0) {
+            $total -= $disc;
+        }
+        if ($delivery_cost > 0) {
+            $total += $delivery_cost;
+        }
+        $this->docform->editpayamount->setText(H::fa($total));
+        $this->docform->payamount->setText(H::fa($total));
+        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($total));
     }
 
     public function OnPayment($sender) {
@@ -974,24 +979,24 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setText($itemname);
         $this->OnChangeItem($this->editdetail->edittovar);
     }
-    
+
     public function OnCustomerFirm($sender) {
-        $c=$this->docform->customer->getKey();
-        $f=$this->docform->firm->getValue(); 
-    
-        $ar = \App\Entity\Contract::getList($c,$f) ;
-        
+        $c = $this->docform->customer->getKey();
+        $f = $this->docform->firm->getValue();
+
+        $ar = \App\Entity\Contract::getList($c, $f);
+
         $this->docform->contract->setOptionList($ar);
-        if(count($ar)>0){
-           $this->docform->contract->setVisible(true);    
-        }  else {
-           $this->docform->contract->setVisible(false);
-           $this->docform->contract->setValue(0);
+        if (count($ar) > 0) {
+            $this->docform->contract->setVisible(true);
+        } else {
+            $this->docform->contract->setVisible(false);
+            $this->docform->contract->setValue(0);
         }
-   
+
     }
-    
-    
+
+
 }
 
 

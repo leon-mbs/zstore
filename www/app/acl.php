@@ -217,20 +217,21 @@ class ACL
         return false;
     }
 
-    
+
     /**
-    * проверка  на  доступ  к отмене документа.
-    * 
-    * @param mixed $doc  документ
-    * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
-    */
+     * проверка  на  доступ  к отмене документа.
+     *
+     * @param mixed $doc документ
+     * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
+     */
     public static function checkCancelDoc($doc, $inreg = true, $showerror = true) {
         $user = System::getUser();
-        if ($user->rolename =='admins')
+        if ($user->rolename == 'admins') {
             return true;
-      
+        }
+
         self::load();
-          
+
         $aclcancel = explode(',', $user->aclcancel);
 
         if (in_array($doc->meta_id, $aclcancel)) {
@@ -238,14 +239,15 @@ class ACL
         }
         if ($showerror == true) {
             System::setErrorMsg('Нет права  отмены документа ' . self::$_metasdesc[$doc]);
-            if ($inreg == false)
+            if ($inreg == false) {
                 App::RedirectHome();
+            }
         }
 
         return false;
     }
-    
-    
+
+
     //проверка  на  доступ  к  сервисным станицам
     public static function checkShowSer($ser, $showerror = true) {
         if (System::getUser()->rolename == 'admins') {
@@ -271,9 +273,9 @@ class ACL
 
     /**
      * возвращает ограничение  для  ресурсов  по филиалам
-     * @param mixed $nul  включая  те  у которых филиал не  задан
+     * @param mixed $nul включая  те  у которых филиал не  задан
      */
-    public static function getBranchConstraint( ) {
+    public static function getBranchConstraint() {
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1) {
             return '';
@@ -281,9 +283,9 @@ class ACL
 
         $id = \App\System::getBranch(); //если  выбран  конкретный
         if ($id > 0) {
-            
-             return "branch_id in (0,{$id})";
-              
+
+            return "branch_id in (0,{$id})";
+
         }
 
 
@@ -293,12 +295,11 @@ class ACL
         }
 
         if (strlen($user->aclbranch) == 0) {
-             return "branch_id in (0 )";
+            return "branch_id in (0 )";
         } //нет доступа  ни  к  одному филиалу
 
-        
+
         return "branch_id in (0,{$user->aclbranch})";
-          
 
 
     }
@@ -332,7 +333,7 @@ class ACL
         }
 
         $id = \App\System::getBranch(); //если  выбран  конкретный
-         
+
         if ($id > 0) {
             return "select stacl.store_id  from stores stacl where stacl.branch_id={$id} ";
         }
@@ -428,7 +429,7 @@ class ACL
 
     /**
      * Возвращает  список филиалов для подстановки  в запрос  в  виде  списка  цифр
-     *                            
+     *
      */
     public static function getBranchIDsConstraint() {
         $options = \App\System::getOptions('common');

@@ -26,13 +26,20 @@ class ShowTopic extends \App\Pages\Base
             return;
         }
 
-        if ($this->_topic->ispublic <> 1) {
+        if ($this->_topic->acctype == 0) {   //приватный
             App::Redirect404();
             return;
         }
+        if ($this->_topic->isout == 0) {
+            $user_id = System::getUser()->user_id;
+            if ($user_id == 0) { //незалогиненый
+                App::Redirect404();
+                return;
+            }
+        }
 
         $this->add(new Label("title", $this->_topic->title, true));
-        $this->add(new Label("content", $this->_topic->content, true));
+        $this->add(new Label("detail", $this->_topic->detail, true));
         $this->add(new ClickLink("copy", $this, "onInsert"));
         $this->add(new ClickLink("link", $this, "onInsert"));
     }

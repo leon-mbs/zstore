@@ -5,7 +5,6 @@ namespace App\Modules\Note\Entity;
 /**
  *  Класс  инкапсулирующий топик
  * @table=note_topics
- * @view=note_topicsview
  * @keyfield=topic_id
  */
 class Topic extends \ZCL\DB\Entity
@@ -13,8 +12,32 @@ class Topic extends \ZCL\DB\Entity
 
     protected function init() {
         $this->topic_id = 0;
-        $this->ispublic = 0;
+        $this->acctype = 0;
     }
+
+    protected function beforeSave() {
+        parent::beforeSave();
+        //упаковываем  данные в detail
+        $this->content = "<content>";
+        $this->content .= "<isout>{$this->isout}</isout>";
+        $this->content .= "<detail><![CDATA[{$this->detail}]]></detail>";
+        $this->content .= "</content>";
+
+        return true;
+    }
+
+    protected function afterLoad() {
+        //распаковываем  данные из detail
+        $xml = @simplexml_load_string($this->content);
+
+
+        $this->isout = (int)($xml->isout[0]);
+
+        $this->detail = (string)($xml->detail[0]);
+
+        parent::afterLoad();
+    }
+
 
     /**
      * список топиков  для  узла
@@ -22,7 +45,9 @@ class Topic extends \ZCL\DB\Entity
      * @param mixed $node_id
      */
     public static function findByNode($node_id) {
-        return self::find("topic_id in (select topic_id from note_topicnode where node_id={$node_id})");
+        $user_id = \App\System::getUser()->user_id;
+
+        return self::find("  (user_id={$user_id} or acctype>0) and topic_id in (select topic_id from note_topicnode where  node_id={$node_id})");
     }
 
     /**

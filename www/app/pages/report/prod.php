@@ -129,10 +129,10 @@ class Prod extends \App\Pages\Base
             $sum2 += $row['summa'];
         }
 
-        $header = array('datefrom' => \App\Helper::fd( $from),
+        $header = array('datefrom' => \App\Helper::fd($from),
             "_detail" => $detail,
             "_detail2" => $detail2,
-            'dateto' => \App\Helper::fd( $to),
+            'dateto' => \App\Helper::fd($to),
             'parea' => null,
             'sum1' => H::fa($sum1),
             'sum2' => H::fa($sum2)

@@ -32,7 +32,7 @@ class Base extends \Zippy\Html\WebPage
         $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
         if (count($blist) == 1) {      //если  одна
             $this->branch_id = array_pop(array_keys($blist));
-            System::setBranch($this->branch_id)   ;
+            System::setBranch($this->branch_id);
         }
         //форма  филиалов       
         $this->add(new \Zippy\Html\Form\Form('nbform'));
@@ -60,13 +60,13 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
         $this->_tvars["usefirms"] = $options['usefirms'] == 1;
- 
+
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
-            System::setBranch( 0)    ;
+            System::setBranch(0);
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
-         
+
         $this->_tvars["shopmenu"] = $_config['modules']['shop'] == 1;
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
@@ -89,7 +89,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["woocomerce"] = false;
         }
-           
+
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         //для скрытия блока разметки  в  шаблоне страниц                           
@@ -110,8 +110,8 @@ class Base extends \Zippy\Html\WebPage
 
     public function onnbFirm($sender) {
         $branch_id = $sender->getValue();
-        System::setBranch($branch_id)  ;
-        
+        System::setBranch($branch_id);
+
         $page = get_class($this);
         App::Redirect($page);
     }
@@ -124,7 +124,7 @@ class Base extends \Zippy\Html\WebPage
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);
-        System::setSuccesMsg($msg);
+        System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg, $p1 = "", $p2 = "") {
@@ -200,8 +200,8 @@ class Base extends \Zippy\Html\WebPage
         \App\Application::$app->setReloadPage();
     }
 
-    public function tm($p,$post) {  
-        return "Привет" ;
+    public function tm($p, $post) {
+        return "Привет";
     }
 
 

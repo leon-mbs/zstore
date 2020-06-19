@@ -1,4 +1,4 @@
-<table class="ctable" border="0"   cellpadding="2" cellspacing="0">
+<table class="ctable" border="0" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="8">
@@ -34,7 +34,7 @@
         <td align="right">{{in}}</td>
         <td align="right">{{obin}}</td>
         <td align="right">{{obout}}</td>
-        <td align="right">{{out}} </td>
+        <td align="right">{{out}}</td>
         <td> {{{documents}}}</td>
     </tr>
     {{/_detail}}

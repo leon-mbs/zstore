@@ -20,21 +20,21 @@
 
             </div>
             {{#usefirms}}
-               <div class="form-group  ">
-                    <label for="firm" >Покупець</label>
-                    <select class="form-control" zippy="firm">
-                        <option value="0">Не вибрана</option>                           
-                    </select>
-                </div>                  
+            <div class="form-group  ">
+                <label for="firm">Покупець</label>
+                <select class="form-control" zippy="firm">
+                    <option value="0">Не вибрана</option>
+                </select>
+            </div>
             {{/usefirms}}
             <div class="form-group  ">
-                <label for="contract" data-label="contract" >Контракт</label>
+                <label for="contract" data-label="contract">Контракт</label>
                 <select class="form-control" zippy="contract">
-                     <option value="0">Не вибраний</option>                          
+                    <option value="0">Не вибраний</option>
                 </select>
-                
 
-            </div>  
+
+            </div>
             <div class="form-group  ">
                 <label for="notes">Примітка </label>
 
@@ -47,8 +47,8 @@
                 <label for="document_date"> Дата</label>
                 <input class="form-control" type="text" zippy="document_date" required="required">
             </div>
-           {{#useval}}
-             
+            {{#useval}}
+
             <div class="form-group  ">
                 <label for="val">Валюта</label>
                 <select class="form-control" zippy="val">
@@ -56,7 +56,7 @@
                 </select>
 
             </div>
-          {{/useval}}            
+            {{/useval}}
             <div class="form-group  ">
                 <label for="payment">Оплата</label>
                 <select class="form-control" zippy="payment">
@@ -108,13 +108,13 @@
                     <td data-label="nds"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
-                <tr style="font-weight: bolder;"  >
+                <tr style="font-weight: bolder;">
                     <td data-label="disc" colspan="5" class="text-right">Знижка:</td>
                     <td zippy="disc" class="text-right"></td>
                     <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
-                <tr style="font-weight: bolder;"  >
+                <tr style="font-weight: bolder;">
                     <td data-label="rate" colspan="5" class="text-right">Курс валюти:</td>
                     <td zippy="rate" class="text-right"></td>
                     <td data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i

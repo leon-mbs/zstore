@@ -4,11 +4,16 @@ namespace App\Pages;
 
 use App\Entity\Doc\Document;
 
-//страница  для  загрузки  файла экпорта
+//страница  для  загрузки  файла экcпорта
 class ShowDoc extends \Zippy\Html\WebPage
 {
 
     public function __construct($type, $docid) {
+
+        $user = \App\System::getUser();
+        if ($user->user_id == 0) {
+            die;
+        }
 
         $doc = Document::load($docid);
         if ($doc == null) {
@@ -68,7 +73,7 @@ class ShowDoc extends \Zippy\Html\WebPage
                 header("Content-Transfer-Encoding: binary");
 
 
-                $dompdf = new \Dompdf\Dompdf(array('defaultFont' => 'DejaVu Sans'));
+                $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
                 $dompdf->loadHtml($html);
 
                 // (Optional) Setup the paper size and orientation

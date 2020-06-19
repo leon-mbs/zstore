@@ -175,17 +175,17 @@ class Helper
             $logger->error($templatepath . " is wrong");
             return "";
         }
- 
+
         $template = @file_get_contents($templatepath);
 
         $m = new \Mustache_Engine();
         $template = $m->render($template, $keys);
- 
+
         return $template;
     }
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
-                     
+
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
         $mail->setFrom($emailfrom);
         $mail->addAddress($emailto);
@@ -193,7 +193,7 @@ class Helper
         $mail->msgHTML($template);
         $mail->CharSet = "UTF-8";
         $mail->IsHTML(true);
- 
+        // $mail->AddAttachment($_SERVER['DOCUMENT_ROOT'].'/facturen/test.pdf', $name = 'test',  $encoding = 'base64', $type = 'application/pdf');
         $mail->send();
 
         /*
@@ -417,50 +417,57 @@ class Helper
      * @param timestamp $date
      * @return mixed
      */
-    public static function fd($date ) {
+    public static function fd($date) {
         if ($date > 0) {
-            $dateformat = System::getOption("common",'dateformat');
-            if(strlen($dateformat)==0) $dateformat = 'd.m.Y';
-            if($time)  $dateformat .= ' H:i';
-            return date($dateformat,$date) ;
+            $dateformat = System::getOption("common", 'dateformat');
+            if (strlen($dateformat) == 0) {
+                $dateformat = 'd.m.Y';
+            }
+            if ($time) {
+                $dateformat .= ' H:i';
+            }
+            return date($dateformat, $date);
         }
 
-        return ''; 
-    }    
- 
+        return '';
+    }
+
     /**
-   * форматирование  даты и времени
-   *  
-   * @param mixed $date
-   * @return mixed
-   */
-    public static function fdt($date ) {
+     * форматирование  даты и времени
+     *
+     * @param mixed $date
+     * @return mixed
+     */
+    public static function fdt($date) {
         if ($date > 0) {
-            $dateformat = System::getOption("common",'dateformat');
-            if(strlen($dateformat)==0) $dateformat = 'd.m.Y';
- 
-            return date($dateformat . ' H:i',$date) ;
+            $dateformat = System::getOption("common", 'dateformat');
+            if (strlen($dateformat) == 0) {
+                $dateformat = 'd.m.Y';
+            }
+
+            return date($dateformat . ' H:i', $date);
         }
 
-        return ''; 
-    }    
-    
+        return '';
+    }
+
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData($branch_id = 0,$firm_id=0) {
-        $usefirms = System::getOption('common','usefirms');
-        if($firm_id>0) {
-           $firm = \App\Entity\Firm::load($firm_id);
-           $data = $firm->getData();
+    public static function getFirmData($branch_id = 0, $firm_id = 0) {
+        $usefirms = System::getOption('common', 'usefirms');
+        if ($firm_id > 0) {
+            $firm = \App\Entity\Firm::load($firm_id);
+            $data = $firm->getData();
+        } else {
+            if ($usefirms == true) {
+                return array();
+            }
+
+            $data = \App\System::getOptions("firm");
         }
-        else {
-           if($usefirms==true )  return array();
-            
-           $data = \App\System::getOptions("firm");    
-        }
-          
-        
+
+
         if ($branch_id > 0) {
             $branch = \App\Entity\Branch::load($branch_id);
             if (strlen($branch->shopname) > 0) {
@@ -563,17 +570,25 @@ class Helper
 
         return $totalstr;
     }
-    
-    public static function getValList(){
-         $val = \App\System::getOptions("val" );        
-         $list = array();
-         if($val['valuan']>0 && $val['valuan']!=1) $list['valuan'] = 'Гривна';
-         if($val['valusd']>0 && $val['valusd']!=1) $list['valusd'] = 'Доллар';
-         if($val['valeuro']>0 && $val['valeuro']!=1) $list['valeuro'] = 'Евро';
-         if($val['valrub']>0 && $val['valrub']!=1) $list['valrub'] = 'Рубль';
-         
-         return $list;
+
+    public static function getValList() {
+        $val = \App\System::getOptions("val");
+        $list = array();
+        if ($val['valuan'] > 0 && $val['valuan'] != 1) {
+            $list['valuan'] = 'Гривна';
+        }
+        if ($val['valusd'] > 0 && $val['valusd'] != 1) {
+            $list['valusd'] = 'Доллар';
+        }
+        if ($val['valeuro'] > 0 && $val['valeuro'] != 1) {
+            $list['valeuro'] = 'Евро';
+        }
+        if ($val['valrub'] > 0 && $val['valrub'] != 1) {
+            $list['valrub'] = 'Рубль';
+        }
+
+        return $list;
     }
-    
-    
+
+
 }

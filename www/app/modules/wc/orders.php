@@ -133,7 +133,7 @@ class Orders extends \App\Pages\Base
         $row->add(new Label('customer', $order->headerdata['wcclient']));
         $row->add(new Label('amount', round($order->amount)));
         $row->add(new Label('comment', $order->notes));
-        $row->add(new Label('date', \App\Helper::fdt( strtotime($order->document_date))));
+        $row->add(new Label('date', \App\Helper::fdt(strtotime($order->document_date))));
     }
 
     public function onImport($sender) {
@@ -164,7 +164,7 @@ class Orders extends \App\Pages\Base
         $row->add(new CheckBox('ch', new Prop($order, 'ch')));
         $row->add(new Label('number2', $order->document_number));
         $row->add(new Label('number3', $order->headerdata['wcorder']));
-        $row->add(new Label('date2', \App\Helper::fdt( $order->document_date)));
+        $row->add(new Label('date2', \App\Helper::fdt($order->document_date)));
         $row->add(new Label('amount2', $order->amount));
         $row->add(new Label('customer2', $order->headerdata['wcclient']));
         $row->add(new Label('state', Document::getStateName($order->state)));

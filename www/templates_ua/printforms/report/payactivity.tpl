@@ -32,7 +32,7 @@
         <td align="right">{{in}}</td>
         <td align="right">{{obin}}</td>
         <td align="right">{{obout}}</td>
-        <td align="right">{{out}} </td>
+        <td align="right">{{out}}</td>
 
     </tr>
     {{/_detail}}
@@ -44,7 +44,7 @@
         <td align="right">{{tb}}</td>
         <td align="right">{{tin}}</td>
         <td align="right">{{tout}}</td>
-        <td align="right">{{tend}} </td>
+        <td align="right">{{tend}}</td>
         <td></td>
     </tr>
 

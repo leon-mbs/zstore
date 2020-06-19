@@ -84,7 +84,7 @@ class OrderCustList extends \App\Pages\Base
 
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('date', H::fd( $doc->document_date)));
+        $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', H::fa($doc->amount)));
@@ -257,7 +257,7 @@ class OrderCustList extends \App\Pages\Base
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= H::fd( $d->document_date) . ';';
+            $csv .= H::fd($d->document_date) . ';';
             $csv .= $d->document_number . ';';
             $csv .= $d->customer_name . ';';
             $csv .= $d->amount . ';';

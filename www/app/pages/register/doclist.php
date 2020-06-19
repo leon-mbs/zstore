@@ -147,7 +147,7 @@ class DocList extends \App\Pages\Base
 
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('branch', $doc->branch_name));
-        $row->add(new Label('date', H::fd( $doc->document_date)));
+        $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
@@ -161,7 +161,7 @@ class DocList extends \App\Pages\Base
 
         $row->add(new Label('hasnotes'))->setVisible(strlen($doc->notes) > 0 && $doc->notes == strip_tags($doc->notes));
         $row->hasnotes->setAttribute('title', $doc->notes);
- 
+
         $row->add(new ClickLink('parentdoc', $this, 'basedOnClick'))->setVisible($doc->parent_id > 0);
         $row->parentdoc->setValue($doc->headerdata['parent_number']);
 

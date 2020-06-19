@@ -82,18 +82,17 @@ class IncomeItem extends \App\Pages\Base
                     if ($basedoc->meta_name == 'OutcomeItem') {
 
 
-                       
-                       foreach($basedoc->unpackDetails('detaildata') as $it){
-                          
-                          //последняя партия 
-                          $stock =  \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$basedoc->headerdata['store'] }",'stock_id desc') ;
-                          $it->price = $stock->partion;
-                           
-                          
-                          $this->_itemlist[] = $it; 
-                       }
-                        
-                        
+                        foreach ($basedoc->unpackDetails('detaildata') as $it) {
+
+                            //последняя партия
+                            $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$basedoc->headerdata['store'] }", 'stock_id desc');
+                            $it->price = $stock->partion;
+
+
+                            $this->_itemlist[] = $it;
+                        }
+
+
                     }
                 }
             }
@@ -114,7 +113,7 @@ class IncomeItem extends \App\Pages\Base
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd( $item->sdate) : ''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         $row->add(new Label('price', H::fa($item->price)));
 

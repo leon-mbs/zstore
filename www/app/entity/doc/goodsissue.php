@@ -25,7 +25,7 @@ class GoodsIssue extends Document
             if (strlen($item->snumber) > 0) {
                 $s = ' (' . $item->snumber . ' )';
                 if (strlen($item->sdate) > 0) {
-                    $s = ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
+                    $s = ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
                 }
                 $name .= $s;
 
@@ -46,9 +46,9 @@ class GoodsIssue extends Document
 
         $totalstr = H::sumstr($this->amount);
 
-        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
+        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "firm_name" => $firm['firm_name'],
             "customer_name" => $this->customer_name,
@@ -58,7 +58,7 @@ class GoodsIssue extends Document
             "weight" => $weight > 0 ? H::l("allweight", $weight) : '',
             "ship_address" => $this->headerdata["ship_address"],
             "ship_number" => $this->headerdata["ship_number"],
-            "delivery_cost" =>H::fa( $this->headerdata["delivery_cost"]),
+            "delivery_cost" => H::fa($this->headerdata["delivery_cost"]),
             "order" => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
@@ -70,19 +70,19 @@ class GoodsIssue extends Document
             "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
-        
+
         if ($this->headerdata["contract_id"] > 0) {
-            $contract=\App\Entity\Contract::load($this->headerdata["contract_id"]);
-            $header['contract'] = $contract->contract_number ;
-            $header['createdon'] = H::fd($contract->createdon) ;
+            $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
+            $header['contract'] = $contract->contract_number;
+            $header['createdon'] = H::fd($contract->createdon);
         }
-        
-        
+
+
         if ($this->headerdata["sent_date"] > 0) {
-            $header['sent_date'] = H::fd( $this->headerdata["sent_date"]);
+            $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
         }
         if ($this->headerdata["delivery_date"] > 0) {
-            $header['delivery_date'] = H::fd( $this->headerdata["delivery_date"]);
+            $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
         }
         $header["isdelivery"] = $this->headerdata["delivery"] > 1;
 

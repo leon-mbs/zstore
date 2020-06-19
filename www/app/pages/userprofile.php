@@ -38,10 +38,9 @@ class UserProfile extends \App\Pages\Base
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
 
- 
-    
+
         $this->add($form);
-      
+
 
         //форма   пароля
 
@@ -66,7 +65,6 @@ class UserProfile extends \App\Pages\Base
         $this->user->defmf = $sender->defmf->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
 
- 
 
         if (!$this->isError()) {
             $this->user->save();
@@ -156,5 +154,5 @@ class UserProfile extends \App\Pages\Base
         $sender->clean();
     }
 
-    
+
 }

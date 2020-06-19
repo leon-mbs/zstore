@@ -10,15 +10,15 @@ use Zippy\Html\Form\TextInput as TextInput;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
-    private $cntlogin=0;
-    
+    private $cntlogin = 0;
+
     public function __construct() {
         parent::__construct();
         global $_config;
-  
+
         $common = System::getOptions('common');
-  
-        
+
+
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userpassword'));
@@ -29,26 +29,26 @@ class UserLogin extends \Zippy\Html\WebPage
 
         $this->add($form);
         $this->setError('');
-        
-        
-        $curver =  'v4.4.0';
-        $this->_tvars['curversion']  = $curver ;
-        
+
+
+        $curver = 'v4.4.1';
+        $this->_tvars['curversion'] = $curver;
+
         //проверка  новой версии        
-        $this->_tvars['isnewversion']  = false;
-        
+        $this->_tvars['isnewversion'] = false;
+
         $v = @file_get_contents("https://zippy.com.ua/version.json");
-        $v = @json_decode($v,true)  ;
-        if(strlen( $v['version'])>0){
-           $c = (int) str_replace(".","",str_replace("v","",$curver )) ;
-           $n = (int)str_replace(".","",str_replace("v","",$v['version'] )) ;
-           if($n>$c) {
-              $this->_tvars['isnewversion'] = true;    
-           }
-            
-           $this->_tvars['newversion'] = $v['version'] ;    
+        $v = @json_decode($v, true);
+        if (strlen($v['version']) > 0) {
+            $c = (int)str_replace(".", "", str_replace("v", "", $curver));
+            $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
+            if ($n > $c) {
+                $this->_tvars['isnewversion'] = true;
+            }
+
+            $this->_tvars['newversion'] = $v['version'];
         }
-        
+
         $this->_tvars['capcha'] = $common['capcha'] == 1;
     }
 
@@ -58,14 +58,14 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->setError('');
         $login = $sender->userlogin->getText();
         $password = $sender->userpassword->getText();
-        $sender->userpassword->setText('') ;      
-        if($this->_tvars['capcha']==true){
+        $sender->userpassword->setText('');
+        if ($this->_tvars['capcha'] == true) {
             $entercode = $sender->capchacode->getText();
             $capchacode = $sender->capcha->getCode();
-            if(strlen($entercode)==0 || $entercode != $capchacode) {
-                $this->setError("invalidcapcha") ;
-                $this->counter() ;
-                
+            if (strlen($entercode) == 0 || $entercode != $capchacode) {
+                $this->setError("invalidcapcha");
+                $this->counter();
+
                 return;
             }
         }
@@ -104,8 +104,8 @@ class UserLogin extends \Zippy\Html\WebPage
             } else {
 
                 $this->setError('invalidlogin');
- 
-                $this->counter() ;
+
+                $this->counter();
             }
         }
 
@@ -130,30 +130,30 @@ class UserLogin extends \Zippy\Html\WebPage
 
         //  $this->_tvars['alerterror'] = ''; 
     }
-    
-    private function counter() {
-         $this->cntlogin++;
-         if($this->cntlogin==5){
-             $msg  = Helper::l("extralogin");  
-             $msg .= '<br>'.$this->loginform->userlogin->getText() .', ';
-             $msg .= $_SERVER['HTTP_HOST'] .' '. $_SERVER['SERVER_ADDR'];
-             $admin = \App\Entity\User::getByLogin('admin');
-             $n = new \App\Entity\Notify();
-             $n->user_id  = $admin->user_id;
 
-             $n->dateshow = time();
-             $n->message  = $msg;
-  
-             $n->save(); 
-             
-             $this->setError('invalidloginalert');
-             $this->loginform->setVisible(false);
-             if(strlen($admin->email)>0) {
-                Helper::sendLetter($msg,$admin->email,$admin->email,"Zippy Store alert") ;   
-             }
-             
-         }
-          
+    private function counter() {
+        $this->cntlogin++;
+        if ($this->cntlogin == 5) {
+            $msg = Helper::l("extralogin");
+            $msg .= '<br>' . $this->loginform->userlogin->getText() . ', ';
+            $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
+            $admin = \App\Entity\User::getByLogin('admin');
+            $n = new \App\Entity\Notify();
+            $n->user_id = $admin->user_id;
+
+            $n->dateshow = time();
+            $n->message = $msg;
+
+            $n->save();
+
+            $this->setError('invalidloginalert');
+            $this->loginform->setVisible(false);
+            if (strlen($admin->email) > 0) {
+                Helper::sendLetter($msg, $admin->email, $admin->email, "Zippy Store alert");
+            }
+
+        }
+
         //  $this->_tvars['alerterror'] = ''; 
     }
 

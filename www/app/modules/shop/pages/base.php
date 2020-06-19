@@ -18,16 +18,16 @@ class Base extends \Zippy\Html\WebPage
             $shop = array();
         }
         $user = System::getUser();
-        if($shop["uselogin"]==1) {
-           if($user->user_id==0) {
-             App::Redirect("\\App\\Modules\\Shop\\Pages\\Userlogin");
-             return;
-              
-           }
+        if ($shop["uselogin"] == 1) {
+            if ($user->user_id == 0) {
+                App::Redirect("\\App\\Modules\\Shop\\Pages\\Userlogin");
+                return;
+
+            }
         }
 
-        
-      //  $this->_tvars["islogined"] = $user->user_id > 0;
+
+        //  $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["currencyname"] = $shop["currencyname"];
         $this->_tvars["notcnt"] = false;
 
@@ -49,7 +49,7 @@ class Base extends \Zippy\Html\WebPage
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);
-        System::setSuccesMsg($msg);
+        System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg, $p1 = "", $p2 = "") {

@@ -14,7 +14,7 @@ class ServiceAct extends Document
 {
 
     public function generateReport() {
-        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
+        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
 
         $i = 1;
 
@@ -27,7 +27,7 @@ class ServiceAct extends Document
             );
         }
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "firm_name" => $firm['firm_name'],
@@ -43,12 +43,12 @@ class ServiceAct extends Document
             "total" => H::fa($this->amount)
         );
         if ($this->headerdata["contract_id"] > 0) {
-            $contract=\App\Entity\Contract::load($this->headerdata["contract_id"]);
-            $header['contract'] = $contract->contract_number ;
-            $header['createdon'] = H::fd($contract->createdon) ;
+            $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
+            $header['contract'] = $contract->contract_number;
+            $header['createdon'] = H::fd($contract->createdon);
         }
-        
-        
+
+
         $report = new \App\Report('doc/serviceact.tpl');
 
         $html = $report->generate($header);
@@ -86,13 +86,13 @@ class ServiceAct extends Document
     public function generatePosReport() {
 
         $printer = \App\System::getOptions('printer');
-        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
+        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
         $wp = 'style="width:40mm"';
         if (strlen($printer['pwidth']) > 0) {
             $wp = 'style="width:' . $printer['pwidth'] . 'mm"';
         }
 
-        $header = array('printw' => $wp, 'date' => H::fd( time()),
+        $header = array('printw' => $wp, 'date' => H::fd(time()),
             "document_number" => $this->document_number,
             "firm_name" => $firm['firm_name'],
             "shopname" => strlen($firm['shopname']) > 0 ? $firm['shopname'] : false,
@@ -104,7 +104,7 @@ class ServiceAct extends Document
             "total" => H::fa($this->amount)
         );
         if (strlen($this->headerdata['gar']) > 0) {
-            $header['gar'] = H::l('garant'). ': ' . $this->headerdata['gar'];
+            $header['gar'] = H::l('garant') . ': ' . $this->headerdata['gar'];
         }
         $detail = array();
         $i = 1;
@@ -120,7 +120,7 @@ class ServiceAct extends Document
         if (count($pays) > 0) {
             $header['plist'] = array();
             foreach ($pays as $pay) {
-                $header['plist'][] = array('pdate' => H::fd( $pay->paydate), 'ppay' => H::fa($pay->amount));
+                $header['plist'][] = array('pdate' => H::fd($pay->paydate), 'ppay' => H::fa($pay->amount));
             }
         }
         $header['ispay'] = count($pays) > 0;

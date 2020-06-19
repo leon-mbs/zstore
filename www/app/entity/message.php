@@ -12,12 +12,12 @@ namespace App\Entity;
 class Message extends \ZCL\DB\Entity
 {
 
-    const TYPE_DOC     = 1;
-    const TYPE_CUST    = 2;
-    const TYPE_EQ      = 3;
-    const TYPE_NOTE    = 4;
-    const TYPE_ISSUE   = 5;
-    const TYPE_PROJECT = 6;
+    const TYPE_DOC      = 1;
+    const TYPE_CUST     = 2;
+    const TYPE_EQ       = 3;
+    const TYPE_NOTE     = 4;
+    const TYPE_ISSUE    = 5;
+    const TYPE_PROJECT  = 6;
     const TYPE_CONTRACT = 7;
 
     protected function afterLoad() {
@@ -31,8 +31,8 @@ class Message extends \ZCL\DB\Entity
      * @param mixed $item_d
      * @param mixed $sort
      */
-    public static function getMessages($type, $item_id ) {
-        return \App\Entity\Message::find("item_type ={$type} and item_id={$item_id}", "message_id "  );
+    public static function getMessages($type, $item_id) {
+        return \App\Entity\Message::find("item_type ={$type} and item_id={$item_id}", "message_id ");
     }
 
     /**

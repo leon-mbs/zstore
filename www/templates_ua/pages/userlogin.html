@@ -42,9 +42,7 @@
     </div>
 </div>
 <div class="login-box">
-    <div class="login-logo">
-        <a href="/"><b> Zippy Склад</b> </a>
-    </div>
+
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
@@ -67,16 +65,16 @@
                         </div>
                     </div>
                 </div>
-               {{#capcha}}
+                {{#capcha}}
                 <div class="input-group mb-3">
-                    <input zippy="capchacode" required="required"  class="form-control mr-4"
-                           placeholder="Введiть код"  >
+                    <input zippy="capchacode" required="required" class="form-control mr-4"
+                           placeholder="Введiть код">
                     <div class="input-group-append">
-                         <img zippy="capcha" style="cursor:pointer" title="Оновити..."  />
+                        <img zippy="capcha" style="cursor:pointer" title="Оновити..."/>
                     </div>
                 </div>
                 {{/capcha}}
-                
+
                 <div class="row">
                     <div class="col-8">
                         <div class="icheck-primary">
@@ -93,15 +91,16 @@
                     <!-- /.col -->
                 </div>
             </form>
-                 {{#isnewversion}} 
-                  <div class="row">
-                    <div class="col-12">
-                    <span> Доступна нова версiя </span>  <span class="badge badge-info"> {{newversion}} </span> <a href="https://zippy.com.ua/zstore#newver">Перейти...</a> 
-                    
-                    </div>
-                  </div>
-                  {{/isnewversion}}         
- 
+            {{#isnewversion}}
+            <div class="row">
+                <div class="col-12">
+                    <span> Доступна нова версiя </span> <span class="badge badge-info"> {{newversion}} </span> <a
+                        href="https://zippy.com.ua/zstore#newver">Перейти...</a>
+
+                </div>
+            </div>
+            {{/isnewversion}}
+
         </div>
         <!-- /.login-card-body -->
     </div>
@@ -109,7 +108,7 @@
 <div class="row justify-content-center">
     <div class="w-100"></div>
     <div class="col-12 " style="margin-top:200px;">
-       {{curversion}} © <a href="http://zippy.com.ua/">zippy.com.ua</a>
+        {{curversion}} © <a href="http://zippy.com.ua/">zippy.com.ua</a>
     </div>
 </div>
 

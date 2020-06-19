@@ -35,13 +35,13 @@ class System
     public static function setUser(User $user) {
         Session::getSession()->user = $user;
     }
-   
+
     public static function getBranch() {
- 
+
         return Session::getSession()->branch_id;
     }
 
-     
+
     public static function setBranch(int $branch_id) {
         Session::getSession()->branch_id = $branch_id;
     }
@@ -116,7 +116,7 @@ class System
         return null;
     }
 
-    public static function setSuccesMsg($msg) {
+    public static function setSuccessMsg($msg) {
         Session::getSession()->smsg = $msg;
     }
 

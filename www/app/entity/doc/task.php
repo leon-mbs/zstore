@@ -24,7 +24,7 @@ class Task extends Document
 
             $detail[] = array("no" => $i++,
                 "service_name" => $ser->service_name,
-                "price" => H::fa($ser->price),
+                "cost" => H::fa($ser->cost),
                 "hours" => $ser->hours
             );
         }
@@ -45,9 +45,9 @@ class Task extends Document
             );
         }
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "pareaname" => strlen($this->headerdata["pareaname"]) > 0 ? $this->headerdata["pareaname"] : false,
-            "document_date" => H::fd( $this->document_date),
+            "document_date" => H::fd($this->document_date),
             "document_number" => $this->document_number,
             "notes" => $this->notes,
             "baseddoc" => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
@@ -85,6 +85,8 @@ class Task extends Document
     public function getRelationBased() {
         $list = array();
         $list['ProdIssue'] = self::getDesc('ProdIssue');
+        $list['ProdReceipt'] = self::getDesc('ProdReceipt');
+        $list['ServiceAct'] = self::getDesc('ServiceAct');
 
         return $list;
     }

@@ -38,6 +38,7 @@ class ServiceList extends \App\Pages\Base
         $this->add(new Form('servicedetail'))->setVisible(false);
         $this->servicedetail->add(new TextInput('editservice_name'));
         $this->servicedetail->add(new TextInput('editprice'));
+        $this->servicedetail->add(new TextInput('editcost'));
         $this->servicedetail->add(new TextInput('edithours'));
         $this->servicedetail->add(new CheckBox('editdisabled'));
 
@@ -50,6 +51,7 @@ class ServiceList extends \App\Pages\Base
 
         $row->add(new Label('service_name', $item->service_name));
         $row->add(new Label('price', $item->price));
+        $row->add(new Label('cost', $item->cost));
         $row->add(new Label('hours', $item->hours));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -76,6 +78,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->setVisible(true);
         $this->servicedetail->editservice_name->setText($this->_service->service_name);
         $this->servicedetail->editprice->setText($this->_service->price);
+        $this->servicedetail->editcost->setText($this->_service->cost);
         $this->servicedetail->edithours->setText($this->_service->hours);
         $this->servicedetail->editdisabled->setChecked($this->_service->disabled);
     }
@@ -96,6 +99,7 @@ class ServiceList extends \App\Pages\Base
 
         $this->_service->service_name = $this->servicedetail->editservice_name->getText();
         $this->_service->price = $this->servicedetail->editprice->getText();
+        $this->_service->cost = $this->servicedetail->editcost->getText();
         $this->_service->hours = $this->servicedetail->edithours->getText();
         if ($this->_service->service_name == '') {
             $this->setError("entername");

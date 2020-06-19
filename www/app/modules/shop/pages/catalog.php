@@ -93,13 +93,13 @@ class Catalog extends Base
         $row->add(new Label("sprice", $item->price));
         $row->add(new TextInput('srated'))->setText($item->rating);
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
-        
-        $op = \App\System::getOptions("shop");        
-        
+
+        $op = \App\System::getOptions("shop");
+
         if ($item->getQuantity($op['defstore']) > 0) {
-            $row->sbuy->setValue( \App\Helper::l('tobay') );
+            $row->sbuy->setValue(\App\Helper::l('tobay'));
         } else {
-            $row->sbuy->setValue(\App\Helper::l('toorder') );
+            $row->sbuy->setValue(\App\Helper::l('toorder'));
         }
         $row->add(new Label('arrowup'))->setVisible($item->chprice == 'up');
         $row->add(new Label('arrowdown'))->setVisible($item->chprice == 'down');

@@ -44,7 +44,7 @@ class GIList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленые', 4 => 'Неоплаченные', 3 => 'Все'), 0));
-        $this->filter->add(new DropDownChoice('searchcomp',Firm::findArray('firm_name','disabled<>1','firm_name'),0));
+        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
@@ -112,7 +112,7 @@ class GIList extends \App\Pages\Base
 
         if ($sender->id == "bsend") {
             $dec = $this->statuspan->statusform->ship_number->getText();
-            $this->_doc->headerdata['sentdate'] = H::fd( time());
+            $this->_doc->headerdata['sentdate'] = H::fd(time());
             if (strlen($dec) > 0) {
                 $this->_doc->headerdata['ship_number'] = $dec;
             }
@@ -267,7 +267,7 @@ class GIList extends \App\Pages\Base
         $csv = "";
 
         foreach ($list as $d) {
-            $csv .= H::fd( $d->document_date) . ';';
+            $csv .= H::fd($d->document_date) . ';';
             $csv .= $d->document_number . ';';
             $csv .= $d->headerdata['order'] . ';';
             $csv .= $d->customer_name . ';';
@@ -325,7 +325,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         }
         $comp = $this->page->filter->searchcomp->getValue();
         if ($comp > 0) {
-            $where = $where . " and firm_id = ". $comp;
+            $where = $where . " and firm_id = " . $comp;
         }
 
 

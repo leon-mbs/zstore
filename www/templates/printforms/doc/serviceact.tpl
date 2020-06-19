@@ -15,10 +15,10 @@
 
     </tr>
     {{/isfirm}}
-   {{#iscontract}}
+    {{#iscontract}}
     <tr>
         <td colspan="4">
-            Договор: {{contract}}  от {{createdon}}
+            Договор: {{contract}} от {{createdon}}
         </td>
 
     </tr>
@@ -33,7 +33,8 @@
     {{/isdevice}}
     <tr style="font-weight: bolder;">
         <td colspan="4" align="center">
-            Акт выполненых работ № {{document_number}} от {{date}}       </td>
+            Акт выполненых работ № {{document_number}} от {{date}}
+        </td>
     </tr>
 
 </table>
@@ -59,7 +60,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
         <td colspan="3" style="border-top: 1px solid black;" align="right">Всего:</td>
-        <td style="border-top: 1px solid black;" align="right">{{total}} </td>
+        <td style="border-top: 1px solid black;" align="right">{{total}}</td>
     </tr>
     <tr style="font-weight: bolder;">
         <td colspan="3" align="right">К оплате:</td>

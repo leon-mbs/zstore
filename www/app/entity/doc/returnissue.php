@@ -25,7 +25,7 @@ class ReturnIssue extends Document
             } else {
                 $name = $item->itemname;
                 if (strlen($item->snumber) > 0) {
-                    $name .= ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
+                    $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
                 }
 
                 $detail[] = array("no" => $i++,
@@ -39,7 +39,7 @@ class ReturnIssue extends Document
         }
 
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "firm_name" => $this->headerdata["firm_name"],
             "customer_name" => $this->customer_name,

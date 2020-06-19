@@ -150,19 +150,19 @@ class ItemList extends \App\Pages\Base
             $plist[] = H::fa($item->price5);
         }
         $row->add(new Label('price', implode(', ', $plist)));
-        $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0)   ;
+        $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0);
         $row->hasnotes->setAttribute('title', htmlspecialchars_decode($item->description));
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-       
-        
+
+
         $row->add(new Label('cell', $item->cell));
-        $row->add(new Label('inprice' ))->setVisible($item->pricelist);
-        $row->add(new Label('inseria' ))->setVisible($item->useserial);
+        $row->add(new Label('inprice'))->setVisible($item->pricelist);
+        $row->add(new Label('inseria'))->setVisible($item->useserial);
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        
+
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
@@ -226,12 +226,12 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editdelimage->setVisible(false);
             $this->itemdetail->editimage->setVisible(false);
         }
-        
+
         $this->itemtable->itemlist->setSelectedRow($sender->getOwner());
         $this->itemtable->itemlist->Reload(false);
-        
-        
-        $this->updateman() ;
+
+
+        $this->updateman();
     }
 
     public function addOnClick($sender) {
@@ -248,7 +248,7 @@ class ItemList extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
-        $this->updateman() ;        
+        $this->updateman();
     }
 
     public function cancelOnClick($sender) {
@@ -473,15 +473,15 @@ class ItemList extends \App\Pages\Base
         $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
     }
 
-    public  function updateman(){
+    public function updateman() {
         $this->_tvars['manlist'] = array();
-        
-        foreach(Item::getManufacturers() as  $man){
-           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
+
+        foreach (Item::getManufacturers() as $man) {
+            $this->_tvars['manlist'][] = array('mitem' => $man);
         }
-         
-    }    
-    
+
+    }
+
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
@@ -538,6 +538,5 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         return Item::load($id);
     }
 
-    
-   
+
 }

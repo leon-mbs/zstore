@@ -34,7 +34,7 @@ class ContractList extends \App\Pages\Base
         $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
-        $this->filter->add(new DropDownChoice('searchcomp',Firm::findArray('firm_name','disabled<>1','firm_name'),0));
+        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
         $this->add(new Panel('contracttable'))->setVisible(true);
         $this->contracttable->add(new DataView('contractlist', new ContractDataSource($this), $this, 'contractlistOnRow'))->Reload();
@@ -43,14 +43,14 @@ class ContractList extends \App\Pages\Base
         $this->contracttable->add(new \Zippy\Html\DataList\Paginator('pag', $this->contracttable->contractlist));
 
         $this->add(new Form('contractdetail'))->setVisible(false);
-        $this->contractdetail->add(new Date('editcreatedon',time()));
+        $this->contractdetail->add(new Date('editcreatedon', time()));
         $this->contractdetail->add(new TextInput('editshortdesc'));
         $this->contractdetail->add(new TextInput('editcontract_number'));
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
-        $this->contractdetail->add(new DropDownChoice('editcomp',Firm::findArray('firm_name','disabled<>1','firm_name'),0));
-        $this->contractdetail->add(new DropDownChoice('editpay',Contract::PayList() ,0));
+        $this->contractdetail->add(new DropDownChoice('editcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+        $this->contractdetail->add(new DropDownChoice('editpay', Contract::PayList(), 0));
         $this->contractdetail->add(new \Zippy\Html\Form\File('scan'));
-    
+
         $this->contractdetail->add(new CheckBox('editdisabled'));
 
         $this->contractdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -66,14 +66,14 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label('customer', $item->customer_name));
         $row->add(new Label('firm', $item->firm_name));
         $row->add(new Label('payname', $item->payname));
-       
+
         $row->add(new \Zippy\Html\Link\BookmarkableLink('scanlink'))->setVisible(false);
-        if($item->file_id>0) {
+        if ($item->file_id > 0) {
             $row->scanlink->setVisible(true);
             $row->scanlink->setLink(_BASEURL . 'loadfile.php?id=' . $item->file_id);
-            
+
         }
-        
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -105,7 +105,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
         $this->contractdetail->editcomp->setValue($this->_contract->firm_id);
         $this->contractdetail->editpay->setValue($this->_contract->pay);
-        
+
     }
 
     public function addOnClick($sender) {
@@ -122,7 +122,7 @@ class ContractList extends \App\Pages\Base
         if (false == \App\ACL::checkEditRef('ContractList')) {
             return;
         }
-         
+
         $this->_contract->contract_number = $this->contractdetail->editcontract_number->getText();
         if ($this->_contract->contract_number == '') {
             $this->setError("notnumber");
@@ -133,23 +133,23 @@ class ContractList extends \App\Pages\Base
             $this->setError("noselcust");
             return;
         }
-        
-        $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();        
-        $this->_contract->shortdesc = $this->contractdetail->editshortdesc->getText();        
+
+        $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();
+        $this->_contract->shortdesc = $this->contractdetail->editshortdesc->getText();
         $this->_contract->firm_id = $this->contractdetail->editcomp->getValue();
         $this->_contract->pay = $this->contractdetail->editpay->getValue();
         $this->_contract->payname = $this->contractdetail->editpay->getValueName();
         $this->_contract->disabled = $this->contractdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_contract->save();
-        
+
         $file = $this->contractdetail->scan->getFile();
         if ($file['size'] > 0) {
             $this->_contract->file_id = H::addFile($file, $this->_contract->contract_id, 'Скан ', \App\Entity\Message::TYPE_CONTRACT);
             $this->_contract->save();
         }
-          
-        
+
+
         $this->contractdetail->setVisible(false);
         $this->contracttable->setVisible(true);
         $this->contracttable->contractlist->Reload(false);
@@ -163,7 +163,7 @@ class ContractList extends \App\Pages\Base
     public function OnFilter($sender) {
         $this->contracttable->contractlist->Reload();
     }
-    
+
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
@@ -190,12 +190,12 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
 
 
         if ($cust > 0) {
-            $where = $where . " and customer_id = ". $cust;
+            $where = $where . " and customer_id = " . $cust;
         }
 
         $comp = $form->searchcomp->getValue();
         if ($comp > 0) {
-            $where = $where . " and firm_id = ". $comp;
+            $where = $where . " and firm_id = " . $comp;
         }
 
         if ($showdis > 0) {

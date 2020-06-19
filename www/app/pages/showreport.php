@@ -8,7 +8,10 @@ class ShowReport extends \Zippy\Html\WebPage
 
     public function __construct($type, $filename) {
 
-
+        $user = \App\System::getUser();
+        if ($user->user_id == 0) {
+            die;
+        }
         $html = \App\Session::getSession()->printform;
 
         if ($type == "preview") {

@@ -26,7 +26,7 @@
             <tr zippy="userrow">
                 <td zippy="userlogin"></td>
                 <td zippy="rolename"></td>
-                 <td zippy="created" align="center" style="white-space:nowrap"></td>
+                <td zippy="created" align="center" style="white-space:nowrap"></td>
 
                 <td zippy="email"></td>
 
@@ -53,20 +53,20 @@
                 <input style="width:200px" class="form-control" zippy="editpass">
                 <span style="font-size:12px">Якщо не змінюється пароль існуючого користувача, залиште порожнім</span>
             </div>
-                    <div class="form-group">
-                        <label for="editrole">Роль</label>
-                        <select    class="form-control" zippy="editrole"  >
-                          <option value='0'>Не вказана</option>
-                        </select>  
-                    </div>
-            
+            <div class="form-group">
+                <label for="editrole">Роль</label>
+                <select class="form-control" zippy="editrole">
+                    <option value='0'>Не вказана</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="editemail">Email</label>
                 <input style="width:200px" class="form-control" zippy="editemail">
             </div>
 
-          {{#usebranch}}
- 
+            {{#usebranch}}
+
 
             <div class="form-group">
                 <label for="acl">Налаштування доступу до філій</label>
@@ -79,22 +79,21 @@
                 </table>
             </div>
             {{/usebranch}}
-              <div class="form-group">
+            <div class="form-group">
                 <div class="form-check   ">
 
                     <input class="form-check-input" type="checkbox" zippy="editonlymy">
                     <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ лише до власних документів</label>
-                </div>            
-                </div>            
-              <div class="form-group">
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="form-check   ">
                     <input class="form-check-input" type="checkbox" zippy="editdisabled">
                     <label class="form-check-label mr-sm-2 text-danger" for="editdisabled"> Деактивовано</label>
                 </div>
-            </div>            
- 
+            </div>
 
- 
+
             <div class="form-group">
 
                 <button type="submit" class="btn btn-primary   ">Зберегти</button>

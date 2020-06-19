@@ -9,17 +9,18 @@
 <div class="row">
 
     <div class="col-12 col-md-12 col-xl-10" zippy="itemtable">
-        <h3>Справочник товаров 
-		 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-				data-html="true" data-placement="bottom" data-content="Журнал для перечня товаров, с возможностью создания новых единиц их редактирование, удаление и поиском.
+        <h3>Справочник товаров
+            <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
+               data-toggle="popover"
+               data-html="true" data-placement="bottom" data-content="Журнал для перечня товаров, с возможностью создания новых единиц их редактирование, удаление и поиском.
 				<br> <br> В списке отображаются активные товары. Для отображения товаров со статусом <b> 'Больше не используется' </b>нужно установить галочку<b> ' Все ' </b>рядом с кнопкой<b> 'ОК '</b>"></i>
-		</h3>
+        </h3>
         <div class="navbar nav">
 
             <form zippy="filter" class="form-inline">
 
                 <label for="searchkey">Поиск</label>
-                <input class="form-control mr-sm-2" type="text" zippy="searchkey"  onkeydown="onSearch()" >
+                <input class="form-control mr-sm-2" type="text" zippy="searchkey" onkeydown="onSearch()">
                 <label for="searchcat">категория</label>
 
                 <select class="form-control mr-sm-2" zippy="searchcat">
@@ -36,7 +37,7 @@
             </form>
         </div>
         <a zippy="addnew" class="btn btn-primary  ">Добавить</a>
-        <table class="table table-bordered  table-sm  ">
+        <table class="table table-hover  table-sm  ">
             <tr>
                 {{#useimages}}
                 <th></th>
@@ -50,10 +51,11 @@
 
                 <th class="text-right">Отп. цена</th>
                 <th>Ячейка</th>
-                <th><i title="В прайсе" class="fa fa-list-alt"></i> </th>
-               {{#usesnumber}}     <th><i title="Учет серий производителя" class="fa fa-calendar-check"></i> </th> {{/usesnumber}}  
-                <th> </th>
-           
+                <th><i title="В прайсе" class="fa fa-list-alt"></i></th>
+                {{#usesnumber}}
+                <th><i title="Учет серий производителя" class="fa fa-calendar-check"></i></th>
+                {{/usesnumber}}
+                <th></th>
 
 
                 <th style="width:150px"></th>
@@ -76,10 +78,13 @@
 
                 <td zippy="price" class="text-right"></td>
                 <td zippy="cell"></td>
-              
-                <td><i zippy="inprice" class="fa fa-check"><i/></td>                
-              {{#usesnumber}}   <td><i zippy="inseria" class="fa fa-check"><i/></td>         {{/usesnumber}}             
-                <td><i zippy="hasnotes" class="far fa-sticky-note"   data-toggle="tooltip" data-placement="left" data-html="true"></i></td>
+
+                <td><i zippy="inprice" class="fa fa-check"><i/></td>
+                {{#usesnumber}}
+                <td><i zippy="inseria" class="fa fa-check"><i/></td>
+                {{/usesnumber}}
+                <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"
+                       data-html="true"></i></td>
 
 
                 <td aling="center">
@@ -133,8 +138,9 @@
                 <label class="col-5 col-form-label" for="editcode">Код товара (артикул)</label>
                 <div class="col-7">
                     <input class="form-control" zippy="editcode"/>
-                    <small class="form-text text-muted">  Код товара должен  быть  уникальным. 
-                    Если  используется  код  производителя, следует  добавить  бренд  к  коду  например  k123_имябренда</small>                    
+                    <small class="form-text text-muted"> Код товара должен быть уникальным.
+                        Если используется код производителя, следует добавить бренд к коду например
+                        k123_имябренда</small>
                 </div>
             </div>
 
@@ -154,7 +160,8 @@
                 <label class="col-5 col-form-label" for="editminqty">Мин. количество</label>
                 <div class="col-7">
                     <input pattern="[0-9\.]+" style="width: 100px;" class="form-control" zippy="editminqty"/>
-                    <small>Если задано то при уменьшении количества на складе меньше заданного
+                    <small class="form-text text-muted">Если задано то при уменьшении количества на складе меньше
+                        заданного
                         товар появится в соответствующем виджете на главной странице</small>
                 </div>
             </div>
@@ -174,22 +181,23 @@
             <div class="form-group row">
                 <label class="col-5 col-form-label" for="editmanufacturer">Бренд, производитель (страна) </label>
                 <div class="col-7">
-                    <input  list="manlist" class="form-control" zippy="editmanufacturer"/>
-                     <datalist id="manlist">
-                            {{#manlist}}
-                            <option label='{{mitem}}' value='{{mitem}}'>
-                           {{/manlist}}  
-                          
-                    </datalist>                 </div>
+                    <input list="manlist" class="form-control" zippy="editmanufacturer"/>
+                    <datalist id="manlist">
+                        {{#manlist}}
+                        <option label='{{mitem}}' value='{{mitem}}'>
+                            {{/manlist}}
+
+                    </datalist>
+                </div>
             </div>
-              {{#usesnumber}}
+            {{#usesnumber}}
             <div class="form-check">
                 <input zippy="edituseserial" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="edituseserial">Учет партий производителя</label>
             </div>
 
 
-            {{/usesnumber}}        
+            {{/usesnumber}}
             <div class="form-check">
                 <input zippy="editpricelist" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="editpricelist">Показывать в прайсе</label>
@@ -295,13 +303,13 @@
 
     });
 
-       function onSearch(ele) {
+    function onSearch(ele) {
 
-                if (event.key === 'Enter' || event.keyCode == 13) {
-                    // alert($('#barcode').val()); 
-                    $('#filter').Submit() ;
-                }
+        if (event.key === 'Enter' || event.keyCode == 13) {
+            // alert($('#barcode').val());
+            $('#filter').Submit();
         }
+    }
 </script>
 
 </body>
