@@ -706,6 +706,14 @@ class Document extends \ZCL\DB\Entity
      *
      */
     public function sendEmail() {
+        global $_config;
+
+        if($doc->customer_id==0){
+            return;
+        }
+        
+        $customer = \App\Entity\Customer::load($doc->customer_id);
+        
         $doc = $this->cast();
     
         $filename = strtolower($doc->meta_name).".pdf";
@@ -718,22 +726,25 @@ class Document extends \ZCL\DB\Entity
    
         $data = $dompdf->output();       
        
-        $f = tempnam(sys_get_temp_dir(),"email")  ;
+        $f = tempnam(sys_get_temp_dir(),"eml")  ;
         file_put_contents($f,$data) ;
         
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->Port = 587;
-        $mail->Username = 'leon.mbs@gmail.com';
-        $mail->Password = 'leon123qwe*';        
+        $mail->Host = $_config['smtp']['host'];
+        $mail->Port = $_config['smtp']['port'];
+        $mail->Username = $_config['smtp']['user'];
+        $mail->Password = $_config['smtp']['password'];        
         $mail->SMTPAuth = true;
-        $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        if($_config['smtp']['tls']=='true'){
+           $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;    
+        } 
         
-        $mail->setFrom('leon.mbs@gmail.com','ZStore');
-        $mail->addAddress('softman@ukr.net');
-        $mail->Subject = "test";
-        $mail->msgHTML("Hi");
+        
+        $mail->setFrom($_config['smtp']['user'],$_config['smtp']['username']);
+        $mail->addAddress($customer->email);
+        $mail->Subject = $doc->getEmailSubject();
+        $mail->msgHTML($doc->getEmailBody());
         $mail->CharSet = "UTF-8";
         $mail->IsHTML(true);
         $mail->AddAttachment($f, $filename, 'base64', 'application/pdf'); 
@@ -747,5 +758,18 @@ class Document extends \ZCL\DB\Entity
        
     }
     
-    
+    /**
+    * возвращает  заполненый  шаблон  письма
+    * 
+    */
+    protected  function getEmailBody(){
+        return  "";
+    }
+   /**
+    * возвращает  тему письма
+    * 
+    */
+    protected  function getEmailSubject(){
+        return  "";
+    }
 }

@@ -1,9 +1,17 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
-
+     {{#islogo}}
+    <tr>
+     
+        <td colspan="9"> 
+        <img  style="height:100px;" src='{{logo}}' />
+        </td>
+     
+    </tr>
+     {{/islogo}}
     <tr>
         <td></td>
-        <td>Замовник</td>
+        <td>Покупець</td>
         <td colspan="7">{{customer_name}}</td>
     </tr>
     <tr>
@@ -34,6 +42,15 @@
 
     </tr>
     {{/iscontract}} 
+  {{#isbank}}
+    <tr>
+        
+        <td></td>
+        <td  > р/р </td>
+        <td colspan="7">{{bankacc}}  в {{bank}}</td>
+
+    </tr>
+    {{/isbank}}      
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
             Рахунок-фактура № {{document_number}} від {{date}}
@@ -83,7 +100,23 @@
     </tr>
     <tr>
         <td colspan="7">На суму <b>{{totalstr}}<b></td>
+           
+ <tr>
+        <td colspan="5">
+        {{#isstamp}}
+        <img  style="height:100px;" src='{{stamp}}' />
+        {{/isstamp}}
+        
+        
+         </td>
+       <td colspan="4">
+        {{#issign}}
+        <img  style="height:100px;" src='{{sign}}' />
+        {{/issign}}
+        
+        
+         </td>
 
-    </tr>
+    </tr>           
 </table>
 

@@ -14,7 +14,7 @@ class Invoice extends \App\Entity\Doc\Document
     public function generateReport() {
 
         $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
-
+    
 
         $i = 1;
         $detail = array();
@@ -41,15 +41,18 @@ class Invoice extends \App\Entity\Doc\Document
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "firm_name" => $firm['firm_name'],
-            "logo" => $firm['logo'],
+            "logo" => _BASEURL.$firm['logo'],
             "islogo" => strlen($firm['logo'])>0,
-            "stamp" => $firm['stamp'],
+            "stamp" => _BASEURL.$firm['stamp'],
             "isstamp" => strlen($firm['stamp'])>0,
-            "sign" => $firm['sign'],
+            "sign" => _BASEURL.$firm['sign'],
             "issign" => strlen($firm['sign'])>0,
             "isfirm" => strlen($firm["firm_name"]) > 0,
             "iscontract" => $this->headerdata["contract_id"] > 0,
             "phone" => $this->headerdata["phone"],
+            "bank" => $firm["bank"],
+            "bankacc" => $firm["bankacc"],
+            "isbank" => (strlen($firm["bankacc"])>0 && strlen($firm["bank"])>0),
             "email" => $this->headerdata["email"],
             "notes" => $this->notes,
             "document_number" => $this->document_number,
@@ -103,4 +106,13 @@ class Invoice extends \App\Entity\Doc\Document
         return $list;
     }
 
+ 
+    protected  function getEmailBody(){
+        return  "";
+    }
+ 
+    protected  function getEmailSubject(){
+        return  H::l('emailinvsub',$this->document_number);
+    }    
+    
 }
