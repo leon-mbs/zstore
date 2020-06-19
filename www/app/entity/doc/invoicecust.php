@@ -12,7 +12,7 @@ class InvoiceCust extends Document
 {
 
     public function generateReport() {
-        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
+        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
 
         $i = 1;
 
@@ -28,21 +28,21 @@ class InvoiceCust extends Document
             );
         }
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "firm_name" => $firm['firm_name'],
-             "isfirm" => strlen($firm["firm_name"]) > 0,
+            "isfirm" => strlen($firm["firm_name"]) > 0,
             "iscontract" => $this->headerdata["contract_id"] > 0,
-           "total" => H::fa($this->amount),
+            "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),
             "payamount" => H::fa($this->payamount)
         );
         if ($this->headerdata["contract_id"] > 0) {
-            $contract=\App\Entity\Contract::load($this->headerdata["contract_id"]);
-            $header['contract'] = $contract->contract_number ;
-            $header['createdon'] = H::fd($contract->createdon) ;
+            $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
+            $header['contract'] = $contract->contract_number;
+            $header['createdon'] = H::fd($contract->createdon);
         }
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;

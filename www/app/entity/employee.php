@@ -29,7 +29,7 @@ class Employee extends \ZCL\DB\Entity
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<phone>{$this->phone}</phone>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
- 
+
         $this->detail .= "</detail>";
 
         return true;

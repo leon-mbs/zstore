@@ -45,8 +45,8 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this,'OnCustomerFirm'  );
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false); ; 
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this, 'OnCustomerFirm');
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
         $this->docform->add(new TextArea('notes'));
 
@@ -130,7 +130,7 @@ class Invoice extends \App\Pages\Base
 
             $this->OnChangeCustomer($this->docform->customer);
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
-            
+
         } else {
             $this->_doc = Document::create('Invoice');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -314,9 +314,6 @@ class Invoice extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
-        if($this->_doc->headerdata['firm_id']>0){
-           $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();    
-        }
 
 
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
@@ -586,19 +583,19 @@ class Invoice extends \App\Pages\Base
     }
 
     public function OnCustomerFirm($sender) {
-        $c=$this->docform->customer->getKey();
-        $f=$this->docform->firm->getValue(); 
-    
-        $ar = \App\Entity\Contract::getList($c,$f) ;
-        
+        $c = $this->docform->customer->getKey();
+        $f = $this->docform->firm->getValue();
+
+        $ar = \App\Entity\Contract::getList($c, $f);
+
         $this->docform->contract->setOptionList($ar);
-        if(count($ar)>0){
-           $this->docform->contract->setVisible(true);    
-        }  else {
-           $this->docform->contract->setVisible(false);
-           $this->docform->contract->setValue(0);
+        if (count($ar) > 0) {
+            $this->docform->contract->setVisible(true);
+        } else {
+            $this->docform->contract->setVisible(false);
+            $this->docform->contract->setValue(0);
         }
-   
+
     }
-    
+
 }

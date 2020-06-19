@@ -27,7 +27,7 @@ class Income extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 =>H::l('repbysellers')  , 3 => H::l('repbydates'), 1));
+        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates'), 1));
 
 
         $this->add(new Panel('detail'))->setVisible(false);
@@ -138,15 +138,15 @@ class Income extends \App\Pages\Base
             $detail[] = array(
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
-                "dt" => date\App\Helper::fd( strtotime($row['dt'])),
+                "dt" => date\App\Helper::fd(strtotime($row['dt'])),
                 "qty" => H::fqty($row['qty']),
                 "summa" => H::fa($row['summa'])
             );
         }
 
-        $header = array('datefrom' => \App\Helper::fd( $from),
+        $header = array('datefrom' => \App\Helper::fd($from),
             "_detail" => $detail,
-            'dateto' => \App\Helper::fd( $to)
+            'dateto' => \App\Helper::fd($to)
         );
         if ($type == 1) {
             $header['_type1'] = true;

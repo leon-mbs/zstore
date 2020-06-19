@@ -45,7 +45,7 @@ class Stock extends \ZCL\DB\Entity
         $list = array();
         foreach ($entitylist as $key => $value) {
             if (strlen($value->snumber) > 0) {
-                $value->itemname .= ' (' . $value->snumber . ',' . \App\Helper::fd( $value->sdate) . ')';
+                $value->itemname .= ' (' . $value->snumber . ',' . \App\Helper::fd($value->sdate) . ')';
             }
 
             if ($partiontype == "1") { //отдельно  по входным  ценам
@@ -92,9 +92,9 @@ class Stock extends \ZCL\DB\Entity
             $stock->item_id = $item_id;
             $stock->partion = $price;
             $stock->snumber = $snumber;
-            $stock->sdate =  $sdate;
- 
-            \App\Helper::log(serialize($stock)) ;
+            $stock->sdate = $sdate;
+
+            \App\Helper::log(serialize($stock));
             $stock->save();
         }
         if ($partiontype == '1') {    //учет  по  последней цене
@@ -167,8 +167,8 @@ class Stock extends \ZCL\DB\Entity
                     $last->item_id = $item->item_id;
                     $last->partion = $item->price;
                     $last->snumber = $item->snumber;
-                    $last->sdate   = $item->sdate; 
-                    
+                    $last->sdate = $item->sdate;
+
 
                 } else {
                     $last->partion = $item->price;

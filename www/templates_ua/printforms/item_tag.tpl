@@ -1,7 +1,7 @@
 <div style="border: 1px solid solid #ccc;;">
-    <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}} >
+    <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
         <tr>
-            <td colspan="2" style="">  {{name}}</td>
+            <td colspan="2" style=""> {{name}}</td>
         </tr>
         <tr>
             <td><b> {{article}}</b></td>

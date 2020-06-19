@@ -1,4 +1,4 @@
-<table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}} >
+<table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
@@ -21,7 +21,7 @@
     {{/shopname}}
     <tr>
 
-        <td colspan="3">  {{address}}</td>
+        <td colspan="3"> {{address}}</td>
     </tr>
     <tr>
         <td colspan="3"> {{phone}}</td>

@@ -20,7 +20,7 @@ use Zippy\Html\Label;
 class Export extends \App\Pages\Base
 {
     public $_docs = array();
-    
+
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowSer('Export')) {
@@ -29,7 +29,7 @@ class Export extends \App\Pages\Base
 
         $form = $this->add(new Form("iform"));
 
-        $form->add(new DropDownChoice("itype", array( ), 0))->onChange($this, "onType");
+        $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
         $form->add(new DropDownChoice("encode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new DropDownChoice("price", Item::getPriceTypeList()));
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
@@ -41,15 +41,15 @@ class Export extends \App\Pages\Base
 
         $form = $this->add(new Form("cform"));
 
-        $form->add(new DropDownChoice("ctype", array(  ), 0));
+        $form->add(new DropDownChoice("ctype", array(), 0));
         $form->add(new DropDownChoice("cencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new TextInput("csep", ';'));
 
         $form->onSubmit($this, "onCExport");
 
         $form = $this->add(new Form("dform"));
-        
-        $form->add(new DropDownChoice("dtype", array( 'GoodsReceipt'=>Document::getDesc('GoodsReceipt'),'GoodsIssue'=>Document::getDesc('GoodsIssue')), 'GoodsReceipt'));
+
+        $form->add(new DropDownChoice("dtype", array('GoodsReceipt' => Document::getDesc('GoodsReceipt'), 'GoodsIssue' => Document::getDesc('GoodsIssue')), 'GoodsReceipt'));
         $form->add(new DropDownChoice("dencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new TextInput("dsep", ';'));
         $form->add(new Date('dfrom', time() - (7 * 24 * 3600)));
@@ -167,28 +167,29 @@ class Export extends \App\Pages\Base
 
     }
 
-    
+
     public function onDPreview($sender) {
-        $dt = $sender->dtype->getValue() ;
- 
+        $dt = $sender->dtype->getValue();
+
         $conn = \ZDB\DB::getConnect();
-        
-        $sql = "meta_name='{$dt}' and date(document_date) >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  date(document_date) <= " . $conn->DBDate($sender->dto->getDate())    ;
+
+        $sql = "meta_name='{$dt}' and date(document_date) >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  date(document_date) <= " . $conn->DBDate($sender->dto->getDate());
         $this->_docs = Document::find($sql);
         $this->dformlist->doclist->Reload();
 
     }
+
     public function expDRow($row) {
         $doc = $row->getDataItem();
         $row->add(new CheckBox('dch', new Prop($doc, 'ch')));
         $row->add(new Label('dnumber', $doc->document_number));
-        $row->add(new Label('ddate', \App\Helper::fd( $doc->document_date)));
-        $row->add(new Label('damount',  \App\Helper::fa($doc->amount)));
+        $row->add(new Label('ddate', \App\Helper::fd($doc->document_date)));
+        $row->add(new Label('damount', \App\Helper::fa($doc->amount)));
         $row->add(new Label('dcustomer', $doc->customer_name));
-        
-    } 
-    
-   public function onDExport($sender) {
+
+    }
+
+    public function onDExport($sender) {
         $encode = $this->dform->dencode->getValue();
 
         $sep = $this->dform->dsep->getText();
@@ -197,43 +198,43 @@ class Export extends \App\Pages\Base
             $this->setError('noselencode');
             return;
         }
-        $csv="";
-        
+        $csv = "";
+
         foreach ($this->_docs as $doc) {
             if ($doc->ch == false) {
                 continue;
             }
-            
-            $csv .=   $doc->document_number . $sep;
-            $csv .=   H::fd($doc->document_date) . $sep;
-            $csv .=   $doc->customer_name . $sep;
+
+            $csv .= $doc->document_number . $sep;
+            $csv .= H::fd($doc->document_date) . $sep;
+            $csv .= $doc->customer_name . $sep;
             $csv .= "\n";
-            $n=1;
-            
-            foreach($doc->unpackDetails('detaildata') as $item) {
-              $csv .= $sep. $n . $sep;
-              $csv .= $item->itemname . $sep;
-              $csv .= $item->item_code . $sep;
-              $csv .= H::fqty($item->quantity) . $sep;
-              $csv .= H::fa($item->price) . $sep;
-              $csv .= "\n";
+            $n = 1;
+
+            foreach ($doc->unpackDetails('detaildata') as $item) {
+                $csv .= $sep . $n . $sep;
+                $csv .= $item->itemname . $sep;
+                $csv .= $item->item_code . $sep;
+                $csv .= H::fqty($item->quantity) . $sep;
+                $csv .= H::fa($item->price) . $sep;
+                $csv .= "\n";
             }
-            $csv .=  "Итого: " . $sep;
-            $csv .= H::fa($doc->amount) . $sep. $sep. $sep. $sep. $sep;
+            $csv .= "Итого: " . $sep;
+            $csv .= H::fa($doc->amount) . $sep . $sep . $sep . $sep . $sep;
             $csv .= "\n";
-               
+
         }
         if ($encode == 2) {
             $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-        }       
+        }
         header("Content-type: text/csv");
         header("Content-Disposition: attachment;Filename=exportdoc_" . date('Y_m_d', time()) . ".csv");
         header("Content-Transfer-Encoding: binary");
 
         echo $csv;
         flush();
-        die;        
-   }
-    
-       
+        die;
+    }
+
+
 }

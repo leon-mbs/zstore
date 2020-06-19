@@ -9,18 +9,19 @@
 <div class="row">
 
     <div class="col-12 col-md-12 col-xl-10" zippy="itemtable">
-        <h3>Довідник товарів 
-		   <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-				data-html="true" data-placement="bottom" data-content="Журнал для переліку товарів, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
+        <h3>Довідник товарів
+            <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
+               data-toggle="popover"
+               data-html="true" data-placement="bottom" data-content="Журнал для переліку товарів, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
 				<br><br>В списку відображаються активні товари. Для відображення товарів з статусом<b> 'Більше не використовується' </b>потрібно встановити галочку<b> 'Усе' </b>біля кнопки<b> 'ОК' </b>"></i>
-		</h3>
-		
+        </h3>
+
         <div class="navbar nav">
 
             <form zippy="filter" class="form-inline">
 
                 <label for="searchkey">Пошук</label>
-                <input class="form-control mr-sm-2" type="text" zippy="searchkey"  onkeydown="onSearch()" >
+                <input class="form-control mr-sm-2" type="text" zippy="searchkey" onkeydown="onSearch()">
                 <label for="searchcat">категорія</label>
 
                 <select class="form-control mr-sm-2" zippy="searchcat">
@@ -37,7 +38,7 @@
             </form>
         </div>
         <a zippy="addnew" class="btn btn-primary  ">Додати</a>
-        <table class="table table-bordered  table-sm  ">
+        <table class="table table-hover  table-sm  ">
             <tr>
                 {{#useimages}}
                 <th></th>
@@ -46,14 +47,16 @@
 
                 <th>Артикул</th>
                 <th>Категорія</th>
-                 <th>Бренд</th>
-               <th>Од.</th>
+                <th>Бренд</th>
+                <th>Од.</th>
 
                 <th class="text-right">Опт. ціна</th>
                 <th>Комірка</th>
-                <th><i title="В прайсi" class="fa fa-list-alt"></i> </th>
-           {{#usesnumber}}   <th><i title="Облiк серiй виробника" class="fa fa-calendar-check"></i> </th>  {{/usesnumber}} 
-                <th> </th>
+                <th><i title="В прайсi" class="fa fa-list-alt"></i></th>
+                {{#usesnumber}}
+                <th><i title="Облiк серiй виробника" class="fa fa-calendar-check"></i></th>
+                {{/usesnumber}}
+                <th></th>
 
 
                 <th style="width:150px"></th>
@@ -76,9 +79,12 @@
 
                 <td zippy="price" class="text-right"></td>
                 <td zippy="cell"></td>
-                <td><i zippy="inprice" class="fa fa-check"><i/></td>                
-             {{#usesnumber}}   <td><i zippy="inseria" class="fa fa-check"><i/></td>         {{/usesnumber}}             
-                <td><i zippy="hasnotes" class="far fa-sticky-note"   data-toggle="tooltip" data-placement="left" data-html="true"></i></td>
+                <td><i zippy="inprice" class="fa fa-check"><i/></td>
+                {{#usesnumber}}
+                <td><i zippy="inseria" class="fa fa-check"><i/></td>
+                {{/usesnumber}}
+                <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"
+                       data-html="true"></i></td>
 
 
                 <td aling="center">
@@ -132,9 +138,9 @@
                 <label class="col-5 col-form-label" for="editcode">Код товару (артикул)</label>
                 <div class="col-7">
                     <input class="form-control" zippy="editcode"/>
-                    <small class="form-text text-muted">  Код товару мае бути унiкальним. 
-                    Якщо використовуется  код виробника, слiд додати  бренд до коду наприклад  k123_имябренда</small>                    
-                    
+                    <small class="form-text text-muted"> Код товару мае бути унiкальним.
+                        Якщо використовуется код виробника, слiд додати бренд до коду наприклад k123_имябренда</small>
+
                 </div>
             </div>
 
@@ -175,14 +181,15 @@
                 <label class="col-5 col-form-label" for="editmanufacturer">Бренд, виробник (краiна-виробник) </label>
                 <div class="col-7">
                     <input list="manlist" class="form-control" zippy="editmanufacturer"/>
-                     <datalist id="manlist">
-                            {{#manlist}}
-                            <option label='{{mitem}}' value='{{mitem}}'>
-                           {{/manlist}}  
-                          
-                    </datalist>                 </div>
+                    <datalist id="manlist">
+                        {{#manlist}}
+                        <option label='{{mitem}}' value='{{mitem}}'>
+                            {{/manlist}}
+
+                    </datalist>
+                </div>
             </div>
-             {{#usesnumber}}
+            {{#usesnumber}}
             <div class="form-check">
                 <input zippy="edituseserial" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="edituseserial">Облік партій виробника</label>
@@ -295,13 +302,13 @@
 
     });
 
-       function onSearch(ele) {
+    function onSearch(ele) {
 
-           if (event.key === 'Enter' || event.keyCode == 13) {
-                    // alert($('#barcode').val()); 
-                    $('#filter').Submit() ;
-           }
+        if (event.key === 'Enter' || event.keyCode == 13) {
+            // alert($('#barcode').val());
+            $('#filter').Submit();
         }
+    }
 </script>
 
 </body>

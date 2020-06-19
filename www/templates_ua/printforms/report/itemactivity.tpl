@@ -34,7 +34,7 @@
         <td align="right">{{in}}</td>
         <td align="right">{{obin}}</td>
         <td align="right">{{obout}}</td>
-        <td align="right">{{out}} </td>
+        <td align="right">{{out}}</td>
         <td> {{{documents}}}</td>
     </tr>
     {{/_detail}}

@@ -80,7 +80,7 @@ class Task extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->taskhours->setText($this->_doc->headerdata['taskhours']);
 
-      
+
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 

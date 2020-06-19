@@ -30,7 +30,7 @@ class GroupList extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');  
+            System::setErrorMsg('noaccesstopage');
             App::RedirectHome();
             return;
         }
@@ -128,9 +128,9 @@ class GroupList extends \App\Pages\Base
         }
         $this->UpdateAttrList();
         //у верхнего  уровня  нет картинок
-        $this->groupform->group_image->setVisible($this->group->parent_id>0);
-        $this->groupform->photo->setVisible($this->group->parent_id>0);
-        $this->groupform->savegroup->setVisible($this->group->parent_id>0);
+        $this->groupform->group_image->setVisible($this->group->parent_id > 0);
+        $this->groupform->photo->setVisible($this->group->parent_id > 0);
+        $this->groupform->savegroup->setVisible($this->group->parent_id > 0);
     }
 
     public function OnNewGroup($sender) {

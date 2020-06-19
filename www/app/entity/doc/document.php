@@ -34,7 +34,7 @@ class Document extends \ZCL\DB\Entity
     const EX_EXCEL = 2;    //  Excel
     const EX_PDF   = 3;    //  PDF
     const EX_POS   = 4;    //  POS терминал
-    const EX_MAIL   = 5;    //  Отправка  email
+    const EX_MAIL  = 5;    //  Отправка  email
 
     // const EX_XML_GNAU = 4;
 
@@ -52,9 +52,9 @@ class Document extends \ZCL\DB\Entity
      */
     public $detaildata = array();
 
-    private static $_metalist = array();    
-    
-    
+    private static $_metalist = array();
+
+
     /**
      * документы должны создаватся методом create
      *
@@ -322,12 +322,12 @@ class Document extends \ZCL\DB\Entity
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
 
- 
+
         $doc->branch_id = $branch_id;
-        if ($branch_id == 0 ) {
+        if ($branch_id == 0) {
             $doc->branch_id = \App\Acl::checkCurrentBranch();
         }
-        
+
         return $doc;
     }
 
@@ -438,27 +438,31 @@ class Document extends \ZCL\DB\Entity
      *
      * @return mixed
      */
-    public function nextNumber($branch_id=0) {
+    public function nextNumber($branch_id = 0) {
 
 
         $class = explode("\\", get_called_class());
         $metaname = $class[count($class) - 1];
         $doc = Document::getFirst("meta_name='" . $metaname . "'", "document_id desc");
         $conn = \ZDB\DB::getConnect();
-        $branch="";
-        if($branch_id>0)   $branch=" and branch_id=".$branch_id;
-        
+        $branch = "";
+        if ($branch_id > 0) {
+            $branch = " and branch_id=" . $branch_id;
+        }
+
         $sql = "select document_number from  documents_view where   meta_name='{$metaname}'   {$branch}  order  by document_id desc limit 0,1";
         $prevnumber = $conn->GetOne($sql);
         if (strlen($prevnumber) == 0) {
             $prevnumber = $this->getNumberTemplate();
-        }  
-  
-        if (strlen($prevnumber) == 0)
+        }
+
+        if (strlen($prevnumber) == 0) {
             return '';
+        }
         $number = preg_replace('/[^0-9]/', '', $prevnumber);
-        if (strlen($number) == 0)
+        if (strlen($number) == 0) {
             $number = 0;
+        }
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
 
@@ -606,11 +610,12 @@ class Document extends \ZCL\DB\Entity
                 $c .= " and user_id  = " . $user->user_id;
             }
 
-            if(strlen($user->aclview)>0)
-               $c .= " and meta_id in({$user->aclview}) ";
-            else 
-               $c .= " and meta_id in(0) ";
-         }
+            if (strlen($user->aclview) > 0) {
+                $c .= " and meta_id in({$user->aclview}) ";
+            } else {
+                $c .= " and meta_id in(0) ";
+            }
+        }
 
         return $c;
     }
@@ -682,94 +687,100 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-    * Локализованное название документа  по  мета имени
-    * 
-    * @param mixed $meta_name
-    */
-    public static function getDesc($meta_name){
+     * Локализованное название документа  по  мета имени
+     *
+     * @param mixed $meta_name
+     */
+    public static function getDesc($meta_name) {
         if (isset(self::$_metalist[$meta_name])) {
             return self::$_metalist[$meta_name];
         }
         $conn = \ZDB\DB::getConnect();
 
         $rs = $conn->Execute("select description, meta_name from metadata ");
-        foreach ($rs  as $m) {
+        foreach ($rs as $m) {
             self::$_metalist[$m['meta_name']] = $m['description'];
         }
 
-        return self::$_metalist[$meta_name];           
+        return self::$_metalist[$meta_name];
     }
-    
-    
-   /**
+
+
+    /**
      * Отправка  документа  по  почте
      *
      */
     public function sendEmail() {
         global $_config;
+        $doc = $this->cast();
 
-        if($doc->customer_id==0){
+        if ($doc->customer_id == 0) {
             return;
         }
-        
+
         $customer = \App\Entity\Customer::load($doc->customer_id);
-        
-        $doc = $this->cast();
-    
-        $filename = strtolower($doc->meta_name).".pdf";
+
+
+        $filename = strtolower($doc->meta_name) . ".pdf";
         $html = $doc->generateReport();
- 
-        $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' =>  true,'defaultFont' => 'DejaVu Sans'));
-        $dompdf->loadHtml($html);
-    
-        $dompdf->render();
-   
-        $data = $dompdf->output();       
-       
-        $f = tempnam(sys_get_temp_dir(),"eml")  ;
-        file_put_contents($f,$data) ;
-        
-        $mail = new \PHPMailer\PHPMailer\PHPMailer();
-        $mail->isSMTP();
-        $mail->Host = $_config['smtp']['host'];
-        $mail->Port = $_config['smtp']['port'];
-        $mail->Username = $_config['smtp']['user'];
-        $mail->Password = $_config['smtp']['password'];        
-        $mail->SMTPAuth = true;
-        if($_config['smtp']['tls']=='true'){
-           $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;    
-        } 
-        
-        
-        $mail->setFrom($_config['smtp']['user'],$_config['smtp']['username']);
-        $mail->addAddress($customer->email);
-        $mail->Subject = $doc->getEmailSubject();
-        $mail->msgHTML($doc->getEmailBody());
-        $mail->CharSet = "UTF-8";
-        $mail->IsHTML(true);
-        $mail->AddAttachment($f, $filename, 'base64', 'application/pdf'); 
-        if($mail->send()===false){
-           System::setErrorMsg($mail->ErrorInfo);    
-        } else {
-           System::setSuccessMsg(Helper::l('email_sent')); 
-        }       
-        
+
+
+        try {
+            $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+            $dompdf->loadHtml($html);
+
+            $dompdf->render();
+
+            $data = $dompdf->output();
+
+            $f = tempnam(sys_get_temp_dir(), "eml");
+            file_put_contents($f, $data);
+
+            $mail = new \PHPMailer\PHPMailer\PHPMailer();
+            $mail->isSMTP();
+            $mail->Host = $_config['smtp']['host'];
+            $mail->Port = $_config['smtp']['port'];
+            $mail->Username = $_config['smtp']['user'];
+            $mail->Password = $_config['smtp']['pass'];
+            $mail->SMTPAuth = true;
+            if ($_config['smtp']['tls'] == 'true') {
+                $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            }
+
+            $mail->setFrom($_config['smtp']['user'], '');
+            $mail->addAddress($customer->email);
+            $mail->Subject = $doc->getEmailSubject();
+            $mail->msgHTML($doc->getEmailBody());
+            $mail->CharSet = "UTF-8";
+            $mail->IsHTML(true);
+            $mail->AddAttachment($f, $filename, 'base64', 'application/pdf');
+            if ($mail->send() === false) {
+                System::setErrorMsg($mail->ErrorInfo);
+            } else {
+                System::setSuccessMsg(Helper::l('email_sent'));
+            }
+        } catch (Exception $e) {
+            System::setErrorMsg($e->message);
+        }
+
+
         @unlink($f);
-       
+
     }
-    
+
     /**
-    * возвращает  заполненый  шаблон  письма
-    * 
-    */
-    protected  function getEmailBody(){
-        return  "";
+     * возвращает  заполненый  шаблон  письма
+     *
+     */
+    protected function getEmailBody() {
+        return "";
     }
-   /**
-    * возвращает  тему письма
-    * 
-    */
-    protected  function getEmailSubject(){
-        return  "";
+
+    /**
+     * возвращает  тему письма
+     *
+     */
+    protected function getEmailSubject() {
+        return "";
     }
 }

@@ -39,23 +39,23 @@ class UserLogin extends \Zippy\Html\WebPage
                 $this->setError('enterpassword');
             }
         }
-  
-        
+
+
         if (strlen($login) > 0 && strlen($password) > 0) {
 
             $user = Helper::login($login, $password);
 
             if ($user instanceof User) {
-                
+
                 if (strpos($user->modules, 'shop') === false && $user->rolename != 'admins') {
-                    System::setErrorMsg('invalidlogin');  
+                    System::setErrorMsg('invalidlogin');
                     App::RedirectHome();
                     return;
-                }                
-                
+                }
+
                 $user->lastlogin = time();
                 $user->save();
-                
+
                 System::setUser($user);
                 $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
                 $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
@@ -64,10 +64,10 @@ class UserLogin extends \Zippy\Html\WebPage
 
                     setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
                 }
-                
+
                 App::RedirectHome();
-              
-                 
+
+
             } else {
 
                 $this->setError('invalidlogin');
@@ -91,6 +91,5 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['alerterror'] = $msg;
     }
 
-  
 
 }

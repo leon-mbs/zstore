@@ -1,4 +1,4 @@
-ALTER TABLE   `issue_history` DROP ` status `;
+
 
 ALTER TABLE   `issue_history` ADD `description` VARCHAR(255)   NULL  ;
 

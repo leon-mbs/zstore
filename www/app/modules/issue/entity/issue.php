@@ -35,8 +35,8 @@ class Issue extends \ZCL\DB\Entity
 
         $this->createdon = time();
         $this->lastupdate = time();
-        $this->notes = ''  ;
-        
+        $this->notes = '';
+
     }
 
     /**
@@ -109,7 +109,7 @@ class Issue extends \ZCL\DB\Entity
         $user = \App\System::getUser();
         $conn = \ZCL\DB\DB::getConnect();
         $createdon = $conn->DBDate(time());
-        $desc = Issue::qstr($desc) ;
+        $desc = Issue::qstr($desc);
         $sql = "insert  into issue_history (issue_id,createdon,user_id ,description  ) values ({$this->issue_id},{$createdon},{$user->user_id} ,{$desc}) ";
         $conn->Execute($sql);
     }

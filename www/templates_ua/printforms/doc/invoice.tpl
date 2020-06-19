@@ -1,14 +1,14 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
-     {{#islogo}}
+    {{#islogo}}
     <tr>
-     
-        <td colspan="9"> 
-        <img  style="height:100px;" src='{{logo}}' />
+
+        <td colspan="9">
+            <img style="height:100px;" src='{{logo}}'/>
         </td>
-     
+
     </tr>
-     {{/islogo}}
+    {{/islogo}}
     <tr>
         <td></td>
         <td>Покупець</td>
@@ -24,33 +24,33 @@
         <td>Email</td>
         <td colspan="7">{{email}}</td>
     </tr>
-     {{#isfirm}}
+    {{#isfirm}}
     <tr>
-         
+
         <td></td>
-        <td  > Продавець </td>
+        <td> Продавець</td>
         <td colspan="7">{{firm_name}}</td>
 
     </tr>
     {{/isfirm}}
-   {{#iscontract}}
+    {{#iscontract}}
     <tr>
-        
+
         <td></td>
-        <td  > Угода </td>
+        <td> Угода</td>
         <td colspan="7">{{contract}} вiд {{createdon}}</td>
 
     </tr>
-    {{/iscontract}} 
-  {{#isbank}}
+    {{/iscontract}}
+    {{#isbank}}
     <tr>
-        
+
         <td></td>
-        <td  > р/р </td>
-        <td colspan="7">{{bankacc}}  в {{bank}}</td>
+        <td> р/р</td>
+        <td colspan="7">{{bankacc}} в {{bank}}</td>
 
     </tr>
-    {{/isbank}}      
+    {{/isbank}}
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
             Рахунок-фактура № {{document_number}} від {{date}}
@@ -100,23 +100,23 @@
     </tr>
     <tr>
         <td colspan="7">На суму <b>{{totalstr}}<b></td>
-           
- <tr>
-        <td colspan="5">
-        {{#isstamp}}
-        <img  style="height:100px;" src='{{stamp}}' />
-        {{/isstamp}}
-        
-        
-         </td>
-       <td colspan="4">
-        {{#issign}}
-        <img  style="height:100px;" src='{{sign}}' />
-        {{/issign}}
-        
-        
-         </td>
 
-    </tr>           
+    <tr>
+        <td colspan="5">
+            {{#isstamp}}
+            <img style="height:100px;" src='{{stamp}}'/>
+            {{/isstamp}}
+
+
+        </td>
+        <td colspan="4">
+            {{#issign}}
+            <img style="height:100px;" src='{{sign}}'/>
+            {{/issign}}
+
+
+        </td>
+
+    </tr>
 </table>
 

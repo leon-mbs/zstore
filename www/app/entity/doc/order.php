@@ -44,7 +44,7 @@ class Order extends \App\Entity\Doc\Document
         }
 
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "customer_name" => $this->customer_name,
             "phone" => $this->headerdata["phone"],

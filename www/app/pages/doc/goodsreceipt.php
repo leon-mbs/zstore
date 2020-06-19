@@ -32,7 +32,7 @@ class GoodsReceipt extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid = 0;
-     
+
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -45,9 +45,9 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->docform->customer->onChange($this,'OnCustomerFirm') ;
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this,'OnCustomerFirm'  );
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false); ; 
+        $this->docform->customer->onChange($this, 'OnCustomerFirm');
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this, 'OnCustomerFirm');
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
@@ -57,9 +57,9 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
-       
-        
-        $this->docform->add(new DropDownChoice('val',H::getValList() , '0'))->onChange($this, 'OnVal');
+
+
+        $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -199,7 +199,6 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
 
 
-
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->CalcTotal();
                         $this->CalcPay();
@@ -233,19 +232,19 @@ class GoodsReceipt extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
-        
+
         $this->_tvars['manlist'] = array();
-        
-        foreach(Item::getManufacturers() as  $man){
-           $this->_tvars['manlist'][] = array('mitem'=>$man)  ;    
-        }         
-        
+
+        foreach (Item::getManufacturers() as $man) {
+            $this->_tvars['manlist'][] = array('mitem' => $man);
+        }
+
     }
 
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
-           $row->add(new Label('num', $row->getAllNumber()));
+        $row->add(new Label('num', $row->getAllNumber()));
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
@@ -253,7 +252,7 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd( $item->sdate) : ''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -275,8 +274,12 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
-        if($item->rowid>0) ;               //для совместимости
-        else $item->rowid = $item->item_id ;
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
 
         $this->_rowid = $item->rowid;
     }
@@ -287,12 +290,16 @@ class GoodsReceipt extends \App\Pages\Base
         }
         $item = $sender->owner->getDataItem();
 
-        if($item->rowid>0) ;               //для совместимости
-        else $item->rowid = $item->item_id ;
-        
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
-      
-       
+
+
         $this->calcTotal();
         $this->calcPay();
 
@@ -306,7 +313,7 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
 
-        foreach ($this->_itemlist as $ri=>$_item ) {
+        foreach ($this->_itemlist as $ri => $_item) {
             if ($_item->bar_code == $code) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
@@ -373,13 +380,13 @@ class GoodsReceipt extends \App\Pages\Base
         if ($item->sdate == false) {
             $item->sdate = '';
         }
-      
 
-        if ($this->_rowid > 0) {    
+
+        if ($this->_rowid > 0) {
             $item->rowid = $this->_rowid;
-        }else {   
-            $next = count($this->_itemlist) >0? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid=$next+1 ;
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
         }
         $this->_itemlist[$item->rowid] = $item;
 
@@ -430,10 +437,10 @@ class GoodsReceipt extends \App\Pages\Base
         }
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
-        if($this->_doc->headerdata['firm_id']>0){
-           $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();    
+        if ($this->_doc->headerdata['firm_id'] > 0) {
+            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
-        
+
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
@@ -501,18 +508,18 @@ class GoodsReceipt extends \App\Pages\Base
                         }
                     }
                 }
-                
+
                 //обновляем  курс
-                if(strlen($this->_doc->headerdata['val'])>1) {
-                  $optval =   \App\System::getOptions("val" );  
-                  if(strlen($optval[$this->_doc->headerdata['val']])>0){
-                      $optval[$this->_doc->headerdata['val']] = $this->_doc->headerdata['rate']    ;
-                       \App\System::setOptions("val", $optval);
-                  }
-                       
+                if (strlen($this->_doc->headerdata['val']) > 1) {
+                    $optval = \App\System::getOptions("val");
+                    if (strlen($optval[$this->_doc->headerdata['val']]) > 0) {
+                        $optval[$this->_doc->headerdata['val']] = $this->_doc->headerdata['rate'];
+                        \App\System::setOptions("val", $optval);
+                    }
+
                 }
-                
-                
+
+
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -592,13 +599,13 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onNds($sender) {
-        $this->docform->nds->setText( $this->docform->editnds->getText() );
+        $this->docform->nds->setText($this->docform->editnds->getText());
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
 
     public function onRate($sender) {
-        $this->docform->rate->setText( $this->docform->editrate->getText() );
+        $this->docform->rate->setText($this->docform->editrate->getText());
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
@@ -677,18 +684,18 @@ class GoodsReceipt extends \App\Pages\Base
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and   (customer_name like {$text}  or phone like {$text} ) and   (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )");
     }
-    
+
     public function OnVal($sender) {
         $val = $sender->getValue();
-        if(strlen($val)>1){
-          $optval = \App\System::getOptions("val" ); 
-          $rate =  $optval[$val];
-        }  else {
-           $rate =1;         
+        if (strlen($val) > 1) {
+            $optval = \App\System::getOptions("val");
+            $rate = $optval[$val];
+        } else {
+            $rate = 1;
         }
-        $this->docform->rate->setText($rate);       
-        $this->docform->editrate->setText($rate); 
-        $this->CalcPay();      
+        $this->docform->rate->setText($rate);
+        $this->docform->editrate->setText($rate);
+        $this->CalcPay();
     }
 
     //добавление нового товара
@@ -702,8 +709,8 @@ class GoodsReceipt extends \App\Pages\Base
         if (System::getOption("common", "autoarticle") == 1) {
             $this->editnewitem->editnewitemcode->setText(Item::getNextArticle());
         }
-       
-        
+
+
     }
 
     public function savenewitemOnClick($sender) {
@@ -814,21 +821,21 @@ class GoodsReceipt extends \App\Pages\Base
 
     }
 
-   public function OnCustomerFirm($sender) {
-        $c=$this->docform->customer->getKey();
-        $f=$this->docform->firm->getValue(); 
-    
-        $ar = \App\Entity\Contract::getList($c,$f) ;
-        
+    public function OnCustomerFirm($sender) {
+        $c = $this->docform->customer->getKey();
+        $f = $this->docform->firm->getValue();
+
+        $ar = \App\Entity\Contract::getList($c, $f);
+
         $this->docform->contract->setOptionList($ar);
-        if(count($ar)>0){
-           $this->docform->contract->setVisible(true);    
-        }  else {
-           $this->docform->contract->setVisible(false);
-           $this->docform->contract->setValue(0);
+        if (count($ar) > 0) {
+            $this->docform->contract->setVisible(true);
+        } else {
+            $this->docform->contract->setVisible(false);
+            $this->docform->contract->setValue(0);
         }
-   
+
     }
- 
-     
+
+
 }

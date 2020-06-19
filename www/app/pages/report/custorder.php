@@ -100,7 +100,7 @@ class CustOrder extends \App\Pages\Base
             "_detail" => $detail,
             'total' => H::fa($total),
             'cust' => $cust > 0,
-            'date' => \App\Helper::fd( time()),
+            'date' => \App\Helper::fd(time()),
             'customer_name' => $this->filter->cust->getValueName()
         );
         $report = new \App\Report('report/custorder.tpl');

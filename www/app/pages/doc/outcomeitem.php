@@ -41,23 +41,23 @@ class OutcomeItem extends \App\Pages\Base
 
         $tostore = array();
         $conn = \ZDB\DB::getConnect();
-        if($this->_tvars["usebranch"]) {
+        if ($this->_tvars["usebranch"]) {
             $rs = $conn->Execute("select  s.store_id,s.`storename`,b.branch_id ,b.`branch_name` from stores s join branches b on s.`branch_id` = b.`branch_id` where b.`disabled` <>  1   order  by branch_name, storename");
-            foreach($rs  as $it){
-               $tostore[$it['store_id'] ] =  $it['branch_name'] .", ". $it['storename'] ;
+            foreach ($rs as $it) {
+                $tostore[$it['store_id']] = $it['branch_name'] . ", " . $it['storename'];
             }
         } else {
             $rs = $conn->Execute("select   store_id, storename   from stores    order  by   storename");
-            foreach($rs  as $it){
-               $tostore[$it['store_id'] ] =    $it['storename'] ;
+            foreach ($rs as $it) {
+                $tostore[$it['store_id']] = $it['storename'];
             }
-            
+
         }
-        
-        
-        $this->docform->add(new DropDownChoice('tostore', $tostore, 0)) ;
-        
-        
+
+
+        $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
+
+
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -170,7 +170,7 @@ class OutcomeItem extends \App\Pages\Base
             $this->setError("noselitem");
             return;
         }
- 
+
         $item = Item::load($id);
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
@@ -276,58 +276,58 @@ class OutcomeItem extends \App\Pages\Base
                     }
                 }
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                
-                
+
+
                 $tostore = $this->docform->tostore->getValue();
                 if ($sender->id == 'execdoc' && $tostore > 0) {
-                   $ch = $this->_doc->getChildren('IncomeItem');
-                   if(count($ch) > 0) {
+                    $ch = $this->_doc->getChildren('IncomeItem');
+                    if (count($ch) > 0) {
                         $this->setWarn('Уже существует приходный документ');
-                   } else {
-                       if($this->_doc->headerdata['store'] == $tostore) {
-                          $this->setWarn('Выбран  тот  же склад'); 
-                       }
-                       $indoc = Document::create('IncomeItem');
-                       
-                       $indoc->headerdata['store']  = $tostore;
-                       $indoc->headerdata['storename']  = $this->docform->tostore->getValueName();
-                       $indoc->branch_id = 0;
-                       if($this->_tvars["usebranch"]) {
-                           $st = Store::load($tostore)  ;
-                           $indoc->branch_id = $st->branch_id;
-                       }
-                       $indoc->document_number = $indoc->nextNumber($indoc->branch_id); 
-                       $indoc->user_id = 0;
-                       $indoc->notes = "Списано с '".$this->_doc->headerdata['storename']."'на  основании '". $this->_doc->document_number."'";
-                       
-                       
-                       $items=array();
-                    
-                       foreach($this->_itemlist as $it){
-                          
-                          //последняя партия 
-                          $stock =  \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$this->_doc->headerdata['store'] }",'stock_id desc') ;
-                          $it->price = $stock->partion;
-                           
-                          
-                          $items[] = $it; 
-                       }
-                       $indoc->packDetails('detaildata', $items);
-                        
-                     
-                       $indoc->save();
-                       $indoc->updateStatus(Document::STATE_NEW); 
-                       
-                       if($indoc->branch_id == 0) {
-                          $indoc->user_id = \App\System::getUser()->user_id;
-                          $indoc->updateStatus(Document::STATE_EXECUTED); 
-                       }
-                       if($indoc->document_id > 0){
-                           $this->setSuccess('Создан документ'); 
-                       }
-                       
-                   }
-                }            
+                    } else {
+                        if ($this->_doc->headerdata['store'] == $tostore) {
+                            $this->setWarn('Выбран  тот  же склад');
+                        }
+                        $indoc = Document::create('IncomeItem');
+
+                        $indoc->headerdata['store'] = $tostore;
+                        $indoc->headerdata['storename'] = $this->docform->tostore->getValueName();
+                        $indoc->branch_id = 0;
+                        if ($this->_tvars["usebranch"]) {
+                            $st = Store::load($tostore);
+                            $indoc->branch_id = $st->branch_id;
+                        }
+                        $indoc->document_number = $indoc->nextNumber($indoc->branch_id);
+                        $indoc->user_id = 0;
+                        $indoc->notes = "Списано с '" . $this->_doc->headerdata['storename'] . "'на  основании '" . $this->_doc->document_number . "'";
+
+
+                        $items = array();
+
+                        foreach ($this->_itemlist as $it) {
+
+                            //последняя партия
+                            $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$this->_doc->headerdata['store'] }", 'stock_id desc');
+                            $it->price = $stock->partion;
+
+
+                            $items[] = $it;
+                        }
+                        $indoc->packDetails('detaildata', $items);
+
+
+                        $indoc->save();
+                        $indoc->updateStatus(Document::STATE_NEW);
+
+                        if ($indoc->branch_id == 0) {
+                            $indoc->user_id = \App\System::getUser()->user_id;
+                            $indoc->updateStatus(Document::STATE_EXECUTED);
+                        }
+                        if ($indoc->document_id > 0) {
+                            $this->setSuccess('Создан документ');
+                        }
+
+                    }
+                }
 
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);

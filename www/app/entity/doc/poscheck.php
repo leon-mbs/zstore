@@ -23,7 +23,7 @@ class POSCheck extends Document
 
             $name = $item->itemname;
             if (strlen($item->snumber) > 0) {
-                $name .= ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
+                $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
             }
 
 
@@ -48,9 +48,9 @@ class POSCheck extends Document
         }
 
 
-        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
+        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "firm_name" => $firm["firm_name"],
             "shopname" => $firm["shopname"],
@@ -59,7 +59,7 @@ class POSCheck extends Document
             "customer_name" => strlen($this->customer_name) > 0 ? $this->customer_name : false,
             "exchange" => $this->headerdata["exchange"],
             "pos_name" => $this->headerdata["pos_name"],
-            "time" => H::fdt(  $this->headerdata["time"]),
+            "time" => H::fdt($this->headerdata["time"]),
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),
@@ -91,7 +91,7 @@ class POSCheck extends Document
                 "amount" => H::fa($item->quantity * $item->price)
             );
         }
-        $i=1;
+        $i = 1;
         foreach ($this->unpackDetails('services') as $ser) {
             $detail[] = array("no" => $i++,
                 "tovar_name" => $ser->service_name,
@@ -100,9 +100,9 @@ class POSCheck extends Document
             );
         }
 
-        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
+        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "firm_name" => $firm["firm_name"],
             "shopname" => strlen($firm["shopname"]) > 0 ? $firm["shopname"] : false,
@@ -112,7 +112,7 @@ class POSCheck extends Document
             "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
             "exchange" => $this->headerdata["exchange"],
             "pos_name" => $this->headerdata["pos_name"],
-            "time" => H::fdt( $this->headerdata["time"]),
+            "time" => H::fdt($this->headerdata["time"]),
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),

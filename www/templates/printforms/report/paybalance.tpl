@@ -24,7 +24,7 @@
 
         <td>{{type}}</td>
 
-        <td align="right">{{in}} </td>
+        <td align="right">{{in}}</td>
 
     </tr>
     {{/_detail}}
@@ -32,7 +32,7 @@
 
         <td align="right">Итого:</td>
 
-        <td align="right">{{tin}} </td>
+        <td align="right">{{tin}}</td>
 
     </tr>
     <tr>
@@ -48,7 +48,7 @@
 
         <td>{{type}}</td>
 
-        <td align="right">{{out}} </td>
+        <td align="right">{{out}}</td>
 
     </tr>
     {{/_detail2}}
@@ -56,14 +56,14 @@
 
         <td align="right">Итого:</td>
 
-        <td align="right">{{tout}} </td>
+        <td align="right">{{tout}}</td>
 
     </tr>
     <tr style="font-weight: bolder;">
 
         <td align="right">Баланс:</td>
 
-        <td align="right">{{total}} </td>
+        <td align="right">{{total}}</td>
 
     </tr>
 

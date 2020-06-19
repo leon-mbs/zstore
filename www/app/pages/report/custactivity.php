@@ -13,7 +13,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Form\AutocompleteTextInput;
 
-/**                                       
+/**
  * Движение по  контрагентам
  */
 class CustActivity extends \App\Pages\Base
@@ -31,8 +31,6 @@ class CustActivity extends \App\Pages\Base
 
         $this->filter->add(new AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
 
-        
-
 
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
@@ -40,16 +38,16 @@ class CustActivity extends \App\Pages\Base
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
 
         $this->detail->add(new RedirectLink('excel', "custreport"));
-     
-     
+
+
         $this->detail->add(new RedirectLink('pdf', "custreport"));
         $this->detail->add(new Label('preview'));
         \App\Session::getSession()->issubmit = false;
     }
 
     public function OnSubmit($sender) {
-        if($this->filter->cust->getKey()==0) {
-            $this->setError(H::l('noselcust')) ;
+        if ($this->filter->cust->getKey() == 0) {
+            $this->setError(H::l('noselcust'));
             return;
         }
 
@@ -119,28 +117,28 @@ class CustActivity extends \App\Pages\Base
 
 
             $detail[] = array(
-                "date" => \App\Helper::fd( strtotime($row['dt'])),
+                "date" => \App\Helper::fd(strtotime($row['dt'])),
 
-                
+
                 "document_number" => $row['document_number'],
                 "obin" => H::fa($row['obin']),
-                "obout" => H::fa($row['obout']) 
-                 
+                "obout" => H::fa($row['obout'])
+
             );
-           
+
             $tin += $row['obin'];
             $tout += $row['obout'];
         }
         $tb = $tend - $tin + $tout;
 
-        $header = array('datefrom' => \App\Helper::fd( $from),
+        $header = array('datefrom' => \App\Helper::fd($from),
             "_detail" => $detail,
-          
+
             'tin' => H::fa($tin),
             'tout' => H::fa($tout),
-    
-            'datefrom' => \App\Helper::fd( $from),
-            'dateto' => \App\Helper::fd( $to),
+
+            'datefrom' => \App\Helper::fd($from),
+            'dateto' => \App\Helper::fd($to),
             "cust_name" => $this->filter->cust->getText()
         );
         $report = new \App\Report('report/custactivity.tpl');
@@ -165,11 +163,11 @@ class CustActivity extends \App\Pages\Base
 
         App::addJavaScript("\$('#autoclick').click()", true);
     }
-    
+
     public function OnAutoCustomer($sender) {
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
-    
+
 
 }

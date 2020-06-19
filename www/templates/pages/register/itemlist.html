@@ -15,7 +15,7 @@
 
 
                 <input autocomplete="off" placeholder="Имя  или  код..." class="form-control mr-sm-2" type="text"
-                 onkeydown="onSearch()"       zippy="searchkey">
+                       onkeydown="onSearch()" zippy="searchkey">
 
                 <label for="searchcat">категория</label>
 
@@ -171,13 +171,13 @@
 
     });
 
-        function onSearch(ele) {
+    function onSearch(ele) {
 
-                if (event.key === 'Enter' || event.keyCode == 13) {
-                    // alert($('#barcode').val()); 
-                    $('#filter').Submit() ;
-                }
+        if (event.key === 'Enter' || event.keyCode == 13) {
+            // alert($('#barcode').val());
+            $('#filter').Submit();
         }
+    }
 </script>
 </body>
 </html>

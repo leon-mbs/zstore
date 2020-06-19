@@ -25,21 +25,21 @@
 
             </div>
             {{#usefirms}}
-               <div class="form-group  ">
-                    <label for="firm" >Покупець</label>
-                    <select class="form-control" zippy="firm">
-                        <option value="0">Не вибрана</option>                           
-                    </select>
-                </div>                  
+            <div class="form-group  ">
+                <label for="firm">Покупець</label>
+                <select class="form-control" zippy="firm">
+                    <option value="0">Не вибрана</option>
+                </select>
+            </div>
             {{/usefirms}}
             <div class="form-group  ">
-                <label for="contract" data-label="contract" >Контракт</label>
+                <label for="contract" data-label="contract">Контракт</label>
                 <select class="form-control" zippy="contract">
-                     <option value="0">Не вибраний</option>                          
+                    <option value="0">Не вибраний</option>
                 </select>
-                
 
-            </div>              
+
+            </div>
             <div class="form-group  ">
                 <label for="basedoc">Підстава </label>
 
@@ -64,8 +64,8 @@
                 </select>
 
             </div>
-           {{#useval}}
-             
+            {{#useval}}
+
             <div class="form-group  ">
                 <label for="val">Валюта</label>
                 <select class="form-control" zippy="val">
@@ -73,7 +73,7 @@
                 </select>
 
             </div>
-          {{/useval}}
+            {{/useval}}
 
             <div class="form-group  ">
                 <label for="notes">Примітка </label>
@@ -95,7 +95,7 @@
             &nbsp;<a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
             <table class="table  table-sm" id="lankor">
                 <tr>
-                     <th> </th>
+                    <th></th>
                     <th>Найменування</th>
                     <th>Код</th>
                     <th>Од.</th>
@@ -111,7 +111,7 @@
                     <th width="70"></th>
                 </tr>
                 <tr zippy="detail">
-                     <td zippy="num"></td>
+                    <td zippy="num"></td>
                     <td zippy="item"></td>
                     <td zippy="code"></td>
                     <td zippy="msr"></td>
@@ -134,27 +134,27 @@
                     <td zippy="total" class="text-right"></td>
                     <td></td>
                 </tr>
-                <tr style="font-weight: bolder;"  >
+                <tr style="font-weight: bolder;">
                     <td data-label="nds" colspan={{colspan}} class="text-right">ПДВ:</td>
                     <td zippy="nds" class="text-right"></td>
                     <td data-label="nds"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
-                <tr style="font-weight: bolder;"  >
+                <tr style="font-weight: bolder;">
                     <td data-label="disc" colspan={{colspan}} class="text-right">Знижка:</td>
                     <td zippy="disc" class="text-right"></td>
                     <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
-                
-  {{#useval}}                
-                <tr style="font-weight: bolder;"  >
+
+                {{#useval}}
+                <tr style="font-weight: bolder;">
                     <td data-label="rate" colspan={{colspan}} class="text-right">Курс валюти:</td>
                     <td zippy="rate" class="text-right"></td>
                     <td data-label="rate"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalrate"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
-      {{/useval}}
+                {{/useval}}
                 <tr style="font-weight: bolder;">
                     <td data-label="payamount" colspan={{colspan}} class="text-right">До оплати:</td>
                     <td zippy="payamount" class="text-right"></td>
@@ -408,15 +408,16 @@
 
             </div>
             {{/usesnumber}}
-              <div class="form-group">
+            <div class="form-group">
                 <label for="editnewmanufacturer">Бренд, виробник </label>
                 <input list="manlist" class="form-control " zippy="editnewmanufacturer"/>
                 <datalist id="manlist">
-                      {{#manlist}}
-                          <option label='{{mitem}}' value='{{mitem}}'>
-                      {{/manlist}}  
-                </datalist>  
-            </div>             <div class="form-group">
+                    {{#manlist}}
+                    <option label='{{mitem}}' value='{{mitem}}'>
+                        {{/manlist}}
+                </datalist>
+            </div>
+            <div class="form-group">
                 <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
                 <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-light ">
             </div>

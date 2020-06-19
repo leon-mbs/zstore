@@ -45,9 +45,9 @@ class Task extends Document
             );
         }
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "pareaname" => strlen($this->headerdata["pareaname"]) > 0 ? $this->headerdata["pareaname"] : false,
-            "document_date" => H::fd( $this->document_date),
+            "document_date" => H::fd($this->document_date),
             "document_number" => $this->document_number,
             "notes" => $this->notes,
             "baseddoc" => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,

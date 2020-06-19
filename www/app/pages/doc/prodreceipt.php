@@ -95,7 +95,7 @@ class ProdReceipt extends \App\Pages\Base
                     $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                     $this->docform->parea->setValue($basedoc->headerdata['parea']);
                 }
-                
+
             }
 
         }
@@ -116,7 +116,7 @@ class ProdReceipt extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd( $item->sdate) : ''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');

@@ -20,7 +20,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');  
+            System::setErrorMsg('noaccesstopage');
             App::RedirectHome();
             return;
         }
@@ -74,8 +74,8 @@ class Options extends \App\Pages\Base
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();
-        $shop['uselogin'] = $this->shop->uselogin->isChecked() ? 1:0;
- 
+        $shop['uselogin'] = $this->shop->uselogin->isChecked() ? 1 : 0;
+
 
         $file = $sender->logo->getFile();
         if (strlen($file["tmp_name"]) > 0) {

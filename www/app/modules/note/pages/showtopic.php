@@ -26,15 +26,15 @@ class ShowTopic extends \App\Pages\Base
             return;
         }
 
-        if ($this->_topic->acctype ==0) {   //приватный
+        if ($this->_topic->acctype == 0) {   //приватный
             App::Redirect404();
             return;
         }
         if ($this->_topic->isout == 0) {
             $user_id = System::getUser()->user_id;
-            if($user_id ==0) { //незалогиненый
-              App::Redirect404();
-              return;
+            if ($user_id == 0) { //незалогиненый
+                App::Redirect404();
+                return;
             }
         }
 

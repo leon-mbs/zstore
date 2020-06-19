@@ -6,89 +6,89 @@
         <h3>Экспорт документов</h3>
         <form zippy="dform" class="row">
             <div class="col-10">
-                 <div class="form-group  row">
+                <div class="form-group  row">
                     <label for="dtype" class="col-sm-4 form-label">Тип экспорта</label>
                     <div class="col-sm-8">
-                      <select zippy="dtype" class="form-control   ">
-                     </select>
-                    </div>               
-                </div>               
-                 <div class="form-group  row">
+                        <select zippy="dtype" class="form-control   ">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group  row">
                     <label for="dfrom" class="col-sm-4 form-label">С</label>
                     <div class="col-sm-8">
-                       <input type="text" class="form-control mr-sm-2  " zippy="dfrom" style="width:110px">
+                        <input type="text" class="form-control mr-sm-2  " zippy="dfrom" style="width:110px">
 
-                    </div>               
-                </div>               
+                    </div>
+                </div>
                 <div class="form-group  row">
                     <label for="dto" class="col-sm-4 form-label">По</label>
                     <div class="col-sm-8">
-                       <input type="text" class="form-control mr-sm-2  " zippy="dto" style="width:110px">
+                        <input type="text" class="form-control mr-sm-2  " zippy="dto" style="width:110px">
 
-                    </div>               
-                </div>               
-                 <div class="form-group  row">
+                    </div>
+                </div>
+                <div class="form-group  row">
                     <label for="dencode" class="col-sm-4 form-label">Кодировка</label>
                     <div class="col-sm-8">
-                      <select zippy="dencode" class="form-control   ">
-                      <option value="0">Не выбрана</option>
-                      </select>
-                    </div>               
-                </div>               
+                        <select zippy="dencode" class="form-control   ">
+                            <option value="0">Не выбрана</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group  row">
                     <label for="dsep" class="col-sm-4 form-label">Разделитель</label>
                     <div class="col-sm-8">
-                       <input type="text" class="form-control mr-sm-2  " zippy="dsep" style="width:50px">
+                        <input type="text" class="form-control mr-sm-2  " zippy="dsep" style="width:50px">
 
-                    </div>               
-                </div>               
-               
+                    </div>
+                </div>
+
                 <div class="form-group ">
                     <input class="btn btn-info" type="submit" value="Просмотр"/>
-                </div>               
-                       
+                </div>
+
             </div>
-        </form> 
-    <form zippy="dformlist" class="row">
+        </form>
+        <form zippy="dformlist" class="row">
             <div class="col-12">
-            <table class="table table-sm table-hover">
-              <tr>
-              <th><input type="checkbox"     id="dchall"  onchange="chclick()"> </th>
-              <th>Номер</th>
-              <th>Дата</th>
-              <th>Контрагент</th>
-              <th class="text-right">Сумма</th>
-              </tr>
-              <tr zippy="doclist">
-                 <td> <input type="checkbox" zippy="dch" class="dchc" ></td>
-                 <td zippy="dnumber"> </td>
-                 <td zippy="ddate" class="text-nowrap "> </td>
-                <td zippy="dcustomer"> </td>
-                <td zippy="damount" class="text-right"> </td>
-             
-              </tr>
-              
-            </table>
+                <table class="table table-sm table-hover">
+                    <tr>
+                        <th><input type="checkbox" id="dchall" onchange="chclick()"></th>
+                        <th>Номер</th>
+                        <th>Дата</th>
+                        <th>Контрагент</th>
+                        <th class="text-right">Сумма</th>
+                    </tr>
+                    <tr zippy="doclist">
+                        <td><input type="checkbox" zippy="dch" class="dchc"></td>
+                        <td zippy="dnumber"></td>
+                        <td zippy="ddate" class="text-nowrap "></td>
+                        <td zippy="dcustomer"></td>
+                        <td zippy="damount" class="text-right"></td>
+
+                    </tr>
+
+                </table>
                 <div class="form-group ">
                     <input class="btn btn-info" type="submit" value="Экспорт"/>
-                </div>              
-           </div>
-           
-        </form>               
-    </div>    
+                </div>
+            </div>
+
+        </form>
+    </div>
     <div class="col-12 col-md-6 col-xl-4">
         <h3>Экспорт номенклатуры</h3>
-       
-         
+
+
         <form zippy="iform" class="row">
             <div class="col-10 col-md-6 col-xl-4">
 
                 <div class="form-group  ">
                     <label for="itype">Тип экспорта</label>
                     <select zippy="itype" class="form-control   ">
-                       <option value="0">Только справочник</option>
+                        <option value="0">Только справочник</option>
                         <option value="1">Данные склада</option>
-                     </select>
+                    </select>
                 </div>
                 <div class="form-group  ">
                     <label for="price">Тип цены</label>
@@ -122,7 +122,7 @@
     </div>
     <div class="col-12 col-md-6 col-xl-4">
         <h3>Экспорт контрагентов</h3>
-       
+
         <form zippy="cform" class="row">
             <div class="col-10 col-md-6 col-xl-4">
 

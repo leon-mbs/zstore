@@ -29,7 +29,7 @@ class Warranty extends Document
         }
 
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "firm_name" => $this->headerdata["firm_name"],
             "customer_name" => $this->customer_name,

@@ -8,22 +8,22 @@
     </tr>
     {{#isfirm}}
     <tr>
-         
+
         <td></td>
-        <td  ><b>Покупатель</b></td>
+        <td><b>Покупатель</b></td>
         <td colspan="6">{{firm_name}}</td>
 
     </tr>
     {{/isfirm}}
-   {{#iscontract}}
+    {{#iscontract}}
     <tr>
-        
+
         <td></td>
-        <td  ><b>Договор</b></td>
-        <td colspan="6">{{contract}}  от {{createdon}}</td>
+        <td><b>Договор</b></td>
+        <td colspan="6">{{contract}} от {{createdon}}</td>
 
     </tr>
-    {{/iscontract}}     
+    {{/iscontract}}
     <tr>
         <td></td>
         <td>Основание</td>

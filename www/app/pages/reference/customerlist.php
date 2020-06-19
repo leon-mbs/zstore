@@ -180,7 +180,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->clean();
         $this->_customer = new Customer();
 
-        $this->contentview->setVisible(false); 
+        $this->contentview->setVisible(false);
     }
 
     public function saveOnClick($sender) {
@@ -314,7 +314,7 @@ class CustomerList extends \App\Pages\Base
 
     //список   комментариев
     private function updateMessages() {
-        $this->_msglist = \App\Entity\Message::find('item_type = 2 and item_id=' . $this->_customer->customer_id,'message_id');
+        $this->_msglist = \App\Entity\Message::find('item_type = 2 and item_id=' . $this->_customer->customer_id, 'message_id');
         $this->contentview->dw_msglist->Reload();
     }
 
@@ -322,8 +322,8 @@ class CustomerList extends \App\Pages\Base
     public function msgListOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label("msgdata",nl2br($item->message)));
-        $row->add(new Label("msgdate", \App\Helper::fdt( $item->created)));
+        $row->add(new Label("msgdata", nl2br($item->message)));
+        $row->add(new Label("msgdate", \App\Helper::fdt($item->created)));
         $row->add(new Label("msguser", $item->username));
 
         $row->add(new ClickLink('delmsg'))->onClick($this, 'deleteMsgOnClick');
@@ -381,7 +381,7 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('eventtitle', $event->title));
 
         $row->add(new Label("eventdesc"))->setText($event->description);
-        $row->add(new Label("eventdate", \App\Helper::fdt( $event->eventdate)));
+        $row->add(new Label("eventdate", \App\Helper::fdt($event->eventdate)));
 
         $row->add(new ClickLink('delevent'))->onClick($this, 'deleteEventOnClick');
     }
@@ -394,7 +394,5 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->customerlist->Reload(false);
     }
 
-    
- 
-    
+
 }

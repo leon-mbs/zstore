@@ -54,7 +54,7 @@ class OutcomeItem extends Document
 
         $header = array(
             "_detail" => $detail,
-            'date' => H::fd( $this->document_date),
+            'date' => H::fd($this->document_date),
             "from" => $this->headerdata["storename"],
             "notes" => $this->notes,
             "document_number" => $this->document_number

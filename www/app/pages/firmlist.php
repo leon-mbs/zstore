@@ -5,7 +5,7 @@ namespace App\Pages;
 use App\Entity\Firm;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
- 
+
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
@@ -25,7 +25,7 @@ class FirmList extends \App\Pages\Base
         if (false == \App\ACL::checkShowRef('FirmList')) {
             return;
         }
- 
+
         $this->add(new Panel('firmtable'))->setVisible(true);
         $this->firmtable->add(new DataView('firmlist', new \ZCL\DB\EntityDataSource('\App\Entity\Firm', '', 'disabled,firm_name'), $this, 'firmlistOnRow'))->Reload();
         $this->firmtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -37,7 +37,11 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new TextInput('editphone'));
         $this->firmdetail->add(new TextInput('editshopname'));
         $this->firmdetail->add(new CheckBox('editdisabled'));
-
+        $this->firmdetail->add(new TextInput('editbank'));
+        $this->firmdetail->add(new TextInput('editbankacc'));
+        $this->firmdetail->add(new TextInput('editlogo'));
+        $this->firmdetail->add(new TextInput('editstamp'));
+        $this->firmdetail->add(new TextInput('editsign'));
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -46,7 +50,7 @@ class FirmList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('firm_name', $item->firm_name));
- 
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -75,6 +79,13 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editaddress->setText($this->_firm->address);
         $this->firmdetail->editphone->setText($this->_firm->phone);
         $this->firmdetail->editshopname->setText($this->_firm->shopname);
+        $this->firmdetail->editbank->setText($this->_firm->bank);
+        $this->firmdetail->editbankacc->setText($this->_firm->bankacc);
+        $this->firmdetail->editlogo->setText($this->_firm->logo);
+        $this->firmdetail->editstamp->setText($this->_firm->stamp);
+        $this->firmdetail->editsign->setText($this->_firm->sign);
+        
+        
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
     }
 
@@ -97,12 +108,17 @@ class FirmList extends \App\Pages\Base
         $this->_firm->address = $this->firmdetail->editaddress->getText();
         $this->_firm->phone = $this->firmdetail->editphone->getText();
         $this->_firm->shopname = $this->firmdetail->editshopname->getText();
-        
+        $this->_firm->bank = $this->firmdetail->editbank->getText();
+        $this->_firm->bankacc = $this->firmdetail->editbankacc->getText();
+        $this->_firm->logo = $this->firmdetail->editlogo->getText();
+        $this->_firm->stamp = $this->firmdetail->editstamp->getText();
+        $this->_firm->sign = $this->firmdetail->editsign->getText();
+
         if ($this->_firm->firm_name == '') {
             $this->setError("entername");
             return;
         }
-        
+
         $this->_firm->disabled = $this->firmdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_firm->Save();
@@ -116,7 +132,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->setVisible(false);
     }
 
-     
+
 }
 
  

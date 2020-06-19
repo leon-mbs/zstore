@@ -49,28 +49,32 @@ class User extends \ZCL\DB\Entity
         $this->createdon = strtotime($this->createdon);
 
         $acl = @unserialize($this->roleacl);
-        if(!is_array($acl))$acl = @unserialize($this->acl); //для  обратно   совместимости
-        if(!is_array($acl))$acl = array();
-        
-       
-        $this->aclview =    $acl['aclview'];
-        $this->acledit =    $acl['acledit'];
-        $this->aclexe =     $acl['aclexe'];
-        $this->aclcancel =  $acl['aclcancel'];
-        
-        $this->widgets =    $acl['widgets'];
-        $this->modules =    $acl['modules'];
-        $this->smartmenu =  $acl['smartmenu'];        
-        
- 
-        $this->aclbranch =  $acl['aclbranch'];
-        $this->onlymy =  $acl['onlymy'];
-  
+        if (!is_array($acl)) {
+            $acl = @unserialize($this->acl);
+        } //для  обратно   совместимости
+        if (!is_array($acl)) {
+            $acl = array();
+        }
+
+
+        $this->aclview = $acl['aclview'];
+        $this->acledit = $acl['acledit'];
+        $this->aclexe = $acl['aclexe'];
+        $this->aclcancel = $acl['aclcancel'];
+
+        $this->widgets = $acl['widgets'];
+        $this->modules = $acl['modules'];
+        $this->smartmenu = $acl['smartmenu'];
+
+
+        $this->aclbranch = $acl['aclbranch'];
+        $this->onlymy = $acl['onlymy'];
+
         $options = @unserialize($this->options);
         if (!is_array($options)) {
             $options = array();
         }
-    
+
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
         $this->pagesize = (int)$options['pagesize'];
@@ -89,19 +93,19 @@ class User extends \ZCL\DB\Entity
         parent::beforeSave();
 
         $acl = array();
- 
-        $acl['aclbranch'] =  $this->aclbranch ;
-        $acl['onlymy'] =  $this->onlymy ;
-     
-        $this->acl  = serialize($acl);
+
+        $acl['aclbranch'] = $this->aclbranch;
+        $acl['onlymy'] = $this->onlymy;
+
+        $this->acl = serialize($acl);
 
         $options = array();
-        
-        $options['defstore']= $this->defstore;
-        
-        $options['defmf']= $this->defmf;
-        $options['pagesize']= $this->pagesize;
-        
+
+        $options['defstore'] = $this->defstore;
+
+        $options['defmf'] = $this->defmf;
+        $options['pagesize'] = $this->pagesize;
+
         $this->options = serialize($options);
 
         return true;

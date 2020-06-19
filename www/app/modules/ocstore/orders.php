@@ -44,12 +44,11 @@ class Orders extends \App\Pages\Base
         $this->add(new Form('filter2'))->onSubmit($this, 'onOutcome');
         $this->filter2->add(new DropDownChoice('store', \App\Entity\Store::getList(), 0));
         $this->filter2->add(new DropDownChoice('kassa', \App\Entity\MoneyFund::getList(), \App\Helper::getDefMF()));
-        $this->filter2->setVisible($modules['ocoutcome']==1);
+        $this->filter2->setVisible($modules['ocoutcome'] == 1);
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
-        $this->add(new ClickLink('importbtn',$this, 'onImport'))->setVisible($modules['ocoutcome']!=1);
-        
+        $this->add(new ClickLink('importbtn', $this, 'onImport'))->setVisible($modules['ocoutcome'] != 1);
 
 
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
@@ -83,7 +82,6 @@ class Orders extends \App\Pages\Base
 
             foreach ($data['orders'] as $ocorder) {
 
-    
 
                 $isorder = Document::findCnt(" (meta_name='Order' or meta_name='GoodsIssue') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
                 if ($isorder > 0) { //уже импортирован
@@ -117,7 +115,7 @@ class Orders extends \App\Pages\Base
         $row->add(new Label('customer', $order->firstname . ' ' . $order->lastname));
         $row->add(new Label('amount', round($order->total)));
         $row->add(new Label('comment', $order->comment));
-        $row->add(new Label('date', \App\Helper::fdt( strtotime($order->date_modified))));
+        $row->add(new Label('date', \App\Helper::fdt(strtotime($order->date_modified))));
     }
 
     public function onImport($sender) {
@@ -159,31 +157,31 @@ class Orders extends \App\Pages\Base
             $neworder->amount = round($shoporder->total);
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
-            
+
             $neworder->notes = "OC номер:{$shoporder->order_id};";
-            
+
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-           
-            if($shoporder->customer_id>0 && $modules['ocinsertcust'] == 1){
-                $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'") ;
-                if($cust == null) {
+
+            if ($shoporder->customer_id > 0 && $modules['ocinsertcust'] == 1) {
+                $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
+                if ($cust == null) {
                     $cust = new Customer();
                     $cust->shopcust_id = $shoporder->customer_id;
-                    $cust->customer_name = $shoporder->firstname . ' ' . $shoporder->lastname; 
-                    $cust->address = $shoporder->shipping_city   . ' ' . $shoporder->shipping_address_1 ; 
-                    $cust->type    = Customer::TYPE_BAYER  ;
-                    $cust->phone   = $shoporder->telephone ;
-                    $cust->email   = $shoporder->email ;
-                    $cust->comment = "Клиент ИМ" ;
+                    $cust->customer_name = $shoporder->firstname . ' ' . $shoporder->lastname;
+                    $cust->address = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1;
+                    $cust->type = Customer::TYPE_BAYER;
+                    $cust->phone = $shoporder->telephone;
+                    $cust->email = $shoporder->email;
+                    $cust->comment = "Клиент ИМ";
                     $cust->save();
-                    
+
                 }
                 $neworder->customer_id = $cust->customer_id;
             }
-           
-           
+
+
             if (strlen($shoporder->email) > 0) {
                 $neworder->notes .= " Email:" . $shoporder->email . ";";
             }
@@ -205,46 +203,45 @@ class Orders extends \App\Pages\Base
     }
 
     public function onOutcome($sender) {
-        $modules = System::getOptions("modules"); 
+        $modules = System::getOptions("modules");
         $store = $this->filter2->store->getValue();
         $kassa = $this->filter2->kassa->getValue();
-        if($store==0){
+        if ($store == 0) {
             $this->setError("noselstore");
             return;
         }
         $allowminus = \App\System::getOption("common", "allowminus");
-        
+
         if ($allowminus != 1) {
-           foreach ($this->_neworders as $shoporder) {
-     
-            foreach ($shoporder->_products_ as $product) {
-                //ищем по артикулу 
-                if (strlen($product['sku']) == 0) {
-                    continue;
+            foreach ($this->_neworders as $shoporder) {
+
+                foreach ($shoporder->_products_ as $product) {
+                    //ищем по артикулу
+                    if (strlen($product['sku']) == 0) {
+                        continue;
+                    }
+                    $code = Item::qstr($product['sku']);
+
+                    $tovar = Item::getFirst('item_code=' . $code);
+                    if ($tovar == null) {
+
+                        $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                        continue;
+                    }
+                    $tovar->quantity = $product['quantity'];
+
+                    $qty = $tovar->getQuantity($store);
+                    if ($qty < $tovar->quantity) {
+                        $this->setError("nominus", \App\Helper::fqty($qty), $tovar->item_name);
+                        return;
+                    }
+
+
                 }
-                $code = Item::qstr($product['sku']);
-
-                $tovar = Item::getFirst('item_code=' . $code);
-                if ($tovar == null) {
-
-                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
-                    continue;
-                }
-                $tovar->quantity = $product['quantity'];
-                
-                $qty = $tovar->getQuantity($store);
-                if ($qty < $tovar->quantity) {
-                    $this->setError("nominus", \App\Helper::fqty($qty), $tovar->item_name);
-                    return;
-                }                
-
-                 
-              }            
-           }
+            }
         }
-      
-      
-        
+
+
         foreach ($this->_neworders as $shoporder) {
 
 
@@ -253,9 +250,9 @@ class Orders extends \App\Pages\Base
             if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'РН-00001';
             }
-         
+
             //товары
-            $totalpr=0;
+            $totalpr = 0;
             $tlist = array();
             foreach ($shoporder->_products_ as $product) {
                 //ищем по артикулу 
@@ -272,7 +269,7 @@ class Orders extends \App\Pages\Base
                 }
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = round($product['price']);
-                $totalpr += ($tovar->quantity *$tovar->price);
+                $totalpr += ($tovar->quantity * $tovar->price);
 
                 $tlist[] = $tovar;
             }
@@ -283,14 +280,14 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['payment'] = $kassa;
             $neworder->customer_id = $modules['occustomer_id'];
-       
+
             $neworder->amount = round($totalpr);
-             
-            if($shoporder->total > $totalpr)  {
-               $neworder->headerdata['delivery_cost'] = $shoporder->total - $totalpr; 
-               $neworder->headerdata['delivery'] = 2; 
-            }          
-           
+
+            if ($shoporder->total > $totalpr) {
+                $neworder->headerdata['delivery_cost'] = $shoporder->total - $totalpr;
+                $neworder->headerdata['delivery'] = 2;
+            }
+
             $neworder->payamount = round($shoporder->total);
             $neworder->payed = round($shoporder->total);
             $neworder->notes = "OC номер:{$shoporder->order_id};";
@@ -309,12 +306,12 @@ class Orders extends \App\Pages\Base
 
             $i++;
         }
-      
-      
+
+
         $this->setInfo('imported_orders', $i);
 
         $this->_neworders = array();
-        $this->neworderslist->Reload();       
+        $this->neworderslist->Reload();
     }
 
     public function onRefresh($sender) {
@@ -328,7 +325,7 @@ class Orders extends \App\Pages\Base
         $row->add(new CheckBox('ch', new Prop($order, 'ch')));
         $row->add(new Label('number2', $order->document_number));
         $row->add(new Label('number3', $order->headerdata['ocorder']));
-        $row->add(new Label('date2', \App\Helper::fd( $order->document_date)));
+        $row->add(new Label('date2', \App\Helper::fd($order->document_date)));
         $row->add(new Label('amount2', $order->amount));
         $row->add(new Label('customer2', $order->headerdata['occlient']));
         $row->add(new Label('state', Document::getStateName($order->state)));

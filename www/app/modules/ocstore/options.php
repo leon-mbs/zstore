@@ -4,7 +4,7 @@ namespace App\Modules\OCStore;
 
 use App\System;
 use Zippy\Html\Form\DropDownChoice;
-use Zippy\Html\Form\CheckBox ;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
@@ -120,8 +120,8 @@ class Options extends \App\Pages\Base
         $key = $this->cform->key->getText();
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
-        $outcome = $this->cform->outcome->isChecked() ?1:0;
-        $insertcust = $this->cform->insertcust->isChecked()?1:0;
+        $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
+        $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
         if ($customer_id == 0) {
 
             $this->setError('noselcust');

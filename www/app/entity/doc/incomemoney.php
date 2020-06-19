@@ -27,7 +27,7 @@ class IncomeMoney extends Document
 
         $header = array(
             'amount' => H::fa($this->amount),
-            'date' => H::fd( $this->document_date),
+            'date' => H::fd($this->document_date),
             "notes" => $this->notes,
             "type" => $pt[$this->headerdata["type"]],
             "to" => $this->headerdata["paymentname"],

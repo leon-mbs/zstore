@@ -14,15 +14,15 @@ class GoodsReceipt extends Document
 {
 
     public function generateReport() {
-        $firm = H::getFirmData($this->branch_id,$this->headerdata["firm_id"]);
-  
+        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
+
         $i = 1;
 
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
             if (strlen($item->snumber) > 0) {
-                $name .= ' (' . $item->snumber . ',' . H::fd( $item->sdate) . ')';
+                $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
             }
 
             $detail[] = array("no" => $i++,
@@ -36,13 +36,13 @@ class GoodsReceipt extends Document
             );
         }
 
-        $header = array('date' => H::fd( $this->document_date),
+        $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "basedoc" => $this->headerdata["basedoc"],
             "firm_name" => $firm['firm_name'],
-             "isfirm" => strlen($firm["firm_name"]) > 0,
+            "isfirm" => strlen($firm["firm_name"]) > 0,
             "iscontract" => $this->headerdata["contract_id"] > 0,
-           "isval" =>  ($this->_doc->headerdata['val'])>1  ,
+            "isval" => ($this->_doc->headerdata['val']) > 1,
             "customer_name" => $this->customer_name,
             "document_number" => $this->document_number,
             "total" => H::fa($this->amount),
@@ -50,22 +50,24 @@ class GoodsReceipt extends Document
             "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
             "payamount" => H::fa($this->payamount)
         );
-         if ($this->headerdata["contract_id"] > 0) {
-            $contract=\App\Entity\Contract::load($this->headerdata["contract_id"]);
-            $header['contract'] = $contract->contract_number ;
-            $header['createdon'] = H::fd($contract->createdon) ;
+        if ($this->headerdata["contract_id"] > 0) {
+            $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
+            $header['contract'] = $contract->contract_number;
+            $header['createdon'] = H::fd($contract->createdon);
         }
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
-        $header['isval'] =  strlen($this->headerdata['val'])>1;
-        
+        $header['isval'] = strlen($this->headerdata['val']) > 1;
+
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
         $header['rate'] = $this->headerdata["rate"];
-        if($header['rate']==0 || $header['rate']==1) $header['isval']=false;
-        $val = H::getValList();  
-        $header['val'] =  $val[$this->headerdata['val']];
+        if ($header['rate'] == 0 || $header['rate'] == 1) {
+            $header['isval'] = false;
+        }
+        $val = H::getValList();
+        $header['val'] = $val[$this->headerdata['val']];
 
         $report = new \App\Report('doc/goodsreceipt.tpl');
 
@@ -108,17 +110,15 @@ class GoodsReceipt extends Document
 
             $sc->save();
 
-            
+
             //запоминаем  курс
-            if(strlen($this->headerdata['val'])>1 && $this->headerdata['rate']!=0 && $this->headerdata['rate'] !=1 ){
+            if (strlen($this->headerdata['val']) > 1 && $this->headerdata['rate'] != 0 && $this->headerdata['rate'] != 1) {
                 $it = Item::load($item->item_id);
-                $it->val=$this->headerdata['val'];
-                $it->rate=$this->headerdata['rate'];
+                $it->val = $this->headerdata['val'];
+                $it->rate = $this->headerdata['rate'];
                 $it->save();
             }
-            
-            
-            
+
 
         }
 

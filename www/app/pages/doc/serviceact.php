@@ -39,11 +39,11 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->docform->customer->onChange($this,'OnCustomerFirm') ;
+        $this->docform->customer->onChange($this, 'OnCustomerFirm');
 
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this,'OnCustomerFirm'  );
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false); ; 
-        
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this, 'OnCustomerFirm');
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
+
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('gar'));
         $this->docform->add(new TextInput('device'));
@@ -125,15 +125,15 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->nextNumber());
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
- 
+
                 if ($basedoc->meta_name == 'Task') {
 
                     $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                     $this->_servicelist = $basedoc->unpackDetails('detaildata');
-                   
+
                 }
-                
-            }      
+
+            }
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
@@ -241,10 +241,10 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
-        if($this->_doc->headerdata['firm_id']>0){
-           $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();    
+        if ($this->_doc->headerdata['firm_id'] > 0) {
+            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
-        
+
 
         $this->calcTotal();
 
@@ -438,21 +438,21 @@ class ServiceAct extends \App\Pages\Base
     }
 
     public function OnCustomerFirm($sender) {
-        $c=$this->docform->customer->getKey();
-        $f=$this->docform->firm->getValue(); 
-    
-        $ar = \App\Entity\Contract::getList($c,$f) ;
-        
+        $c = $this->docform->customer->getKey();
+        $f = $this->docform->firm->getValue();
+
+        $ar = \App\Entity\Contract::getList($c, $f);
+
         $this->docform->contract->setOptionList($ar);
-        if(count($ar)>0){
-           $this->docform->contract->setVisible(true);    
-        }  else {
-           $this->docform->contract->setVisible(false);
-           $this->docform->contract->setValue(0);
+        if (count($ar) > 0) {
+            $this->docform->contract->setVisible(true);
+        } else {
+            $this->docform->contract->setVisible(false);
+            $this->docform->contract->setValue(0);
         }
-   
+
     }
-    
+
     //добавление нового контрагента
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
@@ -488,7 +488,7 @@ class ServiceAct extends \App\Pages\Base
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);
-        $this->OnCustomerFirm(null) ;
+        $this->OnCustomerFirm(null);
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }

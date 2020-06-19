@@ -24,7 +24,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg( H::l('onlyadminpage')  );
+            System::setErrorMsg(H::l('onlyadminpage'));
             App::RedirectHome();
             return false;
         }
@@ -39,7 +39,7 @@ class Options extends \App\Pages\Base
             "2" => H::l('opt_partion')
         );
         $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
- 
+
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
@@ -57,7 +57,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('price4'));
         $this->common->add(new TextInput('price5'));
         $this->common->add(new TextInput('defprice'));
- 
+
         $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
@@ -68,14 +68,14 @@ class Options extends \App\Pages\Base
         $this->common->dateformat->setValue($common['dateformat']);
         $this->common->partiontype->setValue($common['partiontype']);
         $this->common->curr->setValue($common['curr']);
- 
+
         $this->common->price1->setText($common['price1']);
         $this->common->price2->setText($common['price2']);
         $this->common->price3->setText($common['price3']);
         $this->common->price4->setText($common['price4']);
         $this->common->price5->setText($common['price5']);
         $this->common->defprice->setText($common['defprice']);
- 
+
         $this->common->autoarticle->setChecked($common['autoarticle']);
         $this->common->useset->setChecked($common['useset']);
 
@@ -88,7 +88,7 @@ class Options extends \App\Pages\Base
         $this->common->allowminus->setChecked($common['allowminus']);
         $this->common->capcha->setChecked($common['capcha']);
         $this->common->useval->setChecked($common['useval']);
- 
+
         $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
         $this->firm->add(new TextInput('firmname'));
         $this->firm->add(new TextInput('shopname'));
@@ -117,24 +117,24 @@ class Options extends \App\Pages\Base
         $this->firm->logo->setText($firm['logo']);
         $this->firm->stamp->setText($firm['stamp']);
         $this->firm->sign->setText($firm['sign']);
- 
+
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
         $this->valform->add(new TextInput('valuan'));
         $this->valform->add(new TextInput('valusd'));
         $this->valform->add(new TextInput('valeuro'));
         $this->valform->add(new TextInput('valrub'));
-        $this->valform->add(new CheckBox('valprice'));        
-        
+        $this->valform->add(new CheckBox('valprice'));
+
         $val = System::getOptions("val");
         if (!is_array($val)) {
             $val = array();
-        }        
+        }
         $this->valform->valuan->setText($val['valuan']);
         $this->valform->valusd->setText($val['valusd']);
         $this->valform->valeuro->setText($val['valeuro']);
         $this->valform->valrub->setText($val['valrub']);
         $this->valform->valprice->setChecked($val['valprice']);
-        
+
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
         $this->printer->add(new TextInput('pwidth'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
@@ -143,7 +143,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new CheckBox('pcode'));
         $this->printer->add(new CheckBox('pbarcode'));
         $this->printer->add(new CheckBox('pprice'));
-  
+
         $printer = System::getOptions("printer");
         if (!is_array($printer)) {
             $printer = array();
@@ -178,7 +178,7 @@ class Options extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('edit_menugroup'));
 
         $this->editpan->editform->add(new CheckBox('edit_disabled'));
- 
+
         $this->editpan->editform->add(new DropDownChoice('edit_meta_type', \App\Entity\MetaData::getNames()));
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
     }
@@ -214,9 +214,9 @@ class Options extends \App\Pages\Base
 
 
         System::setOptions("common", $common);
-        
+
         $this->_tvars["useval"] = $common['useval'] == 1;
-        
+
         $this->setSuccess('saved');
         System::setCache('labels', null);
     }
@@ -238,15 +238,15 @@ class Options extends \App\Pages\Base
         System::setOptions("firm", $firm);
         $this->setSuccess('saved');
     }
-  
+
     public function saveValOnClick($sender) {
         $val = array();
-        $val['valuan']   = $this->valform->valuan->getText();
-        $val['valusd']   = $this->valform->valusd->getText();
-        $val['valeuro']  = $this->valform->valeuro->getText();
-        $val['valrub']   = $this->valform->valrub->getText();
-        $val['valprice'] = $this->valform->valprice->isChecked() ?1:0;
- 
+        $val['valuan'] = $this->valform->valuan->getText();
+        $val['valusd'] = $this->valform->valusd->getText();
+        $val['valeuro'] = $this->valform->valeuro->getText();
+        $val['valrub'] = $this->valform->valrub->getText();
+        $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
+
         System::setOptions("val", $val);
         $this->setSuccess('saved');
     }

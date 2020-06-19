@@ -19,8 +19,7 @@ class Project extends \ZCL\DB\Entity
     const STATUS_WAITPAIMENT = 6;
     const STATUS_CLOSED      = 12;
 
-  
-    
+
     protected function init() {
         $this->project_id = 0;
         $this->status = 1;
@@ -58,35 +57,35 @@ class Project extends \ZCL\DB\Entity
 
     protected function afterLoad() {
 
-    
+
         //распаковываем  данные из  
         $xml = simplexml_load_string($this->details);
         $this->desc = (string)($xml->desc[0]);
-        $this->creator = (string) ($xml->creator[0]);
-        $this->createddate = (int) ($xml->createddate[0]);
-        $this->creator_id = (int) ($xml->creator_id[0]);
+        $this->creator = (string)($xml->creator[0]);
+        $this->createddate = (int)($xml->createddate[0]);
+        $this->creator_id = (int)($xml->creator_id[0]);
 
         parent::afterLoad();
     }
 
-    public   function getUsers() {
+    public function getUsers() {
         $list = array();
         $conn = \ZDB\DB::getConnect();
-        $res = $conn->Execute("select  user_id  from issue_projectacc   where   project_id={$this->project_id}   " );
-        foreach($res as $r){
-           $list[] = $r['user_id'] ;
+        $res = $conn->Execute("select  user_id  from issue_projectacc   where   project_id={$this->project_id}   ");
+        foreach ($res as $r) {
+            $list[] = $r['user_id'];
         }
-        return  $list;
+        return $list;
     }
 
-    public   function setUsers($users) {
+    public function setUsers($users) {
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from issue_projectacc where   project_id=" . $this->project_id);
-        foreach($users as $u){
-           $conn->Execute("insert into issue_projectacc  (project_id,user_id) value ({$this->project_id},{$u}) "   );
+        foreach ($users as $u) {
+            $conn->Execute("insert into issue_projectacc  (project_id,user_id) value ({$this->project_id},{$u}) ");
         }
     }
-    
+
     public static function getStatusList() {
         $list = array();
         $list[self::STATUS_NEW] = \App\Helper::l('pr_new');
