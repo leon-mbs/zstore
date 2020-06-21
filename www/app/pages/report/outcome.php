@@ -183,6 +183,8 @@ class Outcome extends \App\Pages\Base
         ";
         }
 
+        $totsum = 0;
+        $totnavar = 0;
 
         $rs = $conn->Execute($sql);
 
@@ -196,12 +198,20 @@ class Outcome extends \App\Pages\Base
                 "navarsign" => $row['navar'] > 0,
                 "summa" => H::fa($row['summa'])
             );
+            
+            $totnavar += $row['navar'];
+            $totsum += $row['summa'];
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),
             "_detail" => $detail,
             'dateto' => \App\Helper::fd($to)
         );
+     
+        $header['totsumma'] = H::fa($totsum);
+        $header['totnavar'] = H::fa($totnavar);
+     
+        
         if ($type == 1 || strlen($cat) > 0) {
             $header['_type1'] = true;
             $header['_type2'] = false;

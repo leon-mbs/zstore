@@ -91,7 +91,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=1022 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1034 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -132,7 +132,7 @@ CREATE TABLE `documents` (
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`),
   KEY `branch_id` (`branch_id`)
-)  AUTO_INCREMENT=272 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=275 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -186,7 +186,7 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-)  AUTO_INCREMENT=742 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=743 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -197,7 +197,7 @@ CREATE TABLE `entrylist` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/   /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
+/*!50003 CREATE*/  /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -222,7 +222,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/   /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
+/*!50003 CREATE*/  /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
   FOR EACH ROW
 BEGIN
 
@@ -307,7 +307,7 @@ CREATE TABLE `files` (
   `mime` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`file_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `filesdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -346,12 +346,12 @@ DROP TABLE IF EXISTS `issue_history`;
 CREATE TABLE `issue_history` (
   `hist_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `issue_id` int(11) NOT NULL,
-  `status` smallint(6) NOT NULL,
   `createdon` date NOT NULL,
   `user_id` int(11) NOT NULL,
+  `description` varchar(255) NOT NULL,
   PRIMARY KEY (`hist_id`),
   KEY `issue_id` (`issue_id`)
-)  AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `issue_issuelist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -368,7 +368,7 @@ CREATE TABLE `issue_issuelist` (
   PRIMARY KEY (`issue_id`),
   KEY `project_id` (`project_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `issue_issuelist_view`;
 /*!50001 DROP VIEW IF EXISTS `issue_issuelist_view`*/;
@@ -386,6 +386,16 @@ SET character_set_client = utf8;
  1 AS `username`,
  1 AS `project_name`*/;
 SET character_set_client = @saved_cs_client;
+DROP TABLE IF EXISTS `issue_projectacc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `issue_projectacc` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+)  AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `issue_projectlist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -396,7 +406,7 @@ CREATE TABLE `issue_projectlist` (
   `customer_id` int(11) DEFAULT NULL,
   `status` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`project_id`)
-)  AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `issue_projectlist_view`;
 /*!50001 DROP VIEW IF EXISTS `issue_projectlist_view`*/;
@@ -527,7 +537,7 @@ CREATE TABLE `messages` (
   `item_type` int(11) DEFAULT NULL,
   PRIMARY KEY (`message_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `messages_view`;
 /*!50001 DROP VIEW IF EXISTS `messages_view`*/;
@@ -566,6 +576,16 @@ CREATE TABLE `mfund` (
   PRIMARY KEY (`mf_id`)
 )  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `note_fav`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note_fav` (
+  `fav_id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`fav_id`)
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_nodes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -575,9 +595,10 @@ CREATE TABLE `note_nodes` (
   `title` varchar(50) NOT NULL,
   `mpath` varchar(255) CHARACTER SET latin1 NOT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `ispublic` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`node_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_nodesview`;
 /*!50001 DROP VIEW IF EXISTS `note_nodesview`*/;
@@ -589,6 +610,7 @@ SET character_set_client = utf8;
  1 AS `title`,
  1 AS `mpath`,
  1 AS `user_id`,
+ 1 AS `ispublic`,
  1 AS `tcnt`*/;
 SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `note_tags`;
@@ -600,7 +622,7 @@ CREATE TABLE `note_tags` (
   `tagvalue` varchar(255) NOT NULL,
   PRIMARY KEY (`tag_id`),
   KEY `topic_id` (`topic_id`)
-)  AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_topicnode`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -612,7 +634,7 @@ CREATE TABLE `note_topicnode` (
   PRIMARY KEY (`tn_id`),
   KEY `topic_id` (`topic_id`),
   KEY `node_id` (`node_id`)
-)  AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_topicnodeview`;
 /*!50001 DROP VIEW IF EXISTS `note_topicnodeview`*/;
@@ -632,11 +654,11 @@ DROP TABLE IF EXISTS `note_topics`;
 CREATE TABLE `note_topics` (
   `topic_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `content` text NOT NULL,
-  `favorites` tinyint(1) NOT NULL DEFAULT '0',
-  `ispublic` tinyint(1) DEFAULT '0',
+  `content` longtext NOT NULL,
+  `acctype` smallint(4) DEFAULT '0',
+  `user_id` int(11) NOT NULL,
   PRIMARY KEY (`topic_id`)
-)  AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `note_topicsview`;
 /*!50001 DROP VIEW IF EXISTS `note_topicsview`*/;
@@ -646,8 +668,8 @@ SET character_set_client = utf8;
  1 AS `topic_id`,
  1 AS `title`,
  1 AS `content`,
- 1 AS `favorites`,
- 1 AS `ispublic`*/;
+ 1 AS `acctype`,
+ 1 AS `user_id`*/;
 SET character_set_client = @saved_cs_client;
 DROP TABLE IF EXISTS `notifies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -661,7 +683,7 @@ CREATE TABLE `notifies` (
   `sender_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=91 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -695,7 +717,7 @@ CREATE TABLE `paylist` (
   `paytype` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=251 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=252 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -1150,7 +1172,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `note_nodesview` AS select `note_nodes`.`node_id` AS `node_id`,`note_nodes`.`pid` AS `pid`,`note_nodes`.`title` AS `title`,`note_nodes`.`mpath` AS `mpath`,`note_nodes`.`user_id` AS `user_id`,(select count(`note_topicnode`.`topic_id`) AS `Count(topic_id)` from `note_topicnode` where (`note_topicnode`.`node_id` = `note_nodes`.`node_id`)) AS `tcnt` from `note_nodes` */;
+/*!50001 VIEW `note_nodesview` AS select `note_nodes`.`node_id` AS `node_id`,`note_nodes`.`pid` AS `pid`,`note_nodes`.`title` AS `title`,`note_nodes`.`mpath` AS `mpath`,`note_nodes`.`user_id` AS `user_id`,`note_nodes`.`ispublic` AS `ispublic`,(select count(`note_topicnode`.`topic_id`) AS `Count(topic_id)` from `note_topicnode` where (`note_topicnode`.`node_id` = `note_nodes`.`node_id`)) AS `tcnt` from `note_nodes` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1176,7 +1198,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE  */
 /*!50013  */
-/*!50001 VIEW `note_topicsview` AS select `t`.`topic_id` AS `topic_id`,`t`.`title` AS `title`,`t`.`content` AS `content`,`t`.`favorites` AS `favorites`,`t`.`ispublic` AS `ispublic` from `note_topics` `t` */;
+/*!50001 VIEW `note_topicsview` AS select `t`.`topic_id` AS `topic_id`,`t`.`title` AS `title`,`t`.`content` AS `content`,`t`.`acctype` AS `acctype`,`t`.`user_id` AS `user_id` from `note_topics` `t` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

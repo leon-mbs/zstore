@@ -41,6 +41,7 @@
 
     </tr>
     {{/_detail}}
+    <tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td><td align="right" ><b><b>{{totnavar}}</b></b></td> </tr>
 </table>
 {{/_type1}}
 {{#_type2}}
@@ -70,6 +71,8 @@
     <td></td>
 </tr>
 {{/_detail}}
+ <tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td><td align="right" ><b><b>{{totnavar}}</b></b></td> </tr>
+
 </table>
 {{/_type2}}
 {{#_type3}}
@@ -101,6 +104,8 @@
 
 </tr>
 {{/_detail}}
+<tr><td  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td><td   > </td> </tr>
+
 </table>
 {{/_type3}}
 {{#_type4}}
@@ -131,7 +136,10 @@
     <td></td>
 </tr>
 {{/_detail}}
+<tr><td  ></td><td  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td>  </tr>
+
 </table>
+
 {{/_type4}}
 
 {{#_type5}}
@@ -161,5 +169,7 @@
     <td></td>
 </tr>
 {{/_detail}}
+<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> <td align="right"   > <b>{{totnavar}}</b></td><td   > </td>  </tr>
+
 </table>
 {{/_type5}}

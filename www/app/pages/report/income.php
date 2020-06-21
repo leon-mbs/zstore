@@ -27,7 +27,7 @@ class Income extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates'), 1));
+        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates')), 1));
 
 
         $this->add(new Panel('detail'))->setVisible(false);
@@ -131,23 +131,28 @@ class Income extends \App\Pages\Base
         ";
         }
 
-
+        $total=0;
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {
             $detail[] = array(
                 "code" => $row['item_code'],
                 "name" => $row['itemname'],
-                "dt" => date\App\Helper::fd(strtotime($row['dt'])),
+                "dt" => H::fd(strtotime($row['dt'])),
                 "qty" => H::fqty($row['qty']),
                 "summa" => H::fa($row['summa'])
             );
+          $total += $row['summa'];            
         }
-
-        $header = array('datefrom' => \App\Helper::fd($from),
+        
+ 
+        $header = array('datefrom' => H::fd($from),
             "_detail" => $detail,
-            'dateto' => \App\Helper::fd($to)
+            'dateto' => H::fd($to)
         );
+        
+        $header['total'] = H::fa($total);
+        
         if ($type == 1) {
             $header['_type1'] = true;
             $header['_type2'] = false;
