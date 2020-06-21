@@ -89,6 +89,9 @@
             <div class="navbar nav justify-content-start">
                 Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                 &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+           
+           <!--     &nbsp; &nbsp; <i data-toggle="modal" data-target="#modalscanner" title="Сканировать  мобильным  устройством" style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i> 
+           -->
 
             </div>
             {{/usescanner}}
@@ -453,6 +456,30 @@
         </div>
     </div>
 </form>
+   <div id="modalscanner" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Сканирование</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+        <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
+            <b>Настройки <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
+        </a>   
+        <div   id="collapcescanner">
+               Настройки
+        </div>       
+                <div>тут  камера</div>
+                  Код:   <span id="scancode">12345</span>&nbsp;&nbsp;&nbsp; <button class="btn btn-sm btn-success">OK</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 
 {{#usescanner}}
@@ -469,6 +496,11 @@
             $('#addcode').click()
         }
     }
+    
+    
+    
+    
+    
 </script>
 {{/usescanner}}
 </body>
