@@ -67,7 +67,7 @@
 
     <tr>
         <td></td>
-        <td valign="top"> Коментарий</td>
+        <td valign="top"> Комментарий</td>
         <td colspan="4">
             <p>{{notes}}</p>
         </td>

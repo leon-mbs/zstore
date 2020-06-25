@@ -155,6 +155,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->edittype->setValue($this->_customer->type);
         $this->customerdetail->editstatus->setValue($this->_customer->status);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
+        $this->goAnkor('contentviewlink');        
     }
 
     public function deleteOnClick($sender) {

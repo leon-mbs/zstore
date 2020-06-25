@@ -282,7 +282,7 @@ class Document extends \ZCL\DB\Entity
 
 
             // возвращаем бонусы
-            if ($this->headerdata['paydisc'] > 0) {
+            if ($this->headerdata['paydisc'] > 0 && $this->customer_id>0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);
                 if ($customer->discount > 0) {
                     return; //процент
@@ -290,6 +290,7 @@ class Document extends \ZCL\DB\Entity
                     $customer->bonus = $customer->bonus + $this->headerdata['paydisc'];
                     $customer->save();
                 }
+
             }
 
 
