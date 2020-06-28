@@ -156,9 +156,10 @@ class POSCheck extends Document
                 $customer->save();
             }
         }
+        $payed   =  $this->payed;
         if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
-            //  $this->payed = $this->payed - $this->headerdata['exchange']; //без здачи
+            $payed = $this->payed - $this->headerdata['exchange']; //без здачи
         }
         foreach ($this->unpackDetails('services') as $ser) {
 
@@ -168,8 +169,8 @@ class POSCheck extends Document
 
             $sc->save();
         }
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+        if ($this->headerdata['payment'] > 0 && $payed > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
         }
 
         return true;

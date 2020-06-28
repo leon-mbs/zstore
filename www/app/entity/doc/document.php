@@ -282,7 +282,7 @@ class Document extends \ZCL\DB\Entity
 
 
             // возвращаем бонусы
-            if ($this->headerdata['paydisc'] > 0) {
+            if ($this->headerdata['paydisc'] > 0 && $this->customer_id>0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);
                 if ($customer->discount > 0) {
                     return; //процент
@@ -290,6 +290,7 @@ class Document extends \ZCL\DB\Entity
                     $customer->bonus = $customer->bonus + $this->headerdata['paydisc'];
                     $customer->save();
                 }
+
             }
 
 
@@ -737,16 +738,18 @@ class Document extends \ZCL\DB\Entity
             file_put_contents($f, $data);
 
             $mail = new \PHPMailer\PHPMailer\PHPMailer();
-            $mail->isSMTP();
-            $mail->Host = $_config['smtp']['host'];
-            $mail->Port = $_config['smtp']['port'];
-            $mail->Username = $_config['smtp']['user'];
-            $mail->Password = $_config['smtp']['pass'];
-            $mail->SMTPAuth = true;
-            if ($_config['smtp']['tls'] == 'true') {
-                $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            if($_config['smtp']['usesmtp']=='true') {
+                $mail->isSMTP();
+                $mail->Host = $_config['smtp']['host'];
+                $mail->Port = $_config['smtp']['port'];
+                $mail->Username = $_config['smtp']['user'];
+                $mail->Password = $_config['smtp']['pass'];
+                $mail->SMTPAuth = true;
+                if ($_config['smtp']['tls'] == 'true') {
+                    $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                }
+            
             }
-
             $mail->setFrom($_config['smtp']['user'], '');
             $mail->addAddress($customer->email);
             $mail->Subject = $doc->getEmailSubject();

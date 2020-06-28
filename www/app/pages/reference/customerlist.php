@@ -155,6 +155,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->edittype->setValue($this->_customer->type);
         $this->customerdetail->editstatus->setValue($this->_customer->status);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
+        
     }
 
     public function deleteOnClick($sender) {
@@ -246,6 +247,7 @@ class CustomerList extends \App\Pages\Base
         $this->updateEvents();
         $this->customertable->customerlist->setSelectedRow($sender->getOwner());
         $this->customertable->customerlist->Reload();
+        $this->goAnkor('contentviewlink');        
     }
 
     //контент

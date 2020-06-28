@@ -137,9 +137,7 @@ class POSCheck extends \App\Pages\Base
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            if ($this->_doc->headerdata['exchange'] > 0) {
-                $this->_doc->payed += $this->_doc->headerdata['exchange'];
-            } //учитываем  со  здачей
+ 
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->exchange->setText($this->_doc->headerdata['exchange']);
