@@ -243,7 +243,7 @@ class Item extends \ZCL\DB\Entity
 
     public function getLastPartion($store) {
         $conn = \ZDB\DB::getConnect();
-        $sql = "  select coalesce(partion,0)  from  store_stock where    item_id = {$this->item_id}   ";
+        $sql = "  select coalesce(partion,0)  from  store_stock where partion >0 and    item_id = {$this->item_id}   ";
         if ($store > 0) {
             $sql = $sql . " and store_id=" . $store;
         }
