@@ -48,6 +48,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
+        $this->itemdetail->add(new TextInput('editshortname'));
         $this->itemdetail->add(new TextInput('editprice1'));
         $this->itemdetail->add(new TextInput('editprice2'));
         $this->itemdetail->add(new TextInput('editprice3'));
@@ -197,6 +198,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->setVisible(true);
 
         $this->itemdetail->editname->setText($this->_item->itemname);
+        $this->itemdetail->editshortname->setText($this->_item->shortname);
         $this->itemdetail->editprice1->setText($this->_item->price1);
         $this->itemdetail->editprice2->setText($this->_item->price2);
         $this->itemdetail->editprice3->setText($this->_item->price3);
@@ -265,6 +267,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $this->_item->itemname = $this->itemdetail->editname->getText();
+        $this->_item->shortname = $this->itemdetail->editshortname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
         $this->_item->price1 = $this->itemdetail->editprice1->getText();
         $this->_item->price2 = $this->itemdetail->editprice2->getText();
@@ -439,7 +442,13 @@ class ItemList extends \App\Pages\Base
         $report = new \App\Report('item_tag.tpl');
         $header = array('printw' => $wp);
         if ($printer['pname'] == 1) {
-            $header['name'] = $item->itemname;
+            
+            if(strlen($item->shortname)>0){
+               $header['name'] = $item->shortname;  
+            }else {
+               $header['name'] = $item->itemname;    
+            }
+            
         }
         if ($printer['pprice'] == 1) {
             $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');

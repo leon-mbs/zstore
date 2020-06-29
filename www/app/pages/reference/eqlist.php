@@ -54,6 +54,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editserial'));
         $this->itemdetail->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
+        $this->itemdetail->add(new TextInput('editbalance'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('editeq',true));
@@ -143,6 +144,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->code);
         $this->itemdetail->editserial->setText($this->_item->serial);
+        $this->itemdetail->editbalance->setText($this->_item->balance);
     }
 
     public function addOnClick($sender) {
@@ -177,6 +179,7 @@ class EqList extends \App\Pages\Base
         $this->_item->emp_name = $this->itemdetail->editemp->getValueName();
 
         $this->_item->code = $this->itemdetail->editcode->getText();
+        $this->_item->balance = $this->itemdetail->editbalance->getText();
 
         $this->_item->serial = $this->itemdetail->editserial->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();

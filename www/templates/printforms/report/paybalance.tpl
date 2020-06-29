@@ -75,49 +75,56 @@
         <td  >  </td>
 
     </tr>
-    <tr  >
+    <tr >
         <td  >Проход:</td>
-        <td align="right" > 22</td>
+        <td align="right" >  </td>
         <td  >
-               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"   
+                 title=""></i> 
         </td>
     </tr>
     <tr  >
         <td  >Переменные  затраты:</td>
-        <td align="right" > 22</td>
+        <td align="right" >  </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                 title=""></i> 
         </td>
     </tr>
     <tr  >
         <td  >Операционные расходы:</td>
-        <td align="right" > 22</td>
+        <td align="right" >  </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-        </td>
+                  title=""></i> 
+       </td>
     </tr>
     <tr  >
         <td  >Чистая прибыль:</td>
-        <td align="right" > 22</td>
+        <td align="right" >  </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                 title=""></i> 
         </td>
     </tr>
+    {{#isinv}}
    <tr  >
         <td  >Инвестиции:</td>
-        <td align="right" > 22</td>
+        <td align="right" >  </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-        </td>
+                   title=""></i> 
+      </td>
     </tr>
   <tr  >
         <td  >Отдача от инвестиций (ROI):</td>
-        <td align="right" > 22</td>
+        <td align="right" >  </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-        </td>
+                    title=""></i> 
+     </td>
     </tr>
-
+    {{/isinv}}
 </table>
 
 

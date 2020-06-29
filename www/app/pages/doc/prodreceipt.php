@@ -353,9 +353,13 @@ class ProdReceipt extends \App\Pages\Base
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
-
-        $ilist = \App\Entity\ItemSet::find("pitem_id=" . $id);
+        $item = \App\Entity\Item::load($id);
         $price = 0;
+        if($item->zarp >0){
+           $price += $item->zarp; 
+        }
+        $ilist = \App\Entity\ItemSet::find("pitem_id=" . $id);
+        
         if (count($ilist) > 0) {
             foreach ($ilist as $iset) {
                 $it = \App\Entity\Item::load($iset->item_id);
