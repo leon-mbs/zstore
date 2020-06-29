@@ -43,7 +43,7 @@ class CustomerList extends \App\Pages\Base
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
-        $this->customertable->add(new DataView('customerlist', new \ZCL\DB\EntityDataSource('\App\Entity\Customer'), $this, 'customerlistOnRow'));
+        $this->customertable->add(new DataView('customerlist', new \ZCL\DB\EntityDataSource('\App\Entity\Customer','','customer_name'), $this, 'customerlistOnRow'));
         $this->customertable->customerlist->setPageSize(Helper::getPG());
         $this->customertable->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->customerlist));
         $this->customertable->customerlist->setSelectedClass('table-success');

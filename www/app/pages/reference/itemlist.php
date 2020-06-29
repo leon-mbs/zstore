@@ -87,6 +87,7 @@ class ItemList extends \App\Pages\Base
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editminqty'));
+        $this->itemdetail->add(new TextInput('editzarp'));
         $this->itemdetail->add(new TextInput('editweight'));
 
         $this->itemdetail->add(new TextInput('editcell'));
@@ -103,8 +104,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-
-
+ 
         $this->add(new Panel('setpanel'))->setVisible(false);
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
         $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
@@ -120,8 +120,7 @@ class ItemList extends \App\Pages\Base
         } else {
             $this->addOnClick(null);
         }
-
-
+ 
     }
 
     public function itemlistOnRow($row) {
@@ -214,6 +213,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->editcell->setText($this->_item->cell);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
+        $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
@@ -229,8 +229,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemtable->itemlist->setSelectedRow($sender->getOwner());
         $this->itemtable->itemlist->Reload(false);
-
-
+ 
         $this->updateman();
     }
 
@@ -282,13 +281,13 @@ class ItemList extends \App\Pages\Base
 
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
+        $this->_item->zarp = $this->itemdetail->editzarp->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
 
         $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
-
-
+ 
         //проверка  уникальности артикула
         if (strlen($this->_item->item_code) > 0) {
             $code = Item::qstr($this->_item->item_code);
@@ -319,8 +318,7 @@ class ItemList extends \App\Pages\Base
             $this->setError('itemnamecode_exists');
             return;
         }
-
-
+ 
         //delete image
         if ($this->itemdetail->editdelimage->isChecked()) {
             if ($this->_item->image_id > 0) {
@@ -328,11 +326,9 @@ class ItemList extends \App\Pages\Base
             }
             $this->_item->image_id = 0;
         }
-
-
+ 
         $this->_item->Save();
-
-
+ 
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
             $imagedata = getimagesize($file["tmp_name"]);
@@ -356,8 +352,7 @@ class ItemList extends \App\Pages\Base
             $this->_item->image_id = $image->image_id;
             $this->_item->Save();
         }
-
-
+ 
         $this->itemtable->itemlist->Reload(false);
 
         $this->itemtable->setVisible(true);

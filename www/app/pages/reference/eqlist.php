@@ -34,6 +34,7 @@ class EqList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchemp', Employee::findArray("emp_name", "", "emp_name"), 0));
+
         $this->filter->add(new CheckBox('showdis'));
 
 
@@ -55,7 +56,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
-
+        $this->itemdetail->add(new CheckBox('editeq',true));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -137,6 +138,7 @@ class EqList extends \App\Pages\Base
 
         $this->itemdetail->editemp->setValue($this->_item->emp_id);
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
+        $this->itemdetail->editeq->setChecked($this->_item->eq);
 
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->code);
@@ -148,6 +150,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
         $this->itemdetail->clean();
+        $this->itemdetail->editeq->setChecked(true);
         $this->_item = new Equipment();
     }
 
@@ -177,7 +180,7 @@ class EqList extends \App\Pages\Base
 
         $this->_item->serial = $this->itemdetail->editserial->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
-        $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
+        $this->_item->eq = $this->itemdetail->editeq->isChecked() ? 1 : 0;
 
         $this->_item->Save();
 

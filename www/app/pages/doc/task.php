@@ -69,7 +69,7 @@ class Task extends \App\Pages\Base
 
         //equipment
         $this->add(new Form('editdetail4'))->setVisible(false);
-        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::findArray("eq_name", "disabled<>1", "eq_name")));
+        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::getQuipment()));
         $this->editdetail4->add(new Button('cancelrow4'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 

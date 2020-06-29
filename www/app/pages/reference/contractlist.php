@@ -215,7 +215,7 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return Contract::find($this->getWhere(), "createdon desc", $count, $start);
+        return Contract::find($this->getWhere(), "contract_number", $count, $start);
     }
 
     public function getItem($id) {
