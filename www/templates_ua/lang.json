@@ -233,6 +233,17 @@
   "onlyadminpage": "До сторiнки має доступ тiльки адмiнiстратор",
   "email_sent": "Лист вiдправлено",
   "emailinvsub": "Рахунок до оплати номер %s ",
+  "aclnoaccessviewreg": "Нема права  перегляду   журналу %s ",
+  "aclnoaccessviewreport": "Нема права  перегляду звiту %s ",
+  "aclnoaccesseditref": "Нема права  редагування довiдника %s ",
+  "aclnoaccessviewdoc": "Нема права  перегляду документу %s ",
+  "aclnoaccesseditdoc": "Нема права  редагування документу %s ",
+  "aclnoaccesscanceldoc": "Нема права  вiдмiни документу %s ",
+  "aclnoaccessstatedoc": "Нема права  змiни статусу документу %s ",
+  "aclnoaccessexedoc": "Нема права  проведення документу %s ",
+  "aclnoaccessviewser": "Нема права  доступу до сторiнки   %s ",
+  
+  
   "refreshed": "Оновлено",
   "sent": "Відправлено",
   "saved": "Збережено"

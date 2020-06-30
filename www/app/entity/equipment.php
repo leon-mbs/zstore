@@ -10,6 +10,7 @@ namespace App\Entity;
  */
 class Equipment extends \ZCL\DB\Entity
 {
+ 
 
     protected function init() {
         $this->eq_id = 0;
@@ -22,6 +23,9 @@ class Equipment extends \ZCL\DB\Entity
         $this->detail .= "<emp_name>{$this->emp_name}</emp_name>";
         $this->detail .= "<serial>{$this->serial}</serial>";
         $this->detail .= "<code>{$this->code}</code>";
+        $this->detail .= "<balance>{$this->balance}</balance>";
+        $this->detail .= "<eq>{$this->eq}</eq>";
+      
 
 
         $this->detail .= "</detail>";
@@ -36,9 +40,18 @@ class Equipment extends \ZCL\DB\Entity
         $this->emp_name = (string)($xml->emp_name[0]);
         $this->serial = (string)($xml->serial[0]);
         $this->code = (string)($xml->code[0]);
+        $this->balance = (string)($xml->balance[0]);
+        $this->eq = (int)($xml->eq[0]);
+       
 
 
         parent::afterLoad();
     }
 
+    //возвращает  оборудование для выпадающих списков
+    public static function getQuipment(){
+       return Equipment::findArray("eq_name", "disabled<>1 and detail like'%<eq>1</eq>%' ", "eq_name")  ;
+    }
+    
+    
 }

@@ -82,7 +82,7 @@ class DocList extends \App\Pages\Base
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->doclist->setCurrentPage($filter->page);
-        $this->doclist->setSorting('document_id', 'desc');
+        $this->doclist->setSorting('document_date desc,document_id desc', '');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
@@ -268,6 +268,7 @@ class DocList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+         global $logger;  
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
@@ -301,6 +302,7 @@ class DocList extends \App\Pages\Base
             $this->setError($del);
             return;
         }
+        $logger->info("Документ  {$doc->document_number} удален  пользователем {$user->username}");
         $this->doclist->Reload(true);
         $this->resetURL();
     }

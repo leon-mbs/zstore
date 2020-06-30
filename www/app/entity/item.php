@@ -35,12 +35,14 @@ class Item extends \ZCL\DB\Entity
         $this->price5 = (string)($xml->price5[0]);
         $this->rate = (string)($xml->rate[0]);
         $this->val = (string)($xml->val[0]);
+        $this->zarp = (string)($xml->zarp[0]);
 
         $this->pricelist = (int)$xml->pricelist[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
         $this->weight = (string)$xml->weight[0];
         $this->manufacturer = (string)$xml->manufacturer[0];
+        $this->shortname = (string)$xml->shortname[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -84,6 +86,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<cell>{$this->cell}</cell>";
         //   $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
+        $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
@@ -92,6 +95,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<price5>{$this->price5}</price5>";
         $this->detail .= "<val>{$this->val}</val>";
         $this->detail .= "<rate>{$this->rate}</rate>";
+        $this->detail .= "<zarp>{$this->zarp}</zarp>";
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<weight>{$this->weight}</weight>";

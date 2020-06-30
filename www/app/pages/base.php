@@ -214,5 +214,8 @@ class Base extends \Zippy\Html\WebPage
         App::$app->getResponse()->addJavaScript($js, $docready);
     }
 
+    public function goDocView(){
+          $this->goAnkor('dankor');
+    }
 
 }

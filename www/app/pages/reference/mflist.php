@@ -33,7 +33,7 @@ class MFList extends \App\Pages\Base
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
         $this->add(new Panel('mftable'))->setVisible(true);
-        $this->mftable->add(new DataView('mflist', new \ZCL\DB\EntityDataSource('\App\Entity\MoneyFund'), $this, 'mflistOnRow'))->Reload();
+        $this->mftable->add(new DataView('mflist', new \ZCL\DB\EntityDataSource('\App\Entity\MoneyFund','','mf_name'), $this, 'mflistOnRow'))->Reload();
         $this->mftable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('mfdetail'))->setVisible(false);
         $this->mfdetail->add(new TextInput('editmf_name'));

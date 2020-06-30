@@ -12,21 +12,21 @@ namespace App\Entity;
 class Pay extends \ZCL\DB\Entity
 {
 
-    //типы платеежей - затраты и доходы
+    //типы платежей - затраты и доходы
     const PAY_BASE_INCOME      = 1;     //доход от основной  деятельности
-    const PAY_INVEST_INCOME    = 2;     //инвестиции
+   // const PAY_INVEST_INCOME    = 2;     //инвестиции
     const PAY_OTHER_INCOME     = 100;   //прочие доходы
     const PAY_CANCEL_CUST      = 5;    //Возврат  поставщику
-    const PAY_BASE_OUTCOME     = 50;      //расходы основной  деятельности
+    const PAY_BASE_OUTCOME     = 50;    //расходы основной  деятельности
     const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
     const PAY_ADMIN_OUTCOME    = 52;    //административные  расходы
-    const PAY_SALE_OUTCOME     = 53;     //расходы на сбыт
+    const PAY_SALE_OUTCOME     = 53;    //расходы на сбыт
     const PAY_SALARY_OUTCOME   = 54;    //выплата зарплат
     const PAY_TAX_OUTCOME      = 55;    //уплата  налогов  и сборов
     const PAY_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку  
-    const PAY_DIVIDEND_OUTCOME = 57;    //распределение прибыли 
     const PAY_CANCEL           = 58;    //Возврат  покупателю
     const PAY_OTHER_OUTCOME    = 101;   //прочие расходы
+    const PAY_DIVIDEND_OUTCOME = 102;   //распределение прибыли
 
     protected function init() {
         $this->pl_id = 0;
@@ -96,7 +96,7 @@ class Pay extends \ZCL\DB\Entity
         $list = array();
         if ($type != 2) {
             $list[PAY::PAY_BASE_INCOME] = \App\Helper::l('pt_inprod');
-            $list[PAY::PAY_INVEST_INCOME] = \App\Helper::l('pt_ininv');
+          //  $list[PAY::PAY_INVEST_INCOME] = \App\Helper::l('pt_ininv');
             $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[PAY::PAY_CANCEL_CUST] = \App\Helper::l('pt_infromcust');
         }

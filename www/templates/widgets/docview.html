@@ -1,28 +1,20 @@
 <html>
-<head>
-</head>
-<body>
-<div class="card  p-3 mb-3 bg-white  ">
-    <div class="card">
-
-
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link  active" href="#printtab" data-toggle="tab"><i
-                    class="fa fa-print"></i> Форма для печати</a></li>
-            <li class="nav-item"><a class="nav-link" href="#messagetab" data-toggle="tab"><i class="fa fa-comments"></i>
-                Коментарии <span zippy="hmessages" class="badge badge-pill badge-info"></span> &nbsp;&nbsp;<i
-                        class="fa fa-paperclip"></i> файлы <span zippy="hfiles"
-                                                                 class="badge badge-pill badge-info"></span></a></li>
-            <li class="nav-item"><a class="nav-link" href="#doctab" data-toggle="tab"><i
-                    class="fas fa-project-diagram"></i> Связанные документы <span zippy="hdocs"
-                                                                                  class="badge badge-pill badge-info"></span></a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="#stattab" data-toggle="tab"><i
-                    class="fa fa-calendar-alt"></i> История изменений </a></li>
-        </ul>
-
-        <div class="tab-content">
-            <div id="printtab" class="tab-pane  active">
+ 
+<div class="   p-3 mb-3 bg-white  ">
+     
+ 
+  
+        <div  class="mb-1" style="font-size: 1.3rem">
+        <a zippy="doctabp"><span    class="{{{doctabpbadge}}}"   ><i class="fa fa-print"></i> Печатная форма</span>   </a>
+        <a zippy="doctabd"><span    class="{{{doctabdbadge}}}"   ><i class="fa fa-project-diagram"></i> Связанные документы  <span zippy="hdocs" class="badge badge-pill badge-info"></span></span>  </a>
+        <a zippy="doctabc"><span    class="{{{doctabcbadge}}}"   ><i class="fa fa-comments"></i> Комментарии  <span zippy="hmessages" class="badge badge-pill badge-info"></span></span></a> 
+        <a zippy="doctabf"><span    class="{{{doctabfbadge}}}"   ><i class="fa fa-paperclip"></i> Прикрепленные файлы    <span zippy="hfiles" class="badge badge-pill badge-info"></span></span></a> 
+        <a zippy="doctabh"><span    class="{{{doctabhbadge}}}"   ><i class="fa fa-calendar-alt"></i> История изменений </span>   </a>
+        
+        </div>
+        <div  >
+          {{#doctabp}}
+            <div  >
                 &nbsp; &nbsp; &nbsp;
                 <a zippy="print" onclick=" printform()" title="Печать"><img class="icon20"
                                                                             src="/assets/images/print_32.png"></a>
@@ -49,69 +41,10 @@
 
 
             </div>
-
-
-            <div id="messagetab" class="tab-pane">
-                <div class="row">
-                    <div class="col-auto ">
-
-
-                        <table class="table table-sm">
-                            <tr zippy="dw_msglist">
-                                <td>
-                                    <span><b zippy="msguser"></b> <span zippy="msgdate"
-                                                                        class="text-muted float-right"></span></span>
-
-                                    <br><span style="width:300px" zippy="msgdata"></span>
-                                </td>
-                                <td valign="top"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
-                            </tr>
-                        </table>
-                        <form zippy="addmsgform">
-
-                            <div class="form-group">
-                                <label for="addmsg"> Комментарий: </label>
-                                <textarea class="form-control" required="required" zippy="addmsg"
-                                          style="width:300px;height:120px;"></textarea>
-                            </div>
-                            <input class="btn btn-light  " type="submit" value="Добавить">
-                        </form>
-
-
-                    </div>
-                    <div class="col-auto ">
-
-                        <table class="table table-sm">
-                            <tr zippy="dw_files">
-                                <td style="width:200px"><a zippy="filename" target="_blank"></a></td>
-                                <td><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
-                            </tr>
-                        </table>
-
-                        <form zippy="addfileform" enctype="multipart/form-data">
-
-                            <div class="form-group">
-                                <label for="addfile"> Выбрать файл: </label>
-                                <input class="form-control" type="file" required="required" zippy="addfile">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="adddescfile"> Комментарий </label>
-                                <input class="form-control" type="text" zippy="adddescfile" style="width:200px">
-                            </div>
-                            <input class="btn btn-light  " type="submit" value="Добавить">
-                            <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
-
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-
-            <div id="doctab" class="tab-pane">
-                <div class="row">
-
-                    <div class="col-auto ">
+          {{/doctabp}}  
+           {{#doctabd}}
+            <div  >
+            
 
                         <table class="table table-sm">
                             <tr>
@@ -136,13 +69,77 @@
 
                             <input class="btn btn-light  " type="submit" value="Добавить">
                         </form>
-                    </div>
-
-                </div>
+ 
 
             </div>
+          {{/doctabd}}         
+        
+           {{#doctabc}}  
+            <div  >
+      
 
-            <div id="stattab" class="tab-pane">
+
+                        <table class="table table-sm"   style="width:400px; ">
+                            <tr zippy="dw_msglist">
+                                <td>
+                                    <span><b zippy="msguser"></b> <span zippy="msgdate"
+                                                                        class="text-muted float-right"></span></span>
+
+                                    <br><span style="width:300px" zippy="msgdata"></span>
+                                </td>
+                                <td valign="top"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <form zippy="addmsgform">
+
+                            <div class="form-group">
+                                <label for="addmsg"> Комментарий: </label>
+                                <textarea class="form-control" required="required" zippy="addmsg"
+                                          style="width:400px;height:120px;"></textarea>
+                            </div>
+                            <input class="btn btn-light  " type="submit" value="Добавить">
+                        </form>
+
+
+              
+            </div>
+            
+          {{/doctabc}}     
+          {{#doctabf}}  
+            <div  >
+           
+
+                        <table class="table table-sm">
+                            <tr zippy="dw_files">
+                                <td style="width:200px"><a zippy="filename" target="_blank"></a></td>
+                                <td><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+
+                        <form zippy="addfileform" enctype="multipart/form-data">
+
+                            <div class="form-group">
+                                <label for="addfile"> Выбрать файл: </label>
+                                <input class="form-control" type="file" required="required" zippy="addfile">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adddescfile"> Комментарий </label>
+                                <input class="form-control" type="text" zippy="adddescfile" style="width:200px">
+                            </div>
+                            <input class="btn btn-light  " type="submit" value="Добавить">
+                            <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+
+                        </form>
+
+                 
+            </div>
+            
+          {{/doctabf}}     
+            
+
+          {{#doctabh}}
+            <div  >
                 <div class="row">
 
                     <div class="col-auto ">
@@ -212,9 +209,9 @@
 
 
             </div>
-
+          {{/doctabh}} 
         </div>
-    </div>
+  
 </div>
 
 <script>

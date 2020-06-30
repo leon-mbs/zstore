@@ -242,6 +242,16 @@
   "onlyadminpage": "К странице имеет  доступ только администратор",
   "email_sent": "Письмо отправлено",
   "emailinvsub": "Счет к  оплате  номер %s ",
+  "aclnoaccessviewreg": "Нет права  просмотра   журнала %s ",
+  "aclnoaccessviewreport": "Нет права  просмотра   отчета %s ",
+  "aclnoaccesseditref": "Нет права  редактирования   справочника %s ",
+  "aclnoaccessviewdoc": "Нет права  просмотра документа %s ",
+  "aclnoaccesseditdoc": "Нет права  изменения документа %s ",
+  "aclnoaccesscanceldoc": "Нет права  отмены документа %s ",
+  "aclnoaccessstatedoc": "Нет права  смены  статуса документа %s ",
+  "aclnoaccessexedoc": "Нет права  проведения документа %s ",
+  "aclnoaccessviewser": "Нет права  доступа к  странице %s ",
+    
   "refreshed": "Обновлено",
   "sent": "Отправлено",
   "saved": "Сохранено"

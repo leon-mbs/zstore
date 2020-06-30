@@ -220,6 +220,7 @@ class Roles extends \App\Pages\Base
         $earr = array();
         $xarr = array();
         $carr = array();
+        $sarr = array();
 
         foreach ($this->editpan->editform->metaaccess->metarow->getDataRows() as $row) {
             $item = $row->getDataItem();
@@ -228,6 +229,9 @@ class Roles extends \App\Pages\Base
             }
             if ($item->editacc == true) {
                 $earr[] = $item->meta_id;
+            }
+           if ($item->stateacc == true) {
+                $sarr[] = $item->meta_id;
             }
             if ($item->exeacc == true) {
                 $xarr[] = $item->meta_id;
@@ -240,6 +244,7 @@ class Roles extends \App\Pages\Base
         $this->role->acledit = implode(',', $earr);
         $this->role->aclexe = implode(',', $xarr);
         $this->role->aclcancel = implode(',', $carr);
+        $this->role->aclstate = implode(',', $sarr);
 
 
         $widgets = "";
@@ -361,10 +366,15 @@ class Roles extends \App\Pages\Base
         $item->editacc = false;
         $item->viewacc = false;
         $item->exeacc = false;
+        $item->stateacc = false;
         $item->cancelacc = false;
         $earr = @explode(',', $this->role->acledit);
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
+        }
+        $sarr = @explode(',', $this->role->aclstate);        
+        if (is_array($sarr)) {
+            $item->stateacc = in_array($item->meta_id, $sarr);
         }
         $varr = @explode(',', $this->role->aclview);
         if (is_array($varr)) {
@@ -386,6 +396,7 @@ class Roles extends \App\Pages\Base
         $row->add(new CheckBox('editacc', new Bind($item, 'editacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
         $row->add(new CheckBox('exeacc', new Bind($item, 'exeacc')))->setVisible($item->meta_type == 1);
         $row->add(new CheckBox('cancelacc', new Bind($item, 'cancelacc')))->setVisible($item->meta_type == 1);
+        $row->add(new CheckBox('stateacc', new Bind($item, 'stateacc')))->setVisible($item->meta_type == 1);
     }
 
 

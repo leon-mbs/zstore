@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Application as App;
+use App\Helper as H;
 
 /**
  * Класс  для  управления доступом к метаобьектам
@@ -43,7 +44,7 @@ class ACL
         }
 
         if ($showerror == true) {
-            System::setErrorMsg('Нет права  просмотра   отчета ' . self::$_metasdesc[$rep]);
+            System::setErrorMsg( H::l( 'aclnoaccessviewreport', self::$_metasdesc[$rep]));
             App::RedirectHome();
         }
         return false;
@@ -64,7 +65,8 @@ class ACL
             return true;
         }
 
-        System::setErrorMsg('Нет права  просмотра   справочника ' . self::$_metasdesc[$ref]);
+        System::setErrorMsg(H::l( 'aclnoaccessviewref', self::$_metasdesc[$ref]));
+        
         App::RedirectHome();
         return false;
     }
@@ -84,7 +86,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg('Нет права  изменения   справочника ' . self::$_metasdesc[$ref]);
+            System::setErrorMsg(H::l( 'aclnoaccesseditref', self::$_metasdesc[$ref]));
             App::RedirectHome();
         }
         return false;
@@ -106,7 +108,7 @@ class ACL
         }
 
         if ($showerror == true) {
-            System::setErrorMsg('Нет права  просмотра данного   журнала ' . self::$_metasdesc[$reg]);
+            System::setErrorMsg(  H::l('aclnoaccessviewreg', self::$_metasdesc[$reg]));
             App::RedirectHome();
         }
         return false;
@@ -124,7 +126,7 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg('Нет права  просмотра    документа ' . self::$_metasdesc[$doc]);
+                System::setErrorMsg( H::l('aclnoaccessviewdoc' , self::$_metasdesc[$doc->meta_name]));
                 if ($inreg == false) {
                     App::RedirectHome();
                 }
@@ -141,7 +143,8 @@ class ACL
 
 
         if ($showerror == true) {
-            System::setErrorMsg('Нет права  просмотра   документа ' . self::$_metasdesc[$doc]);
+            System::setErrorMsg( H::l('aclnoaccessviewdoc' , self::$_metasdesc[$doc->meta_name]));
+
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -161,7 +164,9 @@ class ACL
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg('Нет права  изменения   документа ' . self::$_metasdesc[$doc]);
+                
+                System::setErrorMsg( H::l('aclnoaccesseditdoc' , self::$_metasdesc[ $doc->meta_name]));
+                
                 if ($inreg == false) {
                     App::RedirectHome();
                 }
@@ -178,7 +183,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg('Нет права   изменения    документа ' . self::$_metasdesc[$doc->meta_id]);
+            System::setErrorMsg( H::l('aclnoaccesseditdoc' , self::$_metasdesc[ $doc->meta_name]));
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -208,7 +213,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg('Нет права  выполнения документа ' . self::$_metasdesc[$doc]);
+           System::setErrorMsg( H::l('aclnoaccessexedoc' , self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -218,6 +223,34 @@ class ACL
     }
 
 
+    /**
+     * проверка  на  доступ  к смене  статуса документа.
+     *
+     * @param mixed $doc документ
+     * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
+     */
+    public static function checkChangeStateDoc($doc, $inreg = true, $showerror = true) {
+        $user = System::getUser();
+        if ($user->rolename == 'admins') {
+            return true;
+        }
+
+        self::load();
+
+        $aclstate = explode(',', $user->acstate);
+
+        if (in_array($doc->meta_id, $aclstate)) {
+            return true;
+        }
+        if ($showerror == true) {
+           System::setErrorMsg( H::l('aclnoaccessstatedoc' , self::$_metasdesc[$doc->meta_name]));
+            if ($inreg == false) {
+                App::RedirectHome();
+            }
+        }
+
+        return false;
+    }
     /**
      * проверка  на  доступ  к отмене документа.
      *
@@ -238,7 +271,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg('Нет права  отмены документа ' . self::$_metasdesc[$doc]);
+           System::setErrorMsg( H::l('aclnoaccesscanceldoc' , self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -264,8 +297,9 @@ class ACL
             return true;
         }
         if ($showerror == true) {
+             System::setErrorMsg( H::l('aclnoaccessviewser' , self::$_metasdesc[$ser]));
 
-            System::setErrorMsg('Нет права  просмотра страницы ' . self::$_metasdesc[$ser]);
+            
             App::RedirectHome();
         }
         return false;

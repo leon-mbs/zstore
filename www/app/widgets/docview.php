@@ -72,6 +72,14 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new Form('addmsgform'))->onSubmit($this, 'OnMsgSubmit');
         $this->addmsgform->add(new TextArea('addmsg'));
         $this->add(new DataView('dw_msglist', new ArrayDataSource(new Prop($this, '_msglist')), $this, 'msgListOnRow'));
+        
+        $this->add(new ClickLink('doctabp', $this, "onTab")) ;
+        $this->add(new ClickLink('doctabd', $this, "onTab")) ;
+        $this->add(new ClickLink('doctabf', $this, "onTab")) ;
+        $this->add(new ClickLink('doctabc', $this, "onTab")) ;
+        $this->add(new ClickLink('doctabh', $this, "onTab")) ;
+
+        
     }
 
     // Устанавливаем  документ  для  просмотра
@@ -113,26 +121,33 @@ class DocView extends \Zippy\Html\PageFragment
         $this->pdf->params = array('pdf', $doc->document_id);
         //    $this->pos->pagename = $reportpage;
         //    $this->pos->params = array('pos', $doc->document_id);
-        //статусы
-        $this->_statelist = $this->_doc->getLogList();
-        $this->dw_statelist->Reload();
 
-        //оплаты
-        $this->_paylist = \App\Entity\Pay::getPayments($this->_doc->document_id);
-        $this->dw_paylist->Reload();
+        
+             $this->updateMessages();  
+             $this->updateFiles(); 
+             $this->updateDocs();
 
-        //проводки
-        $this->_itemlist = \App\Entity\Entry::find('stock_id > 0 and coalesce(quantity,0) <> 0  and document_id=' . $this->_doc->document_id);
-        $this->dw_itemlist->Reload();
+            $this->_p = Document::load($doc->parent_id);
+            $this->pdoc->setVisible($this->_p instanceof Document);
+            $this->pdoc->setValue($this->_p->meta_desc . ' ' . $this->_p->document_number);
+ 
+ 
+              //статусы
+            $this->_statelist = $this->_doc->getLogList();
+            $this->dw_statelist->Reload();
 
-        //список приатаченных  файлов
-        $this->updateFiles();
-        $this->updateMessages();
-        $this->updateDocs();
+            //оплаты
+            $this->_paylist = \App\Entity\Pay::getPayments($this->_doc->document_id);
+            $this->dw_paylist->Reload();
 
-        $this->_p = Document::load($doc->parent_id);
-        $this->pdoc->setVisible($this->_p instanceof Document);
-        $this->pdoc->setValue($this->_p->meta_desc . ' ' . $this->_p->document_number);
+            //проводки
+            $this->_itemlist = \App\Entity\Entry::find('stock_id > 0 and coalesce(quantity,0) <> 0  and document_id=' . $this->_doc->document_id);
+            $this->dw_itemlist->Reload();
+
+ 
+ 
+        
+        $this->onTab($this->doctabp);
     }
 
     //вывод строки  лога состояний
@@ -360,4 +375,24 @@ class DocView extends \Zippy\Html\PageFragment
         $this->_doc->sendEmail();
     }
 
+    
+    public  function onTab($sender){
+        $page = $this->getOwnerPage() ;  
+        $page->_tvars['doctabp']  = $sender->id =='doctabp';
+        $page->_tvars['doctabc']  = $sender->id =='doctabc';
+        $page->_tvars['doctabf']  = $sender->id =='doctabf';
+        $page->_tvars['doctabd']  = $sender->id =='doctabd';
+        $page->_tvars['doctabh']  = $sender->id =='doctabh';
+        
+        $page->_tvars['doctabpbadge']  = $sender->id =='doctabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;
+        $page->_tvars['doctabcbadge']  = $sender->id =='doctabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
+        $page->_tvars['doctabfbadge']  = $sender->id =='doctabf' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
+        $page->_tvars['doctabdbadge']  = $sender->id =='doctabd' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
+        $page->_tvars['doctabhbadge']  = $sender->id =='doctabh' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
+        
+ 
+        
+        $page->goDocView();     
+    }
+    
 }
