@@ -1,18 +1,15 @@
 <html>
-<head>
-</head>
-<body>
+ 
 <div class="   p-3 mb-3 bg-white  ">
      
-         {{hello}}
  
+  
         <div  class="mb-1" style="font-size: 1.3rem">
-        <a zippy="doctabp"> <span  {{#doctabp}} class="badge badge-dark  badge-pill "  {{/doctabp}}  {{^doctabp}}class="badge badge-light  badge-pill "  {{/#doctabp}} ><i class="fa fa-print"></i> Печатная форма</span>   </a>
-        <span  {{#doctabd}} class="badge badge-dark  badge-pill "  {{/doctabd}}  {{^doctabd}}class="badge badge-light  badge-pill "  {{/#doctabd}} ><i class="fa fa-project-diagram"></i><a zippy="doctabd"> Связанные документы </a> <span zippy="hdocs" class="badge badge-pill badge-info"></span></span> 
-        <span  {{#doctabc}} class="badge badge-dark  badge-pill "  {{/doctabc}}  {{^doctabc}}class="badge badge-light  badge-pill "  {{/#doctabc}} ><i class="fa fa-comments"></i><a zippy="doctabc"> Коментарии </a> <span zippy="hmessages" class="badge badge-pill badge-info"></span></span> 
-        <span  {{#doctabf}} class="badge badge-dark  badge-pill "  {{/doctabf}}  {{^doctabf}}class="badge badge-light  badge-pill "  {{/#doctabf}} ><i class="fa fa-paperclip"></i><a  zippy="doctabf"> Прикрепленные файлы  </a> <span zippy="hfiles" class="badge badge-pill badge-info"></span></span> 
-        
-        <span  {{#doctabh}} class="badge badge-dark  badge-pill "  {{/doctabh}}  {{^doctabh}}class="badge badge-light  badge-pill "  {{/#doctabh}} ><i class="fa fa-calendar-alt"></i><a  zippy="doctabh"> История изменений</a></span> 
+        <a zippy="doctabp"><span    class="{{{doctabpbadge}}}"   ><i class="fa fa-print"></i> Печатная форма</span>   </a>
+        <a zippy="doctabd"><span    class="{{{doctabdbadge}}}"   ><i class="fa fa-project-diagram"></i> Связанные документы  <span zippy="hdocs" class="badge badge-pill badge-info"></span></span>  </a>
+        <a zippy="doctabc"><span    class="{{{doctabcbadge}}}"   ><i class="fa fa-comments"></i> Комментарии  <span zippy="hmessages" class="badge badge-pill badge-info"></span></span></a> 
+        <a zippy="doctabf"><span    class="{{{doctabfbadge}}}"   ><i class="fa fa-paperclip"></i> Прикрепленные файлы    <span zippy="hfiles" class="badge badge-pill badge-info"></span></span></a> 
+        <a zippy="doctabh"><span    class="{{{doctabhbadge}}}"   ><i class="fa fa-calendar-alt"></i> История изменений </span>   </a>
         
         </div>
         <div  >
@@ -45,7 +42,7 @@
 
             </div>
           {{/doctabp}}  
-           {{#doctad}}
+           {{#doctabd}}
             <div  >
             
 
@@ -75,14 +72,14 @@
  
 
             </div>
-          {{/doctad}}         
+          {{/doctabd}}         
         
-           {{#doctac}}  
+           {{#doctabc}}  
             <div  >
       
 
 
-                        <table class="table table-sm">
+                        <table class="table table-sm"   style="width:400px; ">
                             <tr zippy="dw_msglist">
                                 <td>
                                     <span><b zippy="msguser"></b> <span zippy="msgdate"
@@ -98,7 +95,7 @@
                             <div class="form-group">
                                 <label for="addmsg"> Комментарий: </label>
                                 <textarea class="form-control" required="required" zippy="addmsg"
-                                          style="width:300px;height:120px;"></textarea>
+                                          style="width:400px;height:120px;"></textarea>
                             </div>
                             <input class="btn btn-light  " type="submit" value="Добавить">
                         </form>
@@ -107,8 +104,8 @@
               
             </div>
             
-          {{/doctac}}     
-          {{#doctaf}}  
+          {{/doctabc}}     
+          {{#doctabf}}  
             <div  >
            
 
@@ -138,10 +135,10 @@
                  
             </div>
             
-          {{/doctaf}}     
+          {{/doctabf}}     
             
 
-          {{#doctah}}
+          {{#doctabh}}
             <div  >
                 <div class="row">
 
@@ -212,7 +209,7 @@
 
 
             </div>
-          {{/doctah}} 
+          {{/doctabh}} 
         </div>
   
 </div>
