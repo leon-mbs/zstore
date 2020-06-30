@@ -268,6 +268,7 @@ class DocList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
+         global $logger;  
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
@@ -301,6 +302,7 @@ class DocList extends \App\Pages\Base
             $this->setError($del);
             return;
         }
+        $logger->info("Документ  {$doc->document_number} удален  пользователем {$user->username}");
         $this->doclist->Reload(true);
         $this->resetURL();
     }

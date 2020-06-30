@@ -65,21 +65,30 @@
                 <div class="col-md-6">
 
                     <div class="form-group" zippy="metaaccess">
-
+                        &nbsp;<b><i class="fa fa-eye"></i></b> <span>Тiльки перегляд</span><br>
+                        &nbsp;<b><i class="fa fa-edit"></i></b> <span>Створення та  редагування  без  права  проведення.</span><br>
+                        &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Змына  статусу</span><br>
+                        &nbsp;<b><i class="fa fa-gavel"></i></b> <span>Створення, затвердження  та  виконеання.</span><br>
+                        &nbsp;<b><i class="fa fa-undo"></i></b> <span>Вiдмiна проведення</span><br>
+                 
                         <table class="table table-sm  table-hover mr-4">
                             <tr>
                                 <th>Страница</th>
                                 <th>Тип</th>
                                 <th onclick=" $('.viewacc').prop('checked', $('.viewacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Просмотр"><i class="fa fa-search"></i></th>
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-eye"></i></th>
                                 <th onclick=" $('.editacc').prop('checked', $('.editacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Редактирование"><i class="fa fa-edit"></i>
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-edit"></i>
                                 </th>
+                                <th onclick=" $('.stateacc').prop('checked', $('.stateacc').prop('checked' )==false);"
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-exchange-alt"></i>
+                                </th>
+                                
                                 <th onclick=" $('.exeacc').prop('checked',  $('.exeacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Утверждение и проведение"><i
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i
                                         class="fa fa-gavel"></i></th>
                                 <th onclick=" $('.cancelacc').prop('checked', $('.cancelacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Отмена"><i class="fa fa-undo"></i></th>
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-undo"></i></th>
                             </tr>
                             <tr zippy="metarow">
 
@@ -87,6 +96,7 @@
                                 <td zippy="meta_name"></td>
                                 <td><input zippy="viewacc" class="viewacc" type="checkbox"></td>
                                 <td><input zippy="editacc" class="editacc" type="checkbox"></td>
+                                <td><input zippy="stateacc"  class="stateacc"  type="checkbox"></td>
                                 <td><input zippy="exeacc" class="exeacc" type="checkbox"></td>
                                 <td><input zippy="cancelacc" class="cancelacc" type="checkbox"></td>
                             </tr>
