@@ -25,6 +25,7 @@ class Equipment extends \ZCL\DB\Entity
         $this->detail .= "<code>{$this->code}</code>";
         $this->detail .= "<balance>{$this->balance}</balance>";
         $this->detail .= "<eq>{$this->eq}</eq>";
+      
 
 
         $this->detail .= "</detail>";
@@ -41,6 +42,7 @@ class Equipment extends \ZCL\DB\Entity
         $this->code = (string)($xml->code[0]);
         $this->balance = (string)($xml->balance[0]);
         $this->eq = (int)($xml->eq[0]);
+       
 
 
         parent::afterLoad();

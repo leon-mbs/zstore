@@ -77,51 +77,51 @@
     </tr>
     <tr >
         <td  >Проход:</td>
-        <td align="right" >  </td>
+        <td align="right" > {{tu}} </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"   
-                 title=""></i> 
+                 title="Выручка (отпускная цена на количество) минус переменные  застраты (себестоимость)"></i> 
         </td>
     </tr>
     <tr  >
-        <td  >Переменные  затраты:</td>
-        <td align="right" >  </td>
+        <td  >Переменные  затраты :</td>
+        <td align="right" > {{tvc}} </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                 title=""></i> 
+                 title="Себестоимость"></i> 
         </td>
     </tr>
     <tr  >
         <td  >Операционные расходы:</td>
-        <td align="right" >  </td>
+        <td align="right" >{{OP}}  </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                  title=""></i> 
+                  title="Расходы минус  переменные  расходы (себестоимость) "></i> 
        </td>
     </tr>
     <tr  >
         <td  >Чистая прибыль:</td>
-        <td align="right" >  </td>
+        <td align="right" > {{PR}} </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                 title=""></i> 
+                 title="проход минус  расходы"></i> 
         </td>
     </tr>
     {{#isinv}}
    <tr  >
         <td  >Инвестиции:</td>
-        <td align="right" >  </td>
+        <td align="right" > {{inv}} </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                   title=""></i> 
+                   title="ТМЦ  на  складе  и основные  фонды  на  балансе"></i> 
       </td>
     </tr>
   <tr  >
-        <td  >Отдача от инвестиций (ROI):</td>
-        <td align="right" >  </td>
+        <td  >Отдача от инвестиций (ROI),%:</td>
+        <td align="right" > {{ROI}} </td>
         <td  >
                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                    title=""></i> 
+                    title="Проход на  инвестиции"></i> 
      </td>
     </tr>
     {{/isinv}}

@@ -104,9 +104,9 @@ class GIList extends \App\Pages\Base
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkExeDoc($this->_doc, true, true) == false) {
+        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
-        }
+        }    
 
         $state = $this->_doc->state;
 
