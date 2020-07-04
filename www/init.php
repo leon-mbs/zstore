@@ -10,6 +10,9 @@ define('UPLOAD_USERS', 'uploads/users/');
 
 date_default_timezone_set('Europe/Kiev');
 
+//@ini_set('memory_limit', -1); 
+
+
 require_once _ROOT . 'vendor/autoload.php';
 include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 

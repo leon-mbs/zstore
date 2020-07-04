@@ -11,6 +11,7 @@ use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
@@ -54,6 +55,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editserial'));
         $this->itemdetail->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
+        $this->itemdetail->add(new Date('editenterdate'));
         $this->itemdetail->add(new TextInput('editbalance'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
@@ -145,6 +147,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->editcode->setText($this->_item->code);
         $this->itemdetail->editserial->setText($this->_item->serial);
         $this->itemdetail->editbalance->setText($this->_item->balance);
+        $this->itemdetail->editenterdate->setDate($this->_item->enterdate);
     }
 
     public function addOnClick($sender) {
@@ -180,6 +183,7 @@ class EqList extends \App\Pages\Base
 
         $this->_item->code = $this->itemdetail->editcode->getText();
         $this->_item->balance = $this->itemdetail->editbalance->getText();
+        $this->_item->enterdate = $this->itemdetail->editenterdate->getDate();
 
         $this->_item->serial = $this->itemdetail->editserial->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();

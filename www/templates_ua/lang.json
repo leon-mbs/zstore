@@ -242,7 +242,11 @@
   "aclnoaccessstatedoc": "Нема права  змiни статусу документу %s ",
   "aclnoaccessexedoc": "Нема права  проведення документу %s ",
   "aclnoaccessviewser": "Нема права  доступу до сторiнки   %s ",
-  
+   "noenaughtovar": "Недостатньо товару  %s ",
+  "indocalreadyexists": "Вже iснує  приходний документ ",
+  "thesamestore": "Выбрано  той  же склад ",
+  "incomebasedon": "Оприходовано на  пiдставi %s  ",
+ 
   
   "refreshed": "Оновлено",
   "sent": "Відправлено",

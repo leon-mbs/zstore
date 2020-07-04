@@ -21,9 +21,9 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 
 /**
- * Страница  ввода списание товаров
+ * Страница  ввода перемещение товаров
  */
-class OutcomeItem extends \App\Pages\Base
+class MoveItem extends \App\Pages\Base
 {
 
     public $_itemlist = array();
@@ -38,24 +38,12 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-
-        $tostore = array();
-        $conn = \ZDB\DB::getConnect();
-        if ($this->_tvars["usebranch"]) {
-            $rs = $conn->Execute("select  s.store_id,s.`storename`,b.branch_id ,b.`branch_name` from stores s join branches b on s.`branch_id` = b.`branch_id` where b.`disabled` <>  1   order  by branch_name, storename");
-            foreach ($rs as $it) {
-                $tostore[$it['store_id']] = $it['branch_name'] . ", " . $it['storename'];
-            }
-        }  
-
-
-        $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
-
-
+        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+  
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-        
+         
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -88,7 +76,7 @@ class OutcomeItem extends \App\Pages\Base
 
 
         } else {
-            $this->_doc = Document::create('OutcomeItem');
+            $this->_doc = Document::create('MoveItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
         }
 
@@ -227,11 +215,11 @@ class OutcomeItem extends \App\Pages\Base
             return;
         }
   
-
         $this->_doc->notes = $this->docform->notes->getText();
 
 
         $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
+        $this->_doc->headerdata['tostorename'] = $this->docform->tostore->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
@@ -267,63 +255,13 @@ class OutcomeItem extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
 
-                $tostore = $this->docform->tostore->getValue();
-                if ($sender->id == 'execdoc' && $tostore > 0) {
-                    $ch = $this->_doc->getChildren('IncomeItem');
-                    if (count($ch) > 0) {
-                        $this->setWarn('indocalreadyexists');
-                    } else {
-                        if ($this->_doc->headerdata['store'] == $tostore) {
-                            $this->setWarn('thesamestore');
-                        }
-                        $indoc = Document::create('IncomeItem');
-                        $indoc->document_number->setText($indoc->nextNumber());
- 
-                        $indoc->headerdata['store'] = $tostore;
-                        $indoc->headerdata['storename'] = $this->docform->tostore->getValueName();
-                        $indoc->branch_id = 0;
-                        if ($this->_tvars["usebranch"]) {
-                            $st = Store::load($tostore);
-                            $indoc->branch_id = $st->branch_id;
-                        }
-                        $indoc->document_number = $indoc->nextNumber($indoc->branch_id);
-                        $indoc->user_id = 0;
-                        $indoc->notes =  H::l('incomebasedon', $this->_doc->document_number );
-
-
-                        $items = array();
-
-                        foreach ($this->_itemlist as $it) {
-
-                            //последняя партия
-                            $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$this->_doc->headerdata['store'] }", 'stock_id desc');
-                            $it->price = $stock->partion;
-
-
-                            $items[] = $it;
-                        }
-                        $indoc->packDetails('detaildata', $items);
-
-
-                        $indoc->save();
-                        $indoc->updateStatus(Document::STATE_NEW);
-
-                        if ($indoc->branch_id == 0) {
-                            $indoc->user_id = \App\System::getUser()->user_id;
-                            $indoc->updateStatus(Document::STATE_EXECUTED);
-                        }
-                        if ($indoc->document_id > 0) {
-                            $this->setSuccess('Создан документ');
-                        }
-
-                    }
-                }
-
+   
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-         
+    
+
 
             $conn->CommitTrans();
             App::RedirectBack();
@@ -357,6 +295,9 @@ class OutcomeItem extends \App\Pages\Base
 
 
         if (($this->docform->store->getValue() > 0) == false) {
+            $this->setError("noselstore");
+        }
+        if (($this->docform->tostore->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
 

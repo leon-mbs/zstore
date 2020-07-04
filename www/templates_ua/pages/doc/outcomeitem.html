@@ -23,16 +23,19 @@
                     <option value="0">Не обрано</option>
                 </select>
             </div>
+              {{#usebranch}}            
+          
             <div class="form-group  ">
-                <label for="tostore">Оприходувати на склад</label>
+                <label for="tostore">Оприходувати на склад iншої фiлiї</label>
                 <select class="form-control" zippy="tostore">
-                    <option value="0">Не оприходувати</option>
+                    <option value="0">Не обрано</option>
                 </select>
                 <small class="form-text text-muted">При проведеннi буде створено документ 'Оприходування на склад'.
-                    Якщо ввiмкнена пiдтримка фiлiй, документ не буде проведено и йому не буде присвоено автора поки
-                    користувач,
-                    який мае право роботи з цiльоввою фiлiею, не збереже новостворений документ. </small>
+                    Цей документ не буде проведено и йому не буде присвоено автора поки
+                    користувач, який мае право роботи з цiльоввою фiлiею, не збереже новостворений документ. </small>
             </div>
+            {{/usebranch}}            
+         
             <div class="form-group  ">
                 <label for="notes">Примітка </label>
 
@@ -84,14 +87,7 @@
 
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 col-md-4">
-            <div class="form-group">
-                <label for="scan"> &nbsp; &nbsp;Скан докумену</label>
-                <input class="form-control" type="file" zippy="scan">
-            </div>
-        </div>
-    </div>
+ 
 
     <div class="row">
         <div class="col-12 col-md-6">
