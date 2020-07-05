@@ -333,7 +333,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn('item_notfound');
+            $this->setWarnPopup('item_notfound');
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);

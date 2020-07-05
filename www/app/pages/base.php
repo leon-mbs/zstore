@@ -117,6 +117,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     //вывод ошибки,  используется   в дочерних страницах
+   
     public function setError($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);
         System::setErrorMsg($msg);
@@ -136,9 +137,30 @@ class Base extends \Zippy\Html\WebPage
         $msg = Helper::l($msg, $p1, $p2);
         System::setInfoMsg($msg);
     }
+    
+    // показывать  во  всплывающем окне
+    public function setErrorPopup($msg, $p1 = "", $p2 = "") {
+        $msg = Helper::l($msg, $p1, $p2);
+        System::setErrorMsg($msg,true);
+    }
+
+    public function setSuccessPopup($msg, $p1 = "", $p2 = "") {
+        $msg = Helper::l($msg, $p1, $p2);
+        System::setSuccessMsg($msg,true);
+    }
+
+    public function setWarnPopup($msg, $p1 = "", $p2 = "") {
+        $msg = Helper::l($msg, $p1, $p2);
+        System::setWarnMsg($msg,true);
+    }
+
+    public function setInfoPopup($msg, $p1 = "", $p2 = "") {
+        $msg = Helper::l($msg, $p1, $p2);
+        System::setInfoMsg($msg,true);
+    }
 
     final protected function isError() {
-        return strlen(System::getErrorMsg()) > 0;
+        return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg(true)) > 0 ) ;
     }
 
     public function beforeRender() {
@@ -150,7 +172,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['alertsuccess'] = "";
         $this->_tvars['alertinfo'] = "";
 
-        if ($user->popupmessage != 1) {
+  
 
             if (strlen(System::getErrorMsg()) > 0) {
                 $this->_tvars['alerterror'] = System::getErrorMsg();
@@ -168,30 +190,35 @@ class Base extends \Zippy\Html\WebPage
                 $this->_tvars['alertinfo'] = System::getInfoMsg();
                 $this->goAnkor('');
             }
-        }
+       
     }
 
     protected function afterRender() {
         $user = System::getUser();
-        if ($user->popupmessage == 1) {
-            if (strlen(System::getErrorMsg()) > 0) {
-                $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "')        ", true);
+        
+            if (strlen(System::getErrorMsg(true)) > 0) {
+                $this->addJavaScript("toastr.error('" . System::getErrorMsg(true) . "')        ", true);
             }
-            if (strlen(System::getWarnMsg()) > 0) {
-                $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "')        ", true);
+            if (strlen(System::getWarnMsg(true)) > 0) {
+                $this->addJavaScript("toastr.warning('" . System::getWarnMsg(true) . "')        ", true);
             }
-            if (strlen(System::getSuccesMsg()) > 0) {
-                $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "')        ", true);
+            if (strlen(System::getSuccesMsg(true)) > 0) {
+                $this->addJavaScript("toastr.success('" . System::getSuccesMsg(true) . "')        ", true);
             }
-            if (strlen(System::getInfoMsg()) > 0) {
-                $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "')        ", true);
+            if (strlen(System::getInfoMsg(true)) > 0) {
+                $this->addJavaScript("toastr.info('" . System::getInfoMsg(true) . "')        ", true);
             }
-        }
+        
         $this->setError('');
         $this->setSuccess('');
-
         $this->setInfo('');
         $this->setWarn('');
+        $this->setErrorPopup('');
+        $this->setSuccessPopup('');
+        $this->setInfoPopup('');
+        $this->setWarnPopup('');
+        
+
     }
 
     //Перезагрузить страницу  с  клиента

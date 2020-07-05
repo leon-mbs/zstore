@@ -116,36 +116,41 @@ class System
         return null;
     }
 
-    public static function setSuccessMsg($msg) {
-        Session::getSession()->smsg = $msg;
+    public static function setSuccessMsg($msg,$popup=false) {
+        Session::getSession()->smsg = $popup? "": $msg;
+        Session::getSession()->smsgp = $popup? $msg: "";
     }
 
-    public static function getSuccesMsg() {
-        return Session::getSession()->smsg;
+   
+    public static function getSuccesMsg($popup=false) {
+        return $popup ? Session::getSession()->smsgp : Session::getSession()->smsg;
     }
 
-    public static function setErrorMsg($msg) {
-        Session::getSession()->emsg = $msg;
+    public static function setErrorMsg($msg,$popup=false) {
+        Session::getSession()->emsg = $popup? "": $msg;
+        Session::getSession()->emsgp = $popup? $msg: "";
     }
 
-    public static function getErrorMsg() {
-        return Session::getSession()->emsg;
+    public static function getErrorMsg($popup=false) {
+         return $popup ? Session::getSession()->emsgp : Session::getSession()->emsg;
     }
 
-    public static function setWarnMsg($msg) {
-        Session::getSession()->wmsg = $msg;
+    public static function setWarnMsg($msg,$popup=false) {
+        Session::getSession()->wmsg = $popup? "": $msg;
+        Session::getSession()->wmsgp = $popup? $msg: "";
     }
 
-    public static function getWarnMsg() {
-        return Session::getSession()->wmsg;
+    public static function getWarnMsg($popup=false) {
+         return $popup ? Session::getSession()->wmsgp : Session::getSession()->wmsg;
     }
 
-    public static function setInfoMsg($msg) {
-        Session::getSession()->imsg = $msg;
+    public static function setInfoMsg($msg,$popup=false) {
+        Session::getSession()->imsg = $popup? "": $msg;
+        Session::getSession()->imsgp = $popup? $msg: "";
     }
 
-    public static function getInfoMsg() {
-        return Session::getSession()->imsg;
+    public static function getInfoMsg($popup=false) {
+         return $popup ? Session::getSession()->imsgp : Session::getSession()->imsg;
     }
 
 

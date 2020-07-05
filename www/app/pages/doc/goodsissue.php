@@ -726,7 +726,7 @@ class GoodsIssue extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setError("noitemcode", $code);
+            $this->setWarnPopup("noitemcode", $code);
             return;
         }
 
@@ -736,7 +736,7 @@ class GoodsIssue extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setError("noitemonstore", $item->itemname);
+            $this->setWarnPopup("noitemonstore", $item->itemname);
         }
 
 
@@ -759,7 +759,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
                 if (strlen($serial) == 0) {
-                    $this->setWarn('needs_serial');
+                    $this->setWarnPopup('needs_serial');
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 
