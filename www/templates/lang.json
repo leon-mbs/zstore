@@ -255,6 +255,7 @@
   "indocalreadyexists": "Уже существует приходный документ ",
   "thesamestore": "Выбран  тот  же склад ",
   "incomebasedon": "Оприходовано на  основании %s  ",
+  "createddoc": "Создан документ %s  ",
     
   "refreshed": "Обновлено",
   "sent": "Отправлено",

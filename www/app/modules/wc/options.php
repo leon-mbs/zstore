@@ -92,7 +92,7 @@ class Options extends \App\Pages\Base
         $modules['wcpricetype'] = $pricetype;
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+        $this->setSuccessPopup('saved');
     }
 
 }

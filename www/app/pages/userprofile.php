@@ -68,7 +68,7 @@ class UserProfile extends \App\Pages\Base
 
         if (!$this->isError()) {
             $this->user->save();
-            $this->setSuccess('saved');
+            $this->setSuccessPopup('saved');
             System::setUser($this->user);
         }
     }
@@ -97,7 +97,7 @@ class UserProfile extends \App\Pages\Base
         if (!$this->isError()) {
             $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
             $this->user->save();
-            $this->setSuccess('saved');
+            $this->setSuccessPopup('saved');
         }
 
         if ($this->user->userlogin != 'admin') {
@@ -150,7 +150,7 @@ class UserProfile extends \App\Pages\Base
             $n->sender_name = $this->user->username;
             $n->save();
         }
-        $this->setSuccess('sent');
+        $this->setSuccessPopup('sent');
         $sender->clean();
     }
 

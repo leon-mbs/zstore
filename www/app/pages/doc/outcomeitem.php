@@ -313,7 +313,7 @@ class OutcomeItem extends \App\Pages\Base
                             $indoc->updateStatus(Document::STATE_EXECUTED);
                         }
                         if ($indoc->document_id > 0) {
-                            $this->setSuccess('Создан документ');
+                            $this->setSuccess("createddoc",$indoc->document_number);
                         }
 
                     }

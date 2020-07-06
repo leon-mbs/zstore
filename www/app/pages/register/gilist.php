@@ -129,7 +129,7 @@ class GIList extends \App\Pages\Base
             //     $order->updateStatus(Document::STATE_INSHIPMENT);
             // }
             $this->statuspan->statusform->ship_number->setText('');
-            $this->setSuccess('sent');
+            $this->setSuccessPopup('sent');
         }
 
         if ($sender->id == "bdevivered") {

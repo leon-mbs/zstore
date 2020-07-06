@@ -87,7 +87,7 @@ class Options extends \App\Pages\Base
             }
 
 
-            $this->setSuccess('connected');
+            $this->setSuccessPopup('connected');
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
@@ -146,7 +146,7 @@ class Options extends \App\Pages\Base
         $modules['ocinsertcust'] = $insertcust;
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+        $this->setSuccessPopup('saved');
     }
 
 }
