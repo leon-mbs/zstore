@@ -99,7 +99,7 @@ class IncomeMoney extends \App\Pages\Base
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
+            $this->setErrorTop($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
 

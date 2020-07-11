@@ -137,6 +137,8 @@ class DocList extends \App\Pages\Base
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
         $this->doclist->Reload();
+        
+        $this->setSuccessTop("dddd");
     }
 
     public function doclistOnRow($row) {

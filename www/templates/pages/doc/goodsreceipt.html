@@ -1,6 +1,9 @@
 <html>
 <head>
-
+     <script src="/assets/js/quagga.js" type="text/javascript"></script>
+     <script src="/assets/js/mscanner.js" type="text/javascript"></script>
+     <link rel="stylesheet" href="/assets/css/mscanner.css">
+     
 </head>
 <body>
 
@@ -84,14 +87,14 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-10  col-lg-8">
+        <div class="col-12">
             {{#usescanner}}
             <div class="navbar nav justify-content-start">
                 Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                 &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
            
-           <!--     &nbsp; &nbsp; <i data-toggle="modal" data-target="#modalscanner" title="Сканировать  мобильным  устройством" style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i> 
-           -->
+              &nbsp; &nbsp; <i data-toggle="modal" data-target="#modalscanner" title="Сканировать  мобильным  устройством" style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i> 
+          
 
             </div>
             {{/usescanner}}
@@ -456,9 +459,8 @@
         </div>
     </div>
 </form>
-   <div id="modalscanner" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+   <div id="modalscanner" class="modal  "   >
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Сканирование</h5>
@@ -468,19 +470,128 @@
                 </div>
                 <div class="modal-body">
         <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
-            <b>Настройки <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
+            <b>Настройки камеры <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
         </a>   
-        <div   id="collapcescanner">
-               Настройки
-        </div>       
-                <div>тут  камера</div>
-                  Код:   <span id="scancode">12345</span>&nbsp;&nbsp;&nbsp; <button class="btn btn-sm btn-success">OK</button>
-                </div>
+        <div   id="collapcescanner" class="collapse">
+        <form>
+          <div class="row">
+          <div class="col-12 col-sm-6">
+         
+          <div class="form-group row">
+            <label   class="col-sm-6 col-form-label">Barcode-Type</label>
+            <div class="col-sm-6">
+         
+                <select name="decoder_readers" class="form-control" >
+                    <option value="code_128" selected="selected">Code 128</option>
+                    <option value="code_39">Code 39</option>
+                    <option value="code_39_vin">Code 39 VIN</option>
+                    <option value="ean">EAN</option>
+                    <option value="ean_extended">EAN-extended</option>
+                    <option value="ean_8">EAN-8</option>
+                    <option value="upc">UPC</option>
+                    <option value="upc_e">UPC-E</option>
+                    <option value="codabar">Codabar</option>
+                    <option value="i2of5">Interleaved 2 of 5</option>
+                    <option value="2of5">Standard 2 of 5</option>
+                    <option value="code_93">Code 93</option>
+                </select>              
+            </div>
+          </div>        
+           <div class="form-group row">
+             <label   class="col-sm-6 col-form-label">Resolution (width)</label>
+            <div class="col-sm-6">
+         
+                    <select name="input-stream_constraints" class="form-control" >
+                        <option value="320x240">320px</option>
+                        <option selected="selected" value="640x480">640px</option>
+                        <option value="800x600">800px</option>
+                        <option value="1280x720">1280px</option>
+                        <option value="1600x960">1600px</option>
+                        <option value="1920x1080">1920px</option>
+                    </select>         
+            </div>
+          </div>        
+      
+          <div class="form-group row">
+             <label   class="col-sm-6 col-form-label">Patch-Size</label>
+            <div class="col-sm-6">
+         
+                  <select name="locator_patch-size" class="form-control">
+                        <option value="x-small">x-small</option>
+                        <option value="small">small</option>
+                        <option selected="selected" value="medium">medium</option>
+                        <option value="large">large</option>
+                        <option value="x-large">x-large</option>
+                    </select>         
+            </div>
+          </div>        
+          <div class="form-group row">
+             <label   class="col-sm-6 col-form-label">Workers</label>
+            <div class="col-sm-6">
+         
+            <select name="numOfWorkers" class="form-control">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option selected="selected" value="4">4</option>
+                        <option value="8">8</option>
+                    </select>       
+            </div>
+          </div>    
+          </div>    
+          <div class="col-12 col-sm-6">
+ 
+          
+              
+          <div class="form-group row">
+             <label   class="col-sm-6 col-form-label">Half-Sample</label>
+            <div class="col-sm-6">
+         
+             <input type="checkbox" checked="checked" name="locator_half-sample" />     
+            </div>
+          </div>        
+      
+    
+          <div class="form-group row">
+             <label   class="col-sm-6 col-form-label">Camera</label>
+            <div class="col-sm-6">
+         
+            <select name="input-stream_constraints" id="deviceSelection" class="form-control">
+                    </select>      
+            </div>
+          </div>         
+          <div class="form-group row">
+             <label   class="col-sm-6 col-form-label">Zoom</label>
+            <div class="col-sm-6">
+         
+            <select name="settings_zoom"   class="form-control">
+                    </select>      
+            </div>
+          </div>         
+          <div class="form-group row">
+             <label   class="col-sm-6 col-form-label">Torch</label>
+            <div class="col-sm-6">
+         
+              <input type="checkbox" name="settings_torch" />    
+            </div>
+          </div>         
+         </div> 
+         </div>  
+        </form> 
+        </div>
+        Код:   <span id="scancode"  ></span>&nbsp;&nbsp;&nbsp; <button class="btn btn-sm btn-success" onclick="mcode()">Добавить</button>
+       <br>  
+       <br>  
+           
+       <div   id="interactive" class="viewport"></div>
+       
+ 
+                
+          </div>
 
             </div>
         </div>
     </div>
-
 
 {{#usescanner}}
 <script>
@@ -498,10 +609,15 @@
     }
     
     
-    
+   function mcode() {
+      var  code =  $('#scancode').text();
+      $('#barcode').val(code); 
+      $('#addcode').click()
+   } 
     
     
 </script>
+
 {{/usescanner}}
 </body>
 </html>

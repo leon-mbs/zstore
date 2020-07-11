@@ -217,7 +217,7 @@ class Options extends \App\Pages\Base
 
         $this->_tvars["useval"] = $common['useval'] == 1;
 
-        $this->setSuccessPopup('saved');
+        $this->setSuccess('saved');
         System::setCache('labels', null);
     }
 
@@ -236,7 +236,7 @@ class Options extends \App\Pages\Base
         $firm['sign'] = $this->firm->sign->getText();
 
         System::setOptions("firm", $firm);
-        $this->setSuccessPopup('saved');
+        $this->setSuccess('saved');
     }
 
     public function saveValOnClick($sender) {
@@ -248,7 +248,7 @@ class Options extends \App\Pages\Base
         $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
 
         System::setOptions("val", $val);
-        $this->setSuccessPopup('saved');
+        $this->setSuccess('saved');
     }
 
     public function savePrinterOnClick($sender) {
@@ -262,7 +262,7 @@ class Options extends \App\Pages\Base
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
 
         System::setOptions("printer", $printer);
-        $this->setSuccessPopup('saved');
+        $this->setSuccess('saved');
     }
 
     public function filterOnSubmit($sender) {

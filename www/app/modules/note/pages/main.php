@@ -279,10 +279,10 @@ class Main extends \App\Pages\Base
     public function ReloadTree() {
 
         $this->tree->removeNodes();
-        $user_id = System::getUser()->user_id;
-
-
-        $itemlist = Node::find("ispublic = 1 or  user_id={$user_id}  ", "pid,mpath,title");
+        $user = System::getUser() ;
+        $w = "ispublic = 1 or  user_id={$user_id->user_id}  ";
+        if($user->rolename=='admins')  $w='';
+        $itemlist = Node::find($w, "pid,mpath,title");
         if (count($itemlist) == 0) { //добавляем  корень
             $root = new Node();
             $root->title = "//";
@@ -290,15 +290,15 @@ class Main extends \App\Pages\Base
             $root->ispublic = 1;
             $root->save();
 
-            $itemlist = Node::find("ispublic = 1 or  user_id={$user_id} ", "pid,mpath,title");
+            $itemlist = Node::find($w, "pid,mpath,title");
         }
         $first = null;
         $nodelist = array();
         foreach ($itemlist as $item) {
             $node = new \ZCL\BT\TreeNode($item->title, $item->node_id);
-            // $node->tags = $item->tcnt;  //количество  топиков в ветке
+          //  $node->tags = '<span class="badge badge-info badge-pill">6</span>';  //количество  топиков в ветке
             $parentnode = @$nodelist[$item->pid];
-
+            $node->icon='fa fa-trash fa-xs';
             $this->tree->addNode($node, $parentnode);
 
             $nodelist[$item->node_id] = $node;

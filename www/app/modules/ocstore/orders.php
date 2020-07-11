@@ -90,7 +90,7 @@ class Orders extends \App\Pages\Base
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
                     if ($code == "") {
-                        $this->setWarn("noarticle_inorder", $product['name'], $ocorder['order_id']);
+                        $this->setWarnTop("noarticle_inorder", $product['name'], $ocorder['order_id']);
 
                     }
                 }
@@ -103,7 +103,7 @@ class Orders extends \App\Pages\Base
 
             $this->neworderslist->Reload();
         } else {
-            $this->setError($data['error']);
+            $this->setErrorTop($data['error']);
         }
     }
 
@@ -144,7 +144,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder->order_id);
+                    $this->setWarnTop("nofoundarticle_inorder", $product['name'], $shoporder->order_id);
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -225,14 +225,14 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                        $this->setWarnTop("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
 
                     $qty = $tovar->getQuantity($store);
                     if ($qty < $tovar->quantity) {
-                        $this->setError("nominus", \App\Helper::fqty($qty), $tovar->item_name);
+                        $this->setErrorTop("nominus", \App\Helper::fqty($qty), $tovar->item_name);
                         return;
                     }
 
@@ -264,7 +264,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
+                    $this->setWarnTop("nofoundarticle_inorder", $product['name'], $shoporder['order_id']);
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -365,7 +365,7 @@ class Orders extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $this->setError($data['error']);
+            $this->setErrorTop($data['error']);
             return;
         }
 

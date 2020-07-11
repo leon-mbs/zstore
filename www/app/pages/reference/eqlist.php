@@ -87,16 +87,9 @@ class EqList extends \App\Pages\Base
         }
 
         $item = $sender->owner->getDataItem();
-        //проверка на партии
-        if ($item->checkDelete()) {
-            Equipment::delete($item->eq_id);
-        } else {
-
-            $this->setError("nodelete");
-            return;
-        }
-
-
+ 
+        Equipment::delete($item->eq_id);
+ 
         $this->itemtable->eqlist->Reload();
     }
 

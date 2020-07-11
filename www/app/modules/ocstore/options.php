@@ -60,7 +60,7 @@ class Options extends \App\Pages\Base
 
         $data = json_decode($json, true);
         if ($data == null) {
-            $this->setError($json);
+            $this->setErrorTop($json);
             return;
         }
         if (is_array($data) && count($data) == 0) {
@@ -70,10 +70,10 @@ class Options extends \App\Pages\Base
         }
 
         if (is_array($data['error'])) {
-            $this->setError(implode(' ', $data['error']));
+            $this->setErrorTop(implode(' ', $data['error']));
         } else {
             if (strlen($data['error']) > 0) {
-                $this->setError($data['error']);
+                $this->setErrorTop($data['error']);
             }
         }
 
@@ -87,7 +87,7 @@ class Options extends \App\Pages\Base
             }
 
 
-            $this->setSuccessPopup('connected');
+            $this->setSuccess('connected');
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
@@ -95,7 +95,7 @@ class Options extends \App\Pages\Base
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
-                $this->setError($data['error']);
+                $this->setErrorTop($data['error']);
             } else {
 
                 System::getSession()->statuses = $data['statuses'];
@@ -106,7 +106,7 @@ class Options extends \App\Pages\Base
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
-                $this->setError($data['error']);
+                $this->setErrorTop($data['error']);
             } else {
 
                 System::getSession()->cats = $data['cats'];
@@ -146,7 +146,7 @@ class Options extends \App\Pages\Base
         $modules['ocinsertcust'] = $insertcust;
 
         System::setOptions("modules", $modules);
-        $this->setSuccessPopup('saved');
+        $this->setSuccess('saved');
     }
 
 }

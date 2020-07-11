@@ -60,7 +60,7 @@ class Users extends \App\Pages\Base
     public function onAdd($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError(\App\Helper::l('onlyadminsuser'));
+            $this->setError('onlyadminsuser');
 
             return;
         }
@@ -77,7 +77,7 @@ class Users extends \App\Pages\Base
     public function onEdit($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError(\App\Helper::l('onlyadminsuser'));
+            $this->setError('onlyadminsuser');
 
             return;
         }
@@ -164,7 +164,7 @@ class Users extends \App\Pages\Base
     public function OnRemove($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError(\App\Helper::l('onlyadminsuser'));
+            $this->setError('onlyadminsuser');
 
             return;
         }

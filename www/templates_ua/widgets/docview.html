@@ -213,6 +213,21 @@
         </div>
   
 </div>
-    
+<script>
+
+    function printform() {
+        $('#previewpos').attr('style', 'display:none');
+        $('#preview').attr('style', 'display:block');
+        $('#preview').printThis();
+    }
+
+    function printpos() {
+        $('#preview').attr('style', 'display:none');
+        $('#previewpos').attr('style', 'display:block');
+        $('#previewpos').printThis();
+    }
+
+
+</script>    
     </body>
 </html>
