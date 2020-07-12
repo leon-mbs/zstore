@@ -105,6 +105,7 @@ class User extends \ZCL\DB\Entity
 
         $options['defmf'] = $this->defmf;
         $options['pagesize'] = $this->pagesize;
+        $options['hidesidebar'] = $this->hidesidebar;
 
         $this->options = serialize($options);
 

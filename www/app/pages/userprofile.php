@@ -75,7 +75,7 @@ class UserProfile extends \App\Pages\Base
 
     //записать  пароль
     public function onsubmitpass($sender) {
-
+        
         $pass = $sender->userpassword->getText();
         $confirm = $sender->confirmpassword->getText();
 

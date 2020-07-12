@@ -101,6 +101,7 @@ $(function() {
                     $option.appendChild(document.createTextNode(pruneText(device.label || device.deviceId || device.id)));
                     $option.selected = streamLabel === device.label;
                     $deviceSelection.appendChild($option);
+                    
                 });
             });
         },
@@ -175,7 +176,7 @@ $(function() {
         },
         setState: function(path, value) {
             var self = this;
-
+     
             if (typeof self._accessByPath(self.inputMapper, path) === "function") {
                 value = self._accessByPath(self.inputMapper, path)(value);
             }
