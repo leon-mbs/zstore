@@ -6,7 +6,7 @@
 
 
 <form zippy="docform" enctype="multipart/form-data">
-    <h3> Списание ТМЦ</h3>
+    <h3> Перемещение ТМЦ</h3>
     <div class="row">
         <div class="col-12 col-md-3">
             <div class="form-group">
@@ -23,18 +23,14 @@
                     <option value="0">Не выбран</option>
                 </select>
             </div>
-            {{#usebranch}}            
             <div class="form-group  ">
-                <label for="tostore">Оприходовать на склад другого филиала</label>
+                <label for="tostore">На склад</label>
                 <select class="form-control" zippy="tostore">
                     <option value="0">Не выбран</option>
                 </select>
-                <small class="form-text text-muted">При проведении сформируется документ Оприходование товара.
-                    Этот документ не будет проведен и ему не будет присвоен автор пока
-                    пользовтель, имеющий права работы с целевым филиалом, не откроет и не сохранит или проведет созданый
-                    документ. </small>
+     
             </div>
-             {{/usebranch}}
+
             <div class="form-group  ">
                 <label for="notes">Примечание </label>
 
@@ -48,7 +44,7 @@
         <div class="col-12 col-md-8 col-xl-6">
             {{#usescanner}}
             <div class="navbar nav justify-content-start">
-                Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                Штрих-код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                 &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
@@ -88,7 +84,6 @@
     </div>
  
 
-
     <div class="row">
         <div class="col-12 col-md-6">
             <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-light">
@@ -110,7 +105,7 @@
             <div class="form-group">
                 <label for="edititem">Наименование</label>
                 <input class="form-control" zippy="edititem" placeholder="Начните вводить  ">
-
+ 
 
                 Наличие <span zippy="qtystock"></span>
 

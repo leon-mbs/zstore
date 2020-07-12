@@ -61,7 +61,7 @@ class Orders extends \App\Pages\Base
         try {
             $data = $client->get('orders', $fields);
         } catch (\Exception $ee) {
-            $this->setError($ee->getMessage());
+            $this->setErrorTop($ee->getMessage());
             return;
         }
 
@@ -91,7 +91,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("nofoundarticle_inorder", $product->name, $wcorder->order_id);
+                    $this->setWarnTop("nofoundarticle_inorder", $product->name, $wcorder->order_id);
                     continue;
                 }
                 $tovar->quantity = $product->quantity;
@@ -198,7 +198,7 @@ class Orders extends \App\Pages\Base
             try {
                 $data = $client->put('orders/' . $order->headerdata['wcorder'], $fields);
             } catch (\Exception $ee) {
-                $this->setError($ee->getMessage());
+                $this->setErrorTop($ee->getMessage());
                 return;
             }
 

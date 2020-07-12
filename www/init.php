@@ -10,17 +10,25 @@ define('UPLOAD_USERS', 'uploads/users/');
 
 date_default_timezone_set('Europe/Kiev');
 
+//@ini_set('memory_limit', -1); 
+
+
 require_once _ROOT . 'vendor/autoload.php';
 include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 
+//чтение  конфигурации
+$_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+
+
 // логгер
 $logger = new \Monolog\Logger("main");
-$dateFormat = "Y n j, g:i a";
+ 
+$level = $_config['common']['loglevel'];
 //$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
 $output = "%datetime%  %level_name% : %message% \n";
-$formatter = new \Monolog\Formatter\LineFormatter($output, $dateFormat);
-$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 10, $_config['common']['loglevel']);
-$h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 10, 400);
+$formatter = new \Monolog\Formatter\LineFormatter($output );
+$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 10,  $level);
+$h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 10, \Monolog\Logger::INFO);
 $h1->setFormatter($formatter);
 $h2->setFormatter($formatter);
 $logger->pushHandler($h1);
@@ -28,8 +36,6 @@ $logger->pushHandler($h2);
 $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
 @mkdir(_ROOT . "logs");
 
-//чтение  конфигурации
-$_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 
 //  phpQuery::$debug = true;
 //Параметры   соединения  с  БД

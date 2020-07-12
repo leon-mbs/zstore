@@ -590,7 +590,7 @@ class GoodsIssue extends \App\Pages\Base
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setError($ee->getMessage());
+            $this->setErrorTop($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
@@ -726,7 +726,7 @@ class GoodsIssue extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setError("noitemcode", $code);
+            $this->setWarn("noitemcode", $code);
             return;
         }
 
@@ -736,7 +736,7 @@ class GoodsIssue extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setError("noitemonstore", $item->itemname);
+            $this->setWarn("noitemonstore", $item->itemname);
         }
 
 

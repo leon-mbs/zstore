@@ -56,7 +56,7 @@ class Options extends \App\Pages\Base
         try {
             $woocommerce->get('');
         } catch (\Exception $ee) {
-            $this->setError($ee->getMessage());
+            $this->setErrorTop($ee->getMessage());
             return;
         }
 

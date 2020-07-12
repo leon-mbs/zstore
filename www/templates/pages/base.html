@@ -26,21 +26,19 @@
     <script src="/assets/js/app.js" type="text/javascript"></script>
 
     <script src="/assets/js/adminlte.js" type="text/javascript"></script>
-    <!--
-    <script src="/assets/js/quagga.js" type="text/javascript"></script>
-    -->
+    
 
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    
     <!-- Google Font -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet"      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+  
+    
 </head>
 <body class="{{hidesidebar}}">
-
+  {{#usescanner}}
+       <link rel="stylesheet" href="/assets/css/mscanner.css">
+  {{/usescanner}}    
 <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
 <a id="top"></a>
 <div class="wrapper">
@@ -714,6 +712,11 @@
 
 
 </script>
+ {{#usescanner}}
+     <script src="/assets/js/quagga.js" type="text/javascript"></script>
+     <script src="/assets/js/mscanner.js" type="text/javascript"></script>
 
+  {{/usescanner}}      
+ 
 </body>
 </html>

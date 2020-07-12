@@ -481,6 +481,8 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['manlist'] = array();
 
         foreach (Item::getManufacturers() as $man) {
+            if(strlen($man)==0)  continue;
+
             $this->_tvars['manlist'][] = array('mitem' => $man);
         }
 

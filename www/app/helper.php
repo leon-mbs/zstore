@@ -514,6 +514,8 @@ class Helper
         global $_config;
 
         $label = trim($label);
+        if(strlen($label)==0)  return '';
+        
         $labels = System::getCache('labels');
         if ($labels == null) {
             $lang = $_config['common']['lang'];

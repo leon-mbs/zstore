@@ -27,7 +27,7 @@
   "pt_outadm": "Адміністративні  видатки",
   "pt_outsell": "Видатки на збут",
   "pt_outsalary": "Виплата зарплати",
-  "pt_outtax": "Сплатака  податків",
+  "pt_outtax": "Сплата  податків",
   "pt_outrent": "Видатки на  аренду та комуналку",
   "pt_outcap": "Розподіл прибутку",
   "pt_outother": "Інші видатки",
@@ -242,7 +242,12 @@
   "aclnoaccessstatedoc": "Нема права  змiни статусу документу %s ",
   "aclnoaccessexedoc": "Нема права  проведення документу %s ",
   "aclnoaccessviewser": "Нема права  доступу до сторiнки   %s ",
-  
+   "noenaughtovar": "Недостатньо товару  %s ",
+  "indocalreadyexists": "Вже iснує  приходний документ ",
+  "thesamestore": "Выбрано  той  же склад ",
+  "incomebasedon": "Оприходовано на  пiдставi %s  ",
+  "createddoc": "Створено документ %s  ",
+ 
   
   "refreshed": "Оновлено",
   "sent": "Відправлено",

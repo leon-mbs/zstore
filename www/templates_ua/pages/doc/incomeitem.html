@@ -5,7 +5,7 @@
 <body>
 
 
-<form zippy="docform">
+<form zippy="docform" enctype="multipart/form-data">
     <h3> Оприбуткування ТМЦ</h3>
     <div class="row">
         <div class="col-12 col-md-3">
@@ -141,7 +141,14 @@
                        pattern="[0-9\.]+"
                        style="width: 100px;">
             </div>
-
+         <div class="row">
+            <div class="col-12 col-md-4">
+                <div class="form-group">
+                    <label for="scan"> &nbsp; &nbsp;Скан документу</label>
+                    <input class="form-control" type="file" zippy="scan">
+                </div>
+            </div>
+        </div>
             <div class="form-group">
                 <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
                     type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-light">

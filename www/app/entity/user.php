@@ -79,7 +79,7 @@ class User extends \ZCL\DB\Entity
         $this->defmf = (int)$options['defmf'];
         $this->pagesize = (int)$options['pagesize'];
 
-        $this->popupmessage = (int)$options['popupmessage'];
+        
         $this->hidesidebar = (int)$options['hidesidebar'];
 
         parent::afterLoad();
@@ -105,6 +105,7 @@ class User extends \ZCL\DB\Entity
 
         $options['defmf'] = $this->defmf;
         $options['pagesize'] = $this->pagesize;
+        $options['hidesidebar'] = $this->hidesidebar;
 
         $this->options = serialize($options);
 

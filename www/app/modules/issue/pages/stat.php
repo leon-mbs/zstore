@@ -31,7 +31,7 @@ class Stat extends \App\Pages\Base
 
         $allow = (strpos($user->modules, 'issue') !== false || $user->rolename == 'admins');
         if (!$allow) {
-            $this->setError(H::l('noaccesstopage'));
+            $this->setError('noaccesstopage');
             App::RedirectHome();
             return;
         }
