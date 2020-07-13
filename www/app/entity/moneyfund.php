@@ -70,7 +70,7 @@ class MoneyFund extends \ZCL\DB\Entity
     }
 
     public static function getConstraint() {
-        return \App\ACL::getBranchConstraint(true);
+        return \App\ACL::getBranchConstraint( );
     }
 
 }

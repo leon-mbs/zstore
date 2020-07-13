@@ -70,15 +70,18 @@ class PayActivity extends \App\Pages\Base
     private function generateReport() {
 
         $mf_id = $this->filter->mf->getValue();
-
-
+ 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
         $i = 1;
         $detail = array();
         $conn = \ZDB\DB::getConnect();
-
+        $doc = "";
+        $d = \App\Entity\Doc\Document::getConstraint();
+        if(strlen($d)>0){
+           $doc = " and document_id in ( select document_id from documents_view  where  {$d}) "; 
+        }
         $sql = "
          SELECT  t.*,
           
@@ -92,7 +95,7 @@ class PayActivity extends \App\Pages\Base
               sc2.mf_id =  {$mf_id}
         
               AND sc2.paydate  < t.dt   
-               
+              {$doc} 
                                  
          ) as begin_amount   
          
@@ -105,7 +108,7 @@ class PayActivity extends \App\Pages\Base
            
         FROM paylist_view sc
              WHERE   
-                sc.mf_id = {$mf_id}
+                sc.mf_id = {$mf_id}  {$doc} 
               AND DATE(sc.paydate) >= " . $conn->DBDate($from) . "
               AND DATE(sc.paydate) <= " . $conn->DBDate($to) . "
               GROUP BY    

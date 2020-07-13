@@ -7,6 +7,7 @@ class ShowReport extends \Zippy\Html\WebPage
 {
 
     public function __construct($type, $filename) {
+        parent::__construct();
 
         $user = \App\System::getUser();
         if ($user->user_id == 0) {

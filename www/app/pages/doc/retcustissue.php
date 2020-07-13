@@ -131,7 +131,7 @@ class RetCustIssue extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? date\App\Helper::fd($item->sdate) : ''));
+        $row->add(new Label('sdate', $item->sdate > 0 ? H::fd($item->sdate) : ''));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));

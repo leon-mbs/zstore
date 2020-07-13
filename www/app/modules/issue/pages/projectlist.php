@@ -281,7 +281,7 @@ class ProjectList extends \App\Pages\Base
 
         $file = $sender->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->getOwnerPage()->setError("filemore10M");
+            $this->setError("filemore10M");
             return;
         }
 
