@@ -131,7 +131,7 @@ class Helper
 
         $list = array();
         $conn = DB::getConnect();
-        $where = self::getWhere($filter);
+        $where = self::_getWhere($filter);
 
         $sql = "select count(product_id) as  cnt from  shop_products p " . $where;
         return $conn->GetOne($sql);

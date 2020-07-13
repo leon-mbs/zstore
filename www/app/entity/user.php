@@ -50,13 +50,18 @@ class User extends \ZCL\DB\Entity
 
         $acl = @unserialize($this->roleacl);
         if (!is_array($acl)) {
-            $acl = @unserialize($this->acl);
-        } //для  обратно   совместимости
-        if (!is_array($acl)) {
             $acl = array();
+        }        
+        
+ 
+        $acluser = @unserialize($this->acl);
+        if(is_array($acluser)){
+            foreach($acluser as $k=>$v){
+              $acl[$k] = $v; 
+            }
         }
-
-
+      
+ 
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
         $this->aclexe = $acl['aclexe'];

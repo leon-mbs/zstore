@@ -148,7 +148,7 @@ class Document extends \ZCL\DB\Entity
             }
 
             if (is_numeric($value) || strlen($value) == 0) {
-                $value = $value;
+
             } else {
                 $value = "<![CDATA[" . $value . "]]>";
             }
@@ -173,7 +173,7 @@ class Document extends \ZCL\DB\Entity
 
 
                 if (is_numeric($value) || strlen($value) == 0) {
-                    $value = $value;
+
                 } else {
                     $value = "<![CDATA[" . $value . "]]>";
                 }

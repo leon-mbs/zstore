@@ -60,14 +60,14 @@ class Helper
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();
         $groups = array();
-
+        $user = System::getUser();
         $arraymenu = array("groups" => array(), "items" => array());
 
-        $aclview = explode(',', System::getUser()->aclview);
+        $aclview = explode(',', $user->aclview);
         foreach ($rows as $meta_object) {
             $meta_id = $meta_object['meta_id'];
 
-            if (!in_array($meta_id, $aclview) && System::getUser()->rolename != 'admins') {
+            if (!in_array($meta_id, $aclview) && $user->rolename != 'admins') {
                 continue;
             }
 

@@ -151,7 +151,7 @@ class Product extends \ZCL\DB\Entity
      *
      */
     public static function loadSEF($sef) {
-        return self::findFirst("product_id={$sef} or sef='{$sef}'");
+        return self::getFirst("product_id={$sef} or sef='{$sef}'");
     }
 
 

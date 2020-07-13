@@ -137,7 +137,7 @@ class CustActivity extends \App\Pages\Base
             'tin' => H::fa($tin),
             'tout' => H::fa($tout),
 
-            'datefrom' => \App\Helper::fd($from),
+
             'dateto' => \App\Helper::fd($to),
             "cust_name" => $this->filter->cust->getText()
         );
