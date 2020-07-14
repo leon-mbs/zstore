@@ -43,7 +43,7 @@ class GRList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Все', 1 => 'Не проведенные', 2 => 'Неоплаченые'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 =>H::l('all') , 1 =>H::l('notexecuted') , 2 =>H::l('notpayed')  ), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
 

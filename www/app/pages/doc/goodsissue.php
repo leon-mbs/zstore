@@ -87,7 +87,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
-        $this->docform->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта'), 1))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('delivery', array(1 => H::l('delself') , 2 => H::l('delboy') , 3 => H::l('delmail')), 1))->onChange($this, 'OnDelivery');
 
         $this->docform->add(new TextInput('order'));
 

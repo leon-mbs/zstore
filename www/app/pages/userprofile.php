@@ -75,7 +75,7 @@ class UserProfile extends \App\Pages\Base
 
     //записать  пароль
     public function onsubmitpass($sender) {
-        
+         
         $pass = $sender->userpassword->getText();
         $confirm = $sender->confirmpassword->getText();
 
@@ -107,12 +107,10 @@ class UserProfile extends \App\Pages\Base
 
             $n->dateshow = time();
             $n->message = H::l('passchanged', $this->user->username, $pass);
-
-
+ 
             $n->save();
         }
-
-
+ 
         $sender->userpassword->setText('');
         $sender->confirmpassword->setText('');
     }
