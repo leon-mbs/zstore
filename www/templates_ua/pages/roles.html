@@ -5,8 +5,8 @@
 
 
     <div zippy="listpan" class="col-12 col-md-6 col-xl-4">
-        <h3>Роли пользователей</h3>
-        <a zippy="addnew" class="btn btn-outline-success  ">Добавить</a>
+        <h3>Ролі користувачiв</h3>
+        <a zippy="addnew" class="btn btn-outline-success  ">Додати</a>
         <table class="table table-bordered table-striped table-sm">
 
             <thead align="center">
@@ -25,7 +25,7 @@
             <tbody>
             <tr zippy="rolerow">
                 <td zippy="rolename"></td>
-                <td><span title="Пользователей" zippy="cnt" class="badge badge-info "></span></td>
+                <td><span title="Користувачiв" zippy="cnt" class="badge badge-info "></span></td>
 
 
                 <td><a zippy="acl"><i class="fa fa-user-lock"></i></a></td>
@@ -40,23 +40,23 @@
 
 
     <div zippy="editpanname" class="col-12 col-sm-8 col-md-4 col-zl-3  ">
-        <h4> Редактирование роли</h4>
+        <h4> Редагування ролі</h4>
         <form zippy="editformname" role="form">
             <div class="form-group">
-                <label for="editname">Имя</label>
+                <label for="editname">Им'я</label>
                 <input class="form-control" zippy="editname" required="required">
 
             </div>
             <div class="form-group">
 
-                <button type="submit" class="btn btn-primary   ">Сохранить</button>
-                &nbsp; <a zippy="cancelname" class="btn btn-light    ">Отменить</a>
+                <button type="submit" class="btn btn-primary   ">Зберегти</button>
+                &nbsp; <a zippy="cancelname" class="btn btn-light    ">Відмінити</a>
             </div>
         </form>
     </div>
 
     <div zippy="editpan" class="col-12 col-sm-10   ">
-        <h4> Редактирование доступа</h4>
+        <h4> Редагування доступу</h4>
         <form zippy="editform" role="form">
 
 
@@ -67,13 +67,13 @@
                     <div class="form-group" zippy="metaaccess">
                         &nbsp;<b><i class="fa fa-eye"></i></b> <span>Тiльки перегляд</span><br>
                         &nbsp;<b><i class="fa fa-edit"></i></b> <span>Створення та  редагування  без  права  проведення.</span><br>
-                        &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Змына  статусу</span><br>
-                        &nbsp;<b><i class="fa fa-gavel"></i></b> <span>Створення, затвердження  та  виконеання.</span><br>
+                        &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Зміна  статусу</span><br>
+                        &nbsp;<b><i class="fa fa-gavel"></i></b> <span>Створення, затвердження  та  виконання.</span><br>
                         &nbsp;<b><i class="fa fa-undo"></i></b> <span>Вiдмiна проведення</span><br>
                  
                         <table class="table table-sm  table-hover mr-4">
                             <tr>
-                                <th>Страница</th>
+                                <th>Сторінка</th>
                                 <th>Тип</th>
                                 <th onclick=" $('.viewacc').prop('checked', $('.viewacc').prop('checked' )==false);"
                                     style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-eye"></i></th>
@@ -106,8 +106,8 @@
                     </div>
                     <div class="form-group">
 
-                        <button type="submit" class="btn btn-primary   ">Сохранить</button>
-                        &nbsp; <a zippy="cancel" class="btn btn-light    ">Отменить</a>
+                        <button type="submit" class="btn btn-primary   ">Зберегти</button>
+                        &nbsp; <a zippy="cancel" class="btn btn-light    ">Відмінити</a>
                     </div>
                 </div>
 
@@ -118,13 +118,12 @@
                         <table class="table table-sm  ml-4">
                             <tr>
                                 <td>
-                                    <b>Виджеты на главной странице</b></td>
+                                    <b>Віджети на  головній сторінці</b></td>
                             </tr>
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwplanned">
-                                    <label class="form-check-label mr-sm-2" for="editwplanned"> Запланированные
-                                        документы</label>
+                                    <label class="form-check-label mr-sm-2" for="editwplanned"> Заплановані                                         документи</label>
                                 </td>
                             </tr>
 
@@ -132,63 +131,61 @@
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwdebitors">
-                                    <label class="form-check-label mr-sm-2" for="editwdebitors"> Документы к
-                                        оплате</label>
+                                    <label class="form-check-label mr-sm-2" for="editwdebitors"> Документи до сплати</label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwnoliq">
-                                    <label class="form-check-label mr-sm-2" for="editwnoliq"> Неликвидные товары</label>
+                                    <label class="form-check-label mr-sm-2" for="editwnoliq"> Неліквідні товари</label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwminqty">
-                                    <label class="form-check-label mr-sm-2" for="editwminqty"> Минимальное
-                                        количество</label>
+                                    <label class="form-check-label mr-sm-2" for="editwminqty"> Мінімальна
+                                        кількість</label>
                                 </td>
                             </tr>
                             {{#usesnumber}}
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwsdate">
-                                    <label class="form-check-label mr-sm-2" for="editwsdate"> Просроченные
-                                        товары</label>
+                                    <label class="form-check-label mr-sm-2" for="editwsdate"> Просрочені
+                                        товари</label>
                                 </td>
                             </tr>
                             {{/usesnumber}}
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwrdoc">
-                                    <label class="form-check-label mr-sm-2" for="editwrdoc"> Недавние документы </label>
+                                    <label class="form-check-label mr-sm-2" for="editwrdoc"> Недавні документи </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwopendoc">
-                                    <label class="form-check-label mr-sm-2" for="editwopendoc"> Открытые
-                                        документы </label>
+                                    <label class="form-check-label mr-sm-2" for="editwopendoc"> Відкриті
+                                        документи </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwwaited">
-                                    <label class="form-check-label mr-sm-2" for="editwwaited"> Ожидаемые товары </label>
+                                    <label class="form-check-label mr-sm-2" for="editwwaited"> Очікувані товари </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwreserved">
-                                    <label class="form-check-label mr-sm-2"
-                                           for="editwreserved">Зарезервированные </label>
+                                    <label class="form-check-label mr-sm-2"                                            for="editwreserved">Зарезервовані </label>
                                 </td>
                             </tr>
 
 
                             <tr>
                                 <td>
-                                    <b>Доступ к модулям</b>
+                                    <b>Доступ до  модулів</b>
                                 </td>
                             </tr>
 
@@ -197,12 +194,21 @@
                                 <td>
 
                                     <input class="form-check-input" type="checkbox" zippy="editocstore">
-                                    <label class="form-check-label mr-sm-2" for="editocstore"> Интеграция с
+                                    <label class="form-check-label mr-sm-2" for="editocstore"> Iнтеграція з 
                                         опенкарт</label>
                                 </td>
                             </tr>
                             {{/ocstore}}
+                            {{#woocomerce}}
+                            <tr>
+                                <td>
 
+                                    <input class="form-check-input" type="checkbox" zippy="editwoocomerce">
+                                    <label class="form-check-label mr-sm-2" for="editwoocomerce"> Iнтеграція з 
+                                        Woocomerce</label>
+                                </td>
+                            </tr>
+                            {{/woocomerce}}
                             {{#shop}}
                             <tr>
                                 <td>
@@ -217,7 +223,7 @@
                                 <td>
 
                                     <input class="form-check-input" type="checkbox" zippy="editnote">
-                                    <label class="form-check-label mr-sm-2" for="editnote"> База знаний </label>
+                                    <label class="form-check-label mr-sm-2" for="editnote"> База знань </label>
                                 </td>
                             </tr>
                             {{/note}}
@@ -226,7 +232,7 @@
                                 <td>
 
                                     <input class="form-check-input" type="checkbox" zippy="editissue">
-                                    <label class="form-check-label mr-sm-2" for="editissue"> Задачи </label>
+                                    <label class="form-check-label mr-sm-2" for="editissue"> Проекти та  завдання </label>
                                 </td>
                             </tr>
                             {{/issue}}
@@ -240,7 +246,7 @@
     </div>
 
     <div zippy="editpanmenu" class="col-12 col-sm-8 col-md-4 col-zl-3  ">
-        <h4> Меню быстрого доступа</h4>
+        <h4> Меню швидкого доступу</h4>
         <form zippy="editformmenu" role="form">
             <div class="form-group  ">
 
@@ -258,8 +264,8 @@
             </div>
             <div class="form-group">
 
-                <button type="submit" class="btn btn-primary   ">Сохранить</button>
-                &nbsp; <a zippy="cancelmenu" class="btn btn-light    ">Отменить</a>
+                <button type="submit" class="btn btn-primary   ">Зберегти</button>
+                &nbsp; <a zippy="cancelmenu" class="btn btn-light    ">Відмінити</a>
             </div>
         </form>
     </div>
@@ -268,7 +274,7 @@
 <script>
     function check_remove() {
 
-        return confirm("Удалить  роль?")
+        return confirm("Видалити  роль?")
 
     }
 
