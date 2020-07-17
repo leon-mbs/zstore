@@ -11,7 +11,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- * Движение товара
+ * Оплата по нарядам
  */
 class EmpTask extends \App\Pages\Base
 {
@@ -91,8 +91,8 @@ class EmpTask extends \App\Pages\Base
             $total = 0;
             $hours = 0;
             foreach ($doc->unpackDetails('detaildata') as $service) {
-                $total += $service->cost;
-                $hours += $service->hours;
+                $total += $service->cost*$service->qty;
+                $hours += $service->hours*$service->qty;
             }
             if ($doc->headerdata['hours'] > 0) {
                 $hours = $doc->headerdata['hours'];

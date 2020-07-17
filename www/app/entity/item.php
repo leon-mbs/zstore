@@ -43,6 +43,7 @@ class Item extends \ZCL\DB\Entity
         $this->weight = (string)$xml->weight[0];
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
+        $this->warranty = (string)$xml->warranty[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -87,6 +88,7 @@ class Item extends \ZCL\DB\Entity
         //   $this->detail .= "<octoreoptions><![CDATA[{$this->octoreoptions}]]></octoreoptions>";
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
         $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
+        $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";

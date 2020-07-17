@@ -54,9 +54,9 @@ class Task extends \App\Pages\Base
 
         //service
         $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
+        $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")));
 
-        $this->editdetail->add(new TextInput('edithours'));
+        $this->editdetail->add(new TextInput('editqty'));
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
@@ -135,7 +135,9 @@ class Task extends \App\Pages\Base
         $row->add(new Label('service', $service->service_name));
 
 
-        $row->add(new Label('hours', $service->hours));
+        $row->add(new Label('qty', $service->qty));
+        $row->add(new Label('hours', $service->hours* $service->qty));
+        $row->add(new Label('cost', $service->cost*$service->qty));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -149,7 +151,7 @@ class Task extends \App\Pages\Base
         $this->editdetail->editservice->setValue(0);
 
 
-        $this->editdetail->edithours->setText('');
+        $this->editdetail->editqty->setText('1');
     }
 
     public function editOnClick($sender) {
@@ -158,7 +160,7 @@ class Task extends \App\Pages\Base
         $this->docform->setVisible(false);
 
 
-        $this->editdetail->edithours->setText($service->hours);
+        $this->editdetail->editqty->setText($service->qty);
 
         $this->editdetail->editservice->setValue($service->service_id);
     }
@@ -182,7 +184,7 @@ class Task extends \App\Pages\Base
         $service = Service::load($id);
 
 
-        $service->hours = $this->editdetail->edithours->getText();
+        $service->qty = $this->editdetail->editqty->getText();
 
 
         $this->_servicelist[$service->service_id] = $service;
@@ -195,7 +197,7 @@ class Task extends \App\Pages\Base
         //очищаем  форму
         $this->editdetail->editservice->setValue(0);
 
-        $this->editdetail->edithours->setText("0");
+        $this->editdetail->editqty->setText("1");
     }
 
     //employee
@@ -365,14 +367,6 @@ class Task extends \App\Pages\Base
         App::RedirectBack();
     }
 
-    public function OnChangeServive($sender) {
-        $id = $sender->getValue();
-
-        $item = Service::load($id);
-
-
-        $this->editdetail->edithours->setText($item->hours);
-        $this->updateAjax(array('edithours'));
-    }
+ 
 
 }

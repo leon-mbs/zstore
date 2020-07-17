@@ -18,14 +18,14 @@ class Task extends Document
         $i = 1;
 
         $detail = array();
-
-
+ 
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
             $detail[] = array("no" => $i++,
                 "service_name" => $ser->service_name,
-                "cost" => H::fa($ser->cost),
-                "hours" => $ser->hours
+                "cost" => H::fa($ser->cost*$ser->qty),
+                "qty" => $ser->qty,
+                "hours" => $ser->hours*$ser->qty
             );
         }
 
@@ -69,9 +69,9 @@ class Task extends Document
 
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - $ser->price, $ser->quantity);
+            $sc = new Entry($this->document_id, 0 - $ser->cost, $ser->qty);
             $sc->setService($ser->service_id);
-            $sc->save();
+           // $sc->save();
         }
 
 

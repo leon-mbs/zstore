@@ -31,8 +31,10 @@
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Наименование</th>
-        <th style="border: 1px solid black;" width="50" align="right"></th>
+        <th style="border: 1px solid black;" width="50" align="right">Кол.</th>
+        <th style="border: 1px solid black;" width="50" align="right">Сумма</th>
         <th style="border: 1px solid black;" width="50" align="right">Часов</th>
+        
 
 
     </tr>
@@ -40,9 +42,10 @@
     <tr>
         <td>{{no}}</td>
         <td>{{service_name}}</td>
-        <td align="right"></td>
-
+        <td align="right">{{qty}}</td>
+        <td align="right">{{cost}}</td>
         <td align="right">{{hours}}</td>
+        
 
 
     </tr>
