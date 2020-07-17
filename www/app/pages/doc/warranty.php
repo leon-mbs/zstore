@@ -51,6 +51,7 @@ class Warranty extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editwarranty'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
+        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -76,6 +77,11 @@ class Warranty extends \App\Pages\Base
                     $this->docform->customer->setText($basedoc->headerdata['customer_name']);
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
+
+
+                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                    }
+                    if ($basedoc->meta_name == 'POSCheck') {
 
 
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
@@ -258,4 +264,14 @@ class Warranty extends \App\Pages\Base
         return Item::findArrayAC($text);
     }
 
+    
+     public function OnChangeItem($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
+        $this->editdetail->editwarranty->setText($item->warranty) ;
+
+        $this->updateAjax(array('editwarranty' ));
+    }
+  
+    
 }

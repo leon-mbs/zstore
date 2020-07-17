@@ -79,8 +79,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
-      {{#isgar}}  <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Гарантия</th>{{/isgar}}
-
+   
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сумма</th>
@@ -91,16 +90,14 @@
         <td>{{tovar_name}}</td>
         <td>{{tovar_code}}</td>
         <td>{{msr}}</td>
-       {{#isgar}}  <td>{{gar}}</td> {{/isgar}}
-
+ 
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-      {{#isgar}}  <td> </td> {{/isgar}}
-        <td style="border-top:1px #000 solid;" colspan="2">{{weight}}</td>
+         <td style="border-top:1px #000 solid;" colspan="2">{{weight}}</td>
         <td style="border-top:1px #000 solid;" colspan="4" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
@@ -108,34 +105,29 @@
     {{^prepaid}}
     {{#isdisc}}
     <tr style="font-weight: bolder;">
-      {{#isgar}}  <td> </td> {{/isgar}}
-        <td colspan="6" align="right">Скидка:</td>
+         <td colspan="6" align="right">Скидка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
     {{#isdelivery}}
     <tr style="font-weight: bolder;">
-      {{#isgar}}  <td> </td> {{/isgar}}
-        <td colspan="6" align="right">Стоимость доставки:</td>
+         <td colspan="6" align="right">Стоимость доставки:</td>
         <td align="right">{{delivery_cost}}</td>
     </tr>
     {{/isdelivery}}
 
 
     <tr style="font-weight: bolder;">
-       {{#isgar}}  <td> </td> {{/isgar}}
-       <td colspan="6" align="right">К оплате:</td>
+        <td colspan="6" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-      {{#isgar}}  <td> </td> {{/isgar}}
-        <td colspan="6" align="right">Оплата:</td>
+         <td colspan="6" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
     {{/prepaid}}
     <tr>
-       {{#isgar}}  <td> </td> {{/isgar}}
-       <td colspan="7">На сумму <b>{{totalstr}}<b></td>
+        <td colspan="7">На сумму <b>{{totalstr}}<b></td>
 
     </tr>
 </table>
