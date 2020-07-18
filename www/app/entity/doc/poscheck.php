@@ -78,7 +78,7 @@ class POSCheck extends Document
     }
 
     public function generatePosReport() {
-
+        
         $detail = array();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
@@ -104,6 +104,7 @@ class POSCheck extends Document
 
         $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
+            "username" => \App\System::getUser()->username,
             "firm_name" => $firm["firm_name"],
             "shopname" => strlen($firm["shopname"]) > 0 ? $firm["shopname"] : false,
             "address" => $firm["address"],
@@ -183,5 +184,13 @@ class POSCheck extends Document
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
+    
+  public function getRelationBased() {
+        $list = array();
+        $list['Warranty'] = self::getDesc('Warranty');
+    
+        return $list;
+    }
+    
 
 }

@@ -28,14 +28,35 @@
     </tr>
     {{#customer_name}}
     <tr>
+        <td colspan="3"> Покупатель:</td>
+    </tr>
+   <tr>
         <td colspan="3"> {{customer_name}}</td>
     </tr>
 
     {{/customer_name}}
+ 
+    <tr>
+        <td colspan="3">Терминал: {{pos_name}}</td>
+    </tr>
+    <tr>
+        <td colspan="3">Кассир:</td>
+    </tr>
+    <tr>
+        <td colspan="3"> {{username}}</td>
+    </tr>
+
+ 
     {{#_detail}}
     <tr>
-        <td>{{tovar_name}}</td>
-        <td align="right">{{quantity}}</td>
+        <td colspan="3">{{tovar_name}}</td>
+     
+    </tr>
+ 
+    
+    <tr>
+        
+        <td colspan="2" align="right">{{quantity}}</td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
@@ -64,5 +85,8 @@
         <td align="right">{{exchange}}</td>
     </tr>
     {{/prepaid}}
-
+    <tr style="font-weight: bolder;">
+        <td colspan="3"><br>Благодарим за  доверие к  нам!</td>
+     
+    </tr>
 </table>

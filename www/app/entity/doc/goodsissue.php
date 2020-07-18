@@ -18,7 +18,7 @@ class GoodsIssue extends Document
         $i = 1;
         $detail = array();
         $weight = 0;
-        $isgar = false;
+      
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -40,11 +40,11 @@ class GoodsIssue extends Document
                 "tovar_code" => $item->item_code,
                 "quantity" => H::fqty($item->quantity),
                 "msr" => $item->msr,
-                "gar" => $item->gar,
+               
                 "price" => H::fa($item->price),
                 "amount" => H::fa($item->quantity * $item->price)
             );
-            if(strlen($item->gar)>0)$isgar = true;  
+             
         }
 
         $totalstr = H::sumstr($this->amount);
@@ -65,7 +65,7 @@ class GoodsIssue extends Document
             "order" => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
-            "isgar" => $isgar,
+          
             "totalstr" => $totalstr,
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),

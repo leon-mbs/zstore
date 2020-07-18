@@ -470,7 +470,7 @@ class ServiceAct extends \App\Pages\Base
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->phone = $this->editcust->editcustname->getText();
+        $cust->phone = $this->editcust->editphone->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
             $this->setError("tel10");
