@@ -10,7 +10,9 @@
         <a zippy="doctabc"><span    class="{{{doctabcbadge}}}"   ><i class="fa fa-comments"></i> Комментарии  <span zippy="hmessages" class="badge badge-pill badge-info"></span></span></a> 
         <a zippy="doctabf"><span    class="{{{doctabfbadge}}}"   ><i class="fa fa-paperclip"></i> Прикрепленные файлы    <span zippy="hfiles" class="badge badge-pill badge-info"></span></span></a> 
         <a zippy="doctabh"><span    class="{{{doctabhbadge}}}"   ><i class="fa fa-calendar-alt"></i> История изменений </span>   </a>
-        
+        {{#isscan}}
+           <a zippy="doctabs"><span    class="{{{doctabsbadge}}}"   ><i class="fa fa-image"></i> Скан оригинала </span>   </a>
+        {{/isscan}}
         </div>
         <div  >
           {{#doctabp}}
@@ -210,6 +212,14 @@
 
             </div>
           {{/doctabh}} 
+           {{#doctabs}}
+            <div  >
+            
+               <img zippy="scanimage"  />
+ 
+
+            </div>
+          {{/doctabs}}            
         </div>
   
 </div>
