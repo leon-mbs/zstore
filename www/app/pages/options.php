@@ -139,6 +139,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new TextInput('pwidth'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
         $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'EAN13'));
+        $this->printer->add(new DropDownChoice('pfontsize', array('12'=>'12','14'=>'14','16'=>'16','20'=>'20','24'=>'24','28'=>'28','36'=>'36',), '16'));
         $this->printer->add(new CheckBox('pname'));
         $this->printer->add(new CheckBox('pcode'));
         $this->printer->add(new CheckBox('pbarcode'));
@@ -152,6 +153,7 @@ class Options extends \App\Pages\Base
         $this->printer->pwidth->setText($printer['pwidth']);
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
+        $this->printer->pfontsize->setValue($printer['pfontsize']);
         $this->printer->pname->setChecked($printer['pname']);
         $this->printer->pcode->setChecked($printer['pcode']);
         $this->printer->pbarcode->setChecked($printer['pbarcode']);
@@ -256,6 +258,7 @@ class Options extends \App\Pages\Base
         $printer['pwidth'] = $this->printer->pwidth->getText();
         $printer['pricetype'] = $this->printer->pricetype->getValue();
         $printer['barcodetype'] = $this->printer->barcodetype->getValue();
+        $printer['pfontsize'] = $this->printer->pfontsize->getValue();
         $printer['pname'] = $this->printer->pname->isChecked() ? 1 : 0;
         $printer['pcode'] = $this->printer->pcode->isChecked() ? 1 : 0;
         $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;

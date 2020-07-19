@@ -438,12 +438,20 @@ class ItemList extends \App\Pages\Base
     public function printOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
         $printer = \App\System::getOptions('printer');
-        $wp = 'style="width:40mm"';
+        $pwidth='style="width:40mm;"';
+        $pfs='style="font-size:16px;"';
+        
         if (strlen($printer['pwidth']) > 0) {
-            $wp = 'style="width:' . $printer['pwidth'] . 'mm"';
+            $pwidth = 'style="width:' . $printer['pwidth'] . 'mm";';
         }
+        if (strlen($printer['pfontsize']) > 0) {
+            $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
+        }
+ 
+        
+        
         $report = new \App\Report('item_tag.tpl');
-        $header = array('printw' => $wp);
+        $header = array('width' => $pwidth,'fsize' => $pfs);
         if ($printer['pname'] == 1) {
             
             if(strlen($item->shortname)>0){
@@ -452,12 +460,15 @@ class ItemList extends \App\Pages\Base
                $header['name'] = $item->itemname;    
             }
             
-        }
+         }
+        $header['isap']  = false;
         if ($printer['pprice'] == 1) {
             $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
+            $header['isap']  = true;
         }
         if ($printer['pcode'] == 1) {
             $header['article'] = $item->item_code;
+            $header['isap']  = true;
         }
 
         if ($printer['pbarcode'] == 1) {
