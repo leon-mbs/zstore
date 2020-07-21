@@ -34,9 +34,14 @@ class TopicNode extends \ZCL\DB\Entity
                 $arr[] = Topic::qstr('%' . $a . '%');
             }
         }
+        $user = \App\System::getUser() ;
+        $n = " note_topicnodeview.node_id in  ( select node_id from  note_nodes where  user_id={$user->user_id} or ispublic=1  )  and ";
+        if($user->rolename=='admins')  $n='';
+        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or acctype>0  )  and ";
+        if($user->rolename=='admins')  $t='';
+  
 
-
-        $sql = "  select * from note_topicnodeview   where (1=1   ";
+        $sql = "  select * from note_topicnodeview   where   {$n}  {$t}    (1=1   ";
 
         foreach ($arr as $t) {
 
@@ -47,8 +52,12 @@ class TopicNode extends \ZCL\DB\Entity
                 $sql .= " and  title like {$t} ";
             }
         }
-        $sql .= ") and  user_id=" . \App\System::getUser()->user_id;
-
+        $sql .= ")  "  ;
+    
+        
+        
+        
+        
         // $logger->info($sql);
 
         $list = TopicNode::findBySql($sql);
@@ -62,8 +71,13 @@ class TopicNode extends \ZCL\DB\Entity
      * @param mixed $tag
      */
     public static function searchByTag($tag) {
-
-        $sql = "  select * from note_topicnodeview   where topic_id in (select topic_id from note_tags where tagvalue  = " . Topic::qstr($tag) . " ) and  user_id=" . \App\System::getUser()->user_id;
+        $user = \App\System::getUser() ;
+        $n = " note_topicnodeview.node_id in  ( select node_id from  note_nodes where  user_id={$user->user_id} or ispublic=1  )  and ";
+        if($user->rolename=='admins')  $n='';
+        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or acctype>0  )  and ";
+        if($user->rolename=='admins')  $t='';
+   
+        $sql = "  select * from note_topicnodeview   where  {$n}  {$t}  topic_id in (select topic_id from note_tags where tagvalue  = " . Topic::qstr($tag) . " )  "  ;
 
         $list = TopicNode::findBySql($sql);
 
@@ -81,7 +95,7 @@ class TopicNode extends \ZCL\DB\Entity
     }
 
     /**
-     * цепочка  названий ущлов до  корня
+     * цепочка  названий узлов до  корня
      *
      */
     public function nodes() {

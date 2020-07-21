@@ -251,10 +251,14 @@
   "notpayed": "Не  оплаченi",
   "notexecuted": "Не  проведенi",
   "sended": "Вiдправленi",
-  "newed": "Новi",
+  "newed":  "Новi",
   "delself": "Самовивiз",
-  "delboy": "Кур'єр",
+  "delboy":  "Кур'єр",
   "delmail": "Пошта",
+  "tn_privat": "Приватний",
+  "tn_public": "Публiчний",
+  "tn_edit":   "З спiльним редагуванням",
+  "tn_nopublictopic": "Не  можна додавати  публiчний топiк до приватного  вузла ",
      
   
   "refreshed": "Оновлено",

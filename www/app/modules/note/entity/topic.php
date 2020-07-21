@@ -45,9 +45,12 @@ class Topic extends \ZCL\DB\Entity
      * @param mixed $node_id
      */
     public static function findByNode($node_id) {
-        $user_id = \App\System::getUser()->user_id;
-
-        return self::find("  (user_id={$user_id} or acctype>0) and topic_id in (select topic_id from note_topicnode where  node_id={$node_id})");
+         
+        $user = \App\System::getUser() ;
+        $w = "(user_id={$user->user_id} or acctype > 0  ) and ";
+        if($user->rolename=='admins')  $w='';
+ 
+        return self::find(" {$w} topic_id in (select topic_id from note_topicnode where  node_id={$node_id})");
     }
 
     /**

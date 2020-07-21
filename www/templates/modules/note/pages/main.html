@@ -133,6 +133,7 @@
                     <div class="form-group">
                         <label for="edittags">Тэги</label>
                         <div zippy="edittags"></div>
+                        <small>Для ввода  тега  нажмите  Enter</small>
                     </div>
 
                     <a zippy="editcancel" class="btn btn-outline-light">Отмена</a>&nbsp;
@@ -144,8 +145,13 @@
     {{/editor}}
 </div>
 <div class="row">
+    <div class="col-12">
+      <hr>
+    </div>
+ </div>   
+<div class="row">
     <div class="col-sm-12">
-        <div style="margin-top:5px; background-color: #eaeaea;">
+        <div  >
             <div class="navbar nav">
                 <form class="form-inline" zippy="sform">
 
@@ -268,7 +274,15 @@
         $('#opname').val('edit');
         var arr = $('#tree').treeview('getSelected');
         arr.forEach(function (entry) {
+            
             $('#editnodetitle').val(entry.text);
+            
+            if(entry.icon=='fa fa-users fa-xs') {
+                $('#editnodepublic').prop( "checked", true );
+            } else {
+                $('#editnodepublic').prop( "checked", false );
+            }
+            
         });
 
         $('#nodeedit').modal('show');

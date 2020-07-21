@@ -22,10 +22,14 @@ class FirmList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('FirmList')) {
-            return;
-        }
 
+        if (System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg(H::l('onlyadminpage'));
+            App::RedirectHome();
+            return false;
+        }        
+        
+        
         $this->add(new Panel('firmtable'))->setVisible(true);
         $this->firmtable->add(new DataView('firmlist', new \ZCL\DB\EntityDataSource('\App\Entity\Firm', '', 'disabled,firm_name'), $this, 'firmlistOnRow'))->Reload();
         $this->firmtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -56,9 +60,6 @@ class FirmList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('FirmList')) {
-            return;
-        }
 
         $firm_id = $sender->owner->getDataItem()->firm_id;
 
@@ -99,9 +100,6 @@ class FirmList extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('FirmList')) {
-            return;
-        }
 
         $this->_firm->firm_name = $this->firmdetail->editfirm_name->getText();
         $this->_firm->inn = $this->firmdetail->editinn->getText();
