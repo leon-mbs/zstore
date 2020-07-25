@@ -228,10 +228,7 @@ class Base extends \Zippy\Html\WebPage
         \App\Application::$app->setReloadPage();
     }
 
-    public function tm($p, $post) {
-        return "Привет";
-    }
-
+     
 
     /**
      * Вставляет  JavaScript  в  конец   выходного  потока

@@ -71,11 +71,14 @@
                         zippy="username"></span> </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile">Мой профиль</a>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i class="fa fa-calendar-alt"></i> Календарь</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-user"></i> Мой профиль</a>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item  " zippy="logout"> Выйти</a>
+                        <a class="dropdown-item  " zippy="logout"><i class="fa fa-door-open"></i> Выйти</a>
                     </li>
                 </ul>
             </li>
@@ -684,26 +687,8 @@
         }
     });
 
-    function test() {
-        var url = '{{_baseurl}}' + '::tm&ajax=true'
-
-
-        data = "test";
-
-        $.ajax({
-            url: url,
-            data: data,
-            type: 'GET',
-            dataType: "text",
-            success: function (data, textStatus) {
-                alert(data);
-            }
-
-
-        });
-
-    }
-
+    
+ 
 
 </script>
  {{#usescanner}}
