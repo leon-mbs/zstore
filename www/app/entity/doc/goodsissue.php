@@ -49,7 +49,7 @@ class GoodsIssue extends Document
 
         $totalstr = H::sumstr($this->amount);
 
-        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
+        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
 
         $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,

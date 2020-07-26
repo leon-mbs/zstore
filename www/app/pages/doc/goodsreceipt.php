@@ -424,9 +424,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
         $this->goAnkor("");
 
-        $firm = H::getFirmData($this->_doc->branch_id);
-        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
-
+  
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();

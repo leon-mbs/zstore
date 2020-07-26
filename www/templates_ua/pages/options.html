@@ -111,12 +111,7 @@
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Філії (наприклад торгові точки) використовуються для поділу доступу до ресурсів. Сотпруднікі філії мають доступ до документів, складах і кас тільки даного філіала. Отпускние ціни товарів запам'ятовуються в прив'язці до поточного філії.Філії (наприклад торгові точки) використовуються для поділу доступу до ресурсів. Співробітники філії мають доступ до документів, складах і кас тільки даного філіалу. Відпускні ціни товарів запам'ятовуються в прив'язці до поточного філії.    "></i>
             </div>
-            <div class="form-check">
-                <input zippy="usefirms" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="usefirms">Облiк в кiлькох компанiях </label>
-                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                   title="Використовуется якщо раъунки та накладнi треба  вести в  розрiзi кiлькох компанiй  "></i>
-            </div>
+       
 
             <div class="form-check">
                 <input zippy="allowminus" type="checkbox" class="form-check-input">
@@ -176,66 +171,7 @@
         </form>
         {{/useval}}
 
-        {{^usefirms}}
-        <h4>Дані про компанію</h4>
-        <form zippy="firm">
-
-            <div class="form-group">
-                <label for="firmname">Назва </label>
-                <input class="form-control" type="text" zippy="firmname" required="required">
-            </div>
-            <div class="form-group">
-                <label for="inn">ІПН </label>
-                <input class="form-control" type="text" zippy="inn">
-            </div>
-            <div class="form-group">
-                <label for="shopname">Назва торгової точки </label>
-                <input class="form-control" type="text" zippy="shopname">
-                <small>Вводиться якщо назва магазину відрізняється від назви компанії</small>
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Телефон, Viber </label>
-                <input class="form-control" type="text" zippy="phone">
-            </div>
-
-
-            <div class="form-group">
-                <label for="address">Адреса </label>
-                <input class="form-control" type="text" zippy="address">
-            </div>
-            <div class="form-group">
-                <label for="bank">Банк, МФО </label>
-                <input class="form-control" type="text" zippy="bank">
-            </div>
-            <div class="form-group">
-                <label for="bankacc">Розрахунковий рахунок</label>
-                <input class="form-control" type="text" zippy="bankacc">
-            </div>
-            <div class="form-group">
-                <label for="logo">Логотип </label>
-                <input class="form-control" type="text" zippy="logo">
-                <small class="form-text text-muted">Шлях до файлу логотипа вiдносно кореня  сайту. Наприклад
-                    '/upload/logo.png'</small>
-            </div>
-            <div class="form-group">
-                <label for="stamp">Печать </label>
-                <input class="form-control" type="text" zippy="stamp">
-                <small class="form-text text-muted">Шлях до файла зображення   вiдносно кореня сайту . </small>
-            </div>
-            <div class="form-group">
-                <label for="sign">Пiдпис (факсимiле) </label>
-                <input class="form-control" type="text" zippy="sign">
-                <small class="form-text text-muted">Шлях до зображення   вiдносно кореня сайту . </small>
-            </div>            
-            
-            <div class="form-group">
-                <button class="btn btn-primary" type="submit">Зберегти</button>
-            </div>
-
-        </form>
-        {{/usefirms}}
-
+     
         <h4>Налаштування принтера</h4>
         <small>Налаштування вузького принтера для друку чеків і етикеток</small>
         <form zippy="printer">
@@ -356,7 +292,7 @@
                         <input class="form-control" zippy="edit_meta_name" required="required">
                     </div>
                     <div class="form-group">
-                        <label for="edit_menugroup">Група підміню</label>
+                        <label for="edit_menugroup">Група підменю</label>
                         <input class="form-control" zippy="edit_menugroup">
                     </div>
                     <div class="form-group">

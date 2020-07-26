@@ -467,9 +467,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         //   $this->_doc->order = $this->docform->order->getText();
-        $firm = H::getFirmData($this->_doc->branch_id);
-        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
-
+  
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);

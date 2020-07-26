@@ -112,12 +112,7 @@
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Филиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала. Отпускные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
             </div>
-            <div class="form-check">
-                <input zippy="usefirms" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="usefirms">Учет в нескольких компаниях </label>
-                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                   title="Используется  если  счета  и накладные  нужно  вести  в разрезе нескольких компаний. Данные о  компании вместо  формы  в  настройках заносятся в справочнике  компаний  "></i>
-            </div>
+         
             <div class="form-check">
                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="allowminus">Разрешить списывать ТМЦ в минус </label>
@@ -176,64 +171,8 @@
         </form>
         {{/useval}}
 
-        {{^usefirms}}
-        <h4>Данные о компании</h4>
-        <form zippy="firm">
-
-            <div class="form-group">
-                <label for="firmname">Название </label>
-                <input class="form-control" type="text" zippy="firmname" required="required">
-            </div>
-            <div class="form-group">
-                <label for="inn">ИНН </label>
-                <input class="form-control" type="text" zippy="inn">
-            </div>
-            <div class="form-group">
-                <label for="shopname">Название торговой точки </label>
-                <input class="form-control" type="text" zippy="shopname">
-                <small class="form-text text-muted">Вводится если название магазина отличается от названия
-                    компании</small>
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Телефон,viber </label>
-                <input class="form-control" type="text" zippy="phone">
-            </div>
-
-            <div class="form-group">
-                <label for="address">Адрес </label>
-                <input class="form-control" type="text" zippy="address">
-            </div>
-            <div class="form-group">
-                <label for="bank">Банк, МФО </label>
-                <input class="form-control" type="text" zippy="bank">
-            </div>
-            <div class="form-group">
-                <label for="bankacc">Расчетный счет </label>
-                <input class="form-control" type="text" zippy="bankacc">
-            </div>
-            <div class="form-group">
-                <label for="logo">Логотип </label>
-                <input class="form-control" type="text" zippy="logo">
-                <small class="form-text text-muted">Путь к файлу логотипа относительно корня сайта. Например
-                    '/upload/logo.png'</small>
-            </div>
-            <div class="form-group">
-                <label for="stamp">Печать </label>
-                <input class="form-control" type="text" zippy="stamp">
-                <small class="form-text text-muted">Путь к изображению печати относительно корня сайта. </small>
-            </div>
-            <div class="form-group">
-                <label for="sign">Подпись (факсимиле) </label>
-                <input class="form-control" type="text" zippy="sign">
-                <small class="form-text text-muted">Путь к изображению относительно корня сайта. </small>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary" type="submit">Сохранить</button>
-            </div>
-
-        </form>
-        {{/usefirms}}
+ 
+       
 
         <h4>Настройка принтера</h4>
         <small>Настройки узкого принтера для печати чеков и этикеток</small>

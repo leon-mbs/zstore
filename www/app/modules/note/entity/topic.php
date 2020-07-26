@@ -19,7 +19,7 @@ class Topic extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->content = "<content>";
-        $this->content .= "<isout>{$this->isout}</isout>";
+       
         $this->content .= "<detail><![CDATA[{$this->detail}]]></detail>";
         $this->content .= "</content>";
 
@@ -31,8 +31,7 @@ class Topic extends \ZCL\DB\Entity
         $xml = @simplexml_load_string($this->content);
 
 
-        $this->isout = (int)($xml->isout[0]);
-
+      
         $this->detail = (string)($xml->detail[0]);
 
         parent::afterLoad();
