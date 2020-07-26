@@ -1,35 +1,60 @@
 <html>
+<head>
+  
+    <link rel="stylesheet" type="text/css" href="/assets/css/fullcalendar.css"/>
 
+
+    <script language="javascript" src="/assets/js/moment.min.js"></script>
+    <script language="javascript" src="/assets/js/fullcalendar.js"></script>
+    <script language="javascript" src="/assets/js/ru.js"></script>
+
+
+</head>
 <body>
 <div class="row">
-    <div class="col-8">
-        <h3>Уведомления</h3>
+    <div class="col-12 col-lg-10">
+        <h3>Табель учета рабочего  времени</h3>
         <div class="navbar nav">
             <form zippy="filter" class="form-inline ">
 
+                  <label for="from">С</label>
+                <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="from">
 
-                <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
+                <label for="to">по</label>
+                <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="to">
 
-                <input type="submit" class="  btn btn-outline-success  " value="Искать">
+
+                <label for="parea">Сотрудник</label>
+                <select class="form-control mr-sm-2" zippy="emp">
+                    <option value="0">Не выбран</option>
+                </select>
+                
+                <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
 
             </form>
         </div>
-
-        <table class="table table-sm table-bordered  ">
-            <tr zippy="nlist">
-
-                <td><i class="fa fa-clock"> </i> <span zippy="ndate"></span>
-                    &nbsp;&nbsp;&nbsp;<i class="fa fa-user"></i> <span zippy="sender"></span>
-                    <p zippy="msg">
-                    <p>
-                </td>
-                <td><span zippy="newn" class="badge badge-info">Новое</span></td>
-
-
-            </tr>
-        </table>
-        <div zippy="pag"></div>
+        
+       <div zippy="tpanel">
+            <a zippy="addnew" class="btn  btn-success" >Добавить</a>  
+            <div  class="mt-1" style="font-size: 1.5rem">
+            <a zippy="tabc"><span    class="{{{tabcbadge}}}"   >  Календарь</span>   </a> &nbsp;&nbsp;
+            <a zippy="taba"><span    class="{{{tababadge}}}"  >  Расписание   </span>  </a>  &nbsp;&nbsp;
+            <a zippy="tabs"><span    class="{{{tabsbadge}}}"   >  Статистика   </span></a> 
+             </div>
+            
+            
+            <div zippy="tcal">
+         <div zippy='calendar'></div>        
+            </div>
+           <div zippy="tagen">  
+            </div>
+           <div zippy="tstat">  
+            </div>
+     
+        </div>
+        
+ 
 
     </div>
 </div>

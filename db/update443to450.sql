@@ -1,4 +1,6 @@
 
+INSERT   INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Рабочее время', 'Timestat', '', 0);
+
 
 ALTER TABLE `documents` ADD `firm_id` INT NULL  ;
  
@@ -37,4 +39,29 @@ FROM  `documents` `d`
     ON  `d`.`branch_id` = `b`.`branch_id` 
   LEFT JOIN firms `f`
     ON  `d`.`firm_id` = `f`.`firm_id`  ;
-    
+
+
+CREATE TABLE `timesheet` (
+  `time_id` int(11) NOT NULL AUTO_INCREMENT,
+  `emp_id` int(11) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `t_start` datetime DEFAULT NULL,
+  `t_duration` int(11) DEFAULT NULL,
+  `t_type` int(11) DEFAULT '0',
+  PRIMARY KEY (`time_id`),
+  KEY `emp_id` (`emp_id`)
+)    ;    
+
+CREATE  VIEW `timesheet_view` AS 
+  select 
+    `t`.`time_id` AS `time_id`,
+    `t`.`emp_id` AS `emp_id`,
+    `t`.`description` AS `description`,
+    `t`.`t_start` AS `t_start`,
+    `t`.`t_duration` AS `t_duration`,
+    `t`.`t_type` AS `t_type`,
+    `e`.`emp_name` AS `emp_name`,
+    `e`.`disabled` AS `disabled`,
+    `e`.`branch_id` AS `branch_id` 
+  from 
+    (`timesheet` `t` join `employees` `e` on((`t`.`emp_id` = `e`.`employee_id`)));

@@ -9,7 +9,7 @@ UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' 
  
 INSERT INTO `stores` (`store_id`, `storename`, `description`, `branch_id`) VALUES (28, 'Основний склад', '', 0);
 INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`, `branch_id`) VALUES (2, 'Каса', 'Основна каса', 0);
-INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  '����  �i���', '', 0);
+INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  '????  ?i???', '', 0);
 
   
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:16:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:11:"partiontype";s:1:"1";s:4:"lang";s:2:"ua";s:6:"price1";s:17:"Роздрiбна";s:6:"price2";s:12:"Оптова";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"defprice";s:2:"10";s:11:"autoarticle";i:1;s:6:"useset";i:0;s:10:"usesnumber";i:0;s:10:"usescanner";i:0;s:9:"useimages";i:0;s:9:"usebranch";i:0;}');
@@ -77,3 +77,5 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Рух по  контрагентах', 'CustActivity', 'Платежі', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'Контракти', 'ContractList', '', 0); 
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Перемiщення ТМЦ', 'MoveItem', 'Склад', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Рабочее время', 'Timestat', '', 0);
+

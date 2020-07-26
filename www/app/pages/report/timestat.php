@@ -3,41 +3,43 @@
 namespace App\Pages\Report;
 
 use App\Entity\Employee;
+use App\Entity\TimeItem;
 use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\Date;
 
 /**
- *  Отчет по  зарплате
+ *  Отчет по  рабочему времени
  */
-class SalaryRep extends \App\Pages\Base
+class TimeStat extends \App\Pages\Base
 {
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReport('SalaryRep')) {
+        if (false == \App\ACL::checkShowReport('TimeStat')) {
             return;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
+        $dt = new \Carbon\Carbon;
+        $dt->subMonth();
+        $from = $dt->startOfMonth()->timestamp;
+        $to = $dt->endOfMonth()->timestamp;
 
-        $this->filter->add(new DropDownChoice('yfrom', \App\Util::getYears(), round(date('Y'))));
-        $this->filter->add(new DropDownChoice('mfrom', \App\Util::getMonth(), round(date('m'))));
-        $this->filter->add(new DropDownChoice('yto', \App\Util::getYears(), round(date('Y'))));
-        $this->filter->add(new DropDownChoice('mto', \App\Util::getMonth(), round(date('m'))));
+        $this->filter->add(new Date('from', $from));
+        $this->filter->add(new Date('to', $to));
+        $this->filter->add(new DropDownChoice('ttype', TimeItem::getTypeTiime(), 0));
 
-        $this->filter->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name')));
+    
 
-
-        $this->add(new Panel('detail'))->setVisible(false);
-        $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
-
-        $this->detail->add(new RedirectLink('excel', "slreport"));
-        $this->detail->add(new RedirectLink('pdf', "slreport"));
+        
+        $this->detail->add(new RedirectLink('excel', "tsreport"));
+        $this->detail->add(new RedirectLink('pdf', "tsreport"));
         $this->detail->add(new Label('preview'));
 
     }
@@ -50,7 +52,7 @@ class SalaryRep extends \App\Pages\Base
 
         // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $reportpage = "App/Pages/ShowReport";
-        $reportname = "slreport";
+        $reportname = "timestat";
 
 
         $this->detail->excel->pagename = $reportpage;
@@ -59,21 +61,15 @@ class SalaryRep extends \App\Pages\Base
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
- 
+      
 
         $this->detail->preview->setText($html, true);
     }
 
     private function generateReport() {
 
-        $emp_id = $this->filter->emp->getValue();
-        $emp_name = $this->filter->emp->getValueName();
-        $yfrom = $this->filter->yfrom->getValue();
-        $mfrom = $this->filter->mfrom->getValue();
-        $mfromname = $this->filter->mfrom->getValueName();
-        $yto = $this->filter->yto->getValue();
-        $mto = $this->filter->mto->getValue();
-        $mtoname = $this->filter->mto->getValueName();
+        $from = $this->filter->from->getDate();
+        $to = $this->filter->to->getDate();
 
         $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
 
@@ -139,7 +135,7 @@ class SalaryRep extends \App\Pages\Base
         );
 
 
-        $report = new \App\Report('report/salaryrep.tpl');
+        $report = new \App\Report('report/timestat.tpl');
 
         $html = $report->generate($header);
 
