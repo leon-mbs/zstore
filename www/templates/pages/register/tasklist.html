@@ -53,14 +53,15 @@
 
     <div class="col-12  col-xl-10   ">
 
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link active " href="#tasktab" data-toggle="tab">Список</a></li>
-            <li class="nav-item"><a class="nav-link " href="#caltab" data-toggle="tab">Календарь</a></li>
+ 
+           <div  class="mt-1" style="font-size: 1.5rem">
+            <a zippy="tabs"><span    class="{{{tabsbadge}}}"   >  Список</span>   </a> &nbsp;&nbsp;
+            <a zippy="tabc"><span    class="{{{tabcbadge}}}"  >  Календарь   </span>  </a>   
+            
+             </div>
 
-        </ul>
-
-        <div class="tab-content">
-            <div id="tasktab" class="tab-pane  active ">
+   
+            <div zippy="tasktab"  >
                 <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Создать</a>
 
                 <div class="row">
@@ -154,14 +155,14 @@
                 </div>
 
             </div> <!-- tasktab -->
-            <div id="caltab" class="tab-pane    ">
+            <div zippy="caltab"  >
 
                 <div zippy='calendar'></div>
 
 
             </div>
 
-        </div>
+     
 
     </div>
 </div>

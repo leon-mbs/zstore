@@ -69,7 +69,7 @@ class TimeSheet extends \App\Pages\Base
         $this->tpanel->add(new ClickLink('addnew', $this,'AddNew'));
         
      
-        $this->tpanel->tabc->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
+        $this->tpanel->tcal->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
         
         $this->onTab($this->tpanel->tabc);       
@@ -141,7 +141,7 @@ class TimeSheet extends \App\Pages\Base
         }
 
 
-        $this->calendar->setData($tasks);
+         $this->tpanel->tcal->calendar->setData($tasks);
     }
 
 }
