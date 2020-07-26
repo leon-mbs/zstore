@@ -263,7 +263,10 @@ class Order extends \App\Pages\Base
             }
             $this->_doc->save();
 
-            $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+
+            if ($sender->id == 'savedoc') {
+               $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+            }
 
 
             if ($sender->id == 'execdoc') {

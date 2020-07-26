@@ -45,7 +45,7 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this, 'OnCustomerFirm');
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
         $this->docform->add(new TextArea('notes'));
@@ -330,13 +330,13 @@ class Invoice extends \App\Pages\Base
                 $this->_basedocid = 0;
             }
             $this->_doc->save();
-
-
+            if ($sender->id == 'savedoc') {
+               $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+            }
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
-                }
-
+                }  
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             }
 
