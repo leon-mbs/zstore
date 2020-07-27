@@ -6,21 +6,23 @@ use App\Entity\Employee;
 use App\Entity\TimeItem;
 use App\Helper as H;
 use App\System;
+use App\Application as App;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\Button;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Form\Date;
+
 use Zippy\Html\Link\ClickLink;
 use Zippy\WebApplication as App;
 
 class TimeSheet extends \App\Pages\Base
 {
 
-    public $user = null;
-    public $ds;
+    private $_time_id = 0;
 
     public function __construct() {
         parent::__construct();
@@ -31,14 +33,6 @@ class TimeSheet extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
      
-        $dt = new \Carbon\Carbon;
-         
-        $from = $dt->startOfMonth()->timestamp;
-        $to = $dt->endOfMonth()->timestamp;
-     
-     
-        $this->filter->add(new Date('from', $from));
-        $this->filter->add(new Date('to', $to));
 
         $def = 0;
         $list=array();
@@ -54,13 +48,23 @@ class TimeSheet extends \App\Pages\Base
         }  
         
         $this->filter->add(new DropDownChoice('emp', $list , $def));
-       
+ 
+        
+        $dt = new \Carbon\Carbon;
+         
+        $from = $dt->startOfMonth()->timestamp;
+        $to = $dt->endOfMonth()->timestamp;
+     
+        $this->filter->add(new Date('from', $from));
+        $this->filter->add(new Date('to', $to));
+        
         
         $this->add(new Panel('tpanel'))->setVisible(false) ;
         
-        $this->tpanel->add(new Panel('tcal')) ;
-        $this->tpanel->add(new Panel('tagen')) ;
-        $this->tpanel->add(new Panel('tstat')) ;
+        $tcal = $this->tpanel->add(new Panel('tcal')) ;
+        $tagen = $this->tpanel->add(new Panel('tagen')) ;
+        $tstat = $this->tpanel->add(new Panel('tstat')) ;
+
  
         $this->tpanel->add(new ClickLink('tabc', $this,'onTab'));
         $this->tpanel->add(new ClickLink('taba', $this,'onTab'));
@@ -69,8 +73,18 @@ class TimeSheet extends \App\Pages\Base
         $this->tpanel->add(new ClickLink('addnew', $this,'AddNew'));
         
      
-        $this->tpanel->tcal->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
+        $tcal->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
+          
+        $this->add(new Form('editform'))->onSubmit($this, 'timeOnSubmit');
+        $this->editform->setVisible(false);
+        $this->editform->add(new DropDownChoice('edittype', TimeItem::getTypeTime() , TimeItem::TIME_WORK ));
+        $this->editform->add(new TextInput('editnote' ));
+        $this->editform->add(new TextInput('editfrom' ));
+        $this->editform->add(new TextInput('editto' ));
+        $this->editform->add(new Date('editdate',time()));
+        $this->editform->add(new Button('cancel'  ))->onClick($this,'onCancel');
+           
         
         $this->onTab($this->tpanel->tabc);       
         $this->filterOnSubmit($this->filter);       
@@ -83,23 +97,37 @@ class TimeSheet extends \App\Pages\Base
         $this->_tvars['tababadge']  = $sender->id =='taba' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
         $this->_tvars['tabsbadge']  = $sender->id =='tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
        
-        $this->tpanel->tcal->setVisible($sender->id =='tabc');
+        $this->tpanel->tcal->setVisible($sender->id  =='tabc');
         $this->tpanel->tagen->setVisible($sender->id =='taba');
         $this->tpanel->tstat->setVisible($sender->id =='tabs');
         
      }    
  
      public function filterOnSubmit($sender) {
-        $emp_id= $this->filter->emp->getValue();
-        
+        $emp_id = $this->filter->emp->getValue();
         $this->tpanel->setVisible($emp_id>0);  
-         
      }
+   
+     public function onCancel($sender) {
+        $this->tpanel->setVisible(true);     
+        $this->editform->setVisible(false);          
+     }
+
      public function AddNew($sender) {
         
-        $this->tpanel->setVisible(false);  
-         
+          $this->tpanel->setVisible(false);     
+          $this->editform->setVisible(true);        
+          $this->editform->editfrom->setText('09:00');
+          $this->editform->editto->setText('18:00');
+          $this->editform->editnote->setText('');
+          $this->editform->edittype->setValue(TimeItem::TIME_WORK);
+      
      }
+  
+     public function timeOnSubmit($sender) {
+    
+     }
+  
      public function OnCal($sender, $action) {
         if ($action['action'] == 'click') {
 
@@ -115,6 +143,7 @@ class TimeSheet extends \App\Pages\Base
      
       
     }
+
      public function updateCal() {
 
         $tasks = array();
