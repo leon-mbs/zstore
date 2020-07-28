@@ -50,7 +50,7 @@ class TimeItem extends \ZCL\DB\Entity
         
         
         
-        return  true;
+        return  "";
     }
     
     

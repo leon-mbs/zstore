@@ -15,9 +15,8 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Form\Date;
-
 use Zippy\Html\Link\ClickLink;
-use Zippy\WebApplication as App;
+
 
 class TimeSheet extends \App\Pages\Base
 {
@@ -109,23 +108,61 @@ class TimeSheet extends \App\Pages\Base
      }
    
      public function onCancel($sender) {
+        $this->filter->setVisible(true);     
         $this->tpanel->setVisible(true);     
         $this->editform->setVisible(false);          
      }
 
      public function AddNew($sender) {
         
+          $this->filter->setVisible(false);     
           $this->tpanel->setVisible(false);     
           $this->editform->setVisible(true);        
           $this->editform->editfrom->setText('09:00');
           $this->editform->editto->setText('18:00');
           $this->editform->editnote->setText('');
           $this->editform->edittype->setValue(TimeItem::TIME_WORK);
-      
+          $this->_time_id  =0;
+     }
+     public function onEdit($sender) {
+        
+          $this->filter->setVisible(false);     
+          $this->tpanel->setVisible(false);     
+          $this->editform->setVisible(true);  
+          
+          $time = $sender->getOwner()->getDataItem();
+          $this->_time_id  =  $time->time_id; 
+               
+          $this->editform->editfrom->setText('09:00');
+          $this->editform->editto->setText('18:00');
+          $this->editform->editnote->setText('');
+          $this->editform->edittype->setValue(TimeItem::TIME_WORK);
+           
      }
   
      public function timeOnSubmit($sender) {
-    
+         $time = new  TimeItem();
+         $time->description = $sender->editnote->getText();
+         $time->emp_id = $this->filter->emp->getValue();
+         if($time->emp_id ==0) {
+             $setError('Не  выбран  сотрудник');
+             return;
+         }
+         $time->t_type = $sender->edittype->getValue();
+         $from   = $sender->editdate->getText(). ' ' .$sender->editfrom->getText();
+         $to   = $sender->editdate->getText(). ' ' .$sender->editom->getText();
+         $time->t_start = strtotime($from) ;
+         $time->t_end = strtotime($to) ;
+         $v = $time->isValid() ;
+         if($strlen($v)>0){
+             $this->setError($v);
+             return;             
+         }
+         $time->save();
+         
+         $this->filter->setVisible(true);     
+         $this->tpanel->setVisible(true);     
+         $this->editform->setVisible(false);           
      }
   
      public function OnCal($sender, $action) {
@@ -144,7 +181,7 @@ class TimeSheet extends \App\Pages\Base
       
     }
 
-     public function updateCal() {
+     private function updateCal() {
 
         $tasks = array();
         $items = $this->_taskds->getItems();
@@ -173,4 +210,8 @@ class TimeSheet extends \App\Pages\Base
          $this->tpanel->tcal->calendar->setData($tasks);
     }
 
+    
+     private function updateList(){
+         
+     } 
 }

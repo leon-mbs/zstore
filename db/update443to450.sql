@@ -1,5 +1,5 @@
 
-INSERT   INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Рабочее время', 'Timestat', '', 0);
+INSERT   INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Р Р°Р±РѕС‡РµРµ РІСЂРµРјСЏ', 'Timestat', '', 0);
 
 
 ALTER TABLE `documents` ADD `firm_id` INT NULL  ;
