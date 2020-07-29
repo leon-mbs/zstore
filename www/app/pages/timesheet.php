@@ -16,12 +16,13 @@ use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Link\ClickLink;
-
+use Zippy\Html\DataList\ArrayDataSource;
 
 class TimeSheet extends \App\Pages\Base
 {
 
     private $_time_id = 0;
+    public $_list = array();
 
     public function __construct() {
         parent::__construct();
@@ -71,6 +72,7 @@ class TimeSheet extends \App\Pages\Base
         
         $this->tpanel->add(new ClickLink('addnew', $this,'AddNew'));
         
+        $tagen->add(new DataView('llist', new ArrayDataSource($this, '_list') , $this, 'listOnRow'));
      
         $tcal->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
@@ -81,6 +83,7 @@ class TimeSheet extends \App\Pages\Base
         $this->editform->add(new TextInput('editnote' ));
         $this->editform->add(new TextInput('editfrom' ));
         $this->editform->add(new TextInput('editto' ));
+        $this->editform->add(new TextInput('editbreak' ));
         $this->editform->add(new Date('editdate',time()));
         $this->editform->add(new Button('cancel'  ))->onClick($this,'onCancel');
            
@@ -105,6 +108,9 @@ class TimeSheet extends \App\Pages\Base
      public function filterOnSubmit($sender) {
         $emp_id = $this->filter->emp->getValue();
         $this->tpanel->setVisible($emp_id>0);  
+        if($emp_id>0) {
+             $this->updateList() ;
+        }
      }
    
      public function onCancel($sender) {
@@ -120,10 +126,12 @@ class TimeSheet extends \App\Pages\Base
           $this->editform->setVisible(true);        
           $this->editform->editfrom->setText('09:00');
           $this->editform->editto->setText('18:00');
+          $this->editform->editbreak->setText('60');
           $this->editform->editnote->setText('');
           $this->editform->edittype->setValue(TimeItem::TIME_WORK);
           $this->_time_id  =0;
      }
+
      public function onEdit($sender) {
         
           $this->filter->setVisible(false);     
@@ -142,7 +150,9 @@ class TimeSheet extends \App\Pages\Base
   
      public function timeOnSubmit($sender) {
          $time = new  TimeItem();
+         $time->time_id = $this->_time_id  ;
          $time->description = $sender->editnote->getText();
+         $time->t_break = $sender->editbreak->getText();
          $time->emp_id = $this->filter->emp->getValue();
          if($time->emp_id ==0) {
              $setError('Не  выбран  сотрудник');
@@ -150,15 +160,18 @@ class TimeSheet extends \App\Pages\Base
          }
          $time->t_type = $sender->edittype->getValue();
          $from   = $sender->editdate->getText(). ' ' .$sender->editfrom->getText();
-         $to   = $sender->editdate->getText(). ' ' .$sender->editom->getText();
+         $to   = $sender->editdate->getText(). ' ' .$sender->editto->getText();
          $time->t_start = strtotime($from) ;
          $time->t_end = strtotime($to) ;
+         
          $v = $time->isValid() ;
-         if($strlen($v)>0){
+         if(strlen($v)>0){
              $this->setError($v);
              return;             
          }
          $time->save();
+         
+         $this->updateList();
          
          $this->filter->setVisible(true);     
          $this->tpanel->setVisible(true);     
@@ -212,6 +225,48 @@ class TimeSheet extends \App\Pages\Base
 
     
      private function updateList(){
-         
+          $emp_id = $this->filter->emp->getValue(); 
+          $conn = \ZDB\DB::getConnect();
+          $t_start = $conn->DBDate($this->filter->from->getDate()) ;
+          $t_end = $conn->DBDate($this->filter->to->getDate(true)) ;
+
+      
+          $this->_list  = TimeItem::find("emp_id = {$emp_id} and  t_start>={$t_start} and   t_start<{$t_end} ",'t_start')  ;
+          $this->tpanel->tagen->llist->Reload();
      } 
+     
+     public  function listOnRow($row){
+         $item = $row->getDataItem();
+         $tl = TimeItem::getTypeTime() ;
+         $row->add(new Label('ldate',date('Y-m-d',$item->t_start)));        
+         $row->add(new Label('lfrom', date('H:i',$item->t_start)));        
+         $row->add(new Label('lto', date('H:i',$item->t_end)));        
+         $row->add(new Label('ltypename', $tl[$item->t_type]));        
+         $row->add(new Label('ldesc', $item->description));   
+         
+         $diff = $item->t_end - $item->t_start - $item->t_break;
+         $diff=number_format($diff/3600, 2, '.', '') ;
+          
+         $row->add(new Label('ldur', $diff));  
+         if($item->t_type== TimeItem::TIME_WORK)$row->ldur->setAttribute('class','badge badge-primary');      
+         if($item->t_type== TimeItem::TINE_BT)$row->ldur->setAttribute('class','badge badge-info');      
+         if($item->t_type== TimeItem::TINE_HL)$row->ldur->setAttribute('class','badge badge-success');      
+         if($item->t_type== TimeItem::TINE_ILL)$row->ldur->setAttribute('class','badge badge-warning');      
+         if($item->t_type== TimeItem::TINE_OVER)$row->ldur->setAttribute('class','badge badge-danger');      
+         if($item->t_type== TimeItem::TINE_WN)$row->ldur->setAttribute('class','badge badge-danger');      
+         if($item->t_type== TimeItem::TINE_OTHER)$row->ldur->setAttribute('class','badge badge-light');      
+         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+         
+     }
+ 
+     public function deleteOnClick($sender) {
+     
+        $item = $sender->owner->getDataItem();
+ 
+        TimeItem::delete($item->time_id);
+ 
+        $this->updateList();
+    }
+     
 }
