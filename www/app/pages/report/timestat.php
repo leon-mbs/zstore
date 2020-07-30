@@ -27,17 +27,16 @@ class TimeStat extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
         $dt = new \Carbon\Carbon;
-        $dt->subMonth();
+       
         $from = $dt->startOfMonth()->timestamp;
         $to = $dt->endOfMonth()->timestamp;
 
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));
-        $this->filter->add(new DropDownChoice('ttype', TimeItem::getTypeTiime(), 0));
-
-    
-
+        $this->filter->add(new DropDownChoice('ttype', TimeItem::getTypeTime(), TimeItem::TIME_WORK));
+  
         
+        $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('excel', "tsreport"));
         $this->detail->add(new RedirectLink('pdf', "tsreport"));
         $this->detail->add(new Label('preview'));
@@ -70,68 +69,31 @@ class TimeStat extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-
-        $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
+        $type = $this->filter->ttype->getValue();
+        
+        $conn = \ZDB\DB::getConnect();
+         $_from = $conn->DBDate($from) ;
+         $_to = $conn->DBDate($to) ;
 
         $detail = array();
-
-        $from = strtotime($yfrom . '-' . $mfrom . '-01');
-        $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
-
-        foreach ($doclist as $doc) {
-
-            $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
-
-            $d1 = \App\Helper::fdt($from);
-            $d2 = \App\Helper::fdt($to);
-            $d3 = \App\Helper::fdt($date);
-
-            if ($date < $from || $date > $to) {
-                continue;
-            }
-
-            foreach ($doc->unpackDetails('detaildata') as $emp) {
-
-                if ($emp_id > 0) {
-                    if ($emp->employee_id != $emp_id) {
-                        continue;
-                    }
-
-                    $detail[$doc->headerdata['year'] . $doc->headerdata['month']] = array('k' => $doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'], 'v' => $emp->amount);
-
-                } else {
-                    if ($emp->amount > 0) {
-                        if (is_array($detail[$emp->emp_id])) {
-                            $detail[$emp->employee_id]['amount'] += $emp->amount;
-                        } else {
-                            $detail[$emp->employee_id] = array('k' => $emp->emp_name, 'v' => $emp->amount);
-                        }
-                    }
-
-                }
-
-
-            }
-
-
+        $total =0;
+        $sql = "select emp_name,sum(tm) as tm  from (select  emp_name,  (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet_view where  t_type = {$type} and  t_start>={$_from} and   t_start<={$_to}  and  disabled <> 1) t  group by emp_name order by emp_name ";
+        $stat  = $conn->Execute($sql)  ;
+        foreach($stat  as $row)  {
+         
+            $tm = number_format($row['tm']/3600, 2, '.', '');
+            $detail[] = array('emp_name'=>$row['emp_name'],'tm'=>$tm  );
+            $total +=  $tm;
         }
-        $total = 0;
-        foreach ($detail as $k => $item) {
-            $total += $item['v'];
-            $item['v'] = H::fa($item['v']);
-        }
-
+     
 
         $header = array(
             "_detail" => array_values($detail),
-            'yfrom' => $yfrom,
-            'mfrom' => $mfromname,
-            'yto' => $yto,
-            'mto' => $mtoname,
-            'isemp' => $emp_id > 0,
-            'total' => H::fa($total),
-
-            "emp_name" => $emp_name
+            'from' => \App\Helper::fd($from),
+            'to' => \App\Helper::fd($to), 
+            'total' => number_format($total, 2, '.', '')  , 
+ 
+            "typename" => $this->filter->ttype->getValueName()
         );
 
 
@@ -142,5 +104,6 @@ class TimeStat extends \App\Pages\Base
         return $html;
     }
 
-
+  //  KEY `supplierId` (`supplierId`,`DataSupplierArticleNumber`),
+  
 }

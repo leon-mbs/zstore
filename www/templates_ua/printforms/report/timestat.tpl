@@ -2,35 +2,34 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Отчет по зарплате
+            Звiт  по  робочому часi
         </td>
     </tr>
     <tr>
 
-        <td align="center" colspan="2">
-            Период с {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
+        <td align="center"  >
+           <b> Перiод з {{from}}  по  {{to}}   </b>
         </td>
     </tr>
-    {{#isemp}}
-    <tr>
+   <tr>
 
-        <td style="font-weight: bolder;" colspan="2">
-            {{emp_name}}
+        <td   colspan="2">
+            <b>  {{typename}}   </b>
         </td>
     </tr>
-    {{/isemp}}
+   
 
     {{#_detail}}
     <tr>
 
-        <td>{{k}}</td>
-        <td class="text-right">{{v}}</td>
+        <td>{{emp_name}}</td>
+        <td class="text-right">{{tm}}</td>
 
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td class="text-right">Итого:</td>
+        <td class="text-right">Всього:</td>
 
         <td class="text-right">{{total}}</td>
 

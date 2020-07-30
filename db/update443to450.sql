@@ -54,16 +54,18 @@ CREATE TABLE `timesheet` (
 )    ;    
 
 CREATE  VIEW `timesheet_view` AS 
+
   select 
-    t.time_id AS time_id,
-    t.emp_id AS emp_id,
-    t.description AS description,
-    t.t_start AS t_start,
-    t.t_end AS t_end,
-    t.t_type AS t_type,
-    t.t_break AS t_break,
-    e.emp_name AS emp_name,
-    e.disabled AS disabled,
-    e.branch_id AS branch_id 
+    `t`.`time_id` AS `time_id`,
+    `t`.`emp_id` AS `emp_id`,
+    `t`.`description` AS `description`,
+    `t`.`t_start` AS `t_start`,
+    `t`.`t_end` AS `t_end`,
+    `t`.`t_type` AS `t_type`,
+    `t`.`t_break` AS `t_break`,
+    `e`.`emp_name` AS `emp_name`,
+    `e`.`disabled` AS `disabled`,
+    `e`.`branch_id` AS `branch_id` 
   from 
-    (tim
+    (`timesheet` `t` join `employees` `e` on((`t`.`emp_id` = `e`.`employee_id`)));
+    

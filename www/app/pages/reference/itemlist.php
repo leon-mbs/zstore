@@ -442,7 +442,7 @@ class ItemList extends \App\Pages\Base
         $pfs='style="font-size:16px;"';
         
         if (strlen($printer['pwidth']) > 0) {
-            $pwidth = 'style="width:' . $printer['pwidth'] . 'mm";';
+            $pwidth = 'style="width:' . $printer['pwidth'] . ' ";';
         }
         if (strlen($printer['pfontsize']) > 0) {
             $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';

@@ -44,7 +44,7 @@ class TimeSheet extends \App\Pages\Base
             $def = $user->employee_id;
             $list = array($user->employee_id=>$emps[$user->employee_id]) ;
         }
-        if($user->rolename='admins') {
+        if($user->rolename=='admins') {
             $list =  $emps; 
         }  
         
