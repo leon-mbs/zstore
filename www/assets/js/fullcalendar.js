@@ -14465,7 +14465,7 @@ var DayGridEventRenderer = /** @class */ (function (_super) {
         if (seg.isStart) {
             timeText = this.getTimeText(seg.footprint);
             if (timeText) {
-                timeHtml = '<span class="fc-time">' + util_1.htmlEscape(timeText) + '</span>';
+              //  timeHtml = '<span class="fc-time">' + util_1.htmlEscape(timeText) + '</span>';
             }
         }
         titleHtml =

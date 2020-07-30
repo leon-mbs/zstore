@@ -37,14 +37,14 @@ class TimeItem extends \ZCL\DB\Entity
     
     public static  function getTypeTime(){
         $list=array() ;
-        $list[self::TIME_WORK] = H::l('Рабочее время');
-        $list[self::TINE_OVER] = H::l('Переработка');
-        $list[self::TINE_WN] = H::l('Выходные и ночные часы');
+        $list[self::TIME_WORK] = H::l('ts_worktime');
+        $list[self::TINE_OVER] = H::l('ts_overtime');
+        $list[self::TINE_WN] = H::l('ts_wntime');
        // $list[self::TINE_FREE] = H::l('Отгул');
-        $list[self::TINE_HL] = H::l('Отпуск');
-        $list[self::TINE_ILL] = H::l('Больничный');
-        $list[self::TINE_BT] = H::l('Командировка');
-        $list[self::TINE_OTHER] = H::l('Другое');
+        $list[self::TINE_HL] = H::l('ts_hol');
+        $list[self::TINE_ILL] = H::l('ts_ill');
+        $list[self::TINE_BT] = H::l('ts_bt');
+        $list[self::TINE_OTHER] = H::l('ts_other');
         
         return $list;
     }
@@ -62,18 +62,19 @@ class TimeItem extends \ZCL\DB\Entity
            return  "ts_invalidinterval";  
         }
         $conn = \ZDB\DB::getConnect();
-        $t_start = $conn->DBDate($this->t_start) ;
-        $t_end = $conn->DBDate($this->t_end) ;
-        $sql = " select  count(*) from timesheet where  emp_id={$this->emp_id}  and   t_start > {$t_start}  and  t_start < {$t_end}  ";     
+        $t_start = $conn->DBTimeStamp($this->t_start) ;
+        $t_end = $conn->DBTimeStamp($this->t_end) ;
+        $sql = " select  count(*) from timesheet where  time_id <> {$this->time_id}  and   emp_id={$this->emp_id}  ";     
         $cnt = $conn->GetOne($sql);
-        if($cnt > 0){
-            return  "ts_intersect";    
+        $sql = " select  count(*)  from timesheet where time_id <> {$this->time_id}  and  emp_id={$this->emp_id}  and   (( {$t_start}  >= t_end  and  {$t_end}  > t_end) or (  {$t_start}  < t_start  and  {$t_end}  <= t_start))";     
+        $cnt1 = $conn->GetOne($sql);
+     
+        
+        
+        if($cnt > $cnt1){
+             return  "ts_intersect";    
         } 
-        $sql = " select  count(*) from timesheet where  emp_id={$this->emp_id}  and   t_end > {$t_start}  and  t_end < {$t_end}  ";     
-        $cnt = $conn->GetOne($sql);
-        if($cnt > 0){
-            return  "ts_intersect";    
-        } 
+      
         return  "";
     }
     

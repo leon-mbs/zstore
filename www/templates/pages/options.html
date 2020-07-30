@@ -132,7 +132,23 @@
                    title=" Дополнительная защита  от несанкционированого доступа "></i>
             </div>
 
+                    
+           <div class="form-group  ">  <br>
+                <label for="ts_start">Начало рабочего дня</label>
 
+                <input style="width:75px;"  class="form-control" zippy="ts_start" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" >
+              
+            </div>
+           <div class="form-group  ">
+                <label for="ts_end">Конец рабочего дня</label>
+
+                <input style="width:75px;" class="form-control" zippy="ts_end" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" >
+              
+            </div>
+           <div class="form-group">
+                <label for="ts_break">Перерыв, мин .</label>
+                <input style="width:75px;"  pattern="[0-9]+"   class="form-control" type="text" zippy="ts_break">
+            </div>
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
@@ -164,7 +180,7 @@
                 <label class="form-check-label" for="valprice">Учитывать курсовую разницу при продаже </label>
 
             </div>
-
+            
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
@@ -178,11 +194,12 @@
         <small>Настройки узкого принтера для печати чеков и этикеток</small>
         <form zippy="printer">
             <div class="form-group">
-                <label for="pwidth">Ширина печати в мм.</label>
-                <input style="width:60px" pattern="[0-9]+" class="form-control" type="text" zippy="pwidth">
+                <label for="pwidth">Ширина печати  .</label>
+                <input style="width:60px"   class="form-control" type="text" zippy="pwidth">
+            <small class="form-text text-muted">Например '100%'  или '40mm'   </small>            
             </div>
             <div class="form-group">
-                <label for="pwidth">Параметры для этикеток и ценников</label>
+                <label  >Параметры для этикеток и ценников</label>
             </div>
             <div class="form-group  ">
                 <label for="pfontsize">Размер  шрифта</label>

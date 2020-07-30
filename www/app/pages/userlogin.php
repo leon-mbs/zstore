@@ -37,7 +37,7 @@ class UserLogin extends \Zippy\Html\WebPage
         //проверка  новой версии        
         $this->_tvars['isnewversion'] = false;
 
-        @file_get_contents("https://zippy.com.ua/"); //тест
+   
         
         $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
         $v = @json_decode($v, true);

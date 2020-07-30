@@ -23,6 +23,7 @@ class TimeSheet extends \App\Pages\Base
 
     private $_time_id = 0;
     public $_list = array();
+    public $_stat = array();
 
     public function __construct() {
         parent::__construct();
@@ -73,6 +74,7 @@ class TimeSheet extends \App\Pages\Base
         $this->tpanel->add(new ClickLink('addnew', $this,'AddNew'));
         
         $tagen->add(new DataView('llist', new ArrayDataSource($this, '_list') , $this, 'listOnRow'));
+        $tstat->add(new DataView('lstat', new ArrayDataSource($this, '_stat') , $this, 'statOnRow'));
      
         $tcal->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
@@ -121,32 +123,46 @@ class TimeSheet extends \App\Pages\Base
 
      public function AddNew($sender) {
         
+          $common = System::getOptions("common");         
+         
           $this->filter->setVisible(false);     
           $this->tpanel->setVisible(false);     
           $this->editform->setVisible(true);        
-          $this->editform->editfrom->setText('09:00');
-          $this->editform->editto->setText('18:00');
-          $this->editform->editbreak->setText('60');
+          $this->editform->editdate->setDate(time());
+          $this->editform->editfrom->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
+          $this->editform->editto->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
+          $this->editform->editbreak->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
           $this->editform->editnote->setText('');
+          
           $this->editform->edittype->setValue(TimeItem::TIME_WORK);
           $this->_time_id  =0;
      }
 
-     public function onEdit($sender) {
+     public function editOnClick($sender) {
+          $time = $sender->getOwner()->getDataItem();
+          $this->_time_id  =  $time->time_id;         
+          $this->edit();
+          
+     }
+     private function edit() {
         
           $this->filter->setVisible(false);     
           $this->tpanel->setVisible(false);     
           $this->editform->setVisible(true);  
           
-          $time = $sender->getOwner()->getDataItem();
-          $this->_time_id  =  $time->time_id; 
+          $time = TimeItem::load($this->_time_id);
                
-          $this->editform->editfrom->setText('09:00');
-          $this->editform->editto->setText('18:00');
-          $this->editform->editnote->setText('');
-          $this->editform->edittype->setValue(TimeItem::TIME_WORK);
+          $this->editform->editdate->setDate($time->t_start);
+          $this->editform->editfrom->setText(date('H:i',$time->t_start));
+          $this->editform->editto->setText(date('H:i',$time->t_end));
+          $this->editform->editnote->setText($time->description);
+          $this->editform->editbreak->setText($time->t_break);
+          $this->editform->edittype->setValue($time->t_type);
            
      }
+  
+  
+  
   
      public function timeOnSubmit($sender) {
          $time = new  TimeItem();
@@ -155,7 +171,7 @@ class TimeSheet extends \App\Pages\Base
          $time->t_break = $sender->editbreak->getText();
          $time->emp_id = $this->filter->emp->getValue();
          if($time->emp_id ==0) {
-             $setError('Не  выбран  сотрудник');
+             $setError('noempselected');
              return;
          }
          $time->t_type = $sender->edittype->getValue();
@@ -181,14 +197,18 @@ class TimeSheet extends \App\Pages\Base
      public function OnCal($sender, $action) {
         if ($action['action'] == 'click') {
 
-            $task = Document::load($action['id']);
-       
+            $this->_time_id=  $action['id'] ;
+            if($this->_time_id >0) {
+               $this->edit();    
+            }  
+            
+      
         }
         if ($action['action'] == 'add') {
 
-            $start = strtotime($action['id'] . ' 9:00');
-
-            Application::Redirect("\\App\\Pages\\Doc\\Task", 0, 0, $start);
+            $start = strtotime($action['id']  );
+            $this->AddNew(null);
+            $this->editform->editdate->setDate($start);
         }
      
       
@@ -197,26 +217,24 @@ class TimeSheet extends \App\Pages\Base
      private function updateCal() {
 
         $tasks = array();
-        $items = $this->_taskds->getItems();
-        foreach ($items as $item) {
+      
+        foreach ($this->_list as $item) {
 
-            $col = "#aaa";
-            if ($item->state == Document::STATE_INPROCESS) {
-                $col = "#28a745";
-            }
-            if ($item->state == Document::STATE_SHIFTED) {
-                $col = "#ffc107";
-            }
-            if ($item->state == Document::STATE_CLOSED) {
-                $col = "#dddddd";
-            }
-            if (strlen($item->headerdata['taskhours']) == 0) {
-                $item->headerdata['taskhours'] = 0;
-            }
-            $d = floor($item->headerdata['taskhours'] / 8);
-            $end_date = $item->document_date + (3600 * 24 * $d);
+            $col = "#bbb";
+   
+        
+     
+         if($item->t_type== TimeItem::TIME_WORK)$col = "#007bff";      
+         if($item->t_type== TimeItem::TINE_BT)$col = "#17a2b8";      
+         if($item->t_type== TimeItem::TINE_HL)$col = "#28a745";      
+         if($item->t_type== TimeItem::TINE_ILL)$col = "#ffc107";      
+         if($item->t_type== TimeItem::TINE_OVER)$col = "#dc3545";      
+         if($item->t_type== TimeItem::TINE_WN)$col = "#dc3545";      
+         if($item->t_type== TimeItem::TINE_OTHER)$col = "#bbb";      
+ 
+       
 
-            $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->document_date, $end_date, $col);
+            $tasks[] = new \App\CEvent($item->time_id, date('H:i',$item->t_start). ' - ' .date('H:i',$item->t_end), $item->t_start, $item->t_end, $col);
         }
 
 
@@ -233,6 +251,24 @@ class TimeSheet extends \App\Pages\Base
       
           $this->_list  = TimeItem::find("emp_id = {$emp_id} and  t_start>={$t_start} and   t_start<{$t_end} ",'t_start')  ;
           $this->tpanel->tagen->llist->Reload();
+          
+          
+          
+          $tn = TimeItem::getTypeTime() ;
+          $this->_stat = array() ;
+          $stat  = $conn->Execute("select t_type,sum(tm) as tm  from (select t_type,  (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  t_start>={$t_start} and   t_start<{$t_end} ) t  group by t_type order by t_type ")  ;
+          foreach($stat  as $row)           {
+              $t = new  \App\DataItem();
+              $t->t_type =  $row['t_type']; 
+              $t->val =  $row['tm']; 
+              $t->name =  $tn[$row['t_type']];
+               
+              $this->_stat[] = $t;
+          }
+          
+          $this->tpanel->tstat->lstat->Reload();
+                    
+          $this->updateCal() ;
      } 
      
      public  function listOnRow($row){
@@ -244,7 +280,7 @@ class TimeSheet extends \App\Pages\Base
          $row->add(new Label('ltypename', $tl[$item->t_type]));        
          $row->add(new Label('ldesc', $item->description));   
          
-         $diff = $item->t_end - $item->t_start - $item->t_break;
+         $diff = $item->t_end - $item->t_start - ($item->t_break*60);
          $diff=number_format($diff/3600, 2, '.', '') ;
           
          $row->add(new Label('ldur', $diff));  
@@ -257,6 +293,23 @@ class TimeSheet extends \App\Pages\Base
          if($item->t_type== TimeItem::TINE_OTHER)$row->ldur->setAttribute('class','badge badge-light');      
          $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
          $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+         
+     }
+ 
+      public  function statOnRow($row){
+         $item = $row->getDataItem();
+      
+         $row->add(new Label('stypename',$item->name));        
+         $row->add(new Label('scnt', number_format($item->val/3600, 2, '.', '') ));        
+  
+         if($item->t_type== TimeItem::TIME_WORK)$row->scnt->setAttribute('class','badge badge-primary');      
+         if($item->t_type== TimeItem::TINE_BT)$row->scnt->setAttribute('class','badge badge-info');      
+         if($item->t_type== TimeItem::TINE_HL)$row->scnt->setAttribute('class','badge badge-success');      
+         if($item->t_type== TimeItem::TINE_ILL)$row->scnt->setAttribute('class','badge badge-warning');      
+         if($item->t_type== TimeItem::TINE_OVER)$row->scnt->setAttribute('class','badge badge-danger');      
+         if($item->t_type== TimeItem::TINE_WN)$row->scnt->setAttribute('class','badge badge-danger');      
+         if($item->t_type== TimeItem::TINE_OTHER)$row->scnt->setAttribute('class','badge badge-light');      
+       
          
      }
  

@@ -57,7 +57,11 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('price4'));
         $this->common->add(new TextInput('price5'));
         $this->common->add(new TextInput('defprice'));
-
+       
+        $this->common->add(new TextInput('ts_break'));
+        $this->common->add(new TextInput('ts_start' ));
+        $this->common->add(new TextInput('ts_end' ));
+    
         $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
@@ -89,7 +93,9 @@ class Options extends \App\Pages\Base
         $this->common->capcha->setChecked($common['capcha']);
         $this->common->useval->setChecked($common['useval']);
 
- 
+        $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
+        $this->common->ts_start->setText($common['ts_start']== null ? '09:00' : $common['ts_start']);
+        $this->common->ts_end->setText($common['ts_end']== null ? '18:00' : $common['ts_end']);
 
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
         $this->valform->add(new TextInput('valuan'));
@@ -174,6 +180,9 @@ class Options extends \App\Pages\Base
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
         $common['defprice'] = $this->common->defprice->getText();
+        $common['ts_break'] = $this->common->ts_break->getText();
+        $common['ts_start'] = $this->common->ts_start->getText();
+        $common['ts_end'] = $this->common->ts_end->getText();
 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
         $common['useset'] = $this->common->useset->isChecked() ? 1 : 0;
