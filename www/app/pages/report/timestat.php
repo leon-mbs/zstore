@@ -104,6 +104,6 @@ class TimeStat extends \App\Pages\Base
         return $html;
     }
 
-  //  KEY `supplierId` (`supplierId`,`DataSupplierArticleNumber`),
+   
   
 }
