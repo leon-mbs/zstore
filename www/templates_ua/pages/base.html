@@ -9,24 +9,20 @@
     <link rel="stylesheet" href="/assets/css/adminlte.css">
     <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
     <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.min.css">
-
+    <link rel="stylesheet" href="/assets/css/toastr.min.css">
     <link rel="stylesheet" href="/assets/css/select2.css">
     <link rel="stylesheet" href="/assets/css/select2-bootstrap.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <script src="/vendor/leon-mbs/zippy/assets/js/jquery/jquery.js" type="text/javascript"></script>
 
+    <script src="/vendor/leon-mbs/zippy/assets/js/jquery/jquery.js" type="text/javascript"></script>
     <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
     <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.min.js" type="text/javascript"></script>
     <script src="/assets/js/select2.js" type="text/javascript"></script>
+    <script src="/assets/js/toastr.min.js" type="text/javascript"></script>
     <script src="/assets/js/printThis.js" type="text/javascript"></script>
     <script src="/assets/js/app.js" type="text/javascript"></script>
-
     <script src="/assets/js/adminlte.js" type="text/javascript"></script>
 
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
     <!-- Google Font -->
     <link rel="stylesheet"        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     
@@ -75,11 +71,14 @@
                         zippy="username"></span> </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile">Мій профіль</a>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i class="fa fa-calendar-alt"></i> Календар</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-user"></i> Мій профіль</a>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item  " zippy="logout"> Вийти</a>
+                        <a class="dropdown-item  " zippy="logout"><i class="fa fa-door-open"></i> Вийти</a>
                     </li>
                 </ul>
             </li>
@@ -557,14 +556,14 @@
                                     <p>&nbsp;&nbsp;Ролі</p>
                                 </a>
                             </li>
-                            {{#usefirms}}
+                         
                             <li class="nav-item">
                                 <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
                                     <i class="fa    nav-icon"></i>
                                     <p>&nbsp;&nbsp;Компанії</p>
                                 </a>
                             </li>
-                            {{/usefirms}}
+                     
 
 
                             {{#usebranch}}

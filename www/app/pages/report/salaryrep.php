@@ -18,7 +18,7 @@ class SalaryRep extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReport('PayActivity')) {
+        if (false == \App\ACL::checkShowReport('SalaryRep')) {
             return;
         }
 
@@ -36,8 +36,8 @@ class SalaryRep extends \App\Pages\Base
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
 
-        $this->detail->add(new RedirectLink('excel', "mfreport"));
-        $this->detail->add(new RedirectLink('pdf', "mfreport"));
+        $this->detail->add(new RedirectLink('excel', "slreport"));
+        $this->detail->add(new RedirectLink('pdf', "slreport"));
         $this->detail->add(new Label('preview'));
 
     }
@@ -59,7 +59,7 @@ class SalaryRep extends \App\Pages\Base
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
-        $html = $this->generateReport();
+ 
 
         $this->detail->preview->setText($html, true);
     }

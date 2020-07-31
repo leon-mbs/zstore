@@ -49,6 +49,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new Label('hmessages'));
         $this->add(new Label('hdocs'));
         $this->add(new Label('hfiles'));
+         $this->add(new \Zippy\Html\Image('scanimage'))->setVisible(false);
 
 
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
@@ -78,6 +79,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new ClickLink('doctabf', $this, "onTab")) ;
         $this->add(new ClickLink('doctabc', $this, "onTab")) ;
         $this->add(new ClickLink('doctabh', $this, "onTab")) ;
+        $this->add(new ClickLink('doctabs', $this, "onTab")) ;
 
         
     }
@@ -93,6 +95,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->setvisible(true);
         $html = $doc->generateReport();
         $this->preview->setText($html, true);
+        $htmlpos = $doc->generatePosReport();
         $htmlpos = $doc->generatePosReport();
         $this->previewpos->setText($htmlpos, true);
 
@@ -144,7 +147,11 @@ class DocView extends \Zippy\Html\PageFragment
             $this->_itemlist = \App\Entity\Entry::find('stock_id > 0 and coalesce(quantity,0) <> 0  and document_id=' . $this->_doc->document_id);
             $this->dw_itemlist->Reload();
 
- 
+             
+        if($this->_doc->headerdata['scan']>0){
+           $this->scanimage->setVisible(true) ;    
+           $this->scanimage->setUrl('/loadfile.php?im=1&id='.$this->_doc->headerdata['scan']) ;
+        } 
  
         
         $this->onTab($this->doctabp);
@@ -383,12 +390,16 @@ class DocView extends \Zippy\Html\PageFragment
         $page->_tvars['doctabf']  = $sender->id =='doctabf';
         $page->_tvars['doctabd']  = $sender->id =='doctabd';
         $page->_tvars['doctabh']  = $sender->id =='doctabh';
-        
+        $page->_tvars['doctabs']  = $sender->id =='doctabs';
+     
+        $page->_tvars['isscan'] =$this->_doc->headerdata['scan']>0 ; 
+             
         $page->_tvars['doctabpbadge']  = $sender->id =='doctabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;
         $page->_tvars['doctabcbadge']  = $sender->id =='doctabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
         $page->_tvars['doctabfbadge']  = $sender->id =='doctabf' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
         $page->_tvars['doctabdbadge']  = $sender->id =='doctabd' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
         $page->_tvars['doctabhbadge']  = $sender->id =='doctabh' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
+        $page->_tvars['doctabsbadge']  = $sender->id =='doctabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
         
  
         

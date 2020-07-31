@@ -10,24 +10,18 @@
     <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
     <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.min.css">
     <link rel="stylesheet" href="/assets/css/toastr.min.css">
-
     <link rel="stylesheet" href="/assets/css/select2.css">
     <link rel="stylesheet" href="/assets/css/select2-bootstrap.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <script src="/vendor/leon-mbs/zippy/assets/js/jquery/jquery.js" type="text/javascript"></script>
 
+    <script src="/vendor/leon-mbs/zippy/assets/js/jquery/jquery.js" type="text/javascript"></script>
     <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
     <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle.min.js" type="text/javascript"></script>
     <script src="/assets/js/select2.js" type="text/javascript"></script>
     <script src="/assets/js/toastr.min.js" type="text/javascript"></script>
     <script src="/assets/js/printThis.js" type="text/javascript"></script>
-  
-   
     <script src="/assets/js/app.js" type="text/javascript"></script>
-
     <script src="/assets/js/adminlte.js" type="text/javascript"></script>
-    
-
     
     <!-- Google Font -->
     <link rel="stylesheet"      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -77,11 +71,14 @@
                         zippy="username"></span> </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile">Мой профиль</a>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i class="fa fa-calendar-alt"></i> Календарь</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-user"></i> Мой профиль</a>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item  " zippy="logout"> Выйти</a>
+                        <a class="dropdown-item  " zippy="logout"><i class="fa fa-door-open"></i> Выйти</a>
                     </li>
                 </ul>
             </li>
@@ -560,14 +557,14 @@
                             </li>
 
 
-                            {{#usefirms}}
+                        
                             <li class="nav-item">
                                 <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
                                     <i class="fa    nav-icon"></i>
                                     <p>&nbsp;&nbsp;Компании</p>
                                 </a>
                             </li>
-                            {{/usefirms}}
+                         
 
                             {{#usebranch}}
                             <li class="nav-item">
@@ -690,26 +687,8 @@
         }
     });
 
-    function test() {
-        var url = '{{_baseurl}}' + '::tm&ajax=true'
-
-
-        data = "test";
-
-        $.ajax({
-            url: url,
-            data: data,
-            type: 'GET',
-            dataType: "text",
-            success: function (data, textStatus) {
-                alert(data);
-            }
-
-
-        });
-
-    }
-
+    
+ 
 
 </script>
  {{#usescanner}}

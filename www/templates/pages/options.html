@@ -72,72 +72,83 @@
                 <small class="form-text text-muted">Используется для сумм прописью в печатных формах.</small>
             </div>
 
-           <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" zippy="autoarticle">
-              <label class="custom-control-label" for="autoarticle">Автоматически создавать артикулы</label>
+           <div class="form-check">
+              <input type="checkbox" class="form-check-input" zippy="autoarticle">
+              <label class="form-check-label" for="autoarticle">Автоматически создавать артикулы</label>
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                title="Автоматическая  генерация номеров  артикулов для товаров"></i>
             </div>
           
 
-            <div class="custom-control custom-switch">
-                <input zippy="useset" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="useset">Использовать комплекты для продукции</label>
+            <div class="form-check">
+                <input zippy="useset" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="useset">Использовать комплекты для продукции</label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Возможность задать для продукции перечень  комплектующих, из которых состоит  готовая продукция и полуфабрикаты.  
                    Может использоватся  для  подсчета  себестоимости  или  формирования  азявок  поставщику"></i>
             </div>
-            <div class="custom-control custom-switch">
-                <input zippy="usesnumber" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="usesnumber">Учет ТМЦ по сериям (партиям) производителя</label>
+            <div class="form-check">
+                <input zippy="usesnumber" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usesnumber">Учет ТМЦ по сериям (партиям) производителя</label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Отдельный учет  по  каждой партии  производителя с  учетом  срока годности. Использует  ли конкретный товар  учет  по  партиям  указывается в  карточке  товара."></i>
             </div>
 
-            <div class="custom-control custom-switch">
-                <input zippy="useimages" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="useimages">Изображения в номенклатуре </label>
+            <div class="form-check">
+                <input zippy="useimages" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="useimages">Изображения в номенклатуре </label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="   Возможность  добавления изображений в справочник товаров"></i>
             </div>
-            <div class="custom-control custom-switch">
-                <input zippy="usescanner" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="usescanner">Поддержка сканера штрих кодов </label>
+            <div class="form-check">
+                <input zippy="usescanner" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usescanner">Поддержка сканера штрих кодов </label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Использование  сканера  штрих кодов для ввода  товаров в расходной накладной"></i>
             </div>
-            <div class="custom-control custom-switch">
-                <input zippy="usebranch" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="usebranch">Использование филиалов </label>
+            <div class="form-check">
+                <input zippy="usebranch" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usebranch">Использование филиалов </label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Филиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала. Отпускные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
             </div>
-            <div class="custom-control custom-switch">
-                <input zippy="usefirms" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="usefirms">Учет в нескольких компаниях </label>
-                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                   title="Используется  если  счета  и накладные  нужно  вести  в разрезе нескольких компаний. Данные о  компании вместо  формы  в  настройках заносятся в справочнике  компаний  "></i>
-            </div>
-            <div class="custom-control custom-switch">
-                <input zippy="allowminus" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="allowminus">Разрешить списывать ТМЦ в минус </label>
+         
+            <div class="form-check">
+                <input zippy="allowminus" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="allowminus">Разрешить списывать ТМЦ в минус </label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title=" Разрешение на  списывание  количества  при  котором  на  складе  появляется  отрицательное  значение "></i>
             </div>
-            <div class="custom-control custom-switch">
-                <input zippy="useval" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="useval">Валюта в закупках</label>
+            <div class="form-check">
+                <input zippy="useval" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="useval">Валюта в закупках</label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title=" Возможность  ввода  приходной накладной в валюте и пересчета  курса  при  продаже.  "></i>
             </div>
-            <div class="custom-control custom-switch">
-                <input zippy="capcha" type="checkbox" class="custom-control-input">
-                <label class="custom-control-label" for="capcha">Капча на форме логина</label>
+            <div class="form-check">
+                <input zippy="capcha" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="capcha">Капча на форме логина</label>
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title=" Дополнительная защита  от несанкционированого доступа "></i>
             </div>
 
+                    
+           <div class="form-group  ">  <br>
+                <label for="ts_start">Начало рабочего дня</label>
 
+                <input style="width:75px;"  class="form-control" zippy="ts_start" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" >
+              
+            </div>
+           <div class="form-group  ">
+                <label for="ts_end">Конец рабочего дня</label>
+
+                <input style="width:75px;" class="form-control" zippy="ts_end" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" >
+              
+            </div>
+           <div class="form-group">
+                <label for="ts_break">Перерыв, мин .</label>
+                <input style="width:75px;"  pattern="[0-9]+"   class="form-control" type="text" zippy="ts_break">
+            </div>
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
@@ -169,83 +180,33 @@
                 <label class="form-check-label" for="valprice">Учитывать курсовую разницу при продаже </label>
 
             </div>
-
+            
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
         </form>
         {{/useval}}
 
-        {{^usefirms}}
-        <h4>Данные о компании</h4>
-        <form zippy="firm">
-
-            <div class="form-group">
-                <label for="firmname">Название </label>
-                <input class="form-control" type="text" zippy="firmname" required="required">
-            </div>
-            <div class="form-group">
-                <label for="inn">ИНН </label>
-                <input class="form-control" type="text" zippy="inn">
-            </div>
-            <div class="form-group">
-                <label for="shopname">Название торговой точки </label>
-                <input class="form-control" type="text" zippy="shopname">
-                <small class="form-text text-muted">Вводится если название магазина отличается от названия
-                    компании</small>
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Телефон,viber </label>
-                <input class="form-control" type="text" zippy="phone">
-            </div>
-
-            <div class="form-group">
-                <label for="address">Адрес </label>
-                <input class="form-control" type="text" zippy="address">
-            </div>
-            <div class="form-group">
-                <label for="bank">Банк, МФО </label>
-                <input class="form-control" type="text" zippy="bank">
-            </div>
-            <div class="form-group">
-                <label for="bankacc">Расчетный счет </label>
-                <input class="form-control" type="text" zippy="bankacc">
-            </div>
-            <div class="form-group">
-                <label for="logo">Логотип </label>
-                <input class="form-control" type="text" zippy="logo">
-                <small class="form-text text-muted">Путь к файлу логотипа относительно корня сайта. Например
-                    '/upload/logo.png'</small>
-            </div>
-            <div class="form-group">
-                <label for="stamp">Печать </label>
-                <input class="form-control" type="text" zippy="stamp">
-                <small class="form-text text-muted">Путь к изображению печати относительно корня сайта. </small>
-            </div>
-            <div class="form-group">
-                <label for="sign">Подпись (факсимиле) </label>
-                <input class="form-control" type="text" zippy="sign">
-                <small class="form-text text-muted">Путь к изображению относительно корня сайта. </small>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary" type="submit">Сохранить</button>
-            </div>
-
-        </form>
-        {{/usefirms}}
+ 
+       
 
         <h4>Настройка принтера</h4>
         <small>Настройки узкого принтера для печати чеков и этикеток</small>
         <form zippy="printer">
             <div class="form-group">
-                <label for="pwidth">Ширина печати в мм.</label>
-                <input style="width:60px" pattern="[0-9]+" class="form-control" type="text" zippy="pwidth">
+                <label for="pwidth">Ширина печати</label>
+                <input style="width:60px"   class="form-control" type="text" zippy="pwidth">
+            <small class="form-text text-muted">Например '100%'  или '40mm'   </small>            
             </div>
             <div class="form-group">
-                <label for="pwidth">Параметры для этикеток и ценников</label>
+                <label  >Параметры для этикеток и ценников</label>
             </div>
             <div class="form-group  ">
+                <label for="pfontsize">Размер  шрифта</label>
+                <select style="width:100px" class="form-control" zippy="pfontsize">
+                </select>
+            </div>
+           <div class="form-group  ">
                 <label for="pricetype">Тип цены</label>
                 <select class="form-control" zippy="pricetype">
                 </select>

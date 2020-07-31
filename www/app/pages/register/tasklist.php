@@ -42,11 +42,16 @@ class TaskList extends \App\Pages\Base
 
         $this->_taskds = new EDS('\App\Entity\Doc\Document', "", "document_date desc");
 
-        $this->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
-        $this->tasklist->setSelectedClass('table-success');
+        $this->add(new ClickLink('tabc', $this,'onTab'));
+        $this->add(new ClickLink('tabs', $this,'onTab'));
+        $this->add(new Panel('tasktab')) ;
+        $this->add(new Panel('caltab')) ;        
+        
+        $this->tasktab->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
+        $this->tasktab->tasklist->setSelectedClass('table-success');
 
-        $this->tasklist->setPageSize(H::getPG(H::getPG()));
-        $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->tasklist));
+        $this->tasktab->tasklist->setPageSize(H::getPG(H::getPG()));
+        $this->tasktab->add(new \Zippy\Html\DataList\Paginator('pag', $this->tasktab->tasklist));
 
         $this->add(new Form('filterform'))->onSubmit($this, 'OnFilter');
 
@@ -56,25 +61,42 @@ class TaskList extends \App\Pages\Base
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
 
-        $this->add(new Panel("statuspan"))->setVisible(false);
 
-        $this->statuspan->add(new Form('statusform'));
-        $this->statuspan->statusform->add(new SubmitButton('binprocess'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bitems'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bgoods'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bact'))->onClick($this, 'statusOnSubmit');
+       
+        
+        
+        $this->tasktab->add(new Panel("statuspan"))->setVisible(false);
 
-        $this->statuspan->add(new \App\Widgets\DocView('docview'));
+        $this->tasktab->statuspan->add(new Form('statusform'));
+        $this->tasktab->statuspan->statusform->add(new SubmitButton('binprocess'))->onClick($this, 'statusOnSubmit');
+        $this->tasktab->statuspan->statusform->add(new SubmitButton('bclosed'))->onClick($this, 'statusOnSubmit');
+        $this->tasktab->statuspan->statusform->add(new SubmitButton('bshifted'))->onClick($this, 'statusOnSubmit');
+        $this->tasktab->statuspan->statusform->add(new SubmitButton('bitems'))->onClick($this, 'statusOnSubmit');
+        $this->tasktab->statuspan->statusform->add(new SubmitButton('bgoods'))->onClick($this, 'statusOnSubmit');
+        $this->tasktab->statuspan->statusform->add(new SubmitButton('bact'))->onClick($this, 'statusOnSubmit');
 
-        $this->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
+        $this->tasktab->statuspan->add(new \App\Widgets\DocView('docview'));
+
+        $this->caltab->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
         $this->updateTasks();
         $this->updateCal();
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->tasktab->add(new ClickLink('csv', $this, 'oncsv'));
+        
+        $this->onTab($this->tabs);           
     }
 
+  public  function onTab($sender){
+        
+        $this->_tvars['tabcbadge']  = $sender->id =='tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;
+        $this->_tvars['tabsbadge']  = $sender->id =='tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
+       
+        $this->caltab->setVisible($sender->id =='tabc');
+        $this->tasktab->setVisible($sender->id =='tabs');
+        
+     }    
+     
+    
     public function tasklistOnRow($row) {
         $task = $row->getDataItem();
 
@@ -127,35 +149,35 @@ class TaskList extends \App\Pages\Base
         }
 
 
-        $this->statuspan->setVisible(true);
+        $this->tasktab->statuspan->setVisible(true);
 
         // if ($this->_task->checkStates(array(Document::STATE_EXECUTED)) == false || $this->_task->status == Document::STATE_EDITED || $this->_task->status == Document::STATE_NEW) {
         if ($this->_task->state != Document::STATE_EXECUTED) {
-            $this->statuspan->statusform->bclosed->setVisible(true);
+            $this->tasktab->statuspan->statusform->bclosed->setVisible(true);
         } else {
-            $this->statuspan->statusform->bclosed->setVisible(false);
+            $this->tasktab->statuspan->statusform->bclosed->setVisible(false);
         }
         if ($this->_task->state < Document::STATE_EXECUTED) {
-            $this->statuspan->statusform->binprocess->setVisible(true);
-            $this->statuspan->statusform->bshifted->setVisible(true);
+            $this->tasktab->statuspan->statusform->binprocess->setVisible(true);
+            $this->tasktab->statuspan->statusform->bshifted->setVisible(true);
         } else {
-            $this->statuspan->statusform->binprocess->setVisible(false);
-            $this->statuspan->statusform->bshifted->setVisible(false);
+            $this->tasktab->statuspan->statusform->binprocess->setVisible(false);
+            $this->tasktab->statuspan->statusform->bshifted->setVisible(false);
         }
         if ($this->_task->state == Document::STATE_SHIFTED) {
-            $this->statuspan->statusform->binprocess->setVisible(true);
+            $this->tasktab->statuspan->statusform->binprocess->setVisible(true);
         }
         if ($this->_task->state == Document::STATE_INPROCESS) {
-            $this->statuspan->statusform->bshifted->setVisible(true);
+            $this->tasktab->statuspan->statusform->bshifted->setVisible(true);
         }
-        $this->statuspan->statusform->bitems->setVisible($this->_task->state != Document::STATE_CLOSED);
-        $this->statuspan->statusform->bgoods->setVisible($this->_task->state != Document::STATE_CLOSED);
-        $this->statuspan->statusform->bact->setVisible($this->_task->state != Document::STATE_CLOSED);
+        $this->tasktab->statuspan->statusform->bitems->setVisible($this->_task->state != Document::STATE_CLOSED);
+        $this->tasktab->statuspan->statusform->bgoods->setVisible($this->_task->state != Document::STATE_CLOSED);
+        $this->tasktab->statuspan->statusform->bact->setVisible($this->_task->state != Document::STATE_CLOSED);
 
 
-        $this->statuspan->docview->setDoc($this->_task);
-        $this->tasklist->setSelectedRow($sender->getOwner());
-        $this->tasklist->Reload(false);
+        $this->tasktab->statuspan->docview->setDoc($this->_task);
+        $this->tasktab->tasklist->setSelectedRow($sender->getOwner());
+        $this->tasktab->tasklist->Reload(false);
         $this->goAnkor('dankor');
     }
 
@@ -215,9 +237,9 @@ class TaskList extends \App\Pages\Base
             return;
         }
 
-        $this->statuspan->setVisible(false);
+        $this->tasktab->statuspan->setVisible(false);
 
-        $this->tasklist->Reload(false);
+        $this->tasktab->tasklist->Reload(false);
     }
 
     public function updateTasks() {
@@ -240,11 +262,11 @@ class TaskList extends \App\Pages\Base
         }
 
         $this->_taskds->setWhere($sql);
-        $this->tasklist->Reload();
+        $this->tasktab->tasklist->Reload();
 
         $this->updateCal();
 
-        $this->statuspan->setVisible(false);
+        $this->tasktab->statuspan->setVisible(false);
     }
 
     //обновить календар
@@ -275,7 +297,7 @@ class TaskList extends \App\Pages\Base
         }
 
 
-        $this->calendar->setData($tasks);
+        $this->caltab->calendar->setData($tasks);
     }
 
     public function eraseFilter($sender) {
@@ -336,7 +358,7 @@ class TaskList extends \App\Pages\Base
     }
 
     public function oncsv($sender) {
-        $list = $this->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
+        $list = $this->tasktab->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
         $csv = "";
 
         foreach ($list as $task) {

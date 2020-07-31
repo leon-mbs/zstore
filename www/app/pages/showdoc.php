@@ -23,7 +23,7 @@ class ShowDoc extends \Zippy\Html\WebPage
         }
 
         $doc = $doc->cast();
-        $filename = $doc->meta_name;
+        $filename = $doc->document_number;
 
 
         $html = $doc->generateReport();

@@ -82,9 +82,9 @@ class Main extends \App\Pages\Base
         $this->editform->add(new TextInput("edittitle"));
         $this->editform->add(new \ZCL\BT\Tags("edittags"));
         $this->editform->add(new TextArea("editdetail"));
-        $this->editform->add(new CheckBox("editisout"));
+
         $this->editform->add(new ClickLink("editcancel", $this, "onTopicCancel"));
-        $this->editform->add(new DropDownChoice("editacctype", array(0 => 'Приватный', 1 => 'Публичный', 2 => 'С общим редактированием'), 0));
+        $this->editform->add(new DropDownChoice("editacctype", array(0 => H::l('tn_privat')  , 1 => H::l('tn_public')  , 2 => H::l('tn_edit')  ), 0));
         $this->editform->add(new SubmitLink("editsave"))->onClick($this, "onTopicSave");
 
 
@@ -121,7 +121,7 @@ class Main extends \App\Pages\Base
         $this->editform->edittitle->setText('');
         $this->editform->editdetail->setText('');
         $this->editform->editacctype->setValue(0);
-        $this->editform->editisout->setChecked(false);
+        
         $this->editform->editdetail->setText('');
         $this->editform->edittags->setTags(array());
         $topic = new Topic();
@@ -142,7 +142,7 @@ class Main extends \App\Pages\Base
         $this->editform->edittags->setSuggestions($topic->getSuggestionTags());
         $this->editform->editdetail->setText($topic->detail);
         $this->editform->editacctype->setValue($topic->acctype);
-        $this->editform->editisout->setChecked($topic->isout);
+        
 
         $this->_tvars['editor'] = true;
     }
@@ -160,7 +160,7 @@ class Main extends \App\Pages\Base
         $topic->title = $this->editform->edittitle->getText();
         $topic->detail = $this->editform->editdetail->getText();
         $topic->acctype = $this->editform->editacctype->getValue();
-        $topic->isout = $this->editform->editisout->isChecked() ? 1 : 0;
+        
         if (strlen($topic->title) == 0) {
             $this->setError('notitle');
 
@@ -170,8 +170,8 @@ class Main extends \App\Pages\Base
         $nodeid = $this->tree->selectedNodeId();
         if ($this->_edited == 0) {
             $node = Node::load($nodeid);
-            if ($topic->acctype == 0 && $node->ispublic != 1) {
-                $this->setError('Нельзя добавить  публичный топик  к  приватному узлу');
+            if ($topic->acctype > 0 && $node->ispublic != 1) {
+                $this->setError('tn_nopublictopic' );
 
                 return;
             }
@@ -280,7 +280,7 @@ class Main extends \App\Pages\Base
 
         $this->tree->removeNodes();
         $user = System::getUser() ;
-        $w = "ispublic = 1 or  user_id={$user_id->user_id}  ";
+        $w = "ispublic = 1 or  user_id={$user->user_id}  ";
         if($user->rolename=='admins')  $w='';
         $itemlist = Node::find($w, "pid,mpath,title");
         if (count($itemlist) == 0) { //добавляем  корень
@@ -298,7 +298,12 @@ class Main extends \App\Pages\Base
             $node = new \ZCL\BT\TreeNode($item->title, $item->node_id);
           //  $node->tags = '<span class="badge badge-info badge-pill">6</span>';  //количество  топиков в ветке
             $parentnode = @$nodelist[$item->pid];
-            $node->icon='fa fa-trash fa-xs';
+            if($item->ispublic==1) {
+              $node->icon='fa fa-users fa-xs';    
+            } else {
+              $node->icon='fa fa-user fa-xs';  
+            }
+            
             $this->tree->addNode($node, $parentnode);
 
             $nodelist[$item->node_id] = $node;
@@ -415,8 +420,15 @@ class Main extends \App\Pages\Base
             return;
         }
 
-
+        $node =  Node::Load($this->tree->selectedNodeId());
         $topic = Topic::load($this->clipboard[0]);
+        
+        if ($topic->acctype > 0 && $node->ispublic != 1) {
+            $this->setError('tn_nopublictopic' );
+
+            return;
+        }
+        
         if ($this->clipboard[2] == 'cut') {
 
             $topic->removeFromNode($this->clipboard[3]);
@@ -603,7 +615,7 @@ class Main extends \App\Pages\Base
             $this->topiccopy->setVisible(true);
             $this->topictag->setVisible(true);
             $this->topicdelete->setVisible(true);
-            if ($topic->ispublic > 0) {
+            if ($topic->acctype > 0) {
                 $this->topiclink->setVisible(true);
                 $this->topiclink->setLink("/topic/" . $topicid);
             }
@@ -626,6 +638,19 @@ class Main extends \App\Pages\Base
                 //в  ту  же  ветку  можно только  копировать
                 $this->topicpaste->setVisible(false);
             }
+        }
+        
+        $user = System::getUser() ;
+        if($user->rolename=='admins') return;
+        
+        if($topic->user_id != $user->user_id ) {
+            $this->topicedit->setVisible(false);
+            $this->topiccut->setVisible(false);
+            $this->topictag->setVisible(false);
+            $this->topicdelete->setVisible(false);          
+        }
+        if($topic->acctype==2) {
+            $this->topicedit->setVisible(true);
         }
     }
 

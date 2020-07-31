@@ -92,7 +92,7 @@ class Task extends \App\Pages\Base
             $this->_doc = Document::create('Task');
             $this->docform->document_date->setDate(time());
             if ($date > 0) { //с календаря
-                $this->docform->start_date->setDate($date);
+                $this->docform->document_date->setDate($date);
                 $this->docform->taskhours->setText(7);
             }
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -136,9 +136,8 @@ class Task extends \App\Pages\Base
 
 
         $row->add(new Label('qty', $service->qty));
-        $row->add(new Label('hours', $service->hours* $service->qty));
-        $row->add(new Label('cost', $service->cost*$service->qty));
-
+        
+        
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }

@@ -31,12 +31,14 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->setError('');
 
 
-        $curver = 'v4.4.3';
+        $curver = 'v4.5.0';
         $this->_tvars['curversion'] = $curver;
 
         //проверка  новой версии        
         $this->_tvars['isnewversion'] = false;
 
+   
+        
         $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
         $v = @json_decode($v, true);
         if (strlen($v['version']) > 0) {

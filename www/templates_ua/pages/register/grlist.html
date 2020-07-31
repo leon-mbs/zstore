@@ -23,12 +23,12 @@
 
                 <select class="form-control mr-2" zippy="status">
                 </select>
-                {{#usefirms}}
-                <label for="searchcomp">Компанiя</label>
+                
+                <label for="searchcomp">Покупець</label>
                 <select zippy="searchcomp" class="form-control mr-sm-2">
-                    <option value="0">Не вибрана</option>
+                    <option value="0">Не вибраний</option>
                 </select>
-                {{/usefirms}}
+             
 
                 <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
 
@@ -47,9 +47,9 @@
                 <th>Дата</th>
 
                 <th>Постачальник</th>
-                {{#usefirms}}
-                <th>Компанiя</th>
-                {{/usefirms}}
+               
+                <th>Покупець</th>
+               
                 <th class="text-right">Сума</th>
 
                 <th>Статус</th>
@@ -65,9 +65,9 @@
                 <td class="text-nowrap" zippy="date"></td>
 
                 <td zippy="customer"></td>
-                {{#usefirms}}
+              
                 <td zippy="firm"></td>
-                {{/usefirms}}
+              
                 <td zippy="amount" class="text-right"></td>
 
                 <td class="text-nowrap" zippy="state"></td>

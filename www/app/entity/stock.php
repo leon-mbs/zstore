@@ -97,7 +97,7 @@ class Stock extends \ZCL\DB\Entity
             \App\Helper::log(serialize($stock));
             $stock->save();
         }
-        if ($partiontype == '1') {    //учет  по  последней цене
+        if ($partiontype == '1' && $price>0) {    //учет  по  последней цене
             $stock->partion = $price;
             $stock->save();
         }

@@ -41,7 +41,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this, 'OnCustomerFirm');
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
         $this->docform->add(new TextInput('notes'));
@@ -348,7 +348,13 @@ class InvoiceCust extends \App\Pages\Base
 
             if ($file['size'] > 0) {
                 H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
-            }
+                $id=H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+                $imagedata = getimagesize($file["tmp_name"]);
+                if($imagedata[0]>0) {
+                  $this->_doc->headerdata["scan"] = $id;
+                  $this->_doc->save();
+                }                
+           }
 
             $conn->CommitTrans();
 

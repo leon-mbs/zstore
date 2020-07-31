@@ -45,7 +45,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('useset'));
         $this->common->add(new CheckBox('useval'));
 
-        $this->common->add(new CheckBox('usefirms'));
+        
         $this->common->add(new CheckBox('useimages'));
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('usebranch'));
@@ -57,7 +57,11 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('price4'));
         $this->common->add(new TextInput('price5'));
         $this->common->add(new TextInput('defprice'));
-
+       
+        $this->common->add(new TextInput('ts_break'));
+        $this->common->add(new TextInput('ts_start' ));
+        $this->common->add(new TextInput('ts_end' ));
+    
         $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
@@ -81,7 +85,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
-        $this->common->usefirms->setChecked($common['usefirms']);
+        
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
@@ -89,34 +93,9 @@ class Options extends \App\Pages\Base
         $this->common->capcha->setChecked($common['capcha']);
         $this->common->useval->setChecked($common['useval']);
 
-        $this->add(new Form('firm'))->onSubmit($this, 'saveFirmOnClick');
-        $this->firm->add(new TextInput('firmname'));
-        $this->firm->add(new TextInput('shopname'));
-        $this->firm->add(new TextInput('phone'));
-
-        $this->firm->add(new TextInput('address'));
-        $this->firm->add(new TextInput('inn'));
-        $this->firm->add(new TextInput('bank'));
-        $this->firm->add(new TextInput('bankacc'));
-        $this->firm->add(new TextInput('logo'));
-        $this->firm->add(new TextInput('stamp'));
-        $this->firm->add(new TextInput('sign'));
-
-        $firm = System::getOptions("firm");
-        if (!is_array($firm)) {
-            $firm = array();
-        }
-
-        $this->firm->firmname->setText($firm['firm_name']);
-        $this->firm->shopname->setText($firm['shopname']);
-        $this->firm->phone->setText($firm['phone']);
-        $this->firm->address->setText($firm['address']);
-        $this->firm->bankacc->setText($firm['bankacc']);
-        $this->firm->bank->setText($firm['bank']);
-        $this->firm->inn->setText($firm['inn']);
-        $this->firm->logo->setText($firm['logo']);
-        $this->firm->stamp->setText($firm['stamp']);
-        $this->firm->sign->setText($firm['sign']);
+        $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
+        $this->common->ts_start->setText($common['ts_start']== null ? '09:00' : $common['ts_start']);
+        $this->common->ts_end->setText($common['ts_end']== null ? '18:00' : $common['ts_end']);
 
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
         $this->valform->add(new TextInput('valuan'));
@@ -139,6 +118,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new TextInput('pwidth'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
         $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'EAN13'));
+        $this->printer->add(new DropDownChoice('pfontsize', array('12'=>'12','14'=>'14','16'=>'16','20'=>'20','24'=>'24','28'=>'28','36'=>'36',), '16'));
         $this->printer->add(new CheckBox('pname'));
         $this->printer->add(new CheckBox('pcode'));
         $this->printer->add(new CheckBox('pbarcode'));
@@ -152,6 +132,7 @@ class Options extends \App\Pages\Base
         $this->printer->pwidth->setText($printer['pwidth']);
         $this->printer->pricetype->setValue($printer['pricetype']);
         $this->printer->barcodetype->setValue($printer['barcodetype']);
+        $this->printer->pfontsize->setValue($printer['pfontsize']);
         $this->printer->pname->setChecked($printer['pname']);
         $this->printer->pcode->setChecked($printer['pcode']);
         $this->printer->pbarcode->setChecked($printer['pbarcode']);
@@ -199,6 +180,9 @@ class Options extends \App\Pages\Base
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
         $common['defprice'] = $this->common->defprice->getText();
+        $common['ts_break'] = $this->common->ts_break->getText();
+        $common['ts_start'] = $this->common->ts_start->getText();
+        $common['ts_end'] = $this->common->ts_end->getText();
 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
         $common['useset'] = $this->common->useset->isChecked() ? 1 : 0;
@@ -206,7 +190,7 @@ class Options extends \App\Pages\Base
         $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
-        $common['usefirms'] = $this->common->usefirms->isChecked() ? 1 : 0;
+        
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
         $common['useval'] = $this->common->useval->isChecked() ? 1 : 0;
@@ -221,24 +205,7 @@ class Options extends \App\Pages\Base
         System::setCache('labels', null);
     }
 
-    public function saveFirmOnClick($sender) {
-        $firm = array();
-        $firm['firm_name'] = $this->firm->firmname->getText();
-        $firm['shopname'] = $this->firm->shopname->getText();
-        $firm['phone'] = $this->firm->phone->getText();
-
-        $firm['address'] = $this->firm->address->getText();
-        $firm['inn'] = $this->firm->inn->getText();
-        $firm['bank'] = $this->firm->bank->getText();
-        $firm['bankacc'] = $this->firm->bankacc->getText();
-        $firm['logo'] = $this->firm->logo->getText();
-        $firm['stamp'] = $this->firm->stamp->getText();
-        $firm['sign'] = $this->firm->sign->getText();
-
-        System::setOptions("firm", $firm);
-        $this->setSuccess('saved');
-    }
-
+   
     public function saveValOnClick($sender) {
         $val = array();
         $val['valuan'] = $this->valform->valuan->getText();
@@ -256,6 +223,7 @@ class Options extends \App\Pages\Base
         $printer['pwidth'] = $this->printer->pwidth->getText();
         $printer['pricetype'] = $this->printer->pricetype->getValue();
         $printer['barcodetype'] = $this->printer->barcodetype->getValue();
+        $printer['pfontsize'] = $this->printer->pfontsize->getValue();
         $printer['pname'] = $this->printer->pname->isChecked() ? 1 : 0;
         $printer['pcode'] = $this->printer->pcode->isChecked() ? 1 : 0;
         $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;

@@ -11,7 +11,7 @@
 
     <script language="javascript" src="/assets/js/moment.min.js"></script>
     <script language="javascript" src="/assets/js/fullcalendar.js"></script>
-    <script language="javascript" src="/assets/js/ru.js"></script>
+    <script language="javascript" src="/assets/js/ua.js"></script>
 
 
 </head>
@@ -53,14 +53,14 @@
 
     <div class="col-12  col-xl-10   ">
 
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link active " href="#tasktab" data-toggle="tab">Перелік</li>
-            <li class="nav-item"><a class="nav-link " href="#caltab" data-toggle="tab">Календар</li>
-
-        </ul>
-
-        <div class="tab-content">
-            <div id="tasktab" class="tab-pane  active ">
+       
+               <div  class="mt-1" style="font-size: 1.5rem">
+            <a zippy="tabs"><span    class="{{{tabcbadge}}}"   >  Перелік</span>   </a> &nbsp;&nbsp;
+            <a zippy="tabc"><span    class="{{{tababadge}}}"  >  Календар   </span>  </a>  &nbsp;&nbsp;
+            
+             </div>
+    
+            <div zippy="tasktab" class="tab-pane  active ">
                 <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Створити</a>
 
                 <div class="row">
@@ -152,14 +152,14 @@
                 </div>
 
             </div> <!-- tasktab -->
-            <div id="caltab" class="tab-pane    ">
+            <div zippy="caltab" class="tab-pane    ">
 
                 <div zippy='calendar'></div>
 
 
             </div>
 
-        </div>
+       
 
     </div>
 

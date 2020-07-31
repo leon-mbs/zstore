@@ -237,7 +237,7 @@ class ACL
 
         self::load();
 
-        $aclstate = explode(',', $user->acstate);
+        $aclstate = explode(',', $user->aclstate);
 
         if (in_array($doc->meta_id, $aclstate)) {
             return true;

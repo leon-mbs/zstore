@@ -166,6 +166,9 @@ class DocList extends \App\Pages\Base
 
         $row->add(new ClickLink('parentdoc', $this, 'basedOnClick'))->setVisible($doc->parent_id > 0);
         $row->parentdoc->setValue($doc->headerdata['parent_number']);
+     
+        $row->add(new Label('hasscan'))->setVisible($doc->headerdata['scan'] > 0);
+        
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');

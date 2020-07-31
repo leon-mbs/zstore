@@ -9,9 +9,13 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
     private $data = array();
 
     public final function RenderImpl() {
+        global $_config;
         $id = $this->getAttribute('id');
         $url = $this->owner->getURLNode() . "::" . $this->id;
-
+        $lang = 'ru';
+        if($_config['common']['lang'] =='ua'){
+            $lang = 'ua';
+        }
 
         if (count($this->data) > 0) {
             $ev = ",events: [";
@@ -69,7 +73,7 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
      
 
   } ,       
-         locale: 'ru' 
+         locale: '{$lang}' 
           {$ev} 
 
         

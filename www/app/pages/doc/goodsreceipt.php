@@ -46,7 +46,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0))->onChange($this, 'OnCustomerFirm');
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
@@ -424,9 +424,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
         $this->goAnkor("");
 
-        $firm = H::getFirmData($this->_doc->branch_id);
-        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
-
+  
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -527,7 +525,12 @@ class GoodsReceipt extends \App\Pages\Base
 
 
             if ($file['size'] > 0) {
-                H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+                $id=H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+                $imagedata = getimagesize($file["tmp_name"]);
+                if($imagedata[0]>0) {
+                  $this->_doc->headerdata["scan"] = $id;
+                  $this->_doc->save();
+                }                
             }
 
             //если  выполнен и оплачен

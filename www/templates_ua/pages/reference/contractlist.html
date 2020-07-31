@@ -15,12 +15,12 @@
                     <input class="form-control mr-sm-2" type="text" zippy="searchkey">
                     <label for="searchcust">Контрагент</label>
                     <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="searchcust"/>
-                    {{#usefirms}}
+                    
                     <label for="searchcomp">Компанiя</label>
                     <select zippy="searchcomp" class="form-control mr-sm-2">
                         <option value="0">Не вибрана</option>
                     </select>
-                    {{/usefirms}}
+                   
                     <div class="form-check">
 
                         <input title="Показати неактуальнi" class="form-check-input" type="checkbox" zippy="showdis">
@@ -37,9 +37,9 @@
                     <th>Номер</th>
                     <th>Дата</th>
                     <th>Контрагент</th>
-                    {{#usefirms}}
+                  
                     <th>Компанiя</th>
-                    {{/usefirms}}
+                 
                     <th>Оплата</th>
                     <th></th>
                     <th></th>
@@ -50,9 +50,9 @@
                     <td zippy="contract_number"></td>
                     <td zippy="createdon"></td>
                     <td zippy="customer"></td>
-                    {{#usefirms}}
+                
                     <td zippy="firm"></td>
-                    {{/usefirms}}
+                 
                     <td zippy="payname"></td>
                     <td><a zippy="scanlink" title="Скачать"> <i class="fa fa-paperclip"></i> </a></td>
                     <td zippy="shortdesc"></td>
@@ -86,14 +86,14 @@
             <label for="editcust">Контрагент</label>
             <input placeholder="Начните вводить..." class="form-control" zippy="editcust"/>
         </div>
-        {{#usefirms}}
+        
         <div class="form-group">
             <label for="editcomp">Компанiя</label>
             <select zippy="editcomp" class="form-control">
                 <option value="0">Не вибрана</option>
             </select>
         </div>
-        {{/usefirms}}
+       
         <div class="form-group">
             <label for="editpay">Форма оплати</label>
             <select zippy="editpay" class="form-control">

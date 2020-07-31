@@ -14,7 +14,7 @@ class ServiceAct extends Document
 {
 
     public function generateReport() {
-        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
+        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
 
         $i = 1;
 
@@ -86,7 +86,8 @@ class ServiceAct extends Document
     public function generatePosReport() {
 
         $printer = \App\System::getOptions('printer');
-        $firm = H::getFirmData($this->branch_id, $this->headerdata["firm_id"]);
+        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+
         $wp = 'style="width:40mm"';
         if (strlen($printer['pwidth']) > 0) {
             $wp = 'style="width:' . $printer['pwidth'] . 'mm"';

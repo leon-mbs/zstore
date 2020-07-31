@@ -34,6 +34,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('email', $this->user->email));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
         
+        $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));

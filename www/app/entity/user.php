@@ -66,6 +66,7 @@ class User extends \ZCL\DB\Entity
         $this->acledit = $acl['acledit'];
         $this->aclexe = $acl['aclexe'];
         $this->aclcancel = $acl['aclcancel'];
+        $this->aclstate = $acl['aclstate'];
 
         $this->widgets = $acl['widgets'];
         $this->modules = $acl['modules'];
@@ -80,6 +81,7 @@ class User extends \ZCL\DB\Entity
             $options = array();
         }
 
+        $this->deffirm = (int)$options['deffirm'];
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
         $this->pagesize = (int)$options['pagesize'];
@@ -107,6 +109,7 @@ class User extends \ZCL\DB\Entity
         $options = array();
 
         $options['defstore'] = $this->defstore;
+        $options['deffirm'] = $this->deffirm;
 
         $options['defmf'] = $this->defmf;
         $options['pagesize'] = $this->pagesize;

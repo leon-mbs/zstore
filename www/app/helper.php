@@ -331,6 +331,23 @@ class Helper
     }
 
     /**
+     * Возвращает компанию  по  умолчанию
+     *
+     */
+    public static function getDefFirm() {
+        $user = System::getUser();
+        if ($user->deffirm > 0) {
+            return $user->deffirm;
+        }
+        $st = \App\Entity\Firm::getList();
+        if (count($st) == 1) {
+            $keys = array_keys($st);
+            return $keys[0];
+        }
+        return 0;
+    }
+    
+    /**
      * Возвращает склад  по  умолчанию
      *
      */
@@ -454,20 +471,16 @@ class Helper
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData($branch_id = 0, $firm_id = 0) {
-        $usefirms = System::getOption('common', 'usefirms');
+    public static function getFirmData( $firm_id = 0,$branch_id = 0) {
+        $data = array();
         if ($firm_id > 0) {
             $firm = \App\Entity\Firm::load($firm_id);
             $data = $firm->getData();
         } else {
-            if ($usefirms == true) {
-                return array();
-            }
-
-            $data = \App\System::getOptions("firm");
+            $firm = \App\Entity\Firm::load(self::getDefFirm());
+            $data = $firm->getData();
         }
-
-
+  
         if ($branch_id > 0) {
             $branch = \App\Entity\Branch::load($branch_id);
             if (strlen($branch->shopname) > 0) {
