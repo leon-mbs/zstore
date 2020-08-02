@@ -105,8 +105,8 @@ class SalaryRep extends \App\Pages\Base
 
                 } else {
                     if ($emp->amount > 0) {
-                        if (is_array($detail[$emp->emp_id])) {
-                            $detail[$emp->employee_id]['amount'] += $emp->amount;
+                        if (is_array($detail[$emp->employee_id])) {
+                            $detail[$emp->employee_id]['v'] += $emp->amount;
                         } else {
                             $detail[$emp->employee_id] = array('k' => $emp->emp_name, 'v' => $emp->amount);
                         }
