@@ -371,6 +371,7 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                       
                             {{#note}}
                             <li class="nav-item  has-treeview">
                                 <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
@@ -520,6 +521,33 @@
 
                             </li>
                             {{/issue}}
+
+                            {{#tecdoc}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Автозапчасти
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/Tecdoc/Options" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Настройки</p>
+                                        </a>
+                                    </li>
+                                   <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/Tecdoc/Search" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Поиск</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            {{/tecdoc}}
 
                         </ul>
 
