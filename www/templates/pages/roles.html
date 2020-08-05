@@ -71,6 +71,7 @@
                         &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Смена статуса.Например  если  наряд  создается  менеджером  а  исполнитель  только  меняет  статус.</span><br>
                         &nbsp;<b><i class="fa fa-gavel"></i></b> <span>Создание,  утверждение  и проведение.</span><br>
                         &nbsp;<b><i class="fa fa-undo"></i></b> <span>Отмена проведения</span><br>
+                        &nbsp;<b><i class="fa fa-trash"></i></b> <span>Удаление</span><br>
                         <table class="table table-sm  table-hover mr-4">
                             <tr>
                                 <th>Страница</th>
@@ -88,6 +89,8 @@
                                         class="fa fa-gavel"></i></th>
                                 <th onclick=" $('.cancelacc').prop('checked', $('.cancelacc').prop('checked' )==false);"
                                     style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i class="fa fa-undo"></i></th>
+                                <th onclick=" $('.deleteacc').prop('checked', $('.deleteacc').prop('checked' )==false);"
+                                    style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i class="fa fa-trash"></i></th>
                             </tr>
                             <tr zippy="metarow">
 
@@ -98,6 +101,7 @@
                                 <td><input zippy="stateacc"  class="stateacc"  type="checkbox"></td>
                                 <td><input zippy="exeacc"  class="exeacc"  type="checkbox"></td>
                                 <td><input zippy="cancelacc" class="cancelacc" type="checkbox"></td>
+                                <td><input zippy="deleteacc" class="deleteacc" type="checkbox"></td>
                             </tr>
                         </table>
 

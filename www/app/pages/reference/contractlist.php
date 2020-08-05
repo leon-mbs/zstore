@@ -79,7 +79,7 @@ class ContractList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ContractList')) {
+        if (false == \App\ACL::checkDelRef('ContractList')) {
             return;
         }
 

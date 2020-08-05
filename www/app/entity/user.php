@@ -67,6 +67,7 @@ class User extends \ZCL\DB\Entity
         $this->aclexe = $acl['aclexe'];
         $this->aclcancel = $acl['aclcancel'];
         $this->aclstate = $acl['aclstate'];
+        $this->acldelete = $acl['acldelete'];
 
         $this->widgets = $acl['widgets'];
         $this->modules = $acl['modules'];

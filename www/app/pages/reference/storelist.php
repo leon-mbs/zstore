@@ -60,7 +60,7 @@ class StoreList extends \App\Pages\Base
     }
 
     public function storedeleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('StoreList')) {
+        if (false == \App\ACL::checkDelRef('StoreList')) {
             return;
         }
 

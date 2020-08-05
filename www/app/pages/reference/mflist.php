@@ -57,7 +57,7 @@ class MFList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('MFList')) {
+        if (false == \App\ACL::checkDelRef('MFList')) {
             return;
         }
 

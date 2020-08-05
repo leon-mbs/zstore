@@ -265,7 +265,7 @@ class DBHelper
        switch ($this->type) {
             case 'passenger':
                 $sql="
-                   SELECT al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
+                   SELECT s.id as brand_id, al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
                     FROM article_links al 
                     JOIN passanger_car_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -281,7 +281,7 @@ class DBHelper
                 break;
             case 'commercial':
                 $sql="
-                   SELECT al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
+                   SELECT s.id as brand_id, al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
                     FROM article_links al 
                     JOIN commercial_vehicle_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -295,7 +295,7 @@ class DBHelper
                 break;
             case 'motorbike':
                 $sql="
-                   SELECT al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
+                   SELECT s.id as brand_id, al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
                     FROM article_links al 
                     JOIN motorbike_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -309,7 +309,7 @@ class DBHelper
                 break;
             case 'engine':
                 $sql="
-                  SELECT al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
+                  SELECT s.id as brand_id, al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
                     FROM article_links al 
                     JOIN engine_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -323,7 +323,7 @@ class DBHelper
                 break;
             case 'axle':
                 $sql="
-                   SELECT al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
+                   SELECT s.id as brand_id, al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
                     FROM article_links al 
                     JOIN axle_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -346,6 +346,7 @@ class DBHelper
            $item->part_number = $row['part_number'];           
            $item->supplier_name = $row['supplier_name'];           
            $item->product_name = $row['product_name'];           
+           $item->brand_id = $row['brand_id'];           
            $list[] =  $item;
         }   
         return $list;
@@ -356,7 +357,7 @@ class DBHelper
        
        $code = $this->conn->qstr($code);
         
-       $sql = " SELECT  DISTINCT  s.description as supplier_name,al.datasupplierarticlenumber as part_number,prd.description as product_name 
+       $sql = " SELECT  DISTINCT s.id as brand_id, s.description as supplier_name,al.datasupplierarticlenumber as part_number,prd.description as product_name 
             FROM article_links al
             JOIN suppliers s on s.id = al.supplierid
             JOIN passanger_car_prd prd on prd.id = al.productid
@@ -366,7 +367,7 @@ class DBHelper
            $sql .=  "  and s.description  = {$brand} ";
        }
        $sql .= " union ";
-       $sql .= " SELECT  DISTINCT  s.description as supplier_name,al.datasupplierarticlenumber as part_number ,prd.description as product_name  
+       $sql .= " SELECT  DISTINCT s.id as brand_id, s.description as supplier_name,al.datasupplierarticlenumber as part_number ,prd.description as product_name  
             FROM article_links al
             JOIN suppliers s on s.id = al.supplierid
             JOIN commercial_vehicle_prd prd on prd.id = al.productid
@@ -378,7 +379,7 @@ class DBHelper
         
        
        $sql .= " union ";
-       $sql .= " SELECT  DISTINCT  s.description as supplier_name,al.datasupplierarticlenumber as part_number ,prd.description as product_name  
+       $sql .= " SELECT  DISTINCT s.id as brand_id, s.description as supplier_name,al.datasupplierarticlenumber as part_number ,prd.description as product_name  
             FROM article_links al
             JOIN suppliers s on s.id = al.supplierid
             JOIN motorbike_prd prd on prd.id = al.productid
@@ -400,6 +401,7 @@ class DBHelper
            $item->part_number = $row['part_number'];           
            $item->supplier_name = $row['supplier_name'];           
            $item->product_name = $row['product_name'];           
+           $item->brand_id = $row['brand_id'];           
            $list[] =  $item;
         }  
         
@@ -414,21 +416,21 @@ class DBHelper
        
        $barcode = $this->conn->qstr($barcode);
         
-       $sql = " SELECT  DISTINCT  s.description as supplier_name,al.datasupplierarticlenumber as part_number,prd.description as product_name 
+       $sql = " SELECT  DISTINCT s.id as brand_id, s.description as supplier_name,al.datasupplierarticlenumber as part_number,prd.description as product_name 
             FROM article_links al
             JOIN suppliers s on s.id = al.supplierid
             JOIN passanger_car_prd prd on prd.id = al.productid
             JOIN article_ean ean on ean.supplierid = s.id and  ean.datasupplierarticlenumber = al.datasupplierarticlenumber
             WHERE   ean.ean ={$barcode} "; 
             $sql .= " union ";
-       $sql .= " SELECT  DISTINCT  s.description as supplier_name,al.datasupplierarticlenumber as part_number,prd.description as product_name 
+       $sql .= " SELECT  DISTINCT s.id as brand_id, s.description as supplier_name,al.datasupplierarticlenumber as part_number,prd.description as product_name 
             FROM article_links al
             JOIN suppliers s on s.id = al.supplierid
             JOIN commercial_vehicle_prd prd on prd.id = al.productid
             JOIN article_ean ean on ean.supplierid = s.id and  ean.datasupplierarticlenumber = al.datasupplierarticlenumber
             WHERE   ean.ean ={$barcode} "; 
             $sql .= " union ";
-       $sql .= " SELECT  DISTINCT  s.description as supplier_name,al.datasupplierarticlenumber as part_number,prd.description as product_name 
+       $sql .= " SELECT  DISTINCT s.id as brand_id, s.description as supplier_name,al.datasupplierarticlenumber as part_number,prd.description as product_name 
             FROM article_links al
             JOIN suppliers s on s.id = al.supplierid
             JOIN motorbike_prd prd on prd.id = al.productid
@@ -449,6 +451,7 @@ class DBHelper
            $item->part_number = $row['part_number'];           
            $item->supplier_name = $row['supplier_name'];           
            $item->product_name = $row['product_name'];           
+           $item->brand_id = $row['brand_id'];           
            $list[] =  $item;
         }  
         
@@ -459,5 +462,28 @@ class DBHelper
         return $list;      
     }
     
+    public function getAttributes($number, $brand_id)
+    {
+        $list=array();
+        $number = $this->conn->qstr($number);
+        
+        $r = $this->conn->GetOne("   SELECT   ArticleStateDisplayValue FROM articles WHERE DataSupplierArticleNumber=" . $number . " AND supplierId=" . $brand_id );
+        if(strlen($r)>0) {
+           $list['Статус'] = $r; 
+        }
+        
+        $r = $this->conn->GetOne("   SELECT   ean FROM article_ean WHERE datasupplierarticlenumber=" . $number . " AND supplierid=" . $brand_id );
+        if(strlen($r)>0) {
+           $list['Штрих-код'] = $r; 
+        }
          
+        
+        $res = $this->conn->Execute("SELECT   description, displayvalue FROM article_attributes WHERE datasupplierarticlenumber=" . $number . "  AND supplierId=" . $brand_id );
+        foreach($res as $row){
+            $list[$row['description']] = $row['displayvalue'];
+        }    
+         
+        return $list;
+        
+    }         
 }

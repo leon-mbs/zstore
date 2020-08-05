@@ -2,8 +2,8 @@
 
 namespace App\Modules\Tecdoc;
 
-use App\Entity\Employee;
-use App\Entity\TimeItem;
+use App\Entity\Item;
+ 
 use App\Helper as H;
 use App\System;
 use App\Application as App;
@@ -61,14 +61,18 @@ class Search extends \App\Pages\Base
          $tabbarcode->add(new Form('search3form'))->onSubmit($this,'onSearch2'); 
          $tabbarcode->search3form->add(new TextInput('searchbarcode')); 
          
+         
          $this->add(new Panel('tlist'))->setVisible(false);
          $this->tlist->add(new ClickLink('back'))->onClick($this,'onBack');
            
          $this->tlist->add(new DataView('itemlist', new ArrayDataSource(new Bind($this, "_ds")), $this, 'listOnRow'));
-         $this->tlist->itemlist->setSelectedClass('success');
+         $this->tlist->itemlist->setSelectedClass('table-success');
          $this->tlist->itemlist->setPageSize(H::getPG(10));
          $this->tlist->add(new \Zippy\Html\DataList\Paginator('pag', $this->tlist->itemlist));
          
+         
+         $this->add(new Panel('tview'))->setVisible(false);
+           
             
          $this->onTab($this->tpanel->tabl);       
          $this->onType($tablist->search1form->stype);       
@@ -93,9 +97,9 @@ class Search extends \App\Pages\Base
             
         }
 
-        
+        $this->tlist->setVisible(false) ;
+        $this->tview->setVisible(false) ;
      }    
-      
      
      public function onType($sender){
          $db = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
@@ -106,7 +110,9 @@ class Search extends \App\Pages\Base
          $this->tpanel->tablist->search1form->smodel->setOptionList(array());
          $this->tpanel->tablist->search1form->smodif->setOptionList(array());
          $this->tpanel->tablist->search1form->modifdetail->setText('');
-         $this->tpanel->tablist->tree->removeNodes();        
+         $this->tpanel->tablist->tree->removeNodes(); 
+         
+                
      } 
       
      public function onBrand($sender){
@@ -214,13 +220,14 @@ class Search extends \App\Pages\Base
         $this->tlist->itemlist->Reload();
         
         if(count($this->_ds)>0) {
+         
           $this->tpanel->setVisible(false) ;
           $this->tlist->setVisible(true) ;
             
         } else {
             $this->setWarn('Ничего не  найдено') ;
         }
-        
+        $this->tview->setVisible(false) ;
      } 
   
      public function onSearch1($sender ) {
@@ -244,10 +251,11 @@ class Search extends \App\Pages\Base
         } else {
             $this->setWarn('Ничего не  найдено') ;
         }
+        $this->add(new Panel('tview'))->setVisible(false);
         
      } 
  
-    public function onSearch2($sender ) {
+     public function onSearch2($sender ) {
 
         $code = trim($sender->searchbarcode->getText());
         
@@ -268,21 +276,48 @@ class Search extends \App\Pages\Base
         } else {
             $this->setWarn('Ничего не  найдено') ;
         }
+        $this->add(new Panel('tview'))->setVisible(false);
         
      } 
       
      public function onBack($sender){
          $this->tpanel->setVisible(true) ;
          $this->tlist->setVisible(false) ;             
+         $this->tview->setVisible(false) ;             
      }
         
      public  function listOnRow($row){
          $item = $row->getDataItem();
          $row->add(new Label("lbrand",$item->supplier_name));   
          $row->add(new Label("lcode",$item->part_number));   
-         $row->add(new Label("lname",$item->product_name));   
+         $row->add(new Label("lname",$item->product_name)); 
+         $item = Item::getFirst("manufacturer=" . Item::qstr($item->supplier_name) . " and item_code=" . Item::qstr($item->part_number)) ;
+         
+         $row->add(new Label("qty"))->setVisible($item instanceof Item);   
+         $row->add(new Label("price"))->setVisible($item instanceof Item);   
+         if($item instanceof Item) {
+            $modules = System::getOptions("modules");
+            $row->qty->setText(H::fqty($item->getQuantity($modules['td_store'])));
+            $row->price->setText(H::fa($item->getPrice($modules['td_pricetype'],$modules['td_store'])));
+         }
          $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
      }        
-        
-      
+  
+     public function showOnClick($sender){
+         $this->tview->setVisible(true) ;                    
+         $this->tlist->itemlist->setSelectedRow($sender->getOwner());         
+         $this->tlist->itemlist->Reload(false) ;
+         $part = $sender->getOwner()->getDataItem();
+         
+         $db = new DBHelper(0);
+         
+         $list = $db->getAttributes($part->part_number,$part->brand_id)  ;
+         
+         $this->_tvars['isattr'] = count($list) > 0;
+         $this->_tvars['attr'] = array();
+         foreach($list as $k=>$v){
+             $this->_tvars['attr'][] = array('k'=>$k,'v'=>$v);
+         }
+         
+     }      
 }

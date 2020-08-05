@@ -41,6 +41,7 @@ class UserRole extends Entity
         $this->aclexe = $acl['aclexe'];
         $this->aclcancel = $acl['aclcancel'];
         $this->aclstate = $acl['aclstate'];
+        $this->acldelete = $acl['acldelete'];
 
         $this->widgets = $acl['widgets'];
         $this->modules = $acl['modules'];
@@ -64,6 +65,7 @@ class UserRole extends Entity
         $acl['aclexe'] = $this->aclexe;
         $acl['aclcancel'] = $this->aclcancel;
         $acl['aclstate'] = $this->aclstate;
+        $acl['acldelete'] = $this->acldelete;
 
         $acl['widgets'] = $this->widgets;
         $acl['modules'] = $this->modules;

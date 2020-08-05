@@ -58,7 +58,7 @@ class ServiceList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ServiceList')) {
+        if (false == \App\ACL::checkDelRef('ServiceList')) {
             return;
         }
 

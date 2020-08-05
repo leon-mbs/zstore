@@ -176,7 +176,7 @@ class ItemList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('ItemList')) {
+        if (false == \App\ACL::checkDelRef('ItemList')) {
             return;
         }
 

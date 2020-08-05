@@ -111,7 +111,7 @@
                <th  >Код</th> 
                <th  >Наименование</th> 
                <th   class="text-right">Кол.</th> 
-               <th  class="text-right" >Цена</th> 
+               <th   class="text-right" >Цена</th> 
                <th >
                     
                </th> 
@@ -120,8 +120,8 @@
                <td zippy="lbrand"></td> 
                <td zippy="lcode"></td> 
                <td zippy="lname"></td> 
-               <td class="text-right"><span class="badge badge-info badge-pill">0</span></td> 
-               <td class="text-right"  ><span class="badge badge-info badge-pill">0</span></td> 
+               <td class="text-right">  <span zippy="qty"    class="badge badge-info badge-pill"></span></td> 
+               <td class="text-right">  <span zippy="price"  class="badge badge-info badge-pill"></span></td> 
                 <td >
                     <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
                </td> 
@@ -129,3 +129,37 @@
           </table>
           <div zippy="pag"></div>
         </div>   
+      
+        <div zippy="tview" class="row">
+            <div class="col-12 col-md-4">
+                 {{#isattr}}
+                 <b>Детализация</b>
+                 <table class="ctable">
+                    {{#attr}}
+                    <tr><td>{{k}}</td><td>{{v}}</td></tr>
+                    {{/attr}}
+                 </table>
+                 {{/isattr}}
+                 
+                 <b>Оригинальные  номера</b>
+                 
+                 
+                 <b>Замены</b> 
+            </div>   
+            
+            <div class="col-12 col-md-8">
+                 <img style="width:100%" />
+                 
+                 
+            </div>   
+    
+            <div class="col-12 col-md-4">
+                  <b>Аналоги</b>
+            </div>   
+            <div class="col-12 col-md-4">
+                  <b>Применимость</b>
+            </div>   
+        </div>   
+
+    </div>   
+</div>           
