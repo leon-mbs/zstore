@@ -29,6 +29,7 @@ class Options extends \App\Pages\Base
         $form = $this->add(new Form("cform"));
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
+        $form->add(new CheckBox('ssl', $modules['ocssl']));
         $form->add(new CheckBox('outcome', $modules['ocoutcome']));
         $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
         $form->add(new TextArea('key', $modules['ockey']));
@@ -44,6 +45,7 @@ class Options extends \App\Pages\Base
         $apiname = $this->cform->apiname->getText();
         $key = $this->cform->key->getText();
         $site = trim($site, '/');
+        $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
 
         $url = $site . '/index.php?route=api/login';
 
@@ -52,7 +54,7 @@ class Options extends \App\Pages\Base
             'key' => $key
         );
 
-        $json = Helper::do_curl_request($url, $fields);
+        $json = Helper::do_curl_request($url,$ssl, $fields);
         if ($json === false) {
 
             return;
@@ -91,7 +93,7 @@ class Options extends \App\Pages\Base
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
-            $json = Helper::do_curl_request($url, array());
+            $json = Helper::do_curl_request($url,$ssl, array());
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
@@ -102,7 +104,7 @@ class Options extends \App\Pages\Base
             }
             //загружаем список категорий
             $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
-            $json = Helper::do_curl_request($url, array());
+            $json = Helper::do_curl_request($url,$ssl, array());
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
@@ -121,6 +123,7 @@ class Options extends \App\Pages\Base
         $customer_id = $this->cform->defcust->getValue();
         $pricetype = $this->cform->defpricetype->getValue();
         $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
+        $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
         if ($customer_id == 0) {
 
@@ -142,7 +145,7 @@ class Options extends \App\Pages\Base
         $modules['ockey'] = $key;
         $modules['occustomer_id'] = $customer_id;
         $modules['ocpricetype'] = $pricetype;
-        $modules['ocoutcome'] = $outcome;
+        $modules['ocssl'] = $ssl;
         $modules['ocinsertcust'] = $insertcust;
 
         System::setOptions("modules", $modules);

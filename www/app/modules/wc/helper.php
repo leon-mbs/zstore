@@ -16,6 +16,7 @@ class Helper
         $keyc = $modules['wckeyc'];
         $keys = $modules['wckeys'];
         $api = $modules['wcapi'];
+        $ssl = $modules['wcssl'];
         $site = trim($site, '/') . '/';
 
         $woocommerce = new \Automattic\WooCommerce\Client(
@@ -24,6 +25,7 @@ class Helper
             $keys,
             [
                 'version' => 'wc/' . $api,
+                'verify_ssl'=>  $ssl==1
             ]
         );
 

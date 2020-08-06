@@ -19,6 +19,11 @@
                 <textarea style="height:150px;" zippy="key" class="form-control" required="required"></textarea>
                  <small class="form-text text-muted"><i class="fa fa-exclamation-triangle"> В настройках  API опенкарта  должен  быть  добавлен IP адрес  сайта  учетной системы.</i></small>               
             </div>
+            <div class="form-check">
+                <input zippy="ssl" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="ssl">Проверка  SSL сертификата </label>
+                 
+            </div>            
             <div class="form-group  ">
                 <label for="defcust">Покупатель по умолчанию</label>
 
@@ -45,7 +50,8 @@
                 <small class="form-text text-muted">Вместо заказа формировать и автоматически проводить расходную
                     накладную.
                     Используется если заказы обрабатываются на стороне ИМ.</small>
-                <br></div>
+                <br>
+                </div>
             <div class="form-check">
                 <input zippy="insertcust" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="insertcust">Импортировать контрангентов </label>

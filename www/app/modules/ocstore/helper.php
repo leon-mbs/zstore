@@ -2,6 +2,8 @@
 
 namespace App\Modules\OCStore;
 
+ 
+
 /**
  * Вспомагательный  класс
  */
@@ -14,15 +16,17 @@ class Helper
      * @param mixed $url адрес  API  например <youropencartsite>/index.php?route=api/login'
      * @param mixed $params параметры например array('username' => $apiname,'key' => $key );
      */
-    public static function do_curl_request($url, $params = array()) {
+    public static function do_curl_request($url, $ssl, $params = array()) {
+        
+       
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_COOKIEJAR, _ROOT . 'upload/apicookie.txt');
         curl_setopt($ch, CURLOPT_COOKIEFILE, _ROOT . 'upload/apicookie.txt');
-        if( strpos($url,'https')!==false){
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        } 
+ 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl==1);
+ 
        
 
         $params_string = '';
