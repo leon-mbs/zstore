@@ -331,8 +331,8 @@ class Search extends \App\Pages\Base
          if(strlen($image['PictureName'])>0) {
              $this->_tvars['isimage'] = true;
              $path = rtrim($modules['td_ipath'],'/');
-            // $path = $path.'/'.$part->brand_id.'/'.$image['PictureName'];
-             $path = $path.'/'.$image['PictureName'];
+             $path = $path.'/'.$part->brand_id.'/'.$image['PictureName'];
+           //  $path = $path.'/'.$image['PictureName'];
              $this->_tvars['imagepath'] = $path;
              $this->_tvars['imagedesc'] = $image['Description'];
          }
@@ -385,6 +385,7 @@ class Search extends \App\Pages\Base
          
          
            //Аналоги
+         $this->_tvars['crosslist']  = array();
          $this->_tvars['iscross'] = false;
          $this->_tvars['cross']    = array();
          $cr = $db->getArtCross($part->part_number,$this->tpanel->tablist->search1form->sbrand->getValue())  ;
@@ -414,7 +415,7 @@ class Search extends \App\Pages\Base
          if(count($rp)>0){
             $this->_tvars['isapp'] = true;
             foreach($rp as $r){
-               $this->_tvars['applist'][] = array('make'=>$r->make,'model'=>$r->model,'years'=>$r->years,'desc'=>$r->desc);    
+               $this->_tvars['applist'][] = array( 'years'=>$r->years,'desc'=>$r->desc);    
             }
          }          
            

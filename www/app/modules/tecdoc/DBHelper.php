@@ -586,36 +586,31 @@ class DBHelper
             switch($r['linkageTypeId'])
             {
                  case 'PassengerCar':
-                   $sql = "SELECT DISTINCT p.id, mm.description as make, m.description as model, p.constructioninterval, p.description FROM passanger_cars p 
-                        JOIN models m ON m.id=p.id
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                   $sql = "SELECT DISTINCT     p.constructioninterval, p.fulldescription FROM passanger_cars p 
+                        
                         WHERE p.id=".$r['linkageId'];
                    break;
                  case 'CommercialVehicle':
-                              $sql = "SELECT DISTINCT p.id, mm.description as make, m.description as model, p.constructioninterval, p.description FROM commercial_vehicles p 
-                        JOIN models m ON m.id=p.id
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                              $sql = "SELECT DISTINCT      p.constructioninterval, p.fulldescription FROM commercial_vehicles p 
+                        
                         WHERE p.id=".$r['linkageId'];
       
                  break;
                  case 'Motorbike':
-                     $sql = "SELECT DISTINCT p.id, mm.description as make, m.description as model, p.constructioninterval, p.description FROM motorbikes p 
-                        JOIN models m ON m.id=p.id
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                     $sql = "SELECT DISTINCT       p.constructioninterval, p.fulldescription FROM motorbikes p 
+                        
                         WHERE p.id=".$r['linkageId'];
                
                  break;
                  case 'Engine':
-                    $sql = "SELECT DISTINCT p.id, mm.description as make, m.description as model, p.constructioninterval, p.description FROM  engines  p 
-                        JOIN models m ON m.id=p.id
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                    $sql = "SELECT DISTINCT       p.constructioninterval, p.fulldescription FROM  engines  p 
+                        
                         WHERE p.id=".$r['linkageId'];
                 
                  break;
                  case 'Axle':
-                     $sql = "SELECT DISTINCT p.id, mm.description as  make, m.description as model, p.constructioninterval, p.description FROM axles p 
-                        JOIN models m ON m.id=p.id
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                     $sql = "SELECT DISTINCT      p.constructioninterval, p.fulldescription FROM axles p 
+                        
                         WHERE p.id=".$r['linkageId'];
                
                  break;
@@ -623,13 +618,13 @@ class DBHelper
             }
             
             if(strlen($sql)>0){
-                $r = $this->conn->Execute($sql. " order  by  mm.description");
+                $r = $this->conn->Execute($sql );
                 foreach($r as  $row) {
                     $item = new \App\DataItem() ;
-                    $item->make = $row['make'];
-                    $item->model = $row['model'];
+                    
+                    
                     $item->years = $row['constructioninterval'];
-                    $item->desc = $row['description'];
+                    $item->desc = $row['fulldescription'];
                     
                     $list[] = $item;
                 }                 
