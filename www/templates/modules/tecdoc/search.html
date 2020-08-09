@@ -131,7 +131,7 @@
         </div>   
       
         <div zippy="tview" class="row">
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-6 col-xl-4">
                  {{#isattr}}
                  <b>Детализация</b>
                  <table class="ctable">
@@ -141,22 +141,48 @@
                  </table>
                  {{/isattr}}
                  
-                 <b>Оригинальные  номера</b>
                  
                  
-                 <b>Замены</b> 
-            </div>   
+                 
+                 
+               </div>        
             
-            <div class="col-12 col-md-8">
-                 <img style="width:100%" />
+            {{#isimage}}
+            <div class="col-12 col-md-6  col-xl-4 justify-content-center">
+                 <b style="display:block">{{imagedesc}}</b>
+                 <img src='{{imagepath}}' style="width:100%" />
                  
                  
             </div>   
-    
-            <div class="col-12 col-md-4">
+            {{/isimage}}
+            {{#isoem}}
+            <div class="col-12 col-md-3  col-xl-2  ">
+                  <b>Оригинальные  номера</b>
+                    <table class="ctable">
+                        {{#oem}}
+                         <tr><td>  {{oemnum}}</td></tr>
+                        {{/oem}} 
+                    </table>
+            </div>   
+            {{/isoem}}
+           {{#isrep}} 
+           <div class="col-12 col-md-3  ">
+                  <b>Замены</b>
+                 <table class="ctable">
+                        {{#rep}}
+                         <tr>
+                           <td>  {{sup}}</td>
+                           <td>  {{num}}</td>
+                         </tr>
+                        {{/rep}} 
+                </table>                    
+            </div>   
+          {{/isrep}}  
+           <div class="col-12 col-md-3">
                   <b>Аналоги</b>
+                 
             </div>   
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-3">
                   <b>Применимость</b>
             </div>   
         </div>   

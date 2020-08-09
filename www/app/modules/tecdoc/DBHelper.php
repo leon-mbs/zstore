@@ -485,5 +485,66 @@ class DBHelper
          
         return $list;
         
-    }         
+    } 
+    
+     public function getImage($number, $brand_id) {
+ 
+        $number = $this->conn->qstr($number);
+         
+        $row = $this->conn->GetRow("SELECT Description, PictureName FROM article_images WHERE DocumentType ='Picture'  and  DataSupplierArticleNumber=" . $number . "  AND supplierId=" . $brand_id . "    limit 0,1"  ) ;
+          
+        return $row;
+    } 
+
+     public function getOemNumbers($number, $brand_id) {
+ 
+        $number = $this->conn->qstr($number);
+        $list=array(); 
+        $col = $this->conn->GetCol("SELECT DISTINCT a.OENbr FROM article_oe a 
+            WHERE a.datasupplierarticlenumber=" . $number . " AND a.manufacturerId=" . $brand_id . "
+            ORDER BY a.OENbr"  ) ;
+          
+        return $col;
+    } 
+
+    public function getReplace($number, $brand_id) {
+ 
+        $number = $this->conn->qstr($number);
+        $list=array(); 
+        $rs = $this->conn->Execute("SELECT s.id, s.description as  supplier, a.replacenbr   FROM article_rn a 
+            JOIN suppliers s ON s.id=a.replacedupplierid  
+            WHERE a.datasupplierarticlenumber=" . $number . " AND a.supplierid=" . $brand_id . "
+             "  ) ;
+        
+        foreach($rs as $r){
+            $item = new \App\DataItem() ;
+            $item->sid = $r['id'];
+            $item->supplier = $r['supplier'];
+            $item->replacenbr = $r['replacenbr'];
+            $list[] = $item;
+        }
+          
+        return $list;
+    } 
+   public function getArtParts($number, $brand_id) {
+ 
+        $number = $this->conn->qstr($number);
+        $list=array(); 
+        $rs = $this->conn->Execute("SELECT DISTINCT description as Brand, Quantity, PartsDataSupplierArticleNumber as partnumber FROM article_parts 
+            JOIN suppliers ON id=PartsSupplierId 
+            WHERE a.datasupplierarticlenumber=" . $number . " AND a.supplierid=" . $brand_id . "
+             "  ) ;
+        
+        foreach($rs as $r){
+            $item = new \App\DataItem() ;
+            $item->sid = $r['Brand'];
+            $item->supplier = $r['Quantity'];
+            $item->replacenbr = $r['partnumber'];
+            $list[] = $item;
+        }
+          
+        return $list;
+    } 
+
+            
 }

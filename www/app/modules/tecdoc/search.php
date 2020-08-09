@@ -304,6 +304,9 @@ class Search extends \App\Pages\Base
      }        
   
      public function showOnClick($sender){
+         $modules = System::getOptions("modules");
+        
+        
          $this->tview->setVisible(true) ;                    
          $this->tlist->itemlist->setSelectedRow($sender->getOwner());         
          $this->tlist->itemlist->Reload(false) ;
@@ -313,11 +316,43 @@ class Search extends \App\Pages\Base
          
          $list = $db->getAttributes($part->part_number,$part->brand_id)  ;
          
+         
          $this->_tvars['isattr'] = count($list) > 0;
          $this->_tvars['attr'] = array();
          foreach($list as $k=>$v){
              $this->_tvars['attr'][] = array('k'=>$k,'v'=>$v);
          }
+         
+         $this->_tvars['isimage'] = false;
+         
+         
+         $image = $db->getImage($part->part_number,$part->brand_id)  ;
+         if(strlen($image['PictureName'])>0) {
+             $this->_tvars['isimage'] = true;
+             $path = rtrim($modules['td_ipath'],'/');
+             $path = $path.'/'.$part->brand_id.'/'.$image['PictureName'];
+             $this->_tvars['imagepath'] = $path;
+             $this->_tvars['imagedesc'] = $image['Description'];
+         }
+         $this->_tvars['isoem'] = false;
+        
+         $oem = $db->getOemNumbers('20097',$this->tpanel->tablist->search1form->sbrand->getValue())  ;
+         if(count($oem)>0){
+            $this->_tvars['isoem'] = true;
+            foreach($oem as $o){
+               $this->_tvars['oem'][]  = array('oemnum'=>$o);    
+            }
+         }
+         
+          $this->_tvars['isrep'] = false;
+         $rp = $db->getReplace($part->part_number,$part->brand_id)  ;
+         if(count($rp)>0){
+            $this->_tvars['isrep'] = true;
+            foreach($rp as $r){
+               $this->_tvars['rep'][]  = array('sup'=>$r->supplier,'num'=>$r->replacenbr);    
+            }
+         }
+         
          
      }      
 }
