@@ -149,7 +149,7 @@ class Items extends \App\Pages\Base
 
 
         if ($data['error'] != "") {
-            $this->setErrorTop($data['error']);
+            $this->setError($data['error']);
             return;
         }
         $this->setSuccess('exported_items', count($elist));
@@ -186,7 +186,7 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $this->setErrorTop($data['error']);
+            $this->setError($data['error']);
             return;
         }
         $this->setSuccess('refreshed');
@@ -218,7 +218,7 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $this->setErrorTop($data['error']);
+            $this->setError($data['error']);
             return;
         }
         $this->setSuccess('refreshed');
@@ -239,7 +239,7 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $this->setErrorTop($data['error']);
+            $this->setError($data['error']);
             return;
         }
         //  $this->setInfo($json);

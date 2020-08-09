@@ -80,26 +80,28 @@ class GoodsReceipt extends Document
         $types = array();
         $common = \App\System::getOptions("common");
         if ($this->amount == 0) {
-            return;
+           // return;
         }
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
             $total = $this->amount;
-
-            if ($this->headerdata["disc"] > 0) {
-                $total = $total - $this->headerdata["disc"];
+            if($total>0){
+                if ($this->headerdata["disc"] > 0) {
+                    $total = $total - $this->headerdata["disc"];
+                }
+                if ($this->headerdata["nds"] > 0) {
+                    $total = $total + $this->headerdata["nds"];
+                }
+                if (($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1)) {
+                    $total = $total * $this->headerdata["rate"];
+                }
+                $k = $total / $this->amount;
+                $item->price = H::fa($item->price * $k); //пересчитываем  учетную цену
+            }else {
+                $item->price = 0;
             }
-            if ($this->headerdata["nds"] > 0) {
-                $total = $total + $this->headerdata["nds"];
-            }
-            if (($this->headerdata["rate"] != 0) && ($this->headerdata["rate"] != 1)) {
-                $total = $total * $this->headerdata["rate"];
-            }
-            $k = $total / $this->amount;
-            $item->price = H::fa($item->price * $k); //пересчитываем  учетную цену
-
             $item->amount = $item->price * $item->quantity;
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
 

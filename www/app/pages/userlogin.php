@@ -128,10 +128,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['alerterror'] = $msg;
     }
 
-    protected function afterRender() {
-
-        //  $this->_tvars['alerterror'] = ''; 
-    }
+   
 
     private function counter() {
         $this->cntlogin++;

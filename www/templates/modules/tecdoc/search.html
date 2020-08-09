@@ -141,7 +141,14 @@
                  </table>
                  {{/isattr}}
                  
-                 
+                  {{#ispart}}
+                 <b>Составные части</b>
+                 <table class="ctable">
+                    {{#part}}
+                     <tr><td>{{Brand}}</td><td>{{partnumber}}</td><td align="right">{{Quantity}}</td></tr>
+                    {{/part}}
+                 </table>
+                 {{/ispart}}       
                  
                  
                  
@@ -166,25 +173,51 @@
             </div>   
             {{/isoem}}
            {{#isrep}} 
-           <div class="col-12 col-md-3  ">
+           <div class="col-12 col-md-6   col-xl-4">
                   <b>Замены</b>
                  <table class="ctable">
                         {{#rep}}
                          <tr>
                            <td>  {{sup}}</td>
                            <td>  {{num}}</td>
+                           <td align="right">  {{{q}}}</td>
+                           <td align="right">  {{{p}}}</td>
                          </tr>
                         {{/rep}} 
                 </table>                    
             </div>   
           {{/isrep}}  
-           <div class="col-12 col-md-3">
+              {{#iscross}} 
+             <div class="col-12 col-md-6 col-xl-4">
                   <b>Аналоги</b>
-                 
-            </div>   
-            <div class="col-12 col-md-3">
+                  <table class="ctable">
+                        {{#crosslist}}
+                         <tr>
+                           <td>  {{desc}}</td>
+                           <td>  {{cross}}</td>
+                           <td align="right">  {{{q}}}</td>
+                           <td align="right">  {{{p}}}</td>                           
+                         </tr>
+                        {{/crosslist}} 
+                </table>                 
+            </div> 
+                {{/iscross}}    
+         
+             {{#isapp}} 
+            <div class="col-12   col-xl-8">
                   <b>Применимость</b>
+                 <table class="ctable">
+                        {{#applist}}
+                         <tr>
+                           <td>  {{make}}</td>
+                           <td>  {{model}}</td>
+                           <td  >  {{desc}}</td>                           
+                           <td class="text-nowrap"  >  {{years}}</td>                           
+                         </tr>
+                        {{/applist}} 
+                </table>                  
             </div>   
+                 {{/isapp}}  
         </div>   
 
     </div>   

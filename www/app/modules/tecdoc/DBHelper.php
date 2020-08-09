@@ -9,12 +9,17 @@ class DBHelper
     public function __construct($type = 'passenger')
     {
         $this->type = $type;
-       
-        $this->conn = \ADONewConnection("mysqli");
-        $this->conn->NConnect("localhost", "root", "root", "tecdoc");
+        $modules = \App\System::getOptions("modules");
+        if($modules['td_seconddb']==1) {
+            $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
 
-        $this->conn->Execute("SET NAMES 'utf8'");
-          
+            
+            $this->conn = \ADONewConnection("mysqli");
+            $this->conn->NConnect($_config['tecdocdb']['host'], $_config['tecdocdb']['user'], $_config['tecdocdb']['pass'], $_config['tecdocdb']['name']);
+            $this->conn->Execute("SET NAMES 'utf8'");
+        } else {
+            $this->conn = \ZDB\DB::getConnect() ; 
+        }
     }  
     
     
@@ -290,7 +295,7 @@ class DBHelper
                     AND al.linkageid = pds.commertialvehicleid
                     AND al.linkageid = " . (int)$modif_id . "
                     AND pds.nodeid = " . (int)$cat_id . "
-                    AND al.linkagetypeid = 2
+                    AND al.linkagetypeid = 16
                     ORDER BY s.description, al.datasupplierarticlenumber"   ;
                 break;
             case 'motorbike':
@@ -304,7 +309,7 @@ class DBHelper
                     AND al.linkageid = pds.motorbikeid
                     AND al.linkageid = " . (int)$modif_id . "
                     AND pds.nodeid = " . (int)$cat_id . "
-                    AND al.linkagetypeid = 2
+                    AND al.linkagetypeid = 777
                     ORDER BY s.description, al.datasupplierarticlenumber"   ;
                 break;
             case 'engine':
@@ -318,7 +323,7 @@ class DBHelper
                     AND al.linkageid = pds.engineid
                     AND al.linkageid = " . (int)$modif_id . "
                     AND pds.nodeid = " . (int)$cat_id . "
-                    AND al.linkagetypeid = 2
+                    AND al.linkagetypeid = 14
                     ORDER BY s.description, al.datasupplierarticlenumber"   ;
                 break;
             case 'axle':
@@ -332,7 +337,7 @@ class DBHelper
                     AND al.linkageid = pds.axleid
                     AND al.linkageid = " . (int)$modif_id . "
                     AND pds.nodeid = " . (int)$cat_id . "
-                    AND al.linkagetypeid = 2
+                    AND al.linkagetypeid = 19
                     ORDER BY s.description, al.datasupplierarticlenumber"   ;
                 break;
         }
@@ -487,7 +492,7 @@ class DBHelper
         
     } 
     
-     public function getImage($number, $brand_id) {
+    public function getImage($number, $brand_id) {
  
         $number = $this->conn->qstr($number);
          
@@ -496,7 +501,7 @@ class DBHelper
         return $row;
     } 
 
-     public function getOemNumbers($number, $brand_id) {
+    public function getOemNumbers($number, $brand_id) {
  
         $number = $this->conn->qstr($number);
         $list=array(); 
@@ -512,7 +517,7 @@ class DBHelper
         $number = $this->conn->qstr($number);
         $list=array(); 
         $rs = $this->conn->Execute("SELECT s.id, s.description as  supplier, a.replacenbr   FROM article_rn a 
-            JOIN suppliers s ON s.id=a.replacedupplierid  
+            JOIN suppliers s ON s.id=a.replacesupplierid  
             WHERE a.datasupplierarticlenumber=" . $number . " AND a.supplierid=" . $brand_id . "
              "  ) ;
         
@@ -526,25 +531,115 @@ class DBHelper
           
         return $list;
     } 
-   public function getArtParts($number, $brand_id) {
+   
+    public function getArtParts($number, $brand_id) {
  
         $number = $this->conn->qstr($number);
         $list=array(); 
         $rs = $this->conn->Execute("SELECT DISTINCT description as Brand, Quantity, PartsDataSupplierArticleNumber as partnumber FROM article_parts 
             JOIN suppliers ON id=PartsSupplierId 
-            WHERE a.datasupplierarticlenumber=" . $number . " AND a.supplierid=" . $brand_id . "
+            WHERE  DataSupplierArticleNumber=" . $number . " AND  supplierid=" . $brand_id . "
              "  ) ;
         
         foreach($rs as $r){
             $item = new \App\DataItem() ;
-            $item->sid = $r['Brand'];
-            $item->supplier = $r['Quantity'];
-            $item->replacenbr = $r['partnumber'];
+            $item->Brand = $r['Brand'];
+            $item->Quantity = $r['Quantity'];
+            $item->partnumber = $r['partnumber'];
             $list[] = $item;
         }
           
         return $list;
     } 
 
+    public function getArtCross($number, $brand_id) {
+ 
+        $number = $this->conn->qstr($number);
+        $list=array(); 
+        $r = $this->conn->Execute("SELECT DISTINCT s.description, c.PartsDataSupplierArticleNumber as crossnumber   
+            FROM article_oe a 
+            JOIN manufacturers m ON m.id=a.manufacturerId 
+            JOIN article_cross c ON c.OENbr=a.OENbr
+            JOIN suppliers s ON s.id=c.SupplierId
+            WHERE a.datasupplierarticlenumber=" . $number . " AND a.manufacturerId=" . $brand_id . "
+             "  ) ;
+          
+        foreach($r as  $row) {
+            $item = new \App\DataItem() ;
+            $item->description = $row['description'];
+            $item->cross = $row['crossnumber'];
             
+            $list[] = $item;
+        }
+        return $list; 
+    } 
+    
+    public function getArtVehicles($number, $brand_id) {
+ 
+        $number = $this->conn->qstr($number);
+        $list=array(); 
+        $rs = $this->conn->Execute("SELECT linkageTypeId, linkageId FROM article_li    
+              WHERE  DataSupplierArticleNumber=" . $number . " AND  supplierId=" . $brand_id . "
+             "  ) ;
+        
+        foreach($rs as $r){
+            switch($r['linkageTypeId'])
+            {
+                 case 'PassengerCar':
+                   $sql = "SELECT DISTINCT p.id, mm.description as make, m.description as model, p.constructioninterval, p.description FROM passanger_cars p 
+                        JOIN models m ON m.id=p.id
+                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                        WHERE p.id=".$r['linkageId'];
+                   break;
+                 case 'CommercialVehicle':
+                              $sql = "SELECT DISTINCT p.id, mm.description as make, m.description as model, p.constructioninterval, p.description FROM commercial_vehicles p 
+                        JOIN models m ON m.id=p.id
+                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                        WHERE p.id=".$r['linkageId'];
+      
+                 break;
+                 case 'Motorbike':
+                     $sql = "SELECT DISTINCT p.id, mm.description as make, m.description as model, p.constructioninterval, p.description FROM motorbikes p 
+                        JOIN models m ON m.id=p.id
+                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                        WHERE p.id=".$r['linkageId'];
+               
+                 break;
+                 case 'Engine':
+                    $sql = "SELECT DISTINCT p.id, mm.description as make, m.description as model, p.constructioninterval, p.description FROM  engines  p 
+                        JOIN models m ON m.id=p.id
+                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                        WHERE p.id=".$r['linkageId'];
+                
+                 break;
+                 case 'Axle':
+                     $sql = "SELECT DISTINCT p.id, mm.description as  make, m.description as model, p.constructioninterval, p.description FROM axles p 
+                        JOIN models m ON m.id=p.id
+                        JOIN manufacturers mm ON mm.id=m.manufacturerid
+                        WHERE p.id=".$r['linkageId'];
+               
+                 break;
+                 
+            }
+            
+            if(strlen($sql)>0){
+                $r = $this->conn->Execute($sql. " order  by  mm.description");
+                foreach($r as  $row) {
+                    $item = new \App\DataItem() ;
+                    $item->make = $row['make'];
+                    $item->model = $row['model'];
+                    $item->years = $row['constructioninterval'];
+                    $item->desc = $row['description'];
+                    
+                    $list[] = $item;
+                }                 
+                 
+                 
+            }
+            
+             
+        }
+          
+        return $list;
+    } 
 }

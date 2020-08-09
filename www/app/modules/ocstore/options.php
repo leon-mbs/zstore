@@ -62,7 +62,7 @@ class Options extends \App\Pages\Base
 
         $data = json_decode($json, true);
         if ($data == null) {
-            $this->setErrorTop($json);
+            $this->setError($json);
             return;
         }
         if (is_array($data) && count($data) == 0) {
@@ -72,10 +72,10 @@ class Options extends \App\Pages\Base
         }
 
         if (is_array($data['error'])) {
-            $this->setErrorTop(implode(' ', $data['error']));
+            $this->setError(implode(' ', $data['error']));
         } else {
             if (strlen($data['error']) > 0) {
-                $this->setErrorTop($data['error']);
+                $this->setError($data['error']);
             }
         }
 
@@ -97,7 +97,7 @@ class Options extends \App\Pages\Base
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
-                $this->setErrorTop($data['error']);
+                $this->setError($data['error']);
             } else {
 
                 System::getSession()->statuses = $data['statuses'];
@@ -108,7 +108,7 @@ class Options extends \App\Pages\Base
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
-                $this->setErrorTop($data['error']);
+                $this->setError($data['error']);
             } else {
 
                 System::getSession()->cats = $data['cats'];

@@ -246,12 +246,13 @@ class Search extends \App\Pages\Base
         
         if(count($this->_ds)>0) {
           $this->tpanel->setVisible(false) ;
+          
           $this->tlist->setVisible(true) ;
             
         } else {
             $this->setWarn('Ничего не  найдено') ;
         }
-        $this->add(new Panel('tview'))->setVisible(false);
+        $this->tview->setVisible(false) ;
         
      } 
  
@@ -330,29 +331,93 @@ class Search extends \App\Pages\Base
          if(strlen($image['PictureName'])>0) {
              $this->_tvars['isimage'] = true;
              $path = rtrim($modules['td_ipath'],'/');
-             $path = $path.'/'.$part->brand_id.'/'.$image['PictureName'];
+            // $path = $path.'/'.$part->brand_id.'/'.$image['PictureName'];
+             $path = $path.'/'.$image['PictureName'];
              $this->_tvars['imagepath'] = $path;
              $this->_tvars['imagedesc'] = $image['Description'];
          }
+         
+         //Оригинальные  номера
          $this->_tvars['isoem'] = false;
-        
-         $oem = $db->getOemNumbers('20097',$this->tpanel->tablist->search1form->sbrand->getValue())  ;
+         $this->_tvars['oem']    = array();
+         $oem = $db->getOemNumbers($part->part_number,$this->tpanel->tablist->search1form->sbrand->getValue())  ;
          if(count($oem)>0){
             $this->_tvars['isoem'] = true;
             foreach($oem as $o){
                $this->_tvars['oem'][]  = array('oemnum'=>$o);    
             }
          }
-         
-          $this->_tvars['isrep'] = false;
+          //Замены
+         $this->_tvars['isrep'] = false;
+         $this->_tvars['rep']    = array();
          $rp = $db->getReplace($part->part_number,$part->brand_id)  ;
          if(count($rp)>0){
             $this->_tvars['isrep'] = true;
             foreach($rp as $r){
-               $this->_tvars['rep'][]  = array('sup'=>$r->supplier,'num'=>$r->replacenbr);    
+
+                $item = Item::getFirst("manufacturer=" . Item::qstr($r->supplier) . " and item_code=" . Item::qstr($r->replacenbr)) ;
+             
+                if($item instanceof Item) {
+                    $modules = System::getOptions("modules");
+                    $q = H::fqty($item->getQuantity($modules['td_store']));
+                    $p = H::fa($item->getPrice($modules['td_pricetype'],$modules['td_store']));
+                    $q = "<span  class=\"badge badge-info badge-pill\">{$q}</span>";
+                    $p = "<span  class=\"badge badge-info badge-pill\">{$p}</span>";
+                    
+                }               
+                
+                
+                $this->_tvars['rep'][]  = array('sup'=>$r->supplier,'num'=>$r->replacenbr,'q'=>$q,'p'=>$p);    
             }
          }
          
+       
+         //Составные части
+         $this->_tvars['ispart'] = false;
+         $this->_tvars['part']    = array();
+         $rp = $db->getArtParts($part->part_number,$part->brand_id)  ;
+         if(count($rp)>0){
+            $this->_tvars['ispart'] = true;
+            foreach($rp as $r){
+               $this->_tvars['part'][]  = array('Brand'=>$r->Brand,'partnumber'=>$r->partnumber,'Quantity'=>$r->Quantity);    
+            }
+         }
+         
+         
+           //Аналоги
+         $this->_tvars['iscross'] = false;
+         $this->_tvars['cross']    = array();
+         $cr = $db->getArtCross($part->part_number,$this->tpanel->tablist->search1form->sbrand->getValue())  ;
+         if(count($cr)>0){
+            $this->_tvars['iscross'] = true;
+            foreach($cr as $c){
+                $item = Item::getFirst("manufacturer=" . Item::qstr($c->description) . " and item_code=" . Item::qstr($c->cross)) ;
+             
+                if($item instanceof Item) {
+                    $modules = System::getOptions("modules");
+                    $q = H::fqty($item->getQuantity($modules['td_store']));
+                    $p = H::fa($item->getPrice($modules['td_pricetype'],$modules['td_store']));
+                    $q = "<span  class=\"badge badge-info badge-pill\">{$q}</span>";
+                    $p = "<span  class=\"badge badge-info badge-pill\">{$p}</span>";
+                    
+                }   
+                
+                
+               $this->_tvars['crosslist'][]  = array('desc'=>$c->description,'cross'=>$c->cross,'q'=>$q,'p'=>$p);    
+            }
+         }
+        
+         //Применимость
+         $this->_tvars['isapp'] = false;
+         $this->_tvars['applist']    = array();
+         $rp = $db->getArtVehicles($part->part_number,$part->brand_id)  ;
+         if(count($rp)>0){
+            $this->_tvars['isapp'] = true;
+            foreach($rp as $r){
+               $this->_tvars['applist'][] = array('make'=>$r->make,'model'=>$r->model,'years'=>$r->years,'desc'=>$r->desc);    
+            }
+         }          
+           
          
      }      
 }
