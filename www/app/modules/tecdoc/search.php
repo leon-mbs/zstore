@@ -234,10 +234,7 @@ class Search extends \App\Pages\Base
 
         $code = trim($sender->searchcode->getText());
         $brand = trim($sender->searchbrand->getText());
-        if(strlen($code)==0){
-             $this->setError('Не  указан  код') ;
-             return;
-        }
+       
         $db = new DBHelper(0);
          
         $this->_ds= $db->searchByBrandAndCode($code,$brand) ;
@@ -260,10 +257,7 @@ class Search extends \App\Pages\Base
 
         $code = trim($sender->searchbarcode->getText());
         
-        if(strlen($code)==0){
-             $this->setError('Не  указан  код') ;
-             return;
-        }
+       
         $db = new DBHelper(0);
          
         $this->_ds= $db->searchByBarCode($code  ) ;
