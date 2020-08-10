@@ -31,7 +31,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->setError('');
 
 
-        $curver = 'v4.5.0';
+        $curver = 'v4.6.0';
         $this->_tvars['curversion'] = $curver;
 
         //проверка  новой версии        
@@ -128,10 +128,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['alerterror'] = $msg;
     }
 
-    protected function afterRender() {
-
-        //  $this->_tvars['alerterror'] = ''; 
-    }
+   
 
     private function counter() {
         $this->cntlogin++;

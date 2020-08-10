@@ -82,7 +82,7 @@ class EqList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('EqList')) {
+        if (false == \App\ACL::checkDelRef('EqList')) {
             return;
         }
 

@@ -340,6 +340,7 @@ class Helper
             return $user->deffirm;
         }
         $st = \App\Entity\Firm::getList();
+        
         if (count($st) == 1) {
             $keys = array_keys($st);
             return $keys[0];

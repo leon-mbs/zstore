@@ -64,6 +64,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editwoocomerce'));
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
+        $this->editpan->editform->add(new CheckBox('edittecdoc'));
 
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -177,6 +178,9 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'issue') !== false) {
             $this->editpan->editform->editissue->setChecked(true);
         }
+        if (strpos($this->role->modules, 'tecdoc') !== false) {
+            $this->editpan->editform->edittecdoc->setChecked(true);
+        }
     }
 
     public function savenameOnClick($sender) {
@@ -225,6 +229,7 @@ class Roles extends \App\Pages\Base
         $xarr = array();
         $carr = array();
         $sarr = array();
+        $darr = array();
 
         foreach ($this->editpan->editform->metaaccess->metarow->getDataRows() as $row) {
             $item = $row->getDataItem();
@@ -243,12 +248,16 @@ class Roles extends \App\Pages\Base
             if ($item->cancelacc == true) {
                 $carr[] = $item->meta_id;
             }
+            if ($item->deleteacc == true) {
+                $darr[] = $item->meta_id;
+            }
         }
         $this->role->aclview = implode(',', $varr);
         $this->role->acledit = implode(',', $earr);
         $this->role->aclexe = implode(',', $xarr);
         $this->role->aclcancel = implode(',', $carr);
         $this->role->aclstate = implode(',', $sarr);
+        $this->role->acldelete = implode(',', $darr);
 
 
         $widgets = "";
@@ -299,6 +308,9 @@ class Roles extends \App\Pages\Base
         }
         if ($this->editpan->editform->editissue->isChecked()) {
             $modules = $modules . ',issue';
+        }
+        if ($this->editpan->editform->edittecdoc->isChecked()) {
+            $modules = $modules . ',tecdoc';
         }
 
         $this->role->modules = trim($modules, ',');
@@ -375,6 +387,7 @@ class Roles extends \App\Pages\Base
         $item->exeacc = false;
         $item->stateacc = false;
         $item->cancelacc = false;
+        $item->deleteacc = false;
         $earr = @explode(',', $this->role->acledit);
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
@@ -395,6 +408,10 @@ class Roles extends \App\Pages\Base
         if (is_array($carr)) {
             $item->cancelacc = in_array($item->meta_id, $carr);
         }
+        $darr = @explode(',', $this->role->acldelete);
+        if (is_array($carr)) {
+            $item->deleteacc = in_array($item->meta_id, $darr);
+        }
 
         $row->add(new Label('description', $item->description));
         $row->add(new Label('meta_name', $title));
@@ -404,6 +421,7 @@ class Roles extends \App\Pages\Base
         $row->add(new CheckBox('exeacc', new Bind($item, 'exeacc')))->setVisible($item->meta_type == 1);
         $row->add(new CheckBox('cancelacc', new Bind($item, 'cancelacc')))->setVisible($item->meta_type == 1);
         $row->add(new CheckBox('stateacc', new Bind($item, 'stateacc')))->setVisible($item->meta_type == 1);
+        $row->add(new CheckBox('deleteacc', new Bind($item, 'deleteacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
     }
 
 

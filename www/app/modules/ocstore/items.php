@@ -57,7 +57,7 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url);
+        $json = Helper::do_curl_request($url,$modules['ocssl']);
         if ($json === false) {
             return;
         }
@@ -141,7 +141,7 @@ class Items extends \App\Pages\Base
         );
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
+        $json = Helper::do_curl_request($url,$modules['ocssl'], $fields);
         if ($json === false) {
             return;
         }
@@ -149,7 +149,7 @@ class Items extends \App\Pages\Base
 
 
         if ($data['error'] != "") {
-            $this->setErrorTop($data['error']);
+            $this->setError($data['error']);
             return;
         }
         $this->setSuccess('exported_items', count($elist));
@@ -179,14 +179,14 @@ class Items extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
+        $json = Helper::do_curl_request($url,$modules['ocssl'], $fields);
         if ($json === false) {
             return;
         }
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $this->setErrorTop($data['error']);
+            $this->setError($data['error']);
             return;
         }
         $this->setSuccess('refreshed');
@@ -211,14 +211,14 @@ class Items extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url, $fields);
+        $json = Helper::do_curl_request($url,$modules['ocssl'], $fields);
         if ($json === false) {
             return;
         }
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $this->setErrorTop($data['error']);
+            $this->setError($data['error']);
             return;
         }
         $this->setSuccess('refreshed');
@@ -232,14 +232,14 @@ class Items extends \App\Pages\Base
         $elist = array();
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url);
+        $json = Helper::do_curl_request($url,$modules['ocssl']);
         if ($json === false) {
             return;
         }
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $this->setErrorTop($data['error']);
+            $this->setError($data['error']);
             return;
         }
         //  $this->setInfo($json);

@@ -133,7 +133,7 @@ class Items extends \App\Pages\Base
             }
 
         } catch (\Exception $ee) {
-            $this->setErrorTop($ee->getMessage());
+            $this->setError($ee->getMessage());
             return;
         }
 
@@ -152,7 +152,7 @@ class Items extends \App\Pages\Base
         try {
             $data = $client->get('products', array('status' => 'publish'));
         } catch (\Exception $ee) {
-            $this->setErrorTop($ee->getMessage());
+            $this->setError($ee->getMessage());
             return;
         }
 
@@ -192,7 +192,7 @@ class Items extends \App\Pages\Base
             $client->post('products/batch', $data);
 
         } catch (\Exception $ee) {
-            $this->setErrorTop($ee->getMessage());
+            $this->setError($ee->getMessage());
             return;
 
         }
@@ -208,7 +208,7 @@ class Items extends \App\Pages\Base
         try {
             $data = $client->get('products', array('status' => 'publish'));
         } catch (\Exception $ee) {
-            $this->setErrorTop($ee->getMessage());
+            $this->setError($ee->getMessage());
             return;
         }
 
@@ -247,7 +247,7 @@ class Items extends \App\Pages\Base
             $client->post('products/batch', $data);
 
         } catch (\Exception $ee) {
-            $this->setErrorTop($ee->getMessage());
+            $this->setError($ee->getMessage());
             return;
 
         }
@@ -266,7 +266,7 @@ class Items extends \App\Pages\Base
         try {
             $data = $client->get('products', array('status' => 'publish'));
         } catch (\Exception $ee) {
-            $this->setErrorTop($ee->getMessage());
+            $this->setError($ee->getMessage());
             return;
         }
 

@@ -1,0 +1,60 @@
+<html>
+
+<body>
+
+<div class="row  ">
+    <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
+        <h4>Настройки  </h4>
+        <form zippy="cform">
+            <div class="form-group   ">
+                <label for="defpricetype">Тип цены </label>
+                <select class="form-control" zippy="defpricetype">
+                    <option value='0'>Не выбран</option>
+                </select>
+                <small class="form-text text-muted">Цена для показа  в списке </small>
+            </div>  
+            <div class="form-group   ">
+                <label for="defstore">Склад </label>
+                <select class="form-control" zippy="defstore">
+                    <option value='0'>По всем</option>
+                </select>
+                
+            </div>  
+            <div class="form-group">
+                <label for="ipath">Путь к  изображениям
+                <input type="text" zippy="ipath" class="form-control"  />
+                <small class="form-text text-muted">Путь относительно  корня  сайта</small>
+            </div>
+          
+            <div class="form-check">
+                <input zippy="seconddb" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="seconddb">Отдельная БД</label>
+                <small class="form-text text-muted">Конект  должен  быть задан  в  config.ini в  секции [tecdocdb]  аналогично  основной  БД: 
+                        <br>[tecdocdb] 
+                        <br>host=localhost
+                        <br>name=tecdoc
+                        <br>user=root
+                        <br>pass=root</small>
+                 
+            </div>          
+           
+            <div class="form-group">
+                <input type="submit" value="Сохранить" zippy="save" class="btn   btn-primary mr-2"/>
+                
+                
+
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+
+    function check_check() {
+
+        $('#loader').removeAttr('style');
+    }
+
+</script>
+
+</body>
+</html>

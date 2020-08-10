@@ -159,7 +159,7 @@ class CustomerList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('CustomerList')) {
+        if (false == \App\ACL::checkDelRef('CustomerList')) {
             return;
         }
 

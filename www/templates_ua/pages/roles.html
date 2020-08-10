@@ -70,7 +70,8 @@
                         &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Зміна  статусу</span><br>
                         &nbsp;<b><i class="fa fa-gavel"></i></b> <span>Створення, затвердження  та  виконання.</span><br>
                         &nbsp;<b><i class="fa fa-undo"></i></b> <span>Вiдмiна проведення</span><br>
-                 
+                        &nbsp;<b><i class="fa fa-trash"></i></b> <span>Видалення</span><br>
+                         
                         <table class="table table-sm  table-hover mr-4">
                             <tr>
                                 <th>Сторінка</th>
@@ -89,6 +90,8 @@
                                         class="fa fa-gavel"></i></th>
                                 <th onclick=" $('.cancelacc').prop('checked', $('.cancelacc').prop('checked' )==false);"
                                     style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-undo"></i></th>
+                                <th onclick=" $('.deleteacc').prop('checked', $('.deleteacc').prop('checked' )==false);"
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-trash"></i></th>
                             </tr>
                             <tr zippy="metarow">
 
@@ -99,6 +102,7 @@
                                 <td><input zippy="stateacc"  class="stateacc"  type="checkbox"></td>
                                 <td><input zippy="exeacc" class="exeacc" type="checkbox"></td>
                                 <td><input zippy="cancelacc" class="cancelacc" type="checkbox"></td>
+                                <td><input zippy="deleteacc" class="deleteacc" type="checkbox"></td>
                             </tr>
                         </table>
 
@@ -236,6 +240,15 @@
                                 </td>
                             </tr>
                             {{/issue}}
+                            {{#tecdoc}}
+                            <tr>
+                                <td>
+
+                                    <input class="form-check-input" type="checkbox" zippy="edittecdoc">
+                                    <label class="form-check-label mr-sm-2" for="edittecdoc"> Автозапчастини </label>
+                                </td>
+                            </tr>
+                            {{/tecdoc}}                            
                         </table>
                     </div>
                 </div>

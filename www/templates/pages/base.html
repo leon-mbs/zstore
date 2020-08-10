@@ -371,6 +371,7 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                       
                             {{#note}}
                             <li class="nav-item  has-treeview">
                                 <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
@@ -521,6 +522,33 @@
                             </li>
                             {{/issue}}
 
+                            {{#tecdoc}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Автозапчасти
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/Tecdoc/Options" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Настройки</p>
+                                        </a>
+                                    </li>
+                                   <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/Tecdoc/Search" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Поиск</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            {{/tecdoc}}
+
                         </ul>
 
                     </li>
@@ -597,31 +625,7 @@
     <div class="content-wrapper mb-4">
         <!-- Main content -->
         <section class="content">
-            <div class="row justify-content-center mt-2 mb-1">
-                <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
-
-                    {{#alerterror}}
-                    <div class="alert alert-danger" role="alert">
-                        {{{alerterror}}}
-                    </div>
-                    {{/alerterror}}
-                    {{#alertwarning}}
-                    <div class="alert alert-warning" role="alert">
-                        {{{alertwarning}}}
-                    </div>
-                    {{/alertwarning}}
-                    {{#alertinfo}}
-                    <div class="alert alert-info" role="alert">
-                        {{{alertinfo}}}
-                    </div>
-                    {{/alertinfo}}
-                    {{#alertsuccess}}
-                    <div class="alert alert-success" role="alert">
-                        {{{alertsuccess}}}
-                    </div>
-                    {{/alertsuccess}}
-                </div>
-            </div>
+         
             <div class="row">
                 <div class="col-12    ">
 
@@ -658,7 +662,7 @@
         "onclick": null,
         "showDuration": "300",
         "hideDuration": "1000",
-        "timeOut": "5000",
+        "timeOut": "2000",
         "extendedTimeOut": "1000",
         "showEasing": "swing",
         "hideEasing": "linear",
@@ -669,11 +673,12 @@
 
     $(function () {
         $('[data-toggle="popover"]').popover();
-        $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="tooltip"]').tooltip();
+        $('.select2').select2();
     });
 
 
-    $('.select2').select2();
+    
 
     $(window).scroll(function () {
         if ($(this).scrollTop() > 600) {

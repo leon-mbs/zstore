@@ -71,7 +71,7 @@ class EmployeeList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditRef('EmployeeList')) {
+        if (false == \App\ACL::checkDelRef('EmployeeList')) {
             return;
         }
 

@@ -277,7 +277,7 @@ class DocList extends \App\Pages\Base
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();
-        if (false == \App\ACL::checkEditDoc($doc, true)) {
+        if (false == \App\ACL::checkDelDoc($doc, true)) {
             return;
         }
 
