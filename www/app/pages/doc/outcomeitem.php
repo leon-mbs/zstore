@@ -277,7 +277,6 @@ class OutcomeItem extends \App\Pages\Base
                             $this->setWarn('thesamestore');
                         }
                         $indoc = Document::create('IncomeItem');
-                        $indoc->document_number->setText($indoc->nextNumber());
  
                         $indoc->headerdata['store'] = $tostore;
                         $indoc->headerdata['storename'] = $this->docform->tostore->getValueName();

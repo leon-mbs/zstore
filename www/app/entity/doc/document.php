@@ -60,7 +60,7 @@ class Document extends \ZCL\DB\Entity
      *
      * @param mixed $row
      */
-    protected function __construct($row = null) {
+    public function __construct($row = null) {
         parent::__construct($row);
     }
 
