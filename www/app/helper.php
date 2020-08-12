@@ -476,6 +476,7 @@ class Helper
         $data = array();
         if ($firm_id > 0) {
             $firm = \App\Entity\Firm::load($firm_id);
+            if($firm==null)$firm = \App\Entity\Firm::load(self::getDefFirm());
             $data = $firm->getData();
         } else {
             $firm = \App\Entity\Firm::load(self::getDefFirm());
