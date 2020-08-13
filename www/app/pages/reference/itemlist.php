@@ -316,7 +316,17 @@ class ItemList extends \App\Pages\Base
                 }
             }
         }
-
+  
+         //проверка  уникальности штрих кода
+        if (strlen($this->_item->bar_code) > 0) {
+            $code = Item::qstr($this->_item->bar_code);
+            $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and bar_code={$code} ");
+            if ($cnt > 0) {
+                 $this->setWarn('barcode_exists') ;
+            }
+        }
+  
+  
         $itemname = Item::qstr($this->_item->itemname);
         $code = Item::qstr($this->_item->item_code);
         $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and itemname={$itemname} and item_code={$code} ");

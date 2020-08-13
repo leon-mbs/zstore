@@ -626,7 +626,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->_doc->headerdata['firm_id'] = $this->form1->firm->getValue();
 
-        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData(  $this->_doc->headerdata["firm_id"],$this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];

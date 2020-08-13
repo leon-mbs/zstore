@@ -67,7 +67,7 @@ class Orders extends \App\Pages\Base
             'status_id' => $status,
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url,$modules['ocssl'], $fields);
+        $json = Helper::do_curl_request($url,  $fields);
         if ($json === false) {
             return;
         }
@@ -358,7 +358,7 @@ class Orders extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateorder&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url,$modules['ocssl'], $fields);
+        $json = Helper::do_curl_request($url,  $fields);
         if ($json === false) {
             return;
         }

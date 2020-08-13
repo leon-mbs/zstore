@@ -57,7 +57,7 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url,$modules['ocssl']);
+        $json = Helper::do_curl_request($url );
         if ($json === false) {
             return;
         }
@@ -121,7 +121,7 @@ class Items extends \App\Pages\Base
                 continue;
             }
             $elist[] = array('name' => $item->itemname,
-                'description' => $item->description,
+                
                 'sku' => $item->item_code,
                 'quantity' => \App\Helper::fqty($item->qty),
                 'price' => $item->getPrice($modules['ocpricetype'])
@@ -141,7 +141,7 @@ class Items extends \App\Pages\Base
         );
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url,$modules['ocssl'], $fields);
+        $json = Helper::do_curl_request($url,  $fields);
         if ($json === false) {
             return;
         }
@@ -179,7 +179,7 @@ class Items extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url,$modules['ocssl'], $fields);
+        $json = Helper::do_curl_request($url,  $fields);
         if ($json === false) {
             return;
         }
@@ -211,7 +211,7 @@ class Items extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url,$modules['ocssl'], $fields);
+        $json = Helper::do_curl_request($url,  $fields);
         if ($json === false) {
             return;
         }
@@ -232,7 +232,7 @@ class Items extends \App\Pages\Base
         $elist = array();
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
-        $json = Helper::do_curl_request($url,$modules['ocssl']);
+        $json = Helper::do_curl_request($url);
         if ($json === false) {
             return;
         }
@@ -258,7 +258,7 @@ class Items extends \App\Pages\Base
             $item = new Item();
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];
-            $item->description = $product['description'];
+           // $item->description = $product['description'];
             $item->manufacturer = $product['manufacturer'];
             $w = $product['weight'];
             $w = str_replace(',', '.', $w);

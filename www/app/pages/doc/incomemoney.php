@@ -127,9 +127,9 @@ class IncomeMoney extends \App\Pages\Base
         }
         if ($this->docform->mtype->getValue() == 0) {
 
-            $this->setError("noselincome");
+            $this->setWarn("noselincome");
         }
-
+              
         return !$this->isError();
     }
 

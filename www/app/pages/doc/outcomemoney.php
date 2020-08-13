@@ -123,7 +123,7 @@ class OutcomeMoney extends \App\Pages\Base
             $this->setError("noentersum");
         }
         if ($this->docform->mtype->getValue() == 0) {
-            $this->setError("noseloutcome");
+            $this->setWarn("noseloutcome");
         }
 
         return !$this->isError();

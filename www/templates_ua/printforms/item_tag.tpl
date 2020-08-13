@@ -1,4 +1,4 @@
-<div style="border: 1px solid solid #ccc;;">
+<div style="border: 1px   solid #ccc;;">
     <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{width}}}>
         <tr {{{fsize}}}>
             <td  colspan="2"  > {{name}}</td>
