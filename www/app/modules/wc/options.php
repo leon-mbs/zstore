@@ -44,9 +44,10 @@ class Options extends \App\Pages\Base
         $keys = $this->cform->keys->getText();
         $api = $this->cform->api->getValue();
         $site = trim($site, '/') . '/';
-       $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
+        $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
  
-
+        System::getSession()->wcssl =   $ssl;
+ 
         $woocommerce = new \Automattic\WooCommerce\Client(
             $site,
             $keyc,

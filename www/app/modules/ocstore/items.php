@@ -121,7 +121,7 @@ class Items extends \App\Pages\Base
                 continue;
             }
             $elist[] = array('name' => $item->itemname,
-                'description' => $item->description,
+                
                 'sku' => $item->item_code,
                 'quantity' => \App\Helper::fqty($item->qty),
                 'price' => $item->getPrice($modules['ocpricetype'])
@@ -258,7 +258,7 @@ class Items extends \App\Pages\Base
             $item = new Item();
             $item->item_code = $product['sku'];
             $item->itemname = $product['name'];
-            $item->description = $product['description'];
+           // $item->description = $product['description'];
             $item->manufacturer = $product['manufacturer'];
             $w = $product['weight'];
             $w = str_replace(',', '.', $w);
