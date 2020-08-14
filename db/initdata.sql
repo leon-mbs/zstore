@@ -64,7 +64,7 @@ INSERT INTO `metadata` VALUES(58, 1, 'Счет входящий', 'InvoiceCust',
 INSERT INTO `metadata` VALUES(59, 1, 'Счет-фактура', 'Invoice', 'Продажи', 0);
 INSERT INTO `metadata` VALUES(60, 5, 'Импорт', 'Import', '', 0);
 INSERT INTO `metadata` VALUES(61, 3, 'Движение  ТМЦ', 'StockList', 'Склад', 0);
-INSERT INTO `metadata` VALUES(62, 1, 'Кассовый чек', 'POSCheck', 'Продажи', 0);
+INSERT INTO `metadata` VALUES(62, 1, 'Кассовый чек', 'POSCheck', 'Продажи', 1);
 INSERT INTO `metadata` VALUES(63, 2, 'Товары в  пути', 'CustOrder', 'Закупки', 0);
 INSERT INTO `metadata` VALUES(65, 1, 'Оприходование ТМЦ', 'IncomeItem', 'Склад', 0);
 INSERT INTO `metadata` VALUES(75, 5, 'Экспорт', 'Export', '', 0);

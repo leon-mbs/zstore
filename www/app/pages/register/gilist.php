@@ -89,7 +89,7 @@ class GIList extends \App\Pages\Base
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
         $row->add(new Label('order', $doc->headerdata['order']));
-        $row->add(new Label('customer', $doc->customer_name));
+        $row->add(new Label('customer', $doc->headerdata['customer_name']));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('firm', $item->firm_name));
