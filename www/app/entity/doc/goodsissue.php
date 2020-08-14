@@ -54,7 +54,7 @@ class GoodsIssue extends Document
         $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "firm_name" => $firm['firm_name'],
-            "customer_name" => $this->customer_name,
+            "customer_name" => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
             "isfirm" => strlen($firm["firm_name"]) > 0,
             "iscontract" => $this->headerdata["contract_id"] > 0,
             "store_name" => $this->headerdata["store_name"],

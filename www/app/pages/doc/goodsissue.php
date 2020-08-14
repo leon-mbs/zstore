@@ -160,8 +160,13 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
-            $this->docform->customer->setText($this->_doc->customer_name);
-
+            
+            if($this->_doc->customer_id) {
+               $this->docform->customer->setText($this->_doc->customer_name);
+            } else {
+               $this->docform->customer->setText($this->_doc->headerdata['customer_name']);
+            }
+                        
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_orderid = $this->_doc->headerdata['order_id'];
@@ -259,7 +264,12 @@ class GoodsIssue extends \App\Pages\Base
                     if ($basedoc->meta_name == 'GoodsIssue') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
-                        $this->docform->customer->setText($basedoc->customer_name);
+                        if($basedoc->customer_id>0) {
+                           $this->docform->customer->setText($basedoc->customer_name);    
+                        } else {
+                           $this->docform->customer->setText($basedoc->headerdata['customer_name']);
+                        }
+                        
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -461,13 +471,13 @@ class GoodsIssue extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $this->goAnkor("");
+       
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         //   $this->_doc->order = $this->docform->order->getText();
-  
+        $this->_doc->headerdata['customer_name'] =  $this->docform->customer->getText()  ;
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
@@ -796,8 +806,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->nextNumber());
             $this->setError('nouniquedocnumber_created');
         }
-
-
+ 
         if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");
         }
@@ -805,11 +814,17 @@ class GoodsIssue extends \App\Pages\Base
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
         }
-        if ($this->docform->payment->getValue() == 0) {
-
+        $c = $this->docform->customer->getKey();        
+        $p  = $this->docform->payment->getValue();
+        if ($p == 0) {
             $this->setError("noselpaytype");
         }
-
+        if ($p == \App\Entity\MoneyFund::PREPAID && $c == 0) {
+            $this->setError("mustsel_cust");
+        }
+        if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
+            $this->setError("mustsel_cust");
+        }
 
         return !$this->isError();
     }
