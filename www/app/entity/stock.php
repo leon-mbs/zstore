@@ -73,11 +73,11 @@ class Stock extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
 
         $where = "store_id = {$store_id} and item_id = {$item_id}   ";
-
+        
         if ($partiontype == '2') {    //учет  отдельно  по  каждой цене
             $where .= " and partion = {$price}   ";
         }
-
+  
         if (strlen($snumber) > 0) {
             $where .= "  and  snumber =  " . $conn->qstr($snumber);
         }
@@ -165,13 +165,13 @@ class Stock extends \ZCL\DB\Entity
                     $last = new Stock();
                     $last->store_id = $store_id;
                     $last->item_id = $item->item_id;
-                    $last->partion = $item->price;
+                    $last->partion = 0;
                     $last->snumber = $item->snumber;
                     $last->sdate = $item->sdate;
 
 
                 } else {
-                    $last->partion = $item->price;
+                   // $last->partion = $item->price;
                 }
                 $last->save();
                 $last->quantity = $qty;

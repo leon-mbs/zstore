@@ -247,12 +247,16 @@ class Item extends \ZCL\DB\Entity
         return \App\Helper::fa($price);
     }
 
-    public function getLastPartion($store) {
+    public function getLastPartion($store=0, $snumber = "") {
         $conn = \ZDB\DB::getConnect();
         $sql = "  select coalesce(partion,0)  from  store_stock where partion >0 and    item_id = {$this->item_id}   ";
         if ($store > 0) {
             $sql = $sql . " and store_id=" . $store;
         }
+        if (strlen($snumber) > 0) {
+            $sql .= "  and  snumber =  " . $conn->qstr($snumber);
+        }        
+        
         $sql = $sql . " order  by  stock_id desc limit 0,1";
 
         return $conn->GetOne($sql);
