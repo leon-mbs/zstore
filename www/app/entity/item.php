@@ -254,7 +254,7 @@ class Item extends \ZCL\DB\Entity
             $sql = $sql . " and store_id=" . $store;
         }
         if (strlen($snumber) > 0) {
-            $where .= "  and  snumber =  " . $conn->qstr($snumber);
+            $sql .= "  and  snumber =  " . $conn->qstr($snumber);
         }        
         
         $sql = $sql . " order  by  stock_id desc limit 0,1";
