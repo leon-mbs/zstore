@@ -12,7 +12,8 @@ INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`, `branch_id`) VALUES (2, 
 INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  '????  ?i???', '', 0);
 
   
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:16:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:11:"partiontype";s:1:"1";s:4:"lang";s:2:"ua";s:6:"price1";s:17:"Р РѕР·РґСЂiР±РЅР°";s:6:"price2";s:12:"РћРїС‚РѕРІР°";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"defprice";s:2:"10";s:11:"autoarticle";i:1;s:6:"useset";i:0;s:10:"usesnumber";i:0;s:10:"usescanner";i:0;s:9:"useimages";i:0;s:9:"usebranch";i:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:23:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:10:"dateformat";s:5:"d.m.Y";s:11:"partiontype";s:1:"1";s:4:"curr";s:2:"ru";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"shopname";s:14:"Магазин";s:8:"ts_break";s:2:"60";s:8:"ts_start";s:5:"09:00";s:6:"ts_end";s:5:"18:00";s:11:"autoarticle";i:1;s:6:"useset";i:0;s:10:"usesnumber";i:0;s:10:"usescanner";i:1;s:9:"useimages";i:0;s:9:"usebranch";i:0;s:10:"allowminus";i:1;s:6:"useval";i:0;s:6:"capcha";i:0;}');
+
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:7:{s:6:"pwidth";s:0:"";s:9:"pricetype";s:6:"price1";s:11:"barcodetype";s:5:"EAN13";s:5:"pname";i:1;s:5:"pcode";i:0;s:8:"pbarcode";i:1;s:6:"pprice";i:0;}');
 

@@ -40,7 +40,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new TextInput('editinn'));
         $this->firmdetail->add(new TextInput('editaddress'));
         $this->firmdetail->add(new TextInput('editphone'));
-        $this->firmdetail->add(new TextInput('editshopname'));
+
         $this->firmdetail->add(new CheckBox('editdisabled'));
         $this->firmdetail->add(new TextInput('editbank'));
         $this->firmdetail->add(new TextInput('editbankacc'));
@@ -80,7 +80,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editinn->setText($this->_firm->inn);
         $this->firmdetail->editaddress->setText($this->_firm->address);
         $this->firmdetail->editphone->setText($this->_firm->phone);
-        $this->firmdetail->editshopname->setText($this->_firm->shopname);
+        
         $this->firmdetail->editbank->setText($this->_firm->bank);
         $this->firmdetail->editbankacc->setText($this->_firm->bankacc);
         $this->firmdetail->editlogo->setText($this->_firm->logo);
@@ -106,7 +106,7 @@ class FirmList extends \App\Pages\Base
         $this->_firm->inn = $this->firmdetail->editinn->getText();
         $this->_firm->address = $this->firmdetail->editaddress->getText();
         $this->_firm->phone = $this->firmdetail->editphone->getText();
-        $this->_firm->shopname = $this->firmdetail->editshopname->getText();
+        
         $this->_firm->bank = $this->firmdetail->editbank->getText();
         $this->_firm->bankacc = $this->firmdetail->editbankacc->getText();
         $this->_firm->logo = $this->firmdetail->editlogo->getText();

@@ -85,6 +85,7 @@ class ServiceAct extends Document
 
     public function generatePosReport() {
 
+        $common = \App\System::getOptions('common');
         $printer = \App\System::getOptions('printer');
         $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
 
@@ -96,7 +97,7 @@ class ServiceAct extends Document
         $header = array('printw' => $wp, 'date' => H::fd(time()),
             "document_number" => $this->document_number,
             "firm_name" => $firm['firm_name'],
-            "shopname" => strlen($firm['shopname']) > 0 ? $firm['shopname'] : false,
+            "shopname" => strlen($common['shopname']) > 0 ? $common['shopname'] : false,
             "address" => $firm['address'],
             "phone" => $firm['phone'],
             "customer_name" => $this->headerdata['customer_name'],

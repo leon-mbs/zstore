@@ -44,7 +44,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usesnumber'));
         $this->common->add(new CheckBox('useset'));
         $this->common->add(new CheckBox('useval'));
-
+        $this->common->add(new TextInput('shopname'));
         
         $this->common->add(new CheckBox('useimages'));
         $this->common->add(new CheckBox('usescanner'));
@@ -79,6 +79,7 @@ class Options extends \App\Pages\Base
         $this->common->price4->setText($common['price4']);
         $this->common->price5->setText($common['price5']);
         $this->common->defprice->setText($common['defprice']);
+        $this->common->shopname->setText($common['shopname']);
 
         $this->common->autoarticle->setChecked($common['autoarticle']);
         $this->common->useset->setChecked($common['useset']);
@@ -179,7 +180,7 @@ class Options extends \App\Pages\Base
         $common['price3'] = $this->common->price3->getText();
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
-        $common['defprice'] = $this->common->defprice->getText();
+        $common['shopname'] = $this->common->shopname->getText();
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();
         $common['ts_end'] = $this->common->ts_end->getText();

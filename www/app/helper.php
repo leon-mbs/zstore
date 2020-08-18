@@ -485,9 +485,7 @@ class Helper
   
         if ($branch_id > 0) {
             $branch = \App\Entity\Branch::load($branch_id);
-            if (strlen($branch->shopname) > 0) {
-                $data['shopname'] = $branch->shop_name;
-            }
+            
             if (strlen($branch->address) > 0) {
                 $data['address'] = $branch->address;
             }
