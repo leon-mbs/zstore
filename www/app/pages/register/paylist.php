@@ -210,7 +210,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and p.user_id=" . $author;
         }
 
-        $c = \App\ACL::getBranchConstraint( );
+        $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
             $where .= " and " . $c;
         }

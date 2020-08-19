@@ -22,7 +22,7 @@ class Firm extends \ZCL\DB\Entity
         $this->address = (string)($xml->address[0]);
         $this->inn = (string)($xml->inn[0]);
         $this->phone = (string)($xml->phone[0]);
-   
+
         $this->bank = (string)($xml->bank[0]);
         $this->bankacc = (string)($xml->bankacc[0]);
         $this->logo = (string)($xml->logo[0]);

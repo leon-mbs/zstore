@@ -45,9 +45,9 @@ class Options extends \App\Pages\Base
         $api = $this->cform->api->getValue();
         $site = trim($site, '/') . '/';
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
- 
-        System::getSession()->wcssl =   $ssl;
- 
+
+        System::getSession()->wcssl = $ssl;
+
         $woocommerce = new \Automattic\WooCommerce\Client(
             $site,
             $keyc,
@@ -55,7 +55,7 @@ class Options extends \App\Pages\Base
             [
                 'version' => 'wc/' . $api,
                 'wp_api' => true,
-                'verify_ssl'=>  $ssl==1
+                'verify_ssl' => $ssl == 1
             ]
         );
         try {

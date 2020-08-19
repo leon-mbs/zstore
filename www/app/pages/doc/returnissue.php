@@ -233,7 +233,7 @@ class ReturnIssue extends \App\Pages\Base
         }
 
 
-        $firm = H::getFirmData(  $this->_doc->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData($this->_doc->headerdata["firm_id"], $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();

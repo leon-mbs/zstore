@@ -33,7 +33,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new Label('userlogin', $this->user->userlogin));
         $form->add(new TextInput('email', $this->user->email));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
-        
+
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
@@ -61,7 +61,7 @@ class UserProfile extends \App\Pages\Base
 
         $this->user->email = $sender->email->getText();
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
-        
+
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
@@ -76,7 +76,7 @@ class UserProfile extends \App\Pages\Base
 
     //записать  пароль
     public function onsubmitpass($sender) {
-         
+
         $pass = $sender->userpassword->getText();
         $confirm = $sender->confirmpassword->getText();
 
@@ -108,10 +108,10 @@ class UserProfile extends \App\Pages\Base
 
             $n->dateshow = time();
             $n->message = H::l('passchanged', $this->user->username, $pass);
- 
+
             $n->save();
         }
- 
+
         $sender->userpassword->setText('');
         $sender->confirmpassword->setText('');
     }

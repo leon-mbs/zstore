@@ -28,9 +28,9 @@ class FirmList extends \App\Pages\Base
             System::setErrorMsg(H::l('onlyadminpage'));
             App::RedirectHome();
             return false;
-        }        
-        
-        
+        }
+
+
         $this->add(new Panel('firmtable'))->setVisible(true);
         $this->firmtable->add(new DataView('firmlist', new \ZCL\DB\EntityDataSource('\App\Entity\Firm', '', 'disabled,firm_name'), $this, 'firmlistOnRow'))->Reload();
         $this->firmtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -80,14 +80,14 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editinn->setText($this->_firm->inn);
         $this->firmdetail->editaddress->setText($this->_firm->address);
         $this->firmdetail->editphone->setText($this->_firm->phone);
-        
+
         $this->firmdetail->editbank->setText($this->_firm->bank);
         $this->firmdetail->editbankacc->setText($this->_firm->bankacc);
         $this->firmdetail->editlogo->setText($this->_firm->logo);
         $this->firmdetail->editstamp->setText($this->_firm->stamp);
         $this->firmdetail->editsign->setText($this->_firm->sign);
-        
-        
+
+
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
     }
 
@@ -106,7 +106,7 @@ class FirmList extends \App\Pages\Base
         $this->_firm->inn = $this->firmdetail->editinn->getText();
         $this->_firm->address = $this->firmdetail->editaddress->getText();
         $this->_firm->phone = $this->firmdetail->editphone->getText();
-        
+
         $this->_firm->bank = $this->firmdetail->editbank->getText();
         $this->_firm->bankacc = $this->firmdetail->editbankacc->getText();
         $this->_firm->logo = $this->firmdetail->editlogo->getText();

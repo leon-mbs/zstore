@@ -137,8 +137,8 @@ class DocList extends \App\Pages\Base
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
         $this->doclist->Reload();
-        
-        
+
+
     }
 
     public function doclistOnRow($row) {
@@ -147,7 +147,7 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('cust',  $doc->headerdata['customer_name']));
+        $row->add(new Label('cust', $doc->headerdata['customer_name']));
         $row->add(new Label('branch', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
@@ -166,9 +166,9 @@ class DocList extends \App\Pages\Base
 
         $row->add(new ClickLink('parentdoc', $this, 'basedOnClick'))->setVisible($doc->parent_id > 0);
         $row->parentdoc->setValue($doc->headerdata['parent_number']);
-     
+
         $row->add(new Label('hasscan'))->setVisible($doc->headerdata['scan'] > 0);
-        
+
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -273,7 +273,7 @@ class DocList extends \App\Pages\Base
     }
 
     public function deleteOnClick($sender) {
-         global $logger;  
+        global $logger;
         $this->docview->setVisible(false);
 
         $doc = $sender->owner->getDataItem();

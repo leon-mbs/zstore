@@ -424,7 +424,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
         $this->goAnkor("");
 
-  
+
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
@@ -525,12 +525,12 @@ class GoodsReceipt extends \App\Pages\Base
 
 
             if ($file['size'] > 0) {
-                $id=H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+                $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
                 $imagedata = getimagesize($file["tmp_name"]);
-                if($imagedata[0]>0) {
-                  $this->_doc->headerdata["scan"] = $id;
-                  $this->_doc->save();
-                }                
+                if ($imagedata[0] > 0) {
+                    $this->_doc->headerdata["scan"] = $id;
+                    $this->_doc->save();
+                }
             }
 
             //если  выполнен и оплачен

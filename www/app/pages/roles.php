@@ -239,7 +239,7 @@ class Roles extends \App\Pages\Base
             if ($item->editacc == true) {
                 $earr[] = $item->meta_id;
             }
-           if ($item->stateacc == true) {
+            if ($item->stateacc == true) {
                 $sarr[] = $item->meta_id;
             }
             if ($item->exeacc == true) {
@@ -392,7 +392,7 @@ class Roles extends \App\Pages\Base
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
         }
-        $sarr = @explode(',', $this->role->aclstate);        
+        $sarr = @explode(',', $this->role->aclstate);
         if (is_array($sarr)) {
             $item->stateacc = in_array($item->meta_id, $sarr);
         }

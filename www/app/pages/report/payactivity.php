@@ -70,7 +70,7 @@ class PayActivity extends \App\Pages\Base
     private function generateReport() {
 
         $mf_id = $this->filter->mf->getValue();
- 
+
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
@@ -79,8 +79,8 @@ class PayActivity extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $doc = "";
         $d = \App\Entity\Doc\Document::getConstraint();
-        if(strlen($d)>0){
-           $doc = " and document_id in ( select document_id from documents_view  where  {$d}) "; 
+        if (strlen($d) > 0) {
+            $doc = " and document_id in ( select document_id from documents_view  where  {$d}) ";
         }
         $sql = "
          SELECT  t.*,

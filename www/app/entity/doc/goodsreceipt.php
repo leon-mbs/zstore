@@ -14,7 +14,7 @@ class GoodsReceipt extends Document
 {
 
     public function generateReport() {
-        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
         $i = 1;
 
@@ -80,14 +80,14 @@ class GoodsReceipt extends Document
         $types = array();
         $common = \App\System::getOptions("common");
         if ($this->amount == 0) {
-           // return;
+            // return;
         }
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
             $total = $this->amount;
-            if($total>0){
+            if ($total > 0) {
                 if ($this->headerdata["disc"] > 0) {
                     $total = $total - $this->headerdata["disc"];
                 }
@@ -99,7 +99,7 @@ class GoodsReceipt extends Document
                 }
                 $k = $total / $this->amount;
                 $item->price = H::fa($item->price * $k); //пересчитываем  учетную цену
-            }else {
+            } else {
                 $item->price = 0;
             }
             $item->amount = $item->price * $item->quantity;

@@ -73,11 +73,11 @@ class Stock extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
 
         $where = "store_id = {$store_id} and item_id = {$item_id}   ";
-        
+
         if ($partiontype == '2') {    //учет  отдельно  по  каждой цене
             $where .= " and partion = {$price}   ";
         }
-  
+
         if (strlen($snumber) > 0) {
             $where .= "  and  snumber =  " . $conn->qstr($snumber);
         }
@@ -97,7 +97,7 @@ class Stock extends \ZCL\DB\Entity
             \App\Helper::log(serialize($stock));
             $stock->save();
         }
-        if ($partiontype == '1' && $price>0) {    //учет  по  последней цене
+        if ($partiontype == '1' && $price > 0) {    //учет  по  последней цене
             $stock->partion = $price;
             $stock->save();
         }
@@ -171,7 +171,7 @@ class Stock extends \ZCL\DB\Entity
 
 
                 } else {
-                   // $last->partion = $item->price;
+                    // $last->partion = $item->price;
                 }
                 $last->save();
                 $last->quantity = $qty;

@@ -13,8 +13,8 @@ class Pay extends \ZCL\DB\Entity
 {
 
     //типы платежей - затраты и доходы
-    const PAY_BASE_INCOME      = 1;     //доход от основной  деятельности
-   // const PAY_INVEST_INCOME    = 2;     //инвестиции
+    const PAY_BASE_INCOME = 1;     //доход от основной  деятельности
+    // const PAY_INVEST_INCOME    = 2;     //инвестиции
     const PAY_OTHER_INCOME     = 100;   //прочие доходы
     const PAY_CANCEL_CUST      = 5;    //Возврат  поставщику
     const PAY_BASE_OUTCOME     = 50;    //расходы основной  деятельности
@@ -96,7 +96,7 @@ class Pay extends \ZCL\DB\Entity
         $list = array();
         if ($type != 2) {
             $list[PAY::PAY_BASE_INCOME] = \App\Helper::l('pt_inprod');
-          //  $list[PAY::PAY_INVEST_INCOME] = \App\Helper::l('pt_ininv');
+            //  $list[PAY::PAY_INVEST_INCOME] = \App\Helper::l('pt_ininv');
             $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[PAY::PAY_CANCEL_CUST] = \App\Helper::l('pt_infromcust');
         }

@@ -45,7 +45,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('useset'));
         $this->common->add(new CheckBox('useval'));
         $this->common->add(new TextInput('shopname'));
-        
+
         $this->common->add(new CheckBox('useimages'));
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('usebranch'));
@@ -57,11 +57,11 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('price4'));
         $this->common->add(new TextInput('price5'));
         $this->common->add(new TextInput('defprice'));
-       
+
         $this->common->add(new TextInput('ts_break'));
-        $this->common->add(new TextInput('ts_start' ));
-        $this->common->add(new TextInput('ts_end' ));
-    
+        $this->common->add(new TextInput('ts_start'));
+        $this->common->add(new TextInput('ts_end'));
+
         $common = System::getOptions("common");
         if (!is_array($common)) {
             $common = array();
@@ -86,7 +86,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
-        
+
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
@@ -95,8 +95,8 @@ class Options extends \App\Pages\Base
         $this->common->useval->setChecked($common['useval']);
 
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
-        $this->common->ts_start->setText($common['ts_start']== null ? '09:00' : $common['ts_start']);
-        $this->common->ts_end->setText($common['ts_end']== null ? '18:00' : $common['ts_end']);
+        $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
+        $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
 
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
         $this->valform->add(new TextInput('valuan'));
@@ -119,7 +119,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new TextInput('pwidth'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
         $this->printer->add(new DropDownChoice('barcodetype', array('EAN13' => 'EAN-13', 'EAN8' => 'EAN-8', 'C128' => 'Code128', 'C39' => 'Code39'), 'EAN13'));
-        $this->printer->add(new DropDownChoice('pfontsize', array('12'=>'12','14'=>'14','16'=>'16','20'=>'20','24'=>'24','28'=>'28','36'=>'36',), '16'));
+        $this->printer->add(new DropDownChoice('pfontsize', array('12' => '12', '14' => '14', '16' => '16', '20' => '20', '24' => '24', '28' => '28', '36' => '36',), '16'));
         $this->printer->add(new CheckBox('pname'));
         $this->printer->add(new CheckBox('pcode'));
         $this->printer->add(new CheckBox('pbarcode'));
@@ -191,7 +191,7 @@ class Options extends \App\Pages\Base
         $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
-        
+
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
         $common['useval'] = $this->common->useval->isChecked() ? 1 : 0;
@@ -206,7 +206,7 @@ class Options extends \App\Pages\Base
         System::setCache('labels', null);
     }
 
-   
+
     public function saveValOnClick($sender) {
         $val = array();
         $val['valuan'] = $this->valform->valuan->getText();

@@ -105,7 +105,7 @@ class Document extends \ZCL\DB\Entity
 
 
         if (false == $this->checkUniqueNumber()) {
-            System::setWarnMsg(\App\Helper::l('nouniquedocnumber')  );
+            System::setWarnMsg(\App\Helper::l('nouniquedocnumber'));
         }
 
         if ($this->parent_id > 0) {
@@ -282,7 +282,7 @@ class Document extends \ZCL\DB\Entity
 
 
             // возвращаем бонусы
-            if ($this->headerdata['paydisc'] > 0 && $this->customer_id>0) {
+            if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);
                 if ($customer->discount > 0) {
                     return; //процент
@@ -738,7 +738,7 @@ class Document extends \ZCL\DB\Entity
             file_put_contents($f, $data);
 
             $mail = new \PHPMailer\PHPMailer\PHPMailer();
-            if($_config['smtp']['usesmtp']=='true') {
+            if ($_config['smtp']['usesmtp'] == 'true') {
                 $mail->isSMTP();
                 $mail->Host = $_config['smtp']['host'];
                 $mail->Port = $_config['smtp']['port'];
@@ -748,7 +748,7 @@ class Document extends \ZCL\DB\Entity
                 if ($_config['smtp']['tls'] == 'true') {
                     $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
                 }
-            
+
             }
             $mail->setFrom($_config['smtp']['user'], '');
             $mail->addAddress($customer->email);

@@ -106,7 +106,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
- 
+
         $this->add(new Panel('setpanel'))->setVisible(false);
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
         $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
@@ -122,7 +122,7 @@ class ItemList extends \App\Pages\Base
         } else {
             $this->addOnClick(null);
         }
- 
+
     }
 
     public function itemlistOnRow($row) {
@@ -233,7 +233,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemtable->itemlist->setSelectedRow($sender->getOwner());
         $this->itemtable->itemlist->Reload(false);
- 
+
         $this->updateman();
     }
 
@@ -293,7 +293,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
 
         $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
- 
+
         //проверка  уникальности артикула
         if (strlen($this->_item->item_code) > 0) {
             $code = Item::qstr($this->_item->item_code);
@@ -316,17 +316,17 @@ class ItemList extends \App\Pages\Base
                 }
             }
         }
-  
-         //проверка  уникальности штрих кода
+
+        //проверка  уникальности штрих кода
         if (strlen($this->_item->bar_code) > 0) {
             $code = Item::qstr($this->_item->bar_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and bar_code={$code} ");
             if ($cnt > 0) {
-                 $this->setWarn('barcode_exists') ;
+                $this->setWarn('barcode_exists');
             }
         }
-  
-  
+
+
         $itemname = Item::qstr($this->_item->itemname);
         $code = Item::qstr($this->_item->item_code);
         $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and itemname={$itemname} and item_code={$code} ");
@@ -334,7 +334,7 @@ class ItemList extends \App\Pages\Base
             $this->setError('itemnamecode_exists');
             return;
         }
- 
+
         //delete image
         if ($this->itemdetail->editdelimage->isChecked()) {
             if ($this->_item->image_id > 0) {
@@ -342,9 +342,9 @@ class ItemList extends \App\Pages\Base
             }
             $this->_item->image_id = 0;
         }
- 
+
         $this->_item->Save();
- 
+
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
             $imagedata = getimagesize($file["tmp_name"]);
@@ -368,7 +368,7 @@ class ItemList extends \App\Pages\Base
             $this->_item->image_id = $image->image_id;
             $this->_item->Save();
         }
- 
+
         $this->itemtable->itemlist->Reload(false);
 
         $this->itemtable->setVisible(true);
@@ -448,37 +448,36 @@ class ItemList extends \App\Pages\Base
     public function printOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
         $printer = \App\System::getOptions('printer');
-        $pwidth='style="width:40mm;"';
-        $pfs='style="font-size:16px;"';
-        
+        $pwidth = 'style="width:40mm;"';
+        $pfs = 'style="font-size:16px;"';
+
         if (strlen($printer['pwidth']) > 0) {
             $pwidth = 'style="width:' . $printer['pwidth'] . ' ";';
         }
         if (strlen($printer['pfontsize']) > 0) {
             $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
         }
- 
-        
-        
+
+
         $report = new \App\Report('item_tag.tpl');
-        $header = array('width' => $pwidth,'fsize' => $pfs);
+        $header = array('width' => $pwidth, 'fsize' => $pfs);
         if ($printer['pname'] == 1) {
-            
-            if(strlen($item->shortname)>0){
-               $header['name'] = $item->shortname;  
-            }else {
-               $header['name'] = $item->itemname;    
+
+            if (strlen($item->shortname) > 0) {
+                $header['name'] = $item->shortname;
+            } else {
+                $header['name'] = $item->itemname;
             }
-            
-         }
-        $header['isap']  = false;
+
+        }
+        $header['isap'] = false;
         if ($printer['pprice'] == 1) {
             $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
-            $header['isap']  = true;
+            $header['isap'] = true;
         }
         if ($printer['pcode'] == 1) {
             $header['article'] = $item->item_code;
-            $header['isap']  = true;
+            $header['isap'] = true;
         }
 
         if ($printer['pbarcode'] == 1) {
@@ -505,7 +504,9 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['manlist'] = array();
 
         foreach (Item::getManufacturers() as $man) {
-            if(strlen($man)==0)  continue;
+            if (strlen($man) == 0) {
+                continue;
+            }
 
             $this->_tvars['manlist'][] = array('mitem' => $man);
         }

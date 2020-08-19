@@ -18,7 +18,7 @@ class GoodsIssue extends Document
         $i = 1;
         $detail = array();
         $weight = 0;
-      
+
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -34,22 +34,22 @@ class GoodsIssue extends Document
             if ($item->weight > 0) {
                 $weight += $item->weight;
             }
-            
+
             $detail[] = array("no" => $i++,
                 "tovar_name" => $name,
                 "tovar_code" => $item->item_code,
                 "quantity" => H::fqty($item->quantity),
                 "msr" => $item->msr,
-               
+
                 "price" => H::fa($item->price),
                 "amount" => H::fa($item->quantity * $item->price)
             );
-             
+
         }
 
         $totalstr = H::sumstr($this->amount);
 
-        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
         $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
@@ -65,7 +65,7 @@ class GoodsIssue extends Document
             "order" => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
             "emp_name" => $this->headerdata["emp_name"],
             "document_number" => $this->document_number,
-          
+
             "totalstr" => $totalstr,
             "total" => H::fa($this->amount),
             "payed" => H::fa($this->payed),

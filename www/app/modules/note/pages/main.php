@@ -84,7 +84,7 @@ class Main extends \App\Pages\Base
         $this->editform->add(new TextArea("editdetail"));
 
         $this->editform->add(new ClickLink("editcancel", $this, "onTopicCancel"));
-        $this->editform->add(new DropDownChoice("editacctype", array(0 => H::l('tn_privat')  , 1 => H::l('tn_public')  , 2 => H::l('tn_edit')  ), 0));
+        $this->editform->add(new DropDownChoice("editacctype", array(0 => H::l('tn_privat'), 1 => H::l('tn_public'), 2 => H::l('tn_edit')), 0));
         $this->editform->add(new SubmitLink("editsave"))->onClick($this, "onTopicSave");
 
 
@@ -121,7 +121,7 @@ class Main extends \App\Pages\Base
         $this->editform->edittitle->setText('');
         $this->editform->editdetail->setText('');
         $this->editform->editacctype->setValue(0);
-        
+
         $this->editform->editdetail->setText('');
         $this->editform->edittags->setTags(array());
         $topic = new Topic();
@@ -142,7 +142,7 @@ class Main extends \App\Pages\Base
         $this->editform->edittags->setSuggestions($topic->getSuggestionTags());
         $this->editform->editdetail->setText($topic->detail);
         $this->editform->editacctype->setValue($topic->acctype);
-        
+
 
         $this->_tvars['editor'] = true;
     }
@@ -160,7 +160,7 @@ class Main extends \App\Pages\Base
         $topic->title = $this->editform->edittitle->getText();
         $topic->detail = $this->editform->editdetail->getText();
         $topic->acctype = $this->editform->editacctype->getValue();
-        
+
         if (strlen($topic->title) == 0) {
             $this->setError('notitle');
 
@@ -171,7 +171,7 @@ class Main extends \App\Pages\Base
         if ($this->_edited == 0) {
             $node = Node::load($nodeid);
             if ($topic->acctype > 0 && $node->ispublic != 1) {
-                $this->setError('tn_nopublictopic' );
+                $this->setError('tn_nopublictopic');
 
                 return;
             }
@@ -279,9 +279,11 @@ class Main extends \App\Pages\Base
     public function ReloadTree() {
 
         $this->tree->removeNodes();
-        $user = System::getUser() ;
+        $user = System::getUser();
         $w = "ispublic = 1 or  user_id={$user->user_id}  ";
-        if($user->rolename=='admins')  $w='';
+        if ($user->rolename == 'admins') {
+            $w = '';
+        }
         $itemlist = Node::find($w, "pid,mpath,title");
         if (count($itemlist) == 0) { //добавляем  корень
             $root = new Node();
@@ -296,14 +298,14 @@ class Main extends \App\Pages\Base
         $nodelist = array();
         foreach ($itemlist as $item) {
             $node = new \ZCL\BT\TreeNode($item->title, $item->node_id);
-          //  $node->tags = '<span class="badge badge-info badge-pill">6</span>';  //количество  топиков в ветке
+            //  $node->tags = '<span class="badge badge-info badge-pill">6</span>';  //количество  топиков в ветке
             $parentnode = @$nodelist[$item->pid];
-            if($item->ispublic==1) {
-              $node->icon='fa fa-users fa-xs';    
+            if ($item->ispublic == 1) {
+                $node->icon = 'fa fa-users fa-xs';
             } else {
-              $node->icon='fa fa-user fa-xs';  
+                $node->icon = 'fa fa-user fa-xs';
             }
-            
+
             $this->tree->addNode($node, $parentnode);
 
             $nodelist[$item->node_id] = $node;
@@ -420,15 +422,15 @@ class Main extends \App\Pages\Base
             return;
         }
 
-        $node =  Node::Load($this->tree->selectedNodeId());
+        $node = Node::Load($this->tree->selectedNodeId());
         $topic = Topic::load($this->clipboard[0]);
-        
+
         if ($topic->acctype > 0 && $node->ispublic != 1) {
-            $this->setError('tn_nopublictopic' );
+            $this->setError('tn_nopublictopic');
 
             return;
         }
-        
+
         if ($this->clipboard[2] == 'cut') {
 
             $topic->removeFromNode($this->clipboard[3]);
@@ -639,17 +641,19 @@ class Main extends \App\Pages\Base
                 $this->topicpaste->setVisible(false);
             }
         }
-        
-        $user = System::getUser() ;
-        if($user->rolename=='admins') return;
-        
-        if($topic->user_id != $user->user_id ) {
+
+        $user = System::getUser();
+        if ($user->rolename == 'admins') {
+            return;
+        }
+
+        if ($topic->user_id != $user->user_id) {
             $this->topicedit->setVisible(false);
             $this->topiccut->setVisible(false);
             $this->topictag->setVisible(false);
-            $this->topicdelete->setVisible(false);          
+            $this->topicdelete->setVisible(false);
         }
-        if($topic->acctype==2) {
+        if ($topic->acctype == 2) {
             $this->topicedit->setVisible(true);
         }
     }

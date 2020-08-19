@@ -59,7 +59,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editbalance'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
-        $this->itemdetail->add(new CheckBox('editeq',true));
+        $this->itemdetail->add(new CheckBox('editeq', true));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -87,9 +87,9 @@ class EqList extends \App\Pages\Base
         }
 
         $item = $sender->owner->getDataItem();
- 
+
         Equipment::delete($item->eq_id);
- 
+
         $this->itemtable->eqlist->Reload();
     }
 

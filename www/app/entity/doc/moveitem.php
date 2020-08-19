@@ -24,7 +24,7 @@ class MoveItem extends Document
 
             $listst = Stock::pickup($this->headerdata['store'], $item);
             if (count($listst) == 0) {
-               \App\System::setErrorMsg( H::l('noenaughtovar', $item->itemname));
+                \App\System::setErrorMsg(H::l('noenaughtovar', $item->itemname));
 
                 return false;
             }
@@ -32,19 +32,16 @@ class MoveItem extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->save();
-                
-                $sti =  Stock::getStock($this->headerdata['tostore'],$st->item_id,$st->partion,$st->snumber,$st->sdate,true)  ;
-                $sc = new Entry($this->document_id,   $st->quantity * $sti->partion,   $st->quantity);
+
+                $sti = Stock::getStock($this->headerdata['tostore'], $st->item_id, $st->partion, $st->snumber, $st->sdate, true);
+                $sc = new Entry($this->document_id, $st->quantity * $sti->partion, $st->quantity);
                 $sc->setStock($sti->stock_id);
                 $sc->save();
-                
-                
+
+
             }
-            
-            
-            
-            
-            
+
+
         }
 
         return true;
@@ -84,6 +81,5 @@ class MoveItem extends Document
         return 'MТ-000000';
     }
 
-    
 
 }

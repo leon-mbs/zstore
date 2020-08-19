@@ -65,7 +65,7 @@ class RetCustIssue extends Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
- 
+
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {

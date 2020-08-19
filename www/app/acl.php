@@ -44,7 +44,7 @@ class ACL
         }
 
         if ($showerror == true) {
-            System::setErrorMsg( H::l( 'aclnoaccessviewreport', self::$_metasdesc[$rep]));
+            System::setErrorMsg(H::l('aclnoaccessviewreport', self::$_metasdesc[$rep]));
             App::RedirectHome();
         }
         return false;
@@ -65,8 +65,8 @@ class ACL
             return true;
         }
 
-        System::setErrorMsg(H::l( 'aclnoaccessviewref', self::$_metasdesc[$ref]));
-        
+        System::setErrorMsg(H::l('aclnoaccessviewref', self::$_metasdesc[$ref]));
+
         App::RedirectHome();
         return false;
     }
@@ -86,12 +86,13 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg(H::l( 'aclnoaccesseditref', self::$_metasdesc[$ref]));
-             
+            System::setErrorMsg(H::l('aclnoaccesseditref', self::$_metasdesc[$ref]));
+
         }
         return false;
     }
-   //проверка  на  доступ  к   удалению из справочника
+
+    //проверка  на  доступ  к   удалению из справочника
     public static function checkDelRef($ref, $showerror = true) {
         if (System::getUser()->rolename == 'admins') {
             return true;
@@ -106,8 +107,8 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg(H::l( 'aclnoaccessdelref', self::$_metasdesc[$ref]));
-           
+            System::setErrorMsg(H::l('aclnoaccessdelref', self::$_metasdesc[$ref]));
+
         }
         return false;
     }
@@ -128,7 +129,7 @@ class ACL
         }
 
         if ($showerror == true) {
-            System::setErrorMsg(  H::l('aclnoaccessviewreg', self::$_metasdesc[$reg]));
+            System::setErrorMsg(H::l('aclnoaccessviewreg', self::$_metasdesc[$reg]));
             App::RedirectHome();
         }
         return false;
@@ -146,7 +147,7 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg( H::l('aclnoaccessviewdoc' , self::$_metasdesc[$doc->meta_name]));
+                System::setErrorMsg(H::l('aclnoaccessviewdoc', self::$_metasdesc[$doc->meta_name]));
                 if ($inreg == false) {
                     App::RedirectHome();
                 }
@@ -163,7 +164,7 @@ class ACL
 
 
         if ($showerror == true) {
-            System::setErrorMsg( H::l('aclnoaccessviewdoc' , self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg(H::l('aclnoaccessviewdoc', self::$_metasdesc[$doc->meta_name]));
 
             if ($inreg == false) {
                 App::RedirectHome();
@@ -184,9 +185,9 @@ class ACL
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-                
-                System::setErrorMsg( H::l('aclnoaccesseditdoc' , self::$_metasdesc[ $doc->meta_name]));
-                
+
+                System::setErrorMsg(H::l('aclnoaccesseditdoc', self::$_metasdesc[$doc->meta_name]));
+
                 if ($inreg == false) {
                     App::RedirectHome();
                 }
@@ -203,7 +204,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg( H::l('aclnoaccesseditdoc' , self::$_metasdesc[ $doc->meta_name]));
+            System::setErrorMsg(H::l('aclnoaccesseditdoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -211,7 +212,8 @@ class ACL
 
         return false;
     }
-  //проверка  на  доступ  к   удалению документа
+
+    //проверка  на  доступ  к   удалению документа
     public static function checkDelDoc($doc, $inreg = false, $showerror = true) {
         $user = System::getUser();
         if ($user->rolename == 'admins') {
@@ -223,9 +225,9 @@ class ACL
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-                
-                System::setErrorMsg( H::l('aclnoaccessdeldoc' , self::$_metasdesc[ $doc->meta_name]));
-                
+
+                System::setErrorMsg(H::l('aclnoaccessdeldoc', self::$_metasdesc[$doc->meta_name]));
+
                 if ($inreg == false) {
                     App::RedirectHome();
                 }
@@ -242,7 +244,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg( H::l('aclnoaccessdeldoc' , self::$_metasdesc[ $doc->meta_name]));
+            System::setErrorMsg(H::l('aclnoaccessdeldoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -272,7 +274,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-           System::setErrorMsg( H::l('aclnoaccessexedoc' , self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg(H::l('aclnoaccessexedoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -302,7 +304,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-           System::setErrorMsg( H::l('aclnoaccessstatedoc' , self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg(H::l('aclnoaccessstatedoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -310,6 +312,7 @@ class ACL
 
         return false;
     }
+
     /**
      * проверка  на  доступ  к отмене документа.
      *
@@ -330,7 +333,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-           System::setErrorMsg( H::l('aclnoaccesscanceldoc' , self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg(H::l('aclnoaccesscanceldoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
                 App::RedirectHome();
             }
@@ -356,9 +359,9 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-             System::setErrorMsg( H::l('aclnoaccessviewser' , self::$_metasdesc[$ser]));
+            System::setErrorMsg(H::l('aclnoaccessviewser', self::$_metasdesc[$ser]));
 
-            
+
             App::RedirectHome();
         }
         return false;
