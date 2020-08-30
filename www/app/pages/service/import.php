@@ -340,7 +340,7 @@ class Import extends \App\Pages\Base
             }
 
             if (strlen(trim($phone)) > 0) {
-                $c = Item::getFirst('pahone=' . Customer::qstr($phone));
+                $c = Customer::getFirst('phone=' . Customer::qstr($phone));
             }
 
             if ($c == null) {
