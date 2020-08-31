@@ -479,10 +479,10 @@ class Helper
             if ($firm == null) {
                 $firm = \App\Entity\Firm::load(self::getDefFirm());
             }
-            $data = $firm->getData();
+            if($firm!=null)$data = $firm->getData();
         } else {
             $firm = \App\Entity\Firm::load(self::getDefFirm());
-            $data = $firm->getData();
+            if($firm!=null)$data = $firm->getData();
         }
 
         if ($branch_id > 0) {
