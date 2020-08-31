@@ -341,7 +341,7 @@ class Helper
         }
         $st = \App\Entity\Firm::getList();
 
-        if (count($st) == 1) {
+        if (count($st) >0) {
             $keys = array_keys($st);
             return $keys[0];
         }
@@ -358,7 +358,7 @@ class Helper
             return $user->defstore;
         }
         $st = \App\Entity\Store::getList();
-        if (count($st) == 1) {
+        if (count($st) >0) {
             $keys = array_keys($st);
             return $keys[0];
         }
@@ -376,7 +376,7 @@ class Helper
         }
 
         $st = \App\Entity\MoneyFund::getList();
-        if (count($st) == 1) {
+        if (count($st) >0) {
             $keys = array_keys($st);
             return $keys[0];
         }
