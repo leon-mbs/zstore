@@ -201,7 +201,7 @@ class Warranty extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata["customer_name"] = $this->docform->customer->getText();
 
-        $firm = H::getFirmData(  $this->_doc->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData($this->_doc->headerdata["firm_id"], $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
 
@@ -264,14 +264,14 @@ class Warranty extends \App\Pages\Base
         return Item::findArrayAC($text);
     }
 
-    
-     public function OnChangeItem($sender) {
+
+    public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-        $this->editdetail->editwarranty->setText($item->warranty) ;
+        $this->editdetail->editwarranty->setText($item->warranty);
 
-        $this->updateAjax(array('editwarranty' ));
+        $this->updateAjax(array('editwarranty'));
     }
-  
-    
+
+
 }

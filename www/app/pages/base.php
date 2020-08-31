@@ -60,7 +60,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
-        
+
 
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
@@ -122,29 +122,29 @@ class Base extends \Zippy\Html\WebPage
     }
 
     //вывод ошибки,  используется   в дочерних страницах
-     
+
     public function setError($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);
-        System::setErrorMsg($msg );
+        System::setErrorMsg($msg);
     }
 
     public function setSuccess($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);
-        System::setSuccessMsg($msg );
+        System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);
-        System::setWarnMsg($msg );
+        System::setWarnMsg($msg);
     }
 
     public function setInfo($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);
-        System::setInfoMsg($msg );
+        System::setInfoMsg($msg);
     }
 
     final protected function isError() {
-        return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg(true)) > 0 ) ;
+        return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg(true)) > 0);
     }
 
     public function beforeRender() {
@@ -154,7 +154,7 @@ class Base extends \Zippy\Html\WebPage
 
     protected function afterRender() {
         $user = System::getUser();
-        
+
         if (strlen(System::getErrorMsg(true)) > 0) {
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'10000'})        ", true);
         }
@@ -167,13 +167,13 @@ class Base extends \Zippy\Html\WebPage
         if (strlen(System::getInfoMsg(true)) > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
-        
- 
+
+
         $this->setError('');
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');
-        
+
 
     }
 
@@ -183,7 +183,6 @@ class Base extends \Zippy\Html\WebPage
         \App\Application::$app->setReloadPage();
     }
 
-     
 
     /**
      * Вставляет  JavaScript  в  конец   выходного  потока
@@ -194,8 +193,8 @@ class Base extends \Zippy\Html\WebPage
         App::$app->getResponse()->addJavaScript($js, $docready);
     }
 
-    public function goDocView(){
-          $this->goAnkor('dankor');
+    public function goDocView() {
+        $this->goAnkor('dankor');
     }
 
 }

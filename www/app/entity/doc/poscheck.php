@@ -47,13 +47,14 @@ class POSCheck extends Document
             );
         }
 
+        $common = \App\System::getOptions('common');
 
-        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
         $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "firm_name" => $firm["firm_name"],
-            "shopname" => $firm["shopname"],
+            "shopname" => $common["shopname"],
             "address" => $firm["address"],
             "phone" => $firm["phone"],
             "customer_name" => strlen($this->customer_name) > 0 ? $this->customer_name : false,
@@ -78,7 +79,7 @@ class POSCheck extends Document
     }
 
     public function generatePosReport() {
-        
+
         $detail = array();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
@@ -99,14 +100,15 @@ class POSCheck extends Document
                 "amount" => H::fa($ser->quantity * $ser->price)
             );
         }
+        $common = \App\System::getOptions('common');
 
-        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
         $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
             "username" => \App\System::getUser()->username,
             "firm_name" => $firm["firm_name"],
-            "shopname" => strlen($firm["shopname"]) > 0 ? $firm["shopname"] : false,
+            "shopname" => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
             "address" => $firm["address"],
             "phone" => $firm["phone"],
             "inn" => $firm["inn"],
@@ -157,7 +159,7 @@ class POSCheck extends Document
                 $customer->save();
             }
         }
-        $payed   =  $this->payed;
+        $payed = $this->payed;
         if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
             $payed = $this->payed - $this->headerdata['exchange']; //без здачи
@@ -184,13 +186,13 @@ class POSCheck extends Document
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
-    
-  public function getRelationBased() {
+
+    public function getRelationBased() {
         $list = array();
         $list['Warranty'] = self::getDesc('Warranty');
-    
+
         return $list;
     }
-    
+
 
 }

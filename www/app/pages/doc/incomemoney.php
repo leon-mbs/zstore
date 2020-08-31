@@ -129,7 +129,7 @@ class IncomeMoney extends \App\Pages\Base
 
             $this->setWarn("noselincome");
         }
-              
+
         return !$this->isError();
     }
 

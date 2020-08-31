@@ -52,7 +52,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
-        $this->docform->add(new DropDownChoice('delivery', array(1 =>H::l('delself')  , 2 =>H::l('delboy')  , 3 =>H::l('delmail')  )))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('delivery', array(1 => H::l('delself'), 2 => H::l('delboy'), 3 => H::l('delmail'))))->onChange($this, 'OnDelivery');
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextInput('address'))->setVisible(false);
@@ -265,7 +265,7 @@ class Order extends \App\Pages\Base
 
 
             if ($sender->id == 'savedoc') {
-               $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
 

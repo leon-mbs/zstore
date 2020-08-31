@@ -136,8 +136,8 @@ class Task extends \App\Pages\Base
 
 
         $row->add(new Label('qty', $service->qty));
-        
-        
+
+
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -366,6 +366,5 @@ class Task extends \App\Pages\Base
         App::RedirectBack();
     }
 
- 
 
 }

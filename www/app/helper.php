@@ -340,14 +340,14 @@ class Helper
             return $user->deffirm;
         }
         $st = \App\Entity\Firm::getList();
-        
-        if (count($st) == 1) {
+
+        if (count($st) >0) {
             $keys = array_keys($st);
             return $keys[0];
         }
         return 0;
     }
-    
+
     /**
      * Возвращает склад  по  умолчанию
      *
@@ -358,7 +358,7 @@ class Helper
             return $user->defstore;
         }
         $st = \App\Entity\Store::getList();
-        if (count($st) == 1) {
+        if (count($st) >0) {
             $keys = array_keys($st);
             return $keys[0];
         }
@@ -376,7 +376,7 @@ class Helper
         }
 
         $st = \App\Entity\MoneyFund::getList();
-        if (count($st) == 1) {
+        if (count($st) >0) {
             $keys = array_keys($st);
             return $keys[0];
         }
@@ -472,22 +472,22 @@ class Helper
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData( $firm_id = 0,$branch_id = 0) {
+    public static function getFirmData($firm_id = 0, $branch_id = 0) {
         $data = array();
         if ($firm_id > 0) {
             $firm = \App\Entity\Firm::load($firm_id);
-            if($firm==null)$firm = \App\Entity\Firm::load(self::getDefFirm());
-            $data = $firm->getData();
+            if ($firm == null) {
+                $firm = \App\Entity\Firm::load(self::getDefFirm());
+            }
+            if($firm!=null)$data = $firm->getData();
         } else {
             $firm = \App\Entity\Firm::load(self::getDefFirm());
-            $data = $firm->getData();
+            if($firm!=null)$data = $firm->getData();
         }
-  
+
         if ($branch_id > 0) {
             $branch = \App\Entity\Branch::load($branch_id);
-            if (strlen($branch->shopname) > 0) {
-                $data['shopname'] = $branch->shop_name;
-            }
+
             if (strlen($branch->address) > 0) {
                 $data['address'] = $branch->address;
             }
@@ -529,8 +529,10 @@ class Helper
         global $_config;
 
         $label = trim($label);
-        if(strlen($label)==0)  return '';
-        
+        if (strlen($label) == 0) {
+            return '';
+        }
+
         $labels = System::getCache('labels');
         if ($labels == null) {
             $lang = $_config['common']['lang'];

@@ -88,27 +88,26 @@ class Order extends \App\Entity\Doc\Document
     }
 
     public function supportedExport() {
-        return array(self::EX_EXCEL,   self::EX_POS);
+        return array(self::EX_EXCEL, self::EX_POS);
     }
-    
-    
-   public function generatePosReport() {
-        
+
+
+    public function generatePosReport() {
+
         $detail = array();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-      
 
             $detail[] = array(
                 "tovar_name" => $item->itemname,
                 "quantity" => H::fqty($item->quantity),
-                "price" => H::fa($item->price), 
+                "price" => H::fa($item->price),
                 "amount" => H::fa($item->quantity * $item->price)
             );
         }
- 
-        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+
+        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
         $header = array('date' => H::fd($this->document_date),
             "_detail" => $detail,
@@ -127,5 +126,5 @@ class Order extends \App\Entity\Doc\Document
 
         return $html;
     }
-    
+
 }

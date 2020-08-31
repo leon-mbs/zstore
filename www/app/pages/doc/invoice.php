@@ -331,12 +331,12 @@ class Invoice extends \App\Pages\Base
             }
             $this->_doc->save();
             if ($sender->id == 'savedoc') {
-               $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
-                }  
+                }
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             }
 

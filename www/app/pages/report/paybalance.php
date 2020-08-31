@@ -129,7 +129,7 @@ class PayBalance extends \App\Pages\Base
 
         $total = $tin - $tout;
 
-         $header = array(
+        $header = array(
             'datefrom' => \App\Helper::fd($from),
             'dateto' => \App\Helper::fd($to),
             "_detail" => $detail,
@@ -137,9 +137,9 @@ class PayBalance extends \App\Pages\Base
             'tin' => H::fa($tin),
             'tout' => H::fa($tout),
             'total' => H::fa($total)
-        );       
-        
-       $sql = " 
+        );
+
+        $sql = " 
          SELECT   coalesce(0- sum(amount),0)  as am   FROM paylist 
              WHERE   
               amount < 0 
@@ -150,7 +150,7 @@ class PayBalance extends \App\Pages\Base
         ";
 
         $OP = $conn->GetOne($sql); //все затраты
-  
+
         $sql = "
           select    sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as tvc
               from `entrylist_view`  e
@@ -163,19 +163,21 @@ class PayBalance extends \App\Pages\Base
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                
         ";
-                
+
         $fpr = $conn->GetRow($sql); //выручка
-        
-        
-        $header['tu'] =  H::fa($fpr['summa'] - $fpr['tvc']);
-        $header['tvc'] =  H::fa(  $fpr['tvc']);
-        $header['OP'] =  H::fa($OP - $fpr['tvc']);
-        $header['PR'] =  H::fa($header['tu'] - $header['OP']);
-        
+
+
+        $header['tu'] = H::fa($fpr['summa'] - $fpr['tvc']);
+        $header['tvc'] = H::fa($fpr['tvc']);
+        $header['OP'] = H::fa($OP - $fpr['tvc']);
+        $header['PR'] = H::fa($header['tu'] - $header['OP']);
+
         $inv = 0;
-     
-        foreach(\App\Entity\Equipment::find('disabled<>1')  as $oc)  {
-           if($oc->balance >0 )  $inv  +=  $oc->balance ;
+
+        foreach (\App\Entity\Equipment::find('disabled<>1') as $oc) {
+            if ($oc->balance > 0) {
+                $inv += $oc->balance;
+            }
         }
         $sql = " 
          SELECT   coalesce(  sum(partion),0)     FROM store_stock 
@@ -186,18 +188,20 @@ class PayBalance extends \App\Pages\Base
         ";
 
         $amount = $conn->GetOne($sql); //ТМЦ  на складах       
-        
-        if($amount >0 )  $inv  += $amount ;
-        
-        $header['isinv']  = false;
-        if($inv>0){
-             $header['isinv']  = true;
-             $header['inv']  = H::fa($inv);
-             $header['ROI']  = round((($header['tu'] - $header['OP'])/$inv)*100);
+
+        if ($amount > 0) {
+            $inv += $amount;
         }
-        
+
+        $header['isinv'] = false;
+        if ($inv > 0) {
+            $header['isinv'] = true;
+            $header['inv'] = H::fa($inv);
+            $header['ROI'] = round((($header['tu'] - $header['OP']) / $inv) * 100);
+        }
+
         $header['isinv'] = $header['PR'] > 0;
-        
+
         $report = new \App\Report('report/paybalance.tpl');
 
         $html = $report->generate($header);

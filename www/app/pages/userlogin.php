@@ -37,8 +37,7 @@ class UserLogin extends \Zippy\Html\WebPage
         //проверка  новой версии        
         $this->_tvars['isnewversion'] = false;
 
-   
-        
+
         $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
         $v = @json_decode($v, true);
         if (strlen($v['version']) > 0) {
@@ -128,7 +127,6 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['alerterror'] = $msg;
     }
 
-   
 
     private function counter() {
         $this->cntlogin++;

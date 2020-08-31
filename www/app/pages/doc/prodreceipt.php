@@ -355,11 +355,11 @@ class ProdReceipt extends \App\Pages\Base
         $id = $sender->getKey();
         $item = \App\Entity\Item::load($id);
         $price = 0;
-        if($item->zarp >0){
-           $price += $item->zarp; 
+        if ($item->zarp > 0) {
+            $price += $item->zarp;
         }
         $ilist = \App\Entity\ItemSet::find("pitem_id=" . $id);
-        
+
         if (count($ilist) > 0) {
             foreach ($ilist as $iset) {
                 $it = \App\Entity\Item::load($iset->item_id);

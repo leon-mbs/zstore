@@ -13,7 +13,7 @@ class Invoice extends \App\Entity\Doc\Document
 
     public function generateReport() {
 
-        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
 
         $i = 1;
@@ -108,7 +108,7 @@ class Invoice extends \App\Entity\Doc\Document
 
 
     protected function getEmailBody() {
-        $firm = H::getFirmData(  $this->headerdata["firm_id"],$this->branch_id);
+        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
 
         $header = array();
@@ -131,8 +131,8 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_PDF,self::EX_MAIL);
+        return array(self::EX_EXCEL, self::EX_PDF, self::EX_MAIL);
     }
-    
-    
+
+
 }

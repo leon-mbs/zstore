@@ -116,41 +116,39 @@ class System
         return null;
     }
 
-    
-    
-    
-    public static function setSuccessMsg($msg ) {
-        Session::getSession()->smsg =   $msg;
+
+    public static function setSuccessMsg($msg) {
+        Session::getSession()->smsg = $msg;
     }
-   
-    public static function getSuccesMsg( ) {
-        return   Session::getSession()->smsg;
+
+    public static function getSuccesMsg() {
+        return Session::getSession()->smsg;
     }
 
     public static function setErrorMsg($msg) {
-        Session::getSession()->emsg =  $msg;
+        Session::getSession()->emsg = $msg;
     }
 
-    public static function getErrorMsg($popup=false) {
-         return   Session::getSession()->emsg;
+    public static function getErrorMsg($popup = false) {
+        return Session::getSession()->emsg;
     }
 
-    public static function setWarnMsg($msg ) {
-        Session::getSession()->wmsg =   $msg;
-         
+    public static function setWarnMsg($msg) {
+        Session::getSession()->wmsg = $msg;
+
     }
 
-    public static function getWarnMsg( ) {
-         return   Session::getSession()->wmsg;
+    public static function getWarnMsg() {
+        return Session::getSession()->wmsg;
     }
 
-    public static function setInfoMsg($msg,$popup=false) {
-        Session::getSession()->imsg  = $msg;
-         
+    public static function setInfoMsg($msg, $popup = false) {
+        Session::getSession()->imsg = $msg;
+
     }
 
-    public static function getInfoMsg( ) {
-         return   Session::getSession()->imsg;
+    public static function getInfoMsg() {
+        return Session::getSession()->imsg;
     }
 
 

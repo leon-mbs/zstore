@@ -46,7 +46,7 @@ class OutcomeItem extends \App\Pages\Base
             foreach ($rs as $it) {
                 $tostore[$it['store_id']] = $it['branch_name'] . ", " . $it['storename'];
             }
-        }  
+        }
 
 
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
@@ -55,7 +55,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-        
+
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -226,7 +226,7 @@ class OutcomeItem extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-  
+
 
         $this->_doc->notes = $this->docform->notes->getText();
 
@@ -277,7 +277,7 @@ class OutcomeItem extends \App\Pages\Base
                             $this->setWarn('thesamestore');
                         }
                         $indoc = Document::create('IncomeItem');
- 
+
                         $indoc->headerdata['store'] = $tostore;
                         $indoc->headerdata['storename'] = $this->docform->tostore->getValueName();
                         $indoc->branch_id = 0;
@@ -287,7 +287,7 @@ class OutcomeItem extends \App\Pages\Base
                         }
                         $indoc->document_number = $indoc->nextNumber($indoc->branch_id);
                         $indoc->user_id = 0;
-                        $indoc->notes =  H::l('incomebasedon', $this->_doc->document_number );
+                        $indoc->notes = H::l('incomebasedon', $this->_doc->document_number);
 
 
                         $items = array();
@@ -312,7 +312,7 @@ class OutcomeItem extends \App\Pages\Base
                             $indoc->updateStatus(Document::STATE_EXECUTED);
                         }
                         if ($indoc->document_id > 0) {
-                            $this->setSuccess("createddoc",$indoc->document_number);
+                            $this->setSuccess("createddoc", $indoc->document_number);
                         }
 
                     }
@@ -322,7 +322,6 @@ class OutcomeItem extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-         
 
             $conn->CommitTrans();
             App::RedirectBack();

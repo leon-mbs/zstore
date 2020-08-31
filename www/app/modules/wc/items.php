@@ -112,7 +112,7 @@ class Items extends \App\Pages\Base
                 continue;
             }
             $elist[] = array('name' => $item->itemname,
-              //  'short_description' => $item->description,
+                //  'short_description' => $item->description,
                 'sku' => $item->item_code,
                 'manage_stock' => true,
                 'stock_quantity' => (string)\App\Helper::fqty($item->qty),
@@ -286,7 +286,7 @@ class Items extends \App\Pages\Base
             $item = new Item();
             $item->item_code = $product->sku;
             $item->itemname = $product->name;
-         //   $item->description = $product->short_description;
+            //   $item->description = $product->short_description;
 
             if ($modules['wcpricetype'] == 'price1') {
                 $item->price1 = $product->price;

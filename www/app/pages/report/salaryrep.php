@@ -59,7 +59,7 @@ class SalaryRep extends \App\Pages\Base
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
- 
+
 
         $this->detail->preview->setText($html, true);
     }
@@ -96,16 +96,16 @@ class SalaryRep extends \App\Pages\Base
 
             foreach ($doc->unpackDetails('detaildata') as $emp) {
 
-                if ($emp_id > 0  && $emp->amount>0) {
+                if ($emp_id > 0 && $emp->amount > 0) {
                     if ($emp->employee_id != $emp_id) {
                         continue;
                     }
-                    if(is_array($detail[$doc->headerdata['year'] . $doc->headerdata['month']])){
-                       $detail[$doc->headerdata['year'] . $doc->headerdata['month']]['v'] += $emp->amount;
-                    }  else {
-                       $detail[$doc->headerdata['year'] . $doc->headerdata['month']] = array('k' => $doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'], 'v' => $emp->amount);   
+                    if (is_array($detail[$doc->headerdata['year'] . $doc->headerdata['month']])) {
+                        $detail[$doc->headerdata['year'] . $doc->headerdata['month']]['v'] += $emp->amount;
+                    } else {
+                        $detail[$doc->headerdata['year'] . $doc->headerdata['month']] = array('k' => $doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'], 'v' => $emp->amount);
                     }
-                    
+
 
                 } else {
                     if ($emp->amount > 0) {

@@ -53,9 +53,9 @@ class Options extends \App\Pages\Base
             'username' => $apiname,
             'key' => $key
         );
-        System::getSession()->ocssl =   $ssl;
- 
-        $json = Helper::do_curl_request($url,  $fields);
+        System::getSession()->ocssl = $ssl;
+
+        $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
 
             return;
@@ -88,13 +88,13 @@ class Options extends \App\Pages\Base
             if (strlen($data['token']) > 0) { //версия 2.3
                 System::getSession()->octoken = "token=" . $data['token'];
             }
- 
+
 
             $this->setSuccess('connected');
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
-            $json = Helper::do_curl_request($url,  array());
+            $json = Helper::do_curl_request($url, array());
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
@@ -105,7 +105,7 @@ class Options extends \App\Pages\Base
             }
             //загружаем список категорий
             $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
-            $json = Helper::do_curl_request($url,  array());
+            $json = Helper::do_curl_request($url, array());
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {

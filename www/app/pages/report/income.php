@@ -131,7 +131,7 @@ class Income extends \App\Pages\Base
         ";
         }
 
-        $total=0;
+        $total = 0;
         $rs = $conn->Execute($sql);
 
         foreach ($rs as $row) {
@@ -142,17 +142,17 @@ class Income extends \App\Pages\Base
                 "qty" => H::fqty($row['qty']),
                 "summa" => H::fa($row['summa'])
             );
-          $total += $row['summa'];            
+            $total += $row['summa'];
         }
-        
- 
+
+
         $header = array('datefrom' => H::fd($from),
             "_detail" => $detail,
             'dateto' => H::fd($to)
         );
-        
+
         $header['total'] = H::fa($total);
-        
+
         if ($type == 1) {
             $header['_type1'] = true;
             $header['_type2'] = false;

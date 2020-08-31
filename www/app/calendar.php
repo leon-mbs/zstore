@@ -13,7 +13,7 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
         $id = $this->getAttribute('id');
         $url = $this->owner->getURLNode() . "::" . $this->id;
         $lang = 'ru';
-        if($_config['common']['lang'] =='ua'){
+        if ($_config['common']['lang'] == 'ua') {
             $lang = 'ua';
         }
 

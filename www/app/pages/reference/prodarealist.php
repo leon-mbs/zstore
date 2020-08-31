@@ -25,7 +25,7 @@ class ProdAreaList extends \App\Pages\Base
         }
 
         $this->add(new Panel('patable'))->setVisible(true);
-        $this->patable->add(new DataView('palist', new \ZCL\DB\EntityDataSource('\App\Entity\ProdArea','','pa_name'), $this, 'palistOnRow'))->Reload();
+        $this->patable->add(new DataView('palist', new \ZCL\DB\EntityDataSource('\App\Entity\ProdArea', '', 'pa_name'), $this, 'palistOnRow'))->Reload();
         $this->patable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('padetail'))->setVisible(false);
         $this->padetail->add(new TextInput('editpa_name'));

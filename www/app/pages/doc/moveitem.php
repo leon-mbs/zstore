@@ -39,11 +39,11 @@ class MoveItem extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-  
+
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-         
+
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -214,7 +214,7 @@ class MoveItem extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-  
+
         $this->_doc->notes = $this->docform->notes->getText();
 
 
@@ -255,12 +255,9 @@ class MoveItem extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
 
-   
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
-    
 
 
             $conn->CommitTrans();

@@ -16,10 +16,10 @@ class Helper
         $keyc = $modules['wckeyc'];
         $keys = $modules['wckeys'];
         $api = $modules['wcapi'];
-      //  $ssl = $modules['wcssl'];
-      
-        $ssl = \App\System::getSession()->wcssl==1;
-       
+        //  $ssl = $modules['wcssl'];
+
+        $ssl = \App\System::getSession()->wcssl == 1;
+
         $site = trim($site, '/') . '/';
 
         $woocommerce = new \Automattic\WooCommerce\Client(
@@ -28,7 +28,7 @@ class Helper
             $keys,
             [
                 'version' => 'wc/' . $api,
-                'verify_ssl'=>  $ssl
+                'verify_ssl' => $ssl
             ]
         );
 

@@ -42,11 +42,11 @@ class TaskList extends \App\Pages\Base
 
         $this->_taskds = new EDS('\App\Entity\Doc\Document', "", "document_date desc");
 
-        $this->add(new ClickLink('tabc', $this,'onTab'));
-        $this->add(new ClickLink('tabs', $this,'onTab'));
-        $this->add(new Panel('tasktab')) ;
-        $this->add(new Panel('caltab')) ;        
-        
+        $this->add(new ClickLink('tabc', $this, 'onTab'));
+        $this->add(new ClickLink('tabs', $this, 'onTab'));
+        $this->add(new Panel('tasktab'));
+        $this->add(new Panel('caltab'));
+
         $this->tasktab->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
         $this->tasktab->tasklist->setSelectedClass('table-success');
 
@@ -62,9 +62,6 @@ class TaskList extends \App\Pages\Base
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
 
 
-       
-        
-        
         $this->tasktab->add(new Panel("statuspan"))->setVisible(false);
 
         $this->tasktab->statuspan->add(new Form('statusform'));
@@ -82,21 +79,21 @@ class TaskList extends \App\Pages\Base
         $this->updateTasks();
         $this->updateCal();
         $this->tasktab->add(new ClickLink('csv', $this, 'oncsv'));
-        
-        $this->onTab($this->tabs);           
+
+        $this->onTab($this->tabs);
     }
 
-  public  function onTab($sender){
-        
-        $this->_tvars['tabcbadge']  = $sender->id =='tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;
-        $this->_tvars['tabsbadge']  = $sender->id =='tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  " ;;
-       
-        $this->caltab->setVisible($sender->id =='tabc');
-        $this->tasktab->setVisible($sender->id =='tabs');
-        
-     }    
-     
-    
+    public function onTab($sender) {
+
+        $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+
+        $this->caltab->setVisible($sender->id == 'tabc');
+        $this->tasktab->setVisible($sender->id == 'tabs');
+
+    }
+
+
     public function tasklistOnRow($row) {
         $task = $row->getDataItem();
 

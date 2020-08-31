@@ -236,17 +236,17 @@ class IssueList extends \App\Pages\Base
             $this->setError('noselproject');
             return;
         }
-        $emp = User::load($this->_issue->user_id) ;
-        
-        if($emp->rolename != 'admins') {
-            $pr = Project::load($this->_issue->project_id) ;
-            if(in_array($this->_issue->user_id,$pr->getUsers())== false){
+        $emp = User::load($this->_issue->user_id);
+
+        if ($emp->rolename != 'admins') {
+            $pr = Project::load($this->_issue->project_id);
+            if (in_array($this->_issue->user_id, $pr->getUsers()) == false) {
                 $this->setError('empnoaccess');
-                return;            
+                return;
             }
-        }        
-        
-        
+        }
+
+
         $idnew = $this->_issue->issue_id == 0;
         $this->_issue->save();
         if ($idnew) {

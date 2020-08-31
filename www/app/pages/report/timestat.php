@@ -27,15 +27,15 @@ class TimeStat extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
         $dt = new \Carbon\Carbon;
-       
+
         $from = $dt->startOfMonth()->timestamp;
         $to = $dt->endOfMonth()->timestamp;
 
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));
         $this->filter->add(new DropDownChoice('ttype', TimeItem::getTypeTime(), TimeItem::TIME_WORK));
-  
-        
+
+
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('excel', "tsreport"));
         $this->detail->add(new RedirectLink('pdf', "tsreport"));
@@ -60,7 +60,7 @@ class TimeStat extends \App\Pages\Base
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
-      
+
 
         $this->detail->preview->setText($html, true);
     }
@@ -70,29 +70,29 @@ class TimeStat extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
         $type = $this->filter->ttype->getValue();
-        
+
         $conn = \ZDB\DB::getConnect();
-         $_from = $conn->DBDate($from) ;
-         $_to = $conn->DBDate($to) ;
+        $_from = $conn->DBDate($from);
+        $_to = $conn->DBDate($to);
 
         $detail = array();
-        $total =0;
+        $total = 0;
         $sql = "select emp_name,sum(tm) as tm  from (select  emp_name,  (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet_view where  t_type = {$type} and  t_start>={$_from} and   t_start<={$_to}  and  disabled <> 1) t  group by emp_name order by emp_name ";
-        $stat  = $conn->Execute($sql)  ;
-        foreach($stat  as $row)  {
-         
-            $tm = number_format($row['tm']/3600, 2, '.', '');
-            $detail[] = array('emp_name'=>$row['emp_name'],'tm'=>$tm  );
-            $total +=  $tm;
+        $stat = $conn->Execute($sql);
+        foreach ($stat as $row) {
+
+            $tm = number_format($row['tm'] / 3600, 2, '.', '');
+            $detail[] = array('emp_name' => $row['emp_name'], 'tm' => $tm);
+            $total += $tm;
         }
-     
+
 
         $header = array(
             "_detail" => array_values($detail),
             'from' => \App\Helper::fd($from),
-            'to' => \App\Helper::fd($to), 
-            'total' => number_format($total, 2, '.', '')  , 
- 
+            'to' => \App\Helper::fd($to),
+            'total' => number_format($total, 2, '.', ''),
+
             "typename" => $this->filter->ttype->getValueName()
         );
 
@@ -104,6 +104,5 @@ class TimeStat extends \App\Pages\Base
         return $html;
     }
 
-   
-  
+
 }

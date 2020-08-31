@@ -282,18 +282,18 @@ class IncomeItem extends \App\Pages\Base
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-            
+
 
             if ($file['size'] > 0) {
                 H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
-                $id=H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
+                $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
                 $imagedata = getimagesize($file["tmp_name"]);
-                if($imagedata[0]>0) {
-                  $this->_doc->headerdata["scan"] = $id;
-                  $this->_doc->save();
-                }                
+                if ($imagedata[0] > 0) {
+                    $this->_doc->headerdata["scan"] = $id;
+                    $this->_doc->save();
+                }
             }
-              
+
             $conn->CommitTrans();
             App::RedirectBack();
         } catch (\Exception $ee) {
