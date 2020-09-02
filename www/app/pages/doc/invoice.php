@@ -54,6 +54,7 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
+        $this->docform->add(new TextInput('customer_print'));
 
         $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()))->onChange($this, 'OnPayment');
 
@@ -121,6 +122,7 @@ class Invoice extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
+            $this->docform->customer_print->setText($this->_doc->headerdata['customer_print']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
             $this->_prevcust = $this->_doc->customer_id;
@@ -310,6 +312,7 @@ class Invoice extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
+        $this->_doc->headerdata['customer_print'] = $this->docform->customer_print->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
