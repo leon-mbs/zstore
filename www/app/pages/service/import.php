@@ -41,6 +41,8 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colprice", $cols));
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
+        $form->add(new DropDownChoice("colbrand", $cols));
+        $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
 
         $form->onSubmit($this, "onImport");
@@ -63,6 +65,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("ncolqty", $cols));
         $form->add(new DropDownChoice("ncolprice", $cols));
         $form->add(new DropDownChoice("ncolmsr", $cols));
+        $form->add(new CheckBox("npassfirst"));
         $form->add(new CheckBox("npreview"));
 
         $form->onSubmit($this, "onNImport");
@@ -74,6 +77,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("cencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new TextInput("csep", ';'));
         $form->add(new CheckBox("cpreview"));
+        $form->add(new CheckBox("cpassfirst"));
         $form->add(new DropDownChoice("colcname", $cols));
         $form->add(new DropDownChoice("colphone", $cols));
         $form->add(new DropDownChoice("colemail", $cols));
@@ -119,6 +123,7 @@ class Import extends \App\Pages\Base
         $colprice = $this->iform->colprice->getValue();
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
+        $colbrand = $this->iform->colbrand->getValue();
         $sep = $this->iform->sep->getText();
 
         if ($encode == 0) {
@@ -167,7 +172,8 @@ class Import extends \App\Pages\Base
                     'colqty' => $row[$colqty - 1],
                     'colmsr' => $row[$colmsr - 1],
                     'colinprice' => $row[$colinprice - 1],
-                    'colprice' => $row[$colprice - 1]
+                    'colprice' => $row[$colprice - 1],
+                    'colbrand' => $row[$colbrand - 1]
                 );
             }
             return;
@@ -213,6 +219,9 @@ class Import extends \App\Pages\Base
                     }
                     if (strlen($row[$colmsr - 1]) > 0) {
                         $item->msr = trim($row[$colmsr - 1]);
+                    }
+                   if (strlen($row[$colbrand - 1]) > 0) {
+                        $item->brand = trim($row[$colbrand - 1]);
                     }
                     if ($price > 0) {
                         $item->{$pt} = $price;
