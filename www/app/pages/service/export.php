@@ -128,9 +128,9 @@ class Export extends \App\Pages\Base
         }
 
 
-        $csv = "Наименование{$sep}Группа{$sep}Артикул{$sep}Штрих код{$sep}Цена{$sep}";
+        $csv = "Наименование{$sep}Ед.{$sep}Группа{$sep}Бренд{$sep}Артикул{$sep}Штрих код{$sep}Цена{$sep}";
         if ($t == 1) {
-            $csv = "Наименование{$sep}Группа{$sep}Артикул{$sep}Штрих код{$sep}Кол{$sep}Цена{$sep}";
+            $csv = "Наименование{$sep}Ед.{$sep}Группа{$sep}Бренд{$sep}Артикул{$sep}Штрих код{$sep}Кол{$sep}Цена{$sep}";
         }
         $csv .= "\n\n";
 
@@ -142,7 +142,9 @@ class Export extends \App\Pages\Base
             $price = H::fa($item->getPrice($pt));
 
             $csv .= $item->itemname . $sep;
+            $csv .= $item->msr . $sep;
             $csv .= $item->cat_name . $sep;
+            $csv .= $item->manufacturer . $sep;
             $csv .= $item->item_code . $sep;
             $csv .= $item->bar_code . $sep;
             if ($t == 1) {
