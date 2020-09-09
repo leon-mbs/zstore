@@ -2,7 +2,7 @@
 
 <body>
 <div class="row">
-    <div class="col-12 col-lg-6 ">
+    <div class="col-12 col-lg-6  card">
         <h3>Імпорт номенклатури
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
@@ -49,6 +49,11 @@
                     <input type="file" zippy="filename" class="form-control  "/>
                 </div>
                 <div class="  form-check">
+                    <input zippy="passfirst" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="passfirst">Пропустити першу  строку</label>
+                </div>
+                
+                <div class="  form-check">
                     <input zippy="preview" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="preview">Попередній перегляд</label>
                 </div>
@@ -82,6 +87,11 @@
                     <select style="width:100px;" zippy="colgr" class="form-control  ">
                     </select>
                 </div>
+                <div class="form-group  ">
+                    <label for="colbrand">Бренд</label>
+                    <select style="width:100px;" zippy="colbrand" class="form-control  ">
+                    </select>
+                </div>                
                 <div class="form-group  ">
                     <label for="colmsr">Од. виміру</label>
                     <select style="width:100px;" zippy="colmsr" class="form-control  ">
@@ -117,6 +127,7 @@
                         <th>Найменування</th>
                         <th>Код</th>
                         <th>Група</th>
+                        <th>Бренд</th>
                         <th>Од.</th>
                         <th class="text-right">Кіл.</th>
                         <th class="text-right">Обл. ціна</th>
@@ -127,6 +138,7 @@
                         <td>{{colname}}</td>
                         <td>{{colcode}}</td>
                         <td>{{colgr}}</td>
+                        <td>{{colbrand}}</td>
                         <td>{{colmsr}}</td>
                         <td class="text-right">{{colqty}}</td>
                         <td class="text-right">{{colinprice}}</td>
@@ -139,7 +151,7 @@
         {{/preview}}
     </div>
 
-    <div class="col-12 col-lg-6 ">
+    <div class="col-12 col-lg-6  card">
         <h3>Імпорт накладної
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
@@ -180,6 +192,10 @@
                     <input type="file" zippy="nfilename" class="form-control  "/>
                 </div>
                 <div class="  form-check">
+                    <input zippy="npassfirst" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="npassfirst">Пропустити першу  строку</label>
+                </div>
+               <div class="  form-check">
                     <input zippy="npreview" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="npreview">Попередній перегляд</label>
                 </div>
@@ -257,7 +273,7 @@
     </div>
 
 
-    <div class="col-12 col-lg-6 ">
+    <div class="col-12 col-lg-6  card">
         <h3>Імпорт контрагентів
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
@@ -299,6 +315,10 @@
                     <label for="cfilename">Файл імпорту</label>
                     <input type="file" zippy="cfilename" class="form-control  "/>
 
+                </div>
+               <div class="  form-check">
+                    <input zippy="cpassfirst" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="cpassfirst">Пропустити першу  строку</label>
                 </div>
 
                 <div class="  form-check">

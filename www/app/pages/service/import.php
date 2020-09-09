@@ -41,6 +41,8 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colprice", $cols));
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
+        $form->add(new DropDownChoice("colbrand", $cols));
+        $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
 
         $form->onSubmit($this, "onImport");
@@ -63,6 +65,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("ncolqty", $cols));
         $form->add(new DropDownChoice("ncolprice", $cols));
         $form->add(new DropDownChoice("ncolmsr", $cols));
+        $form->add(new CheckBox("npassfirst"));
         $form->add(new CheckBox("npreview"));
 
         $form->onSubmit($this, "onNImport");
@@ -74,6 +77,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("cencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new TextInput("csep", ';'));
         $form->add(new CheckBox("cpreview"));
+        $form->add(new CheckBox("cpassfirst"));
         $form->add(new DropDownChoice("colcname", $cols));
         $form->add(new DropDownChoice("colphone", $cols));
         $form->add(new DropDownChoice("colemail", $cols));
@@ -109,6 +113,7 @@ class Import extends \App\Pages\Base
         $pt = $this->iform->price->getValue();
         $encode = $this->iform->encode->getValue();
         $preview = $this->iform->preview->isChecked();
+        $passfirst = $this->iform->passfirst->isChecked();
         $this->_tvars['preview'] = false;
 
         $colname = $this->iform->colname->getValue();
@@ -119,6 +124,7 @@ class Import extends \App\Pages\Base
         $colprice = $this->iform->colprice->getValue();
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
+        $colbrand = $this->iform->colbrand->getValue();
         $sep = $this->iform->sep->getText();
 
         if ($encode == 0) {
@@ -147,7 +153,10 @@ class Import extends \App\Pages\Base
                 if ($encode == 2) {
                     $row = mb_convert_encoding($row, "utf-8", "windows-1251");
                 }
-
+                if($passfirst==true  ) {
+                    $passfirst = false;
+                    continue;  
+                }
                 $data[] = explode($sep, trim($row));
             }
         }
@@ -167,7 +176,8 @@ class Import extends \App\Pages\Base
                     'colqty' => $row[$colqty - 1],
                     'colmsr' => $row[$colmsr - 1],
                     'colinprice' => $row[$colinprice - 1],
-                    'colprice' => $row[$colprice - 1]
+                    'colprice' => $row[$colprice - 1],
+                    'colbrand' => $row[$colbrand - 1]
                 );
             }
             return;
@@ -213,6 +223,9 @@ class Import extends \App\Pages\Base
                     }
                     if (strlen($row[$colmsr - 1]) > 0) {
                         $item->msr = trim($row[$colmsr - 1]);
+                    }
+                   if (strlen($row[$colbrand - 1]) > 0) {
+                        $item->manufacturer = trim($row[$colbrand - 1]);
                     }
                     if ($price > 0) {
                         $item->{$pt} = $price;
@@ -273,7 +286,8 @@ class Import extends \App\Pages\Base
 
         $encode = $this->cform->cencode->getValue();
         $preview = $this->cform->cpreview->isChecked();
-        $this->_tvars['preview2'] = false;
+         $passfirst = $this->cform->cpassfirst->isChecked();
+       $this->_tvars['preview2'] = false;
 
         $colcname = $this->cform->colcname->getValue();
         $colphone = $this->cform->colphone->getValue();
@@ -303,6 +317,10 @@ class Import extends \App\Pages\Base
             while (($row = fgets($handle)) !== FALSE) {
                 if ($encode == 2) {
                     $row = mb_convert_encoding($row, "utf-8", "windows-1251");
+                }
+                if($passfirst==true  ) {
+                    $passfirst = false;
+                    continue;  
                 }
 
                 $data[] = explode($sep, trim($row));
@@ -381,6 +399,7 @@ class Import extends \App\Pages\Base
         $c = $this->nform->ncust->getKey();
         $encode = $this->nform->nencode->getValue();
         $preview = $this->nform->npreview->isChecked();
+        $passfirst = $this->nform->npassfirst->isChecked();
         $this->_tvars['preview3'] = false;
 
 
@@ -422,6 +441,10 @@ class Import extends \App\Pages\Base
             while (($row = fgets($handle)) !== FALSE) {
                 if ($encode == 2) {
                     $row = mb_convert_encoding($row, "utf-8", "windows-1251");
+                }
+                if($passfirst==true  ) {
+                    $passfirst = false;
+                    continue;  
                 }
 
                 $data[] = explode($sep, trim($row));

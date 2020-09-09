@@ -50,6 +50,7 @@ class Invoice extends \App\Entity\Doc\Document
             "isfirm" => strlen($firm["firm_name"]) > 0,
             "iscontract" => $this->headerdata["contract_id"] > 0,
             "phone" => $this->headerdata["phone"],
+            "customer_name" => $this->headerdata["customer_print"],
             "bank" => $firm["bank"],
             "bankacc" => $firm["bankacc"],
             "isbank" => (strlen($firm["bankacc"]) > 0 && strlen($firm["bank"]) > 0),
@@ -62,6 +63,8 @@ class Invoice extends \App\Entity\Doc\Document
             "payed" => H::fa($this->payed),
             "paydisc" => H::fa($this->headerdata["paydisc"])
         );
+        if(strlen($this->headerdata["customer_print"])>0)        $header['customer_name'] = $this->headerdata["customer_print"] ;
+        
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
