@@ -64,6 +64,7 @@ class ItemList extends \App\Pages\Base
         $store = $this->filter->searchstore->getValue();
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('brand', $item->manufacturer));
         $row->add(new Label('msr', $item->msr));
 
         $qty = $item->getQuantity($store);
