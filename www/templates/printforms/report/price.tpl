@@ -14,6 +14,7 @@
         <th>Код</th>
         <th>Ед.Изм.</th>
         <th>Категория</th>
+        <th>Бренд</th>
 
         <th>{{price1name}}</th>
         <th>{{price2name}}</th>
@@ -29,6 +30,7 @@
         <td>{{code}}</td>
         <td>{{msr}}</td>
         <td>{{cat}}</td>
+        <td>{{brand}}</td>
 
         <td align="right">{{price1}}</td>
         <td align="right">{{price2}}</td>

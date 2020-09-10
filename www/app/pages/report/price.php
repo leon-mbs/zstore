@@ -87,6 +87,7 @@ class Price extends \App\Pages\Base
                 "code" => $item->item_code,
                 "name" => $item->itemname,
                 "cat" => $item->cat_name,
+                "brand" => $item->manufacturer,
                 "msr" => $item->msr,
                 "price1" => $isp1 ? $item->getPrice('price1') : "",
                 "price2" => $isp2 ? $item->getPrice('price2') : "",
