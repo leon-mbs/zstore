@@ -441,9 +441,7 @@ class Helper
             if (strlen($dateformat) == 0) {
                 $dateformat = 'd.m.Y';
             }
-            if ($time) {
-                $dateformat .= ' H:i';
-            }
+        
             return date($dateformat, $date);
         }
 
