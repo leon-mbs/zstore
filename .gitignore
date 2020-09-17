@@ -1,0 +1,8 @@
+www/vendor/
+www/composer.cmd
+www/cron.cmd
+
+.idea/
+www/.idea/
+ 
+ 
