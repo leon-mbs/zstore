@@ -231,7 +231,7 @@ class Document extends \ZCL\DB\Entity
                     if ($row['stock_id'] > 0) {
                         $detaildata[$row['stock_id']] = new \App\Entity\Stock($row);
                     } else {
-                        $id = $row['item_id'] . (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
+                        $id =   (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
                         $detaildata[$id] = new \App\Entity\Item($row);
                     }
                 }
