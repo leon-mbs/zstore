@@ -4,15 +4,18 @@ namespace App\Pages\Reference;
 
 use App\Entity\Contract;
 use App\Entity\Customer;
+use App\Entity\Employee;
 use App\Entity\Firm;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Label;
@@ -24,7 +27,7 @@ class ContractList extends \App\Pages\Base
 
     private $_contract;
 
-    public function __construct() {
+    public function __construct($id=0) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('ContractList')) {
             return;
@@ -44,10 +47,13 @@ class ContractList extends \App\Pages\Base
 
         $this->add(new Form('contractdetail'))->setVisible(false);
         $this->contractdetail->add(new Date('editcreatedon', time()));
+        $this->contractdetail->add(new Date('editenddate', strtotime("+1 month",time())));
         $this->contractdetail->add(new TextInput('editshortdesc'));
+        $this->contractdetail->add(new TextArea('editdesc'));
         $this->contractdetail->add(new TextInput('editcontract_number'));
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
         $this->contractdetail->add(new DropDownChoice('editcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+        $this->contractdetail->add(new DropDownChoice('editemp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
         $this->contractdetail->add(new DropDownChoice('editpay', Contract::PayList(), 0));
         $this->contractdetail->add(new \Zippy\Html\Form\File('scan'));
 
@@ -55,6 +61,22 @@ class ContractList extends \App\Pages\Base
 
         $this->contractdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->contractdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+         
+        $this->add(new Panel('docpan'))->setVisible(true);
+        $this->docpan->add(new Label("cname"));
+        
+        $this->docpan->add(new ClickLink('back'))->onClick($this, 'cancelOnClick'); 
+        $this->docpan->add(new DataView('dtable',new ArrayDataSource(array()) , $this, 'doclistOnRow'));
+        $this->docpan->dtable->setPageSize(H::getPG());
+        $this->docpan->add(new \Zippy\Html\DataList\Paginator('dpag', $this->docpan->dtable));
+               
+        
+        if($id > 0){
+          $c = Contract::load($id)  ;   
+          $this->filter->searchkey->setText($c->contract_number);
+          $this->OnFilter($this->filter);
+        }
+        
     }
 
     public function contractlistOnRow($row) {
@@ -62,10 +84,13 @@ class ContractList extends \App\Pages\Base
 
         $row->add(new Label('contract_number', $item->contract_number));
         $row->add(new Label('shortdesc', $item->shortdesc));
-        $row->add(new Label('createdon', H::fd($item->createdon)));
+        $row->add(new Label('term', H::fd($item->createdon).' - '.H::fd($item->enddate)));
         $row->add(new Label('customer', $item->customer_name));
         $row->add(new Label('firm', $item->firm_name));
         $row->add(new Label('payname', $item->payname));
+        $row->add(new Label('emp', $item->emp_name));
+        $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0 );
+        $row->hasnotes->setAttribute('title', $item->desc);
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('scanlink'))->setVisible(false);
         if ($item->file_id > 0) {
@@ -74,6 +99,7 @@ class ContractList extends \App\Pages\Base
 
         }
 
+        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -93,17 +119,21 @@ class ContractList extends \App\Pages\Base
         $this->contracttable->contractlist->Reload();
     }
 
+
     public function editOnClick($sender) {
         $this->_contract = $sender->owner->getDataItem();
         $this->contracttable->setVisible(false);
         $this->contractdetail->setVisible(true);
         $this->contractdetail->editcreatedon->setDate($this->_contract->createdon);
+        $this->contractdetail->editenddate->setDate($this->_contract->enddate);
         $this->contractdetail->editcontract_number->setText($this->_contract->contract_number);
         $this->contractdetail->editshortdesc->setText($this->_contract->shortdesc);
+        $this->contractdetail->editdesc->setText($this->_contract->desc);
         $this->contractdetail->editdisabled->setChecked($this->_contract->disabled);
         $this->contractdetail->editcust->setKey($this->_contract->customer_id);
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
         $this->contractdetail->editcomp->setValue($this->_contract->firm_id);
+        $this->contractdetail->editemp->setValue($this->_contract->emp_id);
         $this->contractdetail->editpay->setValue($this->_contract->pay);
 
     }
@@ -133,10 +163,21 @@ class ContractList extends \App\Pages\Base
             $this->setError("noselcust");
             return;
         }
-
-        $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();
-        $this->_contract->shortdesc = $this->contractdetail->editshortdesc->getText();
         $this->_contract->firm_id = $this->contractdetail->editcomp->getValue();
+        if ($this->_contract->firm_id == 0) {
+            $this->setError("noselfirm");
+            return;
+        }
+
+        
+        
+        $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();
+        $this->_contract->enddate = $this->contractdetail->editenddate->getDate();
+        $this->_contract->shortdesc = $this->contractdetail->editshortdesc->getText();
+        $this->_contract->desc = $this->contractdetail->editdesc->getText();
+        
+        $this->_contract->emp_id = $this->contractdetail->editemp->getValue();
+        $this->_contract->emp_name = $this->contractdetail->editemp->getValueName();
         $this->_contract->pay = $this->contractdetail->editpay->getValue();
         $this->_contract->payname = $this->contractdetail->editpay->getValueName();
         $this->_contract->disabled = $this->contractdetail->editdisabled->isChecked() ? 1 : 0;
@@ -158,6 +199,7 @@ class ContractList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->contracttable->setVisible(true);
         $this->contractdetail->setVisible(false);
+        $this->docpan->setVisible(false);
     }
 
     public function OnFilter($sender) {
@@ -168,6 +210,27 @@ class ContractList extends \App\Pages\Base
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
+    
+    public function showOnClick($sender) {
+       $this->_contract = $sender->owner->getDataItem(); 
+       $this->contracttable->setVisible(false);
+       $this->docpan->setVisible(true);
+       $this->docpan->cname->setText($this->_contract->contract_number);
+       
+       
+       $dlist =  $this->_contract->getDocs() ;
+       $this->docpan->dtable->getDataSource()->setArray($dlist);
+       $this->docpan->dtable->Reload();   
+    }   
+    public function doclistOnRow($row) {
+        $doc = $row->getDataItem();
+        $row->add(new Label("dtype",$doc->document_number)) ;
+        $row->add(new Label("dnum",$doc->meta_desc)) ;
+        $row->add(new Label("ddate", H::fd($doc->document_date)) );
+        $row->add(new Label("dsumma",H::fa($doc->amount))) ;
+    }
+    
+    
 
 }
 
