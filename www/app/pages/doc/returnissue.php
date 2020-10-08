@@ -166,10 +166,10 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
 
 
-        $this->editdetail->edittovar->setKey($item->item_id);
+        $this->editdetail->edittovar->setKey($item->stock_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid = $item->stock_id;
 
     }
 

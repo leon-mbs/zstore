@@ -29,6 +29,7 @@ class CustomerList extends \App\Pages\Base
     public $_fileslist = array();
     public $_msglist = array();
     public $_eventlist = array();
+    public $_contrtlist = array();
 
     public function __construct($id = 0) {
         parent::__construct();
@@ -83,9 +84,13 @@ class CustomerList extends \App\Pages\Base
 
         $this->contentview->addeventform->add(new DropDownChoice('addeventnotify', array(1 => "1 час", 2 => "2 часа", 4 => "4 часа", 8 => "8 часов", 16 => "16 часов", 24 => "24 часа"), 0));
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
+        
         $this->contentview->dw_eventlist->setPageSize(10);
         $this->contentview->add(new \Zippy\Html\DataList\Paginator('eventpag', $this->contentview->dw_eventlist));
 
+        
+        $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));        
+        
         if ($id > 0) {
             $this->_customer = Customer::load($id);
             if ($this->_customer instanceof Customer) {
@@ -245,6 +250,7 @@ class CustomerList extends \App\Pages\Base
         $this->updateFiles();
         $this->updateMessages();
         $this->updateEvents();
+        $this->updateContrs();
         $this->customertable->customerlist->setSelectedRow($sender->getOwner());
         $this->customertable->customerlist->Reload();
         $this->goAnkor('contentviewlink');
@@ -374,6 +380,10 @@ class CustomerList extends \App\Pages\Base
         $this->_eventlist = \App\Entity\Event::find('  customer_id=' . $this->_customer->customer_id);
         $this->contentview->dw_eventlist->Reload();
     }
+    private function updateContrs() {
+        $this->_contrlist = \App\Entity\Contract::find(' disabled<> 1 and  customer_id=' . $this->_customer->customer_id);
+        $this->contentview->dw_contr->Reload();
+    }
 
     //вывод строки  коментария
     public function eventListOnRow($row) {
@@ -388,6 +398,7 @@ class CustomerList extends \App\Pages\Base
         $row->add(new ClickLink('delevent'))->onClick($this, 'deleteEventOnClick');
     }
 
+
     //удаление коментария
     public function deleteEventOnClick($sender) {
         $event = $sender->owner->getDataItem();
@@ -397,4 +408,21 @@ class CustomerList extends \App\Pages\Base
     }
 
 
+    public function contrListOnRow($row) {
+        $contr = $row->getDataItem();
+
+
+        $row->add(new Label('contract_desc', $contr->shortdesc));
+
+
+        $row->add(new ClickLink('contract'))->onClick($this, 'contractOnClick');
+        $row->contract->setValue($contr->contract_number);
+    }    
+    
+    public function contractOnClick($sender) {
+        $contr = $sender->owner->getDataItem();
+        
+        \App\Application::Redirect("\\App\\Pages\\Reference\\ContractList",$contr->contract_id) ;
+    }
+    
 }

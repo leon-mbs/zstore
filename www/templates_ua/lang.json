@@ -226,6 +226,8 @@
   "repbyitems": "По товарах",
   "repbycat": "По категорiях",
   "repbybyers": "По покупцях",
+  "repbybyersitem": "Товари по  покупцях",
+
   "repbydates": "По датах",
   "repbysellers": "По постачальниках",
   "repbyservices": "Послуги, роботи",
@@ -273,6 +275,9 @@
   "ts_ill": "Лiкарняний",
   "ts_bt": "Вiдрядження",
   "ts_other": "Iнше",     
+  "noselfirm": "Не вибрана компанiя",
+  "iscontractdocs": "Контракт має  документи",
+
   
   "refreshed": "Оновлено",
   "sent": "Відправлено",

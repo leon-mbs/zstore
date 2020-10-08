@@ -173,4 +173,4 @@
 <tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> <td align="right"   > <b>{{totnavar}}</b></td><td   > </td>  </tr>
 
 </table>
-{{/_type5}}
+{{/_type5}}     

@@ -81,7 +81,7 @@ class Document extends \ZCL\DB\Entity
         $this->notes = '';
 
         $this->document_date = time();
-        $this->user_id = \App\System::getUser()->user_id;
+        $this->user_id = 0;
 
 
         $this->headerdata = array();
@@ -231,7 +231,7 @@ class Document extends \ZCL\DB\Entity
                     if ($row['stock_id'] > 0) {
                         $detaildata[$row['stock_id']] = new \App\Entity\Stock($row);
                     } else {
-                        $id = $row['item_id'] . (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
+                        $id =   (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
                         $detaildata[$id] = new \App\Entity\Item($row);
                     }
                 }
@@ -322,6 +322,7 @@ class Document extends \ZCL\DB\Entity
 
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
+        $doc->user_id = \App\System::getUser()->user_id;
 
 
         $doc->branch_id = $branch_id;
