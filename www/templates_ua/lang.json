@@ -226,6 +226,8 @@
   "repbyitems": "По товарах",
   "repbycat": "По категорiях",
   "repbybyers": "По покупцях",
+  "repbybyersitem": "Товари по  покупцях",
+
   "repbydates": "По датах",
   "repbysellers": "По постачальниках",
   "repbyservices": "Послуги, роботи",

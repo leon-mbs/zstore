@@ -81,7 +81,7 @@ class Document extends \ZCL\DB\Entity
         $this->notes = '';
 
         $this->document_date = time();
-        $this->user_id = \App\System::getUser()->user_id;
+        $this->user_id = 0;
 
 
         $this->headerdata = array();
@@ -322,6 +322,7 @@ class Document extends \ZCL\DB\Entity
 
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
+        $doc->user_id = \App\System::getUser()->user_id;
 
 
         $doc->branch_id = $branch_id;

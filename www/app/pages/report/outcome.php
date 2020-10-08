@@ -26,10 +26,12 @@ class Outcome extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 5 => H::l('repbycat'), 2 => H::l('repbybyers'), 3 => H::l('repbydates'), 4 => H::l('repbyservices')), 1))->onChange($this, "OnType");
+        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 5 => H::l('repbycat'),6 => H::l('repbybyersitem'), 2 => H::l('repbybyers'), 3 => H::l('repbydates'), 4 => H::l('repbyservices')), 1))->onChange($this, "OnType");
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
-
+        $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer') ;
+        $this->filter->cust->setVisible(false)     ;
+         
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
         $this->detail->add(new RedirectLink('word', "outcome"));
@@ -41,11 +43,9 @@ class Outcome extends \App\Pages\Base
     public function OnType($sender) {
         $type = $this->filter->type->getValue();
         $this->filter->cat->setValue(0);
-        if ($type == 5) {
-            $this->filter->cat->setVisible(true);
-        } else {
-            $this->filter->cat->setVisible(false);
-        }
+
+        $this->filter->cat->setVisible($type == 5);
+        $this->filter->cust->setVisible($type == 6);
     }
 
     public function OnAutoItem($sender) {
@@ -82,11 +82,18 @@ class Outcome extends \App\Pages\Base
         $this->detail->setVisible(true);
     }
 
+    public function OnAutoCustomer($sender) {
+        $text = \App\Entity\Customer::qstr('%' . $sender->getText() . '%');
+        return \App\Entity\Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
+    }
+ 
+ 
     private function generateReport() {
 
         $type = $this->filter->type->getValue();
         $user = $this->filter->emp->getValue();
         $cat_id = $this->filter->cat->getValue();
+        $cust_id = $this->filter->cust->getKey();
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
@@ -104,15 +111,19 @@ class Outcome extends \App\Pages\Base
         if ($type == 5 && $cat_id > 0) {
             $cat = " and cat_id=" . $cat_id;
         }
+        $cust = "";
+        if ($type == 6 && $cust_id > 0) {
+            $cust = " and d.customer_id=" . $cust_id;
+        }
 
-        if ($type == 1 || strlen($cat) > 0) {    //по товарам
+        if ($type == 1 ||$type == 6 || strlen($cat) > 0  ) {    //по товарам
             $sql = "
           select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0 {$u} and e.`quantity` <> 0   {$cat}
+               where e.`item_id` >0 {$u} and e.`quantity` <> 0   {$cat}   {$cust}  
                and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue')
  
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
@@ -182,6 +193,7 @@ class Outcome extends \App\Pages\Base
                order  by i.`cat_name`
         ";
         }
+     
 
         $totsum = 0;
         $totnavar = 0;
@@ -212,7 +224,7 @@ class Outcome extends \App\Pages\Base
         $header['totnavar'] = H::fa($totnavar);
 
 
-        if ($type == 1 || strlen($cat) > 0) {
+        if ($type == 1 ||$type == 6 || strlen($cat) > 0) {
             $header['_type1'] = true;
             $header['_type2'] = false;
             $header['_type3'] = false;
