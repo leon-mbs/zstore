@@ -23,6 +23,7 @@ class User extends \ZCL\DB\Entity
         $this->hidesidebar = 0;
         $this->pagesize = 25;
         $this->createdon = time();
+        $this->mainpage = '\App\Modules\Shop\Pages\Main';
     }
 
     /**
@@ -89,6 +90,7 @@ class User extends \ZCL\DB\Entity
 
 
         $this->hidesidebar = (int)$options['hidesidebar'];
+        $this->mainpage =  $options['mainpage'];
 
         parent::afterLoad();
     }
@@ -115,6 +117,7 @@ class User extends \ZCL\DB\Entity
         $options['defmf'] = $this->defmf;
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
+        $options['mainpage'] = $this->mainpage;
 
         $this->options = serialize($options);
 

@@ -9,7 +9,7 @@ if (strpos($_SERVER['REQUEST_URI'], 'index.php') > 1) {
 }
 
 try {
-
+    
 
     if ($_COOKIE['remember'] && \App\System::getUser()->user_id == 0) {
         $arr = explode('_', $_COOKIE['remember']);
@@ -27,12 +27,18 @@ try {
         }
     }
 
+    $mainpage='\App\Pages\Main';
+    $user=\App\System::getUser() ;
+    if(strlen($user->mainpage)>0){
+         $mainpage =  $user->mainpage;
+    }
+    
     $app = new \App\Application();
 
     if ($_config['modules']['shop'] == 1) {
         $app->Run('\App\Modules\Shop\Pages\Main');
     } else {
-        $app->Run('\App\Pages\Main');
+        $app->Run($mainpage);
     }
 
     /* } catch (\ZippyERP\System\Exception $e) {

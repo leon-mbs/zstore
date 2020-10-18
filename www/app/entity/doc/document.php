@@ -156,34 +156,7 @@ class Document extends \ZCL\DB\Entity
         }
         $this->content .= "</header>";
 
-        //deprecated
-        $this->content .= "<detail>";
-        foreach ($this->detaildata as $row) {
-            $this->content .= "<row>";
-            foreach ($row as $key => $value) {
-                if ($key > 0) {
-                    continue;
-                }
-
-                if (strpos($value, '[CDATA[') !== false) {
-                    \App\System::setWarnMsg('CDATA в  поле  обьекта');
-                    \App\Helper::log(' CDATA в  поле  обьекта');
-                    continue;
-                }
-
-
-                if (is_numeric($value) || strlen($value) == 0) {
-
-                } else {
-                    $value = "<![CDATA[" . $value . "]]>";
-                }
-
-                $this->content .= "<{$key}>{$value}</{$key}>";
-            }
-
-            $this->content .= "</row>";
-        }
-        $this->content .= "</detail>";
+ 
 
 
         $this->content .= "</doc>";
@@ -213,12 +186,15 @@ class Document extends \ZCL\DB\Entity
         $this->detaildata = array();
 
         //deprecated
-        foreach ($xml->detail->children() as $row) {
-            $_row = array();
-            foreach ($row->children() as $item) {
-                $_row[(string)$item->getName()] = (string)$item;
+        if(isset($xml->detail)) {
+
+            foreach ($xml->detail->children() as $row) {
+                $_row = array();
+                foreach ($row->children() as $item) {
+                    $_row[(string)$item->getName()] = (string)$item;
+                }
+                $this->detaildata[] = $_row;
             }
-            $this->detaildata[] = $_row;
         }
         //перепаковываем в новый вариант
         if (count($this->detaildata) > 0) {
