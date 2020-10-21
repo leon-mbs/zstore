@@ -44,27 +44,36 @@ class UserProfile extends \App\Pages\Base
          
         foreach(\App\Entity\MetaData::find("meta_type<>1","meta_type,description") as $m) {
             $p="";
-            switch ($m->meta_type) {
+            $n="";
+             switch ($m->meta_type) {
      
  
+                case 1 :
+                    $p = "\\App\\Pages\\Doc\\";
+                    $n=H::l("md_doc");
+                    break;
                 case 2 :
                     $p = "\\App\\Pages\\Report\\";
+                    $n=H::l("md_rep");
                     break;
                 case 3 :
                     $p = "\\App\\Pages\\Register\\";
+                    $n=H::l("md_reg");
                     break;
                 case 4 :
                     $p = "\\App\\Pages\\Reference\\";
+                    $n=H::l("md_ref");
                     break;
                 case 5 :
                     $p = "\\App\\Pages\\Service\\";
+                    $n=H::l("md_ser");
                     break;
                     
                     
             } 
             
-            $p = $p. $m->meta_name;
-            $pages[$p]= $m->description ;         
+             $p = $p. $m->meta_name;
+            $pages[$p]=$n.' - '. $m->description ;        
         }
         
         $form->add(new DropDownChoice('mainpage', $pages, $this->user->mainpage));
