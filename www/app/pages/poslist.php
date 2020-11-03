@@ -11,6 +11,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use \Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -40,8 +41,11 @@ class PosList extends \App\Pages\Base
         $this->posdetail->add(new DropDownChoice('editstore', \App\Entity\Store::getList(), H::getDefStore()));
         $this->posdetail->add(new DropDownChoice('editmf', \App\Entity\MoneyFund::getList()));
         $this->posdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList()));
-
-
+      
+        $this->posdetail->add(new CheckBox('editusefisc'));
+        $this->posdetail->add(new TextInput('editposinner'));
+        $this->posdetail->add(new TextInput('editfisc'));
+        $this->posdetail->add(new TextInput('editfiscalnumber'));
         $this->posdetail->add(new TextArea('editcomment'));
 
         $this->posdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -79,9 +83,12 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editbranch->setValue($this->_pos->branch_id);
         $this->posdetail->editstore->setValue($this->_pos->store);
         $this->posdetail->editmf->setValue($this->_pos->mf);
-
         $this->posdetail->editpricetype->setValue($this->_pos->pricetype);
-
+        $this->posdetail->editposinner->setText($this->_pos->posinner);
+        $this->posdetail->editfisc->setText($this->_pos->fisc);
+        $this->posdetail->editfiscalnumber->setText($this->_pos->fiscalnumber);
+        $this->posdetail->editusefisc->setChecked($this->_pos->usefisc);
+        
         $this->posdetail->editcomment->setText($this->_pos->comment);
     }
 
@@ -109,6 +116,11 @@ class PosList extends \App\Pages\Base
         $this->_pos->mf = $this->posdetail->editmf->getValue();
 
         $this->_pos->pricetype = $this->posdetail->editpricetype->getValue();
+      
+        $this->_pos->posinner = $this->posdetail->editposinner->getText();
+        $this->_pos->fisc = $this->posdetail->editfisc->getText();
+        $this->_pos->fiscalnumber = $this->posdetail->editfiscalnumber->getText();
+        $this->_pos->usefisc = $this->posdetail->editusefisc->isChecked() ? 1:0;
 
         if ($this->_pos->pos_name == '') {
             $this->setError("entername");

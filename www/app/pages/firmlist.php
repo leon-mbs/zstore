@@ -47,6 +47,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new TextInput('editlogo'));
         $this->firmdetail->add(new TextInput('editstamp'));
         $this->firmdetail->add(new TextInput('editsign'));
+        $this->firmdetail->add(new TextInput('editpposerv'));
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -86,6 +87,8 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editlogo->setText($this->_firm->logo);
         $this->firmdetail->editstamp->setText($this->_firm->stamp);
         $this->firmdetail->editsign->setText($this->_firm->sign);
+        $this->firmdetail->editpposerv->setText($this->_firm->pposerv);
+
 
 
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
@@ -112,6 +115,7 @@ class FirmList extends \App\Pages\Base
         $this->_firm->logo = $this->firmdetail->editlogo->getText();
         $this->_firm->stamp = $this->firmdetail->editstamp->getText();
         $this->_firm->sign = $this->firmdetail->editsign->getText();
+        $this->_firm->pposerv = $this->firmdetail->editpposerv->getText();
 
         if ($this->_firm->firm_name == '') {
             $this->setError("entername");

@@ -25,7 +25,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('Нет права доступа к странице');
+            System::setErrorMsg(H::l('noaccesstopage'));
 
             App::RedirectHome();
             return;

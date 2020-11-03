@@ -208,7 +208,7 @@ class Inventory extends \App\Pages\Base
 
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['storemame'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);

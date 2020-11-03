@@ -65,6 +65,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
         $this->editpan->editform->add(new CheckBox('edittecdoc'));
+        
 
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');

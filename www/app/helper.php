@@ -608,4 +608,145 @@ class Helper
     }
 
 
+    //фукции  для  фискализации
+    
+    public static function sign($data,$cid){
+        $c = \App\Entity\Firm::load($cid);
+        
+    
+        $ap = explode(':',$c->pposerv)  ;
+  
+  
+        $request = curl_init();
+
+        curl_setopt_array($request, [
+            CURLOPT_PORT => $ap[1],
+            CURLOPT_URL =>  "{$ap[0]}:{$ap[1]}/sign",
+            CURLOPT_POST => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 20,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_POSTFIELDS => $data
+        ]);
+
+        $return = json_decode(curl_exec($request));
+
+        if(curl_errno($request) > 0)
+           {
+             System::setErrorMsg('Curl error: ' . curl_error($request)) ; 
+               
+             return false;
+             
+           }  
+         
+
+        curl_close($request);
+
+        return $return;
+    }
+ 
+    public static function decrypt($data,$cid){
+        $c = \App\Entity\Firm::load($cid);
+        
+    
+        $ap = explode(':',$c->pposerv)  ;
+  
+  
+        $request = curl_init();
+
+        curl_setopt_array($request, [
+            CURLOPT_PORT => $ap[1],
+            CURLOPT_URL =>  "{$ap[0]}:{$ap[1]}/decrypt",
+            CURLOPT_POST => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 20,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_POSTFIELDS => $data
+        ]);
+
+        $return =  (curl_exec($request));
+
+        if(curl_errno($request) > 0)
+           {
+             System::setErrorMsg('Curl error: ' . curl_error($request)) ; 
+               
+             return false;
+             
+           }           
+
+        curl_close($request);
+
+        return $return;
+    }
+ 
+    public  static  function send($data,$type,$cid,$encrypted=false){
+     
+        $signed = Helper::sign($data,$cid);
+        if($signed->success==true){
+            
+            
+            
+            $request = curl_init();
+
+            $data =  base64_decode($signed->data) ;
+             
+            curl_setopt_array($request, [
+                CURLOPT_URL =>  "http://80.91.165.208:8609/fs/{$type}",
+                CURLOPT_POST => true,
+                CURLOPT_HEADER => false,
+                CURLOPT_HTTPHEADER => array('Content-Type: application/octet-stream', "Content-Length: ".strlen($data)),
+                CURLOPT_ENCODING => "",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CONNECTTIMEOUT => 20,
+                CURLOPT_VERBOSE => 1,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_POSTFIELDS => $data
+            ]);
+
+            $return = curl_exec($request);
+               
+          if(curl_errno($request) > 0)
+           {
+             System::setErrorMsg('Curl error: ' . curl_error($request)) ; 
+               
+             return false;
+             
+           }  
+            curl_close($request);            
+            
+            if($encrypted) {
+                        $return = base64_encode($return) ;
+                        $decrypted =    Helper::decrypt($return,$cid); 
+                        $decrypted = json_decode($decrypted) ;
+                        if($decrypted->success==true){
+                             return  base64_decode($decrypted->data)  ;
+                        
+                        }  
+                        else{
+                          return  false;  
+                        }
+
+            }  else {
+                return   ($return)  ;
+            }
+            
+           
+              
+           
+            
+         }  else {
+             
+            return false;     
+         } 
+     
+        
+        
+        
+    }
+     
+    
 }

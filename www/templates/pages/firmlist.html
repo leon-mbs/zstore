@@ -68,8 +68,14 @@
                 <label for="editsign">Подпись (факсимиле) </label>
                 <input class="form-control" type="text" zippy="editsign">
                 <small class="form-text text-muted">Путь к изображению относительно корня сайта. </small>
+            </div>  
+            {{#ppo}}      
+           <div class="form-group">
+                <label for="editpposerv">Сервер  подписи </label>
+                <input class="form-control" type="text" zippy="editpposerv">
+                <small class="form-text text-muted">Адрес  сервера  цифровой подписи в  формате <IP>:<Port>. </small>
             </div>        
-        
+            {{/ppo}}      
         
         <div class="form-check">
             <input zippy="editdisabled" type="checkbox" class="form-check-input">
