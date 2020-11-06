@@ -609,6 +609,17 @@ class Helper
 
 
     //фукции  для  фискализации
+   public static  function guid(){
+ 
+        if (function_exists('com_create_guid') === true)
+            return trim(com_create_guid(), '{}');
+
+        $data = openssl_random_pseudo_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+        
+    }
     
     public static function sign($data,$cid){
         $c = \App\Entity\Firm::load($cid);
@@ -635,9 +646,9 @@ class Helper
 
         if(curl_errno($request) > 0)
            {
-             System::setErrorMsg('Curl error: ' . curl_error($request)) ; 
+             
                
-             return false;
+             throw new  \Exception('Curl error: ' . curl_error($request)) ;
              
            }  
          
@@ -708,12 +719,15 @@ class Helper
             ]);
 
             $return = curl_exec($request);
-               
+            
           if(curl_errno($request) > 0)
            {
-             System::setErrorMsg('Curl error: ' . curl_error($request)) ; 
-               
-             return false;
+             throw new  \Exception('Curl error: ' . curl_error($request)) ;
+             
+           }      
+           if(strpos($return,'помилки') >0)
+           {
+             throw new  \Exception($return) ;
              
            }  
             curl_close($request);            
@@ -748,5 +762,49 @@ class Helper
         
     }
      
+    public static function  OnZ($cid,$posid ) {
+        
+    }
+    
+    public static function  shift($cid,$posid,$open) {
+        $pos = \App\Entity\Pos::load($posid) ;
+       
+        $branch_id= \App\Session::getSession()->branch_id;  
+        $firm = Helper::getFirmData($cid,$branch_id);
+        $branch = \App\Entity\Branch::load($branch_id);
+                
+        $header = array( );
+        $header['doctype'] = $open==true ?100:101 ;
+        $header['firmname'] = $firm['firmname']  ;
+        $header['inn'] = $firm['inn'];
+        $header['edrpou'] =  $firm['tin'];
+        $header['address'] = $firm['address']  ; 
+        $header['branchname'] = strlen($branch->branch_name)>0 ?  $branch->branch_name : $firm['firmname']  ;
+        $header['date'] = date('dmY');
+        $header['time'] = date('His');
+        $header['docnumber'] = $pos->fiscalnumber ;
+        $header['posinner'] = $pos->posinner;
+        $header['posnumber'] = $pos->fisc;
+        $header['username'] =   \App\System::getUser()->username  ;
+        $header['guid'] = Helper::guid();
+   
+       
+        $report = new \App\Report('shift.xml');
+        
+        $xml = $report->generate($header);
+ 
+    //     $file =  "z://home/local.zstore//www//upload//test2.xml";
+    //    @unlink($file);
+    //   file_put_contents($file,$xml);
+        $xml = mb_convert_encoding($xml , "windows-1251","utf-8"  )  ;       
+      //  $xml =          iconv($xml,"utf-8","windows-1251") ;
+       //  $xml =    \Symfony\Polyfill\Mbstring\Mbstring::mb_convert_encoding($xml,"windows-1251",'UTF-8')   ;
+                
+
+       return Helper::send($xml,'doc',$cid,true);   
+
+        
+    }    
+
     
 }

@@ -22,7 +22,7 @@ class PPOList extends \App\Pages\Base
 
     public $_ppolist = array();
     public $_shlist = array();
-    public $_doclist = array();
+    public $_doclist = array();   
 
     public function __construct() {
         parent::__construct();
@@ -99,7 +99,7 @@ class PPOList extends \App\Pages\Base
 
   
     public function onObj($sender) {
-        $ppo = $sender->getOwner()->getDataItem();
+        $ppo = $sender->getOwner()->getDataItem();     
         $this->_shlist = array();
         $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c') ;
         $to = \Carbon\Carbon::now()->format('c') ;
@@ -154,7 +154,7 @@ class PPOList extends \App\Pages\Base
         foreach($res->Documents as $doc) {
              $it = new   DataItem(array('NumFiscal'=>$doc->NumFiscal,
                                         'NumLocal'=>$doc->NumLocal,
-                                        'RegNumFiscal'=>$sh->NumFiscal,
+                                       
                                         'DocClass'=>$doc->DocClass,
                                         'CheckDocType'=>$doc->CheckDocType
                                         )) ;

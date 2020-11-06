@@ -153,14 +153,17 @@ class Base extends \Zippy\Html\WebPage
     public function beforeRender() {
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
+        $this->_tvars['alerterror'] = "";
+        if (strlen(System::getErrorMsg()) > 0) {
+            $this->_tvars['alerterror'] = System::getErrorMsg();
+            $this->goAnkor('');
+        }         
     }
 
     protected function afterRender() {
         $user = System::getUser();
-
-        if (strlen(System::getErrorMsg(true)) > 0) {
-            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'10000'})        ", true);
-        }
+        
+       
         if (strlen(System::getWarnMsg(true)) > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'6000'})        ", true);
         }

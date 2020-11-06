@@ -13,6 +13,7 @@ class Pos extends \ZCL\DB\Entity
 
     protected function init() {
         $this->pos_id = 0;
+        $this->fiscalnumber = 0;
     }
 
     protected function beforeSave() {
@@ -29,7 +30,9 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<fiscalnumber>{$this->fiscalnumber}</fiscalnumber>";
         $this->details .= "<posinner>{$this->posinner}</posinner>";
         $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
-            $this->details .= "</details>";
+        $this->details .= "<openshift>{$this->openshift}</openshift>";
+        $this->details .= "<closeshift>{$this->closeshift}</closeshift>";
+        $this->details .= "</details>";
 
         return true;
     }
@@ -42,10 +45,12 @@ class Pos extends \ZCL\DB\Entity
         $this->pricetype = (string)($xml->pricetype[0]);
         $this->store = (int)($xml->store[0]);
         $this->comment = (string)($xml->comment[0]);
-         $this->fiscalnumber = (string) ($xml->fiscalnumber[0]);
+        $this->fiscalnumber = (string) ($xml->fiscalnumber[0]);
         $this->fisc = (string) ($xml->fisc[0]);
         $this->posinner = (string) ($xml->posinner[0]);
         $this->usefisc = (int) ($xml->usefisc[0]);
+        $this->openshift = (int) ($xml->openshift[0]);
+        $this->opencloseshiftshift = (int) ($xml->closeshift[0]);
 
         parent::afterLoad();
     }
