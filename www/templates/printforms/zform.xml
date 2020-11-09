@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="windows-1251"?>
-<ZFORM xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="check01.xsd">
+<ZREP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="check01.xsd">
      
-    <ZFORMHEAD>
-       <DOCTYPE>{{doctype}}</DOCTYPE>
-        
+    <ZREPHEAD>
+          
         <UID>{{guid}}</UID>
         
         <TIN>{{edrpou}}</TIN>
@@ -30,9 +29,14 @@
         <CASHIER>{{username}}</CASHIER>
        
         <VER>1</VER>
-     </ZFORMHEAD>
  
+        
+     </ZREPHEAD>
+    <ZREPBODY>
+    <SERVICEINPUT>0.00</SERVICEINPUT>
+    <SERVICEOUTPUT>0.00</SERVICEOUTPUT>
+  </ZREPBODY>
  
  
        
-</ZFORM>
+</ZREP>

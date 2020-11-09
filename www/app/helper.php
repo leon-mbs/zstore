@@ -762,9 +762,7 @@ class Helper
         
     }
      
-    public static function  OnZ($cid,$posid ) {
-        
-    }
+  
     
     public static function  shift($cid,$posid,$open) {
         $pos = \App\Entity\Pos::load($posid) ;
@@ -788,7 +786,18 @@ class Helper
         $header['username'] =   \App\System::getUser()->username  ;
         $header['guid'] = Helper::guid();
    
-       
+        if($open==false){
+            
+                
+              $header['doctype']   = 102;
+                
+              $report = new \App\Report('zform.xml');
+            
+              $xml = $report->generate($header);
+            
+              $ret = Helper::send($xml,'doc',$cid,true); 
+            
+        }
         $report = new \App\Report('shift.xml');
         
         $xml = $report->generate($header);

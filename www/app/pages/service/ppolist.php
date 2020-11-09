@@ -9,6 +9,7 @@ use App\System;
 use Zippy\Binding\PropertyBinding as Prop;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -23,6 +24,7 @@ class PPOList extends \App\Pages\Base
     public $_ppolist = array();
     public $_shlist = array();
     public $_doclist = array();   
+    public $_ppo  ;   
 
     public function __construct() {
         parent::__construct();
@@ -43,7 +45,11 @@ class PPOList extends \App\Pages\Base
 
  
         $this->opan->add(new DataView('ppolist', new ArrayDataSource(new Prop($this, '_ppolist')), $this, 'ppoOnRow'));
- 
+       
+        $this->opan->add(new Paginator('pagp', $this->opan->ppolist));
+        
+        $this->opan->ppolist->setPageSize(H::getPG());
+               
         $this->add(new Panel('shpan'))->setVisible(false); 
         $this->shpan->add(new ClickLink('backo',$this,'onBacko')) ;
         $this->shpan->add(new DataView('shlist', new ArrayDataSource(new Prop($this, '_shlist')), $this, 'shOnRow'));
@@ -99,21 +105,20 @@ class PPOList extends \App\Pages\Base
 
   
     public function onObj($sender) {
-        $ppo = $sender->getOwner()->getDataItem();     
+        $this->ppo = $sender->getOwner()->getDataItem();     
         $this->_shlist = array();
         $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c') ;
         $to = \Carbon\Carbon::now()->format('c') ;
         $cid = $this->opan->filter->searchcomp->getValue();
        
-        $res = H::send(json_encode(array('Command'=>'Shifts','NumFiscal'=>$ppo->tr->NumFiscal,'From'=>$from,'To'=>$to)),'cmd',$cid)  ;
+        $res = H::send(json_encode(array('Command'=>'Shifts','NumFiscal'=>$this->ppo->tr->NumFiscal,'From'=>$from,'To'=>$to)),'cmd',$cid)  ;
         $res = json_decode($res ) ;    
         foreach($res->Shifts as $sh) {
              $it = new   DataItem(array('openname'=>$sh->OpenName,
                                         'closename'=>$sh->CloseName,
                                         'opened'=>$sh->Opened,
                                         'closed'=>$sh->Closed,
-                                        'ShiftId'=>$sh->ShiftId ,
-                                        'NumFiscal'=>$ppo->tr->NumFiscal
+                                        'ShiftId'=>$sh->ShiftId  
                                         )) ;
                                         
              
@@ -149,12 +154,13 @@ class PPOList extends \App\Pages\Base
         $this->_doclist = array();
         $cid = $this->opan->filter->searchcomp->getValue();
        
-        $res = H::send(json_encode(array('Command'=>'Documents','NumFiscal'=>$sh->NumFiscal,'ShiftId'=>$sh->ShiftId )),'cmd',$cid)  ;
+        $res = H::send(json_encode(array('Command'=>'Documents','NumFiscal'=>$this->ppo->tr->NumFiscal,'ShiftId'=>$sh->ShiftId )),'cmd',$cid)  ;
         $res = json_decode($res ) ;    
         foreach($res->Documents as $doc) {
              $it = new   DataItem(array('NumFiscal'=>$doc->NumFiscal,
                                         'NumLocal'=>$doc->NumLocal,
                                        
+                                      
                                         'DocClass'=>$doc->DocClass,
                                         'CheckDocType'=>$doc->CheckDocType
                                         )) ;
@@ -192,8 +198,8 @@ class PPOList extends \App\Pages\Base
         $doc = $sender->getOwner()->getDataItem();
         $cid = $this->opan->filter->searchcomp->getValue();
        
-        $res = H::send(json_encode(array('Command'=>$doc->DocClass,'RegistrarNumFiscal'=>$doc->RegNumFiscal,'NumFiscal'=>$doc->NumFiscal )),'cmd',$cid,true)  ;
-        $res = mb_convert_encoding($res , "utf-8" ,"windows-1251" )  ;           
+        $res = H::send(json_encode(array('Command'=>$doc->DocClass,'RegistrarNumFiscal'=>$this->ppo->tr->NumFiscal,'NumFiscal'=>$doc->NumFiscal )),'cmd',$cid,true)  ;
+       // $res = mb_convert_encoding($res , "utf-8" ,"windows-1251" )  ;           
         $this->docpan->docshow->setText($res);
         $this->docpan->docshow->setVisible(true);        
         $this->goAnkor('docshow')      ;

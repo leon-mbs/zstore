@@ -69,7 +69,7 @@ class ARMPos extends \App\Pages\Base
         $this->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
         $this->form2->add(new ClickLink('openshift',$this,'OnShift'));
         $this->form2->add(new ClickLink('closeshift',$this,'OnShift'));
-        $this->form2->add(new ClickLink('zform',$this,'OnZ'));
+        
 
         //оплата
         $this->add(new Form('form3'))->setVisible(false);
@@ -716,18 +716,6 @@ class ARMPos extends \App\Pages\Base
         $pos->save();
         
     }
-   public function OnZ($sender){
-        
-        $cid = $this->form1->firm->getValue();
-        $posid = $this->form1->pos->getValue();
-        try{
-          H::zform($cid,$posid  );
-        }catch(\Exception $e) {
-            $this->setError($e->getMessage()) ;
-            return;
-        }
-       
-        
-    }
+  
     
 }
