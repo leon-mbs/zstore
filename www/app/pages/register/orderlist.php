@@ -222,6 +222,7 @@ class OrderList extends \App\Pages\Base
         }
 
         $this->statuspan->setVisible(true);
+        $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(true);

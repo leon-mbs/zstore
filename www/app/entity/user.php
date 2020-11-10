@@ -23,7 +23,7 @@ class User extends \ZCL\DB\Entity
         $this->hidesidebar = 0;
         $this->pagesize = 25;
         $this->createdon = time();
-        $this->mainpage = '\App\Modules\Shop\Pages\Main';
+        $this->mainpage = '\App\Pages\Main';
     }
 
     /**

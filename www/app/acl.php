@@ -415,7 +415,7 @@ class ACL
             return $id;
         }
         \App\System::setErrorMsg(\App\Helper::l('selectbranch'));
-        \App\Application::RedirectHome();
+        \App\Application::Redirect("\\App\\Pages\\Main");
     }
 
     /**

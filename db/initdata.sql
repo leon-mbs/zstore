@@ -2,8 +2,10 @@
 SET NAMES 'utf8';
 
  
-INSERT INTO `users` (  `userlogin`, `userpass`, `createdon`, `email`, `acl`, `disabled`, `options`) VALUES(  'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:8:{s:7:"acltype";i:0;s:6:"onlymy";i:0;s:7:"aclview";N;s:7:"acledit";N;s:6:"aclexe";N;s:9:"aclbranch";N;s:7:"widgets";N;s:7:"modules";N;}', 0, 'a:4:{s:9:"smartmenu";s:3:"7,8";s:8:"defstore";s:2:"19";s:5:"defmf";s:1:"2";s:8:"pagesize";s:2:"15";}');
-INSERT INTO `roles` (  `rolename`, `acl`) VALUES(  'admins', 'a:7:{s:7:"aclview";N;s:7:"acledit";N;s:6:"aclexe";N;s:9:"aclcancel";N;s:7:"widgets";N;s:7:"modules";N;s:9:"smartmenu";s:1:"8";}');
+INSERT INTO `users` (`user_id`, `userlogin`, `userpass`, `createdon`, `email`, `acl`, `disabled`, `options`, `role_id`) VALUES(4, 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:2:{s:9:"aclbranch";N;s:6:"onlymy";N;}', 0, 'a:6:{s:8:"defstore";s:2:"19";s:7:"deffirm";i:0;s:5:"defmf";s:1:"2";s:8:"pagesize";s:2:"15";s:11:"hidesidebar";i:0;s:8:"mainpage";s:15:"\\App\\Pages\\Main";}', 1);
+
+INSERT INTO `roles` (`role_id`, `rolename`, `acl`) VALUES(1, 'admins', 'a:9:{s:7:"aclview";N;s:7:"acledit";N;s:6:"aclexe";N;s:9:"aclcancel";N;s:8:"aclstate";N;s:9:"acldelete";N;s:7:"widgets";N;s:7:"modules";N;s:9:"smartmenu";s:1:"8";}');
+
 UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' limit 0,1 )  where  userlogin='admin' ;
 
  
