@@ -785,9 +785,9 @@ class GoodsReceipt extends \App\Pages\Base
         $cust->address = $this->editcust->editaddress->getText();
         $cust->phone = $this->editcust->editphone->getText();
 
-        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("tel10");
+            $this->setError("tel10",H::PhoneL());
             return;
         }
 

@@ -925,9 +925,9 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->ship_address->setText($cust->address);
         $cust->phone = $this->editcust->editphone->getText();
 
-        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("tel10");
+            $this->setError("tel10",H::PhoneL());
             return;
         }
 

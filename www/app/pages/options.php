@@ -34,6 +34,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new DropDownChoice('amdigits'));
         $this->common->add(new DropDownChoice('dateformat'));
         $this->common->add(new DropDownChoice('curr', array('gr' => 'Гривна', 'ru' => 'Рубль'), 'gr'));
+        $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
         $pt = array(
             "1" => H::l('opt_lastprice'),
             "2" => H::l('opt_partion')
@@ -72,6 +73,7 @@ class Options extends \App\Pages\Base
         $this->common->dateformat->setValue($common['dateformat']);
         $this->common->partiontype->setValue($common['partiontype']);
         $this->common->curr->setValue($common['curr']);
+        $this->common->phonel->setValue($common['phonel']);
 
         $this->common->price1->setText($common['price1']);
         $this->common->price2->setText($common['price2']);
@@ -174,6 +176,7 @@ class Options extends \App\Pages\Base
         $common['dateformat'] = $this->common->dateformat->getValue();
         $common['partiontype'] = $this->common->partiontype->getValue();
         $common['curr'] = $this->common->curr->getValue();
+        $common['phonel'] = $this->common->phonel->getValue();
 
         $common['price1'] = $this->common->price1->getText();
         $common['price2'] = $this->common->price2->getText();

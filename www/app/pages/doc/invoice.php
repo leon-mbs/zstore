@@ -546,8 +546,8 @@ class Invoice extends \App\Pages\Base
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustphone->getText();
 
-        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
-            $this->setError("tel10");
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
+            $this->setError("tel10",H::PhoneL());
             return;
         }
 

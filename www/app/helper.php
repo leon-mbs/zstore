@@ -515,7 +515,20 @@ class Helper
         }
         return 25;
     }
-
+   /**
+   * длина  номера  телефона
+   * 
+   */
+   public static function PhoneL() {
+ 
+        $phonel = System::getOption("common", 'phonel');
+        if ($phonel > 0) {
+            return  $phonel;
+        }
+        return  10;   
+        
+    }
+    
     /**
      * Возвращает языковую метку
      *

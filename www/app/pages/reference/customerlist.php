@@ -218,8 +218,8 @@ class CustomerList extends \App\Pages\Base
                 return;
             }
         }
-        if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != 10) {
-            $this->setError("tel10");
+        if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL() ) {
+            $this->setError("tel10",Helper::PhoneL());
             return;
         }
         $c = Customer::getByPhone($this->_customer->phone);
