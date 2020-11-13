@@ -49,12 +49,13 @@ class User extends \ZCL\DB\Entity
     protected function afterLoad() {
         $this->createdon = strtotime($this->createdon);
 
+        //доступы  уровня  роли
         $acl = @unserialize($this->roleacl);
         if (!is_array($acl)) {
             $acl = array();
         }
 
-
+        //доступы  уровня  пользователя
         $acluser = @unserialize($this->acl);
         if (is_array($acluser)) {
             foreach ($acluser as $k => $v) {

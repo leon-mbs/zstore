@@ -122,22 +122,23 @@ class Helper
     }
 
     public static function generateSmartMenu() {
+      
         $conn = \ZDB\DB::getConnect();
-
-        $smartmenu = System::getUser()->smartmenu;
+        $user = System::getUser() ;
+        $smartmenu = $user->smartmenu;
 
         if (strlen($smartmenu) == 0) {
             return "";
         }
 
-        $rows = $conn->Execute("select *  from  metadata  where meta_id in ({$smartmenu})   ");
+        $rows = $conn->Execute("select *  from  metadata  where disabled <> 1 and  meta_id in ({$smartmenu})   ");
 
         $textmenu = "";
-        $aclview = explode(',', System::getUser()->aclview);
+        $aclview = explode(',', $user->aclview);
 
         foreach ($rows as $item) {
 
-            if (!in_array($item['meta_id'], $aclview) && System::getUser()->rolename != 'admins') {
+            if (!in_array($item['meta_id'], $aclview) && $user->rolename != 'admins') {
                 continue;
             }
 
@@ -162,10 +163,42 @@ class Helper
 
             $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
         }
-
+        $role = \App\Entity\UserRole::load($user->role_id);
+        
+        $mod = self::modulesMetaData($role);
+        $smartmenu = explode(',',$smartmenu) ;
+        foreach($mod as $p) {
+           if(  in_array($p->meta_id,$smartmenu))  {
+              $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/Modules{$p->meta_name}\">{$p->description}</a> ";
+           }
+        
+        }
         return $textmenu;
     }
 
+    //метаданные   модулей
+    public static function modulesMetaData($role){
+        global $_config;
+        
+        $mdata = array();
+        if($_config['modules']['note'] == 1) {
+          if($role->rolename=='admins' || strpos($role->modules,'note') !==false) {
+             $mdata[] =  new \App\Entity\MetaData(array('meta_id'=>10000,'meta_name'=>"/Note/Pages/Main",'meta_type'=>6,'description'=>'База знаний'));
+          }
+        }
+        
+        if($_config['modules']['tecdoc'] == 1) {
+          if($role->rolename=='admins' || strpos($role->modules,'tecdoc') !==false) {
+             $mdata[] =  new \App\Entity\MetaData(array('meta_id'=>10001,'meta_name'=>"/Tecdoc/Search",'meta_type'=>6,'description'=>'Поиск по TECDOC'));
+          }
+        }
+        
+        
+        
+        return  $mdata;
+        
+    }
+    
     public static function loadEmail($template, $keys = array()) {
         global $logger;
 
@@ -622,7 +655,7 @@ class Helper
 
 
     //фукции  для  фискализации
-   public static  function guid(){
+    public static  function guid(){
  
         if (function_exists('com_create_guid') === true)
             return trim(com_create_guid(), '{}');

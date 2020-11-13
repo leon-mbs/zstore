@@ -6,6 +6,7 @@ use \Zippy\Html\DataList\DataView;
 use \App\Entity\User;
 use \App\Entity\UserRole;
 use \App\System;
+use \App\Helper as H;
 use \App\Application as App;
 use \Zippy\Html\Form\CheckBox;
 use \Zippy\Html\Form\DropDownChoice;
@@ -78,7 +79,9 @@ class Roles extends \App\Pages\Base
         $this->editpanmenu->add(new Form('editformmenu'))->onSubmit($this, 'savemenuOnClick');
 
         $this->editpanmenu->editformmenu->add(new Button('cancelmenu'))->onClick($this, 'cancelOnClick');
-        $this->editpanmenu->editformmenu->add(new DataView('mlist', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "disabled<>1  ", "meta_type,description"), $this, 'menurowOnRow'));
+        
+          
+        $this->editpanmenu->editformmenu->add(new DataView('mlist', new \Zippy\Html\DataList\ArrayDataSource(array()), $this, 'menurowOnRow'));
 
 
     }
@@ -117,8 +120,20 @@ class Roles extends \App\Pages\Base
         }
         if ($this->role->rolename == 'admins') {
             $w = "";
-        }
-        $this->editpanmenu->editformmenu->mlist->getDataSource()->setWhere("disabled<>1  {$w}");
+        } 
+               
+        $smlist =  \App\Entity\MetaData::find("disabled<>1 {$w}","meta_type,description");
+
+ 
+        $mod = H::modulesMetaData($this->role) ;
+        
+        
+        
+        $smlist = array_merge($smlist,$mod)  ;
+          
+
+        
+        $this->editpanmenu->editformmenu->mlist->getDataSource()->setArray($smlist); 
         $this->editpanmenu->editformmenu->mlist->Reload();
 
     }
@@ -368,19 +383,19 @@ class Roles extends \App\Pages\Base
         $item = $row->getDataItem();
         switch ($item->meta_type) {
             case 1:
-                $title = "Документ";
+                $title = H::l('md_doc') ;
                 break;
             case 2:
-                $title = "Отчет";
+                $title = H::l('md_rep')   ;
                 break;
             case 3:
-                $title = "Журнал";
+                $title = H::l('md_reg')  ;
                 break;
             case 4:
-                $title = "Справочник";
+                $title = H::l('md_ref')  ;
                 break;
             case 5:
-                $title = "Сервис";
+                $title = H::l('md_ser')  ;
                 break;
         }
         $item->editacc = false;
@@ -430,19 +445,22 @@ class Roles extends \App\Pages\Base
         $item = $row->getDataItem();
         switch ($item->meta_type) {
             case 1:
-                $title = "Документ";
+                $title = H::l('md_doc');
                 break;
             case 2:
-                $title = "Отчет";
+                $title = H::l('md_rep');
                 break;
             case 3:
-                $title = "Журнал";
+                $title = H::l('md_reg') ;
                 break;
             case 4:
-                $title = "Справочник";
+                $title = H::l('md_ref') ;
                 break;
             case 5:
-                $title = "Сервис ";
+                $title = H::l('md_ser') ;
+                break;
+            case 6:
+                $title = H::l('md_mod') ;
                 break;
         }
         $smartmenu = @explode(',', $this->role->smartmenu);
