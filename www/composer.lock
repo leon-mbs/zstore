@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7a29082e64774c3423b9fc549e21635",
+    "content-hash": "47935f4c7f94c8e211304076a906cc32",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -401,58 +401,6 @@
             "time": "2017-06-27T22:17:23+00:00"
         },
         {
-            "name": "imangazaliev/didom",
-            "version": "1.16",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Imangazaliev/DiDOM.git",
-                "reference": "c2a8bd08679d2eec856782277267a48553322c7e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Imangazaliev/DiDOM/zipball/c2a8bd08679d2eec856782277267a48553322c7e",
-                "reference": "c2a8bd08679d2eec856782277267a48553322c7e",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-iconv": "*",
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "DiDom\\": "src/DiDom/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Imangazaliev Muhammad",
-                    "email": "imangazalievm@gmail.com"
-                }
-            ],
-            "description": "Simple and fast HTML parser",
-            "homepage": "https://github.com/Imangazaliev/DiDOM",
-            "keywords": [
-                "didom",
-                "html",
-                "parser",
-                "xml"
-            ],
-            "support": {
-                "issues": "https://github.com/Imangazaliev/DiDOM/issues",
-                "source": "https://github.com/Imangazaliev/DiDOM/tree/develop"
-            },
-            "time": "2020-05-12T21:04:30+00:00"
-        },
-        {
             "name": "jbzoo/data",
             "version": "2.0.2",
             "source": {
@@ -791,16 +739,16 @@
         },
         {
             "name": "leon-mbs/zdb",
-            "version": "1.2.8",
+            "version": "1.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zdb.git",
-                "reference": "0ec4065c4aa4ba45b235ab2baa31a6b4c4678bf3"
+                "reference": "4c444bb2bf02a06e3cecd429e6bccbdb1312f821"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/0ec4065c4aa4ba45b235ab2baa31a6b4c4678bf3",
-                "reference": "0ec4065c4aa4ba45b235ab2baa31a6b4c4678bf3",
+                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/4c444bb2bf02a06e3cecd429e6bccbdb1312f821",
+                "reference": "4c444bb2bf02a06e3cecd429e6bccbdb1312f821",
                 "shasum": ""
             },
             "require": {
@@ -831,27 +779,27 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zdb/issues",
-                "source": "https://github.com/leon-mbs/zdb/tree/1.2.8"
+                "source": "https://github.com/leon-mbs/zdb/tree/1.2.9"
             },
-            "time": "2020-07-10T06:34:43+00:00"
+            "time": "2020-11-13T16:47:37+00:00"
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.2.2",
+            "version": "2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "baa8028b0417e57fddf9dc91ca708779943780eb"
+                "reference": "6269135ac19beb44ffc592e730f31ec0b8ef830f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/baa8028b0417e57fddf9dc91ca708779943780eb",
-                "reference": "baa8028b0417e57fddf9dc91ca708779943780eb",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/6269135ac19beb44ffc592e730f31ec0b8ef830f",
+                "reference": "6269135ac19beb44ffc592e730f31ec0b8ef830f",
                 "shasum": ""
             },
             "require": {
                 "leon-mbs/phpquery": ">=1.0.0",
-                "leon-mbs/zdb": "1.2.8",
+                "leon-mbs/zdb": "1.2.9",
                 "mustache/mustache": "v2.13.0",
                 "php": ">=7.2.0"
             },
@@ -879,9 +827,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/master"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.2.3"
             },
-            "time": "2020-07-10T06:36:32+00:00"
+            "time": "2020-11-13T16:53:55+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1501,12 +1449,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "e440567339d5fe93d9525e377c5e686b0b08bcca"
+                "reference": "0011d773ec873fbf3cde730da5655ff74eddc9f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e440567339d5fe93d9525e377c5e686b0b08bcca",
-                "reference": "e440567339d5fe93d9525e377c5e686b0b08bcca",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0011d773ec873fbf3cde730da5655ff74eddc9f8",
+                "reference": "0011d773ec873fbf3cde730da5655ff74eddc9f8",
                 "shasum": ""
             },
             "conflict": {
@@ -1641,6 +1589,7 @@
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
                 "pimcore/pimcore": "<6.3",
+                "pocketmine/pocketmine-mp": "<3.15.4",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/contactform": ">1.0.1,<4.3",
                 "prestashop/gamification": "<2.3.2",
@@ -1659,7 +1608,7 @@
                 "serluck/phpwhois": "<=4.2.6",
                 "shopware/core": "<=6.3.2",
                 "shopware/platform": "<=6.3.2",
-                "shopware/shopware": "<5.3.7",
+                "shopware/shopware": "<5.6.9",
                 "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
                 "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
                 "silverstripe/cms": "<4.3.6|>=4.4,<4.4.4",
@@ -1808,7 +1757,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-07T16:07:08+00:00"
+            "time": "2020-11-13T16:02:31+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

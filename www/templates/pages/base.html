@@ -364,16 +364,7 @@
                                 </a>
                             </li>
                             {{/items}}
-                            {{#ppo}}
-                             <li class="nav-item">
-                                    <a href="/index.php?p=App/Pages/Service/PPOList" class="nav-link">
-                                        <i class="fa    nav-icon"></i>
-                                        <p>&nbsp;&nbsp;Зарегистрированые  РРО</p>
-                                    </a>
-                            </li>
-                                   
-                               
-                            {{/ppo}}                            
+                                                      
                             
                             {{/sermenu}}
                         </ul>
@@ -567,6 +558,27 @@
 
                             </li>
                             {{/tecdoc}}
+                           {{#ppo}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Фискализация
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                   
+                                  <li class="nav-item">
+                                    <a href="/index.php?p=App/Modules/PPO/PPOList" class="nav-link">
+                                        <i class="fa    nav-icon"></i>
+                                        <p>&nbsp;&nbsp;Зарегистрированые  РРО</p>
+                                    </a>
+                                   </li>
+                                </ul>
+
+                            </li>
+                            {{/ppo}}
 
                         </ul>
 

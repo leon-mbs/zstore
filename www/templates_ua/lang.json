@@ -278,6 +278,8 @@
   "ts_other": "Iнше",     
   "noselfirm": "Не вибрана компанiя",
   "iscontractdocs": "Контракт має  документи",
+  "modnotemain": "База знань",
+  "modtecdocsearch": "Пошук по TECDOC",
 
   
   "refreshed": "Оновлено",

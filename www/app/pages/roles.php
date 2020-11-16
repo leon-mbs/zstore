@@ -66,6 +66,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
         $this->editpan->editform->add(new CheckBox('edittecdoc'));
+        $this->editpan->editform->add(new CheckBox('editppo'));
         
 
 
@@ -197,6 +198,9 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'tecdoc') !== false) {
             $this->editpan->editform->edittecdoc->setChecked(true);
         }
+        if (strpos($this->role->modules, 'ppo') !== false) {
+            $this->editpan->editform->editppo->setChecked(true);
+        }
     }
 
     public function savenameOnClick($sender) {
@@ -327,6 +331,9 @@ class Roles extends \App\Pages\Base
         }
         if ($this->editpan->editform->edittecdoc->isChecked()) {
             $modules = $modules . ',tecdoc';
+        }
+      if ($this->editpan->editform->editppo->isChecked()) {
+            $modules = $modules . ',ppo';
         }
 
         $this->role->modules = trim($modules, ',');

@@ -60,7 +60,8 @@ class Inventory extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-            $this->docform->document_date->setDate($this->_doc->document_date);
+           // $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->document_date->setDate(time());
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
             $this->docform->notes->setText($this->_doc->notes);
@@ -90,35 +91,18 @@ class Inventory extends \App\Pages\Base
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         //  $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('qfact', H::fqty($item->qfact)));
+        $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item,'qfact')));
 
-        //   if ($item->quantity > $item->qfact)
-        //       $row->item->setAttribute('class', "text-danger");
-        //   if ($item->quantity < $item->qfact)
-        //       $row->item->setAttribute('class', "text-success");
+        $row->item->setAttribute('class', "text-success");
 
 
-        $row->add(new ClickLink('plus'))->onClick($this, 'plusOnClick');
-        $row->add(new ClickLink('minus'))->onClick($this, 'minusOnClick');
-
+    
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
     }
 
-    public function plusOnClick($sender) {
-        $item = $sender->owner->getDataItem();
-        $this->_itemlist[$item->item_id]->qfact += 1;
-
-        $this->docform->detail->Reload();
-    }
-
-    public function minusOnClick($sender) {
-        $item = $sender->owner->getDataItem();
-        $this->_itemlist[$item->item_id]->qfact -= 1;
-
-        $this->docform->detail->Reload();
-    }
+ 
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -209,7 +193,10 @@ class Inventory extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
-
+         
+        foreach ($this->_itemlist as $item) {
+            $item->quantity =  $item->getQuantity($this->_doc->headerdata['store'], $item->snumber);
+        }
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 

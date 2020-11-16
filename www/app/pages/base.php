@@ -75,8 +75,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
         $this->_tvars["tecdoc"] = $_config['modules']['tecdoc'] == 1;
-        
-        $this->_tvars["ppo"] = $_config['common']['ppo'] == 1;
+        $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;

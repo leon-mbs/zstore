@@ -365,16 +365,7 @@
                                 </a>
                             </li>
                             {{/items}}
-                            {{#ppo}}
-                             <li class="nav-item">
-                                    <a href="/index.php?p=App/Pages/Service/PPOList" class="nav-link">
-                                        <i class="fa    nav-icon"></i>
-                                        <p>&nbsp;&nbsp;Зарегистрированые  РРО</p>
-                                    </a>
-                            </li>
-                                   
-                               
-                            {{/ppo}}                              
+                                                        
                             {{/sermenu}}
                         </ul>
 
@@ -538,7 +529,53 @@
 
                             </li>
                             {{/issue}}
-                            
+                               {{#tecdoc}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Автозапчастини
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/Tecdoc/Options" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Налаштування</p>
+                                        </a>
+                                    </li>
+                                   <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/Tecdoc/Search" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Пошук</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            {{/tecdoc}}
+                           {{#ppo}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Фiскализацiя
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+                                   
+                                  <li class="nav-item">
+                                    <a href="/index.php?p=App/Modules/PPO/PPOList" class="nav-link">
+                                        <i class="fa    nav-icon"></i>
+                                        <p>&nbsp;&nbsp;Зареестрованi  РРО</p>
+                                    </a>
+                                   </li>
+                                </ul>
+
+                            </li>
+                            {{/ppo}}                         
                         </ul>
 
                     </li>

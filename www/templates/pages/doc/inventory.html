@@ -60,9 +60,9 @@
                     <th>Дата</th>
                     {{/usesnumber}}
                     <!--     <th width="40"  class="text-right" >Кол. </th> -->
-                    <th class="text-right"></th>
+                   
                     <th width="40" class="text-center">Кол.</th>
-                    <th class="text-left"></th>
+                    
 
 
                     <th width="50"></th>
@@ -75,16 +75,12 @@
                     <td zippy="sdate"></td>
                     {{/usesnumber}}
                     <!--    <td zippy="quantity"  class="text-right" ></td>-->
-                    <td class="text-right">
-                        <a zippy="minus"><i class="fa fa-minus"></i></a>
-                    </td>
+                 
                     <td class="text-center">
-                        <span zippy="qfact"></span>
+                       <input type="input" pattern="[0-9\.]+"  style="width:75px;" zippy="qfact"> 
+ 
                     </td>
-                    <td class="text-left">
-                        <a zippy="plus"><i class="fa fa-plus"></i></a>
-                        &nbsp;
-                    </td>
+                   
 
                     <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
