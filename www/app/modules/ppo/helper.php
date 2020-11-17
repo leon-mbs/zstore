@@ -84,7 +84,7 @@ class Helper
 
         if(curl_errno($request) > 0)
            {
-             System::setErrorMsg('Curl error: ' . curl_error($request)) ; 
+             \App\System::setErrorMsg('Curl error: ' . curl_error($request)) ;
                
              return false;
              
@@ -169,7 +169,7 @@ class Helper
         $pos = \App\Entity\Pos::load($posid) ;
        
         $branch_id= \App\Session::getSession()->branch_id;  
-        $firm = Helper::getFirmData($cid,$branch_id);
+        $firm = \App\Helper::getFirmData($cid,$branch_id);
         $branch = \App\Entity\Branch::load($branch_id);
                 
         $header = array( );

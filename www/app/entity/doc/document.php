@@ -465,7 +465,7 @@ class Document extends \ZCL\DB\Entity
      * @param mixed $header значения заголовка
      */
     public static function search($type, $from, $to, $header = array()) {
-        $conn = $conn = \ZDB\DB::getConnect();;
+        $conn = $conn = \ZDB\DB::getConnect();
         $where = "state= " . Document::STATE_EXECUTED;
 
         if (strlen($type) > 0) {
@@ -739,12 +739,12 @@ class Document extends \ZCL\DB\Entity
             } else {
                 System::setSuccessMsg(Helper::l('email_sent'));
             }
-        } catch (Exception $e) {
-            System::setErrorMsg($e->message);
+        } catch (\Exception $e) {
+            System::setErrorMsg($e->getMessage());
         }
 
 
-        @unlink($f);
+       // @unlink($f);
 
     }
 

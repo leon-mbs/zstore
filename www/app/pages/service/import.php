@@ -418,7 +418,7 @@ class Import extends \App\Pages\Base
             $this->setError('noselcolname');
             return;
         }
-        if ($t == 1 && $colqty == 0) {
+        if (  $colqty == 0) {
             $this->setError('noselcolqty');
             return;
         }

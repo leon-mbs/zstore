@@ -488,6 +488,7 @@ class IssueDS implements \Zippy\Interfaces\DataSource
         $status = $this->page->filter->searchstatus->getValue();
         // $number = trim($this->page->filter->searchnumber->getText());
         $emp = $this->page->filter->searchemp->getValue();
+      //  $number = $this->page->filter->searchnumber->getValue();
         $project = $this->page->filter->searchproject->getValue();
 
         $conn = \ZDB\DB::getConnect();

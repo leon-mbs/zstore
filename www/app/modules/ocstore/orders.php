@@ -243,7 +243,7 @@ class Orders extends \App\Pages\Base
             }
         }
 
-
+        $i=0;
         foreach ($this->_neworders as $shoporder) {
 
 

@@ -111,7 +111,7 @@ class Base extends \Zippy\Html\WebPage
 
         //$page = $this->getOwnerPage();
         //  $page = get_class($page)  ;
-        App::Redirect("\\App\\Pages\\UserLogin");;;
+        App::Redirect("\\App\\Pages\\UserLogin");
         //    App::$app->getresponse()->toBack();
     }
 
@@ -163,13 +163,13 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         
        
-        if (strlen(System::getWarnMsg(true)) > 0) {
+        if (strlen(System::getWarnMsg( )) > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'6000'})        ", true);
         }
-        if (strlen(System::getSuccesMsg(true)) > 0) {
+        if (strlen(System::getSuccesMsg( )) > 0) {
             $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'2000'})        ", true);
         }
-        if (strlen(System::getInfoMsg(true)) > 0) {
+        if (strlen(System::getInfoMsg( )) > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
 

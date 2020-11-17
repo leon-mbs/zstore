@@ -50,7 +50,7 @@ class Invoice extends \App\Entity\Doc\Document
             "isfirm" => strlen($firm["firm_name"]) > 0,
             "iscontract" => $this->headerdata["contract_id"] > 0,
             "phone" => $this->headerdata["phone"],
-            "customer_name" => $this->headerdata["customer_print"],
+            "customer_print" => $this->headerdata["customer_print"],
             "bank" => $firm["bank"],
             "bankacc" => $firm["bankacc"],
             "isbank" => (strlen($firm["bankacc"]) > 0 && strlen($firm["bank"]) > 0),

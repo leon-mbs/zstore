@@ -207,7 +207,7 @@ class Roles extends \App\Pages\Base
         $this->role->rolename = $this->editpanname->editformname->editname->getText();
 
         $role = UserRole::getFirst('rolename=' . UserRole::qstr($this->role->rolename));
-        if ($user instanceof UserRole) {
+        if ($role instanceof UserRole) {
             if ($role->role_id != $this->role->role_id) {
                 $this->setError('Неуникальное имя');
                 return;

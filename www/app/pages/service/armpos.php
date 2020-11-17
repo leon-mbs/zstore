@@ -73,7 +73,7 @@ class ARMPos extends \App\Pages\Base
 
         //оплата
         $this->add(new Form('form3'))->setVisible(false);
-        $this->form3->add(new DropDownChoice('payment'))->onChange($this, 'OnPayment');;
+        $this->form3->add(new DropDownChoice('payment'))->onChange($this, 'OnPayment');
         $this->form3->add(new TextInput('document_number'));
 
         $this->form3->add(new Date('document_date'))->setDate(time());
@@ -699,7 +699,7 @@ class ARMPos extends \App\Pages\Base
         $cid = $this->form1->firm->getValue();
         $posid = $this->form1->pos->getValue();
         try{
-          H::shift($cid,$posid,$sender->id=="openshift");
+        //  H::shift($cid,$posid,$sender->id=="openshift");
         }catch(\Exception $e) {
             $this->setError($e->getMessage()) ;
             return;

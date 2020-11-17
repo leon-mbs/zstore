@@ -204,7 +204,7 @@ class Items extends \App\Pages\Base
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
-
+        $skulist = array();
         try {
             $data = $client->get('products', array('status' => 'publish'));
         } catch (\Exception $ee) {

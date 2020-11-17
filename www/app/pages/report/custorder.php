@@ -84,7 +84,7 @@ class CustOrder extends \App\Pages\Base
                 $items[$item->itemname]['qty'] += $item->quantity;
                 $total += $item->amount;
             }
-        };
+        }
 
         $names = array_keys($items);
         sort($names);  //соартируем по  алфавиту
