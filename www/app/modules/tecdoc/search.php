@@ -195,7 +195,7 @@ class Search extends \App\Pages\Base
 
         $list = $db->getTree($this->tpanel->tablist->search1form->smodif->getValue());
 
-        while (true) {
+        while(true) {
             $wasadded = false;
             foreach ($list as $n) {
                 if ($n->intree) {

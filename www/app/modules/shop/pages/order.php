@@ -135,12 +135,12 @@ class Order extends Base
             }
 
             $order->headerdata = array(
-                'delivery' => $delivery,
+                'delivery'      => $delivery,
                 'delivery_name' => $this->orderform->delivery->getValueName(),
-                'email' => $email,
-                'phone' => $phone,
-                'address' => $address,
-                'total' => $amount
+                'email'         => $email,
+                'phone'         => $phone,
+                'address'       => $address,
+                'total'         => $amount
             );
             $order->packDetails('detaildata', $itlist);
 
@@ -160,7 +160,7 @@ class Order extends Base
             //todo  покупатель по умолчанию
             //todo  отослаnь нотификацию
             //todo  отослаnь письмо
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
         }
 

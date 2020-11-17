@@ -21,11 +21,11 @@ use Zippy\Html\Panel;
 class PayCustList extends \App\Pages\Base
 {
 
-    private $_doc = null;
-    private $_cust = null;
-    public $_custlist = array();
-    public $_doclist = array();
-    public $_pays = array();
+    private $_doc      = null;
+    private $_cust     = null;
+    public  $_custlist = array();
+    public  $_doclist  = array();
+    public  $_pays     = array();
 
     /**
      *

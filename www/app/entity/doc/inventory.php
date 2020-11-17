@@ -67,18 +67,18 @@ class Inventory extends Document
             if ($user->rolename != 'admins') {
                 $q = '-';
             }
-            $detail[] = array("no" => $i++,
-                "item_name" => $name,
-                "qfact" => $item->qfact,
-                "snumber" => $item->snumber,
-                "quantity" => $q
+            $detail[] = array("no"        => $i++,
+                              "item_name" => $name,
+                              "qfact"     => $item->qfact,
+                              "snumber"   => $item->snumber,
+                              "quantity"  => $q
             );
         }
 
         $header = array(
-            "_detail" => $detail,
-            'date' => H::fd($this->document_date),
-            "store" => $this->headerdata["storename"],
+            "_detail"         => $detail,
+            'date'            => H::fd($this->document_date),
+            "store"           => $this->headerdata["storename"],
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/inventory.tpl');

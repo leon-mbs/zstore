@@ -81,7 +81,7 @@ class Helper
             }
 
         }
-        switch ($meta_type) {
+        switch($meta_type) {
             case 1 :
                 $dir = "Pages/Doc";
                 break;
@@ -122,9 +122,9 @@ class Helper
     }
 
     public static function generateSmartMenu() {
-      
+
         $conn = \ZDB\DB::getConnect();
-        $user = System::getUser() ;
+        $user = System::getUser();
         $smartmenu = $user->smartmenu;
 
         if (strlen($smartmenu) == 0) {
@@ -143,7 +143,7 @@ class Helper
             }
 
 
-            switch ((int)$item['meta_type']) {
+            switch((int)$item['meta_type']) {
                 case 1 :
                     $dir = "Pages/Doc";
                     break;
@@ -164,41 +164,40 @@ class Helper
             $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
         }
         $role = \App\Entity\UserRole::load($user->role_id);
-        
+
         $mod = self::modulesMetaData($role);
-        $smartmenu = explode(',',$smartmenu) ;
-        foreach($mod as $p) {
-           if(  in_array($p->meta_id,$smartmenu))  {
-              $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/Modules{$p->meta_name}\">{$p->description}</a> ";
-           }
-        
+        $smartmenu = explode(',', $smartmenu);
+        foreach ($mod as $p) {
+            if (in_array($p->meta_id, $smartmenu)) {
+                $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/Modules{$p->meta_name}\">{$p->description}</a> ";
+            }
+
         }
         return $textmenu;
     }
 
     //метаданные   модулей
-    public static function modulesMetaData($role){
+    public static function modulesMetaData($role) {
         global $_config;
-        
+
         $mdata = array();
-        if($_config['modules']['note'] == 1) {
-          if($role->rolename=='admins' || strpos($role->modules,'note') !==false) {
-             $mdata[] =  new \App\Entity\MetaData(array('meta_id'=>10000,'meta_name'=>"/Note/Pages/Main",'meta_type'=>6,'description'=>self::l('modnotemain')));
-          }
+        if ($_config['modules']['note'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'note') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10000, 'meta_name' => "/Note/Pages/Main", 'meta_type' => 6, 'description' => self::l('modnotemain')));
+            }
         }
-        
-        if($_config['modules']['tecdoc'] == 1) {
-          if($role->rolename=='admins' || strpos($role->modules,'tecdoc') !==false) {
-             $mdata[] =  new \App\Entity\MetaData(array('meta_id'=>10001,'meta_name'=>"/Tecdoc/Search",'meta_type'=>6,'description'=>self::l('modtecdocsearch')));
-          }
+
+        if ($_config['modules']['tecdoc'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'tecdoc') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10001, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => self::l('modtecdocsearch')));
+            }
         }
-        
-        
-        
-        return  $mdata;
-        
+
+
+        return $mdata;
+
     }
-    
+
     public static function loadEmail($template, $keys = array()) {
         global $logger;
 
@@ -374,7 +373,7 @@ class Helper
         }
         $st = \App\Entity\Firm::getList();
 
-        if (count($st) >0) {
+        if (count($st) > 0) {
             $keys = array_keys($st);
             return $keys[0];
         }
@@ -391,7 +390,7 @@ class Helper
             return $user->defstore;
         }
         $st = \App\Entity\Store::getList();
-        if (count($st) >0) {
+        if (count($st) > 0) {
             $keys = array_keys($st);
             return $keys[0];
         }
@@ -409,7 +408,7 @@ class Helper
         }
 
         $st = \App\Entity\MoneyFund::getList();
-        if (count($st) >0) {
+        if (count($st) > 0) {
             $keys = array_keys($st);
             return $keys[0];
         }
@@ -474,7 +473,7 @@ class Helper
             if (strlen($dateformat) == 0) {
                 $dateformat = 'd.m.Y';
             }
-        
+
             return date($dateformat, $date);
         }
 
@@ -510,10 +509,14 @@ class Helper
             if ($firm == null) {
                 $firm = \App\Entity\Firm::load(self::getDefFirm());
             }
-            if($firm!=null)$data = $firm->getData();
+            if ($firm != null) {
+                $data = $firm->getData();
+            }
         } else {
             $firm = \App\Entity\Firm::load(self::getDefFirm());
-            if($firm!=null)$data = $firm->getData();
+            if ($firm != null) {
+                $data = $firm->getData();
+            }
         }
 
         if ($branch_id > 0) {
@@ -548,20 +551,21 @@ class Helper
         }
         return 25;
     }
-   /**
-   * длина  номера  телефона
-   * 
-   */
-   public static function PhoneL() {
- 
+
+    /**
+     * длина  номера  телефона
+     *
+     */
+    public static function PhoneL() {
+
         $phonel = System::getOption("common", 'phonel');
         if ($phonel > 0) {
-            return  $phonel;
+            return $phonel;
         }
-        return  10;   
-        
+        return 10;
+
     }
-    
+
     /**
      * Возвращает языковую метку
      *
@@ -654,6 +658,4 @@ class Helper
     }
 
 
-
-    
 }

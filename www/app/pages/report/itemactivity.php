@@ -176,14 +176,14 @@ class ItemActivity extends \App\Pages\Base
         $baout = 0;
         foreach ($rs as $row) {
             $detail[] = array(
-                "code" => $row['item_code'],
-                "name" => $row['itemname'],
-                "date" => \App\Helper::fd(strtotime($row['dt'])),
+                "code"      => $row['item_code'],
+                "name"      => $row['itemname'],
+                "date"      => \App\Helper::fd(strtotime($row['dt'])),
                 "documents" => $row['docs'],
-                "in" => H::fqty(strlen($row['begin_quantity']) > 0 ? $row['begin_quantity'] : 0),
-                "obin" => H::fqty($row['obin']),
-                "obout" => H::fqty($row['obout']),
-                "out" => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
+                "in"        => H::fqty(strlen($row['begin_quantity']) > 0 ? $row['begin_quantity'] : 0),
+                "obin"      => H::fqty($row['obin']),
+                "obout"     => H::fqty($row['obout']),
+                "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
             $ba = $ba + $row['begin_amount'];
             $bain = $bain + $row['obinamount'];
@@ -191,9 +191,9 @@ class ItemActivity extends \App\Pages\Base
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),
-            "_detail" => $detail,
-            'dateto' => \App\Helper::fd($to),
-            "store" => Store::load($storeid)->storename
+                        "_detail"  => $detail,
+                        'dateto'   => \App\Helper::fd($to),
+                        "store"    => Store::load($storeid)->storename
         );
         $header['ba'] = H::fa($ba);
         $header['bain'] = H::fa($bain);

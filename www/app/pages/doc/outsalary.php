@@ -24,7 +24,7 @@ class OutSalary extends \App\Pages\Base
 {
 
     private $_doc;
-    public $_list = array();
+    public  $_list = array();
 
     public function __construct($docid = 0) {
         parent::__construct();
@@ -128,7 +128,7 @@ class OutSalary extends \App\Pages\Base
             }
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

@@ -27,10 +27,10 @@ use Zippy\Html\Link\SubmitLink;
 class ServiceAct extends \App\Pages\Base
 {
 
-    public $_servicelist = array();
+    public  $_servicelist = array();
     private $_doc;
-    private $_rowid = 0;
-    private $_basedocid = 0;
+    private $_rowid       = 0;
+    private $_basedocid   = 0;
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -302,7 +302,7 @@ class ServiceAct extends \App\Pages\Base
 
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
@@ -473,7 +473,7 @@ class ServiceAct extends \App\Pages\Base
         $cust->phone = $this->editcust->editphone->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("tel10",H::PhoneL());
+            $this->setError("tel10", H::PhoneL());
             return;
         }
 

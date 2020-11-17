@@ -26,7 +26,7 @@ class ItemList extends \App\Pages\Base
 
     private $_item;
     private $_pitem_id = 0;
-    public $_itemset = array();
+    public  $_itemset  = array();
 
     public function __construct($add = false) {
         parent::__construct();

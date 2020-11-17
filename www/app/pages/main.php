@@ -29,12 +29,10 @@ class Main extends Base
         $this->add(new \App\Widgets\WReserved("wreserved"));
 
         $this->add(new \App\Widgets\WWaited("wwaited"));
-        
-        
-       
-        
+
+
     }
-    
+
     /*
     public function test($args,$post) {
         

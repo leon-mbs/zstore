@@ -27,23 +27,23 @@ class POSCheck extends Document
             }
 
 
-            $detail[] = array("no" => $i++,
-                "tovar_name" => $name,
-                "tovar_code" => $item->item_code,
-                "quantity" => H::fqty($item->quantity),
-                "msr" => $item->msr,
-                "price" => H::fa($item->price),
-                "amount" => H::fa($item->quantity * $item->price)
+            $detail[] = array("no"         => $i++,
+                              "tovar_name" => $name,
+                              "tovar_code" => $item->item_code,
+                              "quantity"   => H::fqty($item->quantity),
+                              "msr"        => $item->msr,
+                              "price"      => H::fa($item->price),
+                              "amount"     => H::fa($item->quantity * $item->price)
             );
         }
         foreach ($this->unpackDetails('services') as $ser) {
-            $detail[] = array("no" => $i++,
-                "tovar_name" => $ser->service_name,
-                "tovar_code" => '',
-                "quantity" => H::fqty($ser->quantity),
-                "msr" => '',
-                "price" => H::fa($ser->price),
-                "amount" => H::fa($ser->quantity * $ser->price)
+            $detail[] = array("no"         => $i++,
+                              "tovar_name" => $ser->service_name,
+                              "tovar_code" => '',
+                              "quantity"   => H::fqty($ser->quantity),
+                              "msr"        => '',
+                              "price"      => H::fa($ser->price),
+                              "amount"     => H::fa($ser->quantity * $ser->price)
             );
         }
 
@@ -51,23 +51,23 @@ class POSCheck extends Document
 
         $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "firm_name" => $firm["firm_name"],
-            "shopname" => $common["shopname"],
-            "address" => $firm["address"],
-            "phone" => $firm["phone"],
-            "customer_name" => strlen($this->customer_name) > 0 ? $this->customer_name : false,
-            "exchange" => $this->headerdata["exchange"],
-            "pos_name" => $this->headerdata["pos_name"],
-            "time" => H::fdt($this->headerdata["time"]),
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed),
-            "paydisc" => H::fa($this->headerdata["paydisc"]),
-            "isdisc" => $this->headerdata["paydisc"] > 0,
-            "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
-            "payamount" => H::fa($this->payamount)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "firm_name"       => $firm["firm_name"],
+                        "shopname"        => $common["shopname"],
+                        "address"         => $firm["address"],
+                        "phone"           => $firm["phone"],
+                        "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
+                        "exchange"        => $this->headerdata["exchange"],
+                        "pos_name"        => $this->headerdata["pos_name"],
+                        "time"            => H::fdt($this->headerdata["time"]),
+                        "document_number" => $this->document_number,
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed),
+                        "paydisc"         => H::fa($this->headerdata["paydisc"]),
+                        "isdisc"          => $this->headerdata["paydisc"] > 0,
+                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "payamount"       => H::fa($this->payamount)
         );
 
 
@@ -88,41 +88,41 @@ class POSCheck extends Document
 
             $detail[] = array(
                 "tovar_name" => $name,
-                "quantity" => H::fqty($item->quantity),
-                "amount" => H::fa($item->quantity * $item->price)
+                "quantity"   => H::fqty($item->quantity),
+                "amount"     => H::fa($item->quantity * $item->price)
             );
         }
         $i = 1;
         foreach ($this->unpackDetails('services') as $ser) {
-            $detail[] = array("no" => $i++,
-                "tovar_name" => $ser->service_name,
-                "quantity" => H::fqty($ser->quantity),
-                "amount" => H::fa($ser->quantity * $ser->price)
+            $detail[] = array("no"         => $i++,
+                              "tovar_name" => $ser->service_name,
+                              "quantity"   => H::fqty($ser->quantity),
+                              "amount"     => H::fa($ser->quantity * $ser->price)
             );
         }
         $common = \App\System::getOptions('common');
 
         $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "username" => \App\System::getUser()->username,
-            "firm_name" => $firm["firm_name"],
-            "shopname" => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
-            "address" => $firm["address"],
-            "phone" => $firm["phone"],
-            "inn" => $firm["inn"],
-            "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
-            "exchange" => $this->headerdata["exchange"],
-            "pos_name" => $this->headerdata["pos_name"],
-            "time" => H::fdt($this->headerdata["time"]),
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed),
-            "paydisc" => H::fa($this->headerdata["paydisc"]),
-            "isdisc" => $this->headerdata["paydisc"] > 0,
-            "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
-            "payamount" => H::fa($this->payamount)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "username"        => \App\System::getUser()->username,
+                        "firm_name"       => $firm["firm_name"],
+                        "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
+                        "address"         => $firm["address"],
+                        "phone"           => $firm["phone"],
+                        "inn"             => $firm["inn"],
+                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "exchange"        => $this->headerdata["exchange"],
+                        "pos_name"        => $this->headerdata["pos_name"],
+                        "time"            => H::fdt($this->headerdata["time"]),
+                        "document_number" => $this->document_number,
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed),
+                        "paydisc"         => H::fa($this->headerdata["paydisc"]),
+                        "isdisc"          => $this->headerdata["paydisc"] > 0,
+                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "payamount"       => H::fa($this->payamount)
         );
 
 

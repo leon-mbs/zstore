@@ -25,30 +25,30 @@ class GoodsReceipt extends Document
                 $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
             }
 
-            $detail[] = array("no" => $i++,
-                "itemname" => $name,
-                "snumber" => $item->snumber,
-                "itemcode" => $item->item_code,
-                "quantity" => H::fqty($item->quantity),
-                "price" => H::fa($item->price),
-                "msr" => $item->msr,
-                "amount" => H::fa($item->quantity * $item->price)
+            $detail[] = array("no"       => $i++,
+                              "itemname" => $name,
+                              "snumber"  => $item->snumber,
+                              "itemcode" => $item->item_code,
+                              "quantity" => H::fqty($item->quantity),
+                              "price"    => H::fa($item->price),
+                              "msr"      => $item->msr,
+                              "amount"   => H::fa($item->quantity * $item->price)
             );
         }
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "basedoc" => $this->headerdata["basedoc"],
-            "firm_name" => $firm['firm_name'],
-            "isfirm" => strlen($firm["firm_name"]) > 0,
-            "iscontract" => $this->headerdata["contract_id"] > 0,
-            "isval" => ($this->_doc->headerdata['val']) > 1,
-            "customer_name" => $this->customer_name,
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed),
-            "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
-            "payamount" => H::fa($this->payamount)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "basedoc"         => $this->headerdata["basedoc"],
+                        "firm_name"       => $firm['firm_name'],
+                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "isval"           => ($this->_doc->headerdata['val']) > 1,
+                        "customer_name"   => $this->customer_name,
+                        "document_number" => $this->document_number,
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed),
+                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "payamount"       => H::fa($this->payamount)
         );
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);

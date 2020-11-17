@@ -44,7 +44,7 @@
         </div>
         {{/ppo}}
         <div class="form-group">
-        
+
             <label for="editphone">Телефон,Viber </label>
             <input class="form-control" type="text" zippy="editphone">
         </div>
@@ -52,38 +52,41 @@
             <label for="editaddress">Адрес </label>
             <input class="form-control" type="text" zippy="editaddress">
         </div>
-            <div class="form-group">
-                <label for="editbank">Банк, МФО </label>
-                <input class="form-control" type="text" zippy="editbank">
-            </div>
-            <div class="form-group">
-                <label for="editbankacc">Расчетный счет </label>
-                <input class="form-control" type="text" zippy="editbankacc">
-            </div>
-            <div class="form-group">
-                <label for="editlogo">Логотип </label>
-                <input class="form-control" type="text" zippy="editlogo">
-                <small class="form-text text-muted">Путь к файлу логотипа относительно корня сайта. Например
-                    '/upload/logo.png'</small>
-            </div>
-            <div class="form-group">
-                <label for="editstamp">Печать </label>
-                <input class="form-control" type="text" zippy="editstamp">
-                <small class="form-text text-muted">Путь к изображению печати относительно корня сайта. </small>
-            </div>
-            <div class="form-group">
-                <label for="editsign">Подпись (факсимиле) </label>
-                <input class="form-control" type="text" zippy="editsign">
-                <small class="form-text text-muted">Путь к изображению относительно корня сайта. </small>
-            </div>  
-            {{#ppo}}      
-           <div class="form-group">
-                <label for="editpposerv">Сервер  подписи </label>
-                <input class="form-control" type="text" zippy="editpposerv">
-                <small class="form-text text-muted">Адрес  сервера  цифровой подписи в  формате <IP>:<Port>. </small>
-            </div>        
-            {{/ppo}}      
-        
+        <div class="form-group">
+            <label for="editbank">Банк, МФО </label>
+            <input class="form-control" type="text" zippy="editbank">
+        </div>
+        <div class="form-group">
+            <label for="editbankacc">Расчетный счет </label>
+            <input class="form-control" type="text" zippy="editbankacc">
+        </div>
+        <div class="form-group">
+            <label for="editlogo">Логотип </label>
+            <input class="form-control" type="text" zippy="editlogo">
+            <small class="form-text text-muted">Путь к файлу логотипа относительно корня сайта. Например
+                '/upload/logo.png'</small>
+        </div>
+        <div class="form-group">
+            <label for="editstamp">Печать </label>
+            <input class="form-control" type="text" zippy="editstamp">
+            <small class="form-text text-muted">Путь к изображению печати относительно корня сайта. </small>
+        </div>
+        <div class="form-group">
+            <label for="editsign">Подпись (факсимиле) </label>
+            <input class="form-control" type="text" zippy="editsign">
+            <small class="form-text text-muted">Путь к изображению относительно корня сайта. </small>
+        </div>
+        {{#ppo}}
+        <div class="form-group">
+            <label for="editpposerv">Сервер подписи </label>
+            <input class="form-control" type="text" zippy="editpposerv">
+            <small class="form-text text-muted">Адрес сервера цифровой подписи в формате
+                <IP>:
+                    <Port>.
+            </small>
+        </div>
+        {{/ppo}}
+
         <div class="form-check">
             <input zippy="editdisabled" type="checkbox" class="form-check-input">
             <label class="form-check-label" for="editdisabled">Не используется</label>

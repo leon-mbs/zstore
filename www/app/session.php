@@ -10,7 +10,7 @@ class Session
 {
 
     private $values = array();
-    public $filter = array();
+    public  $filter = array();
 
 
     public function __construct() {

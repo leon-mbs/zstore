@@ -20,27 +20,27 @@ class ServiceAct extends Document
 
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $ser) {
-            $detail[] = array("no" => $i++,
-                "service_name" => $ser->service_name,
-                "desc" => $ser->desc,
-                "price" => H::fa($ser->price)
+            $detail[] = array("no"           => $i++,
+                              "service_name" => $ser->service_name,
+                              "desc"         => $ser->desc,
+                              "price"        => H::fa($ser->price)
             );
         }
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "customer_name" => $this->customer_name,
-            "firm_name" => $firm['firm_name'],
-            "gar" => $this->headerdata['gar'],
-            "isdevice" => strlen($this->headerdata["device"]) > 0,
-            "device" => $this->headerdata["device"],
-            "isfirm" => strlen($firm["firm_name"]) > 0,
-            "iscontract" => $this->headerdata["contract_id"] > 0,
-            "devsn" => $this->headerdata["devsn"],
-            "document_number" => $this->document_number,
-            "payamount" => H::fa($this->payamount),
-            "payed" => H::fa($this->payed),
-            "total" => H::fa($this->amount)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "customer_name"   => $this->customer_name,
+                        "firm_name"       => $firm['firm_name'],
+                        "gar"             => $this->headerdata['gar'],
+                        "isdevice"        => strlen($this->headerdata["device"]) > 0,
+                        "device"          => $this->headerdata["device"],
+                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "devsn"           => $this->headerdata["devsn"],
+                        "document_number" => $this->document_number,
+                        "payamount"       => H::fa($this->payamount),
+                        "payed"           => H::fa($this->payed),
+                        "total"           => H::fa($this->amount)
         );
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
@@ -94,16 +94,16 @@ class ServiceAct extends Document
             $wp = 'style="width:' . $printer['pwidth'] . 'mm"';
         }
 
-        $header = array('printw' => $wp, 'date' => H::fd(time()),
-            "document_number" => $this->document_number,
-            "firm_name" => $firm['firm_name'],
-            "shopname" => strlen($common['shopname']) > 0 ? $common['shopname'] : false,
-            "address" => $firm['address'],
-            "phone" => $firm['phone'],
-            "customer_name" => $this->headerdata['customer_name'],
-            "isdevice" => strlen($this->headerdata["device"]) > 0,
-            "device" => $this->headerdata["device"] . (strlen($this->headerdata["devsn"]) > 0 ? ', с/н ' . $this->headerdata["devsn"] : ''),
-            "total" => H::fa($this->amount)
+        $header = array('printw'          => $wp, 'date' => H::fd(time()),
+                        "document_number" => $this->document_number,
+                        "firm_name"       => $firm['firm_name'],
+                        "shopname"        => strlen($common['shopname']) > 0 ? $common['shopname'] : false,
+                        "address"         => $firm['address'],
+                        "phone"           => $firm['phone'],
+                        "customer_name"   => $this->headerdata['customer_name'],
+                        "isdevice"        => strlen($this->headerdata["device"]) > 0,
+                        "device"          => $this->headerdata["device"] . (strlen($this->headerdata["devsn"]) > 0 ? ', с/н ' . $this->headerdata["devsn"] : ''),
+                        "total"           => H::fa($this->amount)
         );
         if (strlen($this->headerdata['gar']) > 0) {
             $header['gar'] = H::l('garant') . ': ' . $this->headerdata['gar'];
@@ -111,9 +111,9 @@ class ServiceAct extends Document
         $detail = array();
         $i = 1;
         foreach ($this->unpackDetails('detaildata') as $ser) {
-            $detail[] = array("no" => $i++,
-                "service_name" => $ser->service_name,
-                "price" => H::fa($ser->price)
+            $detail[] = array("no"           => $i++,
+                              "service_name" => $ser->service_name,
+                              "price"        => H::fa($ser->price)
             );
         }
         $header['slist'] = $detail;

@@ -11,7 +11,7 @@ use App\Helper as H;
 class ACL
 {
 
-    private static $_metas = array();
+    private static $_metas     = array();
     private static $_metasdesc = array();
 
     private static function load() {

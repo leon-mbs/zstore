@@ -156,8 +156,6 @@ class Document extends \ZCL\DB\Entity
         }
         $this->content .= "</header>";
 
- 
-
 
         $this->content .= "</doc>";
     }
@@ -175,7 +173,7 @@ class Document extends \ZCL\DB\Entity
 
         try {
             $xml = new \SimpleXMLElement($this->content);
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $logger->error("Документ " . $this->document_number . " " . $ee->getMessage());
             return;
@@ -186,7 +184,7 @@ class Document extends \ZCL\DB\Entity
         $this->detaildata = array();
 
         //deprecated
-        if(isset($xml->detail)) {
+        if (isset($xml->detail)) {
 
             foreach ($xml->detail->children() as $row) {
                 $_row = array();
@@ -207,7 +205,7 @@ class Document extends \ZCL\DB\Entity
                     if ($row['stock_id'] > 0) {
                         $detaildata[$row['stock_id']] = new \App\Entity\Stock($row);
                     } else {
-                        $id =   (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
+                        $id = (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
                         $detaildata[$id] = new \App\Entity\Item($row);
                     }
                 }
@@ -271,7 +269,7 @@ class Document extends \ZCL\DB\Entity
 
 
             $conn->CompleteTrans();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             \App\System::setErrorMsg($ee->getMessage());
@@ -373,7 +371,7 @@ class Document extends \ZCL\DB\Entity
      */
     public static function getStateName($state) {
 
-        switch ($state) {
+        switch($state) {
             case Document::STATE_NEW:
                 return Helper::l('st_new');
             case Document::STATE_EDITED:
@@ -739,12 +737,12 @@ class Document extends \ZCL\DB\Entity
             } else {
                 System::setSuccessMsg(Helper::l('email_sent'));
             }
-        } catch (\Exception $e) {
+        } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
         }
 
 
-       // @unlink($f);
+        // @unlink($f);
 
     }
 

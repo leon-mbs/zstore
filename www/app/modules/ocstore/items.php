@@ -122,9 +122,9 @@ class Items extends \App\Pages\Base
             }
             $elist[] = array('name' => $item->itemname,
 
-                'sku' => $item->item_code,
-                'quantity' => \App\Helper::fqty($item->qty),
-                'price' => $item->getPrice($modules['ocpricetype'])
+                             'sku'      => $item->item_code,
+                             'quantity' => \App\Helper::fqty($item->qty),
+                             'price'    => $item->getPrice($modules['ocpricetype'])
             );
         }
         if (count($elist) == 0) {
@@ -137,7 +137,7 @@ class Items extends \App\Pages\Base
 
         $fields = array(
             'data' => $data,
-            'cat' => $cat
+            'cat'  => $cat
         );
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;

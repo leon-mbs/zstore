@@ -19,7 +19,7 @@ class Options extends \App\Pages\Base
 {
 
     private $metadatads;
-    public $pricelist = array();
+    public  $pricelist = array();
 
     public function __construct() {
         parent::__construct();
@@ -281,8 +281,8 @@ class Options extends \App\Pages\Base
     public function metarowOnRow($row) {
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-        $title ='';
-        switch ($item->meta_type) {
+        $title = '';
+        switch($item->meta_type) {
             case 1:
                 $title = H::l('md_doc');
                 break;

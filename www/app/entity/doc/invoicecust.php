@@ -18,26 +18,26 @@ class InvoiceCust extends Document
 
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $detail[] = array("no" => $i++,
-                "itemname" => $item->itemname,
-                "itemcode" => $item->item_code,
-                "quantity" => H::fqty($item->quantity),
-                "price" => H::fa($item->price),
-                "msr" => $item->msr,
-                "amount" => H::fa($item->quantity * $item->price)
+            $detail[] = array("no"       => $i++,
+                              "itemname" => $item->itemname,
+                              "itemcode" => $item->item_code,
+                              "quantity" => H::fqty($item->quantity),
+                              "price"    => H::fa($item->price),
+                              "msr"      => $item->msr,
+                              "amount"   => H::fa($item->quantity * $item->price)
             );
         }
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "customer_name" => $this->customer_name,
-            "document_number" => $this->document_number,
-            "firm_name" => $firm['firm_name'],
-            "isfirm" => strlen($firm["firm_name"]) > 0,
-            "iscontract" => $this->headerdata["contract_id"] > 0,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed),
-            "payamount" => H::fa($this->payamount)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "customer_name"   => $this->customer_name,
+                        "document_number" => $this->document_number,
+                        "firm_name"       => $firm['firm_name'],
+                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed),
+                        "payamount"       => H::fa($this->payamount)
         );
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);

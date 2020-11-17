@@ -22,7 +22,7 @@ class ItemSel extends \Zippy\Html\PageFragment
     private $_event;
     private $_pricetype;
     private $_store = 0;
-    public $_list = array();
+    public  $_list  = array();
 
     /**
      *

@@ -93,7 +93,7 @@ class Application extends \Zippy\WebApplication
                 $params = array_slice($api, 3);
                 echo call_user_func_array(array($page, $api[2]), $params);
                 die;
-            } catch (\Throwable $e) {
+            } catch(\Throwable $e) {
                 global $logger;
                 $logger->error($e->getMessage());
 
@@ -104,17 +104,17 @@ class Application extends \Zippy\WebApplication
         $arr = explode('/', $uri);
 
         $pages = array(
-            "store" => "\\App\\Pages\\Main",
-            "shop" => "\\App\\Modules\\Shop\\Pages\\Main",
-            "sp" => "\\App\\Modules\\Shop\\Pages\\ProductView",
-            "aboutus" => "\\App\\Modules\\Shop\\Pages\\AboutUs",
+            "store"    => "\\App\\Pages\\Main",
+            "shop"     => "\\App\\Modules\\Shop\\Pages\\Main",
+            "sp"       => "\\App\\Modules\\Shop\\Pages\\ProductView",
+            "aboutus"  => "\\App\\Modules\\Shop\\Pages\\AboutUs",
             "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
-            "contact" => "\\App\\Modules\\Shop\\Pages\\Contact",
-            "scat" => "\\App\\Modules\\Shop\\Pages\\Main",
-            "pcat" => "\\App\\Modules\\Shop\\Pages\\Catalog",
-            "project" => "\\App\\Modules\\Issue\\Pages\\ProjectList",
-            "issue" => "\\App\\Modules\\Issue\\Pages\\IssueList",
-            "topic" => "\\App\\Modules\\Note\\Pages\\ShowTopic"
+            "contact"  => "\\App\\Modules\\Shop\\Pages\\Contact",
+            "scat"     => "\\App\\Modules\\Shop\\Pages\\Main",
+            "pcat"     => "\\App\\Modules\\Shop\\Pages\\Catalog",
+            "project"  => "\\App\\Modules\\Issue\\Pages\\ProjectList",
+            "issue"    => "\\App\\Modules\\Issue\\Pages\\IssueList",
+            "topic"    => "\\App\\Modules\\Note\\Pages\\ShowTopic"
         );
 
         if (strlen($pages[$arr[0]]) > 0) {

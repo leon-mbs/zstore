@@ -20,7 +20,7 @@ class Orders extends \App\Pages\Base
 {
 
     public $_neworders = array();
-    public $_eorders = array();
+    public $_eorders   = array();
 
     public function __construct() {
         parent::__construct();
@@ -243,7 +243,7 @@ class Orders extends \App\Pages\Base
             }
         }
 
-        $i=0;
+        $i = 0;
         foreach ($this->_neworders as $shoporder) {
 
 

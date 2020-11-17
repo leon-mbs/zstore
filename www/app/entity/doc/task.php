@@ -21,11 +21,11 @@ class Task extends Document
 
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
-            $detail[] = array("no" => $i++,
-                "service_name" => $ser->service_name,
-                "cost" => H::fa($ser->cost * $ser->qty),
-                "qty" => $ser->qty,
-                "hours" => $ser->hours * $ser->qty
+            $detail[] = array("no"           => $i++,
+                              "service_name" => $ser->service_name,
+                              "cost"         => H::fa($ser->cost * $ser->qty),
+                              "qty"          => $ser->qty,
+                              "hours"        => $ser->hours * $ser->qty
             );
         }
 
@@ -35,7 +35,7 @@ class Task extends Document
 
             $detail2[] = array(
                 "eq_name" => $eq->eq_name,
-                "code" => $eq->code
+                "code"    => $eq->code
             );
         }
         $detail3 = array();
@@ -45,16 +45,16 @@ class Task extends Document
             );
         }
 
-        $header = array('date' => H::fd($this->document_date),
-            "pareaname" => strlen($this->headerdata["pareaname"]) > 0 ? $this->headerdata["pareaname"] : false,
-            "document_date" => H::fd($this->document_date),
-            "document_number" => $this->document_number,
-            "notes" => $this->notes,
-            "baseddoc" => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
-            "_detail" => $detail,
-            "_detail2" => $detail2,
-            "iseq" => count($detail2) > 0,
-            "_detail3" => $detail3
+        $header = array('date'            => H::fd($this->document_date),
+                        "pareaname"       => strlen($this->headerdata["pareaname"]) > 0 ? $this->headerdata["pareaname"] : false,
+                        "document_date"   => H::fd($this->document_date),
+                        "document_number" => $this->document_number,
+                        "notes"           => $this->notes,
+                        "baseddoc"        => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
+                        "_detail"         => $detail,
+                        "_detail2"        => $detail2,
+                        "iseq"            => count($detail2) > 0,
+                        "_detail3"        => $detail3
         );
         $report = new \App\Report('doc/task.tpl');
 

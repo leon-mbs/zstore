@@ -53,113 +53,112 @@
 
     <div class="col-12  col-xl-10   ">
 
-       
-               <div  class="mt-1" style="font-size: 1.5rem">
-            <a zippy="tabs"><span    class="{{{tabcbadge}}}"   >  Перелік</span>   </a> &nbsp;&nbsp;
-            <a zippy="tabc"><span    class="{{{tababadge}}}"  >  Календар   </span>  </a>  &nbsp;&nbsp;
-            
-             </div>
-    
-            <div zippy="tasktab" class="tab-pane  active ">
-                <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Створити</a>
 
-                <div class="row">
-                    <div class="col-12    table-responsive">
-                        <a zippy="csv">Завантажити CSV</a>
+        <div class="mt-1" style="font-size: 1.5rem">
+            <a zippy="tabs"><span class="{{{tabcbadge}}}">  Перелік</span> </a> &nbsp;&nbsp;
+            <a zippy="tabc"><span class="{{{tababadge}}}">  Календар   </span> </a> &nbsp;&nbsp;
 
-                        <table class="table   table-sm table-hover">
-                            <tr>
+        </div>
 
-                                <th>Номер</th>
+        <div zippy="tasktab" class="tab-pane  active ">
+            <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Створити</a>
 
+            <div class="row">
+                <div class="col-12    table-responsive">
+                    <a zippy="csv">Завантажити CSV</a>
 
-                                <th>Початок</th>
+                    <table class="table   table-sm table-hover">
+                        <tr>
 
-                                <th style="text-align: right;">Час.</th>
-
-                                <th>Виконавець</th>
-                                <th>Робота</th>
-                                <th>Статус</th>
-                                <th>Опис</th>
+                            <th>Номер</th>
 
 
-                                <th style="width:75px;"></th>
+                            <th>Початок</th>
 
-                            </tr>
-                            <tr zippy="tasklist">
+                            <th style="text-align: right;">Час.</th>
 
-                                <td zippy="tasknumber"></td>
-
-
-                                <td zippy="taskdocument_date" style="white-space:   nowrap"></td>
-                                <td zippy="taskhours" style="text-align: right;"></td>
-
-                                <td zippy="taskemps"></td>
-                                <td zippy="taskservices"></td>
-                                <td zippy="taskstatus"></td>
-
-                                <td zippy="taskdesc"></td>
-
-                                <td>
-                                    <a zippy="taskshow" title="Перегляд"><i class="fa fa-eye"></i></a>
-                                    &nbsp;&nbsp;<a zippy="taskedit" title="Редагувати"><i class="fa fa-edit"></i></a>
-
-                                </td>
-
-                            </tr>
-
-                        </table>
-                        <div zippy="pag"></div>
-                        <a id="dankor"></a></div>
-                </div>
+                            <th>Виконавець</th>
+                            <th>Робота</th>
+                            <th>Статус</th>
+                            <th>Опис</th>
 
 
-                <div class="row" zippy="statuspan">
-                    <div class="col-12   ">
+                            <th style="width:75px;"></th>
+
+                        </tr>
+                        <tr zippy="tasklist">
+
+                            <td zippy="tasknumber"></td>
 
 
-                        <div class="navbar nav">
-                            <form zippy="statusform" class="form-inline ">
-                                <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 "><i
-                                        class="fas fa-wrench"></i> На виконання
-                                </button>
-                                <button zippy="bshifted" type="submit" class="  btn btn-warning  mr-2 "><i
-                                        class="fas fa-clock"></i> Відкласти
-                                </button>
-                                <button zippy="bclosed" type="submit" class="  btn btn-success  mr-2 "><i
-                                        class="fa fa-gavel"></i> Закінчено
-                                </button>
-                                <button zippy="bitems" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                        class="fa fa-cogs"></i> Витратні матеріали
-                                </button>
+                            <td zippy="taskdocument_date" style="white-space:   nowrap"></td>
+                            <td zippy="taskhours" style="text-align: right;"></td>
 
-                                <button zippy="bgoods" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                        class="fa fa-box"></i> Готова продукція
-                                </button>
-                                <button zippy="bact" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                        class="fa fa-tools"></i> Акт виконаних робіт
-                                </button>
+                            <td zippy="taskemps"></td>
+                            <td zippy="taskservices"></td>
+                            <td zippy="taskstatus"></td>
 
+                            <td zippy="taskdesc"></td>
 
-                            </form>
+                            <td>
+                                <a zippy="taskshow" title="Перегляд"><i class="fa fa-eye"></i></a>
+                                &nbsp;&nbsp;<a zippy="taskedit" title="Редагувати"><i class="fa fa-edit"></i></a>
 
+                            </td>
 
-                        </div>
+                        </tr>
 
-                        <div zippy="docview"></div>
-
-                    </div>
-                </div>
-
-            </div> <!-- tasktab -->
-            <div zippy="caltab" class="tab-pane    ">
-
-                <div zippy='calendar'></div>
-
-
+                    </table>
+                    <div zippy="pag"></div>
+                    <a id="dankor"></a></div>
             </div>
 
-       
+
+            <div class="row" zippy="statuspan">
+                <div class="col-12   ">
+
+
+                    <div class="navbar nav">
+                        <form zippy="statusform" class="form-inline ">
+                            <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 "><i
+                                    class="fas fa-wrench"></i> На виконання
+                            </button>
+                            <button zippy="bshifted" type="submit" class="  btn btn-warning  mr-2 "><i
+                                    class="fas fa-clock"></i> Відкласти
+                            </button>
+                            <button zippy="bclosed" type="submit" class="  btn btn-success  mr-2 "><i
+                                    class="fa fa-gavel"></i> Закінчено
+                            </button>
+                            <button zippy="bitems" type="submit" class="  btn btn-secondary  mr-2 "><i
+                                    class="fa fa-cogs"></i> Витратні матеріали
+                            </button>
+
+                            <button zippy="bgoods" type="submit" class="  btn btn-secondary  mr-2 "><i
+                                    class="fa fa-box"></i> Готова продукція
+                            </button>
+                            <button zippy="bact" type="submit" class="  btn btn-secondary  mr-2 "><i
+                                    class="fa fa-tools"></i> Акт виконаних робіт
+                            </button>
+
+
+                        </form>
+
+
+                    </div>
+
+                    <div zippy="docview"></div>
+
+                </div>
+            </div>
+
+        </div> <!-- tasktab -->
+        <div zippy="caltab" class="tab-pane    ">
+
+            <div zippy='calendar'></div>
+
+
+        </div>
+
 
     </div>
 

@@ -112,8 +112,8 @@ class EmpTask extends \App\Pages\Base
         foreach ($elist as $emp_id => $emp) {
             if ($emp->cnt > 0) {
                 $detail[] = array(
-                    "name" => $emp->emp_name,
-                    "cnt" => $emp->cnt,
+                    "name"  => $emp->emp_name,
+                    "cnt"   => $emp->cnt,
                     "hours" => $emp->hours,
 
                     "amount" => round($emp->amount)
@@ -122,8 +122,8 @@ class EmpTask extends \App\Pages\Base
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),
-            "_detail" => $detail,
-            'dateto' => \App\Helper::fd($to)
+                        "_detail"  => $detail,
+                        'dateto'   => \App\Helper::fd($to)
         );
         $report = new \App\Report('report/emptask.tpl');
 

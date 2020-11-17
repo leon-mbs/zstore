@@ -53,14 +53,14 @@ class Options extends \App\Pages\Base
             $keyc,
             $keys,
             [
-                'version' => 'wc/' . $api,
-                'wp_api' => true,
+                'version'    => 'wc/' . $api,
+                'wp_api'     => true,
                 'verify_ssl' => $ssl == 1
             ]
         );
         try {
             $woocommerce->get('');
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
         }

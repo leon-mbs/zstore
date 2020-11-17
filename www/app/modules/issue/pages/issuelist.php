@@ -29,8 +29,8 @@ class IssueList extends \App\Pages\Base
 
     public $_user;
     public $_issue;
-    public $_stlist = array();
-    public $_msglist = array();
+    public $_stlist    = array();
+    public $_msglist   = array();
     public $_fileslist = array();
 
     public function __construct($id = 0, $project_id = 0, $new = false) {
@@ -488,7 +488,7 @@ class IssueDS implements \Zippy\Interfaces\DataSource
         $status = $this->page->filter->searchstatus->getValue();
         // $number = trim($this->page->filter->searchnumber->getText());
         $emp = $this->page->filter->searchemp->getValue();
-      //  $number = $this->page->filter->searchnumber->getValue();
+        //  $number = $this->page->filter->searchnumber->getValue();
         $project = $this->page->filter->searchproject->getValue();
 
         $conn = \ZDB\DB::getConnect();

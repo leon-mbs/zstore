@@ -67,7 +67,6 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editissue'));
         $this->editpan->editform->add(new CheckBox('edittecdoc'));
         $this->editpan->editform->add(new CheckBox('editppo'));
-        
 
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -80,8 +79,8 @@ class Roles extends \App\Pages\Base
         $this->editpanmenu->add(new Form('editformmenu'))->onSubmit($this, 'savemenuOnClick');
 
         $this->editpanmenu->editformmenu->add(new Button('cancelmenu'))->onClick($this, 'cancelOnClick');
-        
-          
+
+
         $this->editpanmenu->editformmenu->add(new DataView('mlist', new \Zippy\Html\DataList\ArrayDataSource(array()), $this, 'menurowOnRow'));
 
 
@@ -121,20 +120,18 @@ class Roles extends \App\Pages\Base
         }
         if ($this->role->rolename == 'admins') {
             $w = "";
-        } 
-               
-        $smlist =  \App\Entity\MetaData::find("disabled<>1 {$w}","meta_type,description");
+        }
 
- 
-        $mod = H::modulesMetaData($this->role) ;
-        
-        
-        
-        $smlist = array_merge($smlist,$mod)  ;
-          
+        $smlist = \App\Entity\MetaData::find("disabled<>1 {$w}", "meta_type,description");
 
-        
-        $this->editpanmenu->editformmenu->mlist->getDataSource()->setArray($smlist); 
+
+        $mod = H::modulesMetaData($this->role);
+
+
+        $smlist = array_merge($smlist, $mod);
+
+
+        $this->editpanmenu->editformmenu->mlist->getDataSource()->setArray($smlist);
         $this->editpanmenu->editformmenu->mlist->Reload();
 
     }
@@ -332,7 +329,7 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->edittecdoc->isChecked()) {
             $modules = $modules . ',tecdoc';
         }
-      if ($this->editpan->editform->editppo->isChecked()) {
+        if ($this->editpan->editform->editppo->isChecked()) {
             $modules = $modules . ',ppo';
         }
 
@@ -388,21 +385,21 @@ class Roles extends \App\Pages\Base
 
     public function metarowOnRow($row) {
         $item = $row->getDataItem();
-        switch ($item->meta_type) {
+        switch($item->meta_type) {
             case 1:
-                $title = H::l('md_doc') ;
+                $title = H::l('md_doc');
                 break;
             case 2:
-                $title = H::l('md_rep')   ;
+                $title = H::l('md_rep');
                 break;
             case 3:
-                $title = H::l('md_reg')  ;
+                $title = H::l('md_reg');
                 break;
             case 4:
-                $title = H::l('md_ref')  ;
+                $title = H::l('md_ref');
                 break;
             case 5:
-                $title = H::l('md_ser')  ;
+                $title = H::l('md_ser');
                 break;
         }
         $item->editacc = false;
@@ -450,7 +447,7 @@ class Roles extends \App\Pages\Base
 
     public function menurowOnRow($row) {
         $item = $row->getDataItem();
-        switch ($item->meta_type) {
+        switch($item->meta_type) {
             case 1:
                 $title = H::l('md_doc');
                 break;
@@ -458,16 +455,16 @@ class Roles extends \App\Pages\Base
                 $title = H::l('md_rep');
                 break;
             case 3:
-                $title = H::l('md_reg') ;
+                $title = H::l('md_reg');
                 break;
             case 4:
-                $title = H::l('md_ref') ;
+                $title = H::l('md_ref');
                 break;
             case 5:
-                $title = H::l('md_ser') ;
+                $title = H::l('md_ser');
                 break;
             case 6:
-                $title = H::l('md_mod') ;
+                $title = H::l('md_mod');
                 break;
         }
         $smartmenu = @explode(',', $this->role->smartmenu);

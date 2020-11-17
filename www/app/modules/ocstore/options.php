@@ -51,7 +51,7 @@ class Options extends \App\Pages\Base
 
         $fields = array(
             'username' => $apiname,
-            'key' => $key
+            'key'      => $key
         );
         System::getSession()->ocssl = $ssl;
 

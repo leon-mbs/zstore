@@ -23,8 +23,8 @@ class GroupList extends \App\Pages\Base
 {
 
     private $group = null, $rootgroup;
-    public $attrlist = array();
-    private $mm;
+    public                 $attrlist = array();
+    private                $mm;
 
     public function __construct() {
         parent::__construct();

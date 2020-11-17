@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <CHECK xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="check01.xsd">
-     
+
     <CHECKHEAD>
-       <DOCTYPE>{{doctype}}</DOCTYPE>
-        
+        <DOCTYPE>{{doctype}}</DOCTYPE>
+
         <UID>{{guid}}</UID>
-        
+
         <TIN>{{edrpou}}</TIN>
 
         <IPN>{{inn}}</IPN>
@@ -13,26 +13,24 @@
         <ORGNM>{{firmname}}</ORGNM>
 
         <POINTNM>{{branchname}}</POINTNM>
-   
+
         <POINTADDR>{{address}}</POINTADDR>
 
         <ORDERDATE>{{date}}</ORDERDATE>
 
         <ORDERTIME>{{time}}</ORDERTIME>
-     
+
         <ORDERNUM>{{docnumber}}</ORDERNUM>
- 
+
 
         <CASHDESKNUM>{{posinner}}</CASHDESKNUM>
         <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>
 
 
         <CASHIER>{{username}}</CASHIER>
-       
+
         <VER>1</VER>
-     </CHECKHEAD>
- 
- 
- 
-       
+    </CHECKHEAD>
+
+
 </CHECK>

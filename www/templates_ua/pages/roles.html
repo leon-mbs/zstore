@@ -66,32 +66,39 @@
 
                     <div class="form-group" zippy="metaaccess">
                         &nbsp;<b><i class="fa fa-eye"></i></b> <span>Тiльки перегляд</span><br>
-                        &nbsp;<b><i class="fa fa-edit"></i></b> <span>Створення та  редагування  без  права  проведення.</span><br>
+                        &nbsp;<b><i class="fa fa-edit"></i></b>
+                        <span>Створення та  редагування  без  права  проведення.</span><br>
                         &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Зміна  статусу</span><br>
-                        &nbsp;<b><i class="fa fa-gavel"></i></b> <span>Створення, затвердження  та  виконання.</span><br>
+                        &nbsp;<b><i class="fa fa-gavel"></i></b>
+                        <span>Створення, затвердження  та  виконання.</span><br>
                         &nbsp;<b><i class="fa fa-undo"></i></b> <span>Вiдмiна проведення</span><br>
                         &nbsp;<b><i class="fa fa-trash"></i></b> <span>Видалення</span><br>
-                         
+
                         <table class="table table-sm  table-hover mr-4">
                             <tr>
                                 <th>Сторінка</th>
                                 <th>Тип</th>
                                 <th onclick=" $('.viewacc').prop('checked', $('.viewacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-eye"></i></th>
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i
+                                        class="fa fa-eye"></i></th>
                                 <th onclick=" $('.editacc').prop('checked', $('.editacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-edit"></i>
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i
+                                        class="fa fa-edit"></i>
                                 </th>
                                 <th onclick=" $('.stateacc').prop('checked', $('.stateacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-exchange-alt"></i>
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i
+                                        class="fa fa-exchange-alt"></i>
                                 </th>
-                                
+
                                 <th onclick=" $('.exeacc').prop('checked',  $('.exeacc').prop('checked' )==false);"
                                     style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i
                                         class="fa fa-gavel"></i></th>
                                 <th onclick=" $('.cancelacc').prop('checked', $('.cancelacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-undo"></i></th>
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i
+                                        class="fa fa-undo"></i></th>
                                 <th onclick=" $('.deleteacc').prop('checked', $('.deleteacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i class="fa fa-trash"></i></th>
+                                    style="width:30px;cursor:pointer" title="Зняти/виставити флажки"><i
+                                        class="fa fa-trash"></i></th>
                             </tr>
                             <tr zippy="metarow">
 
@@ -99,7 +106,7 @@
                                 <td zippy="meta_name"></td>
                                 <td><input zippy="viewacc" class="viewacc" type="checkbox"></td>
                                 <td><input zippy="editacc" class="editacc" type="checkbox"></td>
-                                <td><input zippy="stateacc"  class="stateacc"  type="checkbox"></td>
+                                <td><input zippy="stateacc" class="stateacc" type="checkbox"></td>
                                 <td><input zippy="exeacc" class="exeacc" type="checkbox"></td>
                                 <td><input zippy="cancelacc" class="cancelacc" type="checkbox"></td>
                                 <td><input zippy="deleteacc" class="deleteacc" type="checkbox"></td>
@@ -122,12 +129,13 @@
                         <table class="table table-sm  ml-4">
                             <tr>
                                 <td>
-                                    <b>Віджети на  головній сторінці</b></td>
+                                    <b>Віджети на головній сторінці</b></td>
                             </tr>
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwplanned">
-                                    <label class="form-check-label mr-sm-2" for="editwplanned"> Заплановані                                         документи</label>
+                                    <label class="form-check-label mr-sm-2" for="editwplanned"> Заплановані
+                                        документи</label>
                                 </td>
                             </tr>
 
@@ -135,7 +143,8 @@
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwdebitors">
-                                    <label class="form-check-label mr-sm-2" for="editwdebitors"> Документи до сплати</label>
+                                    <label class="form-check-label mr-sm-2" for="editwdebitors"> Документи до
+                                        сплати</label>
                                 </td>
                             </tr>
                             <tr>
@@ -182,14 +191,14 @@
                             <tr>
                                 <td>
                                     <input class="form-check-input" type="checkbox" zippy="editwreserved">
-                                    <label class="form-check-label mr-sm-2"                                            for="editwreserved">Зарезервовані </label>
+                                    <label class="form-check-label mr-sm-2" for="editwreserved">Зарезервовані </label>
                                 </td>
                             </tr>
 
 
                             <tr>
                                 <td>
-                                    <b>Доступ до  модулів</b>
+                                    <b>Доступ до модулів</b>
                                 </td>
                             </tr>
 
@@ -198,7 +207,7 @@
                                 <td>
 
                                     <input class="form-check-input" type="checkbox" zippy="editocstore">
-                                    <label class="form-check-label mr-sm-2" for="editocstore"> Iнтеграція з 
+                                    <label class="form-check-label mr-sm-2" for="editocstore"> Iнтеграція з
                                         опенкарт</label>
                                 </td>
                             </tr>
@@ -208,7 +217,7 @@
                                 <td>
 
                                     <input class="form-check-input" type="checkbox" zippy="editwoocomerce">
-                                    <label class="form-check-label mr-sm-2" for="editwoocomerce"> Iнтеграція з 
+                                    <label class="form-check-label mr-sm-2" for="editwoocomerce"> Iнтеграція з
                                         Woocomerce</label>
                                 </td>
                             </tr>
@@ -236,7 +245,8 @@
                                 <td>
 
                                     <input class="form-check-input" type="checkbox" zippy="editissue">
-                                    <label class="form-check-label mr-sm-2" for="editissue"> Проекти та  завдання </label>
+                                    <label class="form-check-label mr-sm-2" for="editissue"> Проекти та
+                                        завдання </label>
                                 </td>
                             </tr>
                             {{/issue}}
@@ -248,13 +258,13 @@
                                     <label class="form-check-label mr-sm-2" for="edittecdoc"> Автозапчастини </label>
                                 </td>
                             </tr>
-                            {{/tecdoc}}  
-                                                                                 {{#ppo}}
+                            {{/tecdoc}}
+                            {{#ppo}}
                             <tr>
                                 <td>
 
                                     <input class="form-check-input" type="checkbox" zippy="editppo">
-                                    <label class="form-check-label mr-sm-2" for="editppo"> Электронний РРО   </label>
+                                    <label class="form-check-label mr-sm-2" for="editppo"> Электронний РРО </label>
                                 </td>
                             </tr>
                             {{/ppo}}

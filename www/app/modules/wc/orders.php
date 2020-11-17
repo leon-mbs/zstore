@@ -20,7 +20,7 @@ class Orders extends \App\Pages\Base
 {
 
     public $_neworders = array();
-    public $_eorders = array();
+    public $_eorders   = array();
 
     public function __construct() {
         parent::__construct();
@@ -61,7 +61,7 @@ class Orders extends \App\Pages\Base
 
         try {
             $data = $client->get('orders', $fields);
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
         }
@@ -198,7 +198,7 @@ class Orders extends \App\Pages\Base
 
             try {
                 $data = $client->put('orders/' . $order->headerdata['wcorder'], $fields);
-            } catch (\Exception $ee) {
+            } catch(\Exception $ee) {
                 $this->setError($ee->getMessage());
                 return;
             }

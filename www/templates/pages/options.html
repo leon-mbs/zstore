@@ -6,10 +6,10 @@
         <h4>Настройки системы</h4>
 
         <form zippy="common">
-             <div class="form-group">
-              <label for="shopname">Название торговой точки </label>
-              <input class="form-control" type="text" zippy="shopname">
-              
+            <div class="form-group">
+                <label for="shopname">Название торговой точки </label>
+                <input class="form-control" type="text" zippy="shopname">
+
             </div>
             <div class="form-group  ">
                 <label for="partiontype">Тип партионного учета</label>
@@ -64,14 +64,14 @@
 
                 </select>
             </div>
-          <div class="form-group  ">
-                <label for="phonel">Длина  номера  телефона</label>
+            <div class="form-group  ">
+                <label for="phonel">Длина номера телефона</label>
 
                 <select style="width:75px" class="form-control" zippy="phonel">
- 
+
 
                 </select>
-            </div>            
+            </div>
             <div class="form-group">
                 <label for="defprice">Наценка по умолчанию, в процентах</label>
                 <input style="width:100px" pattern="[0-9]+" class="form-control" type="text" zippy="defprice">
@@ -84,13 +84,13 @@
                 <small class="form-text text-muted">Используется для сумм прописью в печатных формах.</small>
             </div>
 
-           <div class="form-check">
-              <input type="checkbox" class="form-check-input" zippy="autoarticle">
-              <label class="form-check-label" for="autoarticle">Автоматически создавать артикулы</label>
-                           <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                               title="Автоматическая  генерация номеров  артикулов для товаров"></i>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" zippy="autoarticle">
+                <label class="form-check-label" for="autoarticle">Автоматически создавать артикулы</label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Автоматическая  генерация номеров  артикулов для товаров"></i>
             </div>
-          
+
 
             <div class="form-check">
                 <input zippy="useset" type="checkbox" class="form-check-input">
@@ -124,7 +124,7 @@
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Филиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала. Отпускные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
             </div>
-         
+
             <div class="form-check">
                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="allowminus">Разрешить списывать ТМЦ в минус </label>
@@ -144,22 +144,24 @@
                    title=" Дополнительная защита  от несанкционированого доступа "></i>
             </div>
 
-                    
-           <div class="form-group  ">  <br>
+
+            <div class="form-group  "><br>
                 <label for="ts_start">Начало рабочего дня</label>
 
-                <input style="width:75px;"  class="form-control" zippy="ts_start" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" >
-              
+                <input style="width:75px;" class="form-control" zippy="ts_start"
+                       pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
+
             </div>
-           <div class="form-group  ">
+            <div class="form-group  ">
                 <label for="ts_end">Конец рабочего дня</label>
 
-                <input style="width:75px;" class="form-control" zippy="ts_end" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" >
-              
+                <input style="width:75px;" class="form-control" zippy="ts_end"
+                       pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
+
             </div>
-           <div class="form-group">
+            <div class="form-group">
                 <label for="ts_break">Перерыв, мин .</label>
-                <input style="width:75px;"  pattern="[0-9]+"   class="form-control" type="text" zippy="ts_break">
+                <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text" zippy="ts_break">
             </div>
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Сохранить</button>
@@ -192,33 +194,31 @@
                 <label class="form-check-label" for="valprice">Учитывать курсовую разницу при продаже </label>
 
             </div>
-            
+
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
         </form>
         {{/useval}}
 
- 
-       
 
         <h4>Настройка принтера</h4>
         <small>Настройки узкого принтера для печати чеков и этикеток</small>
         <form zippy="printer">
             <div class="form-group">
                 <label for="pwidth">Ширина печати</label>
-                <input style="width:60px"   class="form-control" type="text" zippy="pwidth">
-            <small class="form-text text-muted">Например '100%'  или '40mm'   </small>            
+                <input style="width:60px" class="form-control" type="text" zippy="pwidth">
+                <small class="form-text text-muted">Например '100%' или '40mm' </small>
             </div>
             <div class="form-group">
-                <label  >Параметры для этикеток и ценников</label>
+                <label>Параметры для этикеток и ценников</label>
             </div>
             <div class="form-group  ">
-                <label for="pfontsize">Размер  шрифта</label>
+                <label for="pfontsize">Размер шрифта</label>
                 <select style="width:100px" class="form-control" zippy="pfontsize">
                 </select>
             </div>
-           <div class="form-group  ">
+            <div class="form-group  ">
                 <label for="pricetype">Тип цены</label>
                 <select class="form-control" zippy="pricetype">
                 </select>
