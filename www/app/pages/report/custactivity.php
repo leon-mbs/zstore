@@ -121,8 +121,8 @@ class CustActivity extends \App\Pages\Base
 
 
                 "document_number" => $row['document_number'],
-                "obin" => H::fa($row['obin']),
-                "obout" => H::fa($row['obout'])
+                "obin"            => H::fa($row['obin']),
+                "obout"           => H::fa($row['obout'])
 
             );
 
@@ -132,14 +132,14 @@ class CustActivity extends \App\Pages\Base
         $tb = $tend - $tin + $tout;
 
         $header = array('datefrom' => \App\Helper::fd($from),
-            "_detail" => $detail,
+                        "_detail"  => $detail,
 
-            'tin' => H::fa($tin),
-            'tout' => H::fa($tout),
+                        'tin'  => H::fa($tin),
+                        'tout' => H::fa($tout),
 
 
-            'dateto' => \App\Helper::fd($to),
-            "cust_name" => $this->filter->cust->getText()
+                        'dateto'    => \App\Helper::fd($to),
+                        "cust_name" => $this->filter->cust->getText()
         );
         $report = new \App\Report('report/custactivity.tpl');
 

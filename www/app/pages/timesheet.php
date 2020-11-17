@@ -22,8 +22,8 @@ class TimeSheet extends \App\Pages\Base
 {
 
     private $_time_id = 0;
-    public $_list = array();
-    public $_stat = array();
+    public  $_list    = array();
+    public  $_stat    = array();
 
     public function __construct() {
         parent::__construct();

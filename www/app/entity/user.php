@@ -91,7 +91,7 @@ class User extends \ZCL\DB\Entity
 
 
         $this->hidesidebar = (int)$options['hidesidebar'];
-        $this->mainpage =  $options['mainpage'];
+        $this->mainpage = $options['mainpage'];
 
         parent::afterLoad();
     }

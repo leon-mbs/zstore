@@ -29,11 +29,11 @@ class ProdIssue extends Document
                 }
 
 
-                $detail[] = array("no" => $i++,
-                    "tovar_name" => $name,
-                    "tovar_code" => $item->item_code,
-                    "msr" => $item->msr,
-                    "quantity" => H::fqty($item->quantity)
+                $detail[] = array("no"         => $i++,
+                                  "tovar_name" => $name,
+                                  "tovar_code" => $item->item_code,
+                                  "msr"        => $item->msr,
+                                  "quantity"   => H::fqty($item->quantity)
 
 
                 );
@@ -41,12 +41,12 @@ class ProdIssue extends Document
         }
 
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "pareaname" => $this->headerdata["pareaname"],
-            "document_number" => $this->document_number,
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "pareaname"       => $this->headerdata["pareaname"],
+                        "document_number" => $this->document_number,
 
-            "notes" => $this->notes
+                        "notes" => $this->notes
         );
 
         $report = new \App\Report('doc/prodissue.tpl');

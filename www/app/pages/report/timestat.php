@@ -89,9 +89,9 @@ class TimeStat extends \App\Pages\Base
 
         $header = array(
             "_detail" => array_values($detail),
-            'from' => \App\Helper::fd($from),
-            'to' => \App\Helper::fd($to),
-            'total' => number_format($total, 2, '.', ''),
+            'from'    => \App\Helper::fd($from),
+            'to'      => \App\Helper::fd($to),
+            'total'   => number_format($total, 2, '.', ''),
 
             "typename" => $this->filter->ttype->getValueName()
         );

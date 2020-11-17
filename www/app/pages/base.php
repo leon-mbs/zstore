@@ -95,7 +95,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules, 'tecdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["tecdoc"] = false;
         }
-   
+
 
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
@@ -156,20 +156,20 @@ class Base extends \Zippy\Html\WebPage
         if (strlen(System::getErrorMsg()) > 0) {
             $this->_tvars['alerterror'] = System::getErrorMsg();
             $this->goAnkor('');
-        }         
+        }
     }
 
     protected function afterRender() {
         $user = System::getUser();
-        
-       
-        if (strlen(System::getWarnMsg( )) > 0) {
+
+
+        if (strlen(System::getWarnMsg()) > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'6000'})        ", true);
         }
-        if (strlen(System::getSuccesMsg( )) > 0) {
+        if (strlen(System::getSuccesMsg()) > 0) {
             $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'2000'})        ", true);
         }
-        if (strlen(System::getInfoMsg( )) > 0) {
+        if (strlen(System::getInfoMsg()) > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
 

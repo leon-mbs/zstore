@@ -132,12 +132,12 @@ class SalaryRep extends \App\Pages\Base
 
         $header = array(
             "_detail" => array_values($detail),
-            'yfrom' => $yfrom,
-            'mfrom' => $mfromname,
-            'yto' => $yto,
-            'mto' => $mtoname,
-            'isemp' => $emp_id > 0,
-            'total' => H::fa($total),
+            'yfrom'   => $yfrom,
+            'mfrom'   => $mfromname,
+            'yto'     => $yto,
+            'mto'     => $mtoname,
+            'isemp'   => $emp_id > 0,
+            'total'   => H::fa($total),
 
             "emp_name" => $emp_name
         );

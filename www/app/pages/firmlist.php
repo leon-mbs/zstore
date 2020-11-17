@@ -26,7 +26,7 @@ class FirmList extends \App\Pages\Base
 
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg(H::l('onlyadminpage'));
-           \App\Application::RedirectHome();
+            \App\Application::RedirectHome();
             return false;
         }
 
@@ -90,7 +90,6 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editstamp->setText($this->_firm->stamp);
         $this->firmdetail->editsign->setText($this->_firm->sign);
         $this->firmdetail->editpposerv->setText($this->_firm->pposerv);
-
 
 
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);

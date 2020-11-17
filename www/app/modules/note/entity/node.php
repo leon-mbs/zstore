@@ -42,7 +42,7 @@ class Node extends TreeEntity
         do {
             $list[] = $parent->title;
             $parent = Node::load($parent->pid);
-        } while ($parent instanceof Node);
+        } while($parent instanceof Node);
 
         return $list;
     }

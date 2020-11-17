@@ -115,14 +115,14 @@ class ABC extends \App\Pages\Base
         }
 
 
-        $header = array('from' => \App\Helper::fd($from),
-            "_detail" => $detail,
-            'to' => \App\Helper::fd($to),
-            "type" => $this->typelist[$type],
-            'totala' => $totala,
-            'totalb' => $totalb,
-            'totalc' => $totalc,
-            'total' => $total
+        $header = array('from'    => \App\Helper::fd($from),
+                        "_detail" => $detail,
+                        'to'      => \App\Helper::fd($to),
+                        "type"    => $this->typelist[$type],
+                        'totala'  => $totala,
+                        'totalb'  => $totalb,
+                        'totalc'  => $totalc,
+                        'total'   => $total
         );
         $report = new \App\Report('report/abc.tpl');
 

@@ -24,10 +24,10 @@ use App\Helper as H;
 class ProjectList extends \App\Pages\Base
 {
 
-    public $_project = null;
-    public $_msglist = array();
+    public $_project   = null;
+    public $_msglist   = array();
     public $_fileslist = array();
-    public $_stlist = array();
+    public $_stlist    = array();
 
     public function __construct($id = 0) {
         parent::__construct();

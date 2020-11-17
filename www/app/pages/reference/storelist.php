@@ -17,7 +17,7 @@ use Zippy\Html\Panel;
 class StoreList extends \App\Pages\Base
 {
 
-    public $_store = null;
+    public  $_store = null;
     private $_blist;
 
     public function __construct() {

@@ -28,12 +28,12 @@ use App\Helper as H;
 class Main extends \App\Pages\Base
 {
 
-    private $_edited = 0;
-    private $clipboard = array();
-    public $_tarr = array();
-    public $_sarr = array();
-    public $_farr = array();
-    public $_favorites = array();
+    private $_edited    = 0;
+    private $clipboard  = array();
+    public  $_tarr      = array();
+    public  $_sarr      = array();
+    public  $_farr      = array();
+    public  $_favorites = array();
 
 
     public function __construct() {

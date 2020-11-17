@@ -22,7 +22,7 @@ use Zippy\Html\Link\ClickLink;
 class StockList extends \App\Pages\Base
 {
 
-    private $_doc = null;
+    private $_doc    = null;
     private $_ptlist = null;
 
     /**

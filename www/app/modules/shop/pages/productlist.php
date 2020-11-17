@@ -27,9 +27,9 @@ class ProductList extends \App\Pages\Base
 {
 
     private $rootgroup, $product;
-    private $store = "";
-    private $op;
-    public $group = null, $attrlist = array(), $imglist = array();
+    private             $store = "";
+    private             $op;
+    public              $group = null, $attrlist = array(), $imglist = array();
 
     public function __construct() {
         parent::__construct();

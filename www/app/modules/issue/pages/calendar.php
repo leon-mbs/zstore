@@ -20,7 +20,7 @@ class Calendar extends \App\Pages\Base
 {
 
     private $timerow = null;
-    private $_tl = null;
+    private $_tl     = null;
 
     public function __construct() {
         parent::__construct();

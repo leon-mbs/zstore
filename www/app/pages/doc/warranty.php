@@ -23,10 +23,10 @@ use Zippy\Html\Link\SubmitLink;
 class Warranty extends \App\Pages\Base
 {
 
-    public $_tovarlist = array();
+    public  $_tovarlist = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid = 0;
+    private $_rowid     = 0;
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -228,7 +228,7 @@ class Warranty extends \App\Pages\Base
 
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

@@ -26,11 +26,11 @@ class OutcomeMoney extends Document
         $pt = Pay::getPayTypeList(2);
 
         $header = array(
-            'amount' => H::fa($this->amount),
-            'date' => H::fd($this->document_date),
-            "notes" => $this->notes,
-            "from" => $this->headerdata["paymentname"],
-            "type" => $pt[$this->headerdata["type"]],
+            'amount'          => H::fa($this->amount),
+            'date'            => H::fd($this->document_date),
+            "notes"           => $this->notes,
+            "from"            => $this->headerdata["paymentname"],
+            "type"            => $pt[$this->headerdata["type"]],
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/outcomemoney.tpl');

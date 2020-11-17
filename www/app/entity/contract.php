@@ -20,7 +20,7 @@ class Contract extends \ZCL\DB\Entity
     protected function afterLoad() {
 
         $this->createdon = strtotime($this->createdon);
-        
+
 
         $xml = @simplexml_load_string($this->details);
 
@@ -32,20 +32,20 @@ class Contract extends \ZCL\DB\Entity
         $this->file_id = (int)($xml->file_id[0]);
         $this->emp_id = (int)($xml->emp_id[0]);
         $this->enddate = (int)($xml->enddate[0]);
-        
-       
+
+
         parent::afterLoad();
     }
 
     protected function beforeDelete() {
-        
-          $docs = $this->getDocs() ;
-          if(count($docs)>0){
-             return  \App\Helper::l("iscontractdocs")  ; 
-          }
-          return "";   
+
+        $docs = $this->getDocs();
+        if (count($docs) > 0) {
+            return \App\Helper::l("iscontractdocs");
+        }
+        return "";
     }
-    
+
     protected function beforeSave() {
         parent::beforeSave();
         $this->details = "<details>";
@@ -92,24 +92,24 @@ class Contract extends \ZCL\DB\Entity
     }
 
     /**
-    * список  документов
-    * 
-    */
-    public  function getDocs() {
+     * список  документов
+     *
+     */
+    public function getDocs() {
 
         $ar = array();
-    
-       
+
+
         $where = "  customer_id={$this->customer_id} and  content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
 
         $res = \App\Entity\Doc\Document::find($where, 'document_id desc');
         foreach ($res as $k => $v) {
             $ar[$k] = $v;
         }
-         
+
 
         return $ar;
     }
-    
-    
+
+
 }
