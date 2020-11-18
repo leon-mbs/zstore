@@ -204,11 +204,12 @@ class GroupList extends \App\Pages\Base
             
             
     
-            $thumb = new \PHPThumb\GD($filedata['tmp_name']);
-            $thumb->resize(256, 256);
             
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($filedata['tmp_name']);
+
+            $thumb = new \App\Thumb($filedata['tmp_name']);
+            $thumb->resize(256, 256);
             $image->thumb = $thumb->getImageAsString();
 
             $image->mime = $imagedata['mime'];

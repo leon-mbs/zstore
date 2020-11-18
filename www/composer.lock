@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "47935f4c7f94c8e211304076a906cc32",
+    "content-hash": "61c11148616c469cf1d3f238051784b1",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -117,106 +117,6 @@
             "time": "2019-01-16T20:28:40+00:00"
         },
         {
-            "name": "bacon/bacon-qr-code",
-            "version": "2.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Bacon/BaconQrCode.git",
-                "reference": "3e9d791b67d0a2912922b7b7c7312f4b37af41e4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/3e9d791b67d0a2912922b7b7c7312f4b37af41e4",
-                "reference": "3e9d791b67d0a2912922b7b7c7312f4b37af41e4",
-                "shasum": ""
-            },
-            "require": {
-                "dasprid/enum": "^1.0.3",
-                "ext-iconv": "*",
-                "php": "^7.1 || ^8.0"
-            },
-            "require-dev": {
-                "phly/keep-a-changelog": "^1.4",
-                "phpunit/phpunit": "^7 | ^8 | ^9",
-                "squizlabs/php_codesniffer": "^3.4"
-            },
-            "suggest": {
-                "ext-imagick": "to generate QR code images"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "BaconQrCode\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ben Scholzen 'DASPRiD'",
-                    "email": "mail@dasprids.de",
-                    "homepage": "https://dasprids.de/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "BaconQrCode is a QR code generator for PHP.",
-            "homepage": "https://github.com/Bacon/BaconQrCode",
-            "support": {
-                "issues": "https://github.com/Bacon/BaconQrCode/issues",
-                "source": "https://github.com/Bacon/BaconQrCode/tree/2.0.3"
-            },
-            "time": "2020-10-30T02:02:47+00:00"
-        },
-        {
-            "name": "dasprid/enum",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/DASPRiD/Enum.git",
-                "reference": "5abf82f213618696dda8e3bf6f64dd042d8542b2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/5abf82f213618696dda8e3bf6f64dd042d8542b2",
-                "reference": "5abf82f213618696dda8e3bf6f64dd042d8542b2",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7 | ^8 | ^9",
-                "squizlabs/php_codesniffer": "^3.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "DASPRiD\\Enum\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ben Scholzen 'DASPRiD'",
-                    "email": "mail@dasprids.de",
-                    "homepage": "https://dasprids.de/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP 7.1 enum implementation",
-            "keywords": [
-                "enum",
-                "map"
-            ],
-            "support": {
-                "issues": "https://github.com/DASPRiD/Enum/issues",
-                "source": "https://github.com/DASPRiD/Enum/tree/1.0.3"
-            },
-            "time": "2020-10-02T16:03:48+00:00"
-        },
-        {
             "name": "dompdf/dompdf",
             "version": "v0.8.5",
             "source": {
@@ -287,70 +187,6 @@
             "time": "2020-02-20T03:52:51+00:00"
         },
         {
-            "name": "endroid/qr-code",
-            "version": "3.7.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/endroid/qr-code.git",
-                "reference": "c9097df3a107649c8347d2470c1bc984a4f6123a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/endroid/qr-code/zipball/c9097df3a107649c8347d2470c1bc984a4f6123a",
-                "reference": "c9097df3a107649c8347d2470c1bc984a4f6123a",
-                "shasum": ""
-            },
-            "require": {
-                "bacon/bacon-qr-code": "^2.0",
-                "ext-gd": "*",
-                "khanamiryan/qrcode-detector-decoder": "^1.0.2",
-                "myclabs/php-enum": "^1.5",
-                "php": ">=7.2",
-                "symfony/http-foundation": "^3.4||^4.2.12||^5.0",
-                "symfony/options-resolver": "^3.4||^4.0||^5.0",
-                "symfony/property-access": "^3.4||^4.0||^5.0"
-            },
-            "require-dev": {
-                "endroid/test": "dev-master"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Endroid\\QrCode\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jeroen van den Enden",
-                    "email": "info@endroid.nl"
-                }
-            ],
-            "description": "Endroid QR Code",
-            "homepage": "https://github.com/endroid/qr-code",
-            "keywords": [
-                "bundle",
-                "code",
-                "endroid",
-                "php",
-                "qr",
-                "qrcode"
-            ],
-            "support": {
-                "issues": "https://github.com/endroid/qr-code/issues",
-                "source": "https://github.com/endroid/qr-code/tree/master"
-            },
-            "time": "2019-12-22T18:55:19+00:00"
-        },
-        {
             "name": "firebase/php-jwt",
             "version": "v5.0.0",
             "source": {
@@ -399,298 +235,6 @@
                 "source": "https://github.com/firebase/php-jwt/tree/v5.0.0"
             },
             "time": "2017-06-27T22:17:23+00:00"
-        },
-        {
-            "name": "jbzoo/data",
-            "version": "2.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JBZoo/Data.git",
-                "reference": "1e1238e915b942b4147ea8746760423f3cbdf20b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JBZoo/Data/zipball/1e1238e915b942b4147ea8746760423f3cbdf20b",
-                "reference": "1e1238e915b942b4147ea8746760423f3cbdf20b",
-                "shasum": ""
-            },
-            "require": {
-                "jbzoo/utils": "^2.2.1",
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "jbzoo/phpunit": "^2.2.1",
-                "jbzoo/profiler": "^1.0.5",
-                "satooshi/php-coveralls": "^1.0.2",
-                "symfony/yaml": "^3.3.13"
-            },
-            "suggest": {
-                "symfony/yaml": "^3.3.13"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/functions.php"
-                ],
-                "psr-4": {
-                    "JBZoo\\Data\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "SmetDenis",
-                    "email": "denis@jbzoo.com",
-                    "role": "lead"
-                }
-            ],
-            "description": "Extended implementation of ArrayObject",
-            "keywords": [
-                "array",
-                "arrayobject",
-                "config",
-                "data",
-                "ini",
-                "json",
-                "params",
-                "yml"
-            ],
-            "support": {
-                "issues": "https://github.com/SmetDenis/Data/issues",
-                "source": "https://github.com/JBZoo/Data/tree/master"
-            },
-            "time": "2018-12-03T16:32:55+00:00"
-        },
-        {
-            "name": "jbzoo/image",
-            "version": "3.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JBZoo/Image.git",
-                "reference": "cf76a07d84fdef48f2e1bdb3b50d025c4d6e26fc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JBZoo/Image/zipball/cf76a07d84fdef48f2e1bdb3b50d025c4d6e26fc",
-                "reference": "cf76a07d84fdef48f2e1bdb3b50d025c4d6e26fc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-gd": "*",
-                "jbzoo/utils": "^1.4|^2.2",
-                "php": ">=5.3.10"
-            },
-            "require-dev": {
-                "jbzoo/phpunit": "^1.7"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "JBZoo\\Image\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nazar Mokrynskyi",
-                    "email": "nazar@mokrynskyi.com",
-                    "homepage": "http://cleverstyle.org/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Cory LaViska",
-                    "homepage": "http://www.abeautifulsite.net/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "SmetDenis",
-                    "email": "denis@jbzoo.com",
-                    "homepage": "http://jbzoo.com/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A PHP class that simplifies working with images (fork abeautifulsite/simpleimage)",
-            "keywords": [
-                "crop",
-                "filters",
-                "gd",
-                "image",
-                "images",
-                "jbzoo",
-                "resize",
-                "thumbnail",
-                "watermark"
-            ],
-            "support": {
-                "issues": "https://github.com/JBZoo/Image/issues",
-                "source": "https://github.com/JBZoo/Image/tree/master"
-            },
-            "time": "2018-09-26T15:11:55+00:00"
-        },
-        {
-            "name": "jbzoo/utils",
-            "version": "2.3.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JBZoo/Utils.git",
-                "reference": "549ca27f7ced373afe0bf1847579656c730ea702"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JBZoo/Utils/zipball/549ca27f7ced373afe0bf1847579656c730ea702",
-                "reference": "549ca27f7ced373afe0bf1847579656c730ea702",
-                "shasum": ""
-            },
-            "require": {
-                "jbzoo/data": "^1.6|^2.0",
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "jbzoo/phpunit": "^2.2",
-                "jbzoo/profiler": "^1.0",
-                "php-coveralls/php-coveralls": "^2.1",
-                "symfony/polyfill-mbstring": "^1.10",
-                "symfony/process": "^3.3|^4.1"
-            },
-            "suggest": {
-                "ext-mbstring": "Provides multibyte specific string functions",
-                "symfony/polyfill-mbstring": "For UTF-8 if ext-mbstring disabled",
-                "symfony/process": "For Cli::exec() method only"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/defines.php"
-                ],
-                "psr-4": {
-                    "JBZoo\\Utils\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "SmetDenis",
-                    "email": "denis@jbzoo.com",
-                    "role": "lead"
-                },
-                {
-                    "name": "Brandon Wamboldt",
-                    "email": "brandon.wamboldt@gmail.com"
-                },
-                {
-                    "name": "Luís Nóbrega",
-                    "email": "luis.barros.nobrega@gmail.com"
-                }
-            ],
-            "description": "A collection of useful PHP functions, mini classes and snippets that you need every day.",
-            "keywords": [
-                "array",
-                "cli",
-                "collection",
-                "command line",
-                "dates",
-                "email",
-                "env",
-                "environment",
-                "filesystem",
-                "filter",
-                "helper",
-                "helpers",
-                "http",
-                "image",
-                "mbstring",
-                "misc",
-                "serialize",
-                "slugify",
-                "string",
-                "timer",
-                "url",
-                "utility",
-                "utils"
-            ],
-            "support": {
-                "issues": "https://github.com/JBZoo/Utils/issues",
-                "source": "https://github.com/JBZoo/Utils/tree/master"
-            },
-            "time": "2019-11-21T09:34:54+00:00"
-        },
-        {
-            "name": "khanamiryan/qrcode-detector-decoder",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/khanamiryan/php-qrcode-detector-decoder.git",
-                "reference": "89b57f2d9939dd57394b83f6ccbd3e1a74659e34"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/khanamiryan/php-qrcode-detector-decoder/zipball/89b57f2d9939dd57394b83f6ccbd3e1a74659e34",
-                "reference": "89b57f2d9939dd57394b83f6ccbd3e1a74659e34",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.6|^7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Zxing\\": "lib/"
-                },
-                "files": [
-                    "lib/Common/customFunctions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ashot Khanamiryan",
-                    "email": "a.khanamiryan@gmail.com",
-                    "homepage": "https://github.com/khanamiryan",
-                    "role": "Developer"
-                }
-            ],
-            "description": "QR code decoder / reader",
-            "homepage": "https://github.com/khanamiryan/php-qrcode-detector-decoder/",
-            "keywords": [
-                "barcode",
-                "qr",
-                "zxing"
-            ],
-            "support": {
-                "issues": "https://github.com/khanamiryan/php-qrcode-detector-decoder/issues",
-                "source": "https://github.com/khanamiryan/php-qrcode-detector-decoder/tree/1.0.3"
-            },
-            "time": "2020-04-19T16:18:51+00:00"
         },
         {
             "name": "leon-mbs/phpquery",
@@ -832,6 +376,57 @@
             "time": "2020-11-13T16:53:55+00:00"
         },
         {
+            "name": "masterexploder/phpthumb",
+            "version": "2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/masterexploder/PHPThumb.git",
+                "reference": "01f6aa65aa3d136e175f67da2b4ea3e316770d02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/masterexploder/PHPThumb/zipball/01f6aa65aa3d136e175f67da2b4ea3e316770d02",
+                "reference": "01f6aa65aa3d136e175f67da2b4ea3e316770d02",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPThumb": "src",
+                    "PHPThumb\\Tests": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jarrod Nettles",
+                    "email": "jarrod.nettles@icloud.com"
+                },
+                {
+                    "name": "Ian Selby",
+                    "email": "ian@gxdlabs.com"
+                }
+            ],
+            "description": "A library for manipulating images in PHP.",
+            "homepage": "https://github.com/masterexploder/PHPThumb",
+            "keywords": [
+                "image",
+                "resize",
+                "rotate"
+            ],
+            "support": {
+                "issues": "https://github.com/masterexploder/PHPThumb/issues",
+                "source": "https://github.com/masterexploder/PHPThumb/tree/2.1"
+            },
+            "time": "2015-09-08T22:55:44+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.25.4",
             "source": {
@@ -971,56 +566,6 @@
                 "source": "https://github.com/bobthecow/mustache.php/tree/master"
             },
             "time": "2019-11-23T21:40:31+00:00"
-        },
-        {
-            "name": "myclabs/php-enum",
-            "version": "1.7.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/myclabs/php-enum.git",
-                "reference": "5f36467c7a87e20fbdc51e524fd8f9d1de80187c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/5f36467c7a87e20fbdc51e524fd8f9d1de80187c",
-                "reference": "5f36467c7a87e20fbdc51e524fd8f9d1de80187c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7",
-                "squizlabs/php_codesniffer": "1.*",
-                "vimeo/psalm": "^3.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "MyCLabs\\Enum\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP Enum contributors",
-                    "homepage": "https://github.com/myclabs/php-enum/graphs/contributors"
-                }
-            ],
-            "description": "PHP Enum implementation",
-            "homepage": "http://github.com/myclabs/php-enum",
-            "keywords": [
-                "enum"
-            ],
-            "support": {
-                "issues": "https://github.com/myclabs/php-enum/issues",
-                "source": "https://github.com/myclabs/php-enum/tree/master"
-            },
-            "time": "2020-02-14T08:15:52+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1449,12 +994,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0011d773ec873fbf3cde730da5655ff74eddc9f8"
+                "reference": "4100ec7deab9f78b3b7685fedc6c9b82c15b5c76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0011d773ec873fbf3cde730da5655ff74eddc9f8",
-                "reference": "0011d773ec873fbf3cde730da5655ff74eddc9f8",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4100ec7deab9f78b3b7685fedc6c9b82c15b5c76",
+                "reference": "4100ec7deab9f78b3b7685fedc6c9b82c15b5c76",
                 "shasum": ""
             },
             "conflict": {
@@ -1484,7 +1029,7 @@
                 "composer/composer": "<=1-alpha.11",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
                 "contao/core": ">=2,<3.5.39",
-                "contao/core-bundle": ">=4,<4.4.52|>=4.5,<4.9.6|= 4.10.0",
+                "contao/core-bundle": "= 4.10.0|>=4,<4.4.52|>=4.5,<4.9.6",
                 "contao/listing-bundle": ">=4,<4.4.8",
                 "datadog/dd-trace": ">=0.30,<0.30.2",
                 "david-garcia/phpwhois": "<=4.3.1",
@@ -1593,6 +1138,7 @@
                 "prestashop/autoupgrade": ">=4,<4.10.1",
                 "prestashop/contactform": ">1.0.1,<4.3",
                 "prestashop/gamification": "<2.3.2",
+                "prestashop/productcomments": ">=4,<4.2",
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "privatebin/privatebin": "<1.2.2|>=1.3,<1.3.2",
                 "propel/propel": ">=2-alpha.1,<=2-alpha.7",
@@ -1757,7 +1303,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-13T16:02:31+00:00"
+            "time": "2020-11-18T07:02:14+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -1807,458 +1353,6 @@
                 "source": "https://github.com/sabberworm/PHP-CSS-Parser/tree/8.3.1"
             },
             "time": "2020-06-01T09:10:00+00:00"
-        },
-        {
-            "name": "symfony/deprecation-contracts",
-            "version": "v2.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5fa56b4074d1ae755beb55617ddafe6f5d78f665",
-                "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.2-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "function.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A generic function and convention to trigger deprecation notices",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/master"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-09-07T11:33:47+00:00"
-        },
-        {
-            "name": "symfony/http-foundation",
-            "version": "v5.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "a2860ec970404b0233ab1e59e0568d3277d32b6f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/a2860ec970404b0233ab1e59e0568d3277d32b6f",
-                "reference": "a2860ec970404b0233ab1e59e0568d3277d32b6f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/deprecation-contracts": "^2.1",
-                "symfony/polyfill-mbstring": "~1.1",
-                "symfony/polyfill-php80": "^1.15"
-            },
-            "require-dev": {
-                "predis/predis": "~1.0",
-                "symfony/cache": "^4.4|^5.0",
-                "symfony/expression-language": "^4.4|^5.0",
-                "symfony/mime": "^4.4|^5.0"
-            },
-            "suggest": {
-                "symfony/mime": "To use the file extension guesser"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\HttpFoundation\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony HttpFoundation Component",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v5.1.8"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-24T12:01:57+00:00"
-        },
-        {
-            "name": "symfony/options-resolver",
-            "version": "v5.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "c6a02905e4ffc7a1498e8ee019db2b477cd1cc02"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/c6a02905e4ffc7a1498e8ee019db2b477cd1cc02",
-                "reference": "c6a02905e4ffc7a1498e8ee019db2b477cd1cc02",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/deprecation-contracts": "^2.1",
-                "symfony/polyfill-php80": "^1.15"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\OptionsResolver\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony OptionsResolver Component",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "config",
-                "configuration",
-                "options"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/options-resolver/tree/v5.1.8"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-24T12:01:57+00:00"
-        },
-        {
-            "name": "symfony/polyfill-ctype",
-            "version": "v1.20.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "f4ba089a5b6366e453971d3aad5fe8e897b37f41"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/f4ba089a5b6366e453971d3aad5fe8e897b37f41",
-                "reference": "f4ba089a5b6366e453971d3aad5fe8e897b37f41",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "suggest": {
-                "ext-ctype": "For best performance"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.20-dev"
-                },
-                "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill for ctype functions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "ctype",
-                "polyfill",
-                "portable"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.20.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-23T14:02:19+00:00"
-        },
-        {
-            "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.20.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "c7cf3f858ec7d70b89559d6e6eb1f7c2517d479c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/c7cf3f858ec7d70b89559d6e6eb1f7c2517d479c",
-                "reference": "c7cf3f858ec7d70b89559d6e6eb1f7c2517d479c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "suggest": {
-                "ext-intl": "For best performance"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.20-dev"
-                },
-                "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Grapheme\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill for intl's grapheme_* functions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "grapheme",
-                "intl",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.20.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-23T14:02:19+00:00"
-        },
-        {
-            "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.20.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
-                "reference": "727d1096295d807c309fb01a851577302394c897"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/727d1096295d807c309fb01a851577302394c897",
-                "reference": "727d1096295d807c309fb01a851577302394c897",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "suggest": {
-                "ext-intl": "For best performance"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.20-dev"
-                },
-                "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Normalizer\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ],
-                "classmap": [
-                    "Resources/stubs"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill for intl's Normalizer class and related functions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "intl",
-                "normalizer",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.20.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-23T14:02:19+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2422,258 +1516,6 @@
                 }
             ],
             "time": "2020-10-23T14:02:19+00:00"
-        },
-        {
-            "name": "symfony/property-access",
-            "version": "v5.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/property-access.git",
-                "reference": "5d77df9a88600797d02c7937c153965ba3537933"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-access/zipball/5d77df9a88600797d02c7937c153965ba3537933",
-                "reference": "5d77df9a88600797d02c7937c153965ba3537933",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/polyfill-php80": "^1.15",
-                "symfony/property-info": "^5.1.1"
-            },
-            "require-dev": {
-                "symfony/cache": "^4.4|^5.0"
-            },
-            "suggest": {
-                "psr/cache-implementation": "To cache access methods."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\PropertyAccess\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony PropertyAccess Component",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "access",
-                "array",
-                "extraction",
-                "index",
-                "injection",
-                "object",
-                "property",
-                "property path",
-                "reflection"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/property-access/tree/v5.1.8"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-24T12:01:57+00:00"
-        },
-        {
-            "name": "symfony/property-info",
-            "version": "v5.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/property-info.git",
-                "reference": "fc15c51f829887b62a94a917ba793f51e80ea3e1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-info/zipball/fc15c51f829887b62a94a917ba793f51e80ea3e1",
-                "reference": "fc15c51f829887b62a94a917ba793f51e80ea3e1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/polyfill-php80": "^1.15",
-                "symfony/string": "^5.1"
-            },
-            "conflict": {
-                "phpdocumentor/reflection-docblock": "<3.2.2",
-                "phpdocumentor/type-resolver": "<0.3.0",
-                "symfony/dependency-injection": "<4.4"
-            },
-            "require-dev": {
-                "doctrine/annotations": "~1.7",
-                "phpdocumentor/reflection-docblock": "^3.0|^4.0|^5.0",
-                "symfony/cache": "^4.4|^5.0",
-                "symfony/dependency-injection": "^4.4|^5.0",
-                "symfony/serializer": "^4.4|^5.0"
-            },
-            "suggest": {
-                "phpdocumentor/reflection-docblock": "To use the PHPDoc",
-                "psr/cache-implementation": "To cache results",
-                "symfony/doctrine-bridge": "To use Doctrine metadata",
-                "symfony/serializer": "To use Serializer metadata"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\PropertyInfo\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kévin Dunglas",
-                    "email": "dunglas@gmail.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Property Info Component",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "doctrine",
-                "phpdoc",
-                "property",
-                "symfony",
-                "type",
-                "validator"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/property-info/tree/v5.1.8"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-24T12:01:57+00:00"
-        },
-        {
-            "name": "symfony/string",
-            "version": "v5.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/string.git",
-                "reference": "a97573e960303db71be0dd8fda9be3bca5e0feea"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/a97573e960303db71be0dd8fda9be3bca5e0feea",
-                "reference": "a97573e960303db71be0dd8fda9be3bca5e0feea",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/polyfill-ctype": "~1.8",
-                "symfony/polyfill-intl-grapheme": "~1.0",
-                "symfony/polyfill-intl-normalizer": "~1.0",
-                "symfony/polyfill-mbstring": "~1.0",
-                "symfony/polyfill-php80": "~1.15"
-            },
-            "require-dev": {
-                "symfony/error-handler": "^4.4|^5.0",
-                "symfony/http-client": "^4.4|^5.0",
-                "symfony/translation-contracts": "^1.1|^2",
-                "symfony/var-exporter": "^4.4|^5.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\String\\": ""
-                },
-                "files": [
-                    "Resources/functions.php"
-                ],
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony String component",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "grapheme",
-                "i18n",
-                "string",
-                "unicode",
-                "utf-8",
-                "utf8"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/string/tree/v5.1.8"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-10-24T12:01:57+00:00"
         },
         {
             "name": "symfony/translation",

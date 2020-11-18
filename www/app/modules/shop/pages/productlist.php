@@ -362,10 +362,10 @@ class ProductList extends \App\Pages\Base
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
-            $th = new \JBZoo\Image\Image($file['tmp_name']);
-            $th = $th->resize(256, 256);
-            //$th->save();
-            $image->thumb = $th->getBinary();
+
+            $thumb = new \App\Thumb($filedata['tmp_name']);
+            $thumb->resize(256, 256);
+            $image->thumb = $thumb->getImageAsString();
 
             $image->save();
             $this->product->images[] = $image->image_id;
