@@ -23,7 +23,7 @@ class Inventory extends Document
             }
 
             //оприходуем
-            if ($item->quantity < $item->qfact) {
+            if ($item->quantity < $item->qfact  && $this->headerdata['autoincome']==1) {
                 $qty = $item->qfact - $item->quantity;
                 $where = "store_id=" . $this->headerdata['store'] . " and item_id=" . $item->item_id;
                 $price = 0;
@@ -40,7 +40,7 @@ class Inventory extends Document
             }
 
             //списываем  со склада
-            if ($item->quantity > $item->qfact) {
+            if ($item->quantity > $item->qfact && $this->headerdata['autooutcome']==1) {
                 $item->quantity = $item->quantity - $item->qfact;
                 $listst = Stock::pickup($this->headerdata['store'], $item);
                 foreach ($listst as $st) {

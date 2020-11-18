@@ -201,12 +201,15 @@ class GroupList extends \App\Pages\Base
                 $this->setError('squareimage');
                 return;
             }
-            $th = new \JBZoo\Image\Image($filedata['tmp_name']);
-            $th = $th->resize(256, 256);
-
+            
+            
+    
+            $thumb = new \PHPThumb\GD($filedata['tmp_name']);
+            $thumb->resize(256, 256);
+            
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($filedata['tmp_name']);
-            $image->thumb = $th->getBinary();
+            $image->thumb = $thumb->getImageAsString();
 
             $image->mime = $imagedata['mime'];
             $image->save();

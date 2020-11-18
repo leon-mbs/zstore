@@ -6,6 +6,7 @@ use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Entity\Store;
+use App\Entity\Category;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -15,6 +16,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -37,9 +39,13 @@ class Inventory extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('category', Category::findArray("cat_name", "", "cat_name"), 0))->onChange($this, 'OnChangeCat');
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new CheckBox('autoincome'));
+        $this->docform->add(new CheckBox('autooutcome'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
+        $this->docform->add(new SubmitLink('loadall'))->onClick($this, 'loadallOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -63,8 +69,11 @@ class Inventory extends \App\Pages\Base
             // $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->document_date->setDate(time());
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->category->setValue($this->_doc->headerdata['cat']);
 
             $this->docform->notes->setText($this->_doc->notes);
+            $this->docform->autoincome->setChecked($this->_doc->headerdata['autoincome']);
+            $this->docform->autooutcome->setChecked($this->_doc->headerdata['autooutcome']);
 
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -189,6 +198,9 @@ class Inventory extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
 
 
+        $this->_doc->headerdata['autoincome'] = $this->docform->autoincome->isChecked() ?1:0;
+        $this->_doc->headerdata['autooutcome'] = $this->docform->autooutcome->isChecked() ?1:0;
+        $this->_doc->headerdata['cat'] = $this->docform->category->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
@@ -263,13 +275,47 @@ class Inventory extends \App\Pages\Base
         $this->_itemlist = array();
         $this->docform->detail->Reload();
     }
+    public function OnChangeCat($sender) {
+        $cat_id = $sender->getValue()     ;
+        
+        if($cat_id>0) {
+            $itemlist = array();
+            foreach($this->_itemlist as $item) {
+                if($item->cat_id==$cat_id) {
+                    $itemlist[$item->item_id]=$item;   
+                }
+            }
+            $this->_itemlist = $itemlist;
+        
+            $this->docform->detail->Reload();
+            
+        }
+    }
 
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        return Item::findArrayAC($text, $store_id);
+        $cat_id = $this->docform->category->getValue();
+        
+        return Item::findArrayAC($text, $store_id,$cat_id);
     }
 
+    public function loadallOnClick($sender) {
+            $this->_itemlist = array();
+            $store_id = $this->docform->store->getValue();
+            $cat_id = $this->docform->category->getValue();
+            $w = " disabled<> 1 and  item_id in (select item_id from  store_stock_view where  qty>0 and store_id={$store_id})    ";
+            if($cat_id>0){
+                $w = $w . " and cat_id =". $cat_id ;
+            }
+            $items = Item::find($w,'itemname') ;
+            foreach($items as $item) {
+                $item->qfact=0;
+                $item->quantity=0;
+                $this->_itemlist[$item->item_id]=$item;    
+            }
+            $this->docform->detail->Reload();       
+    }
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
@@ -278,7 +324,12 @@ class Inventory extends \App\Pages\Base
         $store = $this->docform->store->getValue();
         $code_ = Item::qstr($code);
 
-        $item = Item::getFirst("item_code={$code_} or bar_code={$code_}");
+        $cat_id = $this->docform->category->getValue();
+        $w = "item_code={$code_} or bar_code={$code_}" ;
+        if($cat_id >0) {
+            $w = $w . "  and cat_id=".$cat_id ;
+        }
+        $item = Item::getFirst($w);
         if ($item == null) {
             $this->setError('noitemcode', $code);
             return;

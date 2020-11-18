@@ -279,6 +279,9 @@
   "iscontractdocs": "Контракт має  документи",
   "modnotemain": "База знань",
   "modtecdocsearch": "Пошук по TECDOC",
+  "delitemwarn": "Товар  вже використовуеться. Переведений  в  неактивний",
+  "withoutcat": "Без категорiї",
+   
   "refreshed": "Оновлено",
   "sent": "Відправлено",
   "saved": "Збережено"

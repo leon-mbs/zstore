@@ -37,7 +37,12 @@ class ItemList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
+        $catlist=array();
+        $catlist[-1]= H::l("withoutcat") ;
+        foreach(Category::findArray("cat_name", "", "cat_name") as $k=>$v){
+            $catlist[$k]= $v;   
+        }
+        $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
@@ -128,7 +133,7 @@ class ItemList extends \App\Pages\Base
     public function itemlistOnRow($row) {
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-
+  
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
@@ -182,10 +187,14 @@ class ItemList extends \App\Pages\Base
 
         $item = $sender->owner->getDataItem();
 
-        $del = Item::delete($item->item_id);
-        if (strlen($del) > 0) {
-            $this->setError($del);
-            return;
+        
+        if ($item->allowDelete()) {
+           Item::delete($item->item_id) ;
+        }  else {
+           $this->setWarn("delitemwarn") ;
+           $item->disabled=1;
+           $item->save();
+            
         }
 
 
@@ -532,8 +541,12 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $cat = $form->searchcat->getValue();
         $showdis = $form->showdis->isChecked();
 
-        if ($cat > 0) {
-            $where = $where . " and cat_id=" . $cat;
+        if ($cat != 0) {
+            if($cat==-1) {
+                $where = $where . " and cat_id=0";    
+            }   else {
+               $where = $where . " and cat_id=" . $cat;
+            }
         }
         if ($showdis == true) {
 

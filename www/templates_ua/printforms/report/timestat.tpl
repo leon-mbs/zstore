@@ -2,22 +2,22 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Звiт  по  робочому часi
+            Звiт по робочому часi
         </td>
     </tr>
     <tr>
 
-        <td align="center"  >
-           <b> Перiод з {{from}}  по  {{to}}   </b>
+        <td align="center">
+            <b> Перiод з {{from}} по {{to}}   </b>
         </td>
     </tr>
-   <tr>
+    <tr>
 
-        <td   colspan="2">
+        <td colspan="2">
             <b>  {{typename}}   </b>
         </td>
     </tr>
-   
+
 
     {{#_detail}}
     <tr>
