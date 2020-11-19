@@ -69,7 +69,7 @@ class PPOList extends \App\Pages\Base
         if ($cid == 0) {
             return;
         }
-        $res = H::send(json_encode(array('Command' => 'Objects')), 'cmd', $cid);
+        $res = Helper::send(json_encode(array('Command' => 'Objects')), 'cmd', $cid);
         $res = json_decode($res);
         if (is_array($res->TaxObjects)) {
             $this->_ppolist = array();
@@ -113,7 +113,7 @@ class PPOList extends \App\Pages\Base
         $to = \Carbon\Carbon::now()->format('c');
         $cid = $this->opan->filter->searchcomp->getValue();
 
-        $res = H::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $cid);
+        $res = Helper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $cid);
         $res = json_decode($res);
         foreach ($res->Shifts as $sh) {
             $it = new   DataItem(array('openname'  => $sh->OpenName,
@@ -157,7 +157,7 @@ class PPOList extends \App\Pages\Base
         $this->_doclist = array();
         $cid = $this->opan->filter->searchcomp->getValue();
 
-        $res = H::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $cid);
+        $res = Helper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $cid);
         $res = json_decode($res);
         foreach ($res->Documents as $doc) {
             $it = new   DataItem(array('NumFiscal' => $doc->NumFiscal,
@@ -181,6 +181,8 @@ class PPOList extends \App\Pages\Base
     public function onBacksh($sender) {
         $this->shpan->setVisible(true);
         $this->docpan->setVisible(false);
+        $this->docpan->docshow->setVisible(false);
+        
     }
 
 
@@ -201,7 +203,7 @@ class PPOList extends \App\Pages\Base
         $doc = $sender->getOwner()->getDataItem();
         $cid = $this->opan->filter->searchcomp->getValue();
 
-        $res = H::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $cid, true);
+        $res = Helper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $cid, true);
         // $res = mb_convert_encoding($res , "utf-8" ,"windows-1251" )  ;
         $this->docpan->docshow->setText($res);
         $this->docpan->docshow->setVisible(true);

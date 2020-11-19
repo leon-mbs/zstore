@@ -123,8 +123,8 @@ class Helper
 
             }
             if (strpos($return, 'помилки') > 0) {
-                throw new  \Exception($return);
-
+                 return $return; 
+           
             }
             curl_close($request);
 
@@ -136,7 +136,7 @@ class Helper
                     return base64_decode($decrypted->data);
 
                 } else {
-                    return false;
+                      throw new  \Exception(  $decrypted->data);
                 }
 
             } else {
@@ -145,8 +145,8 @@ class Helper
 
 
         } else {
-
-            return false;
+                 
+            throw new  \Exception(  $signed->data);
         }
 
 
@@ -176,9 +176,7 @@ class Helper
         $header['guid'] = Helper::guid();
 
         if ($open == false) {
-
-
-            $header['doctype'] = 102;
+          
 
             $report = new \App\Report('zform.xml');
 

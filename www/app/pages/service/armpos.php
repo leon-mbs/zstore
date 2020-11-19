@@ -699,7 +699,7 @@ class ARMPos extends \App\Pages\Base
         $cid = $this->form1->firm->getValue();
         $posid = $this->form1->pos->getValue();
         try {
-            //  H::shift($cid,$posid,$sender->id=="openshift");
+            \App\Modules\PPO\Helper::shift($cid,$posid,$sender->id=="openshift");
         } catch(\Exception $e) {
             $this->setError($e->getMessage());
             return;
