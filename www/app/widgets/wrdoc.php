@@ -30,7 +30,7 @@ class WRDoc extends \Zippy\Html\PageFragment
 
 
         if ($visible) {
-            $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where  {$cstr} l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time())). " limit  0,100" ;
+            $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where  {$cstr} l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time())) . " limit  0,100";
 
 
             $rc = $conn->Execute($sql);

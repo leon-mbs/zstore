@@ -24,7 +24,7 @@ class DBHelper
 
 
     public function getBrands() {
-        switch ($this->type) {
+        switch($this->type) {
             case 'passenger':
                 $where = " AND ispassengercar = 'True'";
                 break;
@@ -71,7 +71,7 @@ class DBHelper
     }
 
     public function getModels($brand_id) {
-        switch ($this->type) {
+        switch($this->type) {
             case 'passenger':
                 $where = " AND ispassengercar = 'True'";
                 break;
@@ -105,7 +105,7 @@ class DBHelper
     }
 
     public function getModifs($model_id) {
-        switch ($this->type) {
+        switch($this->type) {
             case 'passenger':
                 $sql = "
                     SELECT id, fulldescription  
@@ -160,7 +160,7 @@ class DBHelper
     }
 
     public function getModifDetail($id) {
-        switch ($this->type) {
+        switch($this->type) {
             case 'passenger':
                 $sql = "
                     SELECT   a.attributegroup, a.attributetype, a.displaytitle, a.displayvalue 
@@ -210,7 +210,7 @@ class DBHelper
     }
 
     public function getTree($id) {
-        switch ($this->type) {
+        switch($this->type) {
             case 'passenger':
                 $sql = "
                     SELECT id,parentId, description
@@ -266,7 +266,7 @@ class DBHelper
 
 
     public function searchByCategory($cat_id, $modif_id) {
-        switch ($this->type) {
+        switch($this->type) {
             case 'passenger':
                 $sql = "
                    SELECT s.id as brand_id, al.datasupplierarticlenumber as part_number, s.description as  supplier_name, prd.description as product_name
@@ -568,7 +568,7 @@ class DBHelper
              ");
 
         foreach ($rs as $r) {
-            switch ($r['linkageTypeId']) {
+            switch($r['linkageTypeId']) {
                 case 'PassengerCar':
                     $sql = "SELECT DISTINCT     p.constructioninterval, p.fulldescription FROM passanger_cars p 
                         

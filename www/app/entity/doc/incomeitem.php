@@ -39,22 +39,22 @@ class IncomeItem extends Document
             $name = $item->itemname;
 
 
-            $detail[] = array("no" => $i++,
-                "item_name" => $name,
-                "snumber" => $item->snumber,
-                "msr" => $item->msr,
-                "quantity" => H::fqty($item->quantity),
-                "price" => H::fa($item->price),
-                "amount" => H::fa($item->quantity * $item->price)
+            $detail[] = array("no"        => $i++,
+                              "item_name" => $name,
+                              "snumber"   => $item->snumber,
+                              "msr"       => $item->msr,
+                              "quantity"  => H::fqty($item->quantity),
+                              "price"     => H::fa($item->price),
+                              "amount"    => H::fa($item->quantity * $item->price)
             );
         }
 
         $header = array(
-            "_detail" => $detail,
-            'date' => H::fd($this->document_date),
-            "total" => H::fa($this->amount),
-            "to" => $this->headerdata["storename"],
-            "notes" => $this->notes,
+            "_detail"         => $detail,
+            'date'            => H::fd($this->document_date),
+            "total"           => H::fa($this->amount),
+            "to"              => $this->headerdata["storename"],
+            "notes"           => $this->notes,
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/incomeitem.tpl');

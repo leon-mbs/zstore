@@ -31,7 +31,7 @@
         <td colspan="7">{{contract}} от {{createdon}}</td>
 
     </tr>
-    {{/iscontract}}    
+    {{/iscontract}}
     {{#isfirm}}
     <tr>
 

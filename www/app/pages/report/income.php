@@ -136,10 +136,10 @@ class Income extends \App\Pages\Base
 
         foreach ($rs as $row) {
             $detail[] = array(
-                "code" => $row['item_code'],
-                "name" => $row['itemname'],
-                "dt" => H::fd(strtotime($row['dt'])),
-                "qty" => H::fqty($row['qty']),
+                "code"  => $row['item_code'],
+                "name"  => $row['itemname'],
+                "dt"    => H::fd(strtotime($row['dt'])),
+                "qty"   => H::fqty($row['qty']),
                 "summa" => H::fa($row['summa'])
             );
             $total += $row['summa'];
@@ -147,8 +147,8 @@ class Income extends \App\Pages\Base
 
 
         $header = array('datefrom' => H::fd($from),
-            "_detail" => $detail,
-            'dateto' => H::fd($to)
+                        "_detail"  => $detail,
+                        'dateto'   => H::fd($to)
         );
 
         $header['total'] = H::fa($total);

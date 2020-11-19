@@ -23,8 +23,8 @@ class GroupList extends \App\Pages\Base
 {
 
     private $group = null, $rootgroup;
-    public $attrlist = array();
-    private $mm;
+    public                 $attrlist = array();
+    private                $mm;
 
     public function __construct() {
         parent::__construct();
@@ -201,12 +201,16 @@ class GroupList extends \App\Pages\Base
                 $this->setError('squareimage');
                 return;
             }
-            $th = new \JBZoo\Image\Image($filedata['tmp_name']);
-            $th = $th->resize(256, 256);
-
+            
+            
+    
+            
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($filedata['tmp_name']);
-            $image->thumb = $th->getBinary();
+
+            $thumb = new \App\Thumb($filedata['tmp_name']);
+            $thumb->resize(256, 256);
+            $image->thumb = $thumb->getImageAsString();
 
             $image->mime = $imagedata['mime'];
             $image->save();

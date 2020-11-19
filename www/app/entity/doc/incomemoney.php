@@ -26,11 +26,11 @@ class IncomeMoney extends Document
         $pt = Pay::getPayTypeList(1);
 
         $header = array(
-            'amount' => H::fa($this->amount),
-            'date' => H::fd($this->document_date),
-            "notes" => $this->notes,
-            "type" => $pt[$this->headerdata["type"]],
-            "to" => $this->headerdata["paymentname"],
+            'amount'          => H::fa($this->amount),
+            'date'            => H::fd($this->document_date),
+            "notes"           => $this->notes,
+            "type"            => $pt[$this->headerdata["type"]],
+            "to"              => $this->headerdata["paymentname"],
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/incomemoney.tpl');

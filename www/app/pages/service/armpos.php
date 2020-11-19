@@ -27,10 +27,10 @@ use Zippy\Html\Link\SubmitLink;
 class ARMPos extends \App\Pages\Base
 {
 
-    public $_itemlist = array();
-    public $_serlist = array();
+    public  $_itemlist = array();
+    public  $_serlist  = array();
     private $pos;
-    private $_doc = null;
+    private $_doc      = null;
 
     public function __construct() {
         parent::__construct();
@@ -67,10 +67,13 @@ class ARMPos extends \App\Pages\Base
 
         $this->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
         $this->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
+        $this->form2->add(new ClickLink('openshift', $this, 'OnShift'));
+        $this->form2->add(new ClickLink('closeshift', $this, 'OnShift'));
+
 
         //оплата
         $this->add(new Form('form3'))->setVisible(false);
-        $this->form3->add(new DropDownChoice('payment'))->onChange($this, 'OnPayment');;
+        $this->form3->add(new DropDownChoice('payment'))->onChange($this, 'OnPayment');
         $this->form3->add(new TextInput('document_number'));
 
         $this->form3->add(new Date('document_date'))->setDate(time());
@@ -545,8 +548,8 @@ class ARMPos extends \App\Pages\Base
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editphone->getText();
 
-        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
-            $this->setError("tel10");
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
+            $this->setError("tel10", H::PhoneL());
             return;
         }
 
@@ -660,7 +663,7 @@ class ARMPos extends \App\Pages\Base
 
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
             $conn->CommitTrans();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
@@ -690,5 +693,29 @@ class ARMPos extends \App\Pages\Base
             $this->form3->exchange->setVisible(true);
         }
     }
+
+    public function OnShift($sender) {
+
+        $cid = $this->form1->firm->getValue();
+        $posid = $this->form1->pos->getValue();
+        try {
+            \App\Modules\PPO\Helper::shift($cid,$posid,$sender->id=="openshift");
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage());
+            return;
+        }
+        //состояние  смены
+        $pos = \App\Entity\Pos::load($posid);
+        if ($sender->id == "openshift") {
+            $pos->openshift = time();
+            $pos->closeshift = 0;
+        } else {
+            $pos->closeshift = time();
+        }
+
+        $pos->save();
+
+    }
+
 
 }

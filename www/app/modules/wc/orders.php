@@ -5,6 +5,7 @@ namespace App\Modules\WC;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\System;
+use App\Helper as H;
 use Zippy\Binding\PropertyBinding as Prop;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
@@ -19,13 +20,13 @@ class Orders extends \App\Pages\Base
 {
 
     public $_neworders = array();
-    public $_eorders = array();
+    public $_eorders   = array();
 
     public function __construct() {
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('Нет права доступа к странице');
+            System::setErrorMsg(H::l('noaccesstopage'));
 
             App::RedirectHome();
             return;
@@ -60,7 +61,7 @@ class Orders extends \App\Pages\Base
 
         try {
             $data = $client->get('orders', $fields);
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
         }
@@ -197,7 +198,7 @@ class Orders extends \App\Pages\Base
 
             try {
                 $data = $client->put('orders/' . $order->headerdata['wcorder'], $fields);
-            } catch (\Exception $ee) {
+            } catch(\Exception $ee) {
                 $this->setError($ee->getMessage());
                 return;
             }

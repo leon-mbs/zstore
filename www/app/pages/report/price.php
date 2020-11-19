@@ -84,11 +84,11 @@ class Price extends \App\Pages\Base
 
         foreach ($items as $item) {
             $detail[] = array(
-                "code" => $item->item_code,
-                "name" => $item->itemname,
-                "cat" => $item->cat_name,
-                "brand" => $item->manufacturer,
-                "msr" => $item->msr,
+                "code"   => $item->item_code,
+                "name"   => $item->itemname,
+                "cat"    => $item->cat_name,
+                "brand"  => $item->manufacturer,
+                "msr"    => $item->msr,
                 "price1" => $isp1 ? $item->getPrice('price1') : "",
                 "price2" => $isp2 ? $item->getPrice('price2') : "",
                 "price3" => $isp3 ? $item->getPrice('price3') : "",
@@ -98,13 +98,13 @@ class Price extends \App\Pages\Base
         }
 
         $header = array(
-            "_detail" => $detail,
+            "_detail"    => $detail,
             "price1name" => $isp1 ? $option['price1'] : "",
             "price2name" => $isp2 ? $option['price2'] : "",
             "price3name" => $isp3 ? $option['price3'] : "",
             "price4name" => $isp4 ? $option['price4'] : "",
             "price5name" => $isp5 ? $option['price5'] : "",
-            'date' => \App\Helper::fd(time())
+            'date'       => \App\Helper::fd(time())
         );
         $report = new \App\Report('report/price.tpl');
 

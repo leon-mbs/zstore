@@ -18,22 +18,22 @@ class Warranty extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $detail[] = array(
                 "tovar_name" => $item->itemname,
-                "quantity" => H::fqty($item->quantity),
-                "price" => H::fa($item->price),
-                "amount" => H::fa($item->quantity * $item->price),
-                "sn" => $item->sn,
-                "msr" => $item->msr,
-                "warranty" => $item->warranty
+                "quantity"   => H::fqty($item->quantity),
+                "price"      => H::fa($item->price),
+                "amount"     => H::fa($item->quantity * $item->price),
+                "sn"         => $item->sn,
+                "msr"        => $item->msr,
+                "warranty"   => $item->warranty
             );
             $total += $item->quantity * $item->price;
         }
 
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "firm_name" => $this->headerdata["firm_name"],
-            "customer_name" => $this->customer_name,
-            "document_number" => $this->document_number
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "firm_name"       => $this->headerdata["firm_name"],
+                        "customer_name"   => $this->customer_name,
+                        "document_number" => $this->document_number
         );
 
         $report = new \App\Report('doc/warranty.tpl');

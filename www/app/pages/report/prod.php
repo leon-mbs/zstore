@@ -94,9 +94,9 @@ class Prod extends \App\Pages\Base
 
         foreach ($rs as $row) {
             $detail[] = array(
-                "code" => $row['item_code'],
-                "name" => $row['itemname'],
-                "qty" => H::fqty($row['qty']),
+                "code"  => $row['item_code'],
+                "name"  => $row['itemname'],
+                "qty"   => H::fqty($row['qty']),
                 "summa" => H::fa($row['summa'])
             );
             $sum1 += $row['summa'];
@@ -121,21 +121,21 @@ class Prod extends \App\Pages\Base
 
         foreach ($rs as $row) {
             $detail2[] = array(
-                "code" => $row['item_code'],
-                "name" => $row['itemname'],
-                "qty" => H::fqty($row['qty']),
+                "code"  => $row['item_code'],
+                "name"  => $row['itemname'],
+                "qty"   => H::fqty($row['qty']),
                 "summa" => H::fa($row['summa'])
             );
             $sum2 += $row['summa'];
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),
-            "_detail" => $detail,
-            "_detail2" => $detail2,
-            'dateto' => \App\Helper::fd($to),
-            'parea' => null,
-            'sum1' => H::fa($sum1),
-            'sum2' => H::fa($sum2)
+                        "_detail"  => $detail,
+                        "_detail2" => $detail2,
+                        'dateto'   => \App\Helper::fd($to),
+                        'parea'    => null,
+                        'sum1'     => H::fa($sum1),
+                        'sum2'     => H::fa($sum2)
         );
         if ($parea > 0) {
             $header['parea'] = $this->filter->parea->getValueName();

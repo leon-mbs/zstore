@@ -27,7 +27,7 @@ class ContractList extends \App\Pages\Base
 
     private $_contract;
 
-    public function __construct($id=0) {
+    public function __construct($id = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('ContractList')) {
             return;
@@ -47,7 +47,7 @@ class ContractList extends \App\Pages\Base
 
         $this->add(new Form('contractdetail'))->setVisible(false);
         $this->contractdetail->add(new Date('editcreatedon', time()));
-        $this->contractdetail->add(new Date('editenddate', strtotime("+1 month",time())));
+        $this->contractdetail->add(new Date('editenddate', strtotime("+1 month", time())));
         $this->contractdetail->add(new TextInput('editshortdesc'));
         $this->contractdetail->add(new TextArea('editdesc'));
         $this->contractdetail->add(new TextInput('editcontract_number'));
@@ -61,22 +61,22 @@ class ContractList extends \App\Pages\Base
 
         $this->contractdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->contractdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-         
+
         $this->add(new Panel('docpan'))->setVisible(true);
         $this->docpan->add(new Label("cname"));
-        
-        $this->docpan->add(new ClickLink('back'))->onClick($this, 'cancelOnClick'); 
-        $this->docpan->add(new DataView('dtable',new ArrayDataSource(array()) , $this, 'doclistOnRow'));
+
+        $this->docpan->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
+        $this->docpan->add(new DataView('dtable', new ArrayDataSource(array()), $this, 'doclistOnRow'));
         $this->docpan->dtable->setPageSize(H::getPG());
         $this->docpan->add(new \Zippy\Html\DataList\Paginator('dpag', $this->docpan->dtable));
-               
-        
-        if($id > 0){
-          $c = Contract::load($id)  ;   
-          $this->filter->searchkey->setText($c->contract_number);
-          $this->OnFilter($this->filter);
+
+
+        if ($id > 0) {
+            $c = Contract::load($id);
+            $this->filter->searchkey->setText($c->contract_number);
+            $this->OnFilter($this->filter);
         }
-        
+
     }
 
     public function contractlistOnRow($row) {
@@ -84,12 +84,12 @@ class ContractList extends \App\Pages\Base
 
         $row->add(new Label('contract_number', $item->contract_number));
         $row->add(new Label('shortdesc', $item->shortdesc));
-        $row->add(new Label('term', H::fd($item->createdon).' - '.H::fd($item->enddate)));
+        $row->add(new Label('term', H::fd($item->createdon) . ' - ' . H::fd($item->enddate)));
         $row->add(new Label('customer', $item->customer_name));
         $row->add(new Label('firm', $item->firm_name));
         $row->add(new Label('payname', $item->payname));
         $row->add(new Label('emp', $item->emp_name));
-        $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0 );
+        $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0);
         $row->hasnotes->setAttribute('title', $item->desc);
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('scanlink'))->setVisible(false);
@@ -169,13 +169,12 @@ class ContractList extends \App\Pages\Base
             return;
         }
 
-        
-        
+
         $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();
         $this->_contract->enddate = $this->contractdetail->editenddate->getDate();
         $this->_contract->shortdesc = $this->contractdetail->editshortdesc->getText();
         $this->_contract->desc = $this->contractdetail->editdesc->getText();
-        
+
         $this->_contract->emp_id = $this->contractdetail->editemp->getValue();
         $this->_contract->emp_name = $this->contractdetail->editemp->getValueName();
         $this->_contract->pay = $this->contractdetail->editpay->getValue();
@@ -210,27 +209,27 @@ class ContractList extends \App\Pages\Base
         $text = Customer::qstr('%' . $sender->getText() . '%');
         return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
-    
+
     public function showOnClick($sender) {
-       $this->_contract = $sender->owner->getDataItem(); 
-       $this->contracttable->setVisible(false);
-       $this->docpan->setVisible(true);
-       $this->docpan->cname->setText($this->_contract->contract_number);
-       
-       
-       $dlist =  $this->_contract->getDocs() ;
-       $this->docpan->dtable->getDataSource()->setArray($dlist);
-       $this->docpan->dtable->Reload();   
-    }   
+        $this->_contract = $sender->owner->getDataItem();
+        $this->contracttable->setVisible(false);
+        $this->docpan->setVisible(true);
+        $this->docpan->cname->setText($this->_contract->contract_number);
+
+
+        $dlist = $this->_contract->getDocs();
+        $this->docpan->dtable->getDataSource()->setArray($dlist);
+        $this->docpan->dtable->Reload();
+    }
+
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
-        $row->add(new Label("dtype",$doc->document_number)) ;
-        $row->add(new Label("dnum",$doc->meta_desc)) ;
-        $row->add(new Label("ddate", H::fd($doc->document_date)) );
-        $row->add(new Label("dsumma",H::fa($doc->amount))) ;
+        $row->add(new Label("dtype", $doc->document_number));
+        $row->add(new Label("dnum", $doc->meta_desc));
+        $row->add(new Label("ddate", H::fd($doc->document_date)));
+        $row->add(new Label("dsumma", H::fa($doc->amount)));
     }
-    
-    
+
 
 }
 

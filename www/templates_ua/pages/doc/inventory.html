@@ -19,24 +19,44 @@
                 <label for="document_number">Номер документа</label>
                 <input class="form-control" type="text" zippy="document_number">
             </div>
-            <div class="form-group">
-                <label for="document_date"> Дата</label>
-                <input class="form-control" type="text" zippy="document_date" required="required">
-            </div>
             <div class="form-group  ">
                 <label for="store">Склад</label>
                 <select class="form-control" zippy="store">
                     <option value="0">Не обрано</option>
                 </select>
             </div>
+            <div class="form-group  ">
+                <label for="store">Категорiя</label>
+                <select class="form-control" zippy="category">
+                    <option value="0">Не вибрана</option>
+                </select>
+                <a zippy="loadall">Загрузити  всi ТМЦ зi  складу</a>
+            </div>
 
+
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="form-group">
+                <label for="document_date"> Дата</label>
+                <input class="form-control" type="text" zippy="document_date" required="required">
+            </div>
+ 
             <div class="form-group  ">
                 <label for="notes">Примітка </label>
 
                 <input class="form-control" type="text" zippy="notes">
 
             </div>
-
+   <div class="form-check">
+                <input zippy="autoincome" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="autoincome">Автоматично  оприходувати злишки </label>
+                
+            </div>                     
+            <div class="form-check">
+                <input zippy="autooutcome" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="autooutcome">Автоматично списати недостачу </label>
+                
+            </div>            
         </div>
     </div>
     <div class="row">
@@ -45,11 +65,13 @@
             <div class="navbar nav justify-content-start">
                 Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
                 &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
-                  &nbsp; &nbsp; &nbsp; &nbsp; <i   id="mobilescanner" data-toggle="modal" data-target="#modalscanner" title="Сканувати  мобiльним пристроєм" style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i> 
+                &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
+                                               title="Сканувати  мобiльним пристроєм"
+                                               style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
 
             </div>
             {{/usescanner}}
-            &nbsp; <a zippy="addrow">Додати товар</a>
+            &nbsp; <a zippy="addrow" class="btn  btn-info">Додати товар</a>
 
             <table class="table table-sm">
                 <tr>
@@ -60,9 +82,8 @@
                     <th>Дата</th>
                     {{/usesnumber}}
                     <!--     <th width="40"  class="text-right" >Кол. </th> -->
-                    <th class="text-right"></th>
+
                     <th width="40" class="text-center">Кіл.</th>
-                    <th class="text-left"></th>
 
 
                     <th width="50"></th>
@@ -75,16 +96,12 @@
                     <td zippy="sdate"></td>
                     {{/usesnumber}}
                     <!--    <td zippy="quantity"  class="text-right" ></td>-->
-                    <td class="text-right">
-                        <a zippy="minus"><i class="fa fa-minus"></i></a>
-                    </td>
+
                     <td class="text-center">
-                        <span zippy="qfact"></span>
+                        <input type="input" pattern="[0-9\.]+" style="width:75px;" zippy="qfact">
+
                     </td>
-                    <td class="text-left">
-                        <a zippy="plus"><i class="fa fa-plus"></i></a>
-                        &nbsp;
-                    </td>
+
 
                     <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
@@ -144,160 +161,158 @@
 
 </form>
 
-   <div id="modalscanner" class="modal  "   >
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Сканування</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+<div id="modalscanner" class="modal  ">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Сканування</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
+                    <b>Налаштування камери <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
+                </a>
+                <div id="collapcescanner" class="collapse  ">
+                    <form class="controls">
+                        <div class="row reader-config-group">
+                            <div class="col-12 col-sm-6">
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label">Тип коду</label>
+                                    <div class="col-sm-7">
+
+                                        <select id="decoder_readers" name="decoder_readers" class="form-control">
+                                            <option value="code_128" selected="selected">Code 128</option>
+                                            <option value="code_39">Code 39</option>
+                                            <option value="code_39_vin">Code 39 VIN</option>
+                                            <option value="ean">EAN</option>
+                                            <option value="ean_extended">EAN-extended</option>
+                                            <option value="ean_8">EAN-8</option>
+                                            <option value="upc">UPC</option>
+                                            <option value="upc_e">UPC-E</option>
+                                            <option value="codabar">Codabar</option>
+                                            <option value="i2of5">Interleaved 2 of 5</option>
+                                            <option value="2of5">Standard 2 of 5</option>
+                                            <option value="code_93">Code 93</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label">Роздiльна здатнiсть</label>
+                                    <div class="col-sm-7">
+
+                                        <select id="input-stream_constraints" name="input-stream_constraints"
+                                                class="form-control">
+                                            <option value="320x240">320px</option>
+                                            <option selected="selected" value="640x480">640px</option>
+                                            <option value="800x600">800px</option>
+                                            <option value="1280x720">1280px</option>
+                                            <option value="1600x960">1600px</option>
+                                            <option value="1920x1080">1920px</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label">Patch-Size</label>
+                                    <div class="col-sm-7">
+
+                                        <select name="locator_patch-size" class="form-control">
+                                            <option value="x-small">x-small</option>
+                                            <option value="small">small</option>
+                                            <option selected="selected" value="medium">medium</option>
+                                            <option value="large">large</option>
+                                            <option value="x-large">x-large</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label">Workers</label>
+                                    <div class="col-sm-7">
+
+                                        <select name="numOfWorkers" class="form-control">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option selected="selected" value="4">4</option>
+                                            <option value="8">8</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label">Half-Sample</label>
+                                    <div class="col-sm-7">
+
+                                        <input type="checkbox" checked="checked" name="locator_half-sample"/>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label">Камера</label>
+                                    <div class="col-sm-7">
+
+                                        <select name="input-stream_constraints" id="deviceSelection"
+                                                class="form-control">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label">Zoom</label>
+                                    <div class="col-sm-7">
+
+                                        <select name="settings_zoom" class="form-control">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label">Пiдсвiтка</label>
+                                    <div class="col-sm-7">
+
+                                        <input type="checkbox" name="settings_torch"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-body">
-        <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
-            <b>Налаштування камери <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
-        </a>   
-        <div   id="collapcescanner" class="collapse  ">
-        <form class="controls">
-          <div class="row reader-config-group">
-          <div class="col-12 col-sm-6">
-         
-          <div class="form-group row">
-            <label   class="col-sm-5 col-form-label">Тип коду</label>
-            <div class="col-sm-7">
-         
-                <select id="decoder_readers" name="decoder_readers" class="form-control" >
-                    <option value="code_128" selected="selected">Code 128</option>
-                    <option value="code_39">Code 39</option>
-                    <option value="code_39_vin">Code 39 VIN</option>
-                    <option value="ean">EAN</option>
-                    <option value="ean_extended">EAN-extended</option>
-                    <option value="ean_8">EAN-8</option>
-                    <option value="upc">UPC</option>
-                    <option value="upc_e">UPC-E</option>
-                    <option value="codabar">Codabar</option>
-                    <option value="i2of5">Interleaved 2 of 5</option>
-                    <option value="2of5">Standard 2 of 5</option>
-                    <option value="code_93">Code 93</option>
-                </select>              
-            </div>
-          </div>        
-           <div class="form-group row">
-             <label   class="col-sm-5 col-form-label">Роздiльна здатнiсть</label>
-            <div class="col-sm-7">
-         
-                    <select id="input-stream_constraints" name="input-stream_constraints" class="form-control" >
-                        <option value="320x240">320px</option>
-                        <option selected="selected" value="640x480">640px</option>
-                        <option value="800x600">800px</option>
-                        <option value="1280x720">1280px</option>
-                        <option value="1600x960">1600px</option>
-                        <option value="1920x1080">1920px</option>
-                    </select>         
-            </div>
-          </div>        
-      
-          <div class="form-group row">
-             <label   class="col-sm-5 col-form-label">Patch-Size</label>
-            <div class="col-sm-7">
-         
-                  <select name="locator_patch-size" class="form-control">
-                        <option value="x-small">x-small</option>
-                        <option value="small">small</option>
-                        <option selected="selected" value="medium">medium</option>
-                        <option value="large">large</option>
-                        <option value="x-large">x-large</option>
-                    </select>         
-            </div>
-          </div>        
-          <div class="form-group row">
-             <label   class="col-sm-5 col-form-label">Workers</label>
-            <div class="col-sm-7">
-         
-            <select name="numOfWorkers" class="form-control">
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option selected="selected" value="4">4</option>
-                        <option value="8">8</option>
-                    </select>       
-            </div>
-          </div>    
-          </div>    
-          <div class="col-12 col-sm-6">
- 
-          
-              
-          <div class="form-group row">
-             <label   class="col-sm-5 col-form-label">Half-Sample</label>
-            <div class="col-sm-7">
-         
-             <input type="checkbox" checked="checked" name="locator_half-sample" />     
-            </div>
-          </div>        
-      
-    
-          <div class="form-group row">
-             <label   class="col-sm-5 col-form-label">Камера</label>
-            <div class="col-sm-7">
-         
-            <select name="input-stream_constraints" id="deviceSelection" class="form-control">
-                    </select>      
-            </div>
-          </div>         
-          <div class="form-group row">
-             <label   class="col-sm-5 col-form-label">Zoom</label>
-            <div class="col-sm-7">
-         
-            <select name="settings_zoom"   class="form-control">
-                    </select>      
-            </div>
-          </div>         
-          <div class="form-group row">
-             <label   class="col-sm-5 col-form-label">Пiдсвiтка</label>
-            <div class="col-sm-7">
-         
-              <input type="checkbox" name="settings_torch" />    
-            </div>
-          </div>         
-         </div> 
-         </div>  
-        </form> 
-        </div> <br><br>  
-        Код:   <span id="scancode"  ></span>&nbsp;&nbsp;&nbsp; <button class="btn btn-sm btn-success" onclick="mcode()">Додати</button>
-       <br>  
-       <br>  
-           
-       <div   id="interactive" class="viewport"></div>
-       
- 
-                
-          </div>
+                <br><br>
+                Код: <span id="scancode"></span>&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-sm btn-success" onclick="mcode()">Додати</button>
+                <br>
+                <br>
+
+                <div id="interactive" class="viewport"></div>
+
 
             </div>
+
         </div>
     </div>
+</div>
 
 <script>
     $(document).ready(function () {
 
         $('#barcode').focus();
-        
-        
-        var val = sessionStorage.getItem('decoder_readers') ;
-        if(val != null) {
-           $('#decoder_readers').val(val)  ;    
+
+
+        var val = sessionStorage.getItem('decoder_readers');
+        if (val != null) {
+            $('#decoder_readers').val(val);
         }
-        val = sessionStorage.getItem('stream_constraints') ;
-        if(val != null) {
-           $('#stream_constraints').val(val)  ;    
+        val = sessionStorage.getItem('stream_constraints');
+        if (val != null) {
+            $('#stream_constraints').val(val);
         }
-        
-       
-       
-      
-       
-       
+
+
     });
 
     function onBarCode(ele) {
@@ -307,24 +322,24 @@
             $('#addcode').click()
         }
     }
-    
-    
-   function mcode() {
-      var  code =  $('#scancode').text();
-      if(code=="") return;               
-            
-      sessionStorage.setItem('decoder_readers',$('#decoder_readers').val()) ;
-      sessionStorage.setItem('stream_constraints',$('#stream_constraints').val()) ;
-      $('#barcode').val(code); 
-      $('#addcode').click()
-   } 
-    
 
- if(mobileCheck()) {
-    $('#mobilescanner').show(); 
- } else{
-    $('#mobilescanner').hide(); 
- }
+
+    function mcode() {
+        var code = $('#scancode').text();
+        if (code == "") return;
+
+        sessionStorage.setItem('decoder_readers', $('#decoder_readers').val());
+        sessionStorage.setItem('stream_constraints', $('#stream_constraints').val());
+        $('#barcode').val(code);
+        $('#addcode').click()
+    }
+
+
+    if (mobileCheck()) {
+        $('#mobilescanner').show();
+    } else {
+        $('#mobilescanner').hide();
+    }
 
 </script>
 

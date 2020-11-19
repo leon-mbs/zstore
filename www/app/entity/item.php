@@ -115,13 +115,13 @@ class Item extends \ZCL\DB\Entity
         return true;
     }
 
-    protected function beforeDelete() {
+    public function allowDelete() {
 
         $conn = \ZDB\DB::getConnect();
         //проверка на партии
         $sql = "  select count(*)  from  store_stock where   item_id = {$this->item_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "ТМЦ уже  используется" : "";
+        return ($cnt > 0) ?  false : true;
     }
 
     protected function afterDelete() {
@@ -354,11 +354,14 @@ class Item extends \ZCL\DB\Entity
      * @return []
      * @static
      */
-    public static function findArrayAC($partname, $store = 0) {
+    public static function findArrayAC($partname, $store = 0,$cat=0) {
 
         $criteria = "  disabled <> 1 ";
         if ($store > 0) {
             $criteria .= "     and item_id in (select item_id from store_stock  where  store_id={$store})";
+        }
+        if ($cat > 0) {
+            $criteria .= "  and cat_id={$cat}    and item_id in (select item_id from store_stock  where  store_id={$store})";
         }
 
         if (strlen($partname) > 0) {

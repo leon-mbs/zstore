@@ -20,12 +20,17 @@ class Calendar extends \App\Pages\Base
 {
 
     private $timerow = null;
-    private $_tl = null;
+    private $_tl     = null;
 
     public function __construct() {
         parent::__construct();
         $user = System::getUser();
-
+        $allow = (strpos($user->modules, 'issue') !== false || $user->rolename == 'admins');
+        if (!$allow) {
+            System::setErrorMsg(H::l('noaccesstopage'));
+            App::RedirectHome();
+            return;
+        }
         $this->add(new Panel('listpan'));
 
         $this->listpan->add(new ClickLink('addtime', $this, 'OnAdd'));

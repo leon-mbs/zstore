@@ -253,7 +253,7 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
 {
 
     public $productattribute = null;
-    public $value = array();
+    public $value            = array();
 
     public function __construct($id, $productattribute) {
         parent::__construct($id);

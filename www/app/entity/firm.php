@@ -28,6 +28,8 @@ class Firm extends \ZCL\DB\Entity
         $this->logo = (string)($xml->logo[0]);
         $this->stamp = (string)($xml->stamp[0]);
         $this->sign = (string)($xml->sign[0]);
+        $this->pposerv = (string)($xml->pposerv[0]);
+        $this->tin = (string)($xml->edittin[0]);
 
         parent::afterLoad();
     }
@@ -44,6 +46,8 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<sign><![CDATA[{$this->sign}]]></sign>";
         $this->details .= "<inn>{$this->inn}</inn>";
         $this->details .= "<phone>{$this->phone}</phone>";
+        $this->details .= "<pposerv>{$this->pposerv}</pposerv>";
+        $this->details .= "<edittin>{$this->tin}</edittin>";
         $this->details .= "</details>";
 
         return true;

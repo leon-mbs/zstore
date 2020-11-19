@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<CHECK xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="check01.xsd">
+
+    <CHECKHEAD>
+
+        <DOCTYPE>{{doctype}}</DOCTYPE>
+        <DOCSUBTYPE>{{docsubtype}}</DOCSUBTYPE>
+
+
+        <UID>{{guid}}</UID>
+
+        <TIN>{{edrpou}}</TIN>
+
+        <INN>{{inn}}</INN>
+
+        <ORGNAME>{{firmname}}</ORGNAME>
+
+        <POINTNAME>{{branchname}}</POINTNAME>
+
+        <POINTADDR>{{address}}</POINTADDR>
+
+        <ORDERDATE>{{date}}</ORDERDATE>
+
+        <ORDERTIME>{{time}}</ORDERTIME>
+
+        <ORDERNUM>{{docnumber}}</ORDERNUM>
+
+
+        <CASHDESKNUM>{{posinner}}</CASHDESKNUM>
+        <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>
+        <ORDERRETNUM>{{docnumberback}}</ORDERRETNUM>
+
+        <CASHIER>{{username}}</CASHIER>
+
+        <VER>1</VER>
+    </CHECKHEAD>
+
+    <CHECKTOTAL>
+        <SUM>{{amount}}</SUM>
+
+
+    </CHECKTOTAL>
+
+
+    <CHECKPAY>
+        <ROW ROWNUM="1">
+
+            <PAYFORMCODE>{{formcode}}</PAYFORMCODE>
+
+            <PAYFORMNAME>{{formname}}</PAYFORMNAME>
+
+            <SUM>{{paysum}}</SUM>
+
+            <SUMPROVIDED>{{payed}}</SUMPROVIDED>
+
+        </ROW>
+    </CHECKPAY>
+
+
+    <CHECKBODY>
+        {{#details}}
+        <ROW
+        {{{num}}}>
+
+        <NAME>{{name}}</NAME>
+
+        <AMOUNT>{{qty}}</AMOUNT>
+        <PRICE>{{price}}</PRICE>
+
+        <COST>{{cost}}</COST>
+    </ROW>
+    {{/details}}
+</CHECKBODY>
+        </CHECK>

@@ -26,7 +26,7 @@ class FirmList extends \App\Pages\Base
 
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg(H::l('onlyadminpage'));
-            App::RedirectHome();
+            \App\Application::RedirectHome();
             return false;
         }
 
@@ -38,6 +38,7 @@ class FirmList extends \App\Pages\Base
         $this->add(new Form('firmdetail'))->setVisible(false);
         $this->firmdetail->add(new TextInput('editfirm_name'));
         $this->firmdetail->add(new TextInput('editinn'));
+        $this->firmdetail->add(new TextInput('edittin'));
         $this->firmdetail->add(new TextInput('editaddress'));
         $this->firmdetail->add(new TextInput('editphone'));
 
@@ -47,6 +48,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new TextInput('editlogo'));
         $this->firmdetail->add(new TextInput('editstamp'));
         $this->firmdetail->add(new TextInput('editsign'));
+        $this->firmdetail->add(new TextInput('editpposerv'));
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -78,6 +80,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->setVisible(true);
         $this->firmdetail->editfirm_name->setText($this->_firm->firm_name);
         $this->firmdetail->editinn->setText($this->_firm->inn);
+        $this->firmdetail->edittin->setText($this->_firm->tin);
         $this->firmdetail->editaddress->setText($this->_firm->address);
         $this->firmdetail->editphone->setText($this->_firm->phone);
 
@@ -86,6 +89,7 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editlogo->setText($this->_firm->logo);
         $this->firmdetail->editstamp->setText($this->_firm->stamp);
         $this->firmdetail->editsign->setText($this->_firm->sign);
+        $this->firmdetail->editpposerv->setText($this->_firm->pposerv);
 
 
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
@@ -104,6 +108,7 @@ class FirmList extends \App\Pages\Base
 
         $this->_firm->firm_name = $this->firmdetail->editfirm_name->getText();
         $this->_firm->inn = $this->firmdetail->editinn->getText();
+        $this->_firm->tin = $this->firmdetail->edittin->getText();
         $this->_firm->address = $this->firmdetail->editaddress->getText();
         $this->_firm->phone = $this->firmdetail->editphone->getText();
 
@@ -112,6 +117,7 @@ class FirmList extends \App\Pages\Base
         $this->_firm->logo = $this->firmdetail->editlogo->getText();
         $this->_firm->stamp = $this->firmdetail->editstamp->getText();
         $this->_firm->sign = $this->firmdetail->editsign->getText();
+        $this->_firm->pposerv = $this->firmdetail->editpposerv->getText();
 
         if ($this->_firm->firm_name == '') {
             $this->setError("entername");

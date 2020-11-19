@@ -26,10 +26,10 @@ use Zippy\Html\Link\SubmitLink;
 class ProdReceipt extends \App\Pages\Base
 {
 
-    public $_itemlist = array();
+    public  $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid = 0;
+    private $_rowid     = 0;
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -286,7 +286,7 @@ class ProdReceipt extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

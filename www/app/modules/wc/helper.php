@@ -27,7 +27,7 @@ class Helper
             $keyc,
             $keys,
             [
-                'version' => 'wc/' . $api,
+                'version'    => 'wc/' . $api,
                 'verify_ssl' => $ssl
             ]
         );

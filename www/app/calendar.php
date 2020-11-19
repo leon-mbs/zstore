@@ -6,7 +6,7 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
 {
 
     private $event = null;
-    private $data = array();
+    private $data  = array();
 
     public final function RenderImpl() {
         global $_config;

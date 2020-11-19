@@ -26,10 +26,10 @@ class Task extends \App\Pages\Base
 {
 
     private $_doc;
-    public $_servicelist = array();
-    public $_eqlist = array();
-    public $_emplist = array();
-    private $_basedocid = 0;
+    public  $_servicelist = array();
+    public  $_eqlist      = array();
+    public  $_emplist     = array();
+    private $_basedocid   = 0;
 
     public function __construct($docid = 0, $basedocid = 0, $date = null) {
         parent::__construct();
@@ -326,7 +326,7 @@ class Task extends \App\Pages\Base
             } else {
                 App::Redirect("\\App\\Pages\\Register\\TaskList");
             }
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

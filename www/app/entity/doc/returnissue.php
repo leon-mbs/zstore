@@ -28,24 +28,24 @@ class ReturnIssue extends Document
                     $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
                 }
 
-                $detail[] = array("no" => $i++,
-                    "tovar_name" => $name,
-                    "quantity" => H::fqty($item->quantity),
-                    "price" => H::fa($item->price),
-                    "msr" => $item->msr,
-                    "amount" => H::fa($item->quantity * $item->price)
+                $detail[] = array("no"         => $i++,
+                                  "tovar_name" => $name,
+                                  "quantity"   => H::fqty($item->quantity),
+                                  "price"      => H::fa($item->price),
+                                  "msr"        => $item->msr,
+                                  "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
         }
 
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "firm_name" => $this->headerdata["firm_name"],
-            "customer_name" => $this->customer_name,
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "firm_name"       => $this->headerdata["firm_name"],
+                        "customer_name"   => $this->customer_name,
+                        "document_number" => $this->document_number,
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed)
         );
 
         $report = new \App\Report('doc/returnissue.tpl');

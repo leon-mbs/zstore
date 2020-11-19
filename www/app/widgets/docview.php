@@ -24,13 +24,13 @@ class DocView extends \Zippy\Html\PageFragment
 {
 
     private $_doc;
-    private $_p = null;
-    public $_reldocs = array();
-    public $_statelist = array();
-    public $_fileslist = array();
-    public $_msglist = array();
-    public $_paylist = array();
-    public $_itemlist = array();
+    private $_p         = null;
+    public  $_reldocs   = array();
+    public  $_statelist = array();
+    public  $_fileslist = array();
+    public  $_msglist   = array();
+    public  $_paylist   = array();
+    public  $_itemlist  = array();
 
     public function __construct($id) {
         parent::__construct($id);

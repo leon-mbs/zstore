@@ -26,7 +26,7 @@ use Zippy\Html\Link\SubmitLink;
 class ProdIssue extends \App\Pages\Base
 {
 
-    public $_itemlist = array();
+    public  $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
 
@@ -326,7 +326,7 @@ class ProdIssue extends \App\Pages\Base
 
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

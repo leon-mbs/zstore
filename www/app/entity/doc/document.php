@@ -156,35 +156,6 @@ class Document extends \ZCL\DB\Entity
         }
         $this->content .= "</header>";
 
-        //deprecated
-        $this->content .= "<detail>";
-        foreach ($this->detaildata as $row) {
-            $this->content .= "<row>";
-            foreach ($row as $key => $value) {
-                if ($key > 0) {
-                    continue;
-                }
-
-                if (strpos($value, '[CDATA[') !== false) {
-                    \App\System::setWarnMsg('CDATA в  поле  обьекта');
-                    \App\Helper::log(' CDATA в  поле  обьекта');
-                    continue;
-                }
-
-
-                if (is_numeric($value) || strlen($value) == 0) {
-
-                } else {
-                    $value = "<![CDATA[" . $value . "]]>";
-                }
-
-                $this->content .= "<{$key}>{$value}</{$key}>";
-            }
-
-            $this->content .= "</row>";
-        }
-        $this->content .= "</detail>";
-
 
         $this->content .= "</doc>";
     }
@@ -202,7 +173,7 @@ class Document extends \ZCL\DB\Entity
 
         try {
             $xml = new \SimpleXMLElement($this->content);
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $logger->error("Документ " . $this->document_number . " " . $ee->getMessage());
             return;
@@ -213,12 +184,15 @@ class Document extends \ZCL\DB\Entity
         $this->detaildata = array();
 
         //deprecated
-        foreach ($xml->detail->children() as $row) {
-            $_row = array();
-            foreach ($row->children() as $item) {
-                $_row[(string)$item->getName()] = (string)$item;
+        if (isset($xml->detail)) {
+
+            foreach ($xml->detail->children() as $row) {
+                $_row = array();
+                foreach ($row->children() as $item) {
+                    $_row[(string)$item->getName()] = (string)$item;
+                }
+                $this->detaildata[] = $_row;
             }
-            $this->detaildata[] = $_row;
         }
         //перепаковываем в новый вариант
         if (count($this->detaildata) > 0) {
@@ -231,7 +205,7 @@ class Document extends \ZCL\DB\Entity
                     if ($row['stock_id'] > 0) {
                         $detaildata[$row['stock_id']] = new \App\Entity\Stock($row);
                     } else {
-                        $id =   (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
+                        $id = (strlen($row['item_id']) > 0 ? $row['item_id'] : '');
                         $detaildata[$id] = new \App\Entity\Item($row);
                     }
                 }
@@ -295,7 +269,7 @@ class Document extends \ZCL\DB\Entity
 
 
             $conn->CompleteTrans();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             \App\System::setErrorMsg($ee->getMessage());
@@ -397,7 +371,7 @@ class Document extends \ZCL\DB\Entity
      */
     public static function getStateName($state) {
 
-        switch ($state) {
+        switch($state) {
             case Document::STATE_NEW:
                 return Helper::l('st_new');
             case Document::STATE_EDITED:
@@ -489,7 +463,7 @@ class Document extends \ZCL\DB\Entity
      * @param mixed $header значения заголовка
      */
     public static function search($type, $from, $to, $header = array()) {
-        $conn = $conn = \ZDB\DB::getConnect();;
+        $conn = $conn = \ZDB\DB::getConnect();
         $where = "state= " . Document::STATE_EXECUTED;
 
         if (strlen($type) > 0) {
@@ -763,12 +737,12 @@ class Document extends \ZCL\DB\Entity
             } else {
                 System::setSuccessMsg(Helper::l('email_sent'));
             }
-        } catch (Exception $e) {
-            System::setErrorMsg($e->message);
+        } catch(\Exception $e) {
+            System::setErrorMsg($e->getMessage());
         }
 
 
-        @unlink($f);
+        // @unlink($f);
 
     }
 

@@ -28,13 +28,13 @@ class RetCustIssue extends Document
                     $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
                 }
 
-                $detail[] = array("no" => $i++,
-                    "tovar_name" => $name,
-                    "tovar_code" => $item->item_code,
-                    "quantity" => H::fqty($item->quantity),
-                    "msr" => $item->msr,
-                    "price" => H::fa($item->price),
-                    "amount" => H::fa($item->quantity * $item->price)
+                $detail[] = array("no"         => $i++,
+                                  "tovar_name" => $name,
+                                  "tovar_code" => $item->item_code,
+                                  "quantity"   => H::fqty($item->quantity),
+                                  "msr"        => $item->msr,
+                                  "price"      => H::fa($item->price),
+                                  "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
         }
@@ -42,13 +42,13 @@ class RetCustIssue extends Document
 
         $customer = \App\Entity\Customer::load($this->customer_id);
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "firm_name" => $this->headerdata["firm_name"],
-            "customer_name" => $this->customer_name,
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "firm_name"       => $this->headerdata["firm_name"],
+                        "customer_name"   => $this->customer_name,
+                        "document_number" => $this->document_number,
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed)
         );
 
 

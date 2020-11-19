@@ -34,10 +34,49 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('email', $this->user->email));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
 
+
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
+
+        $pages = array();
+
+        foreach (\App\Entity\MetaData::find("meta_type<>1", "meta_type,description") as $m) {
+            $p = "";
+            $n = "";
+            switch($m->meta_type) {
+
+
+                case 1 :
+                    $p = "\\App\\Pages\\Doc\\";
+                    $n = H::l("md_doc");
+                    break;
+                case 2 :
+                    $p = "\\App\\Pages\\Report\\";
+                    $n = H::l("md_rep");
+                    break;
+                case 3 :
+                    $p = "\\App\\Pages\\Register\\";
+                    $n = H::l("md_reg");
+                    break;
+                case 4 :
+                    $p = "\\App\\Pages\\Reference\\";
+                    $n = H::l("md_ref");
+                    break;
+                case 5 :
+                    $p = "\\App\\Pages\\Service\\";
+                    $n = H::l("md_ser");
+                    break;
+
+
+            }
+
+            $p = $p . $m->meta_name;
+            $pages[$p] = $n . ' - ' . $m->description;
+        }
+
+        $form->add(new DropDownChoice('mainpage', $pages, $this->user->mainpage));
 
 
         $this->add($form);
@@ -65,6 +104,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
+        $this->user->mainpage = $sender->mainpage->getValue();
 
 
         if (!$this->isError()) {

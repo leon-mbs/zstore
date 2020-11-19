@@ -22,17 +22,17 @@
     <script src="/assets/js/printThis.js" type="text/javascript"></script>
     <script src="/assets/js/app.js" type="text/javascript"></script>
     <script src="/assets/js/adminlte.js" type="text/javascript"></script>
-    
-    <!-- Google Font -->
-    <link rel="stylesheet"      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
-  
-    
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+
 </head>
 <body class="{{hidesidebar}}">
-  {{#usescanner}}
-       <link rel="stylesheet" href="/assets/css/mscanner.css">
-  {{/usescanner}}    
+{{#usescanner}}
+<link rel="stylesheet" href="/assets/css/mscanner.css">
+{{/usescanner}}
 <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
 <a id="top"></a>
 <div class="wrapper">
@@ -71,10 +71,12 @@
                         zippy="username"></span> </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i class="fa fa-calendar-alt"></i> Календарь</a>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i
+                                class="fa fa-calendar-alt"></i> Календарь</a>
                     </li>
                     <li>
-                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-user"></i> Мой профиль</a>
+                        <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-user"></i>
+                            Мой профиль</a>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
@@ -129,7 +131,14 @@
                         </a>
                     </li>
                     {{/shopmenu}}
-
+                    <li class="nav-item  ">
+                        <a href="?p=/App/Pages/Main" class="nav-link">
+                            <i class="nav-icon fa fa-chart-pie"></i>
+                            <p>
+                                Дашборд
+                            </p>
+                        </a>
+                    </li>
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-file"></i>
@@ -357,6 +366,8 @@
                                 </a>
                             </li>
                             {{/items}}
+
+
                             {{/sermenu}}
                         </ul>
 
@@ -371,7 +382,7 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                       
+
                             {{#note}}
                             <li class="nav-item  has-treeview">
                                 <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
@@ -487,6 +498,7 @@
                             </li>
                             {{/woocomerce}}
 
+
                             {{#issue}}
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
@@ -538,7 +550,7 @@
                                             <p>Настройки</p>
                                         </a>
                                     </li>
-                                   <li class="nav-item">
+                                    <li class="nav-item">
                                         <a href="/index.php?p=App/Modules/Tecdoc/Search" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Поиск</p>
@@ -548,6 +560,27 @@
 
                             </li>
                             {{/tecdoc}}
+                            {{#ppo}}
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>Фискализация
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
+                                </a>
+                                <ul class="nav nav-treeview">
+
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Modules/PPO/PPOList" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;Зарегистрированые РРО</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            {{/ppo}}
 
                         </ul>
 
@@ -585,14 +618,13 @@
                             </li>
 
 
-                        
                             <li class="nav-item">
                                 <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
                                     <i class="fa    nav-icon"></i>
                                     <p>&nbsp;&nbsp;Компании</p>
                                 </a>
                             </li>
-                         
+
 
                             {{#usebranch}}
                             <li class="nav-item">
@@ -625,7 +657,17 @@
     <div class="content-wrapper mb-4">
         <!-- Main content -->
         <section class="content">
-         
+            <div class="row justify-content-center mt-2 mb-1">
+                <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
+
+                    {{#alerterror}}
+                    <div class="alert alert-danger" role="alert">
+                        {{{alerterror}}}
+                    </div>
+                    {{/alerterror}}
+
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12    ">
 
@@ -678,8 +720,6 @@
     });
 
 
-    
-
     $(window).scroll(function () {
         if ($(this).scrollTop() > 600) {
             if ($('#upbutton').is(':hidden')) {
@@ -692,15 +732,13 @@
         }
     });
 
-    
- 
 
 </script>
- {{#usescanner}}
-     <script src="/assets/js/quagga.js" type="text/javascript"></script>
-     <script src="/assets/js/mscanner.js" type="text/javascript"></script>
+{{#usescanner}}
+<script src="/assets/js/quagga.js" type="text/javascript"></script>
+<script src="/assets/js/mscanner.js" type="text/javascript"></script>
 
-  {{/usescanner}}      
- 
+{{/usescanner}}
+
 </body>
 </html>

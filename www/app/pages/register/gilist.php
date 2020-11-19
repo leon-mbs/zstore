@@ -92,7 +92,7 @@ class GIList extends \App\Pages\Base
         $row->add(new Label('customer', $doc->headerdata['customer_name']));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('firm', $item->firm_name));
+        $row->add(new Label('firm', $doc->firm_name));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');

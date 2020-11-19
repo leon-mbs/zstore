@@ -149,13 +149,13 @@ class Import extends \App\Pages\Base
         $data = array();
         if (($handle = fopen($file['tmp_name'], "r")) !== FALSE) {
 
-            while (($row = fgets($handle)) !== FALSE) {
+            while(($row = fgets($handle)) !== FALSE) {
                 if ($encode == 2) {
                     $row = mb_convert_encoding($row, "utf-8", "windows-1251");
                 }
-                if($passfirst==true  ) {
+                if ($passfirst == true) {
                     $passfirst = false;
-                    continue;  
+                    continue;
                 }
                 $data[] = explode($sep, trim($row));
             }
@@ -169,15 +169,15 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname' => $row[$colname - 1],
-                    'colcode' => $row[$colcode - 1],
+                    'colname'    => $row[$colname - 1],
+                    'colcode'    => $row[$colcode - 1],
                     'colbarcode' => $row[$colbarcode - 1],
-                    'colgr' => $row[$colgr - 1],
-                    'colqty' => $row[$colqty - 1],
-                    'colmsr' => $row[$colmsr - 1],
+                    'colgr'      => $row[$colgr - 1],
+                    'colqty'     => $row[$colqty - 1],
+                    'colmsr'     => $row[$colmsr - 1],
                     'colinprice' => $row[$colinprice - 1],
-                    'colprice' => $row[$colprice - 1],
-                    'colbrand' => $row[$colbrand - 1]
+                    'colprice'   => $row[$colprice - 1],
+                    'colbrand'   => $row[$colbrand - 1]
                 );
             }
             return;
@@ -224,7 +224,7 @@ class Import extends \App\Pages\Base
                     if (strlen($row[$colmsr - 1]) > 0) {
                         $item->msr = trim($row[$colmsr - 1]);
                     }
-                   if (strlen($row[$colbrand - 1]) > 0) {
+                    if (strlen($row[$colbrand - 1]) > 0) {
                         $item->manufacturer = trim($row[$colbrand - 1]);
                     }
                     if ($price > 0) {
@@ -286,8 +286,8 @@ class Import extends \App\Pages\Base
 
         $encode = $this->cform->cencode->getValue();
         $preview = $this->cform->cpreview->isChecked();
-         $passfirst = $this->cform->cpassfirst->isChecked();
-       $this->_tvars['preview2'] = false;
+        $passfirst = $this->cform->cpassfirst->isChecked();
+        $this->_tvars['preview2'] = false;
 
         $colcname = $this->cform->colcname->getValue();
         $colphone = $this->cform->colphone->getValue();
@@ -314,13 +314,13 @@ class Import extends \App\Pages\Base
         $data = array();
         if (($handle = fopen($file['tmp_name'], "r")) !== FALSE) {
 
-            while (($row = fgets($handle)) !== FALSE) {
+            while(($row = fgets($handle)) !== FALSE) {
                 if ($encode == 2) {
                     $row = mb_convert_encoding($row, "utf-8", "windows-1251");
                 }
-                if($passfirst==true  ) {
+                if ($passfirst == true) {
                     $passfirst = false;
-                    continue;  
+                    continue;
                 }
 
                 $data[] = explode($sep, trim($row));
@@ -335,10 +335,10 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list2'][] = array(
-                    'colname' => $row[$colcname - 1],
-                    'colphone' => $row[$colphone - 1],
-                    'colemail' => $row[$colemail - 1],
-                    'colcity' => $row[$colcity - 1],
+                    'colname'    => $row[$colcname - 1],
+                    'colphone'   => $row[$colphone - 1],
+                    'colemail'   => $row[$colemail - 1],
+                    'colcity'    => $row[$colcity - 1],
                     'coladdress' => $row[$coladdress - 1]
                 );
             }
@@ -418,7 +418,7 @@ class Import extends \App\Pages\Base
             $this->setError('noselcolname');
             return;
         }
-        if ($t == 1 && $colqty == 0) {
+        if ($colqty == 0) {
             $this->setError('noselcolqty');
             return;
         }
@@ -438,13 +438,13 @@ class Import extends \App\Pages\Base
         $data = array();
         if (($handle = fopen($file['tmp_name'], "r")) !== FALSE) {
 
-            while (($row = fgets($handle)) !== FALSE) {
+            while(($row = fgets($handle)) !== FALSE) {
                 if ($encode == 2) {
                     $row = mb_convert_encoding($row, "utf-8", "windows-1251");
                 }
-                if($passfirst==true  ) {
+                if ($passfirst == true) {
                     $passfirst = false;
-                    continue;  
+                    continue;
                 }
 
                 $data[] = explode($sep, trim($row));
@@ -459,10 +459,10 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname' => $row[$colname - 1],
-                    'colcode' => $row[$colcode - 1],
-                    'colqty' => $row[$colqty - 1],
-                    'colmsr' => $row[$colmsr - 1],
+                    'colname'  => $row[$colname - 1],
+                    'colcode'  => $row[$colcode - 1],
+                    'colqty'   => $row[$colqty - 1],
+                    'colmsr'   => $row[$colmsr - 1],
                     'colprice' => $row[$colprice - 1]
                 );
             }

@@ -94,7 +94,7 @@ class DocList extends \App\Pages\Base
             $this->filter->searchnumber->setText($dc->document_number);
             $doclist->Reload();
         }
-        $this->add(new Form('statusform'))->SetVisible(false);;
+        $this->add(new Form('statusform'))->SetVisible(false);
         $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statusform->add(new TextInput('refcomment'));
@@ -114,9 +114,9 @@ class DocList extends \App\Pages\Base
         $filter->searchnumber = '';
 
         $this->filter->clean();
-        $this->filter->to->setDate(time());;
-        $this->filter->from->setDate(time() - (7 * 24 * 3600));;
-        $this->filterOnSubmit($this->filter);;
+        $this->filter->to->setDate(time());
+        $this->filter->from->setDate(time() - (7 * 24 * 3600));
+        $this->filterOnSubmit($this->filter);
     }
 
     public function filterOnSubmit($sender) {
@@ -184,7 +184,7 @@ class DocList extends \App\Pages\Base
             $list = "";
             foreach ($basedonlist as $doctype => $docname) {
                 $list .= "<a  class=\"dropdown-item\" href=\"/index.php?p=App/Pages/Doc/" . $doctype . "&arg=/0/{$doc->document_id}\">{$docname}</a>";
-            };
+            }
             $row->basedon->add(new Label('basedlist'))->setText($list, true);
         }
 

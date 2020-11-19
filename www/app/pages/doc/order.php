@@ -27,10 +27,10 @@ use Zippy\Html\Link\SubmitLink;
 class Order extends \App\Pages\Base
 {
 
-    public $_tovarlist = array();
+    public  $_tovarlist = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid = 0;
+    private $_rowid     = 0;
     private $_discount;
 
     public function __construct($docid = 0, $basedocid = 0) {
@@ -285,7 +285,7 @@ class Order extends \App\Pages\Base
             } else {
                 App::Redirect("\\App\\Pages\\Register\\OrderList");
             }
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
@@ -398,8 +398,8 @@ class Order extends \App\Pages\Base
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustphone->getText();
 
-        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
-            $this->setError("tel10");
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
+            $this->setError("tel10", H::PhoneL());
             return;
         }
 

@@ -24,47 +24,49 @@ class Invoice extends \App\Entity\Doc\Document
             if (isset($detail[$item->item_id])) {
                 $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
-                $detail[] = array("no" => $i++,
-                    "tovar_name" => $item->itemname,
-                    "tovar_code" => $item->item_code,
-                    "quantity" => H::fqty($item->quantity),
-                    "price" => H::fa($item->price),
-                    "msr" => $item->msr,
-                    "amount" => H::fa($item->quantity * $item->price)
+                $detail[] = array("no"         => $i++,
+                                  "tovar_name" => $item->itemname,
+                                  "tovar_code" => $item->item_code,
+                                  "quantity"   => H::fqty($item->quantity),
+                                  "price"      => H::fa($item->price),
+                                  "msr"        => $item->msr,
+                                  "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
         }
 
         $totalstr = H::sumstr($this->amount);
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "customer_name" => $this->customer_name,
-            "firm_name" => $firm['firm_name'],
-            "logo" => _BASEURL . $firm['logo'],
-            "islogo" => strlen($firm['logo']) > 0,
-            "stamp" => _BASEURL . $firm['stamp'],
-            "isstamp" => strlen($firm['stamp']) > 0,
-            "sign" => _BASEURL . $firm['sign'],
-            "issign" => strlen($firm['sign']) > 0,
-            "isfirm" => strlen($firm["firm_name"]) > 0,
-            "iscontract" => $this->headerdata["contract_id"] > 0,
-            "phone" => $this->headerdata["phone"],
-            "customer_name" => $this->headerdata["customer_print"],
-            "bank" => $firm["bank"],
-            "bankacc" => $firm["bankacc"],
-            "isbank" => (strlen($firm["bankacc"]) > 0 && strlen($firm["bank"]) > 0),
-            "email" => $this->headerdata["email"],
-            "notes" => $this->notes,
-            "document_number" => $this->document_number,
-            "totalstr" => $totalstr,
-            "total" => H::fa($this->amount),
-            "payamount" => H::fa($this->payamount),
-            "payed" => H::fa($this->payed),
-            "paydisc" => H::fa($this->headerdata["paydisc"])
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "customer_name"   => $this->customer_name,
+                        "firm_name"       => $firm['firm_name'],
+                        "logo"            => _BASEURL . $firm['logo'],
+                        "islogo"          => strlen($firm['logo']) > 0,
+                        "stamp"           => _BASEURL . $firm['stamp'],
+                        "isstamp"         => strlen($firm['stamp']) > 0,
+                        "sign"            => _BASEURL . $firm['sign'],
+                        "issign"          => strlen($firm['sign']) > 0,
+                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "phone"           => $this->headerdata["phone"],
+                        "customer_print"  => $this->headerdata["customer_print"],
+                        "bank"            => $firm["bank"],
+                        "bankacc"         => $firm["bankacc"],
+                        "isbank"          => (strlen($firm["bankacc"]) > 0 && strlen($firm["bank"]) > 0),
+                        "email"           => $this->headerdata["email"],
+                        "notes"           => $this->notes,
+                        "document_number" => $this->document_number,
+                        "totalstr"        => $totalstr,
+                        "total"           => H::fa($this->amount),
+                        "payamount"       => H::fa($this->payamount),
+                        "payed"           => H::fa($this->payed),
+                        "paydisc"         => H::fa($this->headerdata["paydisc"])
         );
-        if(strlen($this->headerdata["customer_print"])>0)        $header['customer_name'] = $this->headerdata["customer_print"] ;
-        
+        if (strlen($this->headerdata["customer_print"]) > 0) {
+            $header['customer_name'] = $this->headerdata["customer_print"];
+        }
+
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;

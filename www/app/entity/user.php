@@ -23,6 +23,7 @@ class User extends \ZCL\DB\Entity
         $this->hidesidebar = 0;
         $this->pagesize = 25;
         $this->createdon = time();
+        $this->mainpage = '\App\Pages\Main';
     }
 
     /**
@@ -48,12 +49,13 @@ class User extends \ZCL\DB\Entity
     protected function afterLoad() {
         $this->createdon = strtotime($this->createdon);
 
+        //доступы  уровня  роли
         $acl = @unserialize($this->roleacl);
         if (!is_array($acl)) {
             $acl = array();
         }
 
-
+        //доступы  уровня  пользователя
         $acluser = @unserialize($this->acl);
         if (is_array($acluser)) {
             foreach ($acluser as $k => $v) {
@@ -89,6 +91,7 @@ class User extends \ZCL\DB\Entity
 
 
         $this->hidesidebar = (int)$options['hidesidebar'];
+        $this->mainpage = $options['mainpage'];
 
         parent::afterLoad();
     }
@@ -115,6 +118,7 @@ class User extends \ZCL\DB\Entity
         $options['defmf'] = $this->defmf;
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
+        $options['mainpage'] = $this->mainpage;
 
         $this->options = serialize($options);
 

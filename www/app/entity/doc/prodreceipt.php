@@ -26,22 +26,22 @@ class ProdReceipt extends Document
             }
 
 
-            $detail[] = array("no" => $i++,
-                "itemname" => $name,
-                "itemcode" => $item->item_code,
-                "quantity" => H::fqty($item->quantity),
-                "price" => H::fa($item->price),
-                "msr" => $item->msr,
-                "amount" => H::fa($item->quantity * $item->price)
+            $detail[] = array("no"       => $i++,
+                              "itemname" => $name,
+                              "itemcode" => $item->item_code,
+                              "quantity" => H::fqty($item->quantity),
+                              "price"    => H::fa($item->price),
+                              "msr"      => $item->msr,
+                              "amount"   => H::fa($item->quantity * $item->price)
             );
         }
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "document_number" => $this->document_number,
-            "pareaname" => $this->headerdata["pareaname"],
-            "notes" => $this->notes,
-            "total" => H::fa($this->amount)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "document_number" => $this->document_number,
+                        "pareaname"       => $this->headerdata["pareaname"],
+                        "notes"           => $this->notes,
+                        "total"           => H::fa($this->amount)
         );
 
 

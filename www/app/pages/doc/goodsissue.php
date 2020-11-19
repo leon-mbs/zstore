@@ -29,12 +29,12 @@ use Zippy\Html\Link\SubmitLink;
 class GoodsIssue extends \App\Pages\Base
 {
 
-    public $_itemlist = array();
+    public  $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid = 0;
-    private $_orderid = 0;
-    private $_prevcust = 0;   // преыдущий контрагент
+    private $_rowid     = 0;
+    private $_orderid   = 0;
+    private $_prevcust  = 0;   // преыдущий контрагент
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -595,7 +595,7 @@ class GoodsIssue extends \App\Pages\Base
             } else {
                 App::Redirect("\\App\\Pages\\Register\\GIList");
             }
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
@@ -925,9 +925,9 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->ship_address->setText($cust->address);
         $cust->phone = $this->editcust->editphone->getText();
 
-        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("tel10");
+            $this->setError("tel10", H::PhoneL());
             return;
         }
 

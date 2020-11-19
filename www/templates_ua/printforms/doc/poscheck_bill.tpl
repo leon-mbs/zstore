@@ -30,12 +30,12 @@
     <tr>
         <td colspan="3"> Покупець:</td>
     </tr>
-   <tr>
+    <tr>
         <td colspan="3"> {{customer_name}}</td>
     </tr>
 
     {{/customer_name}}
- 
+
     <tr>
         <td colspan="3">Термiнал: {{pos_name}}</td>
     </tr>
@@ -81,6 +81,6 @@
     {{/prepaid}}
     <tr style="font-weight: bolder;">
         <td colspan="3"><br>Дякуємо за довiру до нас!</td>
-     
+
     </tr>
 </table>

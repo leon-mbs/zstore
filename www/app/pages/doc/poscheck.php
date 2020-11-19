@@ -29,13 +29,13 @@ use Zippy\Html\Link\SubmitLink;
 class POSCheck extends \App\Pages\Base
 {
 
-    public $_itemlist = array();
-    public $_serlist = array();
+    public  $_itemlist  = array();
+    public  $_serlist   = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid = 0;
-    private $_order_id = 0;
-    private $_prevcust = 0;   // преыдущий контрагент
+    private $_rowid     = 0;
+    private $_order_id  = 0;
+    private $_prevcust  = 0;   // преыдущий контрагент
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -537,7 +537,7 @@ class POSCheck extends \App\Pages\Base
             } else {
                 App::Redirect("\\App\\Pages\\Register\\GIList");
             }
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
@@ -855,8 +855,8 @@ class POSCheck extends \App\Pages\Base
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editphone->getText();
 
-        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
-            $this->setError("tel10");
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
+            $this->setError("tel10", H::PhoneL());
             return;
         }
 

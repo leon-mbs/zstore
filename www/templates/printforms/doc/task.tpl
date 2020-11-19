@@ -34,7 +34,6 @@
         <th style="border: 1px solid black;" width="50" align="right">Кол.</th>
         <th style="border: 1px solid black;" width="50" align="right">Сумма</th>
         <th style="border: 1px solid black;" width="50" align="right">Часов</th>
-        
 
 
     </tr>
@@ -45,7 +44,6 @@
         <td align="right">{{qty}}</td>
         <td align="right">{{cost}}</td>
         <td align="right">{{hours}}</td>
-        
 
 
     </tr>

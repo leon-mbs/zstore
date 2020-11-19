@@ -23,7 +23,7 @@ class Inventory extends Document
             }
 
             //оприходуем
-            if ($item->quantity < $item->qfact) {
+            if ($item->quantity < $item->qfact  && $this->headerdata['autoincome']==1) {
                 $qty = $item->qfact - $item->quantity;
                 $where = "store_id=" . $this->headerdata['store'] . " and item_id=" . $item->item_id;
                 $price = 0;
@@ -40,7 +40,7 @@ class Inventory extends Document
             }
 
             //списываем  со склада
-            if ($item->quantity > $item->qfact) {
+            if ($item->quantity > $item->qfact && $this->headerdata['autooutcome']==1) {
                 $item->quantity = $item->quantity - $item->qfact;
                 $listst = Stock::pickup($this->headerdata['store'], $item);
                 foreach ($listst as $st) {
@@ -67,18 +67,18 @@ class Inventory extends Document
             if ($user->rolename != 'admins') {
                 $q = '-';
             }
-            $detail[] = array("no" => $i++,
-                "item_name" => $name,
-                "qfact" => $item->qfact,
-                "snumber" => $item->snumber,
-                "quantity" => $q
+            $detail[] = array("no"        => $i++,
+                              "item_name" => $name,
+                              "qfact"     => $item->qfact,
+                              "snumber"   => $item->snumber,
+                              "quantity"  => $q
             );
         }
 
         $header = array(
-            "_detail" => $detail,
-            'date' => H::fd($this->document_date),
-            "store" => $this->headerdata["storename"],
+            "_detail"         => $detail,
+            'date'            => H::fd($this->document_date),
+            "store"           => $this->headerdata["storename"],
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/inventory.tpl');

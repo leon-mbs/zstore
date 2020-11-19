@@ -63,6 +63,28 @@
                             <option value="0">Не выбрано</option>
                         </select>
                     </div>
+                    {{#ppo}}
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input zippy="editusefisc" type="checkbox" class="form-check-input">
+                            <label class="form-check-label text-bold" for="editusefisc">Использовать
+                                фискализацию</label>
+                            <br><small>Чеки с этого терминала будут отправлятся в ФСУ<small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editfisc">Фискальный номер</label>
+                        <input class="form-control" zippy="editfisc"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editposinner"> Внутренний номер</label>
+                        <input class="form-control" zippy="editposinner"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editfiscalnumber"> Следуюший фискальный номер документа</label>
+                        <input class="form-control" zippy="editfiscalnumber"/>
+                    </div>
+                    {{/ppo}}
 
 
                     <div class="form-group">

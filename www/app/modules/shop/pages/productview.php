@@ -21,7 +21,7 @@ class ProductView extends Base
 {
 
     public $msg, $attrlist, $clist;
-    protected $product_id, $gotocomment;
+    protected               $product_id, $gotocomment;
 
     public function __construct($product_id = 0) {
         parent::__construct();

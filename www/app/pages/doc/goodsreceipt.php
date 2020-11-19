@@ -28,10 +28,10 @@ use Zippy\Html\Link\SubmitLink;
 class GoodsReceipt extends \App\Pages\Base
 {
 
-    public $_itemlist = array();
+    public  $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid = 0;
+    private $_rowid     = 0;
 
 
     public function __construct($docid = 0, $basedocid = 0) {
@@ -546,7 +546,7 @@ class GoodsReceipt extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
@@ -785,9 +785,9 @@ class GoodsReceipt extends \App\Pages\Base
         $cust->address = $this->editcust->editaddress->getText();
         $cust->phone = $this->editcust->editphone->getText();
 
-        if (strlen($cust->phone) > 0 && strlen($cust->phone) != 10) {
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("tel10");
+            $this->setError("tel10", H::PhoneL());
             return;
         }
 

@@ -234,7 +234,7 @@ abstract class JsonRPC
      */
     private static function error($id, $code, $message, $data = null) {
         $error = array(
-            'code' => $code,
+            'code'    => $code,
             'message' => $message
         );
 
@@ -244,8 +244,8 @@ abstract class JsonRPC
 
         return array(
             'jsonrpc' => self::VERSION,
-            'id' => $id,
-            'error' => $error
+            'id'      => $id,
+            'error'   => $error
         );
     }
 
@@ -265,8 +265,8 @@ abstract class JsonRPC
     private static function response($id, $result) {
         return array(
             'jsonrpc' => self::VERSION,
-            'id' => $id,
-            'result' => $result
+            'id'      => $id,
+            'result'  => $result
         );
     }
 

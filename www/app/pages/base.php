@@ -75,6 +75,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["note"] = $_config['modules']['note'] == 1;
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
         $this->_tvars["tecdoc"] = $_config['modules']['tecdoc'] == 1;
+        $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
@@ -95,6 +96,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["tecdoc"] = false;
         }
 
+
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         //для скрытия блока разметки  в  шаблоне страниц                           
@@ -109,7 +111,7 @@ class Base extends \Zippy\Html\WebPage
 
         //$page = $this->getOwnerPage();
         //  $page = get_class($page)  ;
-        App::Redirect("\\App\\Pages\\UserLogin");;;
+        App::Redirect("\\App\\Pages\\UserLogin");
         //    App::$app->getresponse()->toBack();
     }
 
@@ -150,21 +152,24 @@ class Base extends \Zippy\Html\WebPage
     public function beforeRender() {
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
+        $this->_tvars['alerterror'] = "";
+        if (strlen(System::getErrorMsg()) > 0) {
+            $this->_tvars['alerterror'] = System::getErrorMsg();
+            $this->goAnkor('');
+        }
     }
 
     protected function afterRender() {
         $user = System::getUser();
 
-        if (strlen(System::getErrorMsg(true)) > 0) {
-            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'10000'})        ", true);
-        }
-        if (strlen(System::getWarnMsg(true)) > 0) {
+
+        if (strlen(System::getWarnMsg()) > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'6000'})        ", true);
         }
-        if (strlen(System::getSuccesMsg(true)) > 0) {
+        if (strlen(System::getSuccesMsg()) > 0) {
             $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'2000'})        ", true);
         }
-        if (strlen(System::getInfoMsg(true)) > 0) {
+        if (strlen(System::getInfoMsg()) > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
 

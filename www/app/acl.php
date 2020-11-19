@@ -11,7 +11,7 @@ use App\Helper as H;
 class ACL
 {
 
-    private static $_metas = array();
+    private static $_metas     = array();
     private static $_metasdesc = array();
 
     private static function load() {
@@ -415,7 +415,7 @@ class ACL
             return $id;
         }
         \App\System::setErrorMsg(\App\Helper::l('selectbranch'));
-        \App\Application::RedirectHome();
+        \App\Application::Redirect("\\App\\Pages\\Main");
     }
 
     /**

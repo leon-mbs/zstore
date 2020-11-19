@@ -32,27 +32,27 @@ class Order extends \App\Entity\Doc\Document
                     $t .= "</table>";
                     $item->itemname = $item->itemname . $t;
                 }
-                $detail[] = array("no" => $i++,
-                    "tovar_name" => $item->itemname,
-                    "tovar_code" => $item->item_code,
-                    "quantity" => H::fqty($item->quantity),
-                    "price" => H::fa($item->price),
-                    "msr" => $item->msr,
-                    "amount" => H::fa($item->quantity * $item->price)
+                $detail[] = array("no"         => $i++,
+                                  "tovar_name" => $item->itemname,
+                                  "tovar_code" => $item->item_code,
+                                  "quantity"   => H::fqty($item->quantity),
+                                  "price"      => H::fa($item->price),
+                                  "msr"        => $item->msr,
+                                  "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
         }
 
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "customer_name" => $this->customer_name,
-            "phone" => $this->headerdata["phone"],
-            "email" => $this->headerdata["email"],
-            "delivery" => $this->headerdata["delivery_name"],
-            "notes" => $this->notes,
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "customer_name"   => $this->customer_name,
+                        "phone"           => $this->headerdata["phone"],
+                        "email"           => $this->headerdata["email"],
+                        "delivery"        => $this->headerdata["delivery_name"],
+                        "notes"           => $this->notes,
+                        "document_number" => $this->document_number,
+                        "total"           => H::fa($this->amount)
         );
         if ($this->headerdata["delivery"] == 2 || $this->headerdata["delivery"] == 3) {
             $header['delivery'] = $header['delivery'] . '. по адресу: ' . $this->headerdata["address"];
@@ -101,21 +101,21 @@ class Order extends \App\Entity\Doc\Document
 
             $detail[] = array(
                 "tovar_name" => $item->itemname,
-                "quantity" => H::fqty($item->quantity),
-                "price" => H::fa($item->price),
-                "amount" => H::fa($item->quantity * $item->price)
+                "quantity"   => H::fqty($item->quantity),
+                "price"      => H::fa($item->price),
+                "amount"     => H::fa($item->quantity * $item->price)
             );
         }
 
         $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "firm_name" => $firm["firm_name"],
-            "phone" => $firm["phone"],
-            "customer_name" => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
-            "document_number" => $this->document_number,
-            "total" => H::fa($this->amount)
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "firm_name"       => $firm["firm_name"],
+                        "phone"           => $firm["phone"],
+                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "document_number" => $this->document_number,
+                        "total"           => H::fa($this->amount)
 
         );
 

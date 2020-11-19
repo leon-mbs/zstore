@@ -6,7 +6,7 @@ namespace App;
 class DataItem implements \Zippy\Interfaces\DataItem
 {
 
-    public $id;
+    public    $id;
     protected $fields = array();
 
     function __construct($row = null) {

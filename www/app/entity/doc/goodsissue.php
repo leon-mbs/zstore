@@ -35,14 +35,14 @@ class GoodsIssue extends Document
                 $weight += $item->weight;
             }
 
-            $detail[] = array("no" => $i++,
-                "tovar_name" => $name,
-                "tovar_code" => $item->item_code,
-                "quantity" => H::fqty($item->quantity),
-                "msr" => $item->msr,
+            $detail[] = array("no"         => $i++,
+                              "tovar_name" => $name,
+                              "tovar_code" => $item->item_code,
+                              "quantity"   => H::fqty($item->quantity),
+                              "msr"        => $item->msr,
 
-                "price" => H::fa($item->price),
-                "amount" => H::fa($item->quantity * $item->price)
+                              "price"  => H::fa($item->price),
+                              "amount" => H::fa($item->quantity * $item->price)
             );
 
         }
@@ -51,28 +51,28 @@ class GoodsIssue extends Document
 
         $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
 
-        $header = array('date' => H::fd($this->document_date),
-            "_detail" => $detail,
-            "firm_name" => $firm['firm_name'],
-            "customer_name" => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
-            "isfirm" => strlen($firm["firm_name"]) > 0,
-            "iscontract" => $this->headerdata["contract_id"] > 0,
-            "store_name" => $this->headerdata["store_name"],
-            "weight" => $weight > 0 ? H::l("allweight", $weight) : '',
-            "ship_address" => $this->headerdata["ship_address"],
-            "ship_number" => $this->headerdata["ship_number"],
-            "delivery_cost" => H::fa($this->headerdata["delivery_cost"]),
-            "order" => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
-            "emp_name" => $this->headerdata["emp_name"],
-            "document_number" => $this->document_number,
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "firm_name"       => $firm['firm_name'],
+                        "customer_name"   => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
+                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "store_name"      => $this->headerdata["store_name"],
+                        "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
+                        "ship_address"    => $this->headerdata["ship_address"],
+                        "ship_number"     => $this->headerdata["ship_number"],
+                        "delivery_cost"   => H::fa($this->headerdata["delivery_cost"]),
+                        "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
+                        "emp_name"        => $this->headerdata["emp_name"],
+                        "document_number" => $this->document_number,
 
-            "totalstr" => $totalstr,
-            "total" => H::fa($this->amount),
-            "payed" => H::fa($this->payed),
-            "paydisc" => H::fa($this->headerdata["paydisc"]),
-            "isdisc" => $this->headerdata["paydisc"] > 0,
-            "prepaid" => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
-            "payamount" => H::fa($this->payamount)
+                        "totalstr"  => $totalstr,
+                        "total"     => H::fa($this->amount),
+                        "payed"     => H::fa($this->payed),
+                        "paydisc"   => H::fa($this->headerdata["paydisc"]),
+                        "isdisc"    => $this->headerdata["paydisc"] > 0,
+                        "prepaid"   => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "payamount" => H::fa($this->payamount)
         );
 
         if ($this->headerdata["contract_id"] > 0) {

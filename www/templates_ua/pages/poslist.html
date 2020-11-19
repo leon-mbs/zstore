@@ -64,7 +64,28 @@
                         </select>
                     </div>
 
-
+                    {{#ppo}}
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input zippy="editusefisc" type="checkbox" class="form-check-input">
+                            <label class="form-check-label text-bold" for="editusefisc">Використовувати
+                                фiскализацiю</label>
+                            <br><small>Чеки з цього термiналу будут вiдправлятись в ФСУ<small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editfisc">Фiскальний номер</label>
+                        <input class="form-control" zippy="editfisc"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editposinner"> Внутрiшнiй номер</label>
+                        <input class="form-control" zippy="editposinner"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editfiscalnumber"> Слiдуючий фiскальний номер документу</label>
+                        <input class="form-control" zippy="editfiscalnumber"/>
+                    </div>
+                    {{/ppo}}
                     <div class="form-group">
                         <label for="editcomment">Коментар</label>
                         <textarea class="form-control" zippy="editcomment">

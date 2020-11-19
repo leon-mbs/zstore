@@ -15,14 +15,14 @@
                     <option value="0">Не выбрано</option>
                 </select>
             </div>
-            
+
             <div class="form-group  ">
                 <label for="firm">Компания</label>
                 <select class="form-control" zippy="firm">
                     <option value="0">Не выбрана</option>
                 </select>
             </div>
-          
+
 
             <div class="form-group  ">
                 <input type="submit" value="Ввод товаров >" zippy="next1" class="btn btn-info">
@@ -34,7 +34,14 @@
 </form>
 
 <form zippy="form2">
-
+    {{#ppo}}
+    <div class="row">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+            <a zippy="openshift">Открыть смену</a> &nbsp; <a zippy="closeshift">Закрыть смену</a>
+            <br><br>
+        </div>
+    </div>
+    {{/ppo}}
     <div class="row">
         <div class="col-12 col-md-10 col-lg-8 col-xl-7">
             {{#usescanner}}
@@ -358,7 +365,7 @@
     }
 
     function check_save(ele) {
-        $('#save').prop('disabled','disabled') ;
+        $('#save').prop('disabled', 'disabled');
         return true;
     }
 

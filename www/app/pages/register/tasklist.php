@@ -24,10 +24,10 @@ class TaskList extends \App\Pages\Base
 
     private $_task;
     private $_taskds;
-    public $_users = array();
-    public $_items = array();
-    public $_store_id = 0;
-    public $_discount = 0;
+    public  $_users    = array();
+    public  $_items    = array();
+    public  $_store_id = 0;
+    public  $_discount = 0;
     private $_taskscnt = array();
 
 

@@ -24,7 +24,7 @@ class EqList extends \App\Pages\Base
 {
 
     private $_item;
-    public $_uselist = array();
+    public  $_uselist = array();
 
     public function __construct() {
         parent::__construct();
@@ -108,7 +108,7 @@ class EqList extends \App\Pages\Base
                 if ($eq->eq_id > 0) {
 
                     $it = new \App\DataItem(array(
-                        "usetask" => $task->document_number,
+                        "usetask"  => $task->document_number,
                         "useplace" => $eq->eq_name
                     ));
                     $this->_uselist[] = $it;

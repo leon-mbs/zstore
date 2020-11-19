@@ -22,8 +22,8 @@ class TimeSheet extends \App\Pages\Base
 {
 
     private $_time_id = 0;
-    public $_list = array();
-    public $_stat = array();
+    public  $_list    = array();
+    public  $_stat    = array();
 
     public function __construct() {
         parent::__construct();
@@ -170,7 +170,7 @@ class TimeSheet extends \App\Pages\Base
         $time->t_break = $sender->editbreak->getText();
         $time->emp_id = $this->filter->emp->getValue();
         if ($time->emp_id == 0) {
-            $setError('noempselected');
+            $this->setError('noempselected');
             return;
         }
         $time->t_type = $sender->edittype->getValue();

@@ -23,7 +23,7 @@ class Items extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('Нет права доступа к странице');
+            System::setErrorMsg(H::l('noaccesstopage'));
 
             App::RedirectHome();
             return;
@@ -54,7 +54,7 @@ class Items extends \App\Pages\Base
 
         try {
             $data = $client->get('products', array('status' => 'publish'));
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
         }
@@ -111,13 +111,13 @@ class Items extends \App\Pages\Base
             if ($item->ch == false) {
                 continue;
             }
-            $elist[] = array('name' => $item->itemname,
+            $elist[] = array('name'           => $item->itemname,
                 //  'short_description' => $item->description,
-                'sku' => $item->item_code,
-                'manage_stock' => true,
-                'stock_quantity' => (string)\App\Helper::fqty($item->qty),
-                'price' => (string)$item->getPrice($modules['wcpricetype']),
-                'regular_price' => (string)$item->getPrice($modules['wcpricetype'])
+                             'sku'            => $item->item_code,
+                             'manage_stock'   => true,
+                             'stock_quantity' => (string)\App\Helper::fqty($item->qty),
+                             'price'          => (string)$item->getPrice($modules['wcpricetype']),
+                             'regular_price'  => (string)$item->getPrice($modules['wcpricetype'])
             );
         }
         if (count($elist) == 0) {
@@ -132,7 +132,7 @@ class Items extends \App\Pages\Base
 
             }
 
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
         }
@@ -151,7 +151,7 @@ class Items extends \App\Pages\Base
 
         try {
             $data = $client->get('products', array('status' => 'publish'));
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
         }
@@ -191,7 +191,7 @@ class Items extends \App\Pages\Base
         try {
             $client->post('products/batch', $data);
 
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
 
@@ -204,10 +204,10 @@ class Items extends \App\Pages\Base
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
-
+        $skulist = array();
         try {
             $data = $client->get('products', array('status' => 'publish'));
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
         }
@@ -246,7 +246,7 @@ class Items extends \App\Pages\Base
         try {
             $client->post('products/batch', $data);
 
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
 
@@ -265,7 +265,7 @@ class Items extends \App\Pages\Base
 
         try {
             $data = $client->get('products', array('status' => 'publish'));
-        } catch (\Exception $ee) {
+        } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
         }

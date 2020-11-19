@@ -55,19 +55,19 @@ class MoveItem extends Document
             $name = $item->itemname;
 
 
-            $detail[] = array("no" => $i++,
-                "item_name" => $name,
-                "snumber" => $item->snumber,
-                "msr" => $item->msr,
-                "quantity" => H::fqty($item->quantity));
+            $detail[] = array("no"        => $i++,
+                              "item_name" => $name,
+                              "snumber"   => $item->snumber,
+                              "msr"       => $item->msr,
+                              "quantity"  => H::fqty($item->quantity));
         }
 
         $header = array(
-            "_detail" => $detail,
-            'date' => H::fd($this->document_date),
-            "from" => $this->headerdata["storename"],
-            "to" => $this->headerdata["tostorename"],
-            "notes" => $this->notes,
+            "_detail"         => $detail,
+            'date'            => H::fd($this->document_date),
+            "from"            => $this->headerdata["storename"],
+            "to"              => $this->headerdata["tostorename"],
+            "notes"           => $this->notes,
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/moveitem.tpl');
