@@ -6,8 +6,9 @@ CHANGELOG
 * Усовершенствованиие  додкумента  Инвентаризация 
 * Исправление  ошибок 
 
- Для  обновления  версии  обновить папки   app, templates, templates_ua  
- Обновить папку vendor (или  выполнить  composer)
+  Для  обновления  версии  обновить папки   app, templates, templates_ua, assets.  
+  Обновить папку vendor (или  выполнить  composer, предварительно  обновив composer.json) 
+
 
 
 
