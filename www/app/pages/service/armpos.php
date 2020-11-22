@@ -69,6 +69,7 @@ class ARMPos extends \App\Pages\Base
         $this->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
         $this->form2->add(new ClickLink('openshift', $this, 'OnShift'));
         $this->form2->add(new ClickLink('closeshift', $this, 'OnShift'));
+        $this->form2->add(new ClickLink('zform', $this, 'OnShift'));
 
 
         //оплата
@@ -698,18 +699,48 @@ class ARMPos extends \App\Pages\Base
 
         $cid = $this->form1->firm->getValue();
         $posid = $this->form1->pos->getValue();
-        try {
-            \App\Modules\PPO\Helper::shift($cid,$posid,$sender->id=="openshift");
-        } catch(\Exception $e) {
-            $this->setError($e->getMessage());
-            return;
-        }
-        //состояние  смены
         $pos = \App\Entity\Pos::load($posid);
-        if ($sender->id == "openshift") {
+  
+            
+            if($sender->id=="openshift") {
+              $ret =    \App\Modules\PPO\Helper::shift($cid,$posid,true);    
+            }
+            if($sender->id=="closeshift") {
+              $ret =   \App\Modules\PPO\Helper::shift($cid,$posid,false);    
+            }
+            if($sender->id=="zform") {
+               $ret =   \App\Modules\PPO\Helper::zform($cid,$posid);    
+            }
+            if($ret['success'] == false && $ret['docnumber']>0) { 
+                //повторяем для  нового номера
+                $pos->fiscdocnumber = $ret['docnumber'];
+                $pos->save();    
+
+                if($sender->id=="openshift") {
+                  $ret =    \App\Modules\PPO\Helper::shift($cid,$posid,true);    
+                }
+                if($sender->id=="closeshift") {
+                  $ret =   \App\Modules\PPO\Helper::shift($cid,$posid,false);    
+                }
+                if($sender->id=="zform") {
+                   $ret =   \App\Modules\PPO\Helper::zform($cid,$posid);    
+                }
+
+            } 
+            if($ret['success'] == false ) {
+                $this->setError($ret['data']);
+                return;
+            } else {
+                $this->setSuccess("ppoexecuted") ;
+            }
+            
+     
+        //состояние  смены
+         if ($sender->id == "openshift") {
             $pos->openshift = time();
             $pos->closeshift = 0;
-        } else {
+        } 
+        if ($sender->id == "closeshift")  {
             $pos->closeshift = time();
         }
 

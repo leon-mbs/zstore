@@ -29,12 +29,12 @@ class Report
     public function generate(array $header) {
         global $_config;
 
-        $temp = 'templates';
+        $dir = 'templates';
         if ($_config['common']['lang'] == 'ua') {
-            $temp = 'templates_ua';
+            $dir = 'templates_ua';
         }
 
-        $template = @file_get_contents(_ROOT . $temp . '/printforms/' . $this->_template);
+        $template = @file_get_contents(_ROOT . $dir . '/printforms/' . $this->_template);
         if (strlen($template) == 0) {
             return "Файл  печатной формы " . $this->_template . " не найден";
         }

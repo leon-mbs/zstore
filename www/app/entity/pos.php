@@ -27,7 +27,7 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<mf>{$this->mf}</mf>";
         $this->details .= "<store>{$this->store}</store>";
         $this->details .= "<fisc>{$this->fisc}</fisc>";
-        $this->details .= "<fiscalnumber>{$this->fiscalnumber}</fiscalnumber>";
+        $this->details .= "<fiscdocnumber>{$this->fiscdocnumber}</fiscdocnumber>";
         $this->details .= "<posinner>{$this->posinner}</posinner>";
         $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
         $this->details .= "<openshift>{$this->openshift}</openshift>";
@@ -45,7 +45,7 @@ class Pos extends \ZCL\DB\Entity
         $this->pricetype = (string)($xml->pricetype[0]);
         $this->store = (int)($xml->store[0]);
         $this->comment = (string)($xml->comment[0]);
-        $this->fiscalnumber = (string)($xml->fiscalnumber[0]);
+        $this->fiscdocnumber = (int)($xml->fiscdocnumber[0]);
         $this->fisc = (string)($xml->fisc[0]);
         $this->posinner = (string)($xml->posinner[0]);
         $this->usefisc = (int)($xml->usefisc[0]);

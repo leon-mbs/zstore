@@ -86,7 +86,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editpricetype->setValue($this->_pos->pricetype);
         $this->posdetail->editposinner->setText($this->_pos->posinner);
         $this->posdetail->editfisc->setText($this->_pos->fisc);
-        $this->posdetail->editfiscalnumber->setText($this->_pos->fiscalnumber);
+        $this->posdetail->editfiscalnumber->setText($this->_pos->fiscdocnumber);
         $this->posdetail->editusefisc->setChecked($this->_pos->usefisc);
 
         $this->posdetail->editcomment->setText($this->_pos->comment);
@@ -119,7 +119,7 @@ class PosList extends \App\Pages\Base
 
         $this->_pos->posinner = $this->posdetail->editposinner->getText();
         $this->_pos->fisc = $this->posdetail->editfisc->getText();
-        $this->_pos->fiscalnumber = $this->posdetail->editfiscalnumber->getText();
+        $this->_pos->fiscdocnumber = $this->posdetail->editfiscalnumber->getText();
         $this->_pos->usefisc = $this->posdetail->editusefisc->isChecked() ? 1 : 0;
 
         if ($this->_pos->pos_name == '') {
