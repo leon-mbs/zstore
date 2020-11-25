@@ -133,13 +133,14 @@ class Outcome extends \App\Pages\Base
         ";
         }
         if ($type == 2) {  //по покупателям
+            $empty = H::l("emptycust");
             $sql = "
-          select c.`customer_name` as itemname,c.`customer_id`,  sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+          select coalesce(c.`customer_name`,'{$empty}') as itemname,c.`customer_id`,  sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
           from `entrylist_view`  e
 
-         join `customers`  c on c.`customer_id` = e.`customer_id`
+        left  join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
-           where e.`customer_id` >0 {$u} and e.`quantity` <>0
+           where   e.`quantity` <>0 {$u}
              and d.`meta_name` in ('GoodsIssue','ServiceAct',  'POSCheck','ReturnIssue')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
   group by  c.`customer_name`,c.`customer_id`

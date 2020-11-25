@@ -3,15 +3,15 @@
 
     <CHECKHEAD>
 
-        <DOCTYPE>{{doctype}}</DOCTYPE>
-        <DOCSUBTYPE>{{docsubtype}}</DOCSUBTYPE>
+        <DOCTYPE>0</DOCTYPE>
+        <DOCSUBTYPE>0</DOCSUBTYPE>
 
 
         <UID>{{guid}}</UID>
 
         <TIN>{{edrpou}}</TIN>
 
-        <INN>{{inn}}</INN>
+        <IPN>{{inn}}</IPN>
 
         <ORGNAME>{{firmname}}</ORGNAME>
 
@@ -33,6 +33,7 @@
         <CASHIER>{{username}}</CASHIER>
 
         <VER>1</VER>
+        <ORDERTAXNUM>101234567890123</ORDERTAXNUM>        
     </CHECKHEAD>
 
     <CHECKTOTAL>
@@ -46,15 +47,15 @@
     <CHECKPAY>
         <ROW ROWNUM="1">
 
-            <PAYFORMCODE>{{formcode}}</PAYFORMCODE>
+            <PAYFORMCD>{{formcode}}</PAYFORMCD>
 
-            <PAYFORMNAME>{{formname}}</PAYFORMNAME>
+            <PAYFORMNM>{{formname}}</PAYFORMNM>
 
             <SUM>{{paysum}}</SUM>
 
-            <SUMPROVIDED>{{payed}}</SUMPROVIDED>
+            <PROVIDED>{{payed}}</PROVIDED>
             {{#rest}}
-            <REMAINDER>{{rest}}</REMAINDER>
+            <REMAINS>{{rest}}</REMAINS>
             {{/rest}}
         </ROW>
     </CHECKPAY>

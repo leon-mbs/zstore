@@ -252,7 +252,7 @@
   "noenaughtovar": "Недостатньо товару  %s ",
   "indocalreadyexists": "Вже iснує  приходний документ ",
   "thesamestore": "Выбрано  той  же склад ",
-  "incomebasedon": "Оприходовано на  пiдставi %s  ",
+  "incomebasedon": "Пiдстава %s зi складу %s ",
   "createddoc": "Створено документ %s  ",
   "all": "Всi",
   "notpayed": "Не  оплаченi",
@@ -282,7 +282,8 @@
   "delitemwarn": "Товар  вже використовуеться. Переведений  в  неактивний",
   "withoutcat": "Без категорiї",
   "ppoexecuted": "Виконано",
- 
+  "emptycust": "Фiз. особа",
+  
     
   "refreshed": "Оновлено",
   "sent": "Відправлено",

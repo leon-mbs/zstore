@@ -287,7 +287,7 @@ class OutcomeItem extends \App\Pages\Base
                         }
                         $indoc->document_number = $indoc->nextNumber($indoc->branch_id);
                         $indoc->user_id = 0;
-                        $indoc->notes = H::l('incomebasedon', $this->_doc->document_number);
+                        $indoc->notes = H::l('incomebasedon', $this->_doc->document_number,$this->_doc->headerdata['storename']);
 
 
                         $items = array();

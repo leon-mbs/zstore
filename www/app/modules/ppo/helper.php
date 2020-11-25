@@ -250,4 +250,86 @@ class Helper
 
     }
 
+   public static function check($cid, $posid ) {
+        $pos = \App\Entity\Pos::load($posid);
+
+        $branch_id = \App\Session::getSession()->branch_id;
+        $firm = \App\Helper::getFirmData($cid, $branch_id);
+        $branch = \App\Entity\Branch::load($branch_id);
+
+        $header = array();
+      
+        $header['firmname'] = $firm['firmname'];
+        $header['inn'] = $firm['inn'];
+        $header['edrpou'] = $firm['tin'];
+        $header['address'] = $firm['address'];
+        $header['branchname'] = strlen($branch->branch_name) > 0 ? $branch->branch_name : $firm['firmname'];
+        $header['date'] = date('dmY');
+        $header['time'] = date('His');
+        $header['docnumber'] = $pos->fiscdocnumber;
+        $header['posinner'] = $pos->posinner;
+        $header['posnumber'] = $pos->fisc;
+        $header['username'] = \App\System::getUser()->username;
+        $header['guid'] = Helper::guid();
+        $header['formname'] = 'Готiвка';
+        $header['formcode'] = 0;
+        if ($doc->headerdata['payform'] == 1) {
+            $header['formname'] = 'Банкiвська  картка';
+            $header['formcode'] = 1;
+        }        
+
+         $header['pay'] = $doc->payamount > 0; 
+        $header['paysum'] = number_format($doc->payamount, 2, '.', '')   ;
+        $header['payed'] =    number_format($doc->payed, 2, '.', '') ;
+        $header['rest'] =  $doc->headerdata["exchange"] >0 ?   number_format($doc->headerdata["exchange"], 2, '.', '') : false;
+        if($doc->payed  < $doc->payamount) {
+            $header['paysum'] = number_format($doc->payed, 2, '.', '')   ;
+            $header['payed'] =    number_format($doc->payed, 2, '.', '') ;  
+            $header['rest'] = false;         
+        }
+       
+       
+        $header['disc'] =  $doc->headerdata["paydisc"] >0 ?   number_format($doc->headerdata["paydisc"], 2, '.', '') : false;
+        $header['details'] = array();
+        $n=1;
+        $disc=1;
+        if($doc->headerdata["paydisc"] >0 ) {
+           $disc = 1 - ($doc->headerdata["paydisc"]/$doc->amount);
+     
+        }
+        $header['amount'] =0;
+        foreach ($doc->unpackDetails('detaildata') as  $item) {
+            $header['details'][] = array(
+                   'num'=>"ROWNUM=\"{$n}\"",
+                   'name'=> $item->itemname ,   
+                   'qty'=> number_format($item->quantity  , 3, '.', '') ,   
+                   'price'=> number_format($item->price*$disc  , 2, '.', ''),    
+                   'cost'=> number_format($item->quantity*$item->price*$disc  , 2, '.', '')    
+            )  ;
+            $n++;
+            $header['amount'] = $header['amount']+ $item->quantity*$item->price*$disc;
+        }
+        foreach ($doc->unpackDetails('services') as  $item) {
+            $header['details'][] = array(
+                   'num'=>"ROWNUM=\"{$n}\"",
+                   'name'=> $item->service_name ,   
+                   'qty'=> number_format($item->quantity  , 3, '.', '') ,   
+                   'price'=> number_format($item->price*$disc  , 2, '.', ''),    
+                   'cost'=> number_format($item->quantity*$item->price*$disc  , 2, '.', '')    
+            )  ;
+            $n++;
+            $header['amount'] = $header['amount']+ $item->quantity*$item->price*$disc;
+        }
+        
+        
+        $header['amount'] = number_format($header['amount'], 2, '.', ''); 
+  
+        $report = new \App\Report('check.xml');
+
+        $xml = $report->generate($header);
+
+        return  Helper::send($xml, 'doc', $cid, true);
+
+    }
+
 }

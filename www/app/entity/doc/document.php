@@ -354,15 +354,25 @@ class Document extends \ZCL\DB\Entity
                 return false;
             }
         }
+        $oldstate = $this->state;
         $this->state = $state;
         $this->insertLog($state);
 
         $this->save();
-
+        
+        if($oldstate!=$state){
+            $this->onState($oldstate,$state);   
+        }
 
         return true;
     }
 
+    //обработяик  изменения  статусов
+    protected  function onState($oldstate,$state){
+        
+        
+    }
+    
     /**
      * Возвращает название  статуса  документа
      *
