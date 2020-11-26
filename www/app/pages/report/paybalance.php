@@ -8,6 +8,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use \App\Entity\Pay;
 
 /**
  * Плптежный  баланс
@@ -82,14 +83,14 @@ class PayBalance extends \App\Pages\Base
             $cstr = "  mf_id in ({$cstr}) and ";
         }
 
-        $pl = \App\Entity\Pay::getPayTypeList();
+        $pl =   Pay::getPayTypeList();
 
         $conn = \ZDB\DB::getConnect();
 
         $sql = " 
          SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
              WHERE    {$cstr}
-              amount >0 
+              paytype <50  
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
               GROUP BY  paytype order  by  paytype  
@@ -110,7 +111,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
              WHERE   
-              amount < 0 
+              paytype >= 50 
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
               GROUP BY  paytype order  by  paytype  
@@ -140,37 +141,33 @@ class PayBalance extends \App\Pages\Base
         );
 
         $sql = " 
-         SELECT   coalesce(0- sum(amount),0)  as am   FROM paylist 
+         SELECT   coalesce(sum(abs(amount)),0)  as am   FROM paylist 
              WHERE   
-              amount < 0 
+              paytype  = ".Pay::PAY_BASE_OUTCOME  ."
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
              
                          
         ";
 
-        $OP = $conn->GetOne($sql); //все затраты
-
-        $sql = "
-          select    sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as tvc
-              from `entrylist_view`  e
-
-               
-             join `documents_view` d on d.`document_id` = e.`document_id`
-               where d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck')
- 
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
-               
+        $OPOUT = $conn->GetOne($sql); // переменные расходы
+   
+         $sql = " 
+         SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM paylist 
+             WHERE   
+              paytype  = ".Pay::PAY_BASE_INCOME ."
+              AND paydate  >= " . $conn->DBDate($from) . "
+              AND  paydate  <= " . $conn->DBDate($to) . "
+             
+                         
         ";
 
-        $fpr = $conn->GetRow($sql); //выручка
-
-
-        $header['tu'] = H::fa($fpr['summa'] - $fpr['tvc']);
-        $header['tvc'] = H::fa($fpr['tvc']);
-        $header['OP'] = H::fa($OP - $fpr['tvc']);
-        $header['PR'] = H::fa($header['tu'] - $header['OP']);
+        $OPIN =  $conn->GetOne($sql); // операционный доход
+   
+        $header['tu'] = H::fa($OPIN - $OPOUT);    //проход
+        $header['tvc'] = H::fa($OPOUT);   //переменные затраты
+        $header['OP'] = H::fa($tout - $OPOUT);  //операционные расходы
+        $header['PR'] = H::fa($header['tu'] - $header['OP']);  // прибыль
 
         $inv = 0;
 

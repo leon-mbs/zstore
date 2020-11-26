@@ -17,8 +17,7 @@ class Pay extends \ZCL\DB\Entity
    
     const PAY_OTHER_INCOME     = 2;   //прочие доходы
     const PAY_FIN              = 3;   //доходы от  фин.  деятельности
-    const PAY_CANCEL_CUST      = 5;    //Возврат  поставщику
-  
+    
   
     const PAY_BASE_OUTCOME     = 50;    //операционные расходы  
     const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
@@ -27,9 +26,8 @@ class Pay extends \ZCL\DB\Entity
     const PAY_SALARY_OUTCOME   = 54;    //выплата зарплат
     const PAY_TAX_OUTCOME      = 55;    //уплата  налогов  и сборов
     const PAY_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку  
-    const PAY_CANCEL           = 58;    //Возврат  покупателю
-    const PAY_OTHER_OUTCOME    = 101;   //прочие расходы
-    const PAY_DIVIDEND_OUTCOME = 102;   //распределение прибыли
+    const PAY_OTHER_OUTCOME    = 57;   //прочие расходы
+    const PAY_DIVIDEND_OUTCOME = 58;   //распределение прибыли
 
     protected function init() {
         $this->pl_id = 0;
@@ -90,6 +88,26 @@ class Pay extends \ZCL\DB\Entity
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
     }
 
+    public static function  cancelPayment($id,$comment){
+        $pl = Pay::load($id);
+        if ($pl == null) {
+            return;
+        }
+    
+        $pay = new \App\Entity\Pay();
+        $pay->mf_id = $pay->mf;
+        $pay->document_id = $pay->document_id;
+        $pay->amount = 0-$pay->amount;
+        $pay->paytype = $pay->paytype;
+        $pay->paydate = time();
+        $pay->notes = $comment;
+
+        $pay->user_id = \App\System::getUser()->user_id;
+        $pay->save();
+          
+    }
+    
+    
     /**
      * список  расходов  и доходов
      *
@@ -102,7 +120,7 @@ class Pay extends \ZCL\DB\Entity
             
             $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[PAY::PAY_FIN] = \App\Helper::l('pt_fin');
-            $list[PAY::PAY_CANCEL_CUST] = \App\Helper::l('pt_infromcust');
+            
         }
 
         if ($type != 1) {
@@ -115,7 +133,7 @@ class Pay extends \ZCL\DB\Entity
             $list[PAY::PAY_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
             $list[PAY::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
             $list[PAY::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
-            $list[PAY::PAY_CANCEL] = \App\Helper::l('pt_outbackcust');
+           
         }
 
         return $list;

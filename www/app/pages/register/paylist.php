@@ -118,13 +118,9 @@ class PayList extends \App\Pages\Base
         $id = $sender->pl_id->getText();
 
 
-        $pl = Pay::load($id);
-        if ($pl == null) {
-            return;
-        }
 
-        Pay::addPayment($pl->document_id, time(), 0 - $pl->amount, $pl->mf_id, Pay::PAY_CANCEL, $sender->notes->getText());
-
+        Pay::cancelPayment($id, $sender->notes->getText());
+        
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
