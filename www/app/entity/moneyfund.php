@@ -20,6 +20,34 @@ class MoneyFund extends \ZCL\DB\Entity
         $this->branch_id = 0;
     }
 
+    protected function beforeSave() {
+        parent::beforeSave();
+        //упаковываем  данные в detail
+        $this->detail = "<detail>";
+        $this->detail .= "<beznal>{$this->beznal}</beznal>";
+
+        $this->detail .= "</detail>";
+
+        return true;
+    }
+
+    protected function afterLoad() {
+        //распаковываем  данные из detail
+        if(strlen($this->detail)==0)  return;
+        
+        $xml = simplexml_load_string($this->detail);
+        $this->beznal = (int)($xml->beznal[0]);
+   
+        parent::afterLoad();
+    }    
+    
+    
+    
+    
+    
+    
+    
+    
     protected function beforeDelete() {
 
         $conn = \ZDB\DB::getConnect();

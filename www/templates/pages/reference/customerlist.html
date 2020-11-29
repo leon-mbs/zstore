@@ -20,6 +20,10 @@
                     <select zippy="searchstatus" class="form-control mr-sm-2">
 
                     </select>
+                    <label for="searchholding">дочерняя для</label>
+                    <select zippy="searchholding" class="form-control mr-sm-2">
+                            <option value="0">Не  указан</option>
+                    </select>
 
                     <input class="btn btn-outline-success   " type="submit" value="ОК">
 
@@ -84,6 +88,17 @@
             <label for="edittype">Тип</label>
             <select zippy="edittype" class="form-control">
                 <option value="0">Не указан</option>
+            </select>
+        </div>
+        <div class="form-check">
+            <input zippy="editisholding" type="checkbox" class="form-check-input">
+            <label class="form-check-label" for="editisholding">Холдинг</label>
+            <small>Компания,  обьединяющая  дочерние  компании. Используется для  консолидированных  отчетов</small>
+        </div>
+        <div class="form-group">
+            <label for="editholding">Дочерняя для холдинга</label>
+            <select zippy="editholding" class="form-control">
+                <option value="0">Не выбрано</option>
             </select>
         </div>
 

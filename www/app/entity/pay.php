@@ -35,10 +35,26 @@ class Pay extends \ZCL\DB\Entity
         $this->paydate = time();
     }
 
-    protected function afterLoad() {
-        $this->paydate = strtotime($this->paydate);
+ 
+    protected function beforeSave() {
+        parent::beforeSave();
+        //упаковываем  данные в detail
+        $this->detail = "<detail>";
+ 
+        $this->detail .= "</detail>";
+
+        return true;
     }
 
+    protected function afterLoad() {
+          $this->paydate = strtotime($this->paydate);
+        //распаковываем  данные из detail
+        if(strlen($this->detail)==0)  return;
+        
+        $xml = simplexml_load_string($this->detail);
+ 
+        parent::afterLoad();
+    } 
     //возвращает список оплат
     public static function getPayments($document_id) {
         $list = Pay::find("document_id=" . $document_id, "pl_id");

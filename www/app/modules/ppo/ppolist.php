@@ -154,7 +154,8 @@ class PPOList extends \App\Pages\Base
         $row->add(new Label('openname', $item->openname));
         $row->add(new Label('closename', $item->closename));
         $row->add(new Label('opened', date('Y-m-d H:i', strtotime($item->opened))));
-        $row->add(new Label('closed', date('Y-m-d H:i', strtotime($item->closed))));
+        $cl = strtotime($item->closed) ;
+        $row->add(new Label('closed', $cl>0? date('Y-m-d H:i',$cl ):''));
 
         $row->add(new ClickLink('shdet', $this, 'onSh'));
     }

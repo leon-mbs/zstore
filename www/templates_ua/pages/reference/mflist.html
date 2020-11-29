@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12 col-md-6 col-xl-4">
         <div zippy="mftable">
-            <h3>Каси </h3>
+            <h3>Каси та  банкiвскi рахунки</h3>
             <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
             <table class="table    table-sm">
                 <tr>
@@ -49,6 +49,11 @@
                 <label for="editmf_name">Назва</label>
                 <input required="required" class="form-control" zippy="editmf_name"/>
             </div>
+            <div class="form-check">
+              <input zippy="editbeznal" type="checkbox" class="form-check-input">
+              <label class="form-check-label" for="editbeznal">Безготiвковий рахунок</label>
+            
+            </div>            
             {{#usebranch}}
             <div class="form-group">
                 <label for="editbranch">Філія</label>

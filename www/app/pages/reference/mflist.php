@@ -10,6 +10,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -39,6 +40,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new TextInput('editmf_name'));
         $this->mfdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
+        $this->mfdetail->add(new CheckBox('editbeznal'));
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -78,6 +80,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->setVisible(true);
         $this->mfdetail->editmf_name->setText($this->_mf->mf_name);
         $this->mfdetail->editbranch->setValue($this->_mf->branch_id);
+        $this->mfdetail->editbeznal->setChecked($this->_mf->beznal);
 
         $this->mfdetail->editmf_description->setText($this->_mf->mf_description);
     }
@@ -105,6 +108,7 @@ class MFList extends \App\Pages\Base
             $this->setError("entername");
             return;
         }
+        $this->_mf->beznal = $this->mfdetail->editbeznal->isChecked()?1:0;
         $this->_mf->branch_id = $this->mfdetail->editbranch->getValue();
         //  if ($this->_tvars['usebranch'] == true && $this->_mf->branch_id == 0) {
         //      $this->setError('Не выбран  филиал');
