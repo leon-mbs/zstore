@@ -26,9 +26,25 @@ class Outcome extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 5 => H::l('repbycat'), 6 => H::l('repbybyersitem'), 2 => H::l('repbybyers'), 3 => H::l('repbydates'), 4 => H::l('repbyservices')), 1))->onChange($this, "OnType");
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
+        $this->filter->add(new DropDownChoice('holding', \App\Entity\Customer::getHoldList(), 0))->setVisible(false);
+
+        
+        $types=array();
+        $types[1]= H::l('repbyitems')  ;
+        $types[6]= H::l('repbybyersitem')  ;
+        $types[2]= H::l('repbybyers')  ;
+        $types[3]= H::l('repbydates')  ;
+        $types[4]= H::l('repbyservices')  ;
+        $types[5]= H::l('repbycat')  ;    
+        if(count($this->filter->holding->getOptionList())>0){
+           $types[7]= H::l('repbyhold')  ;    
+        }
+        
+        
+        $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
+
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
         $this->filter->cust->setVisible(false);
 
@@ -46,6 +62,7 @@ class Outcome extends \App\Pages\Base
 
         $this->filter->cat->setVisible($type == 5);
         $this->filter->cust->setVisible($type == 6);
+        $this->filter->holding->setVisible($type == 7);
     }
 
     public function OnAutoItem($sender) {
@@ -93,6 +110,7 @@ class Outcome extends \App\Pages\Base
         $type = $this->filter->type->getValue();
         $user = $this->filter->emp->getValue();
         $cat_id = $this->filter->cat->getValue();
+        $hold_id = $this->filter->holding->getValue();
         $cust_id = $this->filter->cust->getKey();
 
         $from = $this->filter->from->getDate();
@@ -195,6 +213,13 @@ class Outcome extends \App\Pages\Base
         ";
         }
 
+        if ($type == 7 && $hold_id > 0) {
+            
+        }
+        
+        if ($type == 7 && $hold_id == 0) {
+            
+        }
 
         $totsum = 0;
         $totnavar = 0;

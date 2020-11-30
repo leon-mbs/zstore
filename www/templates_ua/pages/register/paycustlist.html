@@ -3,7 +3,20 @@
 <div class="row">
     <div class="col-12 col-lg-10 col-xl-8 " zippy="clist">
         <h3>Розрахунки з контрагентами </h3>
+        <div class="navbar nav">
+            <form zippy="filter" class="form-inline ">
+   
+                
+                </select>
+                <label for="holdlist"> Холдинг </label>
+                <select class="form-control mr-2" zippy="holdlist">
+                    <option value="0">Не вказано</option>
+                </select>
+         
+                <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
+            </form>
+        </div>
 
         <br><a zippy="csv">Завантажити CSV</a>
         <table class="table   table-sm   ">
@@ -30,7 +43,18 @@
 
 
             </tr>
+               <tr  >
 
+                <td></td>
+                <td   class="text-right text-bold">Всього:</td>
+
+                <td zippy="totcredit" class="text-right text-bold"></td>
+                <td zippy="totdebet" class="text-right  text-bold"></td>
+
+                <td>> </td>
+
+
+            </tr>
         </table>
     </div>
 
