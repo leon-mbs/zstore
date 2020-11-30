@@ -28,7 +28,7 @@ class Outcome extends \App\Pages\Base
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
-        $this->filter->add(new DropDownChoice('holding', \App\Entity\Customer::getHoldList(), 0))->setVisible(false);
+      //  $this->filter->add(new DropDownChoice('holding', \App\Entity\Customer::getHoldList(), 0))->setVisible(false);
 
         
         $types=array();
@@ -38,9 +38,9 @@ class Outcome extends \App\Pages\Base
         $types[3]= H::l('repbydates')  ;
         $types[4]= H::l('repbyservices')  ;
         $types[5]= H::l('repbycat')  ;    
-        if(count($this->filter->holding->getOptionList())>0){
-           $types[7]= H::l('repbyhold')  ;    
-        }
+       // if(count($this->filter->holding->getOptionList())>0){
+        //   $types[7]= H::l('repbyhold')  ;    
+       // }
         
         
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
@@ -62,7 +62,7 @@ class Outcome extends \App\Pages\Base
 
         $this->filter->cat->setVisible($type == 5);
         $this->filter->cust->setVisible($type == 6);
-        $this->filter->holding->setVisible($type == 7);
+      //  $this->filter->holding->setVisible($type == 7);
     }
 
     public function OnAutoItem($sender) {

@@ -573,7 +573,7 @@ class Helper
      * @param mixed $p1
      * @param mixed $p2
      */
-    public static function l($label, $p1 = "", $p2 = "") {
+    public static function l($label, $p1 = "", $p2 = "", $p3 = "") {
         global $_config;
 
         $label = trim($label);
@@ -604,7 +604,7 @@ class Helper
         }
         if (isset($labels[$label])) {
             $text = $labels[$label];
-            $text = sprintf($text, $p1, $p2);
+            $text = sprintf($text, $p1, $p2,$p3);
             return $text;
 
         } else {
