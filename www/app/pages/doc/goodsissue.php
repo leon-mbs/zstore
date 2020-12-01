@@ -802,6 +802,7 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->setError('enterdocnumber');
         }
+        
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
             $this->setError('nouniquedocnumber_created');
@@ -824,6 +825,9 @@ class GoodsIssue extends \App\Pages\Base
         }
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
+        }
+        if ($c == 0) {
+            $this->setError("noselcust");
         }
 
         return !$this->isError();

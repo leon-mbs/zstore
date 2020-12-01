@@ -110,6 +110,7 @@ class Income extends \App\Pages\Base
            and d.`meta_name` in ('GoodsReceipt','RetCustIssue')
           AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND c.detail not like '%<isholding>1</isholding>%'  
   group by  c.`customer_name`,c.`customer_id`
   order  by c.`customer_name`
         ";

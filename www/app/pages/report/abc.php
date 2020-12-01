@@ -169,6 +169,7 @@ class ABC extends \App\Pages\Base
                     WHERE   entrylist_view.amount  >0 and meta_name in('GoodsReceipt') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
+                    AND customers.details not like '%<isholding>1</isholding>%' 
                     GROUP BY name
                     )t    
                     ORDER BY value DESC";
@@ -193,6 +194,7 @@ class ABC extends \App\Pages\Base
                     WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck')  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
+                    AND customers.details not like '%<isholding>1</isholding>%' 
                     GROUP BY name
                     )t      
                     ORDER BY value DESC";
