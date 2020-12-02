@@ -78,11 +78,23 @@ class PayBalance extends \App\Pages\Base
         $detail = array();
         $detail2 = array();
 
-        $cstr = \App\Acl::getMFBranchConstraint();
-        if (strlen($cstr) > 0) {
-            $cstr = "  mf_id in ({$cstr}) and ";
-        }
+       // $cstr = \App\Acl::getMFBranchConstraint();
+       // if (strlen($cstr) > 0) {
+       //     $cstr = "  mf_id in ({$cstr}) and ";
+      //  }
 
+        
+        $brpay="";
+        $brst="";
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if(strlen($brids)>0) {
+           $brst = " and   store_id in( select store_id from  stores where  branch_id in ({$brids})  ) "; 
+           
+           $brpay = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )"; 
+        }
+        
+        
+        
         $pl =   Pay::getPayTypeList();
 
         $conn = \ZDB\DB::getConnect();
@@ -90,7 +102,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
              WHERE    {$cstr}
-              paytype <50  
+              paytype <50   {$brpay}
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
               GROUP BY  paytype order  by  paytype  
@@ -111,7 +123,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   paytype,coalesce(sum(amount),0) as am   FROM paylist 
              WHERE   
-              paytype >= 50 
+              paytype >= 50    {$brpay}
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
               GROUP BY  paytype order  by  paytype  
@@ -143,7 +155,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   coalesce(sum(abs(amount)),0)  as am   FROM paylist 
              WHERE   
-              paytype  = ".Pay::PAY_BASE_OUTCOME  ."
+              paytype  = ".Pay::PAY_BASE_OUTCOME  ."   {$brpay}
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
              
@@ -155,7 +167,7 @@ class PayBalance extends \App\Pages\Base
          $sql = " 
          SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM paylist 
              WHERE   
-              paytype  = ".Pay::PAY_BASE_INCOME ."
+              paytype  = ".Pay::PAY_BASE_INCOME ."   {$brpay}
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
              
@@ -178,8 +190,7 @@ class PayBalance extends \App\Pages\Base
         }
         $sql = " 
          SELECT   coalesce(  sum(partion),0)     FROM store_stock 
-             WHERE   
-              qty <> 0
+             WHERE qty <> 0    {$brst}
               
                          
         ";

@@ -71,32 +71,46 @@ class Pay extends \ZCL\DB\Entity
      * @param mixed $mf денежный счет
      * @param mixed $comment коментарий
      */
-    public static function addPayment($document_id, $paydate, $amount, $mf, $type, $comment = '') {
-        if (0 == (int)$amount || 0 == (int)$document_id || 0 == $mf) {
+    public static function addPayment($document_id, $paydate, $amount, $mf_id, $type, $comment = '') {
+        if (0 == (float)$amount || 0 == (int)$document_id || 0 == $mf_id) {
             return;
         }
 
-        if ($mf == MoneyFund::CREDIT) {
+        if ($mf_id == MoneyFund::CREDIT) {
             return;
         } //в  долг
-        if ($mf == MoneyFund::PREPAID) {
+        if ($mf_id == MoneyFund::PREPAID) {
             return;
         } //предоплата
 
 
         $pay = new \App\Entity\Pay();
-        $pay->mf_id = $mf;
+        $pay->mf_id = $mf_id;
         $pay->document_id = $document_id;
         $pay->amount = $amount;
         $pay->paytype = $type;
         $pay->paydate = $paydate;
         $pay->notes = $comment;
-
-
-        //   $admin = \App\Entity\User::getByLogin('admin');
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
 
+        $mf =  \App\Entity\MoneyFund::load($mf_id);
+        if($mf instanceof \App\Entity\MoneyFund){
+           //банковский процент
+           if($mf->beznal==1 and $mf->btran>0) {
+                $pay = new \App\Entity\Pay();
+                $pay->mf_id = $mf_id;
+                $pay->document_id = $document_id;
+                $pay->amount = ($amount * $mf->btran/100);
+                $pay->paytype = Pay::PAY_BASE_OUTCOME;
+                $pay->paydate = $paydate;
+                $pay->notes = \App\Helper::l('bankproc');
+                $pay->user_id = \App\System::getUser()->user_id;
+                $pay->save();             
+           }
+        }
+        
+        
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $document_id;

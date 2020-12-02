@@ -17,7 +17,8 @@ class ABC extends \App\Pages\Base
 {
 
     private $typelist = array();
-
+    private $br='';
+    
     public function __construct() {
         parent::__construct();
 
@@ -48,6 +49,13 @@ class ABC extends \App\Pages\Base
         $this->detail->add(new RedirectLink('excel', "abc"));
         $this->detail->add(new RedirectLink('pdf', "abc"));
         $this->detail->add(new Label('preview'));
+        
+     
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if(strlen($brids)>0) {
+           $this->br = " and documents_view.branch_id in ({$brids}) "; 
+        }
+        
     }
 
     public function OnSubmit($sender) {
@@ -143,12 +151,12 @@ class ABC extends \App\Pages\Base
                     WHERE   extcode <>0  and meta_name in('GoodsIssue','ReturnIssue') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
-                     
+                    {$this->br} 
                     GROUP BY name
                     )t
                  
                     ORDER BY value DESC";
-        H::log($sql);
+        
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
             $row['value'] = round($row['value']);
@@ -170,6 +178,7 @@ class ABC extends \App\Pages\Base
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     AND customers.details not like '%<isholding>1</isholding>%' 
+                    {$this->br} 
                     GROUP BY name
                     )t    
                     ORDER BY value DESC";
@@ -195,6 +204,7 @@ class ABC extends \App\Pages\Base
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     AND customers.details not like '%<isholding>1</isholding>%' 
+                    {$this->br} 
                     GROUP BY name
                     )t      
                     ORDER BY value DESC";
@@ -220,7 +230,7 @@ class ABC extends \App\Pages\Base
                     WHERE  entrylist_view.amount>0  and meta_name in('ServiceAct') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
-                     
+                    {$this->br}  
                     GROUP BY name
                     )t  
                     ORDER BY value DESC";
@@ -245,6 +255,7 @@ class ABC extends \App\Pages\Base
                     WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck')  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
+                    {$this->br} 
                     GROUP BY name
                     )t      
                     ORDER BY value DESC";

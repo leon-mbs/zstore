@@ -41,6 +41,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
         $this->mfdetail->add(new CheckBox('editbeznal'));
+        $this->mfdetail->add(new TextInput('editbtran'));
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -78,6 +79,7 @@ class MFList extends \App\Pages\Base
         $this->_mf = $sender->owner->getDataItem();
         $this->mftable->setVisible(false);
         $this->mfdetail->setVisible(true);
+        $this->mfdetail->editbtran->setText($this->_mf->btran);
         $this->mfdetail->editmf_name->setText($this->_mf->mf_name);
         $this->mfdetail->editbranch->setValue($this->_mf->branch_id);
         $this->mfdetail->editbeznal->setChecked($this->_mf->beznal);
@@ -102,6 +104,7 @@ class MFList extends \App\Pages\Base
         }
 
         $this->_mf->mf_name = $this->mfdetail->editmf_name->getText();
+        $this->_mf->btran = $this->mfdetail->editbtran->getText();
 
         $this->_mf->description = $this->mfdetail->editmf_description->getText();
         if ($this->_mf->mf_name == '') {

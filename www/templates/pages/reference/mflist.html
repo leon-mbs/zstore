@@ -54,7 +54,12 @@
               <label class="form-check-label" for="editbeznal">Безналичный счет</label>
             
             </div>            
-            {{#usebranch}}
+             <div class="form-group">
+                <label for="editbtran">Процент банка</label>
+                <input style="width:100px" pattern="[0-9\.]+"   class="form-control" zippy="editbtran"/>
+                <small>Процент, который  банк  берет  за  перевод  суммы. Учитывается  как  общепроизводственные  расходы</small>
+            </div>
+          {{#usebranch}}
             <div class="form-group">
                 <label for="editbranch">Филиал</label>
                 <select class="form-control" zippy="editbranch">

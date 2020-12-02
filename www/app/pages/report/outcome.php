@@ -124,6 +124,11 @@ class Outcome extends \App\Pages\Base
         if ($user > 0) {
             $u = " and d.user_id={$user} ";
         }
+        $br="";
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if(strlen($brids)>0) {
+           $br = " and d.branch_id in ({$brids}) "; 
+        }
 
         $detail = array();
         $conn = \ZDB\DB::getConnect();
@@ -159,7 +164,7 @@ class Outcome extends \App\Pages\Base
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0 {$u} and e.`quantity` <> 0   {$cat}   {$cust}  
                and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue')
- 
+               {$br}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.`itemname`,i.`item_code`
@@ -176,7 +181,7 @@ class Outcome extends \App\Pages\Base
          join `documents_view`  d on d.`document_id` = e.`document_id`
            where   e.`quantity` <>0 {$u}        
              and d.`meta_name` in ('GoodsIssue','ServiceAct',  'POSCheck','ReturnIssue')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              {$br} AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.`customer_name`,c.`customer_id`
           order  by c.`customer_name`
@@ -191,7 +196,7 @@ class Outcome extends \App\Pages\Base
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0 {$u} and e.`quantity` <>0
               and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue')           
-               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+               {$br} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.`document_date`
   order  by e.`document_date`
@@ -207,7 +212,7 @@ class Outcome extends \App\Pages\Base
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`service_id` >0 {$u} and e.`quantity` <>0      {$cust}  
               and d.`meta_name` in (  'ServiceAct' ,'POSCheck' )
-                AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+               {$br}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.`service_name`
                order  by s.`service_name`      ";
@@ -222,7 +227,7 @@ class Outcome extends \App\Pages\Base
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0 {$u} and e.`quantity` <>0
                and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue')
- 
+                {$br}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by    i.`cat_name`
@@ -254,7 +259,7 @@ class Outcome extends \App\Pages\Base
                  join `documents_view`  d on d.`document_id` = e.`document_id`
                    where     e.`quantity` <>0 {$u}
                      and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue')    
-                      AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+                      {$br} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
                       AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})
                 ";

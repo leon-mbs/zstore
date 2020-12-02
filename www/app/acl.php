@@ -446,7 +446,7 @@ class ACL
     }
 
     /**
-     * Возвращает  список касс для подстьановки  в запрос по текущим  филиалам
+     * Возвращает  список касс для подстановки  в запрос по текущим  филиалам
      *
      */
     public static function getMFBranchConstraint() {
@@ -545,7 +545,7 @@ class ACL
         }
 
         if (strlen($user->aclbranch) == 0) {
-            return " (0)";
+            return "0";
         } //нет доступа  ни  к  одному филиалу
         return "{$user->aclbranch}";
     }

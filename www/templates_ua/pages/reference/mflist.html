@@ -54,7 +54,12 @@
               <label class="form-check-label" for="editbeznal">Безготiвковий рахунок</label>
             
             </div>            
-            {{#usebranch}}
+              <div class="form-group">
+                <label for="editbtran">Процент банку</label>
+                <input style="width:100px" pattern="[0-9\.]+"   class="form-control" zippy="editbtran"/>
+                <small>Процент, який  банк  бере  за  перевод  суммы. </small>
+            </div>
+           {{#usebranch}}
             <div class="form-group">
                 <label for="editbranch">Філія</label>
                 <select class="form-control" zippy="editbranch">
