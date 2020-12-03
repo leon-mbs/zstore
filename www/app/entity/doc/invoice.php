@@ -14,6 +14,7 @@ class Invoice extends \App\Entity\Doc\Document
     public function generateReport() {
 
         $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
+        $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
 
         $i = 1;
@@ -51,9 +52,9 @@ class Invoice extends \App\Entity\Doc\Document
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "phone"           => $this->headerdata["phone"],
                         "customer_print"  => $this->headerdata["customer_print"],
-                        "bank"            => $firm["bank"],
-                        "bankacc"         => $firm["bankacc"],
-                        "isbank"          => (strlen($firm["bankacc"]) > 0 && strlen($firm["bank"]) > 0),
+                        "bank"            => @$mf->bank,
+                        "bankacc"         => @$mf->bankacc,
+                        "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "email"           => $this->headerdata["email"],
                         "notes"           => $this->notes,
                         "document_number" => $this->document_number,

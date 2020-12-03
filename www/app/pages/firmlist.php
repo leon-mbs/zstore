@@ -43,8 +43,6 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new TextInput('editphone'));
 
         $this->firmdetail->add(new CheckBox('editdisabled'));
-        $this->firmdetail->add(new TextInput('editbank'));
-        $this->firmdetail->add(new TextInput('editbankacc'));
         $this->firmdetail->add(new TextInput('editlogo'));
         $this->firmdetail->add(new TextInput('editstamp'));
         $this->firmdetail->add(new TextInput('editsign'));
@@ -84,8 +82,6 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editaddress->setText($this->_firm->address);
         $this->firmdetail->editphone->setText($this->_firm->phone);
 
-        $this->firmdetail->editbank->setText($this->_firm->bank);
-        $this->firmdetail->editbankacc->setText($this->_firm->bankacc);
         $this->firmdetail->editlogo->setText($this->_firm->logo);
         $this->firmdetail->editstamp->setText($this->_firm->stamp);
         $this->firmdetail->editsign->setText($this->_firm->sign);
@@ -112,9 +108,7 @@ class FirmList extends \App\Pages\Base
         $this->_firm->address = $this->firmdetail->editaddress->getText();
         $this->_firm->phone = $this->firmdetail->editphone->getText();
 
-        $this->_firm->bank = $this->firmdetail->editbank->getText();
-        $this->_firm->bankacc = $this->firmdetail->editbankacc->getText();
-        $this->_firm->logo = $this->firmdetail->editlogo->getText();
+          $this->_firm->logo = $this->firmdetail->editlogo->getText();
         $this->_firm->stamp = $this->firmdetail->editstamp->getText();
         $this->_firm->sign = $this->firmdetail->editsign->getText();
         $this->_firm->pposerv = $this->firmdetail->editpposerv->getText();

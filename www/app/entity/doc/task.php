@@ -86,7 +86,7 @@ class Task extends Document
         $list = array();
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
-        $list['ServiceAct'] = self::getDesc('ServiceAct');
+   //     $list['ServiceAct'] = self::getDesc('ServiceAct');
 
         return $list;
     }

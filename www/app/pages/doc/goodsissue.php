@@ -827,7 +827,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError("mustsel_cust");
         }
         if ($c == 0) {
-            $this->setError("noselcust");
+           // $this->setError("noselcust");
         }
 
         return !$this->isError();

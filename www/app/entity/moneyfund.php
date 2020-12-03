@@ -26,7 +26,9 @@ class MoneyFund extends \ZCL\DB\Entity
         $this->detail = "<detail>";
         $this->detail .= "<beznal>{$this->beznal}</beznal>";
         $this->detail .= "<btran>{$this->btran}</btran>";
-
+        $this->detail .= "<bank><![CDATA[{$this->bank}]]></bank>";
+        $this->detail .= "<bankacc><![CDATA[{$this->bankacc}]]></bankacc>";
+ 
         $this->detail .= "</detail>";
 
         return true;
@@ -39,16 +41,13 @@ class MoneyFund extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
         $this->beznal = intval($xml->beznal[0]);
         $this->btran  = floatval($xml->btran[0]);
+        $this->bank = (string)($xml->bank[0]);
+        $this->bankacc = (string)($xml->bankacc[0]);
    
         parent::afterLoad();
     }    
     
-    
-    
-    
-    
-    
-    
+      
     
     protected function beforeDelete() {
 

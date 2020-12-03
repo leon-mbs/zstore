@@ -11,7 +11,13 @@ namespace App\Entity;
  */
 class Item extends \ZCL\DB\Entity
 {
-
+    const TYPE_TOVAR     = 1;   //товар
+    const TYPE_MAT     = 2;   //материалы  и комплектующие
+    const TYPE_MBP     = 3;   //малоценка
+    const TYPE_PROD     = 4;   //готовая продукция
+    const TYPE_HALFPROD     = 5;   //полуфабрикаты
+    
+ 
     private $brprice = array(); //цены по  филиалам
 
     protected function init() {
@@ -40,6 +46,7 @@ class Item extends \ZCL\DB\Entity
         $this->pricelist = (int)$xml->pricelist[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
+     
         $this->weight = (string)$xml->weight[0];
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
@@ -101,7 +108,7 @@ class Item extends \ZCL\DB\Entity
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<weight>{$this->weight}</weight>";
-
+  
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
@@ -414,4 +421,18 @@ class Item extends \ZCL\DB\Entity
 
     }
 
+    
+    public static function getTypes(){
+        $list = array();
+        
+        $list[Item::TYPE_TOVAR] = \App\Helper::l('it_tovar');
+        $list[Item::TYPE_MAT] = \App\Helper::l('it_mat');
+        $list[Item::TYPE_MBP] = \App\Helper::l('it_mbp');
+        $list[Item::TYPE_PROD] = \App\Helper::l('it_prod');
+        $list[Item::TYPE_HALFPROD] = \App\Helper::l('it_hprod');
+        
+        
+        return $list;
+    }
+    
 }

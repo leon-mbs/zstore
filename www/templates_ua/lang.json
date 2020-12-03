@@ -244,7 +244,7 @@
   "aclnoaccessviewreg": "Нема права  перегляду   журналу %s ",
   "aclnoaccessviewreport": "Нема права  перегляду звiту %s ",
   "aclnoaccesseditref": "Нема права  редагування довiдника %s ",
-  "aclnoaccessdelref": "Нема права  видаленя iз довiдника %s ",
+  "aclnoaccessdelref": "Нема права  видалення iз довiдника %s ",
   "aclnoaccessviewdoc": "Нема права  перегляду документу %s ",
   "aclnoaccesseditdoc": "Нема права  редагування документу %s ",
   "aclnoaccessdeldoc": "Нема права  видалення документу %s ",
@@ -295,7 +295,12 @@
   "notused": "Не  використовуется",
   "potential": "Потенцiальний",
   "bankproc": "Банкiвський процент за  транзакцiю",
-
+  "it_tovar": "Товар",
+  "it_mat": "Матерiали та  комплектуючi",
+  "it_mbp": "МШП (малоцiнка)",
+  "it_prod": "Готова продукцiя",
+  "it_hprod": "Напiвфабрикати",
+ 
     
   "refreshed": "Оновлено",
   "sent": "Відправлено",
