@@ -121,12 +121,11 @@
 
 
             <div class="form-group">
-
-                <label for="edititem">Назва </label>
-                <input placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
-                <a style="font-size:smaller" zippy="addnewitem">Додати новий</a>
-
-
+              <label for="edititem">Назва </label>
+                <select   class="form-control select2" zippy="edititem" >
+                   <option value="1">Не  вибрано</option>
+                </select>
+    
             </div>
             {{#usesnumber}}
             <div class="form-group">
