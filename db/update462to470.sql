@@ -22,7 +22,7 @@ ALTER  VIEW `paylist_view` AS
     (((`paylist` `pl` join `documents_view` `d` on((`pl`.`document_id` = `d`.`document_id`))) join `users_view` `u` on((`pl`.`user_id` = `u`.`user_id`))) join `mfund` `m` on((`pl`.`mf_id` = `m`.`mf_id`)));
 
 
-ALTER TABLE `items` ADD `item_type` INT NULL  `;    
+ALTER TABLE `items` ADD `item_type` INT NULL  ;    
     
 ALTER VIEW items_view AS 
   select 
