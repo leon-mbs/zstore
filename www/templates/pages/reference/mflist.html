@@ -47,7 +47,7 @@
         <form zippy="mfdetail">
             <div class="form-group">
                 <label for="editmf_name">Название</label>
-                <input required="required" class="form-control" zippy="editmf_name"/>
+                <input   class="form-control" zippy="editmf_name"/>
             </div>
             <div class="form-check">
               <input zippy="editbeznal" type="checkbox" class="form-check-input">
@@ -55,15 +55,15 @@
             
             </div> 
                                <div class="form-group">
-            <label for="editbank">Банк, МФО </label>
+            <label for="editbank" data-label="editbank">Банк, МФО </label>
             <input class="form-control" type="text" zippy="editbank">
             </div>
             <div class="form-group">
-                <label for="editbankacc">Расчетный счет </label>
+                <label for="editbankacc" data-label="editbankacc">Расчетный счет </label>
                 <input class="form-control" type="text" zippy="editbankacc">
             </div>
              <div class="form-group">
-                <label for="editbtran">Процент банка</label>
+                <label for="editbtran" data-label="editbtran">Процент банка</label>
                 <input style="width:100px" pattern="[0-9\.]+"   class="form-control" zippy="editbtran"/>
                 <small>Процент, который  банк  берет  за  перевод  суммы. Учитывается  как  общепроизводственные  расходы</small>
             </div>

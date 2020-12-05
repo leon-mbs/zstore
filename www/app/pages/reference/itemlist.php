@@ -281,6 +281,10 @@ class ItemList extends \App\Pages\Base
         }
 
         $this->_item->itemname = $this->itemdetail->editname->getText();
+        if(strlen($this->_item->itemname)==0) {
+            $this->setError('entername');
+            return;
+        }
         $this->_item->shortname = $this->itemdetail->editshortname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
         $this->_item->price1 = $this->itemdetail->editprice1->getText();

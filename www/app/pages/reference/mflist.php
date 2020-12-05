@@ -40,7 +40,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new TextInput('editmf_name'));
         $this->mfdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
-        $this->mfdetail->add(new CheckBox('editbeznal'));
+        $this->mfdetail->add(new CheckBox('editbeznal'))->onChange($this,'onBeznal');
         $this->mfdetail->add(new TextInput('editbtran'));
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new TextInput('editbank'));
@@ -86,7 +86,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->editmf_name->setText($this->_mf->mf_name);
         $this->mfdetail->editbranch->setValue($this->_mf->branch_id);
         $this->mfdetail->editbeznal->setChecked($this->_mf->beznal);
-
+        $this->onBeznal($this->mfdetail->editbeznal);
         $this->mfdetail->editmf_description->setText($this->_mf->mf_description);
         $this->mfdetail->editbank->setText($this->_mf->bank);
         $this->mfdetail->editbankacc->setText($this->_mf->bankacc);
@@ -109,6 +109,10 @@ class MFList extends \App\Pages\Base
         }
 
         $this->_mf->mf_name = $this->mfdetail->editmf_name->getText();
+        if(strlen($this->_mf->mf_name)==0) {
+            $this->setError('entername');
+            return;
+        }        
         $this->_mf->btran = $this->mfdetail->editbtran->getText();
         $this->_mf->bank = $this->mfdetail->editbank->getText();
         $this->_mf->bankacc = $this->mfdetail->editbankacc->getText();
@@ -134,6 +138,13 @@ class MFList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->mftable->setVisible(true);
         $this->mfdetail->setVisible(false);
+    }
+    
+    public function onBeznal($sender) {
+         $b = $sender->isChecked();         
+         $this->mfdetail->editbank->setVisible($b);
+         $this->mfdetail->editbankacc->setVisible($b);
+         $this->mfdetail->editbtran->setVisible($b);
     }
 
 }

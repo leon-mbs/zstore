@@ -20,7 +20,8 @@ class Task extends Document
         $detail = array();
 
         foreach ($this->unpackDetails('detaildata') as $ser) {
-
+            if($ser->cost=="") $ser->cost=0;
+            if($ser->hours=="") $ser->hours=0;
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "cost"         => H::fa($ser->cost * $ser->qty),
