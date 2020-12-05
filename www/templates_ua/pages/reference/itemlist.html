@@ -57,6 +57,7 @@
                 <th><i title="Облiк серiй виробника" class="fa fa-calendar-check"></i></th>
                 {{/usesnumber}}
                 <th></th>
+                <th></th>
 
 
                 <th style="width:150px"></th>
@@ -86,11 +87,11 @@
                 <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"
                        data-html="true"></i></td>
 
-
+                <td><a zippy="set" title="Комплекти"><i class="fa fa-cogs"></i></a> &nbsp;</td>
                 <td aling="center">
-                    {{#useset}}
-                    <a zippy="set" title="Комплекти"><i class="fa fa-cogs"></i></a> &nbsp;
-                    {{/useset}}
+                    
+                    
+                    
                     <a zippy="print" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
                     <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;
                     <a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
@@ -108,7 +109,7 @@
             <div class="form-group row">
                 <label class="col-5 col-form-label" for="editname">Найменування</label>
                 <div class="col-7">
-                    <input required="required" class="form-control" zippy="editname"/>
+                    <input   class="form-control" zippy="editname"/>
                 </div>
             </div>
             <div class="form-group row">
@@ -164,6 +165,16 @@
                     <input class="form-control" zippy="editmsr"/>
                 </div>
             </div>
+          <div class="form-group row">
+                <label class="col-5 col-form-label" for="editcode">Тип ТМЦ</label>
+                <div class="col-7">
+                    <select class="form-control" zippy="edittype">
+                        <option value="0">Не  вказано</option>    
+                    </select>
+                    <small class="form-text text-muted">Використовуєтся  якщо є виробництво</small>
+                </div>
+            </div>
+            
             <div class="form-group row">
                 <label class="col-5 col-form-label" for="editminqty">Мін. кількість</label>
                 <div class="col-7">

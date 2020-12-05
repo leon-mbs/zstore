@@ -13,6 +13,8 @@ class ShowReport extends \Zippy\Html\WebPage
         if ($user->user_id == 0) {
             die;
         }
+        
+        $filename = $filename. date('_Y_m_d') ;
         $html = \App\Session::getSession()->printform;
 
         if ($type == "preview") {

@@ -341,8 +341,7 @@ class ReturnIssue extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
+        return Customer::getList($sender->getText(), 2);
     }
 
     public function OnAutoItem($sender) {

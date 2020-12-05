@@ -108,6 +108,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
+        $this->itemdetail->add(new DropDownChoice('edittype',Item::getTypes()));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -168,6 +169,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
+        $row->set->setVisible($item->item_type ==Item::TYPE_PROD  || $item->item_type ==Item::TYPE_HALFPROD);
 
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
 
@@ -223,6 +225,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editmsr->setText($this->_item->msr);
         $this->itemdetail->editweight->setText($this->_item->weight);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
+        $this->itemdetail->edittype->setValue($this->_item->item_type);
 
         $this->itemdetail->editcell->setText($this->_item->cell);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
@@ -278,6 +281,10 @@ class ItemList extends \App\Pages\Base
         }
 
         $this->_item->itemname = $this->itemdetail->editname->getText();
+        if(strlen($this->_item->itemname)==0) {
+            $this->setError('entername');
+            return;
+        }
         $this->_item->shortname = $this->itemdetail->editshortname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
         $this->_item->price1 = $this->itemdetail->editprice1->getText();
@@ -293,6 +300,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->weight = $this->itemdetail->editweight->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
+        $this->_item->item_type = $this->itemdetail->edittype->getValue();
 
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
@@ -419,7 +427,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $in .= ")";
-        return Item::findArray('itemname', "item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1");
+        return Item::findArray('itemname', "coalesce(item_type,0) <> 1 and coalesce(item_type,0) <>3 and   item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1",'itemname');
     }
 
     public function OnAddSet($sender) {

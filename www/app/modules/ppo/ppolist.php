@@ -70,7 +70,11 @@ class PPOList extends \App\Pages\Base
             return;
         }
         $res = Helper::send(json_encode(array('Command' => 'Objects')), 'cmd', $cid);
-        $res = json_decode($res);
+        if($res['success']==false)  {
+            $this->setError($res['data']);
+            return;
+        }
+        $res = json_decode($res['data']);
         if (is_array($res->TaxObjects)) {
             $this->_ppolist = array();
             foreach ($res->TaxObjects as $item) {
@@ -114,7 +118,11 @@ class PPOList extends \App\Pages\Base
         $cid = $this->opan->filter->searchcomp->getValue();
 
         $res = Helper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $cid);
-        $res = json_decode($res);
+        if($res['success']==false)  {
+            $this->setError($res['data']);
+            return;
+        }
+        $res = json_decode($res['data']);
         foreach ($res->Shifts as $sh) {
             $it = new   DataItem(array('openname'  => $sh->OpenName,
                                        'closename' => $sh->CloseName,
@@ -146,7 +154,8 @@ class PPOList extends \App\Pages\Base
         $row->add(new Label('openname', $item->openname));
         $row->add(new Label('closename', $item->closename));
         $row->add(new Label('opened', date('Y-m-d H:i', strtotime($item->opened))));
-        $row->add(new Label('closed', date('Y-m-d H:i', strtotime($item->closed))));
+        $cl = strtotime($item->closed) ;
+        $row->add(new Label('closed', $cl>0? date('Y-m-d H:i',$cl ):''));
 
         $row->add(new ClickLink('shdet', $this, 'onSh'));
     }
@@ -158,7 +167,11 @@ class PPOList extends \App\Pages\Base
         $cid = $this->opan->filter->searchcomp->getValue();
 
         $res = Helper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $cid);
-        $res = json_decode($res);
+        if($res['success']==false)  {
+            $this->setError($res['data']);
+            return;
+        }
+        $res = json_decode($res['data']);
         foreach ($res->Documents as $doc) {
             $it = new   DataItem(array('NumFiscal' => $doc->NumFiscal,
                                        'NumLocal'  => $doc->NumLocal,
@@ -204,8 +217,14 @@ class PPOList extends \App\Pages\Base
         $cid = $this->opan->filter->searchcomp->getValue();
 
         $res = Helper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $cid, true);
+        if($res['success']==false)  {
+            $this->setError($res['data']);
+            return;
+        }
+   
+        
         // $res = mb_convert_encoding($res , "utf-8" ,"windows-1251" )  ;
-        $this->docpan->docshow->setText($res);
+        $this->docpan->docshow->setText($res['data']);
         $this->docpan->docshow->setVisible(true);
         $this->goAnkor('docshow');
     }

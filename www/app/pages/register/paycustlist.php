@@ -26,6 +26,8 @@ class PayCustList extends \App\Pages\Base
     public  $_custlist = array();
     public  $_doclist  = array();
     public  $_pays     = array();
+    public  $_totdebet      = 0;
+    public  $_totcredit     = 0;
 
     /**
      *
@@ -37,8 +39,12 @@ class PayCustList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('PayCustList')) {
             return;
         }
-
+        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->filter->add(new DropDownChoice('holdlist', \App\Entity\Customer::getHoldList(), 0));
+ 
         $this->add(new Panel("clist"));
+        $this->clist->add(new Label("totcredit"));
+        $this->clist->add(new Label("totdebet"));
 
         $this->clist->add(new DataView('custlist', new ArrayDataSource($this, '_custlist'), $this, 'custlistOnRow'));
 
@@ -70,13 +76,26 @@ class PayCustList extends \App\Pages\Base
         $this->updateCust();
     }
 
+    
+    public function filterOnSubmit($sender) {
+
+
+        $this->plist->setVisible(false);
+        $this->updateCust()  ;
+    }
+        
     public function updateCust() {
         $br = "";
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
             $br = " {$c} and ";
         }
-
+        $hold="";
+        $holding = $this->filter->holdlist->getValue();
+        if($holding>0){
+            $hold=" where  c.detail like '%<holding>{$holding}</holding>%'" ;   
+        }
+        
         $sql = "select c.customer_name,c.phone, c.customer_id,sum(sam) as sam, fl from (
         select customer_id,   coalesce( (payamount - payed),0) as sam,  
         (case when
@@ -84,10 +103,16 @@ class PayCustList extends \App\Pages\Base
          then -1 else 1 end ) as fl
             from `documents_view`  
             where {$br}  payamount > 0 and payamount > payed  and state not in (1,2,3,17,8)   
-            ) t join customers c  on t.customer_id = c.customer_id 
+            ) t join customers c  on t.customer_id = c.customer_id    {$hold}
              group by c.customer_name,c.phone, c.customer_id, fl order by c.customer_name ";
         $this->_custlist = \App\DataItem::query($sql);
+        $this->_totcredit =0;
+        $this->_totdebet = 0;
+        
         $this->clist->custlist->Reload();
+        
+        $this->clist->totdebet->setText(H::fa($this->_totdebet));
+        $this->clist->totcredit->setText(H::fa($this->_totcredit));
     }
 
     public function custlistOnRow($row) {
@@ -98,6 +123,11 @@ class PayCustList extends \App\Pages\Base
         $row->add(new Label('debet', H::fa($cust->fl == 1 ? H::fa($cust->sam) : "")));
 
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
+        
+        $this->_totcredit += ($cust->fl == -1 ? $cust->sam : 0);
+        $this->_totdebet += ($cust->fl == 1 ? $cust->sam : 0);
+ 
+        
     }
 
     //список документов

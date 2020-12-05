@@ -3,8 +3,8 @@
 
     <CHECKHEAD>
 
-        <DOCTYPE>{{doctype}}</DOCTYPE>
-        <DOCSUBTYPE>{{docsubtype}}</DOCSUBTYPE>
+        <DOCTYPE>0</DOCTYPE>
+        <DOCSUBTYPE>1</DOCSUBTYPE>
 
 
         <UID>{{guid}}</UID>
@@ -42,19 +42,7 @@
     </CHECKTOTAL>
 
 
-    <CHECKPAY>
-        <ROW ROWNUM="1">
-
-            <PAYFORMCODE>{{formcode}}</PAYFORMCODE>
-
-            <PAYFORMNAME>{{formname}}</PAYFORMNAME>
-
-            <SUM>{{paysum}}</SUM>
-
-            <SUMPROVIDED>{{payed}}</SUMPROVIDED>
-
-        </ROW>
-    </CHECKPAY>
+ 
 
 
     <CHECKBODY>

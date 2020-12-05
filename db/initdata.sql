@@ -39,7 +39,7 @@ INSERT INTO `metadata` VALUES(19, 1, 'Наряд', 'Task', 'Производст
 INSERT INTO `metadata` VALUES(20, 2, 'Отчет по нарядам', 'EmpTask', 'Производство', 0);
 INSERT INTO `metadata` VALUES(21, 2, 'Закупки', 'Income', 'Закупки', 0);
 INSERT INTO `metadata` VALUES(22, 2, 'Продажи', 'Outcome', 'Продажи', 0);
-INSERT INTO `metadata` VALUES(46, 4, 'Кассы', 'MFList', '', 0);
+INSERT INTO `metadata` VALUES(46, 4, 'Кассы, счета', 'MFList', '', 0);
 INSERT INTO `metadata` VALUES(27, 3, 'Заказы клиентов', 'OrderList', 'Продажи', 0);
 INSERT INTO `metadata` VALUES(28, 1, 'Заказ', 'Order', 'Продажи', 0);
 INSERT INTO `metadata` VALUES(30, 1, 'Оприходование  с  производства', 'ProdReceipt', 'Производство', 0);

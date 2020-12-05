@@ -79,6 +79,12 @@ class Income extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
+        
+        $br="";
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if(strlen($brids)>0) {
+           $br = " and d.branch_id in ({$brids}) "; 
+        }
 
         $detail = array();
         $conn = \ZDB\DB::getConnect();
@@ -92,7 +98,7 @@ class Income extends \App\Pages\Base
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <>0
                and d.`meta_name` in ('GoodsReceipt','RetCustIssue')
- 
+               {$br}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.`itemname`,i.`item_code`
@@ -108,8 +114,11 @@ class Income extends \App\Pages\Base
          join `documents_view`  d on d.`document_id` = e.`document_id`
            where e.`customer_id` >0  and e.`quantity` <>0
            and d.`meta_name` in ('GoodsReceipt','RetCustIssue')
+           {$br}
+
           AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND c.detail not like '%<isholding>1</isholding>%'  
   group by  c.`customer_name`,c.`customer_id`
   order  by c.`customer_name`
         ";
@@ -123,7 +132,8 @@ class Income extends \App\Pages\Base
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <>0
                and d.`meta_name` in ('GoodsReceipt','RetCustIssue')
-             
+                {$br}
+
                AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.`document_date`

@@ -1,84 +1,82 @@
 SET NAMES 'utf8';
-
-
+   
  
 INSERT INTO `users` (`user_id`, `userlogin`, `userpass`, `createdon`, `email`, `acl`, `disabled`, `options`, `role_id`) VALUES(4, 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:2:{s:9:"aclbranch";N;s:6:"onlymy";N;}', 0, 'a:6:{s:8:"defstore";s:2:"19";s:7:"deffirm";i:0;s:5:"defmf";s:1:"2";s:8:"pagesize";s:2:"15";s:11:"hidesidebar";i:0;s:8:"mainpage";s:15:"\\App\\Pages\\Main";}', 1);
 
 INSERT INTO `roles` (`role_id`, `rolename`, `acl`) VALUES(1, 'admins', 'a:9:{s:7:"aclview";N;s:7:"acledit";N;s:6:"aclexe";N;s:9:"aclcancel";N;s:8:"aclstate";N;s:9:"acldelete";N;s:7:"widgets";N;s:7:"modules";N;s:9:"smartmenu";s:1:"8";}');
 
-UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' limit 0,1 )  where  userlogin='admin';
+UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' limit 0,1 )  where  userlogin='admin' ;
 
  
-INSERT INTO `stores` (`store_id`, `storename`, `description`, `branch_id`) VALUES (28, 'РћСЃРЅРѕРІРЅРёР№ СЃРєР»Р°Рґ', '', 0);
-INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`, `branch_id`) VALUES (2, 'РљР°СЃР°', 'РћСЃРЅРѕРІРЅР° РєР°СЃР°', 0);
-INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  '????  ?i???', '', 0);
+INSERT  INTO `stores` (  `storename`, `description`) VALUES(  'РћСЃРЅРѕРІРЅРёР№ СЃРєР»Р°Рґ', '');
+INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`) VALUES(2, 'РљР°СЃР°', 'РћСЃРЅРѕРІРЅР° РєР°СЃР°');
+INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  'РќР°С€Р°  С„iСЂРјР°', '', 0);
 
-  
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:23:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:10:"dateformat";s:5:"d.m.Y";s:11:"partiontype";s:1:"1";s:4:"curr";s:2:"ru";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"shopname";s:14:"Магазин";s:8:"ts_break";s:2:"60";s:8:"ts_start";s:5:"09:00";s:6:"ts_end";s:5:"18:00";s:11:"autoarticle";i:1;s:6:"useset";i:0;s:10:"usesnumber";i:0;s:10:"usescanner";i:1;s:9:"useimages";i:0;s:9:"usebranch";i:0;s:10:"allowminus";i:1;s:6:"useval";i:0;s:6:"capcha";i:0;}');
 
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:23:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:10:"dateformat";s:5:"d.m.Y";s:11:"partiontype";s:1:"1";s:4:"curr";s:2:"gr";s:6:"phonel";s:2:"10";s:6:"price1";s:17:"Роздрiбна";s:6:"price2";s:12:"Оптова";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"shopname";s:14:"Магазин";s:8:"ts_break";s:2:"60";s:8:"ts_start";s:5:"09:00";s:6:"ts_end";s:5:"18:00";s:11:"autoarticle";i:1;s:10:"usesnumber";i:0;s:10:"usescanner";i:0;s:9:"useimages";i:0;s:9:"usebranch";i:0;s:10:"allowminus";i:1;s:6:"useval";i:0;s:6:"capcha";i:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:8:{s:6:"pwidth";s:4:"100%";s:9:"pricetype";s:6:"price1";s:11:"barcodetype";s:5:"EAN13";s:9:"pfontsize";s:2:"16";s:5:"pname";i:1;s:5:"pcode";i:0;s:8:"pbarcode";i:1;s:6:"pprice";i:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:7:{s:6:"pwidth";s:0:"";s:9:"pricetype";s:6:"price1";s:11:"barcodetype";s:5:"EAN13";s:5:"pname";i:1;s:5:"pcode";i:0;s:8:"pbarcode";i:1;s:6:"pprice";i:0;}');
-
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('modules', 'a:11:{s:6:"ocsite";s:20:"http://local.ostore3";s:9:"ocapiname";s:5:"admin";s:5:"ockey";s:256:"Bf81dB8fY2waVxlhych4fFprGfxF2tULlSlHiwEXZqf45E6HDBoA6XjocGcziRsfCQsRovzzDAvMBImmrlzXqEJcMByQpkfeLYfZBDoYstDVuA0Qvx86YkeXVwQ6I2v8xEXS2ZL6ioH1l8qinySGZdRrO5mgFCFWKhgKxIfkNOYpvzIZdR2MdqkHKSzHGSfoDVmbts8slGNFqYzvkXQSP0VaHcw0fYmBZLo0HEvLb2EiBZ5A8EcGDZWWtndg2wlY";s:13:"occustomer_id";s:1:"8";s:11:"ocpricetype";s:6:"price1";s:6:"wcsite";s:15:"http://local.wp";s:6:"wckeyc";s:43:"ck_a36c9d5d8ef70a34001b6a44bc245a7665ca77e7";s:6:"wckeys";s:43:"cs_12b03012d9db469b45b1fc82e329a3bc995f3e36";s:5:"wcapi";s:2:"v3";s:13:"wccustomer_id";s:1:"8";s:11:"wcpricetype";s:6:"price1";}');
   
   
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(1, 4, 'РЎРєР»Р°РґРё', 'StoreList', 'РўРѕРІР°СЂРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(2, 4, 'РќРѕРјРµРЅРєР»Р°С‚СѓСЂР°', 'ItemList', 'РўРѕРІР°СЂРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(3, 4, 'РЎРїС–РІСЂРѕР±С–С‚РЅРёРєРё', 'EmployeeList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(4, 4, 'РљР°С‚РµРіРѕСЂС–С— С‚РѕРІР°СЂС–РІ', 'CategoryList', 'РўРѕРІР°СЂРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(5, 4, 'РљРѕРЅС‚СЂР°РіРµРЅС‚Рё', 'CustomerList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(6, 1, 'РџСЂРёР±СѓС‚РєРѕРІР° РЅР°РєР»Р°РґРЅР°', 'GoodsReceipt', 'Р—Р°РєСѓРїРєРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(7, 1, 'Р’РёРґР°С‚РєРѕРІР° РЅР°РєР»Р°РґРЅР°', 'GoodsIssue', 'РџСЂРѕРґР°Р¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(8, 3, 'Р—Р°РіР°Р»СЊРЅРёР№ Р¶СѓСЂРЅР°Р»', 'DocList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(10, 1, 'Р“Р°СЂР°РЅС‚С–Р№РЅРёР№ С‚Р°Р»РѕРЅ', 'Warranty', 'РџСЂРѕРґР°Р¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(12, 2, 'Р СѓС… РїРѕ СЃРєР»Р°РґСѓ', 'ItemActivity', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(13, 2, 'ABC Р°РЅР°Р»С–Р·', 'ABC', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(14, 4, 'РџРѕСЃР»СѓРіРё, СЂРѕР±РѕС‚Рё', 'ServiceList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(15, 1, 'РђРєС‚ РІРёРєРѕРЅР°РЅРёС… СЂРѕР±С–С‚', 'ServiceAct', 'РџРѕСЃР»СѓРіРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(16, 1, 'РџРѕРІРµСЂРЅРµРЅРЅСЏ РІС–Рґ РїРѕРєСѓРїС†СЏ', 'ReturnIssue', 'РџСЂРѕРґР°Р¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(18, 3, 'РќР°СЂСЏРґРё', 'TaskList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(19, 1, 'РќР°СЂСЏРґ', 'Task', 'Р’РёСЂРѕР±РЅРёС†С‚РІРѕ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(20, 2, 'РћРїР»Р°С‚Р° Р·Р° РЅР°СЂСЏРґР°РјРё', 'EmpTask', 'Р’РёСЂРѕР±РЅРёС†С‚РІРѕ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(21, 2, 'Р—Р°РєСѓРїС–РІР»С–', 'Income', 'Р—Р°РєСѓРїРєРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(22, 2, 'РџСЂРѕРґР°Р¶С–', 'Outcome', 'РџСЂРѕРґР°Р¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(27, 3, 'Р—Р°РјРѕРІР»РµРЅРЅСЏ РєР»С–С”РЅС‚С–РІ', 'OrderList', 'РџСЂРѕРґР°Р¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(28, 1, 'Р—Р°РјРѕРІР»РµРЅРЅСЏ', 'Order', 'РџСЂРѕРґР°Р¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(30, 1, 'РћРїСЂРёР±СѓС‚РєСѓРІР°РЅРЅСЏ Р· РІРёСЂРѕР±РЅРёС†С‚РІР°', 'ProdReceipt', 'Р’РёСЂРѕР±РЅРёС†С‚РІРѕ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(31, 1, 'РЎРїРёСЃР°РЅРЅСЏ РЅР° РІРёСЂРѕР±РЅРёС†С‚РІРѕ', 'ProdIssue', 'Р’РёСЂРѕР±РЅРёС†С‚РІРѕ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(32, 2, 'Р—РІС–С‚ РїРѕ РІРёСЂРѕР±РЅРёС†С‚РІСѓ', 'Prod', 'Р’РёСЂРѕР±РЅРёС†С‚РІРѕ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(33, 4, 'Р’РёСЂРѕР±РЅРёС‡С– РґС–Р»СЊРЅРёС†С–', 'ProdAreaList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(35, 3, 'РџСЂРѕРґР°Р¶С–', 'GIList', 'РџСЂРѕРґР°Р¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(36, 4, 'РћСЃРЅРѕРІРЅС– С„РѕРЅРґРё', 'EqList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(37, 3, 'Р—Р°РєСѓРїС–РІР»С–', 'GRList', 'Р—Р°РєСѓРїРєРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(38, 1, 'Р—Р°СЏРІРєР° РїРѕСЃС‚Р°С‡Р°Р»СЊРЅРёРєСѓ', 'OrderCust', 'Р—Р°РєСѓРїРєРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(39, 3, 'Р—Р°СЏРІРєРё РїРѕСЃС‚Р°С‡Р°Р»СЊРЅРёРєР°Рј', 'OrderCustList', 'Р—Р°РєСѓРїРєРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(40, 2, 'РџСЂР°Р№СЃ', 'Price', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(41, 1, 'РџРѕРІРµСЂРЅРµРЅРЅСЏ РїРѕСЃС‚Р°С‡Р°Р»СЊРЅРёРєСѓ', 'RetCustIssue', 'Р—Р°РєСѓРїРєРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(44, 1, 'РџРµСЂРµРєРѕРјРїР»РµРєС‚Р°С†С–СЏ РўРњР¦', 'TransItem', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(46, 4, 'РљР°СЃРё', 'MFList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(47, 3, 'Р–СѓСЂРЅР°Р» РїР»Р°С‚РµР¶С–РІ', 'PayList', 'РљР°СЃР° С‚Р° РїР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(48, 2, 'Р СѓС… РїРѕ РіСЂРѕС€РѕРІРёРј СЂР°С…СѓРЅРєР°С…', 'PayActivity', 'РџР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(50, 1, 'РџСЂРёР±СѓС‚РєРѕРІРёР№ РѕСЂРґРµСЂ', 'IncomeMoney', 'РџР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(51, 1, 'Р’РёРґР°С‚РєРѕРІРёР№ РѕСЂРґРµСЂ', 'OutcomeMoney', 'РџР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(53, 2, 'РџР»Р°С‚С–Р¶РЅРёР№ Р±Р°Р»Р°РЅСЃ', 'PayBalance', 'РџР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(57, 1, 'Р†РЅРІРµРЅС‚Р°СЂРёР·Р°С†С–СЏ', 'Inventory', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(58, 1, 'Р Р°С…СѓРЅРѕРє, РІС…С–РґРЅРёР№', 'InvoiceCust', 'Р—Р°РєСѓРїРєРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(59, 1, 'Р Р°С…СѓРЅРѕРє-С„Р°РєС‚СѓСЂР°', 'Invoice', 'РџСЂРѕРґР°Р¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(60, 5, 'Р†РјРїРѕСЂС‚', 'Import', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(61, 3, 'Р СѓС… РўРњР¦', 'StockList', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(62, 1, 'РљР°СЃРѕРІРёР№ С‡РµРє', 'POSCheck', 'РџСЂРѕРґР°Р¶С–', 1);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(63, 2, 'РўРѕРІР°СЂРё РІ РґРѕСЂРѕР·С–', 'CustOrder', 'Р—Р°РєСѓРїРєРё', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(64, 1, 'РЎРїРёСЃР°РЅРЅСЏ РўРњР¦', 'OutcomeItem', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(65, 1, 'РћРїСЂРёР±СѓС‚РєСѓРІР°РЅРЅСЏ РўРњР¦', 'IncomeItem', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(67, 5, 'РђР Рњ РєР°СЃРёСЂР°', 'ARMPos', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(69, 3, 'Р РѕР±РѕС‚Рё, РїРѕСЃР»СѓРіРё', 'SerList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(70, 3, 'Р РѕР·СЂР°С…СѓРЅРєРё Р· РєРѕРЅС‚СЂР°РіРµРЅС‚Р°РјРё', 'PayCustList', 'РљР°СЃР° С‚Р° РїР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(71, 3, 'РўРѕРІР°СЂРё РЅР° СЃРєР»Р°РґС–', 'ItemList', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(75, 5, 'Р•РєСЃРїРѕСЂС‚', 'Export', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(76, 1, 'Р’РёРїР»Р°С‚Р° Р·Р°СЂРїР»Р°С‚Рё', 'OutSalary', 'РџР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(77, 2, 'Р—РІС–С‚ РїРѕ  Р·Р°СЂРїР»Р°С‚С–', 'SalaryRep', 'РџР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Р СѓС… РїРѕ  РєРѕРЅС‚СЂР°РіРµРЅС‚Р°С…', 'CustActivity', 'РџР»Р°С‚РµР¶С–', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'РљРѕРЅС‚СЂР°РєС‚Рё', 'ContractList', '', 0); 
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'РџРµСЂРµРјiС‰РµРЅРЅСЏ РўРњР¦', 'MoveItem', 'РЎРєР»Р°Рґ', 0);
-INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Р РѕР±РѕС‡РёР№ С‡Р°СЃ', 'Timestat', '', 0);
+  
+INSERT INTO `metadata` VALUES(1, 4, 'Склади', 'StoreList', 'Товари', 0);
+INSERT INTO `metadata` VALUES(2, 4, 'Номенклатура', 'ItemList', 'Товари', 0);
+INSERT INTO `metadata` VALUES(3, 4, 'Співробітники', 'EmployeeList', '', 0);
+INSERT INTO `metadata` VALUES(4, 4, 'Категорії товарів', 'CategoryList', 'Товари', 0);
+INSERT INTO `metadata` VALUES(5, 4, 'Контрагенти', 'CustomerList', '', 0);
+INSERT INTO `metadata` VALUES(6, 1, 'Прибуткова накладна', 'GoodsReceipt', 'Закупки', 0);
+INSERT INTO `metadata` VALUES(7, 1, 'Видаткова накладна', 'GoodsIssue', 'Продажі', 0);
+INSERT INTO `metadata` VALUES(8, 3, 'Загальний журнал', 'DocList', '', 0);
+INSERT INTO `metadata` VALUES(10, 1, 'Гарантійний талон', 'Warranty', 'Продажі', 0);
+INSERT INTO `metadata` VALUES(12, 2, 'Рух по складу', 'ItemActivity', 'Склад', 0);
+INSERT INTO `metadata` VALUES(13, 2, 'ABC аналіз', 'ABC', '', 0);
+INSERT INTO `metadata` VALUES(14, 4, 'Послуги, роботи', 'ServiceList', '', 0);
+INSERT INTO `metadata` VALUES(15, 1, 'Акт виконаних робіт', 'ServiceAct', 'Послуги', 0);
+INSERT INTO `metadata` VALUES(16, 1, 'Повернення від покупця', 'ReturnIssue', 'Продажі', 0);
+INSERT INTO `metadata` VALUES(18, 3, 'Наряди', 'TaskList', '', 0);
+INSERT INTO `metadata` VALUES(19, 1, 'Наряд', 'Task', 'Виробництво', 0);
+INSERT INTO `metadata` VALUES(20, 2, 'Оплата за нарядами', 'EmpTask', 'Виробництво', 0);
+INSERT INTO `metadata` VALUES(21, 2, 'Закупівлі', 'Income', 'Закупки', 0);
+INSERT INTO `metadata` VALUES(22, 2, 'Продажі', 'Outcome', 'Продажі', 0);
+INSERT INTO `metadata` VALUES(27, 3, 'Замовлення клієнтів', 'OrderList', 'Продажі', 0);
+INSERT INTO `metadata` VALUES(28, 1, 'Замовлення', 'Order', 'Продажі', 0);
+INSERT INTO `metadata` VALUES(30, 1, 'Оприбуткування з виробництва', 'ProdReceipt', 'Виробництво', 0);
+INSERT INTO `metadata` VALUES(31, 1, 'Списання на виробництво', 'ProdIssue', 'Виробництво', 0);
+INSERT INTO `metadata` VALUES(32, 2, 'Звіт по виробництву', 'Prod', 'Виробництво', 0);
+INSERT INTO `metadata` VALUES(33, 4, 'Виробничі дільниці', 'ProdAreaList', '', 0);
+INSERT INTO `metadata` VALUES(35, 3, 'Продажі', 'GIList', 'Продажі', 0);
+INSERT INTO `metadata` VALUES(36, 4, 'Основні фонди', 'EqList', '', 0);
+INSERT INTO `metadata` VALUES(37, 3, 'Закупівлі', 'GRList', 'Закупки', 0);
+INSERT INTO `metadata` VALUES(38, 1, 'Заявка постачальнику', 'OrderCust', 'Закупки', 0);
+INSERT INTO `metadata` VALUES(39, 3, 'Заявки постачальникам', 'OrderCustList', 'Закупки', 0);
+INSERT INTO `metadata` VALUES(40, 2, 'Прайс', 'Price', 'Склад', 0);
+INSERT INTO `metadata` VALUES(41, 1, 'Повернення постачальнику', 'RetCustIssue', 'Закупки', 0);
+INSERT INTO `metadata` VALUES(44, 1, 'Перекомплектація ТМЦ', 'TransItem', 'Склад', 0);
+INSERT INTO `metadata` VALUES(46, 4, 'Каси, рахунки', 'MFList', '', 0);
+INSERT INTO `metadata` VALUES(47, 3, 'Журнал платежів', 'PayList', 'Каса та платежі', 0);
+INSERT INTO `metadata` VALUES(48, 2, 'Рух по грошовим рахунках', 'PayActivity', 'Платежі', 0);
+INSERT INTO `metadata` VALUES(50, 1, 'Прибутковий ордер', 'IncomeMoney', 'Платежі', 0);
+INSERT INTO `metadata` VALUES(51, 1, 'Видатковий ордер', 'OutcomeMoney', 'Платежі', 0);
+INSERT INTO `metadata` VALUES(53, 2, 'Платіжний баланс', 'PayBalance', 'Платежі', 0);
+INSERT INTO `metadata` VALUES(57, 1, 'Інвентаризація', 'Inventory', 'Склад', 0);
+INSERT INTO `metadata` VALUES(58, 1, 'Рахунок, вхідний', 'InvoiceCust', 'Закупки', 0);
+INSERT INTO `metadata` VALUES(59, 1, 'Рахунок-фактура', 'Invoice', 'Продажі', 0);
+INSERT INTO `metadata` VALUES(60, 5, 'Імпорт', 'Import', '', 0);
+INSERT INTO `metadata` VALUES(61, 3, 'Рух ТМЦ', 'StockList', 'Склад', 0);
+INSERT INTO `metadata` VALUES(62, 1, 'Касовий чек', 'POSCheck', 'Продажі', 1);
+INSERT INTO `metadata` VALUES(63, 2, 'Товари в дорозі', 'CustOrder', 'Закупки', 0);
+INSERT INTO `metadata` VALUES(64, 1, 'Списання ТМЦ', 'OutcomeItem', 'Склад', 0);
+INSERT INTO `metadata` VALUES(65, 1, 'Оприбуткування ТМЦ', 'IncomeItem', 'Склад', 0);
+INSERT INTO `metadata` VALUES(67, 5, 'АРМ касира', 'ARMPos', '', 0);
+INSERT INTO `metadata` VALUES(69, 3, 'Роботи, послуги', 'SerList', '', 0);
+INSERT INTO `metadata` VALUES(70, 3, 'Розрахунки з контрагентами', 'PayCustList', 'Каса та платежі', 0);
+INSERT INTO `metadata` VALUES(71, 3, 'Товари на складі', 'ItemList', 'Склад', 0);
+INSERT INTO `metadata` VALUES(75, 5, 'Експорт', 'Export', '', 0);
+INSERT INTO `metadata` VALUES(76, 1, 'Виплата зарплати', 'OutSalary', 'Платежі', 0);
+INSERT INTO `metadata` VALUES(77, 2, 'Звіт по  зарплаті', 'SalaryRep', 'Платежі', 0);
+INSERT INTO `metadata` VALUES(78, 2, 'Рух по  контрагентах', 'CustActivity', 'Платежі', 0);
+INSERT INTO `metadata` VALUES(79, 4, 'Контракти', 'ContractList', '', 0);
+INSERT INTO `metadata` VALUES(80, 1, 'Перемiщення ТМЦ', 'MoveItem', 'Склад', 0);
+INSERT INTO `metadata` VALUES(81, 2, 'Робочий час', 'Timestat', '', 0);
 

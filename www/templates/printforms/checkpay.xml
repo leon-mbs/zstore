@@ -3,8 +3,8 @@
 
     <CHECKHEAD>
 
-        <DOCTYPE>{{doctype}}</DOCTYPE>
-        <DOCSUBTYPE>{{docsubtype}}</DOCSUBTYPE>
+        <DOCTYPE>1</DOCTYPE>
+      
 
 
         <UID>{{guid}}</UID>

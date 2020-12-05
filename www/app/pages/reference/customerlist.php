@@ -39,8 +39,9 @@ class CustomerList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => 'Покупатели', Customer::TYPE_SELLER => 'Поставщики'), 0));
-        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется', Customer::STATUS_WAIT => 'Потенциальный'), Customer::STATUS_ACTUAL));
+        $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("bayers"), 5 => Helper::l("holdings")), 0));
+        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL =>Helper::l("isactul")  , Customer::STATUS_DISABLED => Helper::l("notused"), Customer::STATUS_WAIT => Helper::l("potential")), Customer::STATUS_ACTUAL));
+        $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
@@ -58,6 +59,8 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('editphone'));
         $this->customerdetail->add(new TextInput('editemail'));
         $this->customerdetail->add(new CheckBox('editjurid'));
+        $this->customerdetail->add(new CheckBox('editisholding'));
+        $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => 'Покупатель', 2 => 'Поставщик'), 0));
         $this->customerdetail->add(new DropDownChoice('editstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется', Customer::STATUS_WAIT => 'Потенциальный'), Customer::STATUS_ACTUAL));
         $this->customerdetail->add(new TextInput('discount'));
@@ -102,6 +105,7 @@ class CustomerList extends \App\Pages\Base
     public function OnSearch($sender) {
         $status = $this->filter->searchstatus->getValue();
         $type = $this->filter->searchtype->getValue();
+        $holding = $this->filter->searchholding->getValue();
         $search = trim($this->filter->searchkey->getText());
         $where = "status=" . $status;
 
@@ -109,9 +113,17 @@ class CustomerList extends \App\Pages\Base
             $search = Customer::qstr('%' . $search . '%');
             $where .= " and (customer_name like  {$search} or phone like {$search}    )";
         }
-        if ($type > 0) {
-
-            $where .= " and detail like '%<type>{$type}</type>%'    ";
+        if ($type == 1) {
+            $where .= " and detail like '%<type>1</type>%'    ";
+        }
+        if ($type == 2) {
+            $where .= " and detail like '%<type>2</type>%'    ";
+        }
+        if ($type == 5) {
+            $where .= " and detail like '%<isholding>1</isholding>%'    ";
+        }
+        if ($holding >0 ) {
+            $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
         }
 
 
@@ -147,7 +159,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->setVisible(false);
         $this->customerdetail->setVisible(true);
         $this->contentview->setVisible(false);
-
+        $this->customerdetail->editholding->setOptionList( Customer::getHoldList());
 
         $this->customerdetail->editcustomername->setText($this->_customer->customer_name);
         $this->customerdetail->editphone->setText($this->_customer->phone);
@@ -158,8 +170,10 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->bonus->setText($this->_customer->bonus);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
+        $this->customerdetail->editholding->setValue($this->_customer->holding);
         $this->customerdetail->editstatus->setValue($this->_customer->status);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
+        $this->customerdetail->editisholding->setChecked($this->_customer->isholding);
 
     }
 
@@ -206,10 +220,16 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->discount = $this->customerdetail->discount->getText();
         $this->_customer->bonus = $this->customerdetail->bonus->getText();
         $this->_customer->comment = $this->customerdetail->editcomment->getText();
-        $this->_customer->type = $this->customerdetail->edittype->getValue();
+        $this->_customer->holding = $this->customerdetail->editholding->getValue();
+        $this->_customer->holding_name = $this->customerdetail->editholding->getValueName();
         $this->_customer->status = $this->customerdetail->editstatus->getValue();
-        $this->_customer->jurid = $this->customerdetail->editjurid->isChecked() ? 1 : 0;
+        $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
+        if($this->_customer->isholding == 1 && $this->_customer->holding > 0) {
+            $this->setError('nothold');    
+            return ;
+        }
+        
 
         $c = Customer::getByEmail($this->_customer->email);
         if ($c != null) {

@@ -52,7 +52,7 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
+        $this->editdetail->add(new DropDownChoice('edititem',Item::findArray('itemname','disabled<>1 and  item_type in(4,5)','itemname'))) ;
         $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -136,8 +136,8 @@ class ProdReceipt extends \App\Pages\Base
         $this->editdetail->editsdate->setDate($item->sdate);
 
 
-        $this->editdetail->edititem->setKey($item->item_id);
-        $this->editdetail->edititem->setText($item->itemname);
+        $this->editdetail->edititem->setValue($item->item_id);
+        
 
 
         $this->_rowid = $item->item_id;
@@ -167,19 +167,13 @@ class ProdReceipt extends \App\Pages\Base
         }
 
 
-        $id = $this->editdetail->edititem->getKey();
-        $name = trim($this->editdetail->edititem->getText());
-        if ($id == 0 && strlen($name) < 2) {
+        $id = $this->editdetail->edititem->getValue();
+        
+        if ($id == 0 ) {
             $this->setError("noselitem");
             return;
         }
-        if ($id == 0) {
-            $item = new Item();  // создаем новый
-            $item->itemname = $name;
-            //todo наценка по дефолту
-            $item->save();
-            $id = $item->item_id;
-        }
+  
 
         $item = Item::load($id);
 
@@ -224,8 +218,8 @@ class ProdReceipt extends \App\Pages\Base
         $this->docform->detail->Reload();
         $this->calcTotal();
         //очищаем  форму
-        $this->editdetail->edititem->setKey(0);
-        $this->editdetail->edititem->setText('');
+        $this->editdetail->edititem->setValue(0);
+        
 
         $this->editdetail->editquantity->setText("1");
 
@@ -344,15 +338,9 @@ class ProdReceipt extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-
-    public function OnAutoItem($sender) {
-
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        return Item::findArray('itemname', "(itemname like {$text} or item_code like {$text}) and disabled <> 1");
-    }
-
+  
     public function OnChangeItem($sender) {
-        $id = $sender->getKey();
+        $id = $sender->getValue();
         $item = \App\Entity\Item::load($id);
         $price = 0;
         if ($item->zarp > 0) {
