@@ -16,7 +16,8 @@
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код продавця</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кіл.</th>
@@ -28,6 +29,7 @@
         <td align="right">{{no}}</td>
         <td>{{itemname}}</td>
         <td>{{itemcode}}</td>
+        <td>{{custcode}}</td>
         <td>{{msr}}</td>
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>

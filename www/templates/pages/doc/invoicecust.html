@@ -75,7 +75,9 @@
                 <tr>
 
                     <th>Наименование</th>
-                    <th>Код</th>
+                    <th>Артикул</th>
+                    <th>Код поставщика</th>
+
                     <th>Ед.</th>
                     <th class="text-right">Кол.</th>
                     <th class="text-right">Цена</th>
@@ -88,6 +90,7 @@
 
                     <td zippy="item"></td>
                     <td zippy="code"></td>
+                    <td zippy="custcode"></td>
                     <td zippy="msr"></td>
                     <td zippy="quantity" class="text-right"></td>
                     <td zippy="price" class="text-right"></td>
@@ -294,6 +297,14 @@
                 <label for="edititem">Название </label>
                 <input placeholder="Начните вводить..." class="form-control " zippy="edititem"/>
                 <a style="font-size:smaller" zippy="addnewitem">Добавить новый</a>
+
+
+            </div>
+            <div class="form-group">
+
+                <label for="editcustcode">Код  поставщика </label>
+                <input   class="form-control " zippy="editcustcode"/>
+                <small>Например код  из прайса  продавца</small>
 
 
             </div>

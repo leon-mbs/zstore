@@ -34,6 +34,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код продавца</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кол.</th>
@@ -45,6 +46,7 @@
         <td align="right">{{no}}</td>
         <td>{{itemname}}</td>
         <td>{{itemcode}}</td>
+        <td>{{custcode}}</td>
         <td>{{msr}}</td>
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
