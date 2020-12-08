@@ -21,6 +21,7 @@ class InvoiceCust extends Document
             $detail[] = array("no"       => $i++,
                               "itemname" => $item->itemname,
                               "itemcode" => $item->item_code,
+                              "custcode" => $item->custcode,
                               "quantity" => H::fqty($item->quantity),
                               "price"    => H::fa($item->price),
                               "msr"      => $item->msr,

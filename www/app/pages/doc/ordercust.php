@@ -57,6 +57,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
+        $this->editdetail->add(new TextInput('editcustcode')) ;
         $this->editdetail->add(new TextInput('editprice'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -107,6 +108,7 @@ class OrderCust extends \App\Pages\Base
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('custcode', $item->custcode));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
@@ -123,6 +125,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
+        $this->editdetail->editcustcode->setText($item->custcode);
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
 
@@ -166,6 +169,7 @@ class OrderCust extends \App\Pages\Base
         $item = Item::load($id);
 
 
+        $item->custcode = $this->editdetail->editcustcode->getText();
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         if ($item->price == 0) {
@@ -202,6 +206,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->editdetail->editcustcode->setText("");
     }
 
     public function cancelrowOnClick($sender) {

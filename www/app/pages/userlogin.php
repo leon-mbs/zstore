@@ -18,7 +18,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
         $common = System::getOptions('common');
 
-
+        
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userpassword'));
@@ -50,6 +50,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->_tvars['newversion'] = $v['version'];
         }
 
+        $this->_tvars['appname'] = $common['shopname'];
         $this->_tvars['capcha'] = $common['capcha'] == 1;
     }
 

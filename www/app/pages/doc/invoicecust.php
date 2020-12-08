@@ -82,6 +82,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('editcustcode'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
@@ -177,6 +178,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
+        $this->editdetail->editcustcode->setText($item->custcode);
 
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
@@ -202,6 +204,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->setVisible(false);
         $this->_rowid = 0;
         $this->editdetail->editprice->setText("0");
+        $this->editdetail->editcustcode->setText("");
     }
 
     public function saverowOnClick($sender) {
@@ -217,6 +220,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
+        $item->custcode = $this->editdetail->editcustcode->getText();
         if ($item->price == 0) {
             $this->setWarn("no_price");
         }
@@ -253,6 +257,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->editdetail->editcustcode->setText("");
     }
 
     public function cancelrowOnClick($sender) {

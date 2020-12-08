@@ -11,11 +11,9 @@ class DBHelper
         $this->type = $type;
         $modules = \App\System::getOptions("modules");
         if ($modules['td_seconddb'] == 1) {
-            $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
-
-
+ 
             $this->conn = \ADONewConnection("mysqli");
-            $this->conn->NConnect($_config['tecdocdb']['host'], $_config['tecdocdb']['user'], $_config['tecdocdb']['pass'], $_config['tecdocdb']['name']);
+            $this->conn->NConnect($modules['td_dbhost'], $modules['td_dbuser'], $modules['td_dbpass'], $modules['td_dbname']);
             $this->conn->Execute("SET NAMES 'utf8'");
         } else {
             $this->conn = \ZDB\DB::getConnect();

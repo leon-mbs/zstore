@@ -76,6 +76,7 @@
 
                     <th>Найменування</th>
                     <th>Код</th>
+                    <th>Код поставщика</th> 
                     <th>Од.</th>
                     <th class="text-right">Кіл.</th>
                     <th class="text-right">Ціна</th>
@@ -88,7 +89,8 @@
 
                     <td zippy="item"></td>
                     <td zippy="code"></td>
-                    <td zippy="msr"></td>
+                     <td zippy="custcode"></td>
+                   <td zippy="msr"></td>
                     <td zippy="quantity" class="text-right"></td>
                     <td zippy="price" class="text-right"></td>
 
@@ -294,6 +296,14 @@
                 <label for="edititem">Назва </label>
                 <input placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
                 <a style="font-size:smaller" zippy="addnewitem">Додати новий</a>
+
+
+            </div>
+             <div class="form-group">
+
+                <label for="editcustcode">Код  постачальника </label>
+                <input   class="form-control " zippy="editcustcode"/>
+                <small>Наприклад  код  з  прайсу продавця</small>
 
 
             </div>
