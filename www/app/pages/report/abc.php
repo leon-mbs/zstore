@@ -273,10 +273,7 @@ class ABC extends \App\Pages\Base
     //выполняет расчет  АВС
     private function calc($detail) {
 
-        //   $detail =  \Pinq\Traversable::from($detail)
-        //       ->orderByAscending(function($row){return $row['value'];})
-        //       ->select(function($row){ return array('name'=>$row['name'],'value'=>$row['value'])   ;})->asArray();
-
+ 
 
         $sum = 0;
         $_detail = array();

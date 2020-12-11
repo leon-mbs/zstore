@@ -5,7 +5,7 @@
     "phpmailer/phpmailer": "~6.1",
     "monolog/monolog": "1.25.4",
     "nesbot/carbon": "2.32.2",
-    "timetoogo/pinq": "3.4.1",
+   
   
     "dompdf/dompdf": "v0.8.5",
     "firebase/php-jwt": "v5.0.0",
