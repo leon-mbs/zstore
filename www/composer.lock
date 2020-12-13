@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ad1f45340e40604cfeb1d1c762d5ec1",
+    "content-hash": "b169fd20e0bc5c02170932c28e4fa769",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -283,16 +283,16 @@
         },
         {
             "name": "leon-mbs/zdb",
-            "version": "1.2.9",
+            "version": "1.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zdb.git",
-                "reference": "4c444bb2bf02a06e3cecd429e6bccbdb1312f821"
+                "reference": "eb86c36aa16ac6a0f9255baeb0f0e2a6954a292f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/4c444bb2bf02a06e3cecd429e6bccbdb1312f821",
-                "reference": "4c444bb2bf02a06e3cecd429e6bccbdb1312f821",
+                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/eb86c36aa16ac6a0f9255baeb0f0e2a6954a292f",
+                "reference": "eb86c36aa16ac6a0f9255baeb0f0e2a6954a292f",
                 "shasum": ""
             },
             "require": {
@@ -323,27 +323,27 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zdb/issues",
-                "source": "https://github.com/leon-mbs/zdb/tree/1.2.9"
+                "source": "https://github.com/leon-mbs/zdb/tree/1.2.10"
             },
-            "time": "2020-11-13T16:47:37+00:00"
+            "time": "2020-12-12T20:53:58+00:00"
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.2.3",
+            "version": "2.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "6269135ac19beb44ffc592e730f31ec0b8ef830f"
+                "reference": "2fee5b144376bd0f57a17948e67dde9af88aa4f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/6269135ac19beb44ffc592e730f31ec0b8ef830f",
-                "reference": "6269135ac19beb44ffc592e730f31ec0b8ef830f",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/2fee5b144376bd0f57a17948e67dde9af88aa4f7",
+                "reference": "2fee5b144376bd0f57a17948e67dde9af88aa4f7",
                 "shasum": ""
             },
             "require": {
                 "leon-mbs/phpquery": ">=1.0.0",
-                "leon-mbs/zdb": "1.2.9",
+                "leon-mbs/zdb": "1.2.10",
                 "mustache/mustache": "v2.13.0",
                 "php": ">=7.2.0"
             },
@@ -371,9 +371,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.2.3"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.2.4"
             },
-            "time": "2020-11-13T16:53:55+00:00"
+            "time": "2020-12-12T20:55:12+00:00"
         },
         {
             "name": "masterexploder/phpthumb",

@@ -49,7 +49,7 @@ class PPOList extends \App\Pages\Base
 
         $this->opan->add(new Paginator('pagp', $this->opan->ppolist));
 
-        $this->opan->ppolist->setPageSize(H::getPG());
+        $this->opan->ppolist->setPageSize(5000);
 
         $this->add(new Panel('shpan'))->setVisible(false);
         $this->shpan->add(new ClickLink('backo', $this, 'onBacko'));
@@ -59,6 +59,7 @@ class PPOList extends \App\Pages\Base
         $this->docpan->add(new ClickLink('backsh', $this, 'onBacksh'));
         $this->docpan->add(new Label('docshow'))->setVisible(false);;
         $this->docpan->add(new DataView('doclist', new ArrayDataSource(new Prop($this, '_doclist')), $this, 'docOnRow'));
+        $this->docpan->doclist->setSelectedClass('table-success');
 
     }
 
@@ -112,6 +113,14 @@ class PPOList extends \App\Pages\Base
 
     public function onObj($sender) {
         $this->ppo = $sender->getOwner()->getDataItem();
+
+        $this->updateShifts()  ;
+
+        $this->opan->setVisible(false);
+        $this->shpan->setVisible(true);
+    }
+
+    public function updateShifts() {
         $this->_shlist = array();
         $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c');
         $to = \Carbon\Carbon::now()->format('c');
@@ -136,11 +145,8 @@ class PPOList extends \App\Pages\Base
         }
 
         $this->shpan->shlist->Reload();
-
-        $this->opan->setVisible(false);
-        $this->shpan->setVisible(true);
-    }
-
+    }    
+    
     public function onBacko($sender) {
         $this->opan->setVisible(true);
         $this->shpan->setVisible(false);
@@ -195,6 +201,7 @@ class PPOList extends \App\Pages\Base
         $this->shpan->setVisible(true);
         $this->docpan->setVisible(false);
         $this->docpan->docshow->setVisible(false);
+        $this->updateShifts()  ;
         
     }
 
@@ -214,6 +221,9 @@ class PPOList extends \App\Pages\Base
 
     public function onDoc($sender) {
         $doc = $sender->getOwner()->getDataItem();
+        $this->docpan->doclist->setSelectedRow($sender->getOwner());
+        $this->docpan->doclist->Reload();
+       
         $cid = $this->opan->filter->searchcomp->getValue();
 
         $res = Helper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $cid, true);
