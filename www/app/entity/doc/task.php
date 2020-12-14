@@ -52,6 +52,7 @@ class Task extends Document
                         "document_number" => $this->document_number,
                         "notes"           => $this->notes,
                         "baseddoc"        => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
+                        "cust"        => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "_detail"         => $detail,
                         "_detail2"        => $detail2,
                         "iseq"            => count($detail2) > 0,

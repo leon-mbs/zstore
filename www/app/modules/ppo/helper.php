@@ -94,6 +94,7 @@ class Helper
  
     }
 
+    
     public static function send($data, $type, $cid, $encrypted = false) {
 
         $signed = Helper::sign($data, $cid);
@@ -188,7 +189,7 @@ class Helper
         $pos = \App\Entity\Pos::load($posid);
 
         $branch_id = \App\Session::getSession()->branch_id;
-        $firm = \App\Helper::getFirmData($cid, $branch_id);
+        $firm = \App\Helper::getFirmData($cid );
         $branch = \App\Entity\Branch::load($branch_id);
 
         $header = array();
@@ -223,7 +224,7 @@ class Helper
         $pos = \App\Entity\Pos::load($posid);
 
         $branch_id = \App\Session::getSession()->branch_id;
-        $firm = \App\Helper::getFirmData($cid, $branch_id);
+        $firm = \App\Helper::getFirmData($cid );
         $branch = \App\Entity\Branch::load($branch_id);
 
         $header = array();

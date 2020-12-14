@@ -21,7 +21,7 @@
         <ORDERTIME>{{time}}</ORDERTIME>
 
         <ORDERNUM>{{docnumber}}</ORDERNUM>
-
+    
 
         <CASHDESKNUM>{{posinner}}</CASHDESKNUM>
         <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>

@@ -90,6 +90,14 @@ class ProdReceipt extends \App\Pages\Base
 
                     }
                 }
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'Order') {
+   
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+
+                    }
+                }
                 if ($basedoc->meta_name == 'Task') {
 
                     $this->docform->notes->setText('Наряд ' . $basedoc->document_number);

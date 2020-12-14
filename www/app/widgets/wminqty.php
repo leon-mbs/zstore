@@ -60,11 +60,11 @@ class WMinQty extends \Zippy\Html\PageFragment
     public function mqlistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('storename', $item->storename));
-        $row->add(new Label('itemname', $item->itemname));
-        $row->add(new Label('item_code', $item->item_code));
-        $row->add(new Label('qty', Helper::fqty($item->qty)));
-        $row->add(new Label('minqty', Helper::fqty($item->minqty)));
+        $row->add(new Label('wmq_storename', $item->storename));
+        $row->add(new Label('wmq_itemname', $item->itemname));
+        $row->add(new Label('wmq_item_code', $item->item_code));
+        $row->add(new Label('wmq_qty', Helper::fqty($item->qty)));
+        $row->add(new Label('wmq_minqty', Helper::fqty($item->minqty)));
     }
 
     public function oncsv($sender) {

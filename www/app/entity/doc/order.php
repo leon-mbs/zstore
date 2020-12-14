@@ -80,8 +80,10 @@ class Order extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+        $list['ProdReceipt'] = self::getDesc('ProdReceipt');
         $list['Invoice'] = self::getDesc('Invoice');
         $list['POSCheck'] = self::getDesc('POSCheck');
+        $list['Task'] = self::getDesc('Task') ;
 
 
         return $list;

@@ -21,7 +21,15 @@
 
     </tr>
     {{/baseddoc}}
+ 
+   {{#cust}}
+    <tr>
+        <td colspan="4">
+            Замовник: {{cust}}
+        </td>
 
+    </tr>
+    {{/cust}}
 
     <tr style="font-weight: bolder;">
 

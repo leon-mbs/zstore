@@ -59,6 +59,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -118,7 +119,15 @@ class OrderList extends \App\Pages\Base
 
             $this->setWarn('order_canceled');
         }
+        if ($sender->id == "btask") {
+            $task = count($this->_doc->getChildren('Task')) > 0;
+            
+            if ($task) {
 
+                $this->setWarn('task_exists');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
+        }
         if ($sender->id == "bttn") {
             if ($ttn) {
                 $this->setWarn('order_has_sent');
@@ -173,15 +182,19 @@ class OrderList extends \App\Pages\Base
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
-
+            $this->statuspan->statusform->btask->setVisible(false);
+ 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
+            
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(true);            
+ 
         }
 
         if ($ttn) {
@@ -199,7 +212,7 @@ class OrderList extends \App\Pages\Base
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
-
+            $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);

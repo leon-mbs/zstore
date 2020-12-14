@@ -255,6 +255,7 @@
   "noenaughtovar": "Недостатньо товару  %s ",
   "indocalreadyexists": "Вже iснує  приходний документ ",
   "thesamestore": "Выбрано  той  же склад ",
+  "basedon": "Пiдстава ",
   "incomebasedon": "Пiдстава %s зi складу %s ",
   "incomebasedonbr": "Пiдстава %s,склад %s,фiлiя %s  ",
   "createddoc": "Створено документ %s  ",

@@ -89,9 +89,14 @@ class ProdIssue extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Task') {
 
-                        $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                     }
+                    if ($basedoc->meta_name == 'ServiceAct') {
+
+                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                     
+                    }                    
                     if ($basedoc->meta_name == 'ProdIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);

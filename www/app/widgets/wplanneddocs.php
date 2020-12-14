@@ -46,10 +46,10 @@ class WPlannedDocs extends \Zippy\Html\PageFragment
         $item = $row->getDataItem();
         $item = $item->cast();
         $dt = \App\Helper::fd($item->document_date);
-        $row->add(new \Zippy\Html\Link\RedirectLink("number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
+        $row->add(new \Zippy\Html\Link\RedirectLink("wpl_number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
 
-        $row->add(new Label('date', $dt));
-        $row->add(new Label('type', $item->meta_desc));
+        $row->add(new Label('wpl_date', $dt));
+        $row->add(new Label('wpl_type', $item->meta_desc));
     }
 
 }

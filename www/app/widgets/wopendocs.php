@@ -10,7 +10,7 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\Label;
 
 /**
- * Виджет для  просмотра запланированых документов
+ * Виджет для  просмотра недавно  открытых  документов
  */
 class WOpenDocs extends \Zippy\Html\PageFragment
 {
@@ -44,11 +44,11 @@ class WOpenDocs extends \Zippy\Html\PageFragment
         $item = $row->getDataItem();
         $item = $item->cast();
 
-        $row->add(new \Zippy\Html\Link\RedirectLink("number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
+        $row->add(new \Zippy\Html\Link\RedirectLink("wod_number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
 
-        $row->add(new Label('date', \App\Helper::fdt($item->document_date)));
-        $row->add(new Label('type', $item->meta_desc));
-        $row->add(new Label('amount', Helper::fa($item->amount)));
+        $row->add(new Label('wod_date', \App\Helper::fdt($item->document_date)));
+        $row->add(new Label('wod_type', $item->meta_desc));
+        $row->add(new Label('wod_amount', Helper::fa($item->amount)));
     }
 
 }
