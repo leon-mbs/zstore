@@ -75,6 +75,7 @@ class PPOList extends \App\Pages\Base
             $this->setError($res['data']);
             return;
         }
+ 
         $res = json_decode($res['data']);
         if (is_array($res->TaxObjects)) {
             $this->_ppolist = array();

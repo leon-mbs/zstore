@@ -13,6 +13,7 @@
     "picqer/php-barcode-generator": "v0.3",
  
     "masterexploder/phpthumb" :"*",
+    "lemmon/fetch" :"v0.3.0",
    
    
     "automattic/woocommerce": "3.0.0",

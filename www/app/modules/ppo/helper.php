@@ -98,6 +98,10 @@ class Helper
     public static function send($data, $type, $cid, $encrypted = false) {
 
         $signed = Helper::sign($data, $cid);
+        if(strlen($signed['data'])==0){
+          return array('success'=>false,'data'=>'Неверный ответ сервера  подписи');
+               
+        }
         if ($signed['success'] == true) {
 
 

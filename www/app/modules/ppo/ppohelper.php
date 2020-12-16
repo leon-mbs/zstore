@@ -98,6 +98,10 @@ class PPOHelper
     public static function send($data, $type, $server,$port, $encrypted = false) {
 
         $signed = self::sign($data, $server,$port);
+        if(strlen($signed['data'])==0){
+          return array('success'=>false,'data'=>'Неверный ответ сервера  подписи');
+               
+        }  
         if ($signed['success'] == true) {
 
 

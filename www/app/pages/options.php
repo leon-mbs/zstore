@@ -183,6 +183,7 @@ class Options extends \App\Pages\Base
         $common['price3'] = $this->common->price3->getText();
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
+        $common['defprice'] = $this->common->defprice->getText();
         $common['shopname'] = $this->common->shopname->getText();
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();

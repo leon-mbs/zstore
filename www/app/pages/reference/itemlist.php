@@ -142,19 +142,19 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('manufacturer', $item->manufacturer));
         $plist = array();
         if ($item->price1 > 0) {
-            $plist[] = H::fa($item->price1);
+            $plist[] =  $item->price1 ;
         }
         if ($item->price2 > 0) {
-            $plist[] = H::fa($item->price2);
+            $plist[] =  $item->price2 ;
         }
         if ($item->price3 > 0) {
-            $plist[] = H::fa($item->price3);
+            $plist[] =  $item->price3 ;
         }
         if ($item->price4 > 0) {
-            $plist[] = H::fa($item->price4);
+            $plist[] =  $item->price4 ;
         }
         if ($item->price5 > 0) {
-            $plist[] = H::fa($item->price5);
+            $plist[] =  $item->price5 ;
         }
         $row->add(new Label('price', implode(', ', $plist)));
         $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0);
