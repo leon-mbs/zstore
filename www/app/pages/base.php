@@ -95,6 +95,9 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules, 'tecdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["tecdoc"] = false;
         }
+        if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["ppo"] = false;
+        }
 
 
         //скрыть  боковое  меню

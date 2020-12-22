@@ -341,7 +341,7 @@ class ReturnIssue extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(), 2);
+        return Customer::getList($sender->getText(),1);
     }
 
     public function OnAutoItem($sender) {

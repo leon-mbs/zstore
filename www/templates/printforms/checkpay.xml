@@ -9,13 +9,15 @@
         
         <UID>{{guid}}</UID>
         
-        <TIN>{{edrpou}}</TIN>
+        <TIN>{{tin}}</TIN>
 
+       {{#inn}}
         <IPN>{{inn}}</IPN>
+        {{/inn}}
 
         <ORGNM>{{firmname}}</ORGNM>
 
-        <POINTNM>{{branchname}}</POINTNM>
+        <POINTNM>{{pointname}}</POINTNM>
 
         <POINTADDR>{{address}}</POINTADDR>
 

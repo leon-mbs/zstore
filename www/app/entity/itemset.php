@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Клас-сущность комплект ТМЦ
+ * Класc-сущность комплект ТМЦ
  *
  * @table=item_set
  * @view=item_set_view

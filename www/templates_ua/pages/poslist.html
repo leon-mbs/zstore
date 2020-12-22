@@ -11,14 +11,14 @@
             <table class="table table-bordered   table-sm" style="width:400px">
                 <tr>
                     <th>Назва</th>
-                    <th>Філія</th>
+                          {{#usebranch}}<th>Філія</th>      {{/usebranch}}
 
 
                     <th></th>
                 </tr>
                 <tr zippy="poslist">
                     <td zippy="pos_name"></td>
-                    <td zippy="branch_name"></td>
+                          {{#usebranch}}<td zippy="branch_name"></td>      {{/usebranch}}
 
 
                     <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
@@ -37,12 +37,14 @@
                         <label for="editpos_name">Назва, номер</label>
                         <input required="required" class="form-control" zippy="editpos_name"/>
                     </div>
+                          {{#usebranch}}
                     <div class="form-group">
                         <label for="editbranch">Філія</label>
                         <select class="form-control" zippy="editbranch">
                             <option value="0">Не встановлено
                         </select>
-                    </div>
+                    </div>     
+                     {{/usebranch}}
 
 
                     <div class="form-group  ">
@@ -62,6 +64,10 @@
                         <select class="form-control" zippy="editmf">
                             <option value="0">Не вибрано</option>
                         </select>
+                    </div>
+                   <div class="form-group">
+                        <label for="editaddress"> Адреса</label>
+                        <input class="form-control" zippy="editaddress"/>
                     </div>
 
                     {{#ppo}}

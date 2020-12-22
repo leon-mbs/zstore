@@ -46,6 +46,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->add(new TextInput('editposinner'));
         $this->posdetail->add(new TextInput('editfisc'));
         $this->posdetail->add(new TextInput('editfiscalnumber'));
+        $this->posdetail->add(new TextInput('editaddress'));
         $this->posdetail->add(new TextArea('editcomment'));
 
         $this->posdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -84,8 +85,9 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editstore->setValue($this->_pos->store);
         $this->posdetail->editmf->setValue($this->_pos->mf);
         $this->posdetail->editpricetype->setValue($this->_pos->pricetype);
-        $this->posdetail->editposinner->setText($this->_pos->posinner);
-        $this->posdetail->editfisc->setText($this->_pos->fisc);
+        $this->posdetail->editaddress->setText($this->_pos->address);
+        $this->posdetail->editposinner->setText($this->_pos->fiscallocnumber);
+        $this->posdetail->editfisc->setText($this->_pos->fiscalnumber);
         $this->posdetail->editfiscalnumber->setText($this->_pos->fiscdocnumber);
         $this->posdetail->editusefisc->setChecked($this->_pos->usefisc);
 
@@ -117,8 +119,9 @@ class PosList extends \App\Pages\Base
 
         $this->_pos->pricetype = $this->posdetail->editpricetype->getValue();
 
-        $this->_pos->posinner = $this->posdetail->editposinner->getText();
-        $this->_pos->fisc = $this->posdetail->editfisc->getText();
+        $this->_pos->address = $this->posdetail->editaddress->getText();
+        $this->_pos->fiscallocnumber = $this->posdetail->editposinner->getText();
+        $this->_pos->fiscalnumber = $this->posdetail->editfisc->getText();
         $this->_pos->fiscdocnumber = $this->posdetail->editfiscalnumber->getText();
         $this->_pos->usefisc = $this->posdetail->editusefisc->isChecked() ? 1 : 0;
 

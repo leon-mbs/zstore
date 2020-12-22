@@ -37,9 +37,9 @@
     {{#ppo}}
     <div class="row">
         <div class="col-12 col-md-10 col-lg-8 col-xl-7">
-            <a zippy="openshift">Открыть смену</a> 
-            &nbsp; <a zippy="zform">Отправить Z-форму</a>
-            &nbsp; <a zippy="closeshift">Закрыть смену</a>
+            <a zippy="openshift"><i class="fa fa-bullhorn"> Открыть смену</a> 
+            
+            &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"> Закрыть смену</a>
             <br><br>
         </div>
     </div>
@@ -54,8 +54,8 @@
             </div>
             {{/usescanner}}
 
-            <input type="button" value="< Отмена" zippy="cancel1" class="btn  btn-outline-info">
-            &nbsp;&nbsp;<a class="btn btn-info  " zippy="addrow">Добавить товар</a>
+            
+            <a class="btn btn-info  " zippy="addrow">Добавить товар</a>
             &nbsp;&nbsp;<a class="btn btn-info  " zippy="addser">Добавить услугу</a>
             &nbsp;&nbsp;<input type="submit" value="Перейти к оплате >" zippy="next2" class="btn  btn-info">
 
@@ -320,8 +320,6 @@
                 <label for="editphone">Телефон</label>
                 <input class="form-control" type="text" zippy="editphone"/>
             </div>
-
-
             <div class="form-group">
                 <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
                 <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-light ">
@@ -329,7 +327,56 @@
         </div>
     </div>
 </form>
-
+ 
+ <!--
+<form zippy="zform">
+    <h3>&nbsp;Закрытие  смены </h3>
+    <div class="row">
+        <div class="col-12 col-md-4 col-xl-3">
+            <div class="form-group row">
+                <label for="zformqnt" class="col-5 col-form-label">Кол. документов</label>
+                <div class="col-4">
+                  <input pattern="[0-9]+" class="form-control" type="text" zippy="zformqnt"/>
+               </div>
+            </div>
+           <div class="form-group row">
+                <label for="zformnal" class="col-5 col-form-label">Наличные</label>
+                <div class="col-4">
+                  <input pattern="[0-9\.]+" class="form-control" type="text" zippy="zformnal"/>
+               </div>
+            </div>
+           <div class="form-group row">
+                <label for="zformbnal" class="col-5 col-form-label">Банковская карта</label>
+                <div class="col-4">
+                  <input pattern="[0-9\.]+" class="form-control" type="text" zippy="zformbnal"/>
+               </div>
+            </div>
+           <div class="form-group row">
+                <label for="zformcredit" class="col-5 col-form-label">В кредит</label>
+                <div class="col-4">
+                  <input pattern="[0-9\.]+" class="form-control" type="text" zippy="zformcredit"/>
+               </div>
+            </div>
+           <div class="form-group row">
+                <label for="zformprepaid" class="col-5 col-form-label">Предоплата</label>
+                <div class="col-4">
+                  <input pattern="[0-9\.]+" class="form-control" type="text" zippy="zformprepaid"/>
+               </div>
+            </div>
+           <div class="form-group row">
+                <label for="zformtotal" class="col-5 col-form-label">Всего</label>
+                <div class="col-4">
+                  <input pattern="[0-9\.]+" class="form-control" type="text" zippy="zformtotal"/>
+               </div>
+            </div>
+             <div class="form-group">
+                <input zippy="savezform" type="submit" value="Закрыть" class="btn btn-outline-primary">
+                <input type="button" zippy="cancelzform" value="Отменить" class="btn btn-light ">
+            </div>
+        </div>
+    </div>
+</form>
+ -->
 
 <script>
     $(document).ready(function () {
