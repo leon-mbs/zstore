@@ -14,7 +14,7 @@
     </tr>
     <tr>
 
-        <td colspan="2"> {{firmname}}</td>
+        <td colspan="2"> {{firm_name}}</td>
     </tr>
     <tr>
 

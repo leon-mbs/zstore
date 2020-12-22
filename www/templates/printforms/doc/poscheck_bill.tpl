@@ -6,13 +6,14 @@
     <tr>
         <td colspan="3">Фиск. номер {{fiscalnumber}}</td>
     </tr>
-    {{/fiscalnumber}}    <tr>
+    {{/fiscalnumber}}  
+    <tr>
 
         <td colspan="3">от {{time}}</td>
     </tr>
     <tr>
 
-        <td colspan="2"> {{firmname}}</td>
+        <td colspan="2"> {{firm_name}}</td>
     </tr>
     <tr>
 
