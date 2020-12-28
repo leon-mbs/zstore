@@ -40,12 +40,12 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new TextInput('editmf_name'));
         $this->mfdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
-        $this->mfdetail->add(new CheckBox('editbeznal'))->onChange($this,'onBeznal');
+        $this->mfdetail->add(new CheckBox('editbeznal'))->onChange($this, 'onBeznal');
         $this->mfdetail->add(new TextInput('editbtran'));
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new TextInput('editbank'));
         $this->mfdetail->add(new TextInput('editbankacc'));
-        
+
         $this->mfdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -109,10 +109,10 @@ class MFList extends \App\Pages\Base
         }
 
         $this->_mf->mf_name = $this->mfdetail->editmf_name->getText();
-        if(strlen($this->_mf->mf_name)==0) {
+        if (strlen($this->_mf->mf_name) == 0) {
             $this->setError('entername');
             return;
-        }        
+        }
         $this->_mf->btran = $this->mfdetail->editbtran->getText();
         $this->_mf->bank = $this->mfdetail->editbank->getText();
         $this->_mf->bankacc = $this->mfdetail->editbankacc->getText();
@@ -122,7 +122,7 @@ class MFList extends \App\Pages\Base
             $this->setError("entername");
             return;
         }
-        $this->_mf->beznal = $this->mfdetail->editbeznal->isChecked()?1:0;
+        $this->_mf->beznal = $this->mfdetail->editbeznal->isChecked() ? 1 : 0;
         $this->_mf->branch_id = $this->mfdetail->editbranch->getValue();
         //  if ($this->_tvars['usebranch'] == true && $this->_mf->branch_id == 0) {
         //      $this->setError('Не выбран  филиал');
@@ -139,12 +139,12 @@ class MFList extends \App\Pages\Base
         $this->mftable->setVisible(true);
         $this->mfdetail->setVisible(false);
     }
-    
+
     public function onBeznal($sender) {
-         $b = $sender->isChecked();         
-         $this->mfdetail->editbank->setVisible($b);
-         $this->mfdetail->editbankacc->setVisible($b);
-         $this->mfdetail->editbtran->setVisible($b);
+        $b = $sender->isChecked();
+        $this->mfdetail->editbank->setVisible($b);
+        $this->mfdetail->editbankacc->setVisible($b);
+        $this->mfdetail->editbtran->setVisible($b);
     }
 
 }

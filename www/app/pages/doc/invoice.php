@@ -128,7 +128,7 @@ class Invoice extends \App\Pages\Base
             $this->_prevcust = $this->_doc->customer_id;
 
             $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
-            $this->docform->firm->setValue($this->_doc->headerdata['firm_id']);
+            $this->docform->firm->setValue($this->_doc->firm_id);
 
             $this->OnChangeCustomer($this->docform->customer);
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
@@ -316,7 +316,7 @@ class Invoice extends \App\Pages\Base
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
+        $this->_doc->firm_id = $this->docform->firm->getValue();
 
 
         $this->_doc->packDetails('detaildata', $this->_tovarlist);

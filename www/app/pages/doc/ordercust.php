@@ -57,7 +57,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
-        $this->editdetail->add(new TextInput('editcustcode')) ;
+        $this->editdetail->add(new TextInput('editcustcode'));
         $this->editdetail->add(new TextInput('editprice'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');

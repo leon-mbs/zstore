@@ -283,15 +283,15 @@ class OutcomeItem extends \App\Pages\Base
                         $indoc->branch_id = 0;
                         if ($this->_tvars["usebranch"]) {
                             $st = Store::load($tostore);
-                            
+
                             $indoc->branch_id = $st->branch_id;
                         }
                         $indoc->document_number = $indoc->nextNumber($indoc->branch_id);
                         $indoc->user_id = 0;
-                        $indoc->notes = H::l('incomebasedon', $this->_doc->document_number,$this->_doc->headerdata['storename']);
-                        if($this->_doc->branch_id>0){
-                           $br = \App\Entity\Branch::load($this->_doc->branch_id); 
-                           $indoc->notes = H::l('incomebasedonbr', $this->_doc->document_number,$this->_doc->headerdata['storename'],$br->branch_name);    
+                        $indoc->notes = H::l('incomebasedon', $this->_doc->document_number, $this->_doc->headerdata['storename']);
+                        if ($this->_doc->branch_id > 0) {
+                            $br = \App\Entity\Branch::load($this->_doc->branch_id);
+                            $indoc->notes = H::l('incomebasedonbr', $this->_doc->document_number, $this->_doc->headerdata['storename'], $br->branch_name);
                         }
 
                         $items = array();

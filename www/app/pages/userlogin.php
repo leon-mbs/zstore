@@ -18,7 +18,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
         $common = System::getOptions('common');
 
-        
+
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userpassword'));

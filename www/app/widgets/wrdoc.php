@@ -52,7 +52,7 @@ class WRDoc extends \Zippy\Html\PageFragment
 
     public function doclistOnRow($row) {
         $item = $row->getDataItem();
- 
+
         $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->document_date))));
         $row->add(new Label('wrd_type', $item->meta_desc));
         $row->add(new Label('wrd_amount', Helper::fa($item->amount)));

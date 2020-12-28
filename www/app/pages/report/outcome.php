@@ -29,22 +29,22 @@ class Outcome extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
         $hlist = \App\Entity\Customer::getHoldList();
-      //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
+        //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
 
-        
-        $types=array();
-        $types[1]= H::l('repbyitems')  ;
-        $types[6]= H::l('repbybyersitem')  ;
-        $types[2]= H::l('repbybyers')  ;
-        $types[3]= H::l('repbydates')  ;
-        $types[4]= H::l('repbyservices')  ;
-        $types[7]= H::l('repbybyersservices')  ;
-        $types[5]= H::l('repbycat')  ;    
-        if(count($hlist)>0){
-           $types[8]= H::l('repbyhold')  ;    
+
+        $types = array();
+        $types[1] = H::l('repbyitems');
+        $types[6] = H::l('repbybyersitem');
+        $types[2] = H::l('repbybyers');
+        $types[3] = H::l('repbydates');
+        $types[4] = H::l('repbyservices');
+        $types[7] = H::l('repbybyersservices');
+        $types[5] = H::l('repbycat');
+        if (count($hlist) > 0) {
+            $types[8] = H::l('repbyhold');
         }
-        
-        
+
+
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
 
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
@@ -63,8 +63,8 @@ class Outcome extends \App\Pages\Base
         $this->filter->cat->setValue(0);
 
         $this->filter->cat->setVisible($type == 5);
-        $this->filter->cust->setVisible($type == 6 || $type==7);
-      //  $this->filter->holding->setVisible($type == 7);
+        $this->filter->cust->setVisible($type == 6 || $type == 7);
+        //  $this->filter->holding->setVisible($type == 7);
     }
 
     public function OnAutoItem($sender) {
@@ -112,7 +112,7 @@ class Outcome extends \App\Pages\Base
         $type = $this->filter->type->getValue();
         $user = $this->filter->emp->getValue();
         $cat_id = $this->filter->cat->getValue();
-     //   $hold_id = $this->filter->holding->getValue();
+        //   $hold_id = $this->filter->holding->getValue();
         $cust_id = $this->filter->cust->getKey();
 
         $from = $this->filter->from->getDate();
@@ -124,10 +124,10 @@ class Outcome extends \App\Pages\Base
         if ($user > 0) {
             $u = " and d.user_id={$user} ";
         }
-        $br="";
+        $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
-        if(strlen($brids)>0) {
-           $br = " and d.branch_id in ({$brids}) "; 
+        if (strlen($brids) > 0) {
+            $br = " and d.branch_id in ({$brids}) ";
         }
 
         $detail = array();
@@ -137,24 +137,23 @@ class Outcome extends \App\Pages\Base
             $cat = " and cat_id=" . $cat_id;
         }
         $cust = "";
-        
-        
-        
-        if (($type == 6 || $type==7 ) && $cust_id > 0) {
+
+
+        if (($type == 6 || $type == 7) && $cust_id > 0) {
             $cust = " and d.customer_id=" . $cust_id;
             $c = \App\Entity\Customer::load($cust_id);
-            if($c->isholding==1) {
-                 $list = \App\Entity\Customer::find("detail   like '%<holding>{$cust_id}</holding>%' ");
-                 $ids= array_keys($list) ;
-                 if(count($ids) >0) {
-                     $cust = " and d.customer_id  in(". implode(',',$ids) ."  )" ;         
-                 }
-                 
-                 
-            }            
+            if ($c->isholding == 1) {
+                $list = \App\Entity\Customer::find("detail   like '%<holding>{$cust_id}</holding>%' ");
+                $ids = array_keys($list);
+                if (count($ids) > 0) {
+                    $cust = " and d.customer_id  in(" . implode(',', $ids) . "  )";
+                }
+
+
+            }
         }
 
-        $sql='';
+        $sql = '';
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {    //по товарам
             $sql = "
           select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
@@ -234,23 +233,22 @@ class Outcome extends \App\Pages\Base
                order  by i.`cat_name`
         ";
         }
-         
-    
-       if ($type == 8) {  //по холдингам
-            $sql='';
+
+
+        if ($type == 8) {  //по холдингам
+            $sql = '';
             $rs = array();
-            
-            $hlist = \App\Entity\Customer::getHoldList() ;
-            foreach($hlist as $id=>$name)   {
-                 $custlist='0';
-                 $list = \App\Entity\Customer::find("detail   like '%<holding>{$id}</holding>%' ");
-                 $ids= array_keys($list) ;
-                 if(count($ids) >0) {
-                     $custlist =   implode(',',$ids)  ;         
-                 }
-                             
-                
-                
+
+            $hlist = \App\Entity\Customer::getHoldList();
+            foreach ($hlist as $id => $name) {
+                $custlist = '0';
+                $list = \App\Entity\Customer::find("detail   like '%<holding>{$id}</holding>%' ");
+                $ids = array_keys($list);
+                if (count($ids) > 0) {
+                    $custlist = implode(',', $ids);
+                }
+
+
                 $sqlc = "
                   select    coalesce(sum(0-e.`amount`) ,0) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
                   from `entrylist_view`  e
@@ -263,27 +261,26 @@ class Outcome extends \App\Pages\Base
                       AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})
                 ";
-            
-                 $row = $conn->GetRow($sqlc);
-                 if($row['summa']<>0) {
-                    $row['itemname']  = $name ;
-                    $rs[]=$row;
-                 }
-                 
-                 
-                 
+
+                $row = $conn->GetRow($sqlc);
+                if ($row['summa'] <> 0) {
+                    $row['itemname'] = $name;
+                    $rs[] = $row;
+                }
+
+
             }
-        
+
         }
-         
- 
+
+
         $totsum = 0;
         $totnavar = 0;
-        
-        if(strlen($sql) > 0) { 
+
+        if (strlen($sql) > 0) {
             $rs = $conn->Execute($sql);
         }
-        
+
         foreach ($rs as $row) {
             $detail[] = array(
                 "code"      => $row['item_code'],
@@ -315,7 +312,7 @@ class Outcome extends \App\Pages\Base
             $header['_type4'] = false;
             $header['_type5'] = false;
         }
-        if ($type == 2 ||  $type==8) {
+        if ($type == 2 || $type == 8) {
             $header['_type1'] = false;
             $header['_type2'] = true;
             $header['_type3'] = false;
@@ -329,7 +326,7 @@ class Outcome extends \App\Pages\Base
             $header['_type4'] = false;
             $header['_type5'] = false;
         }
-        if ($type == 4  || $type == 7) {
+        if ($type == 4 || $type == 7) {
             $header['_type1'] = false;
             $header['_type2'] = false;
             $header['_type3'] = false;

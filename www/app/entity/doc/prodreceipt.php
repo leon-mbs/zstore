@@ -81,7 +81,7 @@ class ProdReceipt extends Document
         $list = array();
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
         $list['ProdIssue'] = self::getDesc('ProdIssue'); //для  формирования  комплектубщих  по  готовой продукции
-        
+
 
         return $list;
     }

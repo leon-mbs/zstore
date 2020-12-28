@@ -201,10 +201,8 @@ class GroupList extends \App\Pages\Base
                 $this->setError('squareimage');
                 return;
             }
-            
-            
-    
-            
+
+
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($filedata['tmp_name']);
 

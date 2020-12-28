@@ -73,7 +73,7 @@ class PayList extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-       return Customer::getList($sender->getText()); 
+        return Customer::getList($sender->getText());
     }
 
     public function doclistOnRow($row) {
@@ -117,9 +117,8 @@ class PayList extends \App\Pages\Base
         $id = $sender->pl_id->getText();
 
 
-
         Pay::cancelPayment($id, $sender->notes->getText());
-        
+
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;

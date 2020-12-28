@@ -121,7 +121,7 @@ class OrderList extends \App\Pages\Base
         }
         if ($sender->id == "btask") {
             $task = count($this->_doc->getChildren('Task')) > 0;
-            
+
             if ($task) {
 
                 $this->setWarn('task_exists');
@@ -183,18 +183,18 @@ class OrderList extends \App\Pages\Base
         //новый
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->btask->setVisible(false);
- 
+
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
-            
+
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
-            $this->statuspan->statusform->btask->setVisible(true);            
- 
+            $this->statuspan->statusform->btask->setVisible(true);
+
         }
 
         if ($ttn) {

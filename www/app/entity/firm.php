@@ -21,7 +21,7 @@ class Firm extends \ZCL\DB\Entity
 
         $this->address = (string)($xml->address[0]);
         $this->inn = (string)($xml->inn[0]);
-        
+
         $this->phone = (string)($xml->phone[0]);
 
         $this->logo = (string)($xml->logo[0]);
@@ -43,7 +43,7 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<stamp><![CDATA[{$this->stamp}]]></stamp>";
         $this->details .= "<sign><![CDATA[{$this->sign}]]></sign>";
         $this->details .= "<inn>{$this->inn}</inn>";
-        
+
         $this->details .= "<phone>{$this->phone}</phone>";
         $this->details .= "<pposerver>{$this->pposerver}</pposerver>";
         $this->details .= "<pposerverport>{$this->pposerverport}</pposerverport>";

@@ -206,7 +206,7 @@ class ContractList extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText() );
+        return Customer::getList($sender->getText());
     }
 
     public function showOnClick($sender) {

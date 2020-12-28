@@ -78,24 +78,23 @@ class PayBalance extends \App\Pages\Base
         $detail = array();
         $detail2 = array();
 
-       // $cstr = \App\Acl::getMFBranchConstraint();
-       // if (strlen($cstr) > 0) {
-       //     $cstr = "  mf_id in ({$cstr}) and ";
-      //  }
+        // $cstr = \App\Acl::getMFBranchConstraint();
+        // if (strlen($cstr) > 0) {
+        //     $cstr = "  mf_id in ({$cstr}) and ";
+        //  }
 
-        
-        $brpay="";
-        $brst="";
+
+        $brpay = "";
+        $brst = "";
         $brids = \App\ACL::getBranchIDsConstraint();
-        if(strlen($brids)>0) {
-           $brst = " and   store_id in( select store_id from  stores where  branch_id in ({$brids})  ) "; 
-           
-           $brpay = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )"; 
+        if (strlen($brids) > 0) {
+            $brst = " and   store_id in( select store_id from  stores where  branch_id in ({$brids})  ) ";
+
+            $brpay = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
         }
-        
-        
-        
-        $pl =   Pay::getPayTypeList();
+
+
+        $pl = Pay::getPayTypeList();
 
         $conn = \ZDB\DB::getConnect();
 
@@ -155,7 +154,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   coalesce(sum(abs(amount)),0)  as am   FROM paylist 
              WHERE   
-              paytype  = ".Pay::PAY_BASE_OUTCOME  ."   {$brpay}
+              paytype  = " . Pay::PAY_BASE_OUTCOME . "   {$brpay}
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
              
@@ -163,19 +162,19 @@ class PayBalance extends \App\Pages\Base
         ";
 
         $OPOUT = $conn->GetOne($sql); // переменные расходы
-   
-         $sql = " 
+
+        $sql = " 
          SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM paylist 
              WHERE   
-              paytype  = ".Pay::PAY_BASE_INCOME ."   {$brpay}
+              paytype  = " . Pay::PAY_BASE_INCOME . "   {$brpay}
               AND paydate  >= " . $conn->DBDate($from) . "
               AND  paydate  <= " . $conn->DBDate($to) . "
              
                          
         ";
 
-        $OPIN =  $conn->GetOne($sql); // операционный доход
-   
+        $OPIN = $conn->GetOne($sql); // операционный доход
+
         $header['tu'] = H::fa($OPIN - $OPOUT);    //проход
         $header['tvc'] = H::fa($OPOUT);   //переменные затраты
         $header['OP'] = H::fa($tout - $OPOUT);  //операционные расходы

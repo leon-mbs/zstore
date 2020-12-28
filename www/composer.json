@@ -21,7 +21,7 @@
         "masterexploder/phpthumb" :"*",
         "lemmon/fetch" :"v0.3.0",
         "lis-dev/nova-poshta-api-2" :"0.1.6",
-       
+        "phpoffice/phpspreadsheet" :"^1.15.0",
        
         "automattic/woocommerce": "3.0.0",
         "symfony/polyfill-mbstring": "^1.10",

@@ -37,10 +37,10 @@ class ItemList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchkey'));
-        $catlist=array();
-        $catlist[-1]= H::l("withoutcat") ;
-        foreach(Category::findArray("cat_name", "", "cat_name") as $k=>$v){
-            $catlist[$k]= $v;   
+        $catlist = array();
+        $catlist[-1] = H::l("withoutcat");
+        foreach (Category::findArray("cat_name", "", "cat_name") as $k => $v) {
+            $catlist[$k] = $v;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
 
@@ -108,7 +108,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
-        $this->itemdetail->add(new DropDownChoice('edittype',Item::getTypes()));
+        $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -134,7 +134,7 @@ class ItemList extends \App\Pages\Base
     public function itemlistOnRow($row) {
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-  
+
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
@@ -142,19 +142,19 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('manufacturer', $item->manufacturer));
         $plist = array();
         if ($item->price1 > 0) {
-            $plist[] =  $item->price1 ;
+            $plist[] = $item->price1;
         }
         if ($item->price2 > 0) {
-            $plist[] =  $item->price2 ;
+            $plist[] = $item->price2;
         }
         if ($item->price3 > 0) {
-            $plist[] =  $item->price3 ;
+            $plist[] = $item->price3;
         }
         if ($item->price4 > 0) {
-            $plist[] =  $item->price4 ;
+            $plist[] = $item->price4;
         }
         if ($item->price5 > 0) {
-            $plist[] =  $item->price5 ;
+            $plist[] = $item->price5;
         }
         $row->add(new Label('price', implode(', ', $plist)));
         $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0);
@@ -169,7 +169,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        $row->set->setVisible($item->item_type ==Item::TYPE_PROD  || $item->item_type ==Item::TYPE_HALFPROD);
+        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD);
 
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
 
@@ -189,14 +189,14 @@ class ItemList extends \App\Pages\Base
 
         $item = $sender->owner->getDataItem();
 
-        
+
         if ($item->allowDelete()) {
-           Item::delete($item->item_id) ;
-        }  else {
-           $this->setWarn("delitemwarn") ;
-           $item->disabled=1;
-           $item->save();
-            
+            Item::delete($item->item_id);
+        } else {
+            $this->setWarn("delitemwarn");
+            $item->disabled = 1;
+            $item->save();
+
         }
 
 
@@ -281,7 +281,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $this->_item->itemname = $this->itemdetail->editname->getText();
-        if(strlen($this->_item->itemname)==0) {
+        if (strlen($this->_item->itemname) == 0) {
             $this->setError('entername');
             return;
         }
@@ -427,7 +427,7 @@ class ItemList extends \App\Pages\Base
         }
 
         $in .= ")";
-        return Item::findArray('itemname', "coalesce(item_type,0) <> 1 and coalesce(item_type,0) <>3 and   item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1",'itemname');
+        return Item::findArray('itemname', "coalesce(item_type,0) <> 1 and coalesce(item_type,0) <>3 and   item_id not in {$in} and (itemname like {$text} or item_code like {$text}) and disabled <> 1", 'itemname');
     }
 
     public function OnAddSet($sender) {
@@ -550,10 +550,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $showdis = $form->showdis->isChecked();
 
         if ($cat != 0) {
-            if($cat==-1) {
-                $where = $where . " and cat_id=0";    
-            }   else {
-               $where = $where . " and cat_id=" . $cat;
+            if ($cat == -1) {
+                $where = $where . " and cat_id=0";
+            } else {
+                $where = $where . " and cat_id=" . $cat;
             }
         }
         if ($showdis == true) {

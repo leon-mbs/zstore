@@ -83,7 +83,7 @@ class Order extends \App\Entity\Doc\Document
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
         $list['Invoice'] = self::getDesc('Invoice');
         $list['POSCheck'] = self::getDesc('POSCheck');
-        $list['Task'] = self::getDesc('Task') ;
+        $list['Task'] = self::getDesc('Task');
 
 
         return $list;
@@ -109,7 +109,7 @@ class Order extends \App\Entity\Doc\Document
             );
         }
 
-        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,

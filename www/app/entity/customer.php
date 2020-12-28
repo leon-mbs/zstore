@@ -37,7 +37,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<shopcust_id>{$this->shopcust_id}</shopcust_id>";
         $this->detail .= "<isholding>{$this->isholding}</isholding>";
         $this->detail .= "<holding>{$this->holding}</holding>";
-        
+
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
@@ -76,7 +76,6 @@ class Customer extends \ZCL\DB\Entity
         return "";
     }
 
- 
 
     protected function afterDelete() {
 
@@ -104,39 +103,39 @@ class Customer extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         return Customer::getFirst(' email = ' . $conn->qstr($email));
     }
- 
-   /**
-   * список  контрагентов  кроме  холдингов
-   * 
-   * @param mixed $search
-   * @param mixed $type
-   */
-    public static function getList($search='',$type=0) {
-         
+
+    /**
+     * список  контрагентов  кроме  холдингов
+     *
+     * @param mixed $search
+     * @param mixed $type
+     */
+    public static function getList($search = '', $type = 0) {
+
         $conn = \ZDB\DB::getConnect();
-        
+
         $where = "status=0 and detail not like '%<isholding>1</isholding>%' ";
-        if(strlen($search)>0) {
-           $search = $conn->qstr('%' . $search . '%');
-           $where .= " and  (customer_name like {$search}  or phone like {$search} ) ";   
+        if (strlen($search) > 0) {
+            $search = $conn->qstr('%' . $search . '%');
+            $where .= " and  (customer_name like {$search}  or phone like {$search} ) ";
         }
-        if($type>0) {
-           $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";   
+        if ($type > 0) {
+            $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";
         }
-    
-        return Customer::findArray("customer_name",$where,"customer_name");
+
+        return Customer::findArray("customer_name", $where, "customer_name");
     }
 
-    public static function getHoldList($type=0) {
-         
+    public static function getHoldList($type = 0) {
+
         $conn = \ZDB\DB::getConnect();
         $where = "status=0 and detail like '%<isholding>1</isholding>%' ";
-        if($type>0) {
-           $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";   
+        if ($type > 0) {
+            $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";
         }
-    
-        return Customer::findArray("customer_name",$where,"customer_name");
+
+        return Customer::findArray("customer_name", $where, "customer_name");
     }
 
-    
+
 }

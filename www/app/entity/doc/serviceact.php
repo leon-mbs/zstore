@@ -14,7 +14,7 @@ class ServiceAct extends Document
 {
 
     public function generateReport() {
-        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $i = 1;
 
@@ -87,7 +87,7 @@ class ServiceAct extends Document
 
         $common = \App\System::getOptions('common');
         $printer = \App\System::getOptions('printer');
-        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $wp = 'style="width:40mm"';
         if (strlen($printer['pwidth']) > 0) {
@@ -136,8 +136,8 @@ class ServiceAct extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['Task'] = self::getDesc('Task') ;
-        $list['ProdIssue'] = self::getDesc('ProdIssue') ;
+        $list['Task'] = self::getDesc('Task');
+        $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
 
         return $list;

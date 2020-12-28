@@ -50,6 +50,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
 
+        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -101,6 +102,15 @@ class ReturnIssue extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+
+                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+
+                    }
+                   if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
@@ -233,7 +243,7 @@ class ReturnIssue extends \App\Pages\Base
         }
 
 
-        $firm = H::getFirmData($this->_doc->headerdata["firm_id"], $this->branch_id);
+        $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
@@ -245,6 +255,55 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->total->getText();
         $this->_doc->payed = $this->docform->payed->getText();
         $isEdited = $this->_doc->document_id > 0;
+
+
+     $pos_id = $this->docform->pos->getValue();
+    
+        if($pos_id>0) {
+            $pos = \App\Entity\Pos::load($pos_id);
+
+            if ($this->_basedocid > 0) {
+               $basedoc = Document::load($this->_basedocid); 
+               $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"]; 
+            
+            }  
+            
+            if(strlen($this->_doc->headerdata["docnumberback"])==0)  {
+                $this->setError("ppo_returndoc");
+                return;
+            }
+
+            $this->_doc->headerdata["pos"] =$pos->pos_id; 
+            
+            $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc );
+            if($ret['success'] == false && $ret['docnumber']>0) { 
+                //повторяем для  нового номера
+                $pos->fiscdocnumber = $ret['docnumber'];
+                $pos->save();    
+                $ret =   \App\Modules\PPO\PPOHelper::checkback($this->_doc );
+             
+            }
+            if($ret['success'] == false ) {
+                $this->setError($ret['data']);
+                return;
+            } else {
+          
+                if($ret['docnumber'] >0) {
+                  $pos->fiscdocnumber = $ret['doclocnumber']+1;
+                  $pos->save();    
+                  $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'] ;  
+                }  else {
+                    $this->setError("ppo_noretnumber");
+                    return;    
+                  
+                } 
+                
+            }                    
+  
+ 
+      }
+ 
+
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -263,7 +322,8 @@ class ReturnIssue extends \App\Pages\Base
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
+     
+   
 
             $conn->CommitTrans();
             App::RedirectBack();
@@ -341,7 +401,7 @@ class ReturnIssue extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(),1);
+        return Customer::getList($sender->getText(), 1);
     }
 
     public function OnAutoItem($sender) {

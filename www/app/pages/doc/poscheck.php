@@ -223,6 +223,14 @@ class POSCheck extends \App\Pages\Base
                             $this->docform->payment->setValie(MoneyFund::PREPAID);// предоплата
                         }
                     }
+                    if ($basedoc->meta_name == 'Task') {
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                        $this->_serlist = $basedoc->unpackDetails('detaildata');
+
+                    }
 
 
                 }

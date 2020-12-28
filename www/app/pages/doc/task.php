@@ -15,6 +15,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -42,6 +43,8 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new TextInput('taskhours', "0"));
+
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new DropDownChoice('parea', Prodarea::findArray("pa_name", ""), 0));
 
@@ -80,6 +83,8 @@ class Task extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->taskhours->setText($this->_doc->headerdata['taskhours']);
+            $this->docform->customer->setKey($this->_doc->customer_id);
+            $this->docform->customer->setText($this->_doc->customer_name);
 
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -102,11 +107,11 @@ class Task extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     $this->_doc->customer_id = $basedoc->customer_id;
-                    
+
                     if ($basedoc->meta_name == 'ServiceAct') {
                         $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
                         $this->_servicelist = $basedoc->unpackDetails('detaildata');
-                        
+
                     }
                     if ($basedoc->meta_name == 'Order') {
                         $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
@@ -141,7 +146,7 @@ class Task extends \App\Pages\Base
         $row->add(new Label('service', $service->service_name));
 
 
-        $row->add(new Label('qty', $service->qty));
+        $row->add(new Label('quantity', $service->quantity));
 
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -165,7 +170,7 @@ class Task extends \App\Pages\Base
         $this->docform->setVisible(false);
 
 
-        $this->editdetail->editqty->setText($service->qty);
+        $this->editdetail->editqty->setText($service->quantity);
 
         $this->editdetail->editservice->setValue($service->service_id);
     }
@@ -189,9 +194,11 @@ class Task extends \App\Pages\Base
         $service = Service::load($id);
 
 
-        $service->qty = $this->editdetail->editqty->getText();
-
-
+        $service->quantity = $this->editdetail->editqty->getText();
+        $service->price = $service->cost;
+        if (strlen($service->price) == 0) {
+            $service->price = 0;
+        }
         $this->_servicelist[$service->service_id] = $service;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -289,19 +296,21 @@ class Task extends \App\Pages\Base
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
-
+        $this->_doc->customer_id = $this->docform->customer->getKey();
+        if ($this->_doc->customer_id > 0) {
+            $customer = \App\Entity\Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
+        }
 
         if ($this->checkForm() == false) {
             return;
         }
-
 
         $this->_doc->packDetails('detaildata', $this->_servicelist);
         $this->_doc->packDetails('eqlist', $this->_eqlist);
         $this->_doc->packDetails('emplist', $this->_emplist);
 
         $isEdited = $this->_doc->document_id > 0;
-
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -362,9 +371,7 @@ class Task extends \App\Pages\Base
             $this->setError("noenterpos");
         }
 
-
         return !$this->isError();
-
 
     }
 
@@ -372,5 +379,8 @@ class Task extends \App\Pages\Base
         App::RedirectBack();
     }
 
+    public function OnAutoCustomer($sender) {
+        return \App\Entity\Customer::getList($sender->getText(), 1);
+    }
 
 }

@@ -264,27 +264,24 @@ class GIList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-        $csv = "";
-
+        $header = array();
+        $data = array();
+        
+        $i=0;
         foreach ($list as $d) {
-            $csv .= H::fd($d->document_date) . ';';
-            $csv .= $d->document_number . ';';
-            $csv .= $d->headerdata['order'] . ';';
-            $csv .= $d->customer_name . ';';
-            $csv .= $d->amount . ';';
-            $csv .= str_replace(';', '', $d->notes) . ';';
-            $csv .= "\n";
+             $i++;
+             $data['A'.$i]  =  H::fd($d->document_date) ;
+             $data['B'.$i]  =  $d->document_number ;
+             $data['C'.$i]  =  $d->headerdata['order'] ;
+             $data['D'.$i]  =  $d->customer_name ;
+             $data['E'.$i]  =  $d->amount ;
+             $data['F'.$i]  =  $d->notes ;
+             
         }
-        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=selllist.csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+        
+        H::exportExcel($data,$header,'selllist.xlsx') ;       
+       
+ 
     }
 
 }

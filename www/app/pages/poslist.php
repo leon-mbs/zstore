@@ -36,17 +36,16 @@ class PosList extends \App\Pages\Base
 
         $this->add(new Form('posdetail'))->setVisible(false);
         $this->posdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
+        $this->posdetail->add(new DropDownChoice('editcomp', \App\Entity\Firm::getList(), 0));
 
         $this->posdetail->add(new TextInput('editpos_name'));
-        $this->posdetail->add(new DropDownChoice('editstore', \App\Entity\Store::getList(), H::getDefStore()));
-        $this->posdetail->add(new DropDownChoice('editmf', \App\Entity\MoneyFund::getList()));
-        $this->posdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList()));
 
         $this->posdetail->add(new CheckBox('editusefisc'));
         $this->posdetail->add(new TextInput('editposinner'));
         $this->posdetail->add(new TextInput('editfisc'));
         $this->posdetail->add(new TextInput('editfiscalnumber'));
         $this->posdetail->add(new TextInput('editaddress'));
+        $this->posdetail->add(new TextInput('editpointname'));
         $this->posdetail->add(new TextArea('editcomment'));
 
         $this->posdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -82,10 +81,9 @@ class PosList extends \App\Pages\Base
         $this->posdetail->setVisible(true);
         $this->posdetail->editpos_name->setText($this->_pos->pos_name);
         $this->posdetail->editbranch->setValue($this->_pos->branch_id);
-        $this->posdetail->editstore->setValue($this->_pos->store);
-        $this->posdetail->editmf->setValue($this->_pos->mf);
-        $this->posdetail->editpricetype->setValue($this->_pos->pricetype);
+        $this->posdetail->editcomp->setValue($this->_pos->firm_id);
         $this->posdetail->editaddress->setText($this->_pos->address);
+        $this->posdetail->editpointname->setText($this->_pos->pointname);
         $this->posdetail->editposinner->setText($this->_pos->fiscallocnumber);
         $this->posdetail->editfisc->setText($this->_pos->fiscalnumber);
         $this->posdetail->editfiscalnumber->setText($this->_pos->fiscdocnumber);
@@ -113,13 +111,11 @@ class PosList extends \App\Pages\Base
         $this->_pos->pos_name = $this->posdetail->editpos_name->getText();
 
         $this->_pos->branch_id = $this->posdetail->editbranch->getValue();
+        $this->_pos->firm_id = $this->posdetail->editcomp->getValue();
 
-        $this->_pos->store = $this->posdetail->editstore->getValue();
-        $this->_pos->mf = $this->posdetail->editmf->getValue();
-
-        $this->_pos->pricetype = $this->posdetail->editpricetype->getValue();
 
         $this->_pos->address = $this->posdetail->editaddress->getText();
+        $this->_pos->pointname = $this->posdetail->editpointname->getText();
         $this->_pos->fiscallocnumber = $this->posdetail->editposinner->getText();
         $this->_pos->fiscalnumber = $this->posdetail->editfisc->getText();
         $this->_pos->fiscdocnumber = $this->posdetail->editfiscalnumber->getText();
@@ -129,27 +125,16 @@ class PosList extends \App\Pages\Base
             $this->setError("entername");
             return;
         }
+        if ($this->_pos->firm_id == 0) {
+            $this->setError("noselfirm");
+            return;
+        }
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {
 
             $this->setError("selbranch");
             return;
         }
-        if ($this->_pos->mf == 0) {
 
-            $this->setError("selmf");
-            return;
-        }
-
-        if ($this->_pos->store == 0) {
-
-            $this->setError("noselstore");
-            return;
-        }
-
-        if ($this->_pos->pricetype == "0") {
-            $this->setError("noselpricetype");
-            return;
-        }
 
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id > 0) {
             $mf = \App\Entity\MoneyFund::load($this->_pos->mf);

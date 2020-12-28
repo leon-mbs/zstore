@@ -49,7 +49,7 @@
     <tr>
         <td>{{no}}</td>
         <td>{{service_name}}</td>
-        <td align="right">{{qty}}</td>
+        <td align="right">{{quantity}}</td>
         <td align="right">{{cost}}</td>
         <td align="right">{{hours}}</td>
 

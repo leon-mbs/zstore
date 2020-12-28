@@ -16,6 +16,16 @@
                 <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
 
             </div>
+                {{#ppo}}
+                 <div class="form-group  ">
+               <label for="pos">POS терминал</label>
+                <select class="form-control  " zippy="pos">
+                       <option value="0">Не  выбран</option>
+
+                </select>
+                  </div> 
+                {{/ppo}}            
+            
             <div class="form-group  ">
                 <label for="notes">Примечание </label>
 

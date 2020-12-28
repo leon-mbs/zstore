@@ -54,7 +54,7 @@ class Base extends \Zippy\Html\WebPage
 
         $options = System::getOptions('common');
 
-        
+
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
         $this->_tvars["useimages"] = $options['useimages'] == 1;

@@ -62,7 +62,7 @@ class ItemList extends \App\Pages\Base
     public function itemlistOnRow($row) {
         $item = $row->getDataItem();
         $store = $this->filter->searchstore->getValue();
-      
+
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('brand', $item->manufacturer));

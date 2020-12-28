@@ -32,6 +32,10 @@ class ARMPos extends \App\Pages\Base
     private $pos;
     private $_doc      = null;
 
+
+    private $_pt       = 0;
+    private $_store_id = 0;
+
     public function __construct() {
         parent::__construct();
 
@@ -42,20 +46,18 @@ class ARMPos extends \App\Pages\Base
 
         //обшие настройки
         $this->add(new Form('form1'));
-        $plist = \App\Entity\Pos::findArray('pos_name');
-        $cc = $_COOKIE['posterminal'] > 0 ? $_COOKIE['posterminal'] : 0;
-        if (System::getUser()->rolename != 'admins') {
-            $plist = \App\Entity\Pos::findArray('pos_name', 'pos_id=' . $cc);
-        }
-        $this->form1->add(new DropDownChoice('pos', $plist, $cc));
-        $this->form1->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), 0));
- 
+        $plist = \App\Entity\Pos::findArray('pos_name', '');
+
+        $this->form1->add(new DropDownChoice('pos', $plist, 0));
+        $this->form1->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
+        $this->form1->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), H::getDefPriceType()));
+
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
         $this->add(new Form('form2'))->setVisible(false);
 
         //  ввод товаров
-        
+
         $this->form2->add(new SubmitButton('next2'))->onClick($this, 'next2docOnClick');
         $this->form2->add(new TextInput('barcode'));
         $this->form2->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -68,12 +70,12 @@ class ARMPos extends \App\Pages\Base
         $this->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
         $this->form2->add(new ClickLink('openshift', $this, 'OnOpenShift'));
         $this->form2->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
-        
 
 
         //оплата
         $this->add(new Form('form3'))->setVisible(false);
-        $this->form3->add(new DropDownChoice('payment'))->onChange($this, 'OnPayment');
+        $this->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+
         $this->form3->add(new TextInput('document_number'));
 
         $this->form3->add(new Date('document_date'))->setDate(time());
@@ -131,23 +133,22 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->add(new TextInput('editphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
-  
-  /*
-        //Закрытие  смены
-        $this->add(new Form('zform'))->setVisible(false);
-        $this->zform->add(new TextInput('zformqnt'));
-        $this->zform->add(new TextInput('zformnal'));
-        $this->zform->add(new TextInput('zformbnal'));
-        $this->zform->add(new TextInput('zformcredit'));
-        $this->zform->add(new TextInput('zformprepaid'));
-        $this->zform->add(new TextInput('zformtotal'));
-        $this->zform->add(new Button('cancelzform'))->onClick($this, 'cancelzformOnClick');
-        $this->zform->add(new SubmitButton('savezform'))->onClick($this, 'savezformOnClick');
-  
-    */
+
+        /*
+              //Закрытие  смены
+              $this->add(new Form('zform'))->setVisible(false);
+              $this->zform->add(new TextInput('zformqnt'));
+              $this->zform->add(new TextInput('zformnal'));
+              $this->zform->add(new TextInput('zformbnal'));
+              $this->zform->add(new TextInput('zformcredit'));
+              $this->zform->add(new TextInput('zformprepaid'));
+              $this->zform->add(new TextInput('zformtotal'));
+              $this->zform->add(new Button('cancelzform'))->onClick($this, 'cancelzformOnClick');
+              $this->zform->add(new SubmitButton('savezform'))->onClick($this, 'savezformOnClick');
+
+          */
     }
 
- 
 
     public function cancel2docOnClick($sender) {
 
@@ -164,17 +165,23 @@ class ARMPos extends \App\Pages\Base
     public function next1docOnClick($sender) {
         $this->pos = \App\Entity\Pos::load($this->form1->pos->getValue());
 
+        $this->_store_id = $this->form1->store->getValue();
+        $this->_pt = $this->form1->pricetype->getValue();
 
         if ($this->pos == null) {
             $this->setError("noselterm");
             return;
         }
-        setcookie("posterminal", $this->pos->pos_id, time() + 60 * 60 * 24 * 30);
 
-        $mf = \App\Entity\MoneyFund::Load($this->pos->mf);
+        if ($this->_store_id == 0) {
+            $this->setError("noselstore");
+            return;
+        }
 
-        $this->form3->payment->setOptionList(array($mf->mf_id => $mf->mf_name, \App\Entity\MoneyFund::PREPAID => 'Была предоплата', \App\Entity\MoneyFund::CREDIT => 'В кредит'));
-        $this->form3->payment->setValue($mf->mf_id);
+        if (strlen($this->_pt) == 0) {
+            $this->setError("noselpricetype");
+            return;
+        }
 
         $this->form1->setVisible(false);
         $this->form2->setVisible(true);
@@ -631,13 +638,12 @@ class ARMPos extends \App\Pages\Base
 
         $this->_doc->headerdata['pos'] = $this->pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
-        $this->_doc->headerdata['store'] = $this->pos->store;
-        $this->_doc->headerdata['pricetype'] = $this->pos->pricetype;
-        //   $this->_doc->headerdata['pricetypename'] = $this->form1->pricetype->getValueName();
+        $this->_doc->headerdata['store'] = $this->_store_id;
+        $this->_doc->headerdata['pricetype'] = $this->_pt;
 
-        $this->_doc->headerdata['firm_id'] = $this->form1->firm->getValue();
+        $this->_doc->firm_id = $this->pos->firm_id;
 
-        $firm = H::getFirmData($this->_doc->headerdata["firm_id"], $this->branch_id);
+        $firm = H::getFirmData($this->_doc->firm_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
@@ -665,38 +671,37 @@ class ARMPos extends \App\Pages\Base
                 }
             }
 
-            if($this->pos->usefisc==1) {
-             
-                
-                $ret =  \App\Modules\PPO\PPOHelper::check($this->_doc);
-                if($ret['success'] == false && $ret['docnumber']>0) { 
+            if ($this->pos->usefisc == 1) {
+
+
+                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                if ($ret['success'] == false && $ret['docnumber'] > 0) {
                     //повторяем для  нового номера
                     $this->pos->fiscdocnumber = $ret['docnumber'];
-                    $this->pos->save();    
-                    $ret =   \App\Modules\PPO\PPOHelper::check($this->_doc);
-                 
+                    $this->pos->save();
+                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+
                 }
-                if($ret['success'] == false ) {
+                if ($ret['success'] == false) {
                     $this->setError($ret['data']);
                     return;
                 } else {
-                  //  $this->setSuccess("Выполнено") ;
-                    if($ret['docnumber'] >0) {
-                      $this->pos->fiscdocnumber = $ret['doclocnumber']+1;
-                      $this->pos->save();    
-                      $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'] ;
-                   }  else {
-                      $this->setError("ppo_noretnumber" );
-                      return;    
-                      
-                    } 
-                    
-                }                    
-                
-             }
-  
-            
-            
+                    //  $this->setSuccess("Выполнено") ;
+                    if ($ret['docnumber'] > 0) {
+                        $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                        $this->pos->save();
+                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    } else {
+                        $this->setError("ppo_noretnumber");
+                        return;
+
+                    }
+
+                }
+
+            }
+
+
             $this->_doc->save();
             $this->_doc->updateStatus(Document::STATE_NEW);
 
@@ -732,110 +737,117 @@ class ARMPos extends \App\Pages\Base
             $this->form3->exchange->setVisible(true);
         }
     }
-      
-     
-    public function OnOpenShift(){
-            $ret =    \App\Modules\PPO\PPOHelper::shift($this->form1->firm->getValue(),$this->pos->pos_id,true);    
-            if($ret['success'] == false && $ret['docnumber']>0) { 
-                //повторяем для  нового номера
-                $this->pos->fiscdocnumber = $ret['docnumber'];
-                $this->pos->save();    
-                $ret =    \App\Modules\PPO\PPOHelper::shift($this->form1->firm->getValue(), $this->pos->pos_id,true);    
-            
 
-            } 
-            if($ret['success'] == false ) {
-                $this->setError($ret['data']);
-                return  false;
-            } else {
-                $this->setSuccess("ppo_shiftopened") ;
-                if($ret['docnumber'] >0) {
-                   $this->pos->fiscdocnumber = $ret['doclocnumber']+1;
-                   $this->pos->save();    
-                   $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'] ;
-                    
-                }  else {
-                   $this->setError("ppo_noretnumber");
-                    return;                   
-                  
-                }
-                \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id) ;
-            } 
-    
-  
-        $this->pos->save();    
-        return  true;
-    }
 
-  
-    public  function OnCloseShift($sender){
-        $ret = $this->zform();
-        if($ret==true)$this->closeshift();;
-    }
- 
- 
-    public  function zform(){
-        $ret =    \App\Modules\PPO\PPOHelper::zform($this->form1->firm->getValue(),  $this->pos->pos_id );    
-        if(strpos($ret['data'],'ZRepAlreadyRegistered')) {
-            return  true;
-        }
-        if($ret['success'] == false && $ret['docnumber']>0) { 
+    public function OnOpenShift() {
+        $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
+        if ($ret['success'] == false && $ret['docnumber'] > 0) {
             //повторяем для  нового номера
             $this->pos->fiscdocnumber = $ret['docnumber'];
-            $this->pos->save();    
-            $ret =    \App\Modules\PPO\PPOHelper::zform($this->form1->firm->getValue(),  $this->pos->pos_id );    
-        
+            $this->pos->save();
+            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
 
-        } 
-        if($ret['success'] == false ) {
+
+        }
+        if ($ret['success'] == false) {
             $this->setError($ret['data']);
-            return  false;
+            return false;
         } else {
-           
-            if($ret['docnumber'] >0) {
-               $this->pos->fiscdocnumber = $ret['doclocnumber']+1;
-               $this->pos->save();    
-            }  else {
-                  $this->setError("ppo_noretnumber");
-                    return;                   
-               
-            }
-            
-        } 
-    
-     
-        return  true;
-    }
-  
-   
-    public  function  closeshift(){
-            $ret =    \App\Modules\PPO\PPOHelper::shift($this->form1->firm->getValue(), $this->pos->pos_id,false );    
-            if($ret['success'] == false && $ret['docnumber']>0) { 
-                //повторяем для  нового номера
-                $this->pos->fiscdocnumber = $ret['docnumber'];
-                $this->pos->save();    
-                $ret =    \App\Modules\PPO\PPOHelper::shift($this->form1->firm->getValue(), $this->pos->pos_id,false );    
-            
+            $this->setSuccess("ppo_shiftopened");
+            if ($ret['docnumber'] > 0) {
+                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $this->pos->save();
+                $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
 
-            } 
-            if($ret['success'] == false ) {
-                $this->setError($ret['data']);
-                return  false;
             } else {
-                $this->setSuccess("ppo_shiftclosed") ;
-                if($ret['docnumber'] >0) {
-                  $this->pos->fiscdocnumber = $ret['doclocnumber']+1;
-                   $this->pos->save();    
-                }  else {
-                   $this->setError("ppo_noretnumber");
-                    return;                   
-                   
-                }
-                \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id) ;
-            } 
- 
-     
-        return  true;
+                $this->setError("ppo_noretnumber");
+                return;
+
+            }
+            \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
+
+        }
+
+
+        $this->pos->save();
+        return true;
     }
-   
+
+
+    public function OnCloseShift($sender) {
+        $ret = $this->zform();
+        if ($ret == true) {
+            $this->closeshift();
+        };
+    }
+
+
+    public function zform() {
+
+        $stat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id);
+        $rstat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id, true);
+
+        $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+        if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
+            return true;
+        }
+        if ($ret['success'] == false && $ret['docnumber'] > 0) {
+            //повторяем для  нового номера
+            $this->pos->fiscdocnumber = $ret['docnumber'];
+            $this->pos->save();
+            $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+
+
+        }
+        if ($ret['success'] == false) {
+            $this->setError($ret['data']);
+            return false;
+        } else {
+
+            if ($ret['docnumber'] > 0) {
+                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $this->pos->save();
+            } else {
+                $this->setError("ppo_noretnumber");
+                return;
+
+            }
+
+        }
+
+
+        return true;
+    }
+
+
+    public function closeshift() {
+        $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
+        if ($ret['success'] == false && $ret['docnumber'] > 0) {
+            //повторяем для  нового номера
+            $this->pos->fiscdocnumber = $ret['docnumber'];
+            $this->pos->save();
+            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
+
+
+        }
+        if ($ret['success'] == false) {
+            $this->setError($ret['data']);
+            return false;
+        } else {
+            $this->setSuccess("ppo_shiftclosed");
+            if ($ret['docnumber'] > 0) {
+                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                $this->pos->save();
+            } else {
+                $this->setError("ppo_noretnumber");
+                return;
+
+            }
+            \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
+        }
+
+
+        return true;
+    }
+
 }

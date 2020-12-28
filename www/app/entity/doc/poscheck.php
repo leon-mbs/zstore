@@ -49,7 +49,7 @@ class POSCheck extends Document
 
         $common = \App\System::getOptions('common');
 
-        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
+        $firm = H::getFirmData($this->firm_id );
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -103,7 +103,7 @@ class POSCheck extends Document
         }
         $common = \App\System::getOptions('common');
 
-        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -114,7 +114,7 @@ class POSCheck extends Document
                         "phone"           => $firm["phone"],
                         "inn"             => $firm["inn"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
-                        "fiscalnumber"    => strlen($this->headerdata["fiscalnumber"])>0 ? $this->headerdata["fiscalnumber"] : false,
+                        "fiscalnumber"    => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "exchange"        => $this->headerdata["exchange"],
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
@@ -192,6 +192,7 @@ class POSCheck extends Document
     public function getRelationBased() {
         $list = array();
         $list['Warranty'] = self::getDesc('Warranty');
+        $list['ReturnIssue'] = self::getDesc('ReturnIssue');
 
         return $list;
     }

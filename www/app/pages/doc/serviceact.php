@@ -115,7 +115,7 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-            $this->docform->firm->setValue($this->_doc->headerdata['firm_id']);
+            $this->docform->firm->setValue($this->_doc->firm_id);
             $this->OnCustomerFirm(null);
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
@@ -127,6 +127,8 @@ class ServiceAct extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
 
                 if ($basedoc->meta_name == 'Task') {
+                    $this->docform->customer->setKey($basedoc->customer_id);
+                    $this->docform->customer->setText($basedoc->customer_name);
 
                     $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                     $this->_servicelist = $basedoc->unpackDetails('detaildata');
@@ -215,7 +217,6 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editservice->setValue(0);
         $this->editdetail->editdesc->setText('');
 
-
         $this->editdetail->editprice->setText("0");
     }
 
@@ -240,11 +241,10 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata['device'] = $this->docform->device->getText();
         $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
-        if ($this->_doc->headerdata['firm_id'] > 0) {
+        $this->_doc->firm_id = $this->docform->firm->getValue();
+        if ($this->_doc->firm_id > 0) {
             $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
-
 
         $this->calcTotal();
 
@@ -265,7 +265,6 @@ class ServiceAct extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-
 
         $this->_doc->packDetails('detaildata', $this->_servicelist);
 
@@ -347,7 +346,6 @@ class ServiceAct extends \App\Pages\Base
             }
         }
 
-
         $this->docform->paydisc->setText($disc);
         $this->docform->editpaydisc->setText($disc);
     }
@@ -358,7 +356,6 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->paydisc->setVisible(true);
 
         $b = $sender->getValue();
-
 
         if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);

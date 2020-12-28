@@ -12,6 +12,11 @@ use App\Helper as H;
  */
 class Task extends Document
 {
+    protected function init() {
+        parent::init();
+        $this->tasktype = 0;//0 - услуги,1- производство
+
+    }
 
     public function generateReport() {
 
@@ -20,12 +25,17 @@ class Task extends Document
         $detail = array();
 
         foreach ($this->unpackDetails('detaildata') as $ser) {
-            if($ser->cost=="") $ser->cost=0;
-            if($ser->hours=="") $ser->hours=0;
+            if ($ser->cost == "") {
+                $ser->cost = 0;
+            }
+            if ($ser->hours == "") {
+                $ser->hours = 0;
+            }
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
-                              "cost"         => H::fa($ser->cost * $ser->qty),
-                              "qty"          => $ser->qty,
+                              "quantity"     => H::fqty($ser->quantity),
+                              "cost"         => H::fa($ser->cost * $ser->quantity),
+
                               "hours"        => $ser->hours * $ser->qty
             );
         }
@@ -52,7 +62,7 @@ class Task extends Document
                         "document_number" => $this->document_number,
                         "notes"           => $this->notes,
                         "baseddoc"        => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
-                        "cust"        => strlen($this->customer_name) > 0 ? $this->customer_name : false,
+                        "cust"            => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "_detail"         => $detail,
                         "_detail2"        => $detail2,
                         "iseq"            => count($detail2) > 0,
@@ -88,7 +98,8 @@ class Task extends Document
         $list = array();
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
-   //     $list['ServiceAct'] = self::getDesc('ServiceAct');
+        $list['ServiceAct'] = self::getDesc('ServiceAct');
+        $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
     }

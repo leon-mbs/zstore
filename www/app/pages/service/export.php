@@ -16,7 +16,11 @@ use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
-
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\{Font, Border, Alignment};
+ 
 class Export extends \App\Pages\Base
 {
     public $_docs = array();
@@ -26,7 +30,74 @@ class Export extends \App\Pages\Base
         if (false == \App\ACL::checkShowSer('Export')) {
             return;
         }
-
+   /*
+$spreadsheet = new Spreadsheet();
+//Получаем текущий активный лист
+$sheet = $spreadsheet->getActiveSheet();
+// Записываем в ячейку A1 данные
+$sheet->setCellValue('A1', 'Тест');
+$sheet->getStyle('A1')->applyFromArray([
+    'font' => [
+      'name' => 'Arial',
+      'bold' => true,
+      'italic' => false,
+      'underline' => Font::UNDERLINE_DOUBLE,
+      'strikethrough' => false,
+      'color' => [
+          'rgb' => '808080'
+        ]
+    ],
+    'borders' => [
+        'allBorders' => [
+            'borderStyle' => Border::BORDER_THIN,
+            'color' => [
+                'rgb' => '808080'
+            ]
+        ],
+    ],
+    'alignment' => [
+        'horizontal' => Alignment::HORIZONTAL_CENTER,
+        'vertical' => Alignment::VERTICAL_CENTER,
+        'wrapText' => true,
+    ]
+]);
+$writer = new Xlsx($spreadsheet);
+//Сохраняем файл в текущей папке, в которой выполняется скрипт.
+//Чтобы указать другую папку для сохранения. 
+//Прописываем полный путь до папки и указываем имя файла
+ 
+ 
+   
+   
+ 
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="test.xlsx"');
+        $writer->save('php://output');   
+   
+    
+ $sNewFile = 'c:/Users/leonm/Downloads/items_2020_12_28.csv';
+ 
+ $oSpreadsheet = IOFactory::load($sNewFile); // Вариант и для xls и xlsX
+ 
+ 
+ $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+ 
+ for ($iRow = 1; $iRow <= $oCells->getHighestRow(); $iRow++)
+ {
+ 
+   for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++)
+   {
+     $oCell = $oCells->get($iCol.$iRow);
+     if($oCell)
+     {
+       echo $oCell->getValue() . '<br />';
+     }
+   }
+   echo  '<hr />';
+ }           
+        
+     */
+        
         $form = $this->add(new Form("iform"));
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
