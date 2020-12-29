@@ -270,18 +270,32 @@ class ItemList extends \App\Pages\Base
     public function oncsv($sender) {
         $store = $this->filter->searchstore->getValue();
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
-        $csv = "";
-
+    
+         
+        $header = array();
+        $data = array();
+        
+        $header['A1']  = "Наименование";
+        $header['B1']  = "Артикул";
+        $header['C1']  = "Штрих-код";
+        $header['D1']  = "Ед.";
+        $header['E1']  = "Категория";
+        $header['F1']  = "Кол.";
+        $header['G1']  = "Цена";
+        
+        
+        $i=1;
         foreach ($list as $item) {
-
-            $csv .= $item->itemname . ';';
-            $csv .= $item->item_code . ';';
-
-            $csv .= $item->msr . ';';
-            $csv .= $item->cat_name . ';';
-            $qty = $item->getQuantity($store);
-
-            $csv .= H::fqty($qty) . ';';
+             $i++;
+             $data['A'.$i]  =  $item->itemname;
+             $data['B'.$i]  =  $item->item_code ;
+             $data['C'.$i]  =  $item->bar_code ;
+             $data['D'.$i]  =  $item->msr ;
+             $data['E'.$i]  =  $item->cat_name ;
+             $qty = $item->getQuantity($store);          
+             $data['F'.$i]  =  H::fqty($qty)  ;     
+             
+             
             $plist = array();
             if ($item->price1 > 0) {
                 $plist[] = $item->getPrice('price1', $store);
@@ -297,23 +311,14 @@ class ItemList extends \App\Pages\Base
             }
             if ($item->price5 > 0) {
                 $plist[] = $item->getPrice('price5', $store);
-            }
-
-
-            $csv .= implode(' ', $plist) . ';';
-
-            $csv .= "\n";
+            }             
+            $data['G'.$i]  =  implode(' ', $plist)   ;      
+             
+                     
         }
-        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=stockslist.csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+        
+        H::exportExcel($data,$header,'stocklist.xlsx') ;        
+  
     }
 
 }

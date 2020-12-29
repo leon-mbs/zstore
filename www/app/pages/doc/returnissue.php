@@ -257,9 +257,9 @@ class ReturnIssue extends \App\Pages\Base
         $isEdited = $this->_doc->document_id > 0;
 
 
-     $pos_id = $this->docform->pos->getValue();
+        $pos_id = $this->docform->pos->getValue();
     
-        if($pos_id>0) {
+        if($pos_id>0 && $sender->id == 'execdoc') {
             $pos = \App\Entity\Pos::load($pos_id);
 
             if ($this->_basedocid > 0) {

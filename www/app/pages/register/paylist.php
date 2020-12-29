@@ -136,32 +136,36 @@ class PayList extends \App\Pages\Base
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1);
 
-        $csv = "Дата;Счет;Приход;Расход;Документ;Создал;Контрагент;Примечание;";
-        $csv .= "\n\n";
-
+        
+        $header = array();
+        $data = array();
+  
+        $header['A1']  = "Дата";
+        $header['B1']  = "Счет";
+        $header['C1']  = "Приход";
+        $header['D1']  = "Расход";
+        $header['E1']  = "Документ";  
+        $header['F1']  = "Создал";  
+        $header['G1']  = "Контрагент";  
+        $header['H1']  = "Примечание";  
+        
+        $i=1;
         foreach ($list as $doc) {
-
-            $csv .= H::fd(strtotime($doc->paydate)) . ';';
-            $csv .= $doc->mf_name . ';';
-            $csv .= ($doc->amount > 0 ? $doc->amount : "") . ';';
-            $csv .= ($doc->amount < 0 ? 0 - $doc->amount : "") . ';';
-            $csv .= $doc->document_number . ';';
-            $csv .= $doc->username . ';';
-            $csv .= $doc->customer_name . ';';
-            $csv .= str_replace(';', '', $doc->notes) . ';';
-            $csv .= "\n";
+             $i++;
+             $data['A'.$i]  =  H::fd(strtotime($doc->paydate));
+             $data['B'.$i]  =  $doc->mf_name ;
+             $data['C'.$i]  =  ($doc->amount > 0 ? H::fa($doc->amount) : "") ;
+             $data['D'.$i]  =  ($doc->amount < 0 ? H::fa(0 - $doc->amount) : "") ;
+             $data['E'.$i]  =  $doc->document_number ;
+             $data['F'.$i]  =  $doc->username ;
+             $data['G'.$i]  =  $doc->customer_name ;
+             $data['H'.$i]  =  $doc->notes ;
+             
         }
-        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=baylist.csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+        
+        H::exportExcel($data,$header,'paylist.xlsx') ;            
     }
+     
 
 }
 
