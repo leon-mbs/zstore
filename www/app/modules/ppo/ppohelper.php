@@ -290,7 +290,7 @@ class PPOHelper
             $amount = $amount + $stat['amount1'];
             $n++;
         }
-        if ($row['amount2'] > 0) {
+        if ($stat['amount2'] > 0) {
             $header['pays'][] = array(
                 'formname' => H::l('ppo_credit'),
                 'formcode' => 2,

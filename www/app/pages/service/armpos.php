@@ -715,6 +715,9 @@ class ARMPos extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
+        $this->form3->customer->setKey(0);   
+        $this->form3->customer->setText('');   
+        $this->form3->payment->setValue(H::getDefMF());   
         $this->form3->setVisible(false);
         $this->form4->setVisible(true);
 
@@ -725,17 +728,23 @@ class ARMPos extends \App\Pages\Base
 
     public function OnPayment($sender) {
         $b = $sender->getValue();
+        $this->form3->payed->setVisible(true);
+        $this->form3->payamount->setVisible(true);
+        $this->form3->paydisc->setVisible(true);
+        $this->form3->exchange->setVisible(true);        
+        
         if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->form3->payed->setVisible(false);
             $this->form3->payamount->setVisible(false);
             $this->form3->paydisc->setVisible(false);
             $this->form3->exchange->setVisible(false);
-        } else {
-            $this->form3->payed->setVisible(true);
-            $this->form3->payamount->setVisible(true);
-            $this->form3->paydisc->setVisible(true);
-            $this->form3->exchange->setVisible(true);
-        }
+        }  
+        if ($b == \App\Entity\MoneyFund::CREDIT) {
+            $this->form3->payed->setVisible(false);
+            //$this->form3->payamount->setVisible(false);
+            $this->form3->paydisc->setVisible(false);
+            $this->form3->exchange->setVisible(false);
+        }  
     }
 
 
