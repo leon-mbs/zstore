@@ -307,45 +307,46 @@ class PayCustList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $csv = "";
+       
+        $header = array();
+        $data = array();
+        
+        $i=0;
+       
         if ($sender->id == 'csv') {
             $list = $this->clist->custlist->getDataSource()->getItems(-1, -1, 'customer_name');
 
-
-            foreach ($list as $c) {
-
-                $csv .= $c->customer_name . ';';
-                $csv .= $c->phone . ';';
-
-                $csv .= H::fa($c->fl == -1 ? $c->sam : "") . ';';
-                $csv .= H::fa($c->fl == 1 ? $c->sam : "") . ';';
-
-                $csv .= "\n";
-            }
+        foreach ($list as $c) {
+             $i++;
+             $data['A'.$i]  =  $c->customer_name ;
+             $data['B'.$i]  =  $c->phone ;
+             $data['C'.$i]  =  H::fa($c->fl == -1 ? $c->sam : "") ;
+             $data['D'.$i]  =  H::fa($c->fl == 1 ? $c->sam : "") ;
+       
+             
+        }
+    
+            
+            
+    
         }
         if ($sender->id == 'csv2') {
             $list = $this->plist->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 
-
             foreach ($list as $d) {
-                $csv .= H::fd($d->document_date) . ';';
-                $csv .= $d->document_number . ';';
-
-                $csv .= H::fa($d->amount) . ';';
-                $csv .= str_replace(';', '', $d->notes) . ';';
-                $csv .= "\n";
+                 $i++;
+                 $data['A'.$i]  =  H::fd($d->document_date)  ;
+                 $data['B'.$i]  =  $d->document_number;
+                 $data['C'.$i]  =   H::fa($d->amount);
+                 $data['D'.$i]  =  $d->notes ;
+           
+                 
             }
+M
         }
-
-        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=baylist.csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+            
+        H::exportExcel($data,$header,'baylist.xlsx') ;   
+   
     }
 
 }

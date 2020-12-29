@@ -356,29 +356,26 @@ class TaskList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->tasktab->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
-        $csv = "";
-
+      
+        
+        $header = array();
+        $data = array();
+        
+        $i=0;
         foreach ($list as $task) {
-            $csv .= $task->document_number . ',';
-
-            $csv .= str_replace(',', '', $task->notes) . ';';
-            $csv .= H::fdt($task->document_date) . ';';
-            $csv .= $task->headerdata['taskhours'] . ';';
-            $csv .= Document::getStateName($task->state) . ';';
-            $csv .= $task->amount . ';';
-
-            $csv .= "\n";
+             $i++;
+             $data['A'.$i]  =  $task->document_number ;
+             $data['B'.$i]  =  $task->notes ;
+             $data['C'.$i]  =  H::fdt($task->document_date) ;
+             $data['D'.$i]  =  $task->headerdata['taskhours']  ;
+             $data['E'.$i]  =  Document::getStateName($task->state) ;
+             $data['F'.$i]  =  $task->notes ;
+             
         }
-        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=taskslist.csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+        
+        H::exportExcel($data,$header,'taskslist.xlsx') ;        
+      
+ 
     }
 
 }

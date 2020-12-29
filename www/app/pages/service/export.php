@@ -16,10 +16,7 @@ use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\{Font, Border, Alignment};
+ 
  
 class Export extends \App\Pages\Base
 {
@@ -30,81 +27,14 @@ class Export extends \App\Pages\Base
         if (false == \App\ACL::checkShowSer('Export')) {
             return;
         }
-   /*
-$spreadsheet = new Spreadsheet();
-//Получаем текущий активный лист
-$sheet = $spreadsheet->getActiveSheet();
-// Записываем в ячейку A1 данные
-$sheet->setCellValue('A1', 'Тест');
-$sheet->getStyle('A1')->applyFromArray([
-    'font' => [
-      'name' => 'Arial',
-      'bold' => true,
-      'italic' => false,
-      'underline' => Font::UNDERLINE_DOUBLE,
-      'strikethrough' => false,
-      'color' => [
-          'rgb' => '808080'
-        ]
-    ],
-    'borders' => [
-        'allBorders' => [
-            'borderStyle' => Border::BORDER_THIN,
-            'color' => [
-                'rgb' => '808080'
-            ]
-        ],
-    ],
-    'alignment' => [
-        'horizontal' => Alignment::HORIZONTAL_CENTER,
-        'vertical' => Alignment::VERTICAL_CENTER,
-        'wrapText' => true,
-    ]
-]);
-$writer = new Xlsx($spreadsheet);
-//Сохраняем файл в текущей папке, в которой выполняется скрипт.
-//Чтобы указать другую папку для сохранения. 
-//Прописываем полный путь до папки и указываем имя файла
- 
- 
-   
-   
- 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="test.xlsx"');
-        $writer->save('php://output');   
    
     
- $sNewFile = 'c:/Users/leonm/Downloads/items_2020_12_28.csv';
- 
- $oSpreadsheet = IOFactory::load($sNewFile); // Вариант и для xls и xlsX
- 
- 
- $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
- 
- for ($iRow = 1; $iRow <= $oCells->getHighestRow(); $iRow++)
- {
- 
-   for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++)
-   {
-     $oCell = $oCells->get($iCol.$iRow);
-     if($oCell)
-     {
-       echo $oCell->getValue() . '<br />';
-     }
-   }
-   echo  '<hr />';
- }           
-        
-     */
         
         $form = $this->add(new Form("iform"));
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
-        $form->add(new DropDownChoice("encode", array(1 => 'UTF8', 2 => 'win1251'), 0));
         $form->add(new DropDownChoice("price", Item::getPriceTypeList()));
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
-        $form->add(new TextInput("sep", ';'));
 
         $form->onSubmit($this, "onExport");
 
@@ -113,16 +43,14 @@ $writer = new Xlsx($spreadsheet);
         $form = $this->add(new Form("cform"));
 
         $form->add(new DropDownChoice("ctype", array(), 0));
-        $form->add(new DropDownChoice("cencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
-        $form->add(new TextInput("csep", ';'));
+ 
 
         $form->onSubmit($this, "onCExport");
 
         $form = $this->add(new Form("dform"));
 
         $form->add(new DropDownChoice("dtype", array('GoodsReceipt' => Document::getDesc('GoodsReceipt'), 'GoodsIssue' => Document::getDesc('GoodsIssue')), 'GoodsReceipt'));
-        $form->add(new DropDownChoice("dencode", array(1 => 'UTF8', 2 => 'win1251'), 0));
-        $form->add(new TextInput("dsep", ';'));
+ 
         $form->add(new Date('dfrom', time() - (7 * 24 * 3600)));
         $form->add(new Date('dto', time() + (1 * 24 * 3600)));
 
@@ -142,18 +70,8 @@ $writer = new Xlsx($spreadsheet);
 
     public function onCExport($sender) {
         $t = $this->cform->ctype->getValue();
-        $encode = $this->cform->cencode->getValue();
-
-        $sep = $this->cform->csep->getText();
-
-        if ($encode == 0) {
-            $this->setError('noselencode');
-            return;
-        }
-
-        $csv = "Наименование{$sep}Телефон{$sep}Email{$sep}Город{$sep}Адрес{$sep}";
-
-        $csv .= "\n\n";
+ 
+     
 
         $sql = "  status=" . Customer::STATUS_ACTUAL;
         if ($t > 0) {
@@ -161,82 +79,90 @@ $writer = new Xlsx($spreadsheet);
             $sql .= " and detail like '%<type>{$t}</type>%'    ";
         }
         $list = Customer::find($sql, "customer_name asc");
+       
+         $header = array();
+        $data = array();
+        
+        $header['A1']  = "Наименование";
+        $header['B1']  = "Телефон";
+        $header['C1']  = "Email";
+        $header['D1']  = "Город";
+        $header['E1']  = "Адрес";
+     
+        
+        
+        $i=1;
         foreach ($list as $item) {
-
-            $csv .= $item->customer_name . $sep;
-            $csv .= $item->phone . $sep;
-            $csv .= $item->email . $sep;
-            $csv .= $item->city . $sep;
-            $csv .= $item->address . $sep;
-
-            $csv .= "\n";
+             $i++;
+             $data['A'.$i]  =  $item->customer_name;
+             $data['B'.$i]  =  $item->phone ;
+             $data['C'.$i]  =  $item->email ;
+             $data['D'.$i]  =  $item->city ;
+             $data['E'.$i]  =  $item->address ;
+                 
+             
+                     
         }
-        if ($encode == 2) {
-            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-        }
-
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=customers_" . date('Y_m_d', time()) . ".csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+        
+        H::exportExcel($data,$header,'customers_' . date('Y_m_d', time()) .'.xlsx') ;        
+       
+ 
     }
 
     public function onExport($sender) {
         $t = $this->iform->itype->getValue();
         $store = $this->iform->store->getValue();
         $pt = $this->iform->price->getValue();
-        $encode = $this->iform->encode->getValue();
-
-        $sep = $this->iform->sep->getText();
-
-        if ($encode == 0) {
-            $this->setError('noselencode');
-            return;
-        }
-
-
-        $csv = "Наименование{$sep}Ед.{$sep}Группа{$sep}Бренд{$sep}Артикул{$sep}Штрих код{$sep}Цена{$sep}";
-        if ($t == 1) {
-            $csv = "Наименование{$sep}Ед.{$sep}Группа{$sep}Бренд{$sep}Артикул{$sep}Штрих код{$sep}Кол{$sep}Цена{$sep}";
-        }
-        $csv .= "\n\n";
-
+ 
         $sql = "disabled <> 1 ";
 
         $list = Item::find($sql, "itemname asc");
-
+ 
+        
+        $header = array();
+        $data = array();
+        
+        $header['A1']  = "Наименование";
+        $header['B1']  = "Ед.";
+        $header['C1']  = "Группа";
+        $header['D1']  = "Бренд";
+        $header['E1']  = "Артикул";
+        $header['F1']  = "Штрих код";
+        $header['G1']  = "Цена";
+        if ($t == 1) $header['H1']  = "Кол.";
+     
+        
+        
+        $i=1;
         foreach ($list as $item) {
-            $price = H::fa($item->getPrice($pt));
-
-            $csv .= $item->itemname . $sep;
-            $csv .= $item->msr . $sep;
-            $csv .= $item->cat_name . $sep;
-            $csv .= $item->manufacturer . $sep;
-            $csv .= $item->item_code . $sep;
-            $csv .= $item->bar_code . $sep;
+             $i++;
+             $data['A'.$i]  =  $item->itemname;
+             $data['B'.$i]  =  $item->msr ;
+             $data['C'.$i]  =  $item->cat_name ;
+             $data['D'.$i]  =  $item->manufacturer ;
+             $data['E'.$i]  =  $item->item_code ;
+             $data['F'.$i]  =  $item->bar_code ;
+             $price = H::fa($item->getPrice($pt));             
+             $data['G'.$i]  =  H::fa($price) ;
+             
             if ($t == 1) {
                 $qty = H::fqty($item->getQuantity($store));
-                $csv .= $qty . $sep;
+                $data['H'.$i]  = H::fqty($qty) ;   
             }
-            $csv .= "\n";
+                 
+             
+                     
         }
-        if ($encode == 2) {
-            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-        }
+        
+        H::exportExcel($data,$header,'items_' . date('Y_m_d', time()) .'.xlsx') ;  
+ 
+ 
+ 
 
+      
 
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=items_" . date('Y_m_d', time()) . ".csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
-
+     
+  
 
     }
 
@@ -263,50 +189,38 @@ $writer = new Xlsx($spreadsheet);
     }
 
     public function onDExport($sender) {
-        $encode = $this->dform->dencode->getValue();
-
-        $sep = $this->dform->dsep->getText();
-
-        if ($encode == 0) {
-            $this->setError('noselencode');
-            return;
-        }
-        $csv = "";
-
+ 
+         $header = array();
+        $data = array();
+   
+        
+        
+        $i=0;
         foreach ($this->_docs as $doc) {
-            if ($doc->ch == false) {
-                continue;
-            }
-
-            $csv .= $doc->document_number . $sep;
-            $csv .= H::fd($doc->document_date) . $sep;
-            $csv .= $doc->customer_name . $sep;
-            $csv .= "\n";
-            $n = 1;
-
-            foreach ($doc->unpackDetails('detaildata') as $item) {
-                $csv .= $sep . $n . $sep;
-                $csv .= $item->itemname . $sep;
-                $csv .= $item->item_code . $sep;
-                $csv .= H::fqty($item->quantity) . $sep;
-                $csv .= H::fa($item->price) . $sep;
-                $csv .= "\n";
-            }
-            $csv .= "Итого: " . $sep;
-            $csv .= H::fa($doc->amount) . $sep . $sep . $sep . $sep . $sep;
-            $csv .= "\n";
-
+             $i++;
+             $data['A'.$i]  =  $doc->document_number;
+             $data['B'.$i]  =  H::fd($doc->document_date) ;
+             $data['C'.$i]  =  $doc->customer_name ;
+                $n=1;
+               foreach ($doc->unpackDetails('detaildata') as $item) {
+                    $i++;
+                    $data['B'.$i] = $n++ ;
+                    $data['C'.$i] = $item->itemname;
+                    $data['D'.$i] = $item->item_code   ;
+                    $data['E'.$i] = H::fqty($item->quantity)   ;
+                    $data['F'.$i] = H::fa($item->price)  ;
+                
+                }     
+           
+             $i++;    
+             $data['A'.$i]  =   H::l("total").": ";
+             $data['B'.$i]  =   H::fa($doc->amount);
+             $i++;        
         }
-        if ($encode == 2) {
-            $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-        }
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=exportdoc_" . date('Y_m_d', time()) . ".csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+        
+        H::exportExcel($data,$header,'exportdoc_' . date('Y_m_d', time()) .'.xlsx') ;  
+ 
+       
     }
 
 

@@ -6,7 +6,7 @@
         <h3>Імпорт номенклатури
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
-               data-placement="bottom" data-html="true" data-content="Імпорт ТМЦ з CSV файлу.
+               data-placement="bottom" data-html="true" data-content="Імпорт ТМЦ з Excel файлу.
                        Для вказівки розташування даних необхідно вказати номери відповідних стовпців. перевіряється на                                 унікальність артикул і найменування
                        Може бути виконаний імпорт номенклатури в довідник, або якщо вказано кількість оприбуткування на склад.                       У цьому випадку створюється документ Оприбуткування товару
                        <br>Також є можливість попереднього перегляду даних. "></i>
@@ -20,7 +20,7 @@
                     <label for="itype">Тип імпорту</label>
                     <select zippy="itype" class="form-control  ">
                         <option value="0">Тiльки довiдник</option>
-                        <option value="1">С оприходуванням на склад</option>
+                        <option value="1">З оприходуванням на склад</option>
                     </select>
                 </div>
                 <div class="form-group  ">
@@ -33,17 +33,7 @@
                     <select zippy="store" class="form-control  ">
                     </select>
                 </div>
-                <div class="form-group  ">
-                    <label for="sep">Роздільник</label>
-                    <input style="width:50px;" zippy="sep" class="form-control  "/>
-
-                </div>
-                <div class="form-group  ">
-                    <label for="encode">Кодування</label>
-                    <select zippy="encode" class="form-control  ">
-                        <option value="0">Не обрано</option>
-                    </select>
-                </div>
+           
                 <div class="form-group  ">
                     <label for="filename">Файл імпорту</label>
                     <input type="file" zippy="filename" class="form-control  "/>
@@ -64,7 +54,7 @@
             </div>
             <div class="col-6">
                 <div class="form-group  ">
-                    <label><b>Номери стовпців CSV файлу</b> </label>
+                    <label><b>Номери стовпців Excel файлу</b> </label>
 
                 </div>
                 <div class="form-group  ">
@@ -155,7 +145,7 @@
         <h3>Імпорт накладної
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
-               data-placement="bottom" data-html="true" data-content="Імпорт накладної з  CSV файлу.
+               data-placement="bottom" data-html="true" data-content="Імпорт накладної з  Excel файлу.
                         Для вказівки розташування даних необхідно вказати номери відповідних стовпців. перевіряється на    унікальність артикул і найменування
                         
                        В результатi створюется локусмент Прибуткова накладна який слiд  провести  пiсля вводу                         оплат и других атрибцутов
@@ -176,17 +166,7 @@
                     <select zippy="nstore" class="form-control  ">
                     </select>
                 </div>
-                <div class="form-group  ">
-                    <label for="nsep">Роздільник</label>
-                    <input style="width:50px;" zippy="nsep" class="form-control  "/>
-
-                </div>
-                <div class="form-group  ">
-                    <label for="nencode">Кодування</label>
-                    <select zippy="nencode" class="form-control  ">
-                        <option value="0">Не обрано</option>
-                    </select>
-                </div>
+            
                 <div class="form-group  ">
                     <label for="nfilename">Файл імпорту</label>
                     <input type="file" zippy="nfilename" class="form-control  "/>
@@ -206,7 +186,7 @@
             </div>
             <div class="col-6">
                 <div class="form-group  ">
-                    <label><b>Номери стовпців CSV файлу</b> </label>
+                    <label><b>Номери стовпців Excel файлу</b> </label>
 
                 </div>
                 <div class="form-group  ">
@@ -277,7 +257,7 @@
         <h3>Імпорт контрагентів
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
-               data-placement="bottom" data-html="true" data-content="Імпорт контрагентів з CSV файлу.
+               data-placement="bottom" data-html="true" data-content="Імпорт контрагентів з Excel файлу.
                        Для вказівки розташування даних необхідно вказати номери відповідних стовпців.
                        Перевіряється на унікальність телефон 
                        <br>Також є можливість попереднього перегляду даних. "></i>
@@ -300,17 +280,7 @@
                     </select>
                 </div>
 
-                <div class="form-group  ">
-                    <label for="csep">Роздільник</label>
-                    <input style="width:50px;" zippy="csep" class="form-control  "/>
-
-                </div>
-                <div class="form-group  ">
-                    <label for="cencode">Кодування</label>
-                    <select zippy="cencode" class="form-control  ">
-                        <option value="0">Не обрано</option>
-                    </select>
-                </div>
+               
                 <div class="form-group  ">
                     <label for="cfilename">Файл імпорту</label>
                     <input type="file" zippy="cfilename" class="form-control  "/>
@@ -333,7 +303,7 @@
             </div>
             <div class="col-6">
                 <div class="form-group  ">
-                    <label><b>Номери стовпців CSV файлу</b> </label>
+                    <label><b>Номери стовпців Excel файлу</b> </label>
 
                 </div>
                 <div class="form-group  ">
