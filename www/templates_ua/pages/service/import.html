@@ -122,6 +122,7 @@
                         <th class="text-right">Кіл.</th>
                         <th class="text-right">Обл. ціна</th>
                         <th class="text-right">Вiдп. ціна</th>
+                        
                     </tr>
                     {{#list}}
                     <tr>
@@ -133,6 +134,7 @@
                         <td class="text-right">{{colqty}}</td>
                         <td class="text-right">{{colinprice}}</td>
                         <td class="text-right">{{colprice}}</td>
+                        
                     </tr>
                     {{/list}}
                 </table>
@@ -203,6 +205,11 @@
                 <div class="form-group  ">
                     <label for="ncolmsr">Од. виміру</label>
                     <select style="width:100px;" zippy="ncolmsr" class="form-control  ">
+                    </select>
+                </div>
+        <div class="form-group  ">
+                    <label for="coldesc">Опис </label>
+                    <select style="width:100px;" zippy="coldesc" class="form-control  ">
                     </select>
                 </div>
 

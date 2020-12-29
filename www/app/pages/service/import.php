@@ -42,6 +42,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colinprice", $cols));
         $form->add(new DropDownChoice("colmsr", $cols));
         $form->add(new DropDownChoice("colbrand", $cols));
+        $form->add(new DropDownChoice("coldesc", $cols));
         $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
 
@@ -124,6 +125,7 @@ class Import extends \App\Pages\Base
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
         $colbrand = $this->iform->colbrand->getValue();
+        $coldesc = $this->iform->coldesc->getValue();
         if ($colname === '0') {
             $this->setError('noselcolname');
             return;
@@ -180,7 +182,8 @@ class Import extends \App\Pages\Base
                     'colmsr'     => $row[$colmsr  ],
                     'colinprice' => $row[$colinprice  ],
                     'colprice'   => $row[$colprice  ],
-                    'colbrand'   => $row[$colbrand  ]
+                    'colbrand'   => $row[$colbrand  ] ,
+                    'coldesc'   => $row[$coldesc  ]
                 );
             }
             return;
@@ -229,6 +232,9 @@ class Import extends \App\Pages\Base
                     }
                     if (strlen($row[$colbrand  ]) > 0) {
                         $item->manufacturer = trim($row[$colbrand  ]);
+                    }
+                    if (strlen(trim($row[$coldesc  ])) > 0) {
+                        $item->description = trim($row[$coldesc  ]);
                     }
                     if ($price > 0) {
                         $item->{$pt} = $price;
