@@ -21,13 +21,13 @@ use Zippy\Html\Panel;
 class PayCustList extends \App\Pages\Base
 {
 
-    private $_doc      = null;
-    private $_cust     = null;
-    public  $_custlist = array();
-    public  $_doclist  = array();
-    public  $_pays     = array();
-    public  $_totdebet      = 0;
-    public  $_totcredit     = 0;
+    private $_doc       = null;
+    private $_cust      = null;
+    public  $_custlist  = array();
+    public  $_doclist   = array();
+    public  $_pays      = array();
+    public  $_totdebet  = 0;
+    public  $_totcredit = 0;
 
     /**
      *
@@ -41,7 +41,7 @@ class PayCustList extends \App\Pages\Base
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('holdlist', \App\Entity\Customer::getHoldList(), 0));
- 
+
         $this->add(new Panel("clist"));
         $this->clist->add(new Label("totcredit"));
         $this->clist->add(new Label("totdebet"));
@@ -62,6 +62,7 @@ class PayCustList extends \App\Pages\Base
         $this->paypan->add(new Label("pname"));
         $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
         $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->paypan->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
         $this->paypan->payform->add(new TextInput('pamount'));
         $this->paypan->payform->add(new TextInput('pcomment'));
         $this->paypan->payform->add(new Date('pdate', time()));
@@ -76,26 +77,26 @@ class PayCustList extends \App\Pages\Base
         $this->updateCust();
     }
 
-    
+
     public function filterOnSubmit($sender) {
 
 
         $this->plist->setVisible(false);
-        $this->updateCust()  ;
+        $this->updateCust();
     }
-        
+
     public function updateCust() {
         $br = "";
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
             $br = " {$c} and ";
         }
-        $hold="";
+        $hold = "";
         $holding = $this->filter->holdlist->getValue();
-        if($holding>0){
-            $hold=" where  c.detail like '%<holding>{$holding}</holding>%'" ;   
+        if ($holding > 0) {
+            $hold = " where  c.detail like '%<holding>{$holding}</holding>%'";
         }
-        
+
         $sql = "select c.customer_name,c.phone, c.customer_id,sum(sam) as sam, fl from (
         select customer_id,   coalesce( (payamount - payed),0) as sam,  
         (case when
@@ -106,11 +107,11 @@ class PayCustList extends \App\Pages\Base
             ) t join customers c  on t.customer_id = c.customer_id    {$hold}
              group by c.customer_name,c.phone, c.customer_id, fl order by c.customer_name ";
         $this->_custlist = \App\DataItem::query($sql);
-        $this->_totcredit =0;
+        $this->_totcredit = 0;
         $this->_totdebet = 0;
-        
+
         $this->clist->custlist->Reload();
-        
+
         $this->clist->totdebet->setText(H::fa($this->_totdebet));
         $this->clist->totcredit->setText(H::fa($this->_totcredit));
     }
@@ -123,11 +124,11 @@ class PayCustList extends \App\Pages\Base
         $row->add(new Label('debet', H::fa($cust->fl == 1 ? H::fa($cust->sam) : "")));
 
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
-        
+
         $this->_totcredit += ($cust->fl == -1 ? $cust->sam : 0);
         $this->_totdebet += ($cust->fl == 1 ? $cust->sam : 0);
- 
-        
+
+
     }
 
     //список документов
@@ -237,6 +238,7 @@ class PayCustList extends \App\Pages\Base
 
     public function payOnSubmit($sender) {
         $form = $this->paypan->payform;
+        $pos_id = $form->pos->getValue();
         $amount = $form->pamount->getText();
         $pdate = $form->pdate->getDate();
         if ($amount == 0) {
@@ -249,14 +251,50 @@ class PayCustList extends \App\Pages\Base
             $this->setError('sumoverpay');
             return;
         }
-
+       
         $type = \App\Entity\Pay::PAY_BASE_INCOME;
         //закупки  и возвраты
         if ($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'InvoiceCust' || $this->_doc->meta_name == 'ReturnIssue') {
             $amount = 0 - $amount;
             $type = Pay::PAY_BASE_OUTCOME;
         }
+        
+        if($pos_id>0) {
+            $pos = \App\Entity\Pos::load($pos_id);
+ 
+            $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc,$pos_id,$amount, $form->payment->getValue());
+            if ($ret['success'] == false && $ret['docnumber'] > 0) {
+                    //повторяем для  нового номера
+                    $pos->fiscdocnumber = $ret['docnumber'];
+                    $pos->save();
+                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
 
+                }
+                if ($ret['success'] == false) {
+                    $this->setError($ret['data']);
+                    return;
+                } else {
+                    
+                    if ($ret['docnumber'] > 0) {
+                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                        $pos->save();
+                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    } else {
+                        $this->setError("ppo_noretnumber");
+                        return;
+
+                    }
+
+                }
+            
+        }
+        
+        
+        
+
+
+        
+        
         Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
 
@@ -269,45 +307,46 @@ class PayCustList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $csv = "";
+       
+        $header = array();
+        $data = array();
+        
+        $i=0;
+       
         if ($sender->id == 'csv') {
             $list = $this->clist->custlist->getDataSource()->getItems(-1, -1, 'customer_name');
 
-
-            foreach ($list as $c) {
-
-                $csv .= $c->customer_name . ';';
-                $csv .= $c->phone . ';';
-
-                $csv .= H::fa($c->fl == -1 ? $c->sam : "") . ';';
-                $csv .= H::fa($c->fl == 1 ? $c->sam : "") . ';';
-
-                $csv .= "\n";
-            }
+        foreach ($list as $c) {
+             $i++;
+             $data['A'.$i]  =  $c->customer_name ;
+             $data['B'.$i]  =  $c->phone ;
+             $data['C'.$i]  =  H::fa($c->fl == -1 ? $c->sam : "") ;
+             $data['D'.$i]  =  H::fa($c->fl == 1 ? $c->sam : "") ;
+       
+             
+        }
+    
+            
+            
+    
         }
         if ($sender->id == 'csv2') {
             $list = $this->plist->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 
-
             foreach ($list as $d) {
-                $csv .= H::fd($d->document_date) . ';';
-                $csv .= $d->document_number . ';';
-
-                $csv .= H::fa($d->amount) . ';';
-                $csv .= str_replace(';', '', $d->notes) . ';';
-                $csv .= "\n";
+                 $i++;
+                 $data['A'.$i]  =  H::fd($d->document_date)  ;
+                 $data['B'.$i]  =  $d->document_number;
+                 $data['C'.$i]  =   H::fa($d->amount);
+                 $data['D'.$i]  =  $d->notes ;
+           
+                 
             }
+M
         }
-
-        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=baylist.csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+            
+        H::exportExcel($data,$header,'baylist.xlsx') ;   
+   
     }
 
 }

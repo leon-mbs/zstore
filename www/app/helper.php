@@ -416,6 +416,20 @@ class Helper
     }
 
     /**
+     * Возвращает первый тип  цен  как  по  умолчанию
+     *
+     */
+    public static function getDefPriceType() {
+
+        $pt = \App\Entity\Item::getPriceTypeList();
+        if (count($pt) > 0) {
+            $keys = array_keys($pt);
+            return $keys[0];
+        }
+        return 0;
+    }
+
+    /**
      * Форматирование количества
      *
      * @param mixed $qty
@@ -604,7 +618,7 @@ class Helper
         }
         if (isset($labels[$label])) {
             $text = $labels[$label];
-            $text = sprintf($text, $p1, $p2,$p3);
+            $text = sprintf($text, $p1, $p2, $p3);
             return $text;
 
         } else {
@@ -642,20 +656,88 @@ class Helper
         $val = \App\System::getOptions("val");
         $list = array();
         if ($val['valuan'] > 0 && $val['valuan'] != 1) {
-            $list['valuan'] = 'Гривна';
+            $list['valuan'] = self::l('valuan');
         }
         if ($val['valusd'] > 0 && $val['valusd'] != 1) {
-            $list['valusd'] = 'Доллар';
+            $list['valusd'] = self::l('valusd');
         }
         if ($val['valeuro'] > 0 && $val['valeuro'] != 1) {
-            $list['valeuro'] = 'Евро';
+            $list['valeuro'] = self::l('valeuro');
         }
         if ($val['valrub'] > 0 && $val['valrub'] != 1) {
-            $list['valrub'] = 'Рубль';
+            $list['valrub'] = self::l('valrub');
         }
 
         return $list;
     }
 
+    
+    public  static function  exportExcel($data,$header,$filename){
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+         
+        $sheet = $spreadsheet->getActiveSheet();
+ 
+        
+            
+            foreach($header  as $k=>$v) {
+                
+                $sheet->setCellValue($k, $v);
+                $sheet->getStyle($k)->applyFromArray([
+                'font' => [
+                
+                  'bold' => true 
+                   
+                    ] 
+                ]);               
+                
+            }
+            
+           foreach($data  as $k=>$v) {
+   
+               
+                $sheet->setCellValue($k, $v);
+                             
+                
+            }
+            
+        
+ 
+       /*
+        $sheet->getStyle('A1')->applyFromArray([
+            'font' => [
+              'name' => 'Arial',
+              'bold' => true,
+              'italic' => false,
+              'underline' => Font::UNDERLINE_DOUBLE,
+              'strikethrough' => false,
+              'color' => [
+                  'rgb' => '808080'
+                ]
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => [
+                        'rgb' => '808080'
+                    ]
+                ],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ]
+        ]);
+        
+        */
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+ 
+   
+ 
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        $writer->save('php://output');          
+        die;
+    }
 
 }

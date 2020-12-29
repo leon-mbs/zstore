@@ -40,7 +40,7 @@ class CustomerList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
-        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL =>Helper::l("isactul")  , Customer::STATUS_DISABLED => Helper::l("notused"), Customer::STATUS_WAIT => Helper::l("potential")), Customer::STATUS_ACTUAL));
+        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL => Helper::l("isactul"), Customer::STATUS_DISABLED => Helper::l("notused"), Customer::STATUS_WAIT => Helper::l("potential")), Customer::STATUS_ACTUAL));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
 
 
@@ -122,7 +122,7 @@ class CustomerList extends \App\Pages\Base
         if ($type == 5) {
             $where .= " and detail like '%<isholding>1</isholding>%'    ";
         }
-        if ($holding >0 ) {
+        if ($holding > 0) {
             $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
         }
 
@@ -159,7 +159,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->setVisible(false);
         $this->customerdetail->setVisible(true);
         $this->contentview->setVisible(false);
-        $this->customerdetail->editholding->setOptionList( Customer::getHoldList());
+        $this->customerdetail->editholding->setOptionList(Customer::getHoldList());
 
         $this->customerdetail->editcustomername->setText($this->_customer->customer_name);
         $this->customerdetail->editphone->setText($this->_customer->phone);
@@ -226,11 +226,11 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->status = $this->customerdetail->editstatus->getValue();
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
-        if($this->_customer->isholding == 1 && $this->_customer->holding > 0) {
-            $this->setError('nothold');    
-            return ;
+        if ($this->_customer->isholding == 1 && $this->_customer->holding > 0) {
+            $this->setError('nothold');
+            return;
         }
-        
+
 
         $c = Customer::getByEmail($this->_customer->email);
         if ($c != null) {

@@ -36,7 +36,6 @@ class BranchList extends \App\Pages\Base
         $this->branchtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('branchdetail'))->setVisible(false);
         $this->branchdetail->add(new TextInput('editbranchname'));
-        $this->branchdetail->add(new TextInput('editshopname'));
 
         $this->branchdetail->add(new TextInput('editaddress'));
         $this->branchdetail->add(new TextInput('editphone'));
@@ -76,7 +75,7 @@ class BranchList extends \App\Pages\Base
         $this->branchtable->setVisible(false);
         $this->branchdetail->setVisible(true);
         $this->branchdetail->editbranchname->setText($this->_branch->branch_name);
-        $this->branchdetail->editshopname->setText($this->_branch->shop_name);
+
         $this->branchdetail->editphone->setText($this->_branch->phone);
 
         $this->branchdetail->editaddress->setText($this->_branch->address);
@@ -105,7 +104,7 @@ class BranchList extends \App\Pages\Base
 
         $this->_branch->address = $this->branchdetail->editaddress->getText();
         $this->_branch->phone = $this->branchdetail->editphone->getText();
-        $this->_branch->shop_name = $this->branchdetail->editshopname->getText();
+
         $this->_branch->comment = $this->branchdetail->editcomment->getText();
         $this->_branch->disabled = $this->branchdetail->editdisabled->isChecked() ? 1 : 0;
 

@@ -52,7 +52,7 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new DropDownChoice('edititem',Item::findArray('itemname','disabled<>1 and  item_type in(4,5)','itemname'))) ;
+        $this->editdetail->add(new DropDownChoice('edititem', Item::findArray('itemname', 'disabled<>1 and  item_type in(4,5)', 'itemname')));
         $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -85,6 +85,14 @@ class ProdReceipt extends \App\Pages\Base
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
+
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+
+                    }
+                }
+                if ($basedoc instanceof Document) {
+                    $this->_basedocid = $basedocid;
+                    if ($basedoc->meta_name == 'Order') {
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
@@ -137,7 +145,6 @@ class ProdReceipt extends \App\Pages\Base
 
 
         $this->editdetail->edititem->setValue($item->item_id);
-        
 
 
         $this->_rowid = $item->item_id;
@@ -168,12 +175,12 @@ class ProdReceipt extends \App\Pages\Base
 
 
         $id = $this->editdetail->edititem->getValue();
-        
-        if ($id == 0 ) {
+
+        if ($id == 0) {
             $this->setError("noselitem");
             return;
         }
-  
+
 
         $item = Item::load($id);
 
@@ -219,7 +226,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->calcTotal();
         //очищаем  форму
         $this->editdetail->edititem->setValue(0);
-        
+
 
         $this->editdetail->editquantity->setText("1");
 
@@ -338,7 +345,7 @@ class ProdReceipt extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-  
+
     public function OnChangeItem($sender) {
         $id = $sender->getValue();
         $item = \App\Entity\Item::load($id);

@@ -14,11 +14,11 @@ class Pay extends \ZCL\DB\Entity
 
     //типы платежей - затраты и доходы
     const PAY_BASE_INCOME = 1;     //операционные доходы  
-   
-    const PAY_OTHER_INCOME     = 2;   //прочие доходы
-    const PAY_FIN              = 3;   //доходы от  фин.  деятельности
-    
-  
+
+    const PAY_OTHER_INCOME = 2;   //прочие доходы
+    const PAY_FIN          = 3;   //доходы от  фин.  деятельности
+
+
     const PAY_BASE_OUTCOME     = 50;    //операционные расходы  
     const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
     const PAY_ADMIN_OUTCOME    = 52;    //административные  расходы
@@ -35,26 +35,29 @@ class Pay extends \ZCL\DB\Entity
         $this->paydate = time();
     }
 
- 
+
     protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail>";
- 
+
         $this->detail .= "</detail>";
 
         return true;
     }
 
     protected function afterLoad() {
-          $this->paydate = strtotime($this->paydate);
+        $this->paydate = strtotime($this->paydate);
         //распаковываем  данные из detail
-        if(strlen($this->detail)==0)  return;
-        
+        if (strlen($this->detail) == 0) {
+            return;
+        }
+
         $xml = simplexml_load_string($this->detail);
- 
+
         parent::afterLoad();
-    } 
+    }
+
     //возвращает список оплат
     public static function getPayments($document_id) {
         $list = Pay::find("document_id=" . $document_id, "pl_id");
@@ -94,23 +97,23 @@ class Pay extends \ZCL\DB\Entity
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
 
-        $mf =  \App\Entity\MoneyFund::load($mf_id);
-        if($mf instanceof \App\Entity\MoneyFund){
-           //банковский процент
-           if($mf->beznal==1 and $mf->btran>0) {
+        $mf = \App\Entity\MoneyFund::load($mf_id);
+        if ($mf instanceof \App\Entity\MoneyFund) {
+            //банковский процент
+            if ($mf->beznal == 1 and $mf->btran > 0) {
                 $pay = new \App\Entity\Pay();
                 $pay->mf_id = $mf_id;
                 $pay->document_id = $document_id;
-                $pay->amount = ($amount * $mf->btran/100);
+                $pay->amount = ($amount * $mf->btran / 100);
                 $pay->paytype = Pay::PAY_BASE_OUTCOME;
                 $pay->paydate = $paydate;
                 $pay->notes = \App\Helper::l('bankproc');
                 $pay->user_id = \App\System::getUser()->user_id;
-                $pay->save();             
-           }
+                $pay->save();
+            }
         }
-        
-        
+
+
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $document_id;
@@ -118,26 +121,26 @@ class Pay extends \ZCL\DB\Entity
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
     }
 
-    public static function  cancelPayment($id,$comment){
+    public static function cancelPayment($id, $comment) {
         $pl = Pay::load($id);
         if ($pl == null) {
             return;
         }
-    
+
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $pay->mf;
-        $pay->document_id = $pay->document_id;
-        $pay->amount = 0-$pay->amount;
-        $pay->paytype = $pay->paytype;
+
+        $pay->amount = 0 - $pay->amount;
+
         $pay->paydate = time();
         $pay->notes = $comment;
 
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
-          
+
     }
-    
-    
+
+
     /**
      * список  расходов  и доходов
      *
@@ -147,10 +150,10 @@ class Pay extends \ZCL\DB\Entity
         $list = array();
         if ($type != 2) {
             $list[PAY::PAY_BASE_INCOME] = \App\Helper::l('pt_inprod');
-            
+
             $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[PAY::PAY_FIN] = \App\Helper::l('pt_fin');
-            
+
         }
 
         if ($type != 1) {
@@ -163,7 +166,7 @@ class Pay extends \ZCL\DB\Entity
             $list[PAY::PAY_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
             $list[PAY::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
             $list[PAY::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
-           
+
         }
 
         return $list;

@@ -2,9 +2,11 @@
 
 namespace App\Modules\PPO;
 
-use App\Entity\Item;
+use App\Entity\Firm;
+use App\Entity\Pos;
+use App\Entity\Branch;
 use App\Helper as H;
-use App\Modules\PPO\Helper;
+use App\Modules\PPO\PPOHelper;
 use App\DataItem;
 use App\System;
 use Zippy\Binding\PropertyBinding as Prop;
@@ -38,18 +40,16 @@ class PPOList extends \App\Pages\Base
         }
         $modules = System::getOptions("modules");
 
-
         $this->add(new Panel('opan'));
 
         $this->opan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->opan->filter->add(new DropDownChoice('searchcomp', \App\Entity\Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
-
         $this->opan->add(new DataView('ppolist', new ArrayDataSource(new Prop($this, '_ppolist')), $this, 'ppoOnRow'));
 
         $this->opan->add(new Paginator('pagp', $this->opan->ppolist));
 
-        $this->opan->ppolist->setPageSize(H::getPG());
+        $this->opan->ppolist->setPageSize(2000); //H::getPG()
 
         $this->add(new Panel('shpan'))->setVisible(false);
         $this->shpan->add(new ClickLink('backo', $this, 'onBacko'));
@@ -59,6 +59,7 @@ class PPOList extends \App\Pages\Base
         $this->docpan->add(new ClickLink('backsh', $this, 'onBacksh'));
         $this->docpan->add(new Label('docshow'))->setVisible(false);;
         $this->docpan->add(new DataView('doclist', new ArrayDataSource(new Prop($this, '_doclist')), $this, 'docOnRow'));
+        $this->docpan->doclist->setSelectedClass('table-success');
 
     }
 
@@ -69,27 +70,26 @@ class PPOList extends \App\Pages\Base
         if ($cid == 0) {
             return;
         }
-        $res = Helper::send(json_encode(array('Command' => 'Objects')), 'cmd', $cid);
-        if($res['success']==false)  {
+        $firm = Firm::load($cid);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Objects')), 'cmd', $firm->pposerver, $firm->pposerverport, false);
+        if ($res['success'] == false) {
             $this->setError($res['data']);
             return;
         }
+        $this->_ppolist = array();
         $res = json_decode($res['data']);
         if (is_array($res->TaxObjects)) {
-            $this->_ppolist = array();
+
             foreach ($res->TaxObjects as $item) {
                 foreach ($item->TransactionsRegistrars as $tr) {
-                    $it = new   DataItem(array('org' => $item));
+                    $it = new DataItem(array('org' => $item));
                     $it->tr = $tr;
                     $this->_ppolist[] = $it;
                 }
             }
 
-
             $this->opan->ppolist->Reload();
         }
-
-
     }
 
     public function ppoOnRow($row) {
@@ -100,11 +100,13 @@ class PPOList extends \App\Pages\Base
         $row->add(new Label('name', $item->org->Name));
 
         $row->add(new Label('org', $item->org->OrgName));
+        $row->add(new Label('address', $item->org->Address));
         $row->add(new Label('tin', $item->org->Tin));
         $row->add(new Label('ipn', $item->org->Ipn));
         $row->add(new Label('fn', $item->tr->NumFiscal));
         $row->add(new Label('ln', $item->tr->NumLocal));
         $row->add(new Label('rn', $item->tr->Name));
+        
         $row->add(new ClickLink('objdet', $this, 'onObj'));
 
     }
@@ -112,13 +114,22 @@ class PPOList extends \App\Pages\Base
 
     public function onObj($sender) {
         $this->ppo = $sender->getOwner()->getDataItem();
+
+        $this->updateShifts();
+
+        $this->opan->setVisible(false);
+        $this->shpan->setVisible(true);
+    }
+
+    public function updateShifts() {
         $this->_shlist = array();
         $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c');
         $to = \Carbon\Carbon::now()->format('c');
         $cid = $this->opan->filter->searchcomp->getValue();
+        $firm = Firm::load($cid);
 
-        $res = Helper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $cid);
-        if($res['success']==false)  {
+        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $firm->pposerver, $firm->pposerverport, false);
+        if ($res['success'] == false) {
             $this->setError($res['data']);
             return;
         }
@@ -136,9 +147,6 @@ class PPOList extends \App\Pages\Base
         }
 
         $this->shpan->shlist->Reload();
-
-        $this->opan->setVisible(false);
-        $this->shpan->setVisible(true);
     }
 
     public function onBacko($sender) {
@@ -154,8 +162,8 @@ class PPOList extends \App\Pages\Base
         $row->add(new Label('openname', $item->openname));
         $row->add(new Label('closename', $item->closename));
         $row->add(new Label('opened', date('Y-m-d H:i', strtotime($item->opened))));
-        $cl = strtotime($item->closed) ;
-        $row->add(new Label('closed', $cl>0? date('Y-m-d H:i',$cl ):''));
+        $cl = strtotime($item->closed);
+        $row->add(new Label('closed', $cl > 0 ? date('Y-m-d H:i', $cl) : ''));
 
         $row->add(new ClickLink('shdet', $this, 'onSh'));
     }
@@ -165,9 +173,10 @@ class PPOList extends \App\Pages\Base
         $sh = $sender->getOwner()->getDataItem();
         $this->_doclist = array();
         $cid = $this->opan->filter->searchcomp->getValue();
+        $firm = Firm::load($cid);
 
-        $res = Helper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $cid);
-        if($res['success']==false)  {
+        $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $firm->pposerver, $firm->pposerverport, false);
+        if ($res['success'] == false) {
             $this->setError($res['data']);
             return;
         }
@@ -195,7 +204,8 @@ class PPOList extends \App\Pages\Base
         $this->shpan->setVisible(true);
         $this->docpan->setVisible(false);
         $this->docpan->docshow->setVisible(false);
-        
+        $this->updateShifts();
+
     }
 
 
@@ -214,15 +224,19 @@ class PPOList extends \App\Pages\Base
 
     public function onDoc($sender) {
         $doc = $sender->getOwner()->getDataItem();
-        $cid = $this->opan->filter->searchcomp->getValue();
+        $this->docpan->doclist->setSelectedRow($sender->getOwner());
+        $this->docpan->doclist->Reload();
 
-        $res = Helper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $cid, true);
-        if($res['success']==false)  {
+        $cid = $this->opan->filter->searchcomp->getValue();
+        $firm = Firm::load($cid);
+
+        $res = PPOHelper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $firm->pposerver, $firm->pposerverport, true);
+        if ($res['success'] == false) {
             $this->setError($res['data']);
             return;
         }
-   
-        
+
+
         // $res = mb_convert_encoding($res , "utf-8" ,"windows-1251" )  ;
         $this->docpan->docshow->setText($res['data']);
         $this->docpan->docshow->setVisible(true);

@@ -359,20 +359,20 @@ class Document extends \ZCL\DB\Entity
         $this->insertLog($state);
 
         $this->save();
-        
-        if($oldstate!=$state){
-            $this->onState($oldstate,$state);   
+
+        if ($oldstate != $state) {
+            $this->onState($oldstate, $state);
         }
 
         return true;
     }
 
     //обработяик  изменения  статусов
-    protected  function onState($oldstate,$state){
-        
-        
+    protected function onState($oldstate, $state) {
+
+
     }
-    
+
     /**
      * Возвращает название  статуса  документа
      *

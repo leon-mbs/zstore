@@ -79,11 +79,11 @@ class Income extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
 
-        
-        $br="";
+
+        $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
-        if(strlen($brids)>0) {
-           $br = " and d.branch_id in ({$brids}) "; 
+        if (strlen($brids) > 0) {
+            $br = " and d.branch_id in ({$brids}) ";
         }
 
         $detail = array();

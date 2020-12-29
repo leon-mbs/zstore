@@ -58,9 +58,9 @@ class WWaited extends \Zippy\Html\PageFragment
     public function waitlistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('waititem', $item->storename));
-        $row->add(new Label('waitstore', $item->itemname));
-        $row->add(new Label('waitqty', Helper::fqty($item->qty)));
+        $row->add(new Label('wwt_waititem', $item->storename));
+        $row->add(new Label('wwt_waitstore', $item->itemname));
+        $row->add(new Label('wwt_waitqty', Helper::fqty($item->qty)));
     }
 
 }

@@ -56,10 +56,10 @@ class WDebitors extends \Zippy\Html\PageFragment
     public function OnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('cust', $item->customer_name));
-        $row->add(new Label('amount', Helper::fa($item->am)));
-        $row->add(new Label('type', $item->meta_desc));
-        $row->add(new Label('number', $item->document_number));
+        $row->add(new Label('wdbt_cust', $item->customer_name));
+        $row->add(new Label('wdbt_amount', Helper::fa($item->am)));
+        $row->add(new Label('wdbt_type', $item->meta_desc));
+        $row->add(new Label('wdbt_number', $item->document_number));
     }
 
 }

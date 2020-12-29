@@ -60,10 +60,10 @@ class WNoliq extends \Zippy\Html\PageFragment
         $item = $row->getDataItem();
 
 
-        $row->add(new Label('storename', $item->storename));
-        $row->add(new Label('itemname', $item->itemname));
-        $row->add(new Label('item_code', $item->item_code));
-        $row->add(new Label('qty', Helper::fqty($item->qty)));
+        $row->add(new Label('wnl_storename', $item->storename));
+        $row->add(new Label('wnl_itemname', $item->itemname));
+        $row->add(new Label('wnl_item_code', $item->item_code));
+        $row->add(new Label('wnl_qty', Helper::fqty($item->qty)));
     }
 
     public function oncsv($sender) {

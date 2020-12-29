@@ -6,11 +6,29 @@
             Чек № {{document_number}} от {{date}} <br>
         </td>
     </tr>
+    
+    
     <tr>
+        <td></td>
+        <td valign="top"><b>Продавец</b></td>
+        <td colspan="5">{{firm_name}}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td valign="top"><b>ИНН</b></td>
+        <td colspan="5">{{inn}}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td valign="top"><b>Телефон</b></td>
+        <td colspan="5">{{phone}}</td>
+    </tr>                          
+     <tr>
         <td></td>
         <td valign="top"><b>Терминал</b></td>
         <td colspan="5">{{pos_name}}</td>
     </tr>
+
     {{#customer_name}}
     <tr>
         <td></td>

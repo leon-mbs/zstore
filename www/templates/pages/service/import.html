@@ -6,7 +6,7 @@
         <h3>Импорт номенклатуры
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
-               data-placement="bottom" data-html="true" data-content="Импорт ТМЦ из  CSV файла.
+               data-placement="bottom" data-html="true" data-content="Импорт ТМЦ из  Excel файла.
                        Для указания расположения данных необходимо  указать номера  соответствующих столбцов. Проаеряется  на                                 уникальность  артикул  и наименование
                        Может  быть  выполнен  импорт номенклатуры  в справочник или  если  указано количество  оприходование на  склад.                       В этом  случае создается документ  Оприходование  товара 
                        <br>Также  есть  возможность предварительного просмотра данных. "></i>
@@ -33,17 +33,7 @@
                     <select zippy="store" class="form-control  ">
                     </select>
                 </div>
-                <div class="form-group  ">
-                    <label for="sep">Разделитель</label>
-                    <input style="width:50px;" zippy="sep" class="form-control  "/>
-
-                </div>
-                <div class="form-group  ">
-                    <label for="encode">Кодировка</label>
-                    <select zippy="encode" class="form-control  ">
-                        <option value="0">Не выбрана</option>
-                    </select>
-                </div>
+        
                 <div class="form-group  ">
                     <label for="filename">Файл импорта</label>
                     <input type="file" zippy="filename" class="form-control  "/>
@@ -63,7 +53,7 @@
             </div>
             <div class="col-6">
                 <div class="form-group  ">
-                    <label><b>Номера столбцов CSV файла</b> </label>
+                    <label><b>Номера столбцов Excel файла</b> </label>
 
                 </div>
                 <div class="form-group  ">
@@ -153,7 +143,7 @@
         <h3>Импорт накладной
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
-               data-placement="bottom" data-html="true" data-content="Импорт накладной из  CSV файла.
+               data-placement="bottom" data-html="true" data-content="Импорт накладной из  Excel файла.
                        Для указания расположения данных необходимо  указать номера  соответствующих столбцов. 
                        Проаеряется  на    уникальность  артикул  и наименование если товар не  найден он  добавляется в справочник.
                        В результате  создается   документ Приходная  накладная который следует  провести  после ввода 
@@ -175,17 +165,7 @@
                     <select zippy="nstore" class="form-control  ">
                     </select>
                 </div>
-                <div class="form-group  ">
-                    <label for="nsep">Разделитель</label>
-                    <input style="width:50px;" zippy="nsep" class="form-control  "/>
-
-                </div>
-                <div class="form-group  ">
-                    <label for="nencode">Кодировка</label>
-                    <select zippy="nencode" class="form-control  ">
-                        <option value="0">Не выбрана</option>
-                    </select>
-                </div>
+            
                 <div class="form-group  ">
                     <label for="nfilename">Файл импорта</label>
                     <input type="file" zippy="nfilename" class="form-control  "/>
@@ -205,7 +185,7 @@
             </div>
             <div class="col-6">
                 <div class="form-group  ">
-                    <label><b>Номера столбцов CSV файла</b> </label>
+                    <label><b>Номера столбцов Excel файла</b> </label>
 
                 </div>
                 <div class="form-group  ">
@@ -275,7 +255,7 @@
         <h3>Импорт контрагентов
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
-               data-placement="bottom" data-html="true" data-content="Импорт контрагентов из  CSV файла.
+               data-placement="bottom" data-html="true" data-content="Импорт контрагентов из  Excel файла.
                        Для указания расположения данных необходимо  указать номера  соответствующих столбцов.
                        Проверяется  на  уникальность телефон 
                        <br>Также  есть  возможность предварительного просмотра данных. "></i>
@@ -296,18 +276,7 @@
                         <option value="2">Покупатели</option>
                     </select>
                 </div>
-
-                <div class="form-group  ">
-                    <label for="csep">Разделитель</label>
-                    <input style="width:50px;" zippy="csep" class="form-control  "/>
-
-                </div>
-                <div class="form-group  ">
-                    <label for="cencode">Кодировка</label>
-                    <select zippy="cencode" class="form-control  ">
-                        <option value="0">Не выбрана</option>
-                    </select>
-                </div>
+           
                 <div class="form-group  ">
                     <label for="cfilename">Файл импорта</label>
                     <input type="file" zippy="cfilename" class="form-control  "/>
@@ -330,7 +299,7 @@
             </div>
             <div class="col-6">
                 <div class="form-group  ">
-                    <label><b>Номера столбцов CSV файла</b> </label>
+                    <label><b>Номера столбцов Excel файла</b> </label>
 
                 </div>
                 <div class="form-group  ">

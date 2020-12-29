@@ -84,7 +84,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
 
-        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()));
+        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
         $this->docform->add(new DropDownChoice('delivery', array(1 => H::l('delself'), 2 => H::l('delboy'), 3 => H::l('delmail')), 1))->onChange($this, 'OnDelivery');
@@ -172,7 +172,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->_orderid = $this->_doc->headerdata['order_id'];
             $this->_prevcust = $this->_doc->customer_id;
 
-            $this->docform->firm->setValue($this->_doc->headerdata['firm_id']);
+            $this->docform->firm->setValue($this->_doc->firm_id);
             $this->OnChangeCustomer($this->docform->customer);
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
@@ -243,7 +243,7 @@ class GoodsIssue extends \App\Pages\Base
                         $invoice = $basedoc->cast();
 
                         $this->docform->total->setText($invoice->amount);
-                        $this->docform->firm->setValue($basedoc->headerdata['firm_id']);
+                        $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
@@ -278,7 +278,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->ship_address->setText($basedoc->headerdata['address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
-                        $this->docform->firm->setValue($basedoc->headerdata['firm_id']);
+                        $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
@@ -293,10 +293,11 @@ class GoodsIssue extends \App\Pages\Base
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
 
-                        $this->docform->notes->setText('Комплектующие  для  ' . $basedoc->document_number);
+                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                     }
+
                 }
             }
         }
@@ -484,8 +485,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
-        if ($this->_doc->headerdata['firm_id'] > 0) {
+        $this->_doc->firm_id = $this->docform->firm->getValue();
+        if ($this->_doc->firm_id > 0) {
             $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
 
@@ -802,7 +803,7 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->setError('enterdocnumber');
         }
-        
+
         if (false == $this->_doc->checkUniqueNumber()) {
             $this->docform->document_number->setText($this->_doc->nextNumber());
             $this->setError('nouniquedocnumber_created');
@@ -827,7 +828,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError("mustsel_cust");
         }
         if ($c == 0) {
-           // $this->setError("noselcust");
+            // $this->setError("noselcust");
         }
 
         return !$this->isError();

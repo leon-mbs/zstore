@@ -14,7 +14,7 @@ class GoodsReceipt extends Document
 {
 
     public function generateReport() {
-        $firm = H::getFirmData($this->headerdata["firm_id"], $this->branch_id);
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $i = 1;
 

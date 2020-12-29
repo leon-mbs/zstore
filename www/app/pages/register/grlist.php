@@ -176,26 +176,25 @@ class GRList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-        $csv = "";
-
+        
+        
+        $header = array();
+        $data = array();
+        
+        $i=0;
         foreach ($list as $d) {
-            $csv .= H::fd($d->document_date) . ';';
-            $csv .= $d->document_number . ';';
-            $csv .= $d->customer_name . ';';
-            $csv .= $d->amount . ';';
-            $csv .= str_replace(';', '', $d->notes) . ';';
-            $csv .= "\n";
+             $i++;
+             $data['A'.$i]  =  H::fd($d->document_date) ;
+             $data['B'.$i]  =  $d->document_number ;
+             $data['C'.$i]  =  $d->customer_name ;
+             $data['D'.$i]  =  $d->amount ;
+             $data['E'.$i]  =  $d->notes ;
+             
         }
-        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=baylist.csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+        
+        H::exportExcel($data,$header,'baylist.xlsx') ;        
+        
+ 
     }
 
 }
@@ -257,9 +256,6 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
 
-        //$l = Traversable::from($docs);
-        //$l = $l->where(function ($doc) {return $doc->document_id == 169; }) ;
-        //$l = $l->select(function ($doc) { return $doc; })->asArray() ;
         return $docs;
     }
 

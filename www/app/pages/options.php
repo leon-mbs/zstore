@@ -43,7 +43,7 @@ class Options extends \App\Pages\Base
 
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
-        
+
         $this->common->add(new CheckBox('useval'));
         $this->common->add(new TextInput('shopname'));
 
@@ -84,7 +84,7 @@ class Options extends \App\Pages\Base
         $this->common->shopname->setText($common['shopname']);
 
         $this->common->autoarticle->setChecked($common['autoarticle']);
-        
+
 
         $this->common->usesnumber->setChecked($common['usesnumber']);
 
@@ -183,13 +183,14 @@ class Options extends \App\Pages\Base
         $common['price3'] = $this->common->price3->getText();
         $common['price4'] = $this->common->price4->getText();
         $common['price5'] = $this->common->price5->getText();
+        $common['defprice'] = $this->common->defprice->getText();
         $common['shopname'] = $this->common->shopname->getText();
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();
         $common['ts_end'] = $this->common->ts_end->getText();
 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
-        
+
 
         $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;

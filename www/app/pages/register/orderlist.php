@@ -59,6 +59,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -118,7 +119,15 @@ class OrderList extends \App\Pages\Base
 
             $this->setWarn('order_canceled');
         }
+        if ($sender->id == "btask") {
+            $task = count($this->_doc->getChildren('Task')) > 0;
 
+            if ($task) {
+
+                $this->setWarn('task_exists');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
+        }
         if ($sender->id == "bttn") {
             if ($ttn) {
                 $this->setWarn('order_has_sent');
@@ -173,15 +182,19 @@ class OrderList extends \App\Pages\Base
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
+            $this->statuspan->statusform->btask->setVisible(false);
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
+
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(true);
+
         }
 
         if ($ttn) {
@@ -199,7 +212,7 @@ class OrderList extends \App\Pages\Base
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
-
+            $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
@@ -242,26 +255,25 @@ class OrderList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-        $csv = "";
-
+ 
+        $header = array();
+        $data = array();
+        
+        $i=0;
         foreach ($list as $d) {
-            $csv .= H::fd($d->document_date) . ';';
-            $csv .= $d->document_number . ';';
-            $csv .= $d->customer_name . ';';
-            $csv .= $d->amount . ';';
-            $csv .= Document::getStateName($d->state) . ';';
-            $csv .= str_replace(';', '', $d->notes) . ';';
-            $csv .= "\n";
+             $i++;
+             $data['A'.$i]  =  H::fd($d->document_date) ;
+             $data['B'.$i]  =  $d->document_number ;
+             $data['C'.$i]  =  $d->customer_name ;
+             $data['D'.$i]  =  $d->amount ;
+             $data['E'.$i]  =  Document::getStateName($d->state)  ;
+             $data['F'.$i]  =  $d->notes ;
+             
         }
-        $csv = mb_convert_encoding($csv, "windows-1251", "utf-8");
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment;Filename=orderlist.csv");
-        header("Content-Transfer-Encoding: binary");
-
-        echo $csv;
-        flush();
-        die;
+        
+        H::exportExcel($data,$header,'orderlist.xlsx') ;     
+ 
+   
     }
 
 }
@@ -321,9 +333,6 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
 
-        //$l = Traversable::from($docs);
-        //$l = $l->where(function ($doc) {return $doc->document_id == 169; }) ;
-        //$l = $l->select(function ($doc) { return $doc; })->asArray() ;
         return $docs;
     }
 

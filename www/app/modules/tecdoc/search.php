@@ -298,7 +298,7 @@ class Search extends \App\Pages\Base
         } else {
             $this->setWarn('Ничего не  найдено');
         }
-        $this->add(new Panel('tview'))->setVisible(false);
+        $this->tview->setVisible(false);
 
     }
 

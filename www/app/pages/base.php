@@ -54,7 +54,7 @@ class Base extends \Zippy\Html\WebPage
 
         $options = System::getOptions('common');
 
-        
+
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
         $this->_tvars["useimages"] = $options['useimages'] == 1;
@@ -94,6 +94,9 @@ class Base extends \Zippy\Html\WebPage
         }
         if (strpos(System::getUser()->modules, 'tecdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["tecdoc"] = false;
+        }
+        if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["ppo"] = false;
         }
 
 

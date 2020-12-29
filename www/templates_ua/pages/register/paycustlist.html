@@ -61,7 +61,7 @@
     <div class="col-12 col-lg-10 col-xl-8 " zippy="plist">
         <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
         <h3 zippy="cname"></h3>
-        <br><a zippy="csv2">Завантажити CSV</a>
+        <br><a zippy="csv2">Експорт в Excel</a>
         <table class="table   table-sm   ">
             <tr>
 
@@ -108,12 +108,22 @@
             <form zippy="payform" class="form-inline ">
                 <label>До оплати</label>
                 <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
-                       class="form-control mr-sm-2">
+                       class="form-control mr-2">
                 <label for="payment">рахунок</label>
-                <select class="form-control mr-sm-2" zippy="payment">
+                <select class="form-control mr-2" zippy="payment">
 
                 </select>
-                <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-sm-2">
+               {{#ppo}}
+               <label for="pos">POS</label>
+                <select class="form-control mr-2" zippy="pos">
+                  <option value="0">Не  вибраний</option>
+
+                </select>
+                {{/ppo}}
+                 <label>дата</label>
+                <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
+               
+                <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
 
                 <button type="submit" class="  btn btn-info  mr-2 ">Оплатити</button>
 

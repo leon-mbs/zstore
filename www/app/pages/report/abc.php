@@ -17,8 +17,8 @@ class ABC extends \App\Pages\Base
 {
 
     private $typelist = array();
-    private $br='';
-    
+    private $br       = '';
+
     public function __construct() {
         parent::__construct();
 
@@ -49,13 +49,13 @@ class ABC extends \App\Pages\Base
         $this->detail->add(new RedirectLink('excel', "abc"));
         $this->detail->add(new RedirectLink('pdf', "abc"));
         $this->detail->add(new Label('preview'));
-        
-     
+
+
         $brids = \App\ACL::getBranchIDsConstraint();
-        if(strlen($brids)>0) {
-           $this->br = " and documents_view.branch_id in ({$brids}) "; 
+        if (strlen($brids) > 0) {
+            $this->br = " and documents_view.branch_id in ({$brids}) ";
         }
-        
+
     }
 
     public function OnSubmit($sender) {
@@ -156,7 +156,7 @@ class ABC extends \App\Pages\Base
                     )t
                  
                     ORDER BY value DESC";
-        
+
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
             $row['value'] = round($row['value']);
@@ -272,10 +272,6 @@ class ABC extends \App\Pages\Base
 
     //выполняет расчет  АВС
     private function calc($detail) {
-
-        //   $detail =  \Pinq\Traversable::from($detail)
-        //       ->orderByAscending(function($row){return $row['value'];})
-        //       ->select(function($row){ return array('name'=>$row['name'],'value'=>$row['value'])   ;})->asArray();
 
 
         $sum = 0;

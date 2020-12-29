@@ -18,7 +18,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
         $common = System::getOptions('common');
 
-        
+
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userpassword'));
@@ -31,7 +31,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->setError('');
 
 
-        $curver = 'v4.7.0';
+        $curver = 'v4.8.0';
         $this->_tvars['curversion'] = $curver;
 
         //проверка  новой версии        

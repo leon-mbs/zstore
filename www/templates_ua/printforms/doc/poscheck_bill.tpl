@@ -2,13 +2,19 @@
     <tr>
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
+    {{#fiscalnumber}}
+    <tr>
+        <td colspan="3">Фiск. номер {{fiscalnumber}}</td>
+    </tr>
+    {{/fiscalnumber}}    <tr>
+
     <tr>
 
         <td colspan="3">від {{time}}</td>
     </tr>
     <tr>
 
-        <td colspan="2"> {{firmname}}</td>
+        <td colspan="2"> {{firm_name}}</td>
     </tr>
     <tr>
 

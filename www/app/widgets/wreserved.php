@@ -57,9 +57,9 @@ class WReserved extends \Zippy\Html\PageFragment
     public function reslistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('resitem', $item->storename));
-        $row->add(new Label('resstore', $item->itemname));
-        $row->add(new Label('resqty', Helper::fqty($item->qty)));
+        $row->add(new Label('wres_resitem', $item->storename));
+        $row->add(new Label('wres_resstore', $item->itemname));
+        $row->add(new Label('wres_resqty', Helper::fqty($item->qty)));
     }
 
 }

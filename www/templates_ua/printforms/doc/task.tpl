@@ -21,7 +21,15 @@
 
     </tr>
     {{/baseddoc}}
+ 
+   {{#cust}}
+    <tr>
+        <td colspan="4">
+            Замовник: {{cust}}
+        </td>
 
+    </tr>
+    {{/cust}}
 
     <tr style="font-weight: bolder;">
 
@@ -31,7 +39,8 @@
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
-        <th style="border: 1px solid black;" width="50" align="right"></th>
+        <th style="border: 1px solid black;" width="50" align="right">Кiл</th>
+        <th style="border: 1px solid black;" width="50" align="right">Сума</th>
         <th style="border: 1px solid black;" width="50" align="right">Годин</th>
 
 
@@ -40,8 +49,8 @@
     <tr>
         <td>{{no}}</td>
         <td>{{service_name}}</td>
-        <td align="right"></td>
-
+        <td align="right">{{quantity}}</td>
+        <td align="right">{{cost}}</td>
         <td align="right">{{hours}}</td>
 
 

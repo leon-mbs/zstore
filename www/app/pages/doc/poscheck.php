@@ -65,7 +65,7 @@ class POSCheck extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        //  $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::find('')));
+        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', '')));
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -222,6 +222,14 @@ class POSCheck extends \App\Pages\Base
                         if ($invoice->payamount > 0) {
                             $this->docform->payment->setValie(MoneyFund::PREPAID);// предоплата
                         }
+                    }
+                    if ($basedoc->meta_name == 'Task') {
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                        $this->_serlist = $basedoc->unpackDetails('detaildata');
+
                     }
 
 
@@ -471,7 +479,42 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->packDetails('services', $this->_serlist);
         $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->headerdata['pos'] = $this->docform->pos->getValue();
+        
+        $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
+       
+           if ($pos->usefisc == 1 && $sender->id == 'execdoc') {
 
+
+                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                if ($ret['success'] == false && $ret['docnumber'] > 0) {
+                    //повторяем для  нового номера
+                    $pos->fiscdocnumber = $ret['docnumber'];
+                    $pos->save();
+                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+
+                }
+                if ($ret['success'] == false) {
+                    $this->setError($ret['data']);
+                    return;
+                } else {
+                    //  $this->setSuccess("Выполнено") ;
+                    if ($ret['docnumber'] > 0) {
+                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                        $pos->save();
+                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    } else {
+                        $this->setError("ppo_noretnumber");
+                        return;
+
+                    }
+
+                }
+
+            }
+          
+       
+       
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -735,6 +778,9 @@ class POSCheck extends \App\Pages\Base
         }
         if (($this->docform->store->getValue() > 0) == false) {
             $this->setError("noselstore");
+        }
+        if (($this->docform->pos->getValue() > 0) == false) {
+            $this->setError("noselposterm");
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();

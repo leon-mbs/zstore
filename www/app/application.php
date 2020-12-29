@@ -19,12 +19,12 @@ class Application extends \Zippy\WebApplication
         $path = '';
         $name = ltrim($name, '\\');
 
-        $lang = $_config['common']['lang']; 
+        $lang = $_config['common']['lang'];
 
         $templatepath = 'templates/';
- 
-        if (strlen($lang) >0  && $lang != 'ru') {
-            $templatepath = 'templates_'.$lang.'/';
+
+        if (strlen($lang) > 0 && $lang != 'ru') {
+            $templatepath = 'templates_' . $lang . '/';
         }
 
         $className = str_replace("\\", "/", ltrim($name, '\\'));
@@ -107,6 +107,7 @@ class Application extends \Zippy\WebApplication
 
         $pages = array(
             "store"    => "\\App\\Pages\\Main",
+            "admin"    => "\\App\\Pages\\Main",
             "shop"     => "\\App\\Modules\\Shop\\Pages\\Main",
             "sp"       => "\\App\\Modules\\Shop\\Pages\\ProductView",
             "aboutus"  => "\\App\\Modules\\Shop\\Pages\\AboutUs",

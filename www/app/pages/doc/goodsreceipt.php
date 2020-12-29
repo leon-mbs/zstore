@@ -148,7 +148,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editpayed->setText($this->_doc->payed);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->firm->setValue($this->_doc->headerdata['firm_id']);
+            $this->docform->firm->setValue($this->_doc->firm_id);
             $this->OnCustomerFirm($this->docform->customer);
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
@@ -193,7 +193,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->editrate->setText($invoice->headerdata['rate']);
                         $this->docform->disc->setText($invoice->headerdata['disc']);
                         $this->docform->editdisc->setText($invoice->headerdata['disc']);
-                        $this->docform->firm->setValue($invoice->headerdata['firm_id']);
+                        $this->docform->firm->setValue($invoice->firm_id);
                         $this->OnCustomerFirm($this->docform->customer);
 
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
@@ -211,7 +211,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $basedoc = $basedoc->cast();
-                        $this->docform->firm->setValue($basedoc->headerdata['firm_id']);
+                        $this->docform->firm->setValue($basedoc->firm_id);
                         $this->OnCustomerFirm($this->docform->customer);
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
@@ -314,7 +314,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code) {
+            if ($_item->bar_code == $code || $_item->item_code == $code) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();
@@ -334,6 +334,8 @@ class GoodsReceipt extends \App\Pages\Base
         if ($item == null) {
 
             $this->setWarn('item_notfound');
+            $this->addnewitemOnClick(null);
+
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
@@ -434,8 +436,8 @@ class GoodsReceipt extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->headerdata['firm_id'] = $this->docform->firm->getValue();
-        if ($this->_doc->headerdata['firm_id'] > 0) {
+        $this->_doc->firm_id = $this->docform->firm->getValue();
+        if ($this->_doc->firm_id > 0) {
             $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
         }
 

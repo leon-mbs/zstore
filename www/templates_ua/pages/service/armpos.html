@@ -15,17 +15,23 @@
                     <option value="0">Не вибрано</option>
                 </select>
             </div>
-
+        
             <div class="form-group  ">
-                <label for="firm">Продавець</label>
-                <select class="form-control" zippy="firm">
-                    <option value="0">Не вибраний</option>
+                <label for="store">Склад</label>
+                <select class="form-control" zippy="store">
+                    <option value="0">Не выбраний</option>
+                </select>
+            </div>
+          
+              <div class="form-group  ">
+                <label for="pricetype">Тип цены</label>
+                <select class="form-control" zippy="pricetype">
+                    <option value="0">Не выбраний</option>
                 </select>
             </div>
 
-
             <div class="form-group  ">
-                <input type="submit" value="Ввод товаров >" zippy="next1" class="btn btn-info">
+                <input type="submit" value="Додати товари >" zippy="next1" class="btn btn-info">
             </div>
         </div>
 
@@ -37,9 +43,8 @@
     {{#ppo}}
     <div class="row">
         <div class="col-12 col-md-10 col-lg-8 col-xl-7">
-            <a zippy="openshift">Вiдкрити  змiну</a> 
-            &nbsp; <a zippy="zform">Вiдправити Z-форму</a>
-            &nbsp; <a zippy="closeshift">Закрити змiну</a>
+            <a zippy="openshift"><i class="fa fa-bullhorn"> Вiдкрити  змiну</a> 
+            &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"> Закрити змiну</a>
             <br><br>
         </div>
     </div>
@@ -54,8 +59,8 @@
             </div>
             {{/usescanner}}
 
-            <input type="button" value="< Отмена" zippy="cancel1" class="btn  btn-outline-info">
-            &nbsp;&nbsp;<a class="btn btn-info  " zippy="addrow">Додати товар</a>
+            
+            <a class="btn btn-info  " zippy="addrow">Додати товар</a>
             &nbsp;&nbsp;<a class="btn btn-info  " zippy="addser">Додати послугу</a>
             &nbsp;&nbsp;<input type="submit" value="Перейти к оплате >" zippy="next2" class="btn  btn-info">
 
@@ -179,15 +184,15 @@
             </div>
             <div class="form-group">
                 <label for="paydisc" data-label="paydisc">Знижка</label>
-                <input class="form-control" type="text" zippy="paydisc">
+                <input autocomplete="off" class="form-control" type="text" zippy="paydisc">
             </div>
             <div class="form-group">
                 <label for="payamount" data-label="payamount">До оплати</label>
-                <input class="form-control" type="text" zippy="payamount">
+                <input autocomplete="off" class="form-control" type="text" zippy="payamount">
             </div>
             <div class="form-group">
                 <label for="payed" data-label="payed">Внесена оплата</label>
-                <input class="form-control" type="text" zippy="payed">
+                <input autocomplete="off" class="form-control" type="text" zippy="payed">
             </div>
 
             <div class="form-group">
@@ -255,7 +260,7 @@
 
             <div class="form-group">
                 <label for="editprice">Ціна </label>
-                <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
+                <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
                        style="width: 70px;">
 
             </div>
@@ -329,7 +334,7 @@
         </div>
     </div>
 </form>
-
+ 
 
 <script>
     $(document).ready(function () {

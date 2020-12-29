@@ -54,14 +54,14 @@ class WSdate extends \Zippy\Html\PageFragment
     public function sdlistOnRow($row) {
         $stock = $row->getDataItem();
 
-        $row->add(new Label('storename', $stock->storename));
-        $row->add(new Label('itemname', $stock->itemname));
-        $row->add(new Label('snumber', $stock->snumber));
-        $row->add(new Label('edate', \App\Helper::fd($stock->sdate)));
-        $row->add(new Label('qty', Helper::fqty($stock->qty)));
-        $row->edate->setAttribute('class', 'badge badge-danger');
+        $row->add(new Label('wsd_storename', $stock->storename));
+        $row->add(new Label('wsd_itemname', $stock->itemname));
+        $row->add(new Label('wsd_snumber', $stock->snumber));
+        $row->add(new Label('wsd_edate', \App\Helper::fd($stock->sdate)));
+        $row->add(new Label('wsd_qty', Helper::fqty($stock->qty)));
+        $row->wsd_edate->setAttribute('class', 'badge badge-danger');
         if ($stock->sdate > time()) {
-            $row->edate->setAttribute('class', 'badge badge-warning');
+            $row->wsd_edate->setAttribute('class', 'badge badge-warning');
         }
     }
 

@@ -198,8 +198,8 @@ class Inventory extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['autoincome'] = $this->docform->autoincome->isChecked() ?1:0;
-        $this->_doc->headerdata['autooutcome'] = $this->docform->autooutcome->isChecked() ?1:0;
+        $this->_doc->headerdata['autoincome'] = $this->docform->autoincome->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['autooutcome'] = $this->docform->autooutcome->isChecked() ? 1 : 0;
         $this->_doc->headerdata['cat'] = $this->docform->category->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
@@ -275,20 +275,21 @@ class Inventory extends \App\Pages\Base
         $this->_itemlist = array();
         $this->docform->detail->Reload();
     }
+
     public function OnChangeCat($sender) {
-        $cat_id = $sender->getValue()     ;
-        
-        if($cat_id>0) {
+        $cat_id = $sender->getValue();
+
+        if ($cat_id > 0) {
             $itemlist = array();
-            foreach($this->_itemlist as $item) {
-                if($item->cat_id==$cat_id) {
-                    $itemlist[$item->item_id]=$item;   
+            foreach ($this->_itemlist as $item) {
+                if ($item->cat_id == $cat_id) {
+                    $itemlist[$item->item_id] = $item;
                 }
             }
             $this->_itemlist = $itemlist;
-        
+
             $this->docform->detail->Reload();
-            
+
         }
     }
 
@@ -296,26 +297,27 @@ class Inventory extends \App\Pages\Base
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         $cat_id = $this->docform->category->getValue();
-        
-        return Item::findArrayAC($text, $store_id,$cat_id);
+
+        return Item::findArrayAC($text, $store_id, $cat_id);
     }
 
     public function loadallOnClick($sender) {
-            $this->_itemlist = array();
-            $store_id = $this->docform->store->getValue();
-            $cat_id = $this->docform->category->getValue();
-            $w = " disabled<> 1 and  item_id in (select item_id from  store_stock_view where  qty>0 and store_id={$store_id})    ";
-            if($cat_id>0){
-                $w = $w . " and cat_id =". $cat_id ;
-            }
-            $items = Item::find($w,'itemname') ;
-            foreach($items as $item) {
-                $item->qfact=0;
-                $item->quantity=0;
-                $this->_itemlist[$item->item_id]=$item;    
-            }
-            $this->docform->detail->Reload();       
+        $this->_itemlist = array();
+        $store_id = $this->docform->store->getValue();
+        $cat_id = $this->docform->category->getValue();
+        $w = " disabled<> 1 and  item_id in (select item_id from  store_stock_view where  qty>0 and store_id={$store_id})    ";
+        if ($cat_id > 0) {
+            $w = $w . " and cat_id =" . $cat_id;
+        }
+        $items = Item::find($w, 'itemname');
+        foreach ($items as $item) {
+            $item->qfact = 0;
+            $item->quantity = 0;
+            $this->_itemlist[$item->item_id] = $item;
+        }
+        $this->docform->detail->Reload();
     }
+
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
@@ -325,9 +327,9 @@ class Inventory extends \App\Pages\Base
         $code_ = Item::qstr($code);
 
         $cat_id = $this->docform->category->getValue();
-        $w = "item_code={$code_} or bar_code={$code_}" ;
-        if($cat_id >0) {
-            $w = $w . "  and cat_id=".$cat_id ;
+        $w = "item_code={$code_} or bar_code={$code_}";
+        if ($cat_id > 0) {
+            $w = $w . "  and cat_id=" . $cat_id;
         }
         $item = Item::getFirst($w);
         if ($item == null) {
