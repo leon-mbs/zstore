@@ -355,15 +355,15 @@ class ProductList extends \App\Pages\Base
             }
             $r = ((double)$imagedata[0]) / $imagedata[1];
             if ($r > 1.1 || $r < 0.9) {
-                $this->setError('squareimage');
-                return;
+                 $this->setError('squareimage');
+                 return;
             }
 
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
 
-            $thumb = new \App\Thumb($filedata['tmp_name']);
+            $thumb = new \App\Thumb($file['tmp_name']);
             $thumb->resize(256, 256);
             $image->thumb = $thumb->getImageAsString();
 
