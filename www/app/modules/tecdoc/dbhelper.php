@@ -483,7 +483,7 @@ class DBHelper
 
         return $row;
     }
-
+      //Оригинальные  номера
     public function getOemNumbers($number, $brand_id) {
 
         $number = $this->conn->qstr($number);
@@ -494,7 +494,7 @@ class DBHelper
 
         return $col;
     }
-
+         //Замены
     public function getReplace($number, $brand_id) {
 
         $number = $this->conn->qstr($number);
@@ -514,7 +514,7 @@ class DBHelper
 
         return $list;
     }
-
+      //Составные части
     public function getArtParts($number, $brand_id) {
 
         $number = $this->conn->qstr($number);
@@ -534,18 +534,18 @@ class DBHelper
 
         return $list;
     }
-
+       //Аналоги
     public function getArtCross($number, $brand_id) {
 
         $number = $this->conn->qstr($number);
         $list = array();
         $r = $this->conn->Execute("SELECT DISTINCT s.description, c.PartsDataSupplierArticleNumber as crossnumber   
             FROM article_oe a 
-            JOIN manufacturers m ON m.id=a.manufacturerId 
+             JOIN manufacturers m ON m.id=a.manufacturerId 
             JOIN article_cross c ON c.OENbr=a.OENbr
             JOIN suppliers s ON s.id=c.SupplierId
-            WHERE a.datasupplierarticlenumber=" . $number . " AND a.manufacturerId=" . $brand_id . "
-             ");
+            WHERE a.datasupplierarticlenumber=" . $number . " AND a.supplierid=" . $brand_id . "
+            ORDER  BY  s.description ");
 
         foreach ($r as $row) {
             $item = new \App\DataItem();
@@ -556,7 +556,7 @@ class DBHelper
         }
         return $list;
     }
-
+            //Применимость
     public function getArtVehicles($number, $brand_id) {
 
         $number = $this->conn->qstr($number);

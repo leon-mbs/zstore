@@ -45,6 +45,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("coldesc", $cols));
         $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
+        $form->add(new CheckBox("checkname"));
 
         $form->onSubmit($this, "onImport");
 
@@ -113,7 +114,8 @@ class Import extends \App\Pages\Base
         $pt = $this->iform->price->getValue();
         
         $preview = $this->iform->preview->isChecked();
-        $passfirst = $this->iform->passfirst->isChecked();
+        $preview = $this->iform->preview->isChecked();
+        $checkname = $this->iform->checkname->isChecked();
         $this->_tvars['preview'] = false;
 
         $colname = $this->iform->colname->getValue();
@@ -205,12 +207,16 @@ class Import extends \App\Pages\Base
             $item = null;
             $itemname = trim($row[$colname  ]);
             $itemcode = trim($row[$colcode  ]);
+            $itembarcode = trim($row[$colbarcode  ]);
             if (strlen($itemname) > 0) {
 
+                if (strlen($itembarcode) > 0) {
+                    $item = Item::getFirst('bar_code=' . Item::qstr($itembarcode));
+                }  else 
                 if (strlen($itemcode) > 0) {
                     $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
                 }
-                if ($item == null) {
+                if ($item == null && $checkname==true) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
 

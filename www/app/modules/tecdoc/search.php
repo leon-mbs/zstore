@@ -361,7 +361,7 @@ class Search extends \App\Pages\Base
         //Оригинальные  номера
         $this->_tvars['isoem'] = false;
         $this->_tvars['oem'] = array();
-        $oem = $db->getOemNumbers($part->part_number, $this->tpanel->tablist->search1form->sbrand->getValue());
+        $oem = $db->getOemNumbers($part->part_number, $part->brand_id);
         if (count($oem) > 0) {
             $this->_tvars['isoem'] = true;
             foreach ($oem as $o) {
@@ -409,7 +409,7 @@ class Search extends \App\Pages\Base
         $this->_tvars['crosslist'] = array();
         $this->_tvars['iscross'] = false;
         $this->_tvars['cross'] = array();
-        $cr = $db->getArtCross($part->part_number, $this->tpanel->tablist->search1form->sbrand->getValue());
+        $cr = $db->getArtCross($part->part_number, $part->brand_id);
         if (count($cr) > 0) {
             $this->_tvars['iscross'] = true;
             foreach ($cr as $c) {
