@@ -155,6 +155,8 @@ class ItemList extends \App\Pages\Base
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
 
+        if(\App\System::getUser()->rolename!='admins')  $row->partion->setText('');;
+
         $row->add(new Label('qty', H::fqty($stock->qty)));
         $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
 

@@ -22,7 +22,7 @@ use \Zippy\Binding\PropertyBinding as Bind;
 class Search extends \App\Pages\Base
 {
     public $_ds = array();
-
+    public $_card = array();
     public function __construct() {
         parent::__construct();
 
@@ -46,7 +46,7 @@ class Search extends \App\Pages\Base
 
         $tablist->add(new Form('search1form'));
 
-        $tablist->search1form->add(new DropDownChoice('stype', array('passenger' => 'Легковая', 'commercial' => 'Грузовик', 'motorbike' => 'Мотоцикл',/* 'engine'=>'Двигатель', 'axle'=>'Ось'*/), 'passenger'))->onChange($this, 'onType');
+        $tablist->search1form->add(new DropDownChoice('stype', array('passenger' => 'Авто', 'commercial' => 'Грузовик', 'motorbike' => 'Мотоцикл' ), 'passenger'))->onChange($this, 'onType');
         $tablist->search1form->add(new DropDownChoice('sbrand', array(), 0))->onChange($this, 'onBrand');
         $tablist->search1form->add(new DropDownChoice('smodel', array(), 0))->onChange($this, 'onModel');
         $tablist->search1form->add(new DropDownChoice('smodif', array(), 0))->onChange($this, 'onModif');
@@ -73,6 +73,18 @@ class Search extends \App\Pages\Base
 
         $this->add(new Panel('tview'))->setVisible(false);
 
+        
+        //Корзина
+        $this->_card = \App\Session::getSession()->cardlist  ;
+        if(!is_array($this->_card))$this->_card=array();
+        $this->add(new Panel('cartpan'))->setVisible(count($this->_card)>0);
+        $this->cartpan->add(new DataView('cardlist', new ArrayDataSource(new Bind($this, "_card")), $this, 'cardOnRow'));
+        $this->cartpan->cardlist->Reload();
+        $this->cartpan->add(new  ClickLink('copycart',$this,'OnCopy'));
+        
+        
+        
+        
 
         $this->onTab($this->tpanel->tabl);
         $this->onType($tablist->search1form->stype);
@@ -90,10 +102,18 @@ class Search extends \App\Pages\Base
         $this->tpanel->tabbarcode->setVisible($sender->id == 'tabb');
 
         if ($sender->id == 'tabc') {
-            $db = new DBHelper(0);
-            foreach ($db->getAllBrands() as $name) {
-                $this->_tvars['brandslist'][] = array('bname' => $name);
+            $api = new APIHelper();
+
+            $ret = $api->getAllBrands();
+
+            if ($ret['success'] == true) {
+                foreach ($ret['data'] as $name) {
+                    $this->_tvars['brandslist'][] = array('bname' => $name);
+                }
+            } else {
+                $this->setError($ret['error']);
             }
+
 
         }
 
@@ -102,10 +122,14 @@ class Search extends \App\Pages\Base
     }
 
     public function onType($sender) {
-        $db = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
 
-        $list = $db->getBrands();
-        $this->tpanel->tablist->search1form->sbrand->setOptionList($list);
+        $ret = $api->getManufacturers();
+        if ($ret['success'] == true) {
+            $this->tpanel->tablist->search1form->sbrand->setOptionList($ret['data']);
+        } else {
+            $this->setError($ret['error']);
+        }
 
         $this->tpanel->tablist->search1form->smodel->setOptionList(array());
         $this->tpanel->tablist->search1form->smodif->setOptionList(array());
@@ -116,10 +140,17 @@ class Search extends \App\Pages\Base
     }
 
     public function onBrand($sender) {
-        $db = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
-        $list = $db->getModels($this->tpanel->tablist->search1form->sbrand->getValue());
-        $this->tpanel->tablist->search1form->smodel->setOptionList($list);
+        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+
+        $ret = $api->getModels($this->tpanel->tablist->search1form->sbrand->getValue());
+
+        if ($ret['success'] == true) {
+            $this->tpanel->tablist->search1form->smodel->setOptionList($ret['data']);
+        } else {
+            $this->setError($ret['error']);
+        }
+
 
         $this->tpanel->tablist->search1form->smodif->setOptionList(array());
         $this->tpanel->tablist->search1form->modifdetail->setText('');
@@ -128,20 +159,34 @@ class Search extends \App\Pages\Base
     }
 
     public function onModel($sender) {
-        $db = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
-        $list = $db->getModifs($this->tpanel->tablist->search1form->smodel->getValue());
-        $this->tpanel->tablist->search1form->smodif->setOptionList($list);
+        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+
+        $ret = $api->getModifs($this->tpanel->tablist->search1form->smodel->getValue());
+
+        if ($ret['success'] == true) {
+            $this->tpanel->tablist->search1form->smodif->setOptionList($ret['data']);
+        } else {
+            $this->setError($ret['error']);
+        }
+
+
         $this->tpanel->tablist->search1form->modifdetail->setText('');
         $this->tpanel->tablist->tree->removeNodes();
     }
 
     public function onModif($sender) {
-        $db = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
 
-        $list = $db->getModifDetail($this->tpanel->tablist->search1form->smodif->getValue());
+        $ret = $api->getModifDetail($this->tpanel->tablist->search1form->smodif->getValue());
+
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+
         $t = "<table  style='font-size:smaller;'>";
-        foreach ($list as $k => $v) {
+        foreach ($ret['data'] as $k => $v) {
 
             if ($k == 'ConstructionInterval') {
                 $t = $t . "<tr><td>Годы выпуска</td><td>{$v}</td></tr>";
@@ -193,7 +238,18 @@ class Search extends \App\Pages\Base
         $tlist[0] = $root;
         $this->tpanel->tablist->tree->addNode($root);
 
-        $list = $db->getTree($this->tpanel->tablist->search1form->smodif->getValue());
+        $ret = $api->getTree($this->tpanel->tablist->search1form->smodif->getValue());
+
+        $list = array();
+        foreach ($ret['data'] as $row) {
+            $item = new \App\DataItem();
+            $item->intree = false;
+            $item->id = $row['id'];
+            $item->parentId = $row['parentId'];
+            $item->description = $row['description'];
+            $list[$item->id] = $item;
+        }
+
 
         while(true) {
             $wasadded = false;
@@ -239,11 +295,27 @@ class Search extends \App\Pages\Base
                 };
             }
         }
+        if ($id == -1) {
+            return;
+        }
+        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
 
-        $db = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $ret = $api->searchByCategory($id, $this->tpanel->tablist->search1form->smodif->getValue());
 
-        $this->_ds = $db->searchByCategory($id, $this->tpanel->tablist->search1form->smodif->getValue());
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
 
+        $this->_ds = array();
+        foreach ($ret['data'] as $row) {
+            $item = new \App\DataItem();
+            $item->part_number = $row['part_number'];
+            $item->supplier_name = $row['supplier_name'];
+            $item->product_name = $row['product_name'];
+            $item->brand_id = $row['brand_id'];
+            $this->_ds[] = $item;
+        }
         $this->tlist->itemlist->Reload();
 
         if (count($this->_ds) > 0) {
@@ -252,7 +324,7 @@ class Search extends \App\Pages\Base
             $this->tlist->setVisible(true);
 
         } else {
-            $this->setWarn('Ничего не  найдено');
+            $this->setWarn('notfound');
         }
         $this->tview->setVisible(false);
     }
@@ -262,10 +334,23 @@ class Search extends \App\Pages\Base
         $code = trim($sender->searchcode->getText());
         $brand = trim($sender->searchbrand->getText());
 
-        $db = new DBHelper(0);
+        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
 
-        $this->_ds = $db->searchByBrandAndCode($code, $brand);
+        $ret = $api->searchByBrandAndCode($code, $brand);
 
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+        $this->_ds = array();
+        foreach ($ret['data'] as $row) {
+            $item = new \App\DataItem();
+            $item->part_number = $row['part_number'];
+            $item->supplier_name = $row['supplier_name'];
+            $item->product_name = $row['product_name'];
+            $item->brand_id = $row['brand_id'];
+            $this->_ds[] = $item;
+        }
         $this->tlist->itemlist->Reload();
 
         if (count($this->_ds) > 0) {
@@ -274,7 +359,7 @@ class Search extends \App\Pages\Base
             $this->tlist->setVisible(true);
 
         } else {
-            $this->setWarn('Ничего не  найдено');
+            $this->setWarn('notfound');
         }
         $this->tview->setVisible(false);
 
@@ -283,12 +368,23 @@ class Search extends \App\Pages\Base
     public function onSearch2($sender) {
 
         $code = trim($sender->searchbarcode->getText());
+        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
 
+        $ret = $api->searchByBarCode($code);
 
-        $db = new DBHelper(0);
-
-        $this->_ds = $db->searchByBarCode($code);
-
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+        $this->_ds = array();
+        foreach ($ret['data'] as $row) {
+            $item = new \App\DataItem();
+            $item->part_number = $row['part_number'];
+            $item->supplier_name = $row['supplier_name'];
+            $item->product_name = $row['product_name'];
+            $item->brand_id = $row['brand_id'];
+            $this->_ds[] = $item;
+        }
         $this->tlist->itemlist->Reload();
 
         if (count($this->_ds) > 0) {
@@ -296,7 +392,7 @@ class Search extends \App\Pages\Base
             $this->tlist->setVisible(true);
 
         } else {
-            $this->setWarn('Ничего не  найдено');
+            $this->setWarn('notfound');
         }
         $this->tview->setVisible(false);
 
@@ -323,6 +419,8 @@ class Search extends \App\Pages\Base
             $row->price->setText(H::fa($item->getPrice($modules['td_pricetype'], $modules['td_store'])));
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
+        $row->add(new ClickLink('cart', $this, "OnCart"));//->setVisible($item->quantity>0);
+        
     }
 
     public function showOnClick($sender) {
@@ -334,10 +432,16 @@ class Search extends \App\Pages\Base
         $this->tlist->itemlist->Reload(false);
         $part = $sender->getOwner()->getDataItem();
 
-        $db = new DBHelper(0);
 
-        $list = $db->getAttributes($part->part_number, $part->brand_id);
+        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
 
+        $ret = $api->getAttributes($part->part_number, $part->brand_id);
+
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+        $list = $ret['data'];
 
         $this->_tvars['isattr'] = count($list) > 0;
         $this->_tvars['attr'] = array();
@@ -348,35 +452,53 @@ class Search extends \App\Pages\Base
         $this->_tvars['isimage'] = false;
 
 
-        $image = $db->getImage($part->part_number, $part->brand_id);
-        if (strlen($image['PictureName']) > 0) {
+        $ret = $api->getImage($part->part_number, $part->brand_id);
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+
+        if (strlen($ret['data']) > 0) {
             $this->_tvars['isimage'] = true;
-            $path = rtrim($modules['td_ipath'], '/');
-            $path = $path . '/' . $part->brand_id . '/' . $image['PictureName'];
-            //  $path = $path.'/'.$image['PictureName'];
-            $this->_tvars['imagepath'] = $path;
-            $this->_tvars['imagedesc'] = $image['Description'];
+
+            $this->_tvars['imagepath'] = str_replace('.BMP', '.jpg', $ret['data']);
+
         }
 
         //Оригинальные  номера
         $this->_tvars['isoem'] = false;
         $this->_tvars['oem'] = array();
-        $oem = $db->getOemNumbers($part->part_number, $part->brand_id);
-        if (count($oem) > 0) {
-            $this->_tvars['isoem'] = true;
-            foreach ($oem as $o) {
-                $this->_tvars['oem'][] = array('oemnum' => $o);
-            }
+        $ret = $api->getOemNumbers($part->part_number, $part->brand_id);
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
         }
+        if (count($ret['data']) > 0) {
+            $this->_tvars['isoem'] = true;
+            foreach ($ret['data'] as $row) {
+
+                $this->_tvars['oem'][] = array('oemnum' => $row['OENbr'], 'manufacturer_name' => $row['manufacturer_name']);
+            }
+
+        }
+
+
         //Замены
         $this->_tvars['isrep'] = false;
         $this->_tvars['rep'] = array();
-        $rp = $db->getReplace($part->part_number, $part->brand_id);
-        if (count($rp) > 0) {
-            $this->_tvars['isrep'] = true;
-            foreach ($rp as $r) {
 
-                $item = Item::getFirst("manufacturer=" . Item::qstr($r->supplier) . " and item_code=" . Item::qstr($r->replacenbr));
+
+        $ret = $api->getReplace($part->part_number, $part->brand_id);
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+
+        if (count($ret['data']) > 0) {
+            $this->_tvars['isrep'] = true;
+            foreach ($ret['data'] as $r) {
+
+                $item = Item::getFirst("manufacturer=" . Item::qstr($r['supplier']) . " and item_code=" . Item::qstr($r['replacenbr']));
 
                 if ($item instanceof Item) {
                     $modules = System::getOptions("modules");
@@ -387,8 +509,7 @@ class Search extends \App\Pages\Base
 
                 }
 
-
-                $this->_tvars['rep'][] = array('sup' => $r->supplier, 'num' => $r->replacenbr, 'q' => $q, 'p' => $p);
+                $this->_tvars['rep'][] = array('sup' => $r['supplier'], 'num' => $r['replacenbr'], 'q' => $q, 'p' => $p);
             }
         }
 
@@ -396,11 +517,18 @@ class Search extends \App\Pages\Base
         //Составные части
         $this->_tvars['ispart'] = false;
         $this->_tvars['part'] = array();
-        $rp = $db->getArtParts($part->part_number, $part->brand_id);
-        if (count($rp) > 0) {
+
+        $ret = $api->getArtParts($part->part_number, $part->brand_id);
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+
+
+        if (count($ret['data']) > 0) {
             $this->_tvars['ispart'] = true;
-            foreach ($rp as $r) {
-                $this->_tvars['part'][] = array('Brand' => $r->Brand, 'partnumber' => $r->partnumber, 'Quantity' => $r->Quantity);
+            foreach ($ret['data'] as $r) {
+                $this->_tvars['part'][] = array('Brand' => $r['Brand'], 'partnumber' => $r['partnumber'], 'Quantity' => $r['Quantity']);
             }
         }
 
@@ -409,11 +537,17 @@ class Search extends \App\Pages\Base
         $this->_tvars['crosslist'] = array();
         $this->_tvars['iscross'] = false;
         $this->_tvars['cross'] = array();
-        $cr = $db->getArtCross($part->part_number, $part->brand_id);
-        if (count($cr) > 0) {
+
+        $ret = $api->getArtCross($part->part_number, $part->brand_id);
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+
+        if (count($ret['data']) > 0) {
             $this->_tvars['iscross'] = true;
-            foreach ($cr as $c) {
-                $item = Item::getFirst("manufacturer=" . Item::qstr($c->description) . " and item_code=" . Item::qstr($c->cross));
+            foreach ($ret['data'] as $c) {
+                $item = Item::getFirst("manufacturer=" . Item::qstr($c['description']) . " and item_code=" . Item::qstr($c['crossnumber']));
 
                 if ($item instanceof Item) {
                     $modules = System::getOptions("modules");
@@ -425,21 +559,87 @@ class Search extends \App\Pages\Base
                 }
 
 
-                $this->_tvars['crosslist'][] = array('desc' => $c->description, 'cross' => $c->cross, 'q' => $q, 'p' => $p);
+                $this->_tvars['crosslist'][] = array('desc' => $c['description'], 'cross' => $c['crossnumber'], 'q' => $q, 'p' => $p);
             }
         }
 
         //Применимость
         $this->_tvars['isapp'] = false;
         $this->_tvars['applist'] = array();
-        $rp = $db->getArtVehicles($part->part_number, $part->brand_id);
-        if (count($rp) > 0) {
+
+        $ret = $api->getArtVehicles($part->part_number, $part->brand_id);
+        if ($ret['success'] != true) {
+            $this->setError($ret['error']);
+            return;
+        }
+
+        if (count($ret['data']) > 0) {
             $this->_tvars['isapp'] = true;
-            foreach ($rp as $r) {
-                $this->_tvars['applist'][] = array('years' => $r->years, 'desc' => $r->desc);
+            foreach ($ret['data'] as $r) {
+                $this->_tvars['applist'][] = array('years' => $r['years'], 'desc' => $r['desc']);
             }
         }
 
 
     }
+    
+    public function cardOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('carditem', $item->itemname));
+        $row->add(new Label('carcode', $item->item_code));
+        $row->add(new Label('cardbrand', $item->manufacturer));
+        $row->add(new ClickLink('delcard', $this, "OnDelCart"));
+    }
+
+ 
+    public function OnCart($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $item->itemname  = $item->product_name ;
+        $item->manufacturer  = $item->brand ;       
+        $item->item_code = $item->part_number;   
+        
+        if ($item->item_id > 0) {
+            $item->item_code = $item->product_name;
+
+            $this->_card[$item->item_id] = $item;
+        } else {
+            $_item = Item::getFirst("item_code=" . Item::qstr($item->part_number) . " and manufacturer=" . Item::qstr($item->brand));
+            if ($_item instanceof Item) {
+                $item->item_id = $_item->item_id;
+           
+                
+            } else {
+                $_item = new Item();
+                $_item->itemname = $item->product_name;
+ 
+                $_item->item_code = $item->part_number;
+                $_item->manufacturer = $item->brand;
+                
+                $_item->save();
+                $item->item_id = $_item->item_id;
+                $item->quantity = 1;
+                $this->_card[$item->item_id] = $item;
+            }
+        }
+           
+        $this->_card[$item->item_id] = $item ; 
+        $this->cartpan->cardlist->Reload();
+        $this->cartpan->setVisible(count($this->_card) > 0);
+       
+    }
+
+    public function OnDelCart($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $this->_card = array_diff_key($this->_card, array($item->item_id => $this->_card[$item->item_id]));
+        $this->cartpan->cardlist->Reload();
+        $this->cartpan->setVisible(count($this->_card) > 0);
+              
+    }
+    
+    public function OnCopy($sender) {
+     
+        \App\Session::getSession()->clipboard=$this->_card;    
+        $this->setInfo('Скопировано');    
+    }
+    
 }

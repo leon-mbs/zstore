@@ -95,6 +95,9 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('ship_number'));
         $this->docform->add(new TextInput('ship_address'));
 
+        $cp =  \App\Session::getSession()->clipboard ;
+        $this->docform->add(new ClickLink('paste',$this,'onPaste'))->setVisible(is_array($cp) && count($cp)>0);
+          
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -105,6 +108,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->docform->add(new Label('weight'))->setVisible(false);
 
+        
+        
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -1014,6 +1019,28 @@ class GoodsIssue extends \App\Pages\Base
     }
 
 
+    
+  public function onPaste($sender) {
+        $store_id = $this->docform->store->getValue();
+
+        $cp =  \App\Session::getSession()->clipboard ;
+      
+        foreach($cp as $it) {
+           $item = Item::load($it->item_id);  
+           if($item==null) continue;
+           $item->quantity  =1;
+           $item->price  =$item->getPrice($this->docform->pricetype->getValue(), $store_id);
+           
+           $this->_itemlist[$item->item_id] = $item;
+        }
+  
+        $this->docform->detail->Reload();
+
+  
+        $this->calcTotal();
+        $this->calcPay();
+    }
+   
 }
 
 

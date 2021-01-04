@@ -43,8 +43,9 @@ class OrderCust extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->add(new TextInput('notes'));
-
-
+        $cp =  \App\Session::getSession()->clipboard ;
+        $this->docform->add(new ClickLink('paste',$this,'onPaste'))->setVisible(is_array($cp) && count($cp)>0);
+         
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -378,4 +379,25 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->setVisible(true);
     }
 
+    
+  public function onPaste($sender) {
+       
+        $cp =  \App\Session::getSession()->clipboard ;
+      
+        foreach($cp as $it) {
+           $item = Item::load($it->item_id);  
+           if($item==null) continue;
+           $item->quantity  =1;
+           $item->price  = 0;
+           
+           $this->_itemlist[$item->item_id] = $item;
+        }
+  
+        $this->docform->detail->Reload();
+
+  
+        $this->calcTotal();
+     
+    }
+       
 }
