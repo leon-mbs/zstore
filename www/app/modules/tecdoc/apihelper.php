@@ -13,11 +13,12 @@ class APIHelper
    
 
  
-        $this->code = $modules['td_code'];
+        $this->token = $modules['td_code'];
         $this->email = $modules['td_email'];
         
         $this->api = $modules['td_host'];
         
+        $this->api  =rtrim($this->api,'/') . '/';
 
     }
 

@@ -93,7 +93,7 @@ class Application extends \Zippy\WebApplication
 
                 //для произвольной страницы
                 $params = array_slice($api, 3);
-                echo call_user_func_array(array($page, $api[2]), $params);
+                call_user_func_array(array($page, $api[2]), $params);
                 die;
             } catch(\Throwable $e) {
                 global $logger;
