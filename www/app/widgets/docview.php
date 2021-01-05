@@ -96,7 +96,7 @@ class DocView extends \Zippy\Html\PageFragment
         $html = $doc->generateReport();
         $this->preview->setText($html, true);
         $htmlpos = $doc->generatePosReport();
-        $htmlpos = $doc->generatePosReport();
+  
         $this->previewpos->setText($htmlpos, true);
 
 

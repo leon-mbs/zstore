@@ -48,9 +48,5 @@
         <td align="right">{{total}}</td>
     </tr>
 
-
-    <tr style="font-weight: bolder;">
-        <td colspan="3"><br>Благодарим за доверие к нам!</td>
-
-    </tr>
+ 
 </table>
