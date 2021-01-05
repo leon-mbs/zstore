@@ -108,7 +108,7 @@ class OrderCustList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
-        $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
+      //  $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         //проверяем  что есть ТТН
         $d = $this->_doc->getChildren('GoodsReceipt');
         $ttn = count($d) > 0;
@@ -144,7 +144,7 @@ class OrderCustList extends \App\Pages\Base
         }
         if ($sender->id == "bclose") {
 
-            $this->_doc->payamount = $this->_doc->amount;
+           // $this->_doc->payamount = $this->_doc->amount;
             $this->_doc->save();
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
@@ -161,7 +161,7 @@ class OrderCustList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-        $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
+       // $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         //доставлен
         $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
 
@@ -223,6 +223,7 @@ class OrderCustList extends \App\Pages\Base
 
             $this->statuspan->statusform->setVisible(false);
         }
+        
     }
 
     //просмотр
@@ -232,14 +233,16 @@ class OrderCustList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
-
+      
         $this->statuspan->setVisible(true);
+        $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(true);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
+         
     }
 
     public function editOnClick($sender) {

@@ -31,12 +31,15 @@ class APIHelper
         $ask = trim($ask, '&');
 
         $url = $this->api . "?" . $ask;
-        $ret = \Fetch\fetch($this->api . "?" . $ask, [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ])->json(true);
-
+        try{
+            $ret = \Fetch\fetch($this->api . "?" . $ask, [
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ])->json(true);
+        }  catch(\Exception $e) {
+           return array('success' => false, 'error' => $e->getMessage());            
+        }
 
         if (is_array($ret)) {
             return $ret;

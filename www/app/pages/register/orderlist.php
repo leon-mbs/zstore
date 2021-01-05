@@ -146,7 +146,7 @@ class OrderList extends \App\Pages\Base
 
         if ($sender->id == "bclose") {
 
-            $this->_doc->payamount = $this->_doc->amount;
+          //  $this->_doc->payamount = $this->_doc->amount;
             $this->_doc->save();
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
@@ -235,6 +235,7 @@ class OrderList extends \App\Pages\Base
         }
 
         $this->statuspan->setVisible(true);
+        $this->statuspan->statusform->setVisible(true);        
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
@@ -306,10 +307,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         if ($status == 1) {
             $where .= " and  state =1 ";
         }
-        if ($status == 2) {
-            $where .= " and  amount > payamount";
-        }
-
+  
 
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {
