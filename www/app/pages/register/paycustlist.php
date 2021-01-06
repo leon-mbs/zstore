@@ -28,6 +28,9 @@ class PayCustList extends \App\Pages\Base
     public  $_pays      = array();
     public  $_totdebet  = 0;
     public  $_totcredit = 0;
+    private  $_docsin = "'GoodsReceipt','InvoiceCust','ReturnIssue' ";
+    private  $_docsout = "'GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct' ";
+    private  $_state = "1,2,3,17,8";
 
     /**
      *
@@ -99,13 +102,16 @@ class PayCustList extends \App\Pages\Base
 
         $sql = "select c.customer_name,c.phone, c.customer_id,sum(sam) as sam, fl from (
         select customer_id,   coalesce( (payamount - payed),0) as sam,  
-        (case when
-          meta_name in('GoodsReceipt','ReturnIssue')
-         then -1 else 1 end ) as fl
+        (case when  meta_name in({$this->_docsin}) then -1 
+             when  meta_name in({$this->_docsout}) then 1 
+             else 0 end ) as fl
             from `documents_view`  
-            where {$br}  payamount > 0 and payamount > payed  and state not in (1,2,3,17,8)   
+            where {$br}  payamount > 0 and payamount > payed  and state not in ({$this->_state})   
             ) t join customers c  on t.customer_id = c.customer_id    {$hold}
-             group by c.customer_name,c.phone, c.customer_id, fl order by c.customer_name ";
+             group by c.customer_name,c.phone, c.customer_id, fl
+             having fl <> 0 
+             order by c.customer_name ";
+ 
         $this->_custlist = \App\DataItem::query($sql);
         $this->_totcredit = 0;
         $this->_totdebet = 0;
@@ -145,10 +151,10 @@ class PayCustList extends \App\Pages\Base
     public function updateDocs() {
 
         if ($this->_cust->fl == -1) {
-            $docs = "'GoodsReceipt','InvoiceCust','ReturnIssue'";
+            $docs = " meta_name in({$this->_docsin})  ";
         }
         if ($this->_cust->fl == 1) {
-            $docs = "'GoodsIssue', 'ServiceAct','Invoice','POSCheck','RetCustIssue'";
+            $docs = " meta_name    in({$this->_docsout})  ";
         }
 
         $br = "";
@@ -158,7 +164,7 @@ class PayCustList extends \App\Pages\Base
         }
 
 
-        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  > payed  and state not in (1,2,3,17,8)  and meta_name in({$docs})", "(payamount - payed) desc");
+        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  > payed  and state not in ({$this->_state})  and {$docs}", "(payamount - payed) desc");
 
         $this->plist->doclist->Reload();
     }
@@ -251,13 +257,14 @@ class PayCustList extends \App\Pages\Base
             $this->setError('sumoverpay');
             return;
         }
-       
-        $type = \App\Entity\Pay::PAY_BASE_INCOME;
-        //закупки  и возвраты
-        if ($this->_doc->meta_name == 'GoodsReceipt' || $this->_doc->meta_name == 'InvoiceCust' || $this->_doc->meta_name == 'ReturnIssue') {
+        $type = Pay::PAY_BASE_INCOME    ; 
+              
+    
+        if (  in_array($this->_doc->meta_name,array('GoodsReceipt','InvoiceCust','ReturnIssue') ) ){
             $amount = 0 - $amount;
             $type = Pay::PAY_BASE_OUTCOME;
         }
+       
         
         if($pos_id>0) {
             $pos = \App\Entity\Pos::load($pos_id);
@@ -342,7 +349,7 @@ class PayCustList extends \App\Pages\Base
            
                  
             }
-M
+ 
         }
             
         H::exportExcel($data,$header,'baylist.xlsx') ;   

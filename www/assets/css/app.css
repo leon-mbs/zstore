@@ -1,5 +1,5 @@
 body {
-    font-family: "Roboto", "Helvetica Neue";
+    font-family: "Arial", "Helvetica Neue";
     background-color: #FaFaFa;
 }
 
@@ -16,6 +16,13 @@ body {
     color: #00c0ef;
     font-style: italic;
 }
+
+.ctable  {
+   color:#000; 
+   background-color: #fff;
+   font-family: "Arial";
+}
+
 
 .ctable td {
     padding: 4px;

@@ -110,7 +110,7 @@ class PPOHelper
 
         if ($signed['success'] == true) {
 
-
+     file_put_contents("d:/leon/denwer72/home/local.gost/www/signedask",$signed['data']) ;
             $request = curl_init();
 
             curl_setopt_array($request, [

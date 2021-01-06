@@ -3,7 +3,7 @@
 namespace App\API;
 
 /**
- * Класс  для Json RPC
+ * Пример  для  использования Json RPC
  * пример  вызова /api/Orders
  */
 class Orders extends \App\JsonRPC

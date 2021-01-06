@@ -9,7 +9,7 @@
     }
 </style>
 <div class="row">
-    <div class="col-12 col-lg-10">
+    <div class="col-12 col-xl-10">
 
         <div zippy="tpanel">
             <h3>Поиск автозапчастей</h3>
@@ -105,8 +105,29 @@
         </div>
 
 
-        <div zippy="tlist">
+        <div zippy="tlist" class="row">
+      
+        <div class="col-12 col-md-6   ">
             <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> К поиску</a>
+         </div>
+  
+         
+               <div   zippy="cartpan" class="col-12 col-md-6  ">
+                <b><i class="fa fa-shopping-cart text-cyan"></i> Корзина</b>
+                <table class="table table-sm">
+                    <tr zippy="cardlist">
+                        <td zippy="carcode"></td>
+                        <td zippy="cardbrand"></td>
+                        <td zippy="carditem"></td>
+                        <td><a zippy="delcard"><i class="fa fa-trash   text-cyan "  ></i></a></td>
+                    </tr>
+
+                </table>
+                <a zippy="copycart"><i class="fa fa-copy  text-cyan"></i> Скопировать</a>     
+              </div>
+         
+          
+          <div class="col-12">
             <table class="table table-sm">
                 <tr>
                     <th>Бренд</th>
@@ -125,11 +146,14 @@
                     <td class="text-right"><span zippy="qty" class="badge badge-info badge-pill"></span></td>
                     <td class="text-right"><span zippy="price" class="badge badge-info badge-pill"></span></td>
                     <td>
+                     <a title="Корзина" zippy="cart"><i class="fa fa-shopping-cart"></i></a>
+                          &nbsp; &nbsp;                  
                         <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
                     </td>
                 </tr>
             </table>
             <div zippy="pag"></div>
+        </div>
         </div>
 
         <div zippy="tview" class="row">
@@ -164,7 +188,7 @@
 
             {{#isimage}}
             <div class="col-12 col-md-6  col-xl-4 justify-content-center">
-                <b style="display:block">{{imagedesc}}</b>
+                <b style="display:block">Рисунок</b>
                 <img src='{{imagepath}}' style="width:100%"/>
 
 
@@ -176,6 +200,7 @@
                 <table class="ctable">
                     {{#oem}}
                     <tr>
+                        <td> {{manufacturer_name}}</td>
                         <td> {{oemnum}}</td>
                     </tr>
                     {{/oem}}

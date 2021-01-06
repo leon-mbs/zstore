@@ -1,6 +1,6 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
-        <td colspan="3">Замовлення {{document_number}}</td>
+        <td colspan="3">Накладна  №{{document_number}}</td>
     </tr>
     <tr>
 
@@ -16,7 +16,7 @@
 
 
     <tr>
-        <td colspan="3"> {{phone}}</td>
+        <td colspan="3"> Тел. {{phone}}</td>
     </tr>
     {{#customer_name}}
     <tr>
@@ -49,5 +49,6 @@
     </tr>
 
 
-   
+  
+    </tr>
 </table>

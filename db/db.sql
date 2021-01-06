@@ -91,7 +91,7 @@ CREATE TABLE `docstatelog` (
   `hostname` varchar(64) NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=1149 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1199 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `docstatelog_view`;
 /*!50001 DROP VIEW IF EXISTS `docstatelog_view`*/;
@@ -134,7 +134,7 @@ CREATE TABLE `documents` (
   KEY `user_id` (`user_id`),
   KEY `branch_id` (`branch_id`),
   KEY `meta_id` (`meta_id`)
-)  AUTO_INCREMENT=310 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=331 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `documents_view`;
 /*!50001 DROP VIEW IF EXISTS `documents_view`*/;
@@ -190,9 +190,9 @@ CREATE TABLE `entrylist` (
   PRIMARY KEY (`entry_id`),
   KEY `document_id` (`document_id`),
   KEY `stock_id` (`stock_id`)
-)  AUTO_INCREMENT=802 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=821 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-ALTER DATABASE `zstore` CHARACTER SET utf8 COLLATE utf8_general_ci ;
+ ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -218,8 +218,8 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-ALTER DATABASE `zstore` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
-ALTER DATABASE `zstore` CHARACTER SET utf8 COLLATE utf8_general_ci ;
+;
+ ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -244,7 +244,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-ALTER DATABASE `zstore` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
+;
 DROP TABLE IF EXISTS `entrylist_view`;
 /*!50001 DROP VIEW IF EXISTS `entrylist_view`*/;
 SET @saved_cs_client     = @@character_set_client;
@@ -335,7 +335,7 @@ CREATE TABLE `firms` (
   `details` longtext NOT NULL,
   `disabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`firm_id`)
-)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `images`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -346,7 +346,7 @@ CREATE TABLE `images` (
   `mime` varchar(16) DEFAULT NULL,
   `thumb` longblob,
   PRIMARY KEY (`image_id`)
-)  AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `issue_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -514,7 +514,7 @@ CREATE TABLE `items` (
   KEY `item_code` (`item_code`),
   KEY `itemname` (`itemname`),
   KEY `cat_id` (`cat_id`)
-)  AUTO_INCREMENT=575 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=581 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `items_view`;
 /*!50001 DROP VIEW IF EXISTS `items_view`*/;
@@ -694,7 +694,7 @@ CREATE TABLE `notifies` (
   `sender_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `user_id` (`user_id`)
-)  AUTO_INCREMENT=92 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -729,7 +729,7 @@ CREATE TABLE `paylist` (
   `detail` longtext,
   PRIMARY KEY (`pl_id`),
   KEY `document_id` (`document_id`)
-)  AUTO_INCREMENT=264 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=291 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `paylist_view`;
 /*!50001 DROP VIEW IF EXISTS `paylist_view`*/;
@@ -760,7 +760,7 @@ CREATE TABLE `poslist` (
   `details` longtext NOT NULL,
   `branch_id` int(11) DEFAULT '0',
   PRIMARY KEY (`pos_id`)
-)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `ppo_zformstat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -927,7 +927,7 @@ CREATE TABLE `shop_products` (
   `comments` int(11) DEFAULT '0',
   PRIMARY KEY (`product_id`),
   KEY `group_id` (`group_id`)
-)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `shop_products_view`;
 /*!50001 DROP VIEW IF EXISTS `shop_products_view`*/;
@@ -966,7 +966,7 @@ CREATE TABLE `store_stock` (
   `sdate` date DEFAULT NULL,
   PRIMARY KEY (`stock_id`),
   KEY `item_id` (`item_id`)
-)  AUTO_INCREMENT=573 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=575 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `store_stock_view`;
 /*!50001 DROP VIEW IF EXISTS `store_stock_view`*/;
@@ -1014,7 +1014,7 @@ CREATE TABLE `timesheet` (
   `t_break` smallint(6) DEFAULT '0',
   PRIMARY KEY (`time_id`),
   KEY `emp_id` (`emp_id`)
-)  AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `timesheet_view`;
 /*!50001 DROP VIEW IF EXISTS `timesheet_view`*/;
@@ -1082,7 +1082,7 @@ CREATE TABLE `zformstat` (
   `document_number` varchar(255) NOT NULL,
   `amount3` decimal(10,2) NOT NULL,
   PRIMARY KEY (`zf_id`)
-)  AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50001 DROP VIEW IF EXISTS `contracts_view`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;

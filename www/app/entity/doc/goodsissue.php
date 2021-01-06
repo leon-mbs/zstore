@@ -144,4 +144,45 @@ class GoodsIssue extends Document
         return 'РН-000000';
     }
 
+    
+   public function generatePosReport() {
+
+        $detail = array();
+
+        foreach ($this->unpackDetails('detaildata') as $item) {
+
+
+            $detail[] = array(
+                "tovar_name" => $item->itemname,
+                "quantity"   => H::fqty($item->quantity),
+                "price"      => H::fa($item->price),
+                "amount"     => H::fa($item->quantity * $item->price)
+            );
+        }
+
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "firm_name"       => $firm["firm_name"],
+                        "phone"           => $firm["phone"],
+                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "document_number" => $this->document_number,
+                        "total"           => H::fa($this->amount)
+
+        );
+
+
+        $report = new \App\Report('doc/goodsissue_bill.tpl');
+
+        $html = $report->generate($header);
+
+        return $html;
+    }
+   
+   
+  public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_POS,  self::EX_PDF);
+    }
+   
 }

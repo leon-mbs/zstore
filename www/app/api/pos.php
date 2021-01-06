@@ -3,24 +3,18 @@
 namespace App\API;
 
 /**
- * Класс  для  работы  с  кассовыми  апаратами
+ * Пример  для  создания  произвольного класса  через  API
  * пример  вызова /api/Pos/Add/1
  */
 class Pos
 {
-
-    //Демо
+  
     public function Add($p) {
-        $error = "";
-        $xml = $_POST['data'];
-        $user = $_POST['user'];
-        $pass = $_REQUEST['pass'];
+      
+        //если  POST
+        $request = file_get_contents('php://input');
 
-        //$doc = new \App\Entity\Doc\RegisterReceipt();
-        // todo
-        // $doc->save();
-
-        return "";
+        echo "Hi";
     }
 
 }

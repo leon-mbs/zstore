@@ -9,7 +9,7 @@ if (strpos($_SERVER['REQUEST_URI'], 'index.php') > 1) {
 }
 
 try {
-    
+  
 
     if ($_COOKIE['remember'] && \App\System::getUser()->user_id == 0) {
         $arr = explode('_', $_COOKIE['remember']);
