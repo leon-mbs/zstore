@@ -319,6 +319,9 @@
   "noselposterm": "Не вибраний POS термiнал",
   "notfound": "Нiчого не знайдено",
   "copied": "Скопiйовано",
+  "apijwt": "Авторизацiя з JWT (Bearer)",
+  "apibasic": "Basic авторизацiя",
+  "apinologin": "Автоматична  авторизацiя",
      
   "refreshed": "Оновлено",
   "sent": "Відправлено",

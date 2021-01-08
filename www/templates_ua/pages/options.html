@@ -247,7 +247,33 @@
                 <button class="btn btn-primary" type="submit">Зберегти</button>
             </div>
         </form>
+            {{#hideblock}}
+       <h4>Налаштування API</h4>
+        <small>Налаштування API для доступу до даних з iнших систем</small>
+        <form zippy="api">
+ 
+            <div class="form-group  ">
+                <label for="atype">Тип авторизацii</label>
+                <select   class="form-control" zippy="atype">
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-label="akey" for="akey">Ключ</label>
+                <input zippy="akey"  pattern="[a-zA-Z0-9]+"  class="form-control"  >
+                <small data-label="akey" >Довiльне  латиничне слово для шифрування  токену<small>
+            </div>
+            <div class="form-group">
+                <label data-label="aexp"  for="aexp">Час життя  токену в хв.</label>
+                <input zippy="aexp"   pattern="[0-9]+" class="form-control" value="0"  >
 
+            </div>
+  
+
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+            </div>
+        </form>
+        {{/hideblock}}
     </div>
     <div class="col-12 col-md-10 col-lg-8   ">
         <h4>Налаштування меню</h4>

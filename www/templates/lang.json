@@ -329,6 +329,9 @@
   "noselposterm": "Не  выбран POS терминал",
   "notfound": "Ничего не  найдено",
   "copied": "Скопировано",
+  "apijwt": "Авторизация с JWT (Bearer)",
+  "apibasic": "Basic авторизация",
+  "apinologin": "Автоматическая  авторизация",
  
   "refreshed": "Обновлено",
   "sent": "Отправлено",

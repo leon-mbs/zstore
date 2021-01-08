@@ -141,6 +141,21 @@ class Options extends \App\Pages\Base
         $this->printer->pbarcode->setChecked($printer['pbarcode']);
         $this->printer->pprice->setChecked($printer['pprice']);
 
+        $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
+  
+        $this->api->add(new TextInput('akey'));
+        $this->api->add(new TextInput('aexp'));
+        $this->api->add(new DropDownChoice('atype',array('1'=>H::l('apijwt'),'2'=>H::l('apibasic'),'3'=>H::l('apinologin')),1))->onChange($this,'onApiType');
+        $api = System::getOptions("api");
+        if (!is_array($api)) {
+            $api = array('exp'=>60,'key'=>'qwerty','atype'=>1);
+        }
+        $this->api->akey->setText($api['key']);
+        $this->api->aexp->setValue($api['exp']);
+        $this->api->atype->setValue($api['atype']);
+         
+        $this->onApiType($this->api->atype);
+        
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
         $this->add(new Panel('listpan'));
@@ -235,6 +250,22 @@ class Options extends \App\Pages\Base
         $printer['pprice'] = $this->printer->pprice->isChecked() ? 1 : 0;
 
         System::setOptions("printer", $printer);
+        $this->setSuccess('saved');
+    }
+    public function onApiType($sender) {
+      $type = $this->api->atype->getValue() ;
+      $this->api->aexp->setVisible($type==1) ;
+      $this->api->akey->setVisible($type==1) ;
+      
+      $this->goAnkor('api')  ;
+    }
+    public function saveApiOnClick($sender) {
+        $api = array();
+        $printer['exp'] = $this->api->aexp->getText();
+        $printer['key'] = $this->api->akey->getText();
+        $printer['atype'] = $this->api->atype->getValue();
+
+        System::setOptions("api", $api);
         $this->setSuccess('saved');
     }
 

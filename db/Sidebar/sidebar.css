@@ -1,0 +1,181 @@
+li {
+	list-style: none;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+.sidebar {
+	background-color: #343a40;
+	position: fixed;
+	left: 0;
+	top: 0;
+	height: 100%;
+	overflow-y: auto;
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.15);
+	font-size: 18px;
+	color: #c2c7d0;
+	z-index: 10000;
+}
+
+.sidebar__content {
+	display: flex;
+}
+
+.sidebar__subitem-wrap:hover {
+	color: #fff;
+	cursor: pointer;
+	background-color: #494e53;
+}
+
+.sidebar__icon {
+	width: 50px;
+	text-align: center;
+}
+
+.sidebar__link {
+	width: 250px;
+	margin: 0;
+	padding-left: 10px;
+	padding-right: 20px;
+}
+
+.sidebar__header {
+	border-bottom: 1px solid #4b545c;
+	margin-bottom: 10px;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.sidebar__menu {
+	padding: 0;
+	margin: 0;
+}
+
+
+.sidebar__content {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 3px;
+}
+
+.sidebar__content {
+	color: #c2c7d0;
+	text-decoration: none;
+}
+
+.sidebar__list {
+	padding: 0;
+	margin: 0;
+}
+
+.sidebar__body .sidebar__content:hover {
+	color: #fff;
+	cursor: pointer;
+	background-color: #494e53;
+}
+
+
+.sidebar__content_active {
+	color: #fff;
+	background-color: #494e53;
+}
+
+
+.sidebar__wrap {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+
+.sidebar__list {
+	display: none;
+}
+
+.arrow-rotate {
+	transform: rotate(-90deg);
+}
+
+.sidebar__arrow i {
+	transition: all 0.1s linear;
+}
+
+.sidebar__subitem-wrap {
+	color: #c2c7d0;
+	text-decoration: none;
+	padding: 10px 20px 10px 60px;
+	display: block;
+	margin-bottom: 3px;
+}
+
+.sidebar__subitem-wrap_active {
+	color: #fff;
+	background-color: #494e53;
+}
+
+.sidebar__second .sidebar__subitem-wrap {
+	padding: 10px 20px 10px 80px;
+	display: block;
+}
+
+.sidebar__link {
+	display: none;
+}
+
+.wrap {
+	margin-left: 50px;
+}
+
+.wrap-open {
+	margin-left: 300px;
+}
+
+.sidebar-btn {
+	background-color: transparent;
+	border: 0;
+	outline: 0;
+	color: #007bff;
+	font-size: 18px;
+}
+
+.sidebar-btn:focus {
+	outline: 0;
+}
+
+.sidebar__header .sidebar__content {
+	margin-bottom: 0;
+}
+
+header {
+	height: 60px;
+	display: flex;
+	-webkit-align-items: center;
+	        align-items: center;
+	border-bottom: 1px solid #dee2e6;
+}
+
+.sidebar-bg {
+	background-color: black;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 9999;
+	opacity: 0.1;
+	display: none;
+}
+
+@media screen and (max-width: 992px) {
+	.sidebar__icon {
+		display: none;
+	}
+	.wrap {
+		margin-left: 0;
+	}
+}
