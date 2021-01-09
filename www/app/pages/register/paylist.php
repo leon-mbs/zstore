@@ -40,8 +40,6 @@ class PayList extends \App\Pages\Base
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
@@ -186,7 +184,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(paydate) <= " . $conn->DBDate($this->page->filter->to->getDate());
+        $where = " 1=1 ";
 
         $author = $this->page->filter->fuser->getValue();
         $type = $this->page->filter->ftype->getValue();

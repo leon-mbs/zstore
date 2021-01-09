@@ -322,6 +322,7 @@
   "apijwt": "Авторизацiя з JWT (Bearer)",
   "apibasic": "Basic авторизацiя",
   "apinologin": "Автоматична  авторизацiя",
+  "opened": "Вiдкритi",
      
   "refreshed": "Оновлено",
   "sent": "Відправлено",

@@ -16,9 +16,9 @@ class APIHelper
         $this->token = $modules['td_code'];
         $this->email = $modules['td_email'];
         
-        $this->api = $modules['td_host'];
+    
         
-        $this->api  =rtrim($this->api,'/') . '/';
+        $this->api  =rtrim($modules['td_host'],'/') .'/api' ;
 
     }
 

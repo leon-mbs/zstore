@@ -37,9 +37,7 @@ class OrderCustList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
-
+   
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 3 => 'Все'), 0));
@@ -297,9 +295,8 @@ class OrderCustDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
-        $where .= " and meta_name  = 'OrderCust' ";
+     
+        $where  = "   meta_name  = 'OrderCust' ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {

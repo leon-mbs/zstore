@@ -38,12 +38,10 @@ class GIList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
-
+      
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l('Открытые'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
 
@@ -302,10 +300,8 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
-
-        $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
-        $where .= " and meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty' ) ";
+     
+        $where  = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
