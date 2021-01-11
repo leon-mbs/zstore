@@ -13,10 +13,6 @@
                 <label for="document_number">Номер документа</label>
                 <input class="form-control" type="text" zippy="document_number">
             </div>
-            <div class="form-group">
-                <label for="document_date"> Дата</label>
-                <input class="form-control" type="text" zippy="document_date" required="required">
-            </div>
 
             <div class="form-group  ">
                 <label for="payment">З рахунку</label>
@@ -34,13 +30,31 @@
                 </select>
             </div>
 
+
+        </div>
+        <div class="col-12 col-md-4 col-xl-3">
+              <div class="form-group">
+                <label for="document_date"> Дата</label>
+                <input class="form-control" type="text" zippy="document_date" required="required">
+            </div>
+
+                  <div class="form-group">
+                <label for="customer">Контрагент</label>
+                <input   class="form-control" type="text" zippy="customer">
+            </div>
+            <div class="form-group">
+                <label for="emp">Спiвробiтник</label>
+                <select class="form-control select2" zippy="emp">
+                    <option value="0">Не вибраний</option>
+                </select>
+            </div>
+
             <div class="form-group  ">
                 <label for="notes">Примітка </label>
 
                 <input class="form-control" type="text" zippy="notes">
 
             </div>
-
         </div>
     </div>
 

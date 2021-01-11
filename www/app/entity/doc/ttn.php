@@ -47,7 +47,7 @@ class TTN extends Document
 
         }
 
-        $totalstr = H::sumstr($this->amount);
+     
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
@@ -56,30 +56,20 @@ class TTN extends Document
                         "firm_name"       => $firm['firm_name'],
                         "customer_name"   => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
-                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "store_name"      => $this->headerdata["store_name"],
                         "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
-                        "ship_address"    => $this->headerdata["ship_address"],
-                        "ship_number"     => $this->headerdata["ship_number"],
-                        "delivery_cost"   => H::fa($this->headerdata["delivery_cost"]),
+                        "ship_address"    => strlen($this->headerdata["ship_address"]) >0 ? $this->headerdata["ship_address"] : false ,
+                        "ship_number"     => strlen($this->headerdata["ship_number"]) >0 ? $this->headerdata["ship_number"] : false ,
+                        "delivery_name"     => $this->headerdata["delivery_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
 
-                        "totalstr"  => $totalstr,
+                     
                         "total"     => H::fa($this->amount),
-                        "payed"     => H::fa($this->payed),
-                        "paydisc"   => H::fa($this->headerdata["paydisc"]),
-                        "isdisc"    => $this->headerdata["paydisc"] > 0,
-                        "prepaid"   => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
-                        "payamount" => H::fa($this->payamount)
         );
 
-        if ($this->headerdata["contract_id"] > 0) {
-            $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
-            $header['contract'] = $contract->contract_number;
-            $header['createdon'] = H::fd($contract->createdon);
-        }
+ 
 
 
         if ($this->headerdata["sent_date"] > 0) {
@@ -88,9 +78,8 @@ class TTN extends Document
         if ($this->headerdata["delivery_date"] > 0) {
             $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
         }
-        $header["isdelivery"] = $this->headerdata["delivery"] > 1;
-
-        $report = new \App\Report('doc/goodsissue.tpl');
+    
+        $report = new \App\Report('doc/ttn.tpl');
 
         $html = $report->generate($header);
 
@@ -112,21 +101,7 @@ class TTN extends Document
             }
         }
 
-        //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-            $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->discount > 0) {
-                return; //процент
-            } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                $customer->save();
-            }
-        }
-
-
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
-        }
+   
 
         return true;
     }
@@ -141,48 +116,14 @@ class TTN extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'РН-000000';
+        return 'ТТН-000000';
     }
 
     
-   public function generatePosReport() {
-
-        $detail = array();
-
-        foreach ($this->unpackDetails('detaildata') as $item) {
-
-
-            $detail[] = array(
-                "tovar_name" => $item->itemname,
-                "quantity"   => H::fqty($item->quantity),
-                "price"      => H::fa($item->price),
-                "amount"     => H::fa($item->quantity * $item->price)
-            );
-        }
-
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
-
-        $header = array('date'            => H::fd($this->document_date),
-                        "_detail"         => $detail,
-                        "firm_name"       => $firm["firm_name"],
-                        "phone"           => $firm["phone"],
-                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
-                        "document_number" => $this->document_number,
-                        "total"           => H::fa($this->amount)
-
-        );
-
-
-        $report = new \App\Report('doc/goodsissue_bill.tpl');
-
-        $html = $report->generate($header);
-
-        return $html;
-    }
    
    
-  public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_POS,  self::EX_PDF);
+   public function supportedExport() {
+        return array(self::EX_EXCEL,   self::EX_PDF);
     }
    
 }

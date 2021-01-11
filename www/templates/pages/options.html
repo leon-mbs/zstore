@@ -1,10 +1,29 @@
 <html>
 <body>
-<h2>Настройки </h2>
+ 
 <div class="row">
-    <div class="col-12 col-md-6 col-lg-4     ">
-        <h4>Настройки системы</h4>
-
+    <div class="col-12  ">
+            <ul class="nav nav-tabs"  role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active"  id="tablink1"  data-toggle="pill" href="#tab1" role="tab"  ><h3>Настройки системы </h3></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="tablink2"  data-toggle="pill" href="#tab2" role="tab" ><h3>Настройка  меню</h3></a>
+              </li>
+             
+            </ul>
+    
+    
+      <div class="tab-content"  >       
+    
+    <div class="tab-pane  show   active" id="tab1" role="tabpanel" >
+        <div class="row">
+       
+       <div class="col-12  col-md-5 col-xl-4  ">
+        
+          <div class="card">
+          <div class="card-body">
+          <h4>Общие  настройки</h4>
         <form zippy="common">
             <div class="form-group">
                 <label for="shopname">Название  сайта </label>
@@ -124,6 +143,12 @@
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title=" Разрешение на  списывание  количества  при  котором  на  складе  появляется  отрицательное  значение "></i>
             </div>
+           <div class="form-check">
+                <input zippy="noallowfiz" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="noallowfiz">Не разрешать накладные без  контрагента </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Покупатель должен  быть  указан  и занесен  в справочник "></i>
+            </div>
             <div class="form-check">
                 <input zippy="useval" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="useval">Валюта в закупках</label>
@@ -161,7 +186,14 @@
             </div>
 
         </form>
+        </div>
+        </div>
+        </div>
+       <div class="col-12  col-md-5 col-xl-4  "> 
+        
         {{#useval}}
+        <div class="card">
+          <div class="card-body">        
         <h4>Курсы валют </h4>
         <form zippy="valform">
             <div class="form-group">
@@ -192,9 +224,11 @@
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
         </form>
+       </div>
+        </div>        
         {{/useval}}
-
-
+            <div class="card">
+          <div class="card-body">  
         <h4>Настройка принтера</h4>
         <small>Настройки узкого принтера для печати чеков и этикеток</small>
         <form zippy="printer">
@@ -243,7 +277,12 @@
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
         </form>
+       </div>
+        </div>        
+      
         {{#hideblock}}
+        <div class="card">
+          <div class="card-body">          
        <h4>Настройка API</h4>
         <small>Настройки API для доступа к данным  с других систем</small>
         <form zippy="api">
@@ -269,13 +308,23 @@
                 <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
         </form>
+      </div>
+        </div>         
         {{/hideblock}}
+    
+        
+         
+         </div>
+         </div>
+        
     </div>
-    <div class="col-12 col-md-10 col-lg-8   ">
+    <div class="tab-pane    " id="tab2" role="tabpanel">
+        <div class="card">
+          <div class="card-body">       
         <h4>Настройка меню</h4>
         <div zippy="listpan">
-            <div class="row">
-                <div class="col-12  ">
+            
+                <div class="col-12 col-lg-10 col-xl-8  ">
                     <form zippy="filter" class="form-inline" role="form">
                         <div class="form-check   ">
 
@@ -325,9 +374,10 @@
                         </tr>
                     </table>
                 </div>
-            </div>
+            
         </div>
-        <div class="col-12  col-md-8 col-lg-6">
+        <div class="col-12  col-md-4 col-xl-3">
+        
             <div zippy="editpan">
                 <h5> Редактирование пункта меню</h5>
                 <form zippy="editform" role="form">
@@ -371,8 +421,26 @@
 
 
     </div>
-
+    </div>
+    </div>
+   
+    
+    
+    
+   </div>
+   
+   </div>
 </div>
+  {{#tab2}}
+<script>
+
+
+  var someTabTriggerEl = document.querySelector('#tablink2')
+  var tab = new bootstrap.Tab(someTabTriggerEl)
+
+  tab.show()
+</script>
+  {{/tab2}}
 <script>
     function check_rowdelete() {
         return confirm("Удалить  запись?")

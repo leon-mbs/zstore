@@ -15,15 +15,7 @@
 
     </tr>
     {{/isfirm}}
-    {{#iscontract}}
-    <tr>
-
-        <td></td>
-        <td valign="top"><b>Договор</b></td>
-        <td colspan="5">{{contract}} от {{createdon}}</td>
-
-    </tr>
-    {{/iscontract}}
+ 
 
     <tr>
         <td></td>
@@ -37,20 +29,27 @@
         <td><b>Заказ</b></td>
         <td colspan="5">{{order}}</td>
     </tr>
-    {{/order}}
-    {{#isdelivery}}
+   {{/order}}
+    <tr>
+        <td></td>
+        <td><b>Доставка</b></td>
+        <td colspan="5">{{delivery_name}}</td>
+    </tr>
+
+   {{#ship_address}}
     <tr>
         <td></td>
         <td><b>Адрес</b></td>
         <td colspan="5">{{ship_address}}</td>
     </tr>
-
-
+   {{/ship_address}}
+   {{#ship_number}}
     <tr>
         <td></td>
         <td><b>Декларация</b></td>
         <td colspan="4">{{ship_number}}</td>
     </tr>
+    {{/ship_number}}
     <tr>
         <td></td>
         <td><b>Дата отправки</b></td>
@@ -67,10 +66,10 @@
         <td colspan="5"> {{emp_name}}</td>
     </tr>
 
-    {{/isdelivery}}
+ 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-            Накладная № {{document_number}} от {{date}} <br>
+            ТТН № {{document_number}} от {{date}} <br>
         </td>
     </tr>
 
@@ -102,33 +101,7 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-    {{^prepaid}}
-    {{#isdisc}}
-    <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
-    </tr>
-    {{/isdisc}}
-    {{#isdelivery}}
-    <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Стоимость доставки:</td>
-        <td align="right">{{delivery_cost}}</td>
-    </tr>
-    {{/isdelivery}}
-
-
-    <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">К оплате:</td>
-        <td align="right">{{payamount}}</td>
-    </tr>
-    <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Оплата:</td>
-        <td align="right">{{payed}}</td>
-    </tr>
-    {{/prepaid}}
-    <tr>
-        <td colspan="7">На сумму <b>{{totalstr}}<b></td>
-
-    </tr>
+ 
+ 
 </table>
 

@@ -19,6 +19,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -34,7 +35,7 @@ class TTN extends \App\Pages\Base
     private $_basedocid = 0;
     private $_rowid     = 0;
     private $_orderid   = 0;
-    private $_prevcust  = 0;   // преыдущий контрагент
+    
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -51,23 +52,6 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new Date('sent_date'));
         $this->docform->add(new Date('delivery_date'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
-
-        $this->docform->add(new Label('discount'))->setVisible(false);
-        $this->docform->add(new TextInput('editpaydisc'));
-        $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
-        $this->docform->add(new Label('paydisc', 0));
-
-
-        $this->docform->add(new TextInput('editpayamount'));
-        $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
-        $this->docform->add(new TextInput('editpayed', "0"));
-        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
-        $this->docform->add(new TextInput('editdelivery_cost', "0"));
-        $this->docform->add(new SubmitButton('bdelivery_cost'))->onClick($this, 'onDelivery_cost');
-        $this->docform->add(new Label('payed', 0));
-        $this->docform->add(new Label('payamount', 0));
-        $this->docform->add(new Label('delivery_cost', 0));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -80,24 +64,23 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
+        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()));
 
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
-        $this->docform->add(new DropDownChoice('delivery', array(1 => H::l('delself'), 2 => H::l('delboy'), 3 => H::l('delmail')), 1))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('delivery', array(1 => H::l('delself'), 2 => H::l('delboy'), 3 => H::l('delservice')), 1))->onChange($this, 'OnDelivery');
 
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('ship_number'));
-        $this->docform->add(new TextInput('ship_address'));
+        $this->docform->add(new TextArea('ship_address'));
+        
+        $this->docform->add(new Label('notesfromorder'));
 
-        $cp =  \App\Session::getSession()->clipboard ;
-        $this->docform->add(new ClickLink('paste',$this,'onPaste'))->setVisible(is_array($cp) && count($cp)>0);
-          
+             
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -149,18 +132,10 @@ class TTN extends \App\Pages\Base
             $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
-            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            
 
-            $this->docform->delivery_cost->setText($this->_doc->headerdata['delivery_cost']);
-            $this->docform->editdelivery_cost->setText($this->_doc->headerdata['delivery_cost']);
-            $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
-            $this->docform->payed->setText($this->_doc->payed);
-            $this->docform->editpayed->setText($this->_doc->payed);
 
-            $this->OnPayment($this->docform->payment);
+            
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -175,19 +150,19 @@ class TTN extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_orderid = $this->_doc->headerdata['order_id'];
-            $this->_prevcust = $this->_doc->customer_id;
+            
 
             $this->docform->firm->setValue($this->_doc->firm_id);
             $this->OnChangeCustomer($this->docform->customer);
 
-            $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
+            
 
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
 
         } else {
-            $this->_doc = Document::create('GoodsIssue');
+            $this->_doc = Document::create('TTN');
             $this->docform->document_number->setText($this->_doc->nextNumber());
 
             if ($basedocid > 0) {  //создание на  основании
@@ -199,22 +174,22 @@ class TTN extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
+                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
+                        $this->docform->notesfromorder->setText($basedoc->notes);
                         $this->docform->ship_address->setText($basedoc->headerdata['address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
-
-                        $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
-                        $this->docform->delivery_date->setDate($basedoc->headerdata['delivery']);
-
+                  
+                        
                         $notfound = array();
                         $order = $basedoc->cast();
 
 
                         //проверяем  что уже есть отправка
-                        $list = $order->getChildren('GoodsIssue');
+                        $list = $order->getChildren('TTN');
 
                         if (count($list) > 0) {
 
@@ -227,7 +202,7 @@ class TTN extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
-                        $this->calcPay();
+                      
 
                     }
                     if ($basedoc->meta_name == 'Invoice') {
@@ -237,13 +212,7 @@ class TTN extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                        //  $this->_orderid = $basedocid;
-                        //  $this->docform->order->setText($basedoc->document_number);
-                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
-                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
-                        $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
-                        $this->docform->delivery_date->setDate($basedoc->headerdata['delivery']);
-
+                
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
@@ -251,17 +220,12 @@ class TTN extends \App\Pages\Base
                         $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                        $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
+                        
 
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
-                        $this->calcPay();
-
-                        if ($invoice->payamount > 0) {
-                            $this->docform->payment->setValue(MoneyFund::PREPAID);// предоплата
-                        }
-
+                        
 
                     }
 
@@ -279,14 +243,11 @@ class TTN extends \App\Pages\Base
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
-
-                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
-                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
-
+                     
                         $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                        $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
+                        
 
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
@@ -294,14 +255,9 @@ class TTN extends \App\Pages\Base
                             $this->_itemlist[$item->item_id] = $item;
                         }
                         $this->calcTotal();
-                        $this->calcPay();
+                         
                     }
-                    if ($basedoc->meta_name == 'ServiceAct') {
-
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
-                        $this->docform->customer->setKey($basedoc->customer_id);
-                        $this->docform->customer->setText($basedoc->customer_name);
-                    }
+                    
 
                 }
             }
@@ -351,7 +307,7 @@ class TTN extends \App\Pages\Base
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
-        $this->calcPay();
+        
     }
 
     public function addrowOnClick($sender) {
@@ -457,7 +413,7 @@ class TTN extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
-        $this->calcPay();
+        
     }
 
     public function cancelrowOnClick($sender) {
@@ -489,31 +445,10 @@ class TTN extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
-        $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
+        
         $this->_doc->firm_id = $this->docform->firm->getValue();
         if ($this->_doc->firm_id > 0) {
             $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
-        }
-
-        $this->_doc->payamount = $this->docform->payamount->getText();
-
-        $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
-        $this->_doc->headerdata['delivery_cost'] = $this->docform->delivery_cost->getText();
-        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
-            $this->_doc->headerdata['paydisc'] = 0;
-            $this->_doc->payed = 0;
-            $this->_doc->payamount = 0;
-        }
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
-            $this->_doc->payed = 0;
-        }
-
-
-        if ($this->checkForm() == false) {
-            return;
         }
 
         $this->_doc->headerdata['order_id'] = $this->_orderid;
@@ -521,6 +456,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->headerdata['ship_address'] = $this->docform->ship_address->getText();
         $this->_doc->headerdata['ship_number'] = $this->docform->ship_number->getText();
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
+        $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
@@ -531,14 +467,21 @@ class TTN extends \App\Pages\Base
         $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
         $this->_doc->headerdata['order_id'] = $this->_orderid;
 
+        if ($this->checkForm() == false) {
+            return;
+        }        
+        
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-
-
+ 
         $this->_doc->amount = $this->docform->total->getText();
 
         $isEdited = $this->_doc->document_id > 0;
-
-
+                      
+        if($sender->id == 'senddoc' &&  $this->_doc->headerdata['delivery'] > 2 && strlen($this->_doc->headerdata['delivery'])==0)  {
+            $this->setError('nottnnumber');     
+            return;                
+        }        
+ 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -551,8 +494,8 @@ class TTN extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-
-
+ 
+                /*
                 // проверка на минус  в  количестве
                 $allowminus = System::getOption("common", "allowminus");
                 if ($allowminus != 1) {
@@ -565,11 +508,12 @@ class TTN extends \App\Pages\Base
                         }
                     }
                 }
-
+                   */
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
 
-                if ($this->_doc->parent_id > 0) {   //закрываем заказ
+              /*  if ($this->_doc->parent_id > 0) {   //закрываем заказ
                     if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
 
                     } else {
@@ -578,9 +522,13 @@ class TTN extends \App\Pages\Base
                             $order->updateStatus(Document::STATE_CLOSED);
                         }
                     }
-                }
+                } */
             } else {
                 if ($sender->id == 'senddoc') {
+                    
+                    
+                
+                    
                     if (!$isEdited) {
                         $this->_doc->updateStatus(Document::STATE_NEW);
                     }
@@ -596,11 +544,9 @@ class TTN extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-            if ($isEdited) {
-                App::RedirectBack();
-            } else {
-                App::Redirect("\\App\\Pages\\Register\\GIList");
-            }
+ 
+            App::Redirect("\\App\\Pages\\Register\\GIList");
+            
         } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -611,34 +557,9 @@ class TTN extends \App\Pages\Base
         }
     }
 
-    public function onPayAmount($sender) {
-        $this->docform->payamount->setText($this->docform->editpayamount->getText());
-        $this->goAnkor("tankor");
-    }
+  
 
-    public function onDelivery_cost($sender) {
-        $this->docform->delivery_cost->setText($this->docform->editdelivery_cost->getText());
-        $this->goAnkor("tankor");
-        $this->calcPay();
-    }
-
-    public function onPayed($sender) {
-        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
-        $payed = $this->docform->payed->getText();
-        $payamount = $this->docform->payamount->getText();
-        if ($payed > $payamount) {
-
-            $this->setWarn('inserted_extrasum');
-        } else {
-            $this->goAnkor("tankor");
-        }
-    }
-
-    public function onPayDisc() {
-        $this->docform->paydisc->setText($this->docform->editpaydisc->getText());
-        $this->calcPay();
-        $this->goAnkor("tankor");
-    }
+ 
 
     /**
      * Расчет  итого
@@ -661,67 +582,9 @@ class TTN extends \App\Pages\Base
         $this->docform->weight->setText(H::l("allweight", $weight));
         $this->docform->weight->setVisible($weight > 0);
 
-
-        $disc = 0;
-
-        $customer_id = $this->docform->customer->getKey();
-        if ($customer_id > 0) {
-            $customer = Customer::load($customer_id);
-
-            if ($customer->discount > 0) {
-                $disc = round($total * ($customer->discount / 100));
-            } else {
-                if ($customer->bonus > 0) {
-                    if ($total >= $customer->bonus) {
-                        $disc = $customer->bonus;
-                    } else {
-                        $disc = $total;
-                    }
-                }
-            }
-        }
-
-
-        $this->docform->paydisc->setText($disc);
-        $this->docform->editpaydisc->setText($disc);
+ 
     }
-
-    private function calcPay() {
-        $total = $this->docform->total->getText();
-        $disc = $this->docform->paydisc->getText();
-        $delivery_cost = $this->docform->delivery_cost->getText();
-        if ($disc > 0) {
-            $total -= $disc;
-        }
-        if ($delivery_cost > 0) {
-            $total += $delivery_cost;
-        }
-        $this->docform->editpayamount->setText(H::fa($total));
-        $this->docform->payamount->setText(H::fa($total));
-        $this->docform->editpayed->setText(H::fa($total));
-        $this->docform->payed->setText(H::fa($total));
-    }
-
-    public function OnPayment($sender) {
-        $this->docform->payed->setVisible(true);
-        $this->docform->payamount->setVisible(true);
-        $this->docform->paydisc->setVisible(true);
-
-        $b = $sender->getValue();
-
-
-        if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-            $this->docform->paydisc->setVisible(false);
-        }
-        if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payed->setText(0);
-            $this->docform->editpayed->setText(0);
-        }
-    }
-
+ 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
@@ -794,7 +657,7 @@ class TTN extends \App\Pages\Base
         }
         $this->docform->detail->Reload();
         $this->calcTotal();
-        $this->calcPay();
+   
 
         $this->_rowid = 0;
     }
@@ -822,20 +685,14 @@ class TTN extends \App\Pages\Base
             $this->setError("noselstore");
         }
         $c = $this->docform->customer->getKey();
-        $p = $this->docform->payment->getValue();
-        if ($p == 0) {
-            $this->setError("noselpaytype");
-        }
-        if ($p == \App\Entity\MoneyFund::PREPAID && $c == 0) {
-            $this->setError("mustsel_cust");
-        }
-        if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("mustsel_cust");
-        }
+  
+     
         if ($c == 0) {
-            // $this->setError("noselcust");
+              $this->setError("noselcust");
         }
-
+    
+        
+        
         return !$this->isError();
     }
 
@@ -884,32 +741,19 @@ class TTN extends \App\Pages\Base
     }
 
     public function OnChangeCustomer($sender) {
-        $this->docform->discount->setVisible(false);
+        
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-            if ($customer->discount > 0) {
-                $this->docform->discount->setText("Постоянная скидка " . $customer->discount . '%');
-                $this->docform->discount->setVisible(true);
-            } else {
-                if ($customer->bonus > 0) {
-                    $this->docform->discount->setText("Бонусы " . $customer->bonus);
-                    $this->docform->discount->setVisible(true);
-                }
-            }
+   
             if ($this->docform->ship_address->getText() == '') {
                 $this->docform->ship_address->setText($customer->address);
             }
 
         }
-        if ($this->_prevcust != $customer_id) {//сменился контрагент
-            $this->_prevcust = $customer_id;
-            $this->calcTotal();
-
-            $this->calcPay();
-        }
-        $this->OnCustomerFirm(null);
+     
+ 
     }
 
     //добавление нового контрагента
@@ -955,8 +799,8 @@ class TTN extends \App\Pages\Base
 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
-        $this->docform->discount->setVisible(false);
-        $this->_discount = 0;
+        
+        
     }
 
     public function cancelcustOnClick($sender) {
@@ -968,26 +812,26 @@ class TTN extends \App\Pages\Base
 
         if ($sender->getValue() == 2 || $sender->getValue() == 3) {
             $this->docform->senddoc->setVisible(true);
-            $this->docform->execdoc->setVisible(false);
+            
             $this->docform->ship_address->setVisible(true);
-            $this->docform->ship_number->setVisible(true);
+            $this->docform->ship_number->setVisible($sender->getValue() == 3);
             $this->docform->sent_date->setVisible(true);
             $this->docform->sent_date->setVisible(true);
             $this->docform->delivery_date->setVisible(true);
             $this->docform->emp->setVisible(true);
-            $this->docform->delivery_cost->setVisible(true);
+            
         } else {
             $this->docform->senddoc->setVisible(false);
-            $this->docform->execdoc->setVisible(true);
+            
             $this->docform->ship_address->setVisible(false);
             $this->docform->ship_number->setVisible(false);
             $this->docform->sent_date->setVisible(false);
             $this->docform->sent_date->setVisible(false);
             $this->docform->delivery_date->setVisible(false);
             $this->docform->emp->setVisible(false);
-            $this->docform->delivery_cost->setVisible(false);
+            
         }
-        $this->calcPay();
+        
     }
 
     public function onOpenItemSel($sender) {
@@ -1002,45 +846,8 @@ class TTN extends \App\Pages\Base
         $this->OnChangeItem($this->editdetail->edittovar);
     }
 
-    public function OnCustomerFirm($sender) {
-        $c = $this->docform->customer->getKey();
-        $f = $this->docform->firm->getValue();
-
-        $ar = \App\Entity\Contract::getList($c, $f);
-
-        $this->docform->contract->setOptionList($ar);
-        if (count($ar) > 0) {
-            $this->docform->contract->setVisible(true);
-        } else {
-            $this->docform->contract->setVisible(false);
-            $this->docform->contract->setValue(0);
-        }
-
-    }
-
-
     
-  public function onPaste($sender) {
-        $store_id = $this->docform->store->getValue();
-
-        $cp =  \App\Session::getSession()->clipboard ;
-      
-        foreach($cp as $it) {
-           $item = Item::load($it->item_id);  
-           if($item==null) continue;
-           $item->quantity  =1;
-           $item->price  =$item->getPrice($this->docform->pricetype->getValue(), $store_id);
-           
-           $this->_itemlist[$item->item_id] = $item;
-        }
-  
-        $this->docform->detail->Reload();
-
-  
-        $this->calcTotal();
-        $this->calcPay();
-    }
-   
+ 
 }
 
 

@@ -28,7 +28,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_FAIL       = 17; // Аннулирован
     const STATE_FINISHED   = 18; // Закончен
     const STATE_APPROVED   = 19;      //  Готов к выполнению
-    // const STATE_READYTOEXE = 20; // готов к выполнению    
+    const STATE_READYTOSHIP = 20; // готов к отправке    
     // типы  экспорта
     const EX_WORD  = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -115,17 +115,7 @@ class Document extends \ZCL\DB\Entity
         $this->packData();
     }
 
-    public function checkUniqueNumber() {
-        $this->document_number = trim($this->document_number);
 
-        $doc = Document::getFirst(" document_number = '{$this->document_number}' ");
-        if ($doc instanceof Document) {
-            if ($this->document_id != $doc->document_id) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Упаковка  данных  в  XML
@@ -413,12 +403,28 @@ class Document extends \ZCL\DB\Entity
                 return Helper::l('st_fail');
             case Document::STATE_INPROCESS:
                 return Helper::l('st_inprocess');
+            case Document::STATE_READYTOSHIP:
+                return Helper::l('st_rdshipment');
 
             default:
                 return Helper::l('st_unknow');
         }
     }
 
+    
+    public function checkUniqueNumber() {
+        $this->document_number = trim($this->document_number);
+        $class = explode("\\", get_called_class());
+        $metaname = $class[count($class) - 1];
+        $doc = Document::getFirst("meta_name='" . $metaname . "'  and  document_number = '{$this->document_number}' ");
+        if ($doc instanceof Document) {
+            if ($this->document_id != $doc->document_id) {
+                return false;
+            }
+        }
+        return true;
+    }    
+    
     /**
      * Возвращает  следующий  номер  при  автонумерации
      *
@@ -451,8 +457,8 @@ class Document extends \ZCL\DB\Entity
         }
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
-
-        return $letter . sprintf("%05d", ++$number);
+        $next = $letter . sprintf("%05d", ++$number);
+        return $next ;
     }
 
     /**

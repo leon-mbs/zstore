@@ -29,7 +29,7 @@ class PayCustList extends \App\Pages\Base
     public  $_totdebet  = 0;
     public  $_totcredit = 0;
     private  $_docsin = "'GoodsReceipt','InvoiceCust','ReturnIssue' ";
-    private  $_docsout = "'GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct' ";
+    private  $_docsout = "'GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order' ";
     private  $_state = "1,2,3,17,8";
 
     /**

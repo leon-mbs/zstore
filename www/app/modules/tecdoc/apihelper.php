@@ -48,7 +48,7 @@ class APIHelper
         }
 
     }
-
+   
     public function getAllBrands() {
 
 
@@ -84,14 +84,14 @@ class APIHelper
     }
 
     public function searchByCategory($id, $modif_id) {
-        return $this->fetch(array('cmd' => 'searchByCategory', 'type' => $this->type, 'modif_id' => $modif_id, 'nodeid' => $id));
+        return $this->fetch(array('cmd' => 'searchByCategory', 'type' => $this->type, 'modif_id' => $modif_id, 'node_id' => $id));
 
     }
 
 
     public function searchByBrandAndCode($code, $brand) {
 
-        return $this->fetch(array('cmd' => 'searchByBrandAndCode', 'code' => $code, 'brand' => $brand));
+        return $this->fetch(array('cmd' => 'searchByBrandAndCode', 'partnumber' => $code, 'brand' => $brand));
 
     }
 

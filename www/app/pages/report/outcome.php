@@ -26,7 +26,7 @@ class Outcome extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN'))", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
         $hlist = \App\Entity\Customer::getHoldList();
         //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
@@ -162,7 +162,7 @@ class Outcome extends \App\Pages\Base
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0 {$u} and e.`quantity` <> 0   {$cat}   {$cust}  
-               and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue')
+               and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN')
                {$br}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -179,7 +179,7 @@ class Outcome extends \App\Pages\Base
         left  join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
            where   e.`quantity` <>0 {$u}        
-             and d.`meta_name` in ('GoodsIssue','ServiceAct',  'POSCheck','ReturnIssue')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+             and d.`meta_name` in ('GoodsIssue','ServiceAct',  'POSCheck','ReturnIssue','TTN')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               {$br} AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.`customer_name`,c.`customer_id`
@@ -194,7 +194,7 @@ class Outcome extends \App\Pages\Base
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0 {$u} and e.`quantity` <>0
-              and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue')           
+              and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN')           
                {$br} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.`document_date`
@@ -225,7 +225,7 @@ class Outcome extends \App\Pages\Base
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0 {$u} and e.`quantity` <>0
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue')
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
                 {$br}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -256,7 +256,7 @@ class Outcome extends \App\Pages\Base
                
                  join `documents_view`  d on d.`document_id` = e.`document_id`
                    where     e.`quantity` <>0 {$u}
-                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue')    
+                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN')    
                       {$br} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
                       AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})

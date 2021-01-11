@@ -15,17 +15,7 @@
 
     </tr>
     {{/isfirm}}
-    {{#iscontract}}
-    <tr>
-
-        <td></td>
-
-        <td valign="top"><b>Угода</b></td>
-        <td colspan="5">{{contract}} вiд {{createdon}}</td>
-
-
-    </tr>
-    {{/iscontract}}
+ 
     <tr>
         <td></td>
         <td valign="top"><b>Зписано з</b></td>
@@ -39,19 +29,25 @@
         <td colspan="5">{{order}}</td>
     </tr>
     {{/order}}
-    {{#isdelivery}}
+    <tr>
+        <td></td>
+        <td><b>Доставка</b></td>
+        <td colspan="5">{{delivery_name}}</td>
+    </tr>
+    {{#ship_address}}
     <tr>
         <td></td>
         <td><b>Адреса</b></td>
         <td colspan="5">{{ship_address}}</td>
     </tr>
-
-
+    {{/ship_address}}
+    {{#ship_number}}
     <tr>
         <td></td>
         <td><b>Декларація</b></td>
         <td colspan="4">{{ship_number}}</td>
     </tr>
+    {{/ship_number}}
     <tr>
         <td></td>
         <td><b>Дата відправки</b></td>
@@ -68,11 +64,10 @@
         <td colspan="5"> {{emp_name}}</td>
     </tr>
 
-
-    {{/isdelivery}}
+ 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-            Накладна № {{document_number}} від {{date}} <br>
+            ТТН № {{document_number}} від {{date}} <br>
         </td>
     </tr>
 
@@ -100,40 +95,12 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="2">{{weight}}</td>
-
-        <td style="border-top:1px #000 solid;" colspan="4" align="right">Разом:</td>
+        <td style="border-top:1px #000 solid;" colspan="4" align="right">Всього:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-    {{^prepaid}}
-    {{#isdisc}}
-    <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Знижка:</td>
-        <td align="right">{{paydisc}}</td>
-    </tr>
-    {{/isdisc}}
-    {{#isdelivery}}
-    <tr style="font-weight: bolder;">
 
-        <td colspan="6" align="right">Вартiсть доставки:</td>
-        <td align="right">{{delivery_cost}}</td>
-    </tr>
-    {{/isdelivery}}
-
-    <tr style="font-weight: bolder;">
-
-        <td colspan="6" align="right">До оплати:</td>
-        <td align="right">{{payamount}}</td>
-    </tr>
-    <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Оплата:</td>
-        <td align="right">{{payed}}</td>
-    </tr>
-    {{/prepaid}}
-    <tr>
-        <td colspan="7">На суму <b>{{totalstr}}<b></td>
-
-    </tr>
+   
 
 </table>
 

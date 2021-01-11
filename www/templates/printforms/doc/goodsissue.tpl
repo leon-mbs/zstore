@@ -38,36 +38,7 @@
         <td colspan="5">{{order}}</td>
     </tr>
     {{/order}}
-    {{#isdelivery}}
-    <tr>
-        <td></td>
-        <td><b>Адрес</b></td>
-        <td colspan="5">{{ship_address}}</td>
-    </tr>
-
-
-    <tr>
-        <td></td>
-        <td><b>Декларация</b></td>
-        <td colspan="4">{{ship_number}}</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td><b>Дата отправки</b></td>
-        <td colspan="5">{{sent_date}}</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td><b>Дата доставки</b></td>
-        <td colspan="5">{{delivery_date}}</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td><b>Ответственный</b></td>
-        <td colspan="5"> {{emp_name}}</td>
-    </tr>
-
-    {{/isdelivery}}
+ 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             Накладная № {{document_number}} от {{date}} <br>
@@ -109,12 +80,7 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
-    {{#isdelivery}}
-    <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Стоимость доставки:</td>
-        <td align="right">{{delivery_cost}}</td>
-    </tr>
-    {{/isdelivery}}
+ 
 
 
     <tr style="font-weight: bolder;">

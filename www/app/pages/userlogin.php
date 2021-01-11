@@ -17,7 +17,7 @@ class UserLogin extends \Zippy\Html\WebPage
         global $_config;
 
         $common = System::getOptions('common');
-
+        \App\Session::getSession()->clipboard = null;
 
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('userlogin'));

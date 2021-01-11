@@ -43,15 +43,13 @@ class GIList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
-
-
+ 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
-
+ 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
@@ -62,8 +60,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new TextInput('ship_number'));
-
-
+ 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->doclist->Reload();
@@ -71,8 +68,7 @@ class GIList extends \App\Pages\Base
     }
 
     public function filterOnSubmit($sender) {
-
-
+ 
         $this->statuspan->setVisible(false);
 
         $this->doclist->Reload(false);
@@ -117,10 +113,12 @@ class GIList extends \App\Pages\Base
             $this->_doc->headerdata['document_date'] = time();
             $this->_doc->save();
 
-            $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            if($this->_doc->state<4) {
+               $this->_doc->updateStatus(Document::STATE_EXECUTED);    
+            }
+            
             $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-
-
+  
             $this->_doc->save();
             // if ($order instanceof Document) {
             //     $order = $order->cast();
@@ -133,6 +131,7 @@ class GIList extends \App\Pages\Base
         if ($sender->id == "bdevivered") {
             $this->_doc->updateStatus(Document::STATE_DELIVERED);
 
+            /*
             if ($this->_doc->parent_id > 0) {   //закрываем заказ
                 if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
 
@@ -144,28 +143,28 @@ class GIList extends \App\Pages\Base
                     }
                 }
             }
+            */
 
-
-            $this->_doc->updateStatus(Document::STATE_CLOSED);
+           // $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
 
         if ($sender->id == "bttn") {
-            $d = $this->_doc->getChildren('GoodsReceipt');
+            $d = $this->_doc->getChildren('TTN');
 
             if (count($d) > 0) {
-                $this->setWarn('goodsreceipt_exists');
+                $this->setWarn('ttn_exists');
 
             }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
+            App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
         }
+  
         if ($sender->id == "bgar") {
             App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bret") {
             App::Redirect("\\App\\Pages\\Doc\\ReturnIssue", 0, $this->_doc->document_id);
         }
-
-
+ 
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
@@ -175,8 +174,7 @@ class GIList extends \App\Pages\Base
     }
 
     public function updateStatusButtons() {
-
-
+ 
         $this->statuspan->statusform->bdevivered->setVisible(true);
         $this->statuspan->statusform->bttn->setVisible(true);
         $this->statuspan->statusform->bret->setVisible(true);
@@ -185,12 +183,13 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->ship_number->setVisible(true);
 
         $state = $this->_doc->state;
-
-
+ 
+        //готов  к  отправке
+        if ($state == Document::STATE_READYTOSHIP) {
+             $this->statuspan->statusform->bdevivered->setVisible(false);
+        }
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
-
-
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
@@ -203,15 +202,21 @@ class GIList extends \App\Pages\Base
         }
 
         //прячем лишнее
-        if ($this->_doc->meta_name == 'GoodsIssue') {
+        if ($this->_doc->meta_name == 'TTN') {
+            $this->statuspan->statusform->ship_number->setVisible($this->_doc->headerdata['delivery']>2);
 
             $this->statuspan->statusform->bttn->setVisible(false);
         }
-        if ($this->_doc->meta_name == 'POSCheck') {
-            $this->statuspan->statusform->bsend->setVisible(false);
+        if ($this->_doc->meta_name == 'GoodsIssue') {
+
             $this->statuspan->statusform->bdevivered->setVisible(false);
-            $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
+            $this->statuspan->statusform->bsend->setVisible(false);
+        }
+        if ($this->_doc->meta_name == 'POSCheck') {
+            $this->statuspan->statusform->bdevivered->setVisible(false);
+            $this->statuspan->statusform->ship_number->setVisible(false);
+            $this->statuspan->statusform->bsend->setVisible(false);
         }
         if ($this->_doc->meta_name == 'Invoice') {
 
@@ -222,8 +227,7 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
         if ($this->_doc->meta_name == 'ReturnIssue') {
-
-
+ 
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
@@ -278,8 +282,7 @@ class GIList extends \App\Pages\Base
         }
         
         H::exportExcel($data,$header,'selllist.xlsx') ;       
-       
- 
+  
     }
 
 }

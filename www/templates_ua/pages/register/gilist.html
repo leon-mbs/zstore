@@ -22,17 +22,16 @@
                 <select zippy="searchcomp" class="form-control mr-sm-2">
                     <option value="0">Не вибраний</option>
                 </select>
-
-
+ 
                 <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
-
-
+  
                 <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
             </form>
         </div>
         <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-info mt-2 mb-3">Створити ВН</a>&nbsp;
         <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-info mt-2 mb-3">Створити РФ</a>
+        <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-info mt-2 mb-3">Створити ТТН</a>
         <br> <a zippy="csv">Експорт в Excel</a>
 
         <table class="table   table-sm   ">
@@ -48,8 +47,7 @@
                 <th class="text-right">Сума</th>
 
                 <th>Статус</th>
-
-
+ 
                 <th>Примітка</th>
                 <th></th>
 
@@ -65,8 +63,7 @@
                 <td zippy="firm"></td>
 
                 <td zippy="amount" class="text-right"></td>
-
-
+ 
                 <td class="text-nowrap" zippy="state"></td>
                 <td zippy="onotes"></td>
 
@@ -99,11 +96,11 @@
                 <input zippy="ship_number" style="width:250px;" placeholder="Номер декларації"
                        class="form-control mr-sm-2">
                 <button zippy="bsend" type="submit" class="  btn btn-success  mr-2 ">Відправити</button>
-                <button zippy="bdevivered" type="submit" class="  btn btn-success  mr-2 ">Доставлено</button>
-                <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Створити накладну</button>
+                <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Створити ТТН</button>
                 <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">Гарантійний талон</button>
                 <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Повернення</button>
-
+                <button zippy="bdevivered" type="submit" class="  btn btn-success  mr-1 ">Доставлено</button>
+                 <input zippy="ship_number" type="checkbox"  class="form-control "> <span>Закрыть ордер</span>
 
             </form>
         </div>

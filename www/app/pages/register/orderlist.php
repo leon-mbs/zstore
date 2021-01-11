@@ -130,7 +130,7 @@ class OrderList extends \App\Pages\Base
             if ($ttn) {
                 $this->setWarn('order_has_sent');
             }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+            App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "binv") {
@@ -170,7 +170,7 @@ class OrderList extends \App\Pages\Base
 
 
         //проверяем  что есть ТТН
-        $list = $this->_doc->getChildren('GoodsIssue');
+        $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
         $list = $this->_doc->getChildren('Invoice');
         $invoice = count($list) > 0;

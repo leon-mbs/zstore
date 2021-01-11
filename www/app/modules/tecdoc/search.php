@@ -75,16 +75,13 @@ class Search extends \App\Pages\Base
 
         
         //Корзина
-        $this->_card = \App\Session::getSession()->cardlist  ;
+        $this->_card = \App\Session::getSession()->clipboard  ;
         if(!is_array($this->_card))$this->_card=array();
-        $this->add(new Panel('cartpan'))->setVisible(count($this->_card)>0);
-        $this->cartpan->add(new DataView('cardlist', new ArrayDataSource(new Bind($this, "_card")), $this, 'cardOnRow'));
-        $this->cartpan->cardlist->Reload();
-        $this->cartpan->add(new  ClickLink('copycart',$this,'OnCopy'));
-        
-        
-        
-        
+        $this->tlist->add(new Panel('cartpan'))->setVisible(count($this->_card)>0);
+        $this->tlist->cartpan->add(new DataView('cardlist', new ArrayDataSource(new Bind($this, "_card")), $this, 'cardOnRow'));
+        $this->tlist->cartpan->cardlist->Reload();
+        $this->tlist->cartpan->add(new  ClickLink('copycart',$this,'OnCopy'));
+         
 
         $this->onTab($this->tpanel->tabl);
         $this->onType($tablist->search1form->stype);
@@ -623,16 +620,16 @@ class Search extends \App\Pages\Base
         }
            
         $this->_card[$item->item_id] = $item ; 
-        $this->cartpan->cardlist->Reload();
-        $this->cartpan->setVisible(count($this->_card) > 0);
+        $this->tlist->cartpan->cardlist->Reload();
+        $this->tlist->cartpan->setVisible(count($this->_card) > 0);
        
     }
 
     public function OnDelCart($sender) {
         $item = $sender->getOwner()->getDataItem();
         $this->_card = array_diff_key($this->_card, array($item->item_id => $this->_card[$item->item_id]));
-        $this->cartpan->cardlist->Reload();
-        $this->cartpan->setVisible(count($this->_card) > 0);
+        $this->tlist->cartpan->cardlist->Reload();
+        $this->tlist->cartpan->setVisible(count($this->_card) > 0);
               
     }
     

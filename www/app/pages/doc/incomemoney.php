@@ -13,6 +13,10 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\AutocompleteTextInput;
+use App\Entity\Customer;
+use App\Entity\Employee;
+
 
 /**
  * Страница    приходный ордер
@@ -30,21 +34,26 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(1), Pay::PAY_BASE_INCOME));
+        $this->docform->add(new DropDownChoice('emp', Employee::findArray("emp_name", "disabled<>1", "emp_name") ));
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('amount'));
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
 
-        if ($docid > 0) {    //загружаем   содержимок  документа на страницу
+        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->mtype->setValue($this->_doc->headerdata['type']);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
+            $this->docform->customer->setKey($this->_doc->customer_id);
+            $this->docform->customer->setText($this->_doc->customer_name);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
@@ -70,11 +79,14 @@ class IncomeMoney extends \App\Pages\Base
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paymentname'] = $this->docform->payment->getValueName();
         $this->_doc->headerdata['type'] = $this->docform->mtype->getValue();
+        $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
 
         $this->_doc->amount = H::fa($this->docform->amount->getText());
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-
+        $this->_doc->customer_id = $this->docform->customer->getKey();
+   
         if ($this->checkForm() == false) {
             return;
         }
@@ -136,5 +148,7 @@ class IncomeMoney extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-
+    public function OnAutoCustomer($sender) {
+        return Customer::getList($sender->getText(), 2);
+    }
 }

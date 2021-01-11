@@ -74,38 +74,7 @@
 
 
         </div>
-        <div class="col-12 col-md-4  col-xl-3">
-            <div class="form-group">
-                <label for="delivery">Доставка</label>
-                <select class="form-control" zippy="delivery">
-
-                </select>
-            </div>
-            <div class="form-group">
-                <label data-label="ship_address" for="ship_address">Адрес доставки</label>
-                <input class="form-control" type="text" zippy="ship_address">
-            </div>
-            <div class="form-group">
-                <label data-label="ship_number" for="ship_number">Номер декларации</label>
-                <input class="form-control" type="text" zippy="ship_number">
-            </div>
-            <div class="form-group  ">
-                <label data-label="emp" for="emp">Ответственный за доставку</label>
-                <select class="form-control select2" zippy="emp">
-                    <option>Не указан</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label data-label="sent_date" for="sent_date"> Дата отправки</label>
-                <input style="width:120px;" class="form-control" type="text" zippy="sent_date" required="required">
-            </div>
-            <div class="form-group">
-                <label data-label="delivery_date" for="delivery_date"> Дата доставки</label>
-                <input style="width:120px;" class="form-control" type="text" zippy="delivery_date" required="required">
-            </div>
-
-        </div>
+       
     </div>
     <div class="row">
         <div class="col-12  col-xl-10">
@@ -189,17 +158,7 @@
                     <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
-                <tr style="font-weight: bolder;">
-
-                    <td colspan={{colspan}} class="text-right"><span
-                            data-label="delivery_cost">Стоимость доставки:</span></td>
-
-
-                    <td zippy="delivery_cost" class="text-right"></td>
-                    <td><a data-label="delivery_cost" href="javascript:void(0);" data-toggle="modal"
-                           data-target="#modaldelivery_cost"><i
-                            class="fa fa-edit"></i></a></td>
-                </tr>
+               
                 <tr style="font-weight: bolder;">
 
                     <td colspan={{colspan}} class="text-right"><span data-label="payamount">К оплате:</span></td>
@@ -227,7 +186,7 @@
             <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
             <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
             &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
-            &nbsp;<input zippy="senddoc" type="submit" value="Отправить" class="btn btn-primary  ">
+            
 
 
         </div>
@@ -302,29 +261,7 @@
             </div>
         </div>
     </div>
-    <div id="modaldelivery_cost" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Доставка</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="input-group  ">
-                        <input class="form-control" type="text" zippy="editdelivery_cost" pattern="[0-9\.]+">
-                        <div class="input-group-append">
-                            <input type="submit" value="OK" zippy="bdelivery_cost" class="ml-2 btn btn-info  ">
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
+ 
 
 </form>
 <div class="row">
