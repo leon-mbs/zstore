@@ -411,7 +411,7 @@ class ItemList extends \App\Pages\Base
 
         $this->setpanel->stitle->setText($item->itemname);
 
-        $this->_itemset = ItemSet::find("pitem_id=" . $this->_pitem_id, "itemname");
+   
         $this->setpanel->setlist->Reload();
     }
 

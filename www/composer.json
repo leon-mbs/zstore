@@ -25,6 +25,8 @@
        
         "automattic/woocommerce": "3.0.0",
         "symfony/polyfill-mbstring": "^1.10",
+        "symfony/polyfill-uuid": "^1.10",
+       
         "leon-mbs/zippy": "2.2.4"
 
     }
