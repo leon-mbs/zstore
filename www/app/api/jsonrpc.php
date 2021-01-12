@@ -219,7 +219,7 @@ abstract class JsonRPC
         
         try{
                      
-          $result =  @call_user_func_array(array($this, $method), $arguments);
+          $result =  @call_user_func_array(array($this, $method),array('args'=>$arguments) );
         } catch(\Exception $e){
             return self::error($id, $e->getCode() , $e->getMessage());
         }
@@ -320,7 +320,7 @@ abstract class JsonRPC
      * @return array
      * Returns a response object.
      */
-    private static function response($id, $result) {
+    private static function response($id, $result) {  
         return array(
             'jsonrpc' => self::VERSION,
             'id'      => $id,

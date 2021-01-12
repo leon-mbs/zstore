@@ -2,10 +2,10 @@
   
 namespace App\API; 
 
-class Common extends  JsonRPC
+class common extends  JsonRPC
 {
     
-    public function Login($user,$password) {
+    public function login($user,$password) {
           
        
           $api = \App\System::getOptions('api') ;
@@ -32,14 +32,7 @@ class Common extends  JsonRPC
             return  $jwt ;
         
     }
-    public function Info(  ) {
-         
-       if(!$this->checkAcess())return;
-       $user = \App\System::getUser();
-       
-       
-        
-    }
+ 
 
     
 }

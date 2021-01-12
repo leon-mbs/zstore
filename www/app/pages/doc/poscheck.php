@@ -450,7 +450,7 @@ class POSCheck extends \App\Pages\Base
         }
         $this->_doc->payamount = $this->docform->payamount->getText();
 
-        $this->_doc->headerdata['time'] = time();
+        
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
@@ -516,6 +516,9 @@ class POSCheck extends \App\Pages\Base
        
        
         $isEdited = $this->_doc->document_id > 0;
+        if($isEdited == false)  {
+            $this->_doc->headerdata['time'] = time();
+        }
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
