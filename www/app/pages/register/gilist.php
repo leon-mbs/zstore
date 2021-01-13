@@ -87,6 +87,7 @@ class GIList extends \App\Pages\Base
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('firm', $doc->firm_name));
+        $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -308,7 +309,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state <>   " . Document::STATE_CLOSED;
+            $where .= "  and  (  (payamount >0 and payamount > payed and  state >3 )  or( ( meta_name= 'TTN' and  state <> 9) or (meta_name <> 'TTN' and state <>5)  )  )    "  ;
         }
         if ($status == 1) {
             $where .= " and  state =  " . Document::STATE_NEW;
@@ -317,7 +318,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and state = " . Document::STATE_INSHIPMENT;
         }
         if ($status == 4) {
-            $where .= " and  amount > payamount";
+            $where .= "  and payamount >0 and  payamount > payed  and  state >3  ";
         }
         $comp = $this->page->filter->searchcomp->getValue();
         if ($comp > 0) {

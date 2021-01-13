@@ -41,7 +41,7 @@ class WSdate extends \Zippy\Html\PageFragment
         }
 
         $sdlist = $this->add(new DataView('sdlist', new ArrayDataSource($data), $this, 'sdlistOnRow'));
-        $sdlist->setPageSize(10);
+        $sdlist->setPageSize(Helper::getPG());
         $this->add(new \Zippy\Html\DataList\Paginator("sdpag", $sdlist));
         $sdlist->Reload();
 

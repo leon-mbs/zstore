@@ -4,6 +4,7 @@ namespace App\Widgets;
 
 use App\Entity\Doc\Document;
 use App\System;
+use App\Helper;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Label;
@@ -33,7 +34,7 @@ class WPlannedDocs extends \Zippy\Html\PageFragment
         }
 
         $doclist = $this->add(new DataView('pdoclist', new ArrayDataSource($data), $this, 'doclistOnRow'));
-        $doclist->setPageSize(10);
+        $doclist->setPageSize(Helper::getPG());
         $this->add(new \Zippy\Html\DataList\Paginator("plpag", $doclist));
         $doclist->Reload();
 

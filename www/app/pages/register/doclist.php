@@ -320,7 +320,7 @@ class DocList extends \App\Pages\Base
         //     return;
         $user = System::getUser();
 
-        if (\App\ACL::checkExeDoc($doc, true, false) == false) {
+        if (\App\ACL::checkCancelDoc($doc, true, false) == false) {
             if ($doc->state == Document::STATE_WA && $doc->user_id == $user->user_id) {
                 //свой может  отменить
             } else {
@@ -341,8 +341,12 @@ class DocList extends \App\Pages\Base
             $this->setError("dochasnocanceledchilld");
             return;
         }
-
+        
         $doc->updateStatus(Document::STATE_CANCELED);
+        $doc->payed= 0;  //отменяем  оплату
+        $doc->save();
+        
+        
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
         $this->resetURL();

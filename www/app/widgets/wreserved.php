@@ -44,7 +44,7 @@ class WReserved extends \Zippy\Html\PageFragment
         }
 
         $reslist = $this->add(new DataView('reslist', new ArrayDataSource($data), $this, 'reslistOnRow'));
-        $reslist->setPageSize(10);
+        $reslist->setPageSize(Helper::getPG());
         $this->add(new \Zippy\Html\DataList\Paginator("respag", $reslist));
         $reslist->Reload();
 
