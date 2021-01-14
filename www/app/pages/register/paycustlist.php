@@ -254,8 +254,8 @@ class PayCustList extends \App\Pages\Base
 
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
 
-            $this->setError('sumoverpay');
-            return;
+            $this->setWarn('sumoverpay');
+          
         }
         $type = Pay::PAY_BASE_INCOME    ; 
               

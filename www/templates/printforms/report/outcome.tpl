@@ -41,7 +41,11 @@
 
     </tr>
     {{/_detail}}
-    <tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td><td align="right" ><b><b>{{totnavar}}</b></b></td> </tr>
+    <tr><td colspan="3" align="right"><b>Всего:</b></td><td align="right" ><b>{{totsumma}}</b></td><td align="right" ><b><b>{{totnavar}}</b></b></td> </tr>
+    {{#isdisc}}
+    <tr><td colspan="3" align="right"><b>Скидка:</b></td><td align="right" ><b>{{disc}}</b></td><td align="right" ><b><b> </b></b></td> </tr>
+    <tr><td colspan="3" align="right"><b>Итого:</b></td><td align="right" ><b>{{totall}}</b></td><td align="right" ><b><b> </b></b></td> </tr>
+    {{/isdisc}}
 </table>
 {{/_type1}}
 {{#_type2}}
