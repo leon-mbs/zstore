@@ -48,10 +48,10 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name") ))->onChange($this,'OnEmp');
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
         $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('examount'));
-        
+
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -70,7 +70,7 @@ class IncomeItem extends \App\Pages\Base
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            
+
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
@@ -98,7 +98,7 @@ class IncomeItem extends \App\Pages\Base
 
                             $this->_itemlist[] = $it;
                         }
-                     }
+                    }
                 }
             }
         }
@@ -247,31 +247,31 @@ class IncomeItem extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        
+
         $this->_doc->notes = $this->docform->notes->getText();
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
             $this->setError("filemore10M");
             return;
         }
- 
+
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
         $this->_doc->headerdata['exmf'] = $this->docform->exmf->getValue();
         $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
- 
+
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-        
-  
+
+
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->amount = $this->docform->total->getText();
         if ($this->checkForm() == false) {
             return;
-        }        
-      
+        }
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -336,7 +336,7 @@ class IncomeItem extends \App\Pages\Base
             $this->setError("enterdocnumber");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $next = $this->_doc->nextNumber() ;
+            $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->setError('nouniquedocnumber_created');
             return false;
@@ -396,15 +396,15 @@ class IncomeItem extends \App\Pages\Base
 
         $this->docform->detail->Reload();
     }
-    
-    public function OnEmp($sender){
-        if($sender->getValue() >0){
-            $this->docform->examount->setVisible(true)  ;          
-            $this->docform->exmf->setVisible(true)     ;       
-        }   else {
-            $this->docform->examount->setVisible(false)  ;          
-            $this->docform->exmf->setVisible(false)     ;       
+
+    public function OnEmp($sender) {
+        if ($sender->getValue() > 0) {
+            $this->docform->examount->setVisible(true);
+            $this->docform->exmf->setVisible(true);
+        } else {
+            $this->docform->examount->setVisible(false);
+            $this->docform->exmf->setVisible(false);
         }
     }
-     
+
 }

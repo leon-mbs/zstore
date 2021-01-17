@@ -26,29 +26,29 @@ class Options extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $form = $this->add(new Form("cform"));
-  
+
         $form->add(new TextInput('host', $modules['td_host']));
         $form->add(new TextInput('code', $modules['td_code']));
-         
+
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['td_pricetype']));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $modules['td_store']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
 
-        
+
     }
 
- 
+
     public function saveOnClick($sender) {
 
         $modules = System::getOptions("modules");
 
         $modules['td_pricetype'] = $this->cform->defpricetype->getValue();
         $modules['td_store'] = $this->cform->defstore->getValue();
- 
+
         $modules['td_host'] = $this->cform->host->getText();
         $modules['td_code'] = $this->cform->code->getText();
-       
+
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
     }

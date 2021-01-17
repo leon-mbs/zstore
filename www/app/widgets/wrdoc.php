@@ -43,7 +43,7 @@ class WRDoc extends \Zippy\Html\PageFragment
         $doclist = $this->add(new DataView('rdoclist', new ArrayDataSource($data), $this, 'doclistOnRow'));
         $doclist->setPageSize(Helper::getPG());
         $this->add(new \Zippy\Html\DataList\Paginator("wrpag", $doclist));
- 
+
 
         $doclist->Reload();
 

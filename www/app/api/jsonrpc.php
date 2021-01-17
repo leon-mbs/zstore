@@ -1,6 +1,6 @@
 <?php
 
-namespace App\API; 
+namespace App\API;
 
 /**
  * Base class for Json RPC
@@ -14,7 +14,6 @@ abstract class JsonRPC
     public function Execute() {
 
 
-
         $request = file_get_contents('php://input');
 
         if (!is_string($request)) {
@@ -26,61 +25,57 @@ abstract class JsonRPC
 
 
         if ($response != null) {
-            echo json_encode($response, JSON_UNESCAPED_UNICODE );
+            echo json_encode($response, JSON_UNESCAPED_UNICODE);
         } else {
-             http_response_code(200);
+            http_response_code(200);
         }
     }
 
-    
-    protected function checkAcess(){
-       $api = \App\System::getOptions('api') ;
-       $user = null;    
-  
+
+    protected function checkAcess() {
+        $api = \App\System::getOptions('api');
+        $user = null;
+
         //Bearer
-        if($api['atype']==1) {
-        
-            $jwt ="";
-            $headers = apache_request_headers();            
+        if ($api['atype'] == 1) {
+
+            $jwt = "";
+            $headers = apache_request_headers();
             foreach ($headers as $header => $value) {
-                 if($header=="Authorization" ){
-                     $jwt = str_replace("Bearer ","",$value) ;
-                     $jwt = trim($jwt);
-                     break;
-                 }
-            }     
-         
-          $key = strlen($api['key']) > 0 ?  $api['key'] : "defkey" ;
-                
-         
-          $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));    
-         
-          $user = \App\Entity\User::load($decoded->user_id);
-      }
-      //Basic
-      if($api['atype']==2) {
-          $user = \App\Helper::login($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']) ;
-          
-      }
-      //без  авторризации
-      if($api['atype']==3) {
-          $user=\App\Entity\User::getByLogin('admin') ;
-      }
-      if($user == null){
-         throw new  \Exception('Пользователь не  найден',1001);    
-      }
-      \App\System::setUser($user) ;
-  
-        
-     return  true;
-        
+                if ($header == "Authorization") {
+                    $jwt = str_replace("Bearer ", "", $value);
+                    $jwt = trim($jwt);
+                    break;
+                }
+            }
+
+            $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
+
+
+            $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
+
+            $user = \App\Entity\User::load($decoded->user_id);
+        }
+        //Basic
+        if ($api['atype'] == 2) {
+            $user = \App\Helper::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+
+        }
+        //без  авторризации
+        if ($api['atype'] == 3) {
+            $user = \App\Entity\User::getByLogin('admin');
+        }
+        if ($user == null) {
+            throw new  \Exception('Пользователь не  найден', 1001);
+        }
+        \App\System::setUser($user);
+
+
+        return true;
+
     }
-    
-    
-    
-    
-    
-    
+
+
     /**
      * Processes the user input, and prepares a response (if necessary).
      *
@@ -153,7 +148,7 @@ abstract class JsonRPC
         if (!is_array($request)) {
             return self::requestError();
         }
-        
+
         // The presence of the 'id' key indicates that a response is expected
         $isQuery = array_key_exists('id', $request);
 
@@ -211,19 +206,19 @@ abstract class JsonRPC
      * Returns a response object or an error object.
      */
     private function processQuery($id, $method, $arguments) {
-          
-            
+
+
         if (method_exists($this, $method) == false) {
             return self::error($id, -32601, "Method '{$method}' not found");
         }
-        
-        try{
-                     
-          $result =  @call_user_func_array(array($this, $method),array('args'=>$arguments) );
-        } catch(\Exception $e){
-            return self::error($id, $e->getCode() , $e->getMessage());
+
+        try {
+
+            $result = @call_user_func_array(array($this, $method), array('args' => $arguments));
+        } catch(\Exception $e) {
+            return self::error($id, $e->getCode(), $e->getMessage());
         }
-        
+
         if ($result != false) {
             return self::response($id, $result);
         }
@@ -320,15 +315,13 @@ abstract class JsonRPC
      * @return array
      * Returns a response object.
      */
-    private static function response($id, $result) {  
+    private static function response($id, $result) {
         return array(
             'jsonrpc' => self::VERSION,
             'id'      => $id,
             'result'  => $result
         );
     }
-    
-    
- 
+
 
 }

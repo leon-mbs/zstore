@@ -32,7 +32,7 @@ class Order extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
-   
+
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -48,9 +48,9 @@ class Order extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(false,false), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(false, false), H::getDefMF()));
 
-    
+
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
@@ -62,9 +62,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
-            
-        
-        
+
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
@@ -124,7 +122,7 @@ class Order extends \App\Pages\Base
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
 
-   
+
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
@@ -178,7 +176,7 @@ class Order extends \App\Pages\Base
         $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
-        $this->calcPay();        
+        $this->calcPay();
     }
 
     public function addrowOnClick($sender) {
@@ -227,7 +225,7 @@ class Order extends \App\Pages\Base
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
         $this->calcTotal();
-        $this->calcPay();        
+        $this->calcPay();
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
@@ -279,12 +277,12 @@ class Order extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->amount = $this->docform->total->getText();
-  
+
         $this->_doc->payamount = $this->docform->payamount->getText();
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
-        
+
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
@@ -295,8 +293,8 @@ class Order extends \App\Pages\Base
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
         }
-        
-        
+
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -321,11 +319,11 @@ class Order extends \App\Pages\Base
 
             $conn->CommitTrans();
             if ($sender->id == 'execdoc') {
-               // App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
-               
+                // App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
+
             }
-            App::Redirect("\\App\\Pages\\Register\\OrderList")   ;
-             
+            App::Redirect("\\App\\Pages\\Register\\OrderList");
+
         } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -350,8 +348,8 @@ class Order extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        
-        
+
+
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
@@ -371,7 +369,7 @@ class Order extends \App\Pages\Base
 
 
         $this->docform->paydisc->setText($disc);
-        $this->docform->editpaydisc->setText($disc);        
+        $this->docform->editpaydisc->setText($disc);
     }
 
     /**
@@ -389,10 +387,10 @@ class Order extends \App\Pages\Base
         if (count($this->_tovarlist) == 0) {
             $this->setError("noenteritem");
         }
-       
+
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-              $this->setError("noselcust");
+            $this->setError("noselcust");
         }
         return !$this->isError();
     }
@@ -405,7 +403,7 @@ class Order extends \App\Pages\Base
         $id = $sender->getKey();
         $item = Item::load($id);
         $price = $item->getPrice($this->docform->pricetype->getValue());
-      
+
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
         $this->editdetail->editprice->setText($price);
@@ -418,16 +416,16 @@ class Order extends \App\Pages\Base
     }
 
     public function OnChangeCustomer($sender) {
-        
+
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-            
+
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
             $this->docform->address->setText($customer->address);
-            
-            
+
+
             if ($customer->discount > 0) {
                 $this->docform->discount->setText("Постоянная скидка " . $customer->discount . '%');
                 $this->docform->discount->setVisible(true);
@@ -436,14 +434,13 @@ class Order extends \App\Pages\Base
                     $this->docform->discount->setText("Бонусы " . $customer->bonus);
                     $this->docform->discount->setVisible(true);
                 }
-            }            
+            }
         }
-        
-        
-        
+
+
         $this->calcTotal();
-  
-        $this->calcPay();        
+
+        $this->calcPay();
     }
 
     public function OnAutoItem($sender) {
@@ -491,7 +488,7 @@ class Order extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->discount->setVisible(false);
-     
+
         $this->docform->phone->setText($cust->phone);
     }
 
@@ -513,15 +510,14 @@ class Order extends \App\Pages\Base
         foreach ($this->_tovarlist as $item) {
             //$item = Item::load($item->item_id);
             $price = $item->getPrice($this->docform->pricetype->getValue());
-            $item->price = $price  ;
+            $item->price = $price;
         }
         $this->calcTotal();
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
-    
-    
- 
+
+
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->goAnkor("tankor");
@@ -538,7 +534,7 @@ class Order extends \App\Pages\Base
         } else {
             $this->goAnkor("tankor");
         }
-        $this->calcPay();        
+        $this->calcPay();
     }
 
     public function onPayDisc() {
@@ -546,19 +542,20 @@ class Order extends \App\Pages\Base
         $this->calcPay();
         $this->goAnkor("tankor");
     }
+
     private function calcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
-        
+
         if ($disc > 0) {
             $total -= $disc;
         }
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
-      //  $this->docform->editpayed->setText(H::fa($total));
-      //  $this->docform->payed->setText(H::fa($total));
+        //  $this->docform->editpayed->setText(H::fa($total));
+        //  $this->docform->payed->setText(H::fa($total));
     }
-   
+
 
 }

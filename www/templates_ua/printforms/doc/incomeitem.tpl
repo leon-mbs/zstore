@@ -10,13 +10,13 @@
             <b>На склад:</b> {{to}}
         </td>
     </tr>
-   {{#emp}}
-   <tr>
+    {{#emp}}
+    <tr>
         <td colspan="6">
             <b>Спiвробiтник:</b> {{emp}}
         </td>
     </tr>
-   <tr>
+    <tr>
         <td colspan="6">
             <b>Сума:</b> {{examount}}
         </td>

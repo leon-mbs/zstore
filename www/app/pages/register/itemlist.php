@@ -50,8 +50,6 @@ class ItemList extends \App\Pages\Base
 
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
 
-      
-
 
         $this->OnFilter(null);
     }
@@ -152,7 +150,9 @@ class ItemList extends \App\Pages\Base
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
 
-        if(\App\System::getUser()->rolename!='admins')  $row->partion->setText('');;
+        if (\App\System::getUser()->rolename != 'admins') {
+            $row->partion->setText('');
+        };
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
         $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
@@ -207,39 +207,39 @@ class ItemList extends \App\Pages\Base
             $name = $name . ', ' . H::fa($stock->partion);
             $st[$stock->stock_id] = $name;
         }
-      
+
     }
 
-   
+
     public function oncsv($sender) {
         $store = $this->filter->searchstore->getValue();
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
-    
-         
+
+
         $header = array();
         $data = array();
-        
-        $header['A1']  = "Наименование";
-        $header['B1']  = "Артикул";
-        $header['C1']  = "Штрих-код";
-        $header['D1']  = "Ед.";
-        $header['E1']  = "Категория";
-        $header['F1']  = "Кол.";
-        $header['G1']  = "Цена";
-        
-        
-        $i=1;
+
+        $header['A1'] = "Наименование";
+        $header['B1'] = "Артикул";
+        $header['C1'] = "Штрих-код";
+        $header['D1'] = "Ед.";
+        $header['E1'] = "Категория";
+        $header['F1'] = "Кол.";
+        $header['G1'] = "Цена";
+
+
+        $i = 1;
         foreach ($list as $item) {
-             $i++;
-             $data['A'.$i]  =  $item->itemname;
-             $data['B'.$i]  =  $item->item_code ;
-             $data['C'.$i]  =  $item->bar_code ;
-             $data['D'.$i]  =  $item->msr ;
-             $data['E'.$i]  =  $item->cat_name ;
-             $qty = $item->getQuantity($store);          
-             $data['F'.$i]  =  H::fqty($qty)  ;     
-             
-             
+            $i++;
+            $data['A' . $i] = $item->itemname;
+            $data['B' . $i] = $item->item_code;
+            $data['C' . $i] = $item->bar_code;
+            $data['D' . $i] = $item->msr;
+            $data['E' . $i] = $item->cat_name;
+            $qty = $item->getQuantity($store);
+            $data['F' . $i] = H::fqty($qty);
+
+
             $plist = array();
             if ($item->price1 > 0) {
                 $plist[] = $item->getPrice('price1', $store);
@@ -255,14 +255,14 @@ class ItemList extends \App\Pages\Base
             }
             if ($item->price5 > 0) {
                 $plist[] = $item->getPrice('price5', $store);
-            }             
-            $data['G'.$i]  =  implode(' ', $plist)   ;      
-             
-                     
+            }
+            $data['G' . $i] = implode(' ', $plist);
+
+
         }
-        
-        H::exportExcel($data,$header,'stocklist.xlsx') ;        
-  
+
+        H::exportExcel($data, $header, 'stocklist.xlsx');
+
     }
 
 }

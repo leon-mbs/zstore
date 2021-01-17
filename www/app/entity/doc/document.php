@@ -13,21 +13,21 @@ class Document extends \ZCL\DB\Entity
 {
 
     // состояния  документа
-    const STATE_NEW        = 1;     //Новый
-    const STATE_EDITED     = 2;  //Отредактирован
-    const STATE_CANCELED   = 3;      //Отменен
-    const STATE_EXECUTED   = 5;      // Проведен
-    const STATE_DELETED    = 6;       //  Удален
-    const STATE_INPROCESS  = 7; // в  работе
-    const STATE_WA         = 8; // ждет подтверждения
-    const STATE_CLOSED     = 9; // Закрыт , доставлен, выполнен
-    const STATE_INSHIPMENT = 11; // Отгружен
-    const STATE_DELIVERED  = 14; // доставлен
-    const STATE_REFUSED    = 15; // отклонен
-    const STATE_SHIFTED    = 16; // отложен
-    const STATE_FAIL       = 17; // Аннулирован
-    const STATE_FINISHED   = 18; // Закончен
-    const STATE_APPROVED   = 19;      //  Готов к выполнению
+    const STATE_NEW         = 1;     //Новый
+    const STATE_EDITED      = 2;  //Отредактирован
+    const STATE_CANCELED    = 3;      //Отменен
+    const STATE_EXECUTED    = 5;      // Проведен
+    const STATE_DELETED     = 6;       //  Удален
+    const STATE_INPROCESS   = 7; // в  работе
+    const STATE_WA          = 8; // ждет подтверждения
+    const STATE_CLOSED      = 9; // Закрыт , доставлен, выполнен
+    const STATE_INSHIPMENT  = 11; // Отгружен
+    const STATE_DELIVERED   = 14; // доставлен
+    const STATE_REFUSED     = 15; // отклонен
+    const STATE_SHIFTED     = 16; // отложен
+    const STATE_FAIL        = 17; // Аннулирован
+    const STATE_FINISHED    = 18; // Закончен
+    const STATE_APPROVED    = 19;      //  Готов к выполнению
     const STATE_READYTOSHIP = 20; // готов к отправке    
     // типы  экспорта
     const EX_WORD  = 1; //  Word
@@ -39,11 +39,11 @@ class Document extends \ZCL\DB\Entity
     // const EX_XML_GNAU = 4;
 
     //доставка
-    const DEL_SELF  = 1;    //  самовывоз
-    const DEL_BOY  = 2;    //  курьер
-    const DEL_SERVICE  = 3;    //  служба доставки
-    
-    
+    const DEL_SELF    = 1;    //  самовывоз
+    const DEL_BOY     = 2;    //  курьер
+    const DEL_SERVICE = 3;    //  служба доставки
+
+
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
      *
@@ -120,7 +120,6 @@ class Document extends \ZCL\DB\Entity
         }
         $this->packData();
     }
-
 
 
     /**
@@ -417,7 +416,7 @@ class Document extends \ZCL\DB\Entity
         }
     }
 
-    
+
     public function checkUniqueNumber() {
         $this->document_number = trim($this->document_number);
         $class = explode("\\", get_called_class());
@@ -429,8 +428,8 @@ class Document extends \ZCL\DB\Entity
             }
         }
         return true;
-    }    
-    
+    }
+
     /**
      * Возвращает  следующий  номер  при  автонумерации
      *
@@ -464,7 +463,7 @@ class Document extends \ZCL\DB\Entity
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
         $next = $letter . sprintf("%05d", ++$number);
-        return $next ;
+        return $next;
     }
 
     /**
@@ -704,19 +703,17 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-    * Список  типов  доставки
-    */
-    public static function getDeliveryTypes(){
+     * Список  типов  доставки
+     */
+    public static function getDeliveryTypes() {
         $list = array();
-        $list[self::DEL_SELF]       =  Helper::l('delself');
-        $list[self::DEL_BOY]        =  Helper::l('delboy');
-        $list[self::DEL_SERVICE]    =  Helper::l('delservice');
-        
-        return  $list;
+        $list[self::DEL_SELF] = Helper::l('delself');
+        $list[self::DEL_BOY] = Helper::l('delboy');
+        $list[self::DEL_SERVICE] = Helper::l('delservice');
+
+        return $list;
     }
-    
-    
-    
+
 
     /**
      * Отправка  документа  по  почте

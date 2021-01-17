@@ -17,14 +17,14 @@
     </tr>
     <tr>
         <td></td>
-        <td> Доставка </td>
-        <td  >{{delivery}}</td>
+        <td> Доставка</td>
+        <td>{{delivery}}</td>
         <td colspan="6">Адрес: {{ship_address}}</td>
     </tr>
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
-           Заказ № {{document_number}} от {{date}}
+            Заказ № {{document_number}} от {{date}}
         </td>
     </tr>
 
@@ -56,14 +56,13 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-  
+
     {{#isdisc}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">Скидка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
- 
 
 
     <tr style="font-weight: bolder;">
@@ -74,7 +73,7 @@
         <td colspan="8" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
- 
+
 
     <tr>
         <td></td>

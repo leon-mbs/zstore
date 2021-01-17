@@ -50,18 +50,17 @@ class Order extends \App\Entity\Doc\Document
                         "phone"           => $this->headerdata["phone"],
                         "email"           => $this->headerdata["email"],
                         "delivery"        => $this->headerdata["delivery_name"],
-                        "ship_address"    => strlen($this->headerdata["ship_address"]) >0 ? $this->headerdata["ship_address"] : false ,
+                        "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "notes"           => $this->notes,
                         "document_number" => $this->document_number,
-                        "total"     => H::fa($this->amount),
-                        "payed"     => H::fa($this->payed),
-                        "paydisc"   => H::fa($this->headerdata["paydisc"]),
-                        "isdisc"    => $this->headerdata["paydisc"] > 0,
-                        //"prepaid"   => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
-                        "payamount" => H::fa($this->payamount)
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed),
+                        "paydisc"         => H::fa($this->headerdata["paydisc"]),
+                        "isdisc"          => $this->headerdata["paydisc"] > 0,
+            //"prepaid"   => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "payamount"       => H::fa($this->payamount)
         );
-    
-  
+
 
         $report = new \App\Report('doc/order.tpl');
 
@@ -128,11 +127,11 @@ class Order extends \App\Entity\Doc\Document
         return $html;
     }
 
-    
-   public function Execute() {
+
+    public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-  
+
         //списываем бонусы
         if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
@@ -151,5 +150,5 @@ class Order extends \App\Entity\Doc\Document
 
         return true;
     }
-    
+
 }

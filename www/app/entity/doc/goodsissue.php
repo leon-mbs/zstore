@@ -76,7 +76,7 @@ class GoodsIssue extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-    
+
         $report = new \App\Report('doc/goodsissue.tpl');
 
         $html = $report->generate($header);
@@ -132,8 +132,8 @@ class GoodsIssue extends Document
         return 'РН-000000';
     }
 
-    
-   public function generatePosReport() {
+
+    public function generatePosReport() {
 
         $detail = array();
 
@@ -167,10 +167,10 @@ class GoodsIssue extends Document
 
         return $html;
     }
-   
-   
-  public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_POS,  self::EX_PDF);
+
+
+    public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_POS, self::EX_PDF);
     }
-   
+
 }

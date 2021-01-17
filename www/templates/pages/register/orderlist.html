@@ -10,7 +10,6 @@
             <form zippy="filter" class="form-inline ">
 
 
-              
                 <label for="searchnumber"> № </label>
 
                 <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
@@ -30,7 +29,7 @@
         <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Новый заказ</a>
 
 
-        <br><a zippy="csv">Экспорт  в  Excel</a>
+        <br><a zippy="csv">Экспорт в Excel</a>
 
         <table class="table   table-sm   ">
             <tr>
@@ -42,7 +41,7 @@
                 <th>Статус</th>
 
 
-                <th  ></th>
+                <th></th>
                 <th></th>
                 <th></th>
 
@@ -58,13 +57,13 @@
 
                 <td class="text-nowrap" zippy="state"></td>
                 <td zippy="onotes"></td>
-                <td >
-                <a zippy="pay" title="Оплата"><i class="fa fa-credit-card"></i></a>                
+                <td>
+                    <a zippy="pay" title="Оплата"><i class="fa fa-credit-card"></i></a>
                 </td>
 
                 <td class="text-nowrap">
-                  
-                                 <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
+
+                    <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
                     &nbsp; <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
 
                 </td>
@@ -82,9 +81,9 @@
 </div>
 
 
-<div class="row"  >
+<div class="row">
     <div class="col-12 col-xl-10">
-      <div class="navbar nav">
+        <div class="navbar nav">
             <form zippy="payform" class="form-inline ">
                 <label>К оплате</label>
                 <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сумма..."
@@ -94,9 +93,9 @@
 
                 </select>
                 {{#ppo}}
-               <label for="pos">POS</label>
+                <label for="pos">POS</label>
                 <select class="form-control mr-2" zippy="pos">
-                    <option value="0">Не  выбран</option>
+                    <option value="0">Не выбран</option>
                 </select>
                 {{/ppo}}
                 <label>дата</label>
@@ -104,14 +103,14 @@
                 <input zippy="pcomment" placeholder="Комментарий..." class="form-control mr-2">
 
                 <button type="submit" class="  btn btn-info  mr-2 ">Оплатить</button>
-                <input  zippy="closeorder" type="checkbox"  class="form-control "  > <span data-label="closeorder">Закрыть ордер</span>
+                <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрыть ордер</span>
 
 
             </form>
 
         </div>
-     </div>
-</div>    
+    </div>
+</div>
 <div class="row" zippy="statuspan">
     <div class="col-12 col-xl-10">
 
@@ -121,11 +120,11 @@
                 <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 "><i class="fa fa-gavel"></i>
                     Выполнен
                 </button>
-                <button zippy="bttn" class="btn btn-info  mr-4"><i class="fa fa-truck"></i> Создать ТТН</button>            
+                <button zippy="bttn" class="btn btn-info  mr-4"><i class="fa fa-truck"></i> Создать ТТН</button>
                 <button zippy="binp" class="btn btn-info  mr-2"><i class="fa fa-cog"></i> В обработку</button>
                 <button zippy="binv" class="btn btn-info  mr-2"><i class="fa fa-credit-card"></i> Создать счет-фактуру
                 </button>
-            
+
                 <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Создать наряд</button>
                 <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Аннулирован
                 </button>

@@ -21,21 +21,21 @@
             <b>Тип доходу:</b> {{type}}
         </td>
     </tr>
-    
-    {{#customer}}    
+
+    {{#customer}}
     <tr>
         <td colspan="4">
             <b>Контрагент:</b> {{customer}}
         </td>
     </tr>
     {{/customer}}
-     {{#emp}}    
+    {{#emp}}
     <tr>
         <td colspan="4">
             <b>Спiвробiтник:</b> {{emp}}
         </td>
     </tr>
-    {{/emp}}     
+    {{/emp}}
     <tr>
         <td colspan="4">
             {{notes}}

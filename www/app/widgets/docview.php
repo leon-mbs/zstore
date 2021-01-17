@@ -96,7 +96,7 @@ class DocView extends \Zippy\Html\PageFragment
         $html = $doc->generateReport();
         $this->preview->setText($html, true);
         $htmlpos = $doc->generatePosReport();
-  
+
         $this->previewpos->setText($htmlpos, true);
 
 
@@ -179,7 +179,7 @@ class DocView extends \Zippy\Html\PageFragment
     //вывод строки  проводок
     public function itemListOnRow($row) {
         $entry = $row->getDataItem();
-        $stock = \App\Entity\Stock::load($entry->stock_id);;
+        $stock = \App\Entity\Stock::load($entry->stock_id);
         $row->add(new Label('itname', $stock->itemname));
         $row->add(new Label('itcode', $stock->item_code));
         $row->add(new Label('itqty', H::fqty($entry->quantity)));
@@ -395,11 +395,11 @@ class DocView extends \Zippy\Html\PageFragment
         $page->_tvars['isscan'] = $this->_doc->headerdata['scan'] > 0;
 
         $page->_tvars['doctabpbadge'] = $sender->id == 'doctabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $page->_tvars['doctabcbadge'] = $sender->id == 'doctabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
-        $page->_tvars['doctabfbadge'] = $sender->id == 'doctabf' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
-        $page->_tvars['doctabdbadge'] = $sender->id == 'doctabd' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
-        $page->_tvars['doctabhbadge'] = $sender->id == 'doctabh' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
-        $page->_tvars['doctabsbadge'] = $sender->id == 'doctabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";;
+        $page->_tvars['doctabcbadge'] = $sender->id == 'doctabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $page->_tvars['doctabfbadge'] = $sender->id == 'doctabf' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $page->_tvars['doctabdbadge'] = $sender->id == 'doctabd' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $page->_tvars['doctabhbadge'] = $sender->id == 'doctabh' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $page->_tvars['doctabsbadge'] = $sender->id == 'doctabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
 
 
         $page->goDocView();

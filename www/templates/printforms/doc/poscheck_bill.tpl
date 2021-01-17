@@ -1,4 +1,4 @@
-<table    class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
+<table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
@@ -6,7 +6,7 @@
     <tr>
         <td colspan="3">Фиск. номер {{fiscalnumber}}</td>
     </tr>
-    {{/fiscalnumber}}  
+    {{/fiscalnumber}}
     <tr>
 
         <td colspan="3">от {{time}}</td>

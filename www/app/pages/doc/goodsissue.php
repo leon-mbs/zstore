@@ -63,7 +63,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
-        
+
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -81,26 +81,25 @@ class GoodsIssue extends \App\Pages\Base
 
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
-        
-        
+
 
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
 
-        $cp =  \App\Session::getSession()->clipboard ;
-        $this->docform->add(new ClickLink('paste',$this,'onPaste'))->setVisible(is_array($cp) && count($cp)>0);
-          
+        $cp = \App\Session::getSession()->clipboard;
+        $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        
+
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-          
-        
+
+
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -216,7 +215,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                       
+
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
@@ -251,7 +250,6 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-
 
 
                         $this->docform->firm->setValue($basedoc->firm_id);
@@ -289,7 +287,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->_tvars['manlist'][] = array('mitem' => $man);
         }
 
-        
+
     }
 
     public function detailOnRow($row) {
@@ -470,7 +468,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
-        
+
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
@@ -489,7 +487,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
-        
+
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
@@ -519,7 +517,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
                 // проверка на минус  в  количестве
-                
+
                 $allowminus = System::getOption("common", "allowminus");
                 if ($allowminus != 1) {
 
@@ -535,11 +533,11 @@ class GoodsIssue extends \App\Pages\Base
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
-              
+
             } else {
-                
-                    $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-           
+
+                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+
             }
 
 
@@ -590,16 +588,16 @@ class GoodsIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-     
+
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
-             
+
         }
         $this->docform->total->setText(H::fa($total));
-    
+
         $disc = 0;
 
         $customer_id = $this->docform->customer->getKey();
@@ -627,7 +625,7 @@ class GoodsIssue extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
-        
+
         if ($disc > 0) {
             $total -= $disc;
         }
@@ -758,13 +756,13 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError("noselstore");
         }
         $c = $this->docform->customer->getKey();
-        
+
         $noallowfiz = System::getOption("common", "noallowfiz");
-        if($noallowfiz == 1  &&  $c==0) {
-           $this->setError("noselcust"); 
+        if ($noallowfiz == 1 && $c == 0) {
+            $this->setError("noselcust");
         }
-        
-        
+
+
         $p = $this->docform->payment->getValue();
         if ($p == 0) {
             $this->setError("noselpaytype");
@@ -895,7 +893,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->discount->setVisible(false);
-     
+
     }
 
     public function cancelcustOnClick($sender) {
@@ -933,28 +931,29 @@ class GoodsIssue extends \App\Pages\Base
     }
 
 
-    
-  public function onPaste($sender) {
+    public function onPaste($sender) {
         $store_id = $this->docform->store->getValue();
 
-        $cp =  \App\Session::getSession()->clipboard ;
-      
-        foreach($cp as $it) {
-           $item = Item::load($it->item_id);  
-           if($item==null) continue;
-           $item->quantity  =1;
-           $item->price  =$item->getPrice($this->docform->pricetype->getValue(), $store_id);
-           
-           $this->_itemlist[$item->item_id] = $item;
+        $cp = \App\Session::getSession()->clipboard;
+
+        foreach ($cp as $it) {
+            $item = Item::load($it->item_id);
+            if ($item == null) {
+                continue;
+            }
+            $item->quantity = 1;
+            $item->price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+
+            $this->_itemlist[$item->item_id] = $item;
         }
-  
+
         $this->docform->detail->Reload();
 
-  
+
         $this->calcTotal();
         $this->calcPay();
     }
-   
+
 }
 
 

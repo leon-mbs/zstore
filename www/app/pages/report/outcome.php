@@ -26,7 +26,7 @@ class Outcome extends \App\Pages\Base
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
             $br = " and  branch_id in ({$brids}) ";
-        }        
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
@@ -113,7 +113,7 @@ class Outcome extends \App\Pages\Base
 
 
     private function generateReport() {
-          $conn = \ZDB\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
         $type = $this->filter->type->getValue();
         $user = $this->filter->emp->getValue();
         $cat_id = $this->filter->cat->getValue();
@@ -136,27 +136,26 @@ class Outcome extends \App\Pages\Base
         }
 
         // скидка
-   
-            
-       $sql = "document_id in( select  d.document_id  from `entrylist_view`  e 
+
+
+        $sql = "document_id in( select  d.document_id  from `entrylist_view`  e 
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <> 0
                and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order','POSCheck')
                {$br}  {$u}     and  d.payamount >0 and  d.payamount <  d.amount 
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) .")";             
-             
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . ")";
+
         $res = \App\Entity\Doc\Document::find($sql);
-        $disc=0;
-        foreach($res as $d){
-            if($d->headerdata['paydisc'] >0){
-        
-                $disc  +=  $d->headerdata['paydisc'] ;
+        $disc = 0;
+        foreach ($res as $d) {
+            if ($d->headerdata['paydisc'] > 0) {
+
+                $disc += $d->headerdata['paydisc'];
             }
-        }         
-        
-        
-        
+        }
+
+
         $detail = array();
 
         $cat = "";
@@ -307,15 +306,16 @@ class Outcome extends \App\Pages\Base
         if (strlen($sql) > 0) {
             $rs = $conn->Execute($sql);
         }
-     
+
 
         foreach ($rs as $row) {
-            
-            $summa = $row['summa'] ;
-            if($row['navar'] != 0) $row['summa'] += $row['navar'] ;
-            
-          
-         
+
+            $summa = $row['summa'];
+            if ($row['navar'] != 0) {
+                $row['summa'] += $row['navar'];
+            }
+
+
             $detail[] = array(
                 "code"      => $row['item_code'],
                 "name"      => $row['itemname'],
@@ -331,14 +331,14 @@ class Outcome extends \App\Pages\Base
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),
-                        "_detail"  => $detail,  
+                        "_detail"  => $detail,
                         'dateto'   => \App\Helper::fd($to)
         );
 
         $header['totsumma'] = H::fa($totsum);
         $header['totnavar'] = H::fa($totnavar);
         $header['disc'] = H::fa($disc);
-        $header['isdisc'] = $disc>0;
+        $header['isdisc'] = $disc > 0;
         $header['totall'] = H::fa($totsum - $disc);
 
 

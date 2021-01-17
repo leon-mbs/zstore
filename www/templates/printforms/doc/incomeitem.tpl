@@ -11,13 +11,13 @@
         </td>
     </tr>
 
-   {{#emp}}
-   <tr>
+    {{#emp}}
+    <tr>
         <td colspan="6">
             <b>Сотрудник:</b> {{emp}}
         </td>
     </tr>
-   <tr>
+    <tr>
         <td colspan="6">
             <b>Сумма:</b> {{examount}}
         </td>

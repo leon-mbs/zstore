@@ -469,7 +469,7 @@ class ARMPos extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-         $store = $this->form1->store->getValue();
+        $store = $this->form1->store->getValue();
 
 
         $price = $item->getPrice($this->pos->pricetype, $store);
@@ -718,9 +718,9 @@ class ARMPos extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
-        $this->form3->customer->setKey(0);   
-        $this->form3->customer->setText('');   
-        $this->form3->payment->setValue(H::getDefMF());   
+        $this->form3->customer->setKey(0);
+        $this->form3->customer->setText('');
+        $this->form3->payment->setValue(H::getDefMF());
         $this->form3->setVisible(false);
         $this->form4->setVisible(true);
 
@@ -734,20 +734,20 @@ class ARMPos extends \App\Pages\Base
         $this->form3->payed->setVisible(true);
         $this->form3->payamount->setVisible(true);
         $this->form3->paydisc->setVisible(true);
-        $this->form3->exchange->setVisible(true);        
-        
+        $this->form3->exchange->setVisible(true);
+
         if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->form3->payed->setVisible(false);
             $this->form3->payamount->setVisible(false);
             $this->form3->paydisc->setVisible(false);
             $this->form3->exchange->setVisible(false);
-        }  
+        }
         if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->form3->payed->setVisible(false);
             //$this->form3->payamount->setVisible(false);
             $this->form3->paydisc->setVisible(false);
             $this->form3->exchange->setVisible(false);
-        }  
+        }
     }
 
 
@@ -790,7 +790,7 @@ class ARMPos extends \App\Pages\Base
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();
-        };
+        }
     }
 
 

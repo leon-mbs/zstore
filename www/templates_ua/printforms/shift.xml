@@ -7,11 +7,11 @@
         <UID>{{guid}}</UID>
 
         <TIN>{{tin}}</TIN>
-     
+
         {{#inn}}
         <IPN>{{inn}}</IPN>
         {{/inn}}
-     
+
         <ORGNM>{{firmname}}</ORGNM>
 
         <POINTNM>{{pointname}}</POINTNM>
@@ -23,7 +23,7 @@
         <ORDERTIME>{{time}}</ORDERTIME>
 
         <ORDERNUM>{{docnumber}}</ORDERNUM>
-    
+
 
         <CASHDESKNUM>{{posinner}}</CASHDESKNUM>
         <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>

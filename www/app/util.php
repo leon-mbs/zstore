@@ -5,7 +5,7 @@ namespace App;
 use App\Helper as H;
 use Symfony\Polyfill\Mbstring\Mbstring;
 use Symfony\Polyfill\Uuid\Uuid;
- 
+
 
 /**
  * Класс   со  вспомагательными   функциями
@@ -18,10 +18,10 @@ class Util
      */
     public static function guid() {
 
-        $uuid =  Uuid::uuid_create(Uuid::UUID_TYPE_RANDOM);
-        
+        $uuid = Uuid::uuid_create(Uuid::UUID_TYPE_RANDOM);
+
         return $uuid;
-     
+
 
     }
 

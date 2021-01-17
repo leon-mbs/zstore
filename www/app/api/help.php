@@ -1,12 +1,13 @@
 <?php
-namespace App\API; 
+
+namespace App\API;
 /**
-* возвращает  описание   API  
-*/
+ * возвращает  описание   API
+ */
 class help
 {
-    function __construct( ) {
-   
+    function __construct() {
+
         global $_config;
 
 
@@ -15,20 +16,20 @@ class help
 
         $lang = $_config['common']['lang'];
 
-        if(strlen($_GET['lang']) >0){
-           $lang = $_GET['lang'];   
+        if (strlen($_GET['lang']) > 0) {
+            $lang = $_GET['lang'];
         }
-        
+
         $templatepath = 'templates/';
 
         if (strlen($lang) > 0 && $lang != 'ru') {
             $templatepath = 'templates_' . $lang . '/';
         }
-        $path = _ROOT . strtolower($templatepath)."apihelp.html";
+        $path = _ROOT . strtolower($templatepath) . "apihelp.html";
 
- 
+
         $template = @file_get_contents($path);
         echo $template;
-        die;  
+        die;
     }
 } 

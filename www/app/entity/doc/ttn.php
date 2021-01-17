@@ -47,7 +47,6 @@ class TTN extends Document
 
         }
 
-     
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
@@ -58,18 +57,16 @@ class TTN extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "store_name"      => $this->headerdata["store_name"],
                         "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
-                        "ship_address"    => strlen($this->headerdata["ship_address"]) >0 ? $this->headerdata["ship_address"] : false ,
-                        "ship_number"     => strlen($this->headerdata["ship_number"]) >0 ? $this->headerdata["ship_number"] : false ,
-                        "delivery_name"     => $this->headerdata["delivery_name"],
+                        "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
+                        "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
+                        "delivery_name"   => $this->headerdata["delivery_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
 
-                     
-                        "total"     => H::fa($this->amount),
-        );
 
- 
+                        "total" => H::fa($this->amount),
+        );
 
 
         if ($this->headerdata["sent_date"] > 0) {
@@ -78,7 +75,7 @@ class TTN extends Document
         if ($this->headerdata["delivery_date"] > 0) {
             $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
         }
-    
+
         $report = new \App\Report('doc/ttn.tpl');
 
         $html = $report->generate($header);
@@ -101,7 +98,6 @@ class TTN extends Document
             }
         }
 
-   
 
         return true;
     }
@@ -119,11 +115,9 @@ class TTN extends Document
         return 'ТТН-000000';
     }
 
-    
-   
-   
-   public function supportedExport() {
-        return array(self::EX_EXCEL,   self::EX_PDF);
+
+    public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_PDF);
     }
-   
+
 }

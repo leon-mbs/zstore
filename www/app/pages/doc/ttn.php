@@ -35,7 +35,7 @@ class TTN extends \App\Pages\Base
     private $_basedocid = 0;
     private $_rowid     = 0;
     private $_orderid   = 0;
-    
+
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -70,17 +70,17 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
-        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes() , Document::DEL_SELF))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes(), Document::DEL_SELF))->onChange($this, 'OnDelivery');
 
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('ship_number'));
         $this->docform->add(new TextArea('ship_address'));
-        
+
         $this->docform->add(new Label('notesfromorder'));
 
-             
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -91,8 +91,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->docform->add(new Label('weight'))->setVisible(false);
 
-        
-        
+
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -132,10 +131,6 @@ class TTN extends \App\Pages\Base
             $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
-            
-
-
-            
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -150,12 +145,10 @@ class TTN extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_orderid = $this->_doc->headerdata['order_id'];
-            
+
 
             $this->docform->firm->setValue($this->_doc->firm_id);
             $this->OnChangeCustomer($this->docform->customer);
-
-            
 
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -182,8 +175,8 @@ class TTN extends \App\Pages\Base
                         $this->docform->notesfromorder->setText($basedoc->notes);
                         $this->docform->ship_address->setText($basedoc->headerdata['address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
-                  
-                        
+
+
                         $notfound = array();
                         $order = $basedoc->cast();
 
@@ -202,7 +195,7 @@ class TTN extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
-                      
+
 
                     }
                     if ($basedoc->meta_name == 'Invoice') {
@@ -212,7 +205,7 @@ class TTN extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                
+
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
@@ -220,12 +213,11 @@ class TTN extends \App\Pages\Base
                         $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                        
 
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
-                        
+
 
                     }
 
@@ -243,11 +235,10 @@ class TTN extends \App\Pages\Base
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
-                     
+
                         $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->OnChangeCustomer($this->docform->customer);
-                        
 
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
@@ -255,9 +246,9 @@ class TTN extends \App\Pages\Base
                             $this->_itemlist[$item->item_id] = $item;
                         }
                         $this->calcTotal();
-                         
+
                     }
-                    
+
 
                 }
             }
@@ -307,7 +298,7 @@ class TTN extends \App\Pages\Base
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
-        
+
     }
 
     public function addrowOnClick($sender) {
@@ -413,7 +404,7 @@ class TTN extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
-        
+
     }
 
     public function cancelrowOnClick($sender) {
@@ -445,7 +436,7 @@ class TTN extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText() . ' ' . $customer->phone;
         }
-        
+
         $this->_doc->firm_id = $this->docform->firm->getValue();
         if ($this->_doc->firm_id > 0) {
             $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
@@ -469,19 +460,19 @@ class TTN extends \App\Pages\Base
 
         if ($this->checkForm() == false) {
             return;
-        }        
-        
+        }
+
         $this->_doc->packDetails('detaildata', $this->_itemlist);
- 
+
         $this->_doc->amount = $this->docform->total->getText();
 
         $isEdited = $this->_doc->document_id > 0;
-                      
-        if($sender->id == 'senddoc' &&  $this->_doc->headerdata['delivery'] > 2 && strlen($this->_doc->headerdata['delivery'])==0)  {
-            $this->setError('nottnnumber');     
-            return;                
-        }        
- 
+
+        if ($sender->id == 'senddoc' && $this->_doc->headerdata['delivery'] > 2 && strlen($this->_doc->headerdata['delivery']) == 0) {
+            $this->setError('nottnnumber');
+            return;
+        }
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -494,7 +485,7 @@ class TTN extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
- 
+
                 /*
                 // проверка на минус  в  количестве
                 $allowminus = System::getOption("common", "allowminus");
@@ -513,22 +504,20 @@ class TTN extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
 
-              /*  if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                    if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+                /*  if ($this->_doc->parent_id > 0) {   //закрываем заказ
+                      if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
 
-                    } else {
-                        $order = Document::load($this->_doc->parent_id);
-                        if ($order->state == Document::STATE_INPROCESS) {
-                            $order->updateStatus(Document::STATE_CLOSED);
-                        }
-                    }
-                } */
+                      } else {
+                          $order = Document::load($this->_doc->parent_id);
+                          if ($order->state == Document::STATE_INPROCESS) {
+                              $order->updateStatus(Document::STATE_CLOSED);
+                          }
+                      }
+                  } */
             } else {
                 if ($sender->id == 'senddoc') {
-                    
-                    
-                
-                    
+
+
                     if (!$isEdited) {
                         $this->_doc->updateStatus(Document::STATE_NEW);
                     }
@@ -544,9 +533,9 @@ class TTN extends \App\Pages\Base
 
 
             $conn->CommitTrans();
- 
+
             App::Redirect("\\App\\Pages\\Register\\GIList");
-            
+
         } catch(\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -557,9 +546,6 @@ class TTN extends \App\Pages\Base
         }
     }
 
-  
-
- 
 
     /**
      * Расчет  итого
@@ -582,9 +568,9 @@ class TTN extends \App\Pages\Base
         $this->docform->weight->setText(H::l("allweight", $weight));
         $this->docform->weight->setVisible($weight > 0);
 
- 
+
     }
- 
+
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
@@ -657,7 +643,7 @@ class TTN extends \App\Pages\Base
         }
         $this->docform->detail->Reload();
         $this->calcTotal();
-   
+
 
         $this->_rowid = 0;
     }
@@ -685,14 +671,13 @@ class TTN extends \App\Pages\Base
             $this->setError("noselstore");
         }
         $c = $this->docform->customer->getKey();
-  
-     
+
+
         if ($c == 0) {
-              $this->setError("noselcust");
+            $this->setError("noselcust");
         }
-    
-        
-        
+
+
         return !$this->isError();
     }
 
@@ -741,19 +726,19 @@ class TTN extends \App\Pages\Base
     }
 
     public function OnChangeCustomer($sender) {
-        
+
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
-   
+
             if ($this->docform->ship_address->getText() == '') {
                 $this->docform->ship_address->setText($customer->address);
             }
 
         }
-     
- 
+
+
     }
 
     //добавление нового контрагента
@@ -799,8 +784,8 @@ class TTN extends \App\Pages\Base
 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
-        
-        
+
+
     }
 
     public function cancelcustOnClick($sender) {
@@ -812,24 +797,24 @@ class TTN extends \App\Pages\Base
 
         if ($sender->getValue() == Document::DEL_BOY || $sender->getValue() == Document::DEL_SERVICE) {
             $this->docform->senddoc->setVisible(true);
-            
+
             $this->docform->ship_address->setVisible(true);
             $this->docform->ship_number->setVisible($sender->getValue() == 3);
             $this->docform->sent_date->setVisible(true);
             $this->docform->delivery_date->setVisible(true);
             $this->docform->emp->setVisible(true);
-            
+
         } else {
             $this->docform->senddoc->setVisible(false);
-            
+
             $this->docform->ship_address->setVisible(false);
             $this->docform->ship_number->setVisible(false);
             $this->docform->sent_date->setVisible(false);
             $this->docform->delivery_date->setVisible(false);
             $this->docform->emp->setVisible(false);
-            
+
         }
-        
+
     }
 
     public function onOpenItemSel($sender) {
@@ -844,8 +829,7 @@ class TTN extends \App\Pages\Base
         $this->OnChangeItem($this->editdetail->edittovar);
     }
 
-    
- 
+
 }
 
 

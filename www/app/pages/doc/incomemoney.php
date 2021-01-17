@@ -34,7 +34,7 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(1), Pay::PAY_BASE_INCOME));
-        $this->docform->add(new DropDownChoice('emp', Employee::findArray("emp_name", "disabled<>1", "emp_name") ));
+        $this->docform->add(new DropDownChoice('emp', Employee::findArray("emp_name", "disabled<>1", "emp_name")));
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
@@ -86,7 +86,7 @@ class IncomeMoney extends \App\Pages\Base
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->customer_id = $this->docform->customer->getKey();
-   
+
         if ($this->checkForm() == false) {
             return;
         }
@@ -148,6 +148,7 @@ class IncomeMoney extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
+
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 2);
     }

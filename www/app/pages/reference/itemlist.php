@@ -207,7 +207,7 @@ class ItemList extends \App\Pages\Base
     public function editOnClick($sender) {
         $item = $sender->owner->getDataItem();
         $this->_item = Item::load($item->item_id);
-        
+
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(true);
 
@@ -403,7 +403,7 @@ class ItemList extends \App\Pages\Base
     public function setOnClick($sender) {
         $item = $sender->owner->getDataItem();
         $item = Item::load($item->item_id);
-        
+
         $this->_pitem_id = $item->item_id;
         $this->_itemset = ItemSet::find("pitem_id=" . $item->item_id, "itemname");
         $this->setpanel->setVisible(true);
@@ -411,7 +411,7 @@ class ItemList extends \App\Pages\Base
 
         $this->setpanel->stitle->setText($item->itemname);
 
-   
+
         $this->setpanel->setlist->Reload();
     }
 

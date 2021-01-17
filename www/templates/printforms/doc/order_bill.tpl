@@ -18,7 +18,7 @@
     <tr>
         <td colspan="3"> {{phone}}</td>
     </tr>
- 
+
     <tr>
         <td colspan="3"> Покупатель:</td>
     </tr>
@@ -26,13 +26,13 @@
         <td colspan="3"> {{customer_name}}</td>
     </tr>
 
-  
-     <tr>
-        <td  colspan="3">Доставка {{delivery}}</td>
-      
+
+    <tr>
+        <td colspan="3">Доставка {{delivery}}</td>
+
     </tr>
     <tr>
-         <td colspan="3" >{{ship_address}}</td>
+        <td colspan="3">{{ship_address}}</td>
     </tr>
 
     {{#_detail}}
@@ -54,5 +54,5 @@
         <td align="right">{{total}}</td>
     </tr>
 
- 
+
 </table>

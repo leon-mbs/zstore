@@ -134,36 +134,36 @@ class PayList extends \App\Pages\Base
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1);
 
-        
+
         $header = array();
         $data = array();
-  
-        $header['A1']  = "Дата";
-        $header['B1']  = "Счет";
-        $header['C1']  = "Приход";
-        $header['D1']  = "Расход";
-        $header['E1']  = "Документ";  
-        $header['F1']  = "Создал";  
-        $header['G1']  = "Контрагент";  
-        $header['H1']  = "Примечание";  
-        
-        $i=1;
+
+        $header['A1'] = "Дата";
+        $header['B1'] = "Счет";
+        $header['C1'] = "Приход";
+        $header['D1'] = "Расход";
+        $header['E1'] = "Документ";
+        $header['F1'] = "Создал";
+        $header['G1'] = "Контрагент";
+        $header['H1'] = "Примечание";
+
+        $i = 1;
         foreach ($list as $doc) {
-             $i++;
-             $data['A'.$i]  =  H::fd(strtotime($doc->paydate));
-             $data['B'.$i]  =  $doc->mf_name ;
-             $data['C'.$i]  =  ($doc->amount > 0 ? H::fa($doc->amount) : "") ;
-             $data['D'.$i]  =  ($doc->amount < 0 ? H::fa(0 - $doc->amount) : "") ;
-             $data['E'.$i]  =  $doc->document_number ;
-             $data['F'.$i]  =  $doc->username ;
-             $data['G'.$i]  =  $doc->customer_name ;
-             $data['H'.$i]  =  $doc->notes ;
-             
+            $i++;
+            $data['A' . $i] = H::fd(strtotime($doc->paydate));
+            $data['B' . $i] = $doc->mf_name;
+            $data['C' . $i] = ($doc->amount > 0 ? H::fa($doc->amount) : "");
+            $data['D' . $i] = ($doc->amount < 0 ? H::fa(0 - $doc->amount) : "");
+            $data['E' . $i] = $doc->document_number;
+            $data['F' . $i] = $doc->username;
+            $data['G' . $i] = $doc->customer_name;
+            $data['H' . $i] = $doc->notes;
+
         }
-        
-        H::exportExcel($data,$header,'paylist.xlsx') ;            
+
+        H::exportExcel($data, $header, 'paylist.xlsx');
     }
-     
+
 
 }
 

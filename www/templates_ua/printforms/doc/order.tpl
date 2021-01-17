@@ -15,10 +15,10 @@
         <td>Email</td>
         <td colspan="7">{{email}}</td>
     </tr>
-     <tr>
+    <tr>
         <td></td>
-        <td> Доставка </td>
-        <td  >{{delivery}}</td>
+        <td> Доставка</td>
+        <td>{{delivery}}</td>
         <td colspan="6">Адрес: {{ship_address}}</td>
     </tr>
 
@@ -56,14 +56,14 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
- 
+
     {{#isdisc}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">Знижка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
- 
+
 
     <tr style="font-weight: bolder;">
 
@@ -74,7 +74,7 @@
         <td colspan="8" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
- 
+
 
     <tr>
         <td></td>

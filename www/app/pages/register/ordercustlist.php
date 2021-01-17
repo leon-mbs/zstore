@@ -37,7 +37,7 @@ class OrderCustList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-   
+
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 3 => 'Все'), 0));
@@ -106,7 +106,7 @@ class OrderCustList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
-      //  $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
+        //  $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         //проверяем  что есть ТТН
         $d = $this->_doc->getChildren('GoodsReceipt');
         $ttn = count($d) > 0;
@@ -142,7 +142,7 @@ class OrderCustList extends \App\Pages\Base
         }
         if ($sender->id == "bclose") {
 
-           // $this->_doc->payamount = $this->_doc->amount;
+            // $this->_doc->payamount = $this->_doc->amount;
             $this->_doc->save();
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
@@ -159,7 +159,7 @@ class OrderCustList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-       // $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
+        // $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         //доставлен
         $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
 
@@ -221,7 +221,7 @@ class OrderCustList extends \App\Pages\Base
 
             $this->statuspan->statusform->setVisible(false);
         }
-        
+
     }
 
     //просмотр
@@ -231,7 +231,7 @@ class OrderCustList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
-      
+
         $this->statuspan->setVisible(true);
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
@@ -240,7 +240,7 @@ class OrderCustList extends \App\Pages\Base
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
-         
+
     }
 
     public function editOnClick($sender) {
@@ -255,25 +255,25 @@ class OrderCustList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-        
-        
+
+
         $header = array();
         $data = array();
-        
-        $i=0;
+
+        $i = 0;
         foreach ($list as $d) {
-             $i++;
-             $data['A'.$i]  =  H::fd($d->document_date) ;
-             $data['B'.$i]  =  $d->document_number ;
-             $data['C'.$i]  =  $d->customer_name ;
-             $data['D'.$i]  =  $d->amount ;
-             $data['E'.$i]  =  Document::getStateName($d->state)  ;
-             $data['F'.$i]  =  $d->notes ;
-             
+            $i++;
+            $data['A' . $i] = H::fd($d->document_date);
+            $data['B' . $i] = $d->document_number;
+            $data['C' . $i] = $d->customer_name;
+            $data['D' . $i] = $d->amount;
+            $data['E' . $i] = Document::getStateName($d->state);
+            $data['F' . $i] = $d->notes;
+
         }
-        
-        H::exportExcel($data,$header,'ordercustlist.xlsx') ;        
- 
+
+        H::exportExcel($data, $header, 'ordercustlist.xlsx');
+
     }
 
 }
@@ -295,8 +295,8 @@ class OrderCustDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-     
-        $where  = "   meta_name  = 'OrderCust' ";
+
+        $where = "   meta_name  = 'OrderCust' ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {

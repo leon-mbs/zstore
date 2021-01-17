@@ -6,19 +6,17 @@ class APIHelper
 {
     private $type;
     private $api;
-  
+
     public function __construct($type = 'passenger') {
         $this->type = $type;
         $modules = \App\System::getOptions("modules");
-   
 
- 
+
         $this->token = $modules['td_code'];
         $this->email = $modules['td_email'];
-        
-    
-        
-        $this->api  =rtrim($modules['td_host'],'/') .'/api' ;
+
+
+        $this->api = rtrim($modules['td_host'], '/') . '/api';
 
     }
 
@@ -31,14 +29,14 @@ class APIHelper
         $ask = trim($ask, '&');
 
         $url = $this->api . "?" . $ask;
-        try{
+        try {
             $ret = \Fetch\fetch($this->api . "?" . $ask, [
                 'headers' => [
                     'Accept' => 'application/json',
                 ],
             ])->json(true);
-        }  catch(\Exception $e) {
-           return array('success' => false, 'error' => $e->getMessage());            
+        } catch(\Exception $e) {
+            return array('success' => false, 'error' => $e->getMessage());
         }
 
         if (is_array($ret)) {
@@ -48,7 +46,7 @@ class APIHelper
         }
 
     }
-   
+
     public function getAllBrands() {
 
 

@@ -25,10 +25,10 @@ class IncomeItem extends Document
             $sc->setStock($stockto->stock_id);
             $sc->save();
         }
-        
-        if($this->headerdata['emp']>0 && $this->headerdata['exmf']>0 && $this->headerdata['examount']>0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'] , \App\Entity\Pay::PAY_BASE_INCOME, $this->notes );
-       
+
+        if ($this->headerdata['emp'] > 0 && $this->headerdata['exmf'] > 0 && $this->headerdata['examount'] > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'], \App\Entity\Pay::PAY_BASE_INCOME, $this->notes);
+
         }
 
         return true;
@@ -58,16 +58,16 @@ class IncomeItem extends Document
             'date'            => H::fd($this->document_date),
             "total"           => H::fa($this->amount),
             "to"              => $this->headerdata["storename"],
-            "emp"           => false,
+            "emp"             => false,
             "notes"           => $this->notes,
             "document_number" => $this->document_number
         );
-        if($this->headerdata["emp"]>0 && $this->headerdata['examount']) {
-            $header['emp'] = $this->headerdata["empname"]   ;
-            $header['examount'] = H::fa($this->headerdata["examount"]  ) ;
-            
+        if ($this->headerdata["emp"] > 0 && $this->headerdata['examount']) {
+            $header['emp'] = $this->headerdata["empname"];
+            $header['examount'] = H::fa($this->headerdata["examount"]);
+
         }
-        
+
         $report = new \App\Report('doc/incomeitem.tpl');
 
         $html = $report->generate($header);

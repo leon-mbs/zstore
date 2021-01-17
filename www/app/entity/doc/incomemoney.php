@@ -30,7 +30,7 @@ class IncomeMoney extends Document
             'date'            => H::fd($this->document_date),
             "notes"           => $this->notes,
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
-            "emp"             =>  strlen($this->headerdata["emp_name"]) > 0 ? $this->headerdata["emp_name"]: false,
+            "emp"             => strlen($this->headerdata["emp_name"]) > 0 ? $this->headerdata["emp_name"] : false,
             "type"            => $pt[$this->headerdata["type"]],
             "to"              => $this->headerdata["paymentname"],
             "document_number" => $this->document_number

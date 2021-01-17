@@ -93,8 +93,8 @@ class Application extends \Zippy\WebApplication
 
                 //для произвольной страницы
                 $params = array_slice($api, 3);
-                if(strlen($api[2])>0)  {
-                   call_user_func_array(array($page, $api[2]), $params);
+                if (strlen($api[2]) > 0) {
+                    call_user_func_array(array($page, $api[2]), $params);
                 }
                 die;
             } catch(\Throwable $e) {

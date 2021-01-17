@@ -6,7 +6,8 @@
     <tr>
         <td colspan="3">Фiск. номер {{fiscalnumber}}</td>
     </tr>
-    {{/fiscalnumber}}    <tr>
+    {{/fiscalnumber}}
+    <tr>
 
     <tr>
 

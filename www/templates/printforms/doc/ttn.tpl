@@ -15,7 +15,7 @@
 
     </tr>
     {{/isfirm}}
- 
+
 
     <tr>
         <td></td>
@@ -29,16 +29,16 @@
         <td><b>Заказ</b></td>
         <td colspan="5">{{order}}</td>
     </tr>
-   {{/order}}
+    {{/order}}
     <tr>
         <td></td>
         <td><b>Доставка</b></td>
-        <td  >{{delivery_name}}</td>
+        <td>{{delivery_name}}</td>
         <td colspan="4">{{ship_address}}</td>
     </tr>
 
-  
-   {{#ship_number}}
+
+    {{#ship_number}}
     <tr>
         <td></td>
         <td><b>Декларация</b></td>
@@ -61,7 +61,7 @@
         <td colspan="5"> {{emp_name}}</td>
     </tr>
 
- 
+
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             ТТН № {{document_number}} от {{date}} <br>
@@ -96,7 +96,6 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
- 
- 
+
 </table>
 

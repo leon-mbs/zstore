@@ -356,26 +356,26 @@ class TaskList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->tasktab->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
-      
-        
+
+
         $header = array();
         $data = array();
-        
-        $i=0;
+
+        $i = 0;
         foreach ($list as $task) {
-             $i++;
-             $data['A'.$i]  =  $task->document_number ;
-             $data['B'.$i]  =  $task->notes ;
-             $data['C'.$i]  =  H::fdt($task->document_date) ;
-             $data['D'.$i]  =  $task->headerdata['taskhours']  ;
-             $data['E'.$i]  =  Document::getStateName($task->state) ;
-             $data['F'.$i]  =  $task->notes ;
-             
+            $i++;
+            $data['A' . $i] = $task->document_number;
+            $data['B' . $i] = $task->notes;
+            $data['C' . $i] = H::fdt($task->document_date);
+            $data['D' . $i] = $task->headerdata['taskhours'];
+            $data['E' . $i] = Document::getStateName($task->state);
+            $data['F' . $i] = $task->notes;
+
         }
-        
-        H::exportExcel($data,$header,'taskslist.xlsx') ;        
-      
- 
+
+        H::exportExcel($data, $header, 'taskslist.xlsx');
+
+
     }
 
 }

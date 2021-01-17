@@ -27,10 +27,10 @@ class Import extends \App\Pages\Base
         $form = $this->add(new Form("iform"));
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
-        
+
         $form->add(new DropDownChoice("price", Item::getPriceTypeList()));
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
-        
+
         $form->add(new \Zippy\Html\Form\File("filename"));
         $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J');
         $form->add(new DropDownChoice("colname", $cols));
@@ -56,12 +56,11 @@ class Import extends \App\Pages\Base
         $form = $this->add(new Form("nform"));
 
 
-        
         $form->add(new DropDownChoice("nstore", Store::getList(), H::getDefStore()));
-        
+
         $form->add(new AutocompleteTextInput("ncust"))->onText($this, 'OnAutoCustomer');
         $form->add(new \Zippy\Html\Form\File("nfilename"));
-        
+
         $form->add(new DropDownChoice("ncolname", $cols));
         $form->add(new DropDownChoice("ncolcode", $cols));
         $form->add(new DropDownChoice("ncolqty", $cols));
@@ -76,8 +75,8 @@ class Import extends \App\Pages\Base
         $form = $this->add(new Form("cform"));
 
         $form->add(new DropDownChoice("ctype", array(), 0));
-        
-        
+
+
         $form->add(new CheckBox("cpreview"));
         $form->add(new CheckBox("cpassfirst"));
         $form->add(new DropDownChoice("colcname", $cols));
@@ -112,7 +111,7 @@ class Import extends \App\Pages\Base
         $t = $this->iform->itype->getValue();
         $store = $this->iform->store->getValue();
         $pt = $this->iform->price->getValue();
-        
+
         $preview = $this->iform->preview->isChecked();
         $preview = $this->iform->preview->isChecked();
         $checkname = $this->iform->checkname->isChecked();
@@ -144,30 +143,27 @@ class Import extends \App\Pages\Base
         }
 
         $data = array();
-     $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
-     
-     
-     $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
-     
-     for ($iRow = ($passfirst ? 2:1); $iRow <= $oCells->getHighestRow(); $iRow++)
-     {
-      
-       $row = array();
-       for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++)
-       {
-         $oCell = $oCells->get($iCol.$iRow);
-         if($oCell)
-         {
-           $row[$iCol] =  $oCell->getValue();
-         }
-         
-       }
-       $data[$iRow]  =  $row;
-       
-       
-     }           
-                 
-      unset($oSpreadsheet); 
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+
+
+        $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+
+        for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
+
+            $row = array();
+            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+                $oCell = $oCells->get($iCol . $iRow);
+                if ($oCell) {
+                    $row[$iCol] = $oCell->getValue();
+                }
+
+            }
+            $data[$iRow] = $row;
+
+
+        }
+
+        unset($oSpreadsheet);
 
         if ($preview) {
 
@@ -176,16 +172,16 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'    => $row[$colname  ],
-                    'colcode'    => $row[$colcode  ],
-                    'colbarcode' => $row[$colbarcode  ],
-                    'colgr'      => $row[$colgr  ],
-                    'colqty'     => $row[$colqty  ],
-                    'colmsr'     => $row[$colmsr  ],
-                    'colinprice' => $row[$colinprice  ],
-                    'colprice'   => $row[$colprice  ],
-                    'colbrand'   => $row[$colbrand  ] ,
-                    'coldesc'   => $row[$coldesc  ]
+                    'colname'    => $row[$colname],
+                    'colcode'    => $row[$colcode],
+                    'colbarcode' => $row[$colbarcode],
+                    'colgr'      => $row[$colgr],
+                    'colqty'     => $row[$colqty],
+                    'colmsr'     => $row[$colmsr],
+                    'colinprice' => $row[$colinprice],
+                    'colprice'   => $row[$colprice],
+                    'colbrand'   => $row[$colbrand],
+                    'coldesc'    => $row[$coldesc]
                 );
             }
             return;
@@ -195,7 +191,7 @@ class Import extends \App\Pages\Base
         $newitems = array();
         foreach ($data as $row) {
 
-            $catname = $row[$colgr  ];
+            $catname = $row[$colgr];
             if (strlen($catname) > 0) {
                 $cat = Category::getFirst('cat_name=' . Category::qstr($catname));
                 if ($cat == null) {
@@ -205,42 +201,43 @@ class Import extends \App\Pages\Base
                 }
             }
             $item = null;
-            $itemname = trim($row[$colname  ]);
-            $itemcode = trim($row[$colcode  ]);
-            $itembarcode = trim($row[$colbarcode  ]);
+            $itemname = trim($row[$colname]);
+            $itemcode = trim($row[$colcode]);
+            $itembarcode = trim($row[$colbarcode]);
             if (strlen($itemname) > 0) {
 
                 if (strlen($itembarcode) > 0) {
                     $item = Item::getFirst('bar_code=' . Item::qstr($itembarcode));
-                }  else 
-                if (strlen($itemcode) > 0) {
-                    $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
+                } else {
+                    if (strlen($itemcode) > 0) {
+                        $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
+                    }
                 }
-                if ($item == null && $checkname==true) {
+                if ($item == null && $checkname == true) {
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
 
 
                 if ($item == null) {
-                    $price = str_replace(',', '.', trim($row[$colprice  ]));
-                    $inprice = str_replace(',', '.', trim($row[$colinprice  ]));
-                    $qty = str_replace(',', '.', trim($row[$colqty  ]));
+                    $price = str_replace(',', '.', trim($row[$colprice]));
+                    $inprice = str_replace(',', '.', trim($row[$colinprice]));
+                    $qty = str_replace(',', '.', trim($row[$colqty]));
                     $item = new Item();
                     $item->itemname = $itemname;
-                    if (strlen($row[$colcode  ]) > 0) {
-                        $item->item_code = trim($row[$colcode  ]);
+                    if (strlen($row[$colcode]) > 0) {
+                        $item->item_code = trim($row[$colcode]);
                     }
-                    if (strlen($row[$colbarcode  ]) > 0) {
-                        $item->bar_code = trim($row[$colbarcode  ]);
+                    if (strlen($row[$colbarcode]) > 0) {
+                        $item->bar_code = trim($row[$colbarcode]);
                     }
-                    if (strlen($row[$colmsr  ]) > 0) {
-                        $item->msr = trim($row[$colmsr  ]);
+                    if (strlen($row[$colmsr]) > 0) {
+                        $item->msr = trim($row[$colmsr]);
                     }
-                    if (strlen($row[$colbrand  ]) > 0) {
-                        $item->manufacturer = trim($row[$colbrand  ]);
+                    if (strlen($row[$colbrand]) > 0) {
+                        $item->manufacturer = trim($row[$colbrand]);
                     }
-                    if (strlen(trim($row[$coldesc  ])) > 0) {
-                        $item->description = trim($row[$coldesc  ]);
+                    if (strlen(trim($row[$coldesc])) > 0) {
+                        $item->description = trim($row[$coldesc]);
                     }
                     if ($price > 0) {
                         $item->{$pt} = $price;
@@ -299,7 +296,7 @@ class Import extends \App\Pages\Base
     public function onCImport($sender) {
         $t = $this->cform->ctype->getValue();
 
-        
+
         $preview = $this->cform->cpreview->isChecked();
         $passfirst = $this->cform->cpassfirst->isChecked();
         $this->_tvars['preview2'] = false;
@@ -309,7 +306,7 @@ class Import extends \App\Pages\Base
         $colemail = $this->cform->colemail->getValue();
         $colcity = $this->cform->colcity->getValue();
         $coladdress = $this->cform->coladdress->getValue();
-        
+
 
         if ($colcname === '0') {
             $this->setError('noselcolname');
@@ -321,38 +318,33 @@ class Import extends \App\Pages\Base
             $this->setError('noselfile');
             return;
         }
- 
-    
-     $data = array();
-     
-     $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
-     
-     
-     $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
-     
-     for ($iRow = ($passfirst ? 2:1); $iRow <= $oCells->getHighestRow(); $iRow++)
-     {
-      
-       $row = array();
-       for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++)
-       {
-         $oCell = $oCells->get($iCol.$iRow);
-         if($oCell)
-         {
-           $row[$iCol] =  $oCell->getValue();
-         }
-         
-       }
-       $data[$iRow]  =  $row;
-       
-       
-     }           
-                 
-      unset($oSpreadsheet);      
-            
- 
-        
-        
+
+
+        $data = array();
+
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+
+
+        $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+
+        for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
+
+            $row = array();
+            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+                $oCell = $oCells->get($iCol . $iRow);
+                if ($oCell) {
+                    $row[$iCol] = $oCell->getValue();
+                }
+
+            }
+            $data[$iRow] = $row;
+
+
+        }
+
+        unset($oSpreadsheet);
+
+
         if ($preview) {
 
             $this->_tvars['preview2'] = true;
@@ -360,11 +352,11 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list2'][] = array(
-                    'colname'    => $row[$colcname  ],
-                    'colphone'   => $row[$colphone  ],
-                    'colemail'   => $row[$colemail  ],
-                    'colcity'    => $row[$colcity  ],
-                    'coladdress' => $row[$coladdress  ]
+                    'colname'    => $row[$colcname],
+                    'colphone'   => $row[$colphone],
+                    'colemail'   => $row[$colemail],
+                    'colcity'    => $row[$colcity],
+                    'coladdress' => $row[$coladdress]
                 );
             }
             return;
@@ -375,8 +367,8 @@ class Import extends \App\Pages\Base
         foreach ($data as $row) {
 
             $c = null;
-            $name = $row[$colcname  ];
-            $phone = $row[$colphone ];
+            $name = $row[$colcname];
+            $phone = $row[$colphone];
 
             if (strlen(trim($name)) == 0) {
                 continue;
@@ -392,17 +384,17 @@ class Import extends \App\Pages\Base
                 $c->type = $t;
                 $c->customer_name = $name;
 
-                if (strlen($row[$colphone  ]) > 0) {
-                    $c->phone = $row[$colphone  ];
+                if (strlen($row[$colphone]) > 0) {
+                    $c->phone = $row[$colphone];
                 }
-                if (strlen($row[$colemail  ]) > 0) {
-                    $c->email = $row[$colemail  ];
+                if (strlen($row[$colemail]) > 0) {
+                    $c->email = $row[$colemail];
                 }
-                if (strlen($row[$colcity  ]) > 0) {
-                    $c->city = $row[$colcity  ];
+                if (strlen($row[$colcity]) > 0) {
+                    $c->city = $row[$colcity];
                 }
-                if (strlen($row[$coladdress  ]) > 0) {
-                    $c->address = $row[$coladdress  ];
+                if (strlen($row[$coladdress]) > 0) {
+                    $c->address = $row[$coladdress];
                 }
 
 
@@ -422,7 +414,7 @@ class Import extends \App\Pages\Base
     public function onNImport($sender) {
         $store = $this->nform->nstore->getValue();
         $c = $this->nform->ncust->getKey();
-        
+
         $preview = $this->nform->npreview->isChecked();
         $passfirst = $this->nform->npassfirst->isChecked();
         $this->_tvars['preview3'] = false;
@@ -433,7 +425,7 @@ class Import extends \App\Pages\Base
         $colqty = $this->nform->ncolqty->getValue();
         $colprice = $this->nform->ncolprice->getValue();
         $colmsr = $this->nform->ncolmsr->getValue();
-        
+
 
         if ($colname === '0') {
             $this->setError('noselcolname');
@@ -457,30 +449,27 @@ class Import extends \App\Pages\Base
         }
 
         $data = array();
-     $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
-     
-     
-     $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
-     
-     for ($iRow = ($passfirst ? 2:1); $iRow <= $oCells->getHighestRow(); $iRow++)
-     {
-      
-       $row = array();
-       for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++)
-       {
-         $oCell = $oCells->get($iCol.$iRow);
-         if($oCell)
-         {
-           $row[$iCol] =  $oCell->getValue();
-         }
-         
-       }
-       $data[$iRow]  =  $row;
-       
-       
-     }           
-                 
-      unset($oSpreadsheet); 
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+
+
+        $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+
+        for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
+
+            $row = array();
+            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+                $oCell = $oCells->get($iCol . $iRow);
+                if ($oCell) {
+                    $row[$iCol] = $oCell->getValue();
+                }
+
+            }
+            $data[$iRow] = $row;
+
+
+        }
+
+        unset($oSpreadsheet);
 
         if ($preview) {
 
@@ -489,11 +478,11 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'  => $row[$colname  ],
-                    'colcode'  => $row[$colcode  ],
-                    'colqty'   => $row[$colqty  ],
-                    'colmsr'   => $row[$colmsr  ],
-                    'colprice' => $row[$colprice  ]
+                    'colname'  => $row[$colname],
+                    'colcode'  => $row[$colcode],
+                    'colqty'   => $row[$colqty],
+                    'colmsr'   => $row[$colmsr],
+                    'colprice' => $row[$colprice]
                 );
             }
             return;
@@ -505,8 +494,8 @@ class Import extends \App\Pages\Base
 
 
             $item = null;
-            $itemname = trim($row[$colname  ]);
-            $itemcode = trim($row[$colcode  ]);
+            $itemname = trim($row[$colname]);
+            $itemcode = trim($row[$colcode]);
             if (strlen($itemname) > 0) {
 
                 if (strlen($itemcode) > 0) {
@@ -516,17 +505,17 @@ class Import extends \App\Pages\Base
                     $item = Item::getFirst('itemname=' . Item::qstr($itemname));
                 }
 
-                $price = str_replace(',', '.', trim($row[$colprice  ]));
-                $qty = str_replace(',', '.', trim($row[$colqty  ]));
+                $price = str_replace(',', '.', trim($row[$colprice]));
+                $qty = str_replace(',', '.', trim($row[$colqty]));
 
                 if ($item == null) {
                     $item = new Item();
                     $item->itemname = $itemname;
-                    if (strlen($row[$colcode  ]) > 0) {
-                        $item->item_code = trim($row[$colcode  ]);
+                    if (strlen($row[$colcode]) > 0) {
+                        $item->item_code = trim($row[$colcode]);
                     }
                     if (strlen($row[$colmsr - 1]) > 0) {
-                        $item->msr = trim($row[$colmsr  ]);
+                        $item->msr = trim($row[$colmsr]);
                     }
 
 

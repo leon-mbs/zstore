@@ -39,8 +39,8 @@
         <td colspan="5">{{order}}</td>
     </tr>
     {{/order}}
- 
- 
+
+
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
             Накладна № {{document_number}} від {{date}} <br>
@@ -83,7 +83,7 @@
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
- 
+
 
     <tr style="font-weight: bolder;">
 

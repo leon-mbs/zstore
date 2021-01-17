@@ -341,12 +341,12 @@ class DocList extends \App\Pages\Base
             $this->setError("dochasnocanceledchilld");
             return;
         }
-        
+
         $doc->updateStatus(Document::STATE_CANCELED);
-        $doc->payed= 0;  //отменяем  оплату
+        $doc->payed = 0;  //отменяем  оплату
         $doc->save();
-        
-        
+
+
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
         $this->resetURL();
@@ -399,26 +399,25 @@ class DocList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-        
+
         $header = array();
         $data = array();
-        
-        $i=0;
+
+        $i = 0;
         foreach ($list as $d) {
-             $i++;
-             $data['A'.$i]  =  H::fd($d->document_date) ;
-             $data['B'.$i]  =  $d->document_number ;
-             $data['C'.$i]  =  $d->meta_desc ;
-             $data['D'.$i]  =  $d->customer_name ;
-             $data['E'.$i]  =  $d->amount ;
-             $data['F'.$i]  =  $d->notes ;
-             
+            $i++;
+            $data['A' . $i] = H::fd($d->document_date);
+            $data['B' . $i] = $d->document_number;
+            $data['C' . $i] = $d->meta_desc;
+            $data['D' . $i] = $d->customer_name;
+            $data['E' . $i] = $d->amount;
+            $data['F' . $i] = $d->notes;
+
         }
-        
-        H::exportExcel($data,$header,'doclist.xlsx') ;
-    
-        
-     
+
+        H::exportExcel($data, $header, 'doclist.xlsx');
+
+
     }
 
 }
