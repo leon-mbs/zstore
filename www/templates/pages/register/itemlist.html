@@ -31,7 +31,7 @@
 
             </form>
         </div>
-        <a zippy="csv">Экспорт  в  Excel</a>
+        <a zippy="csv">Экспорт в Excel</a>
 
         <table class="table   table-responsive-sm   table-sm  table-hover ">
             <tr>
@@ -126,34 +126,10 @@
 
             </tr>
         </table>
-        <a href="#q1" data-toggle="collapse"> Перемещение партий <i class="fa fa-chevron-down"></i> </a>
 
-        <div id="q1" class="collapse ">
-            <small>Перемещение между партиями, например для исправления отрицательных количеств.
-                Создается и автоматически проводится документ 'Перекомплектация ТМЦ', который не подлежит дальнейшему
-                редактированию,
-                только отмене.
-            </small>
-            <form zippy="moveform" class="form-inline">
-                <label for="searchcat">C </label>
-
-                <select class="form-control mr-sm-2" zippy="frompart">
-                    <option value="0">Выбрать</option>
-                </select>
-                <label for="topart"> в </label>
-
-                <select class="form-control mr-sm-2" zippy="topart">
-                    <option value="0">Выбрать</option>
-                </select>
-
-                <label for="topart"> кол. </label>
-                <input zippy="mqty" class="form-control mr-sm-2" style="width:100px">
-
-                <input class="btn btn-outline-success  " type="submit" value="ОК">
-
-            </form>
-
-        </div>
+        <small><i class="fa fa-exclamation-triangle"> Скорректировать партии, например переместить с одной в другую если
+            образовался минус можно документами
+            Оприходование и Списание ТМЦ.</small>
     </div>
 
 

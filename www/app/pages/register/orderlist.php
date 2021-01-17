@@ -13,9 +13,11 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use App\Entity\Pay;
 
 /**
  * журнал  заказов
@@ -37,8 +39,6 @@ class OrderList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
@@ -65,11 +65,23 @@ class OrderList extends \App\Pages\Base
 
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
+
+        $this->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
+        $this->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
+        $this->payform->add(new TextInput('pamount'));
+        $this->payform->add(new TextInput('pcomment'));
+        $this->payform->add(new CheckBox('closeorder'));
+        $this->payform->add(new Date('pdate', time()));
+        $this->payform->setVisible(false);
+
+
     }
 
     public function filterOnSubmit($sender) {
 
         $this->statuspan->setVisible(false);
+        $this->payform->setVisible(false);
 
         $this->doclist->Reload();
     }
@@ -88,6 +100,7 @@ class OrderList extends \App\Pages\Base
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new ClickLink('pay', $this, 'payOnClick'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
 
         if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
@@ -132,7 +145,7 @@ class OrderList extends \App\Pages\Base
             if ($ttn) {
                 $this->setWarn('order_has_sent');
             }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+            App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "binv") {
@@ -146,8 +159,8 @@ class OrderList extends \App\Pages\Base
 
         if ($sender->id == "bclose") {
 
-          //  $this->_doc->payamount = $this->_doc->amount;
-            $this->_doc->save();
+            //  $this->_doc->payamount = $this->_doc->amount;
+            // $this->_doc->save();
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
@@ -172,7 +185,7 @@ class OrderList extends \App\Pages\Base
 
 
         //проверяем  что есть ТТН
-        $list = $this->_doc->getChildren('GoodsIssue');
+        $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
         $list = $this->_doc->getChildren('Invoice');
         $invoice = count($list) > 0;
@@ -186,6 +199,8 @@ class OrderList extends \App\Pages\Base
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
 
         } else {
@@ -220,6 +235,11 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->setVisible(false);
         }
 
+        if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+            $this->statuspan->statusform->bclose->setVisible(false);
+        }
+
+
         $this->_tvars['askclose'] = false;
         if ($inproc == false || $sent == false) {
             $this->_tvars['askclose'] = true;
@@ -228,6 +248,7 @@ class OrderList extends \App\Pages\Base
 
     //просмотр
     public function showOnClick($sender) {
+        $this->payform->setVisible(false);
 
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
@@ -235,7 +256,7 @@ class OrderList extends \App\Pages\Base
         }
 
         $this->statuspan->setVisible(true);
-        $this->statuspan->statusform->setVisible(true);        
+        $this->statuspan->statusform->setVisible(true);
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
         $this->doclist->setSelectedRow($sender->getOwner());
@@ -256,25 +277,123 @@ class OrderList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
- 
+
         $header = array();
         $data = array();
-        
-        $i=0;
+
+        $i = 0;
         foreach ($list as $d) {
-             $i++;
-             $data['A'.$i]  =  H::fd($d->document_date) ;
-             $data['B'.$i]  =  $d->document_number ;
-             $data['C'.$i]  =  $d->customer_name ;
-             $data['D'.$i]  =  $d->amount ;
-             $data['E'.$i]  =  Document::getStateName($d->state)  ;
-             $data['F'.$i]  =  $d->notes ;
-             
+            $i++;
+            $data['A' . $i] = H::fd($d->document_date);
+            $data['B' . $i] = $d->document_number;
+            $data['C' . $i] = $d->customer_name;
+            $data['D' . $i] = $d->amount;
+            $data['E' . $i] = Document::getStateName($d->state);
+            $data['F' . $i] = $d->notes;
+
         }
-        
-        H::exportExcel($data,$header,'orderlist.xlsx') ;     
- 
-   
+
+        H::exportExcel($data, $header, 'orderlist.xlsx');
+
+
+    }
+
+    public function payOnClick($sender) {
+        $this->statuspan->setVisible(false);
+        $this->payform->setVisible(true);
+        $this->doclist->setSelectedRow($sender->getOwner());
+        $this->doclist->Reload(true);
+
+        $this->_doc = $sender->owner->getDataItem();
+
+
+        $this->goAnkor('dankor');
+
+        $this->payform->pamount->setText($this->_doc->payamount - $this->_doc->payed);;
+        $this->payform->pcomment->setText("");;
+
+        $this->payform->pos->setVisible(false);//пока  без  фискализации
+
+        $this->payform->closeorder->setVisible(false);
+
+        $delivered = 0;
+        $list = $this->_doc->getChildren('TTN');
+        foreach ($list as $ttn) {
+            if ($ttn->state == Document::STATE_DELIVERED) {
+                $delivered++;
+            }
+        }
+        if ($delivered > 0 && $delivered == count($list)) {
+            $this->payform->closeorder->setVisible(true);
+
+        }
+
+        $this->payform->closeorder->setChecked(false);
+    }
+
+    public function payOnSubmit($sender) {
+        $form = $this->payform;
+        $pos_id = $form->pos->getValue();
+        $amount = $form->pamount->getText();
+        $pdate = $form->pdate->getDate();
+        if ($amount == 0) {
+            return;
+        }
+
+
+        if ($amount > $this->_doc->payamount - $this->_doc->payed) {
+
+            $this->setWarn('sumoverpay');
+
+        }
+
+
+        if ($pos_id > 0) {
+            $pos = \App\Entity\Pos::load($pos_id);
+
+            $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
+            if ($ret['success'] == false && $ret['docnumber'] > 0) {
+                //повторяем для  нового номера
+                $pos->fiscdocnumber = $ret['docnumber'];
+                $pos->save();
+                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+
+            }
+            if ($ret['success'] == false) {
+                $this->setError($ret['data']);
+                return;
+            } else {
+
+                if ($ret['docnumber'] > 0) {
+                    $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                    $pos->save();
+                    $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                } else {
+                    $this->setError("ppo_noretnumber");
+                    return;
+
+                }
+
+            }
+
+        }
+
+        Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), Pay::PAY_BASE_INCOME, $form->pcomment->getText());
+
+
+        $this->setSuccess('payment_added');
+
+
+        if ($this->payform->closeorder->isChecked() == true) {
+            $doc = Document::load($this->_doc->document_id);     //загружаем  тобы  обновить  оплату
+            $doc->updateStatus(Document::STATE_CLOSED);
+        }
+
+
+        $this->doclist->Reload(false);
+        $this->payform->setVisible(false);
+
+
     }
 
 }
@@ -296,9 +415,8 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
 
-        $where .= " and   meta_name  = 'Order'  ";
+        $where = "     meta_name  = 'Order'  ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
@@ -307,7 +425,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         if ($status == 1) {
             $where .= " and  state =1 ";
         }
-  
+
 
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {

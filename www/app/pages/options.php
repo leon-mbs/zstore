@@ -51,6 +51,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('allowminus'));
+        $this->common->add(new CheckBox('noallowfiz'));
         $this->common->add(new CheckBox('capcha'));
         $this->common->add(new TextInput('price1'));
         $this->common->add(new TextInput('price2'));
@@ -92,6 +93,7 @@ class Options extends \App\Pages\Base
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->useimages->setChecked($common['useimages']);
         $this->common->usebranch->setChecked($common['usebranch']);
+        $this->common->noallowfiz->setChecked($common['noallowfiz']);
         $this->common->allowminus->setChecked($common['allowminus']);
         $this->common->capcha->setChecked($common['capcha']);
         $this->common->useval->setChecked($common['useval']);
@@ -141,6 +143,21 @@ class Options extends \App\Pages\Base
         $this->printer->pbarcode->setChecked($printer['pbarcode']);
         $this->printer->pprice->setChecked($printer['pprice']);
 
+        $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
+
+        $this->api->add(new TextInput('akey'));
+        $this->api->add(new TextInput('aexp'));
+        $this->api->add(new DropDownChoice('atype', array('1' => H::l('apijwt'), '2' => H::l('apibasic'), '3' => H::l('apinologin')), 1))->onChange($this, 'onApiType');
+        $api = System::getOptions("api");
+        if (!is_array($api)) {
+            $api = array('exp' => 60, 'key' => 'qwerty', 'atype' => 1);
+        }
+        $this->api->akey->setText($api['key']);
+        $this->api->aexp->setValue($api['exp']);
+        $this->api->atype->setValue($api['atype']);
+
+        $this->onApiType($this->api->atype);
+
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
         $this->add(new Panel('listpan'));
@@ -165,6 +182,8 @@ class Options extends \App\Pages\Base
 
         $this->editpan->editform->add(new DropDownChoice('edit_meta_type', \App\Entity\MetaData::getNames()));
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
+
+        $this->_tvars['tab2'] = false;
     }
 
 
@@ -197,6 +216,7 @@ class Options extends \App\Pages\Base
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
+        $common['noallowfiz'] = $this->common->noallowfiz->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
         $common['useval'] = $this->common->useval->isChecked() ? 1 : 0;
         $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
@@ -208,6 +228,8 @@ class Options extends \App\Pages\Base
 
         $this->setSuccess('saved');
         System::setCache('labels', null);
+
+        $this->_tvars['tab2'] = false;
     }
 
 
@@ -221,6 +243,8 @@ class Options extends \App\Pages\Base
 
         System::setOptions("val", $val);
         $this->setSuccess('saved');
+
+        $this->_tvars['tab2'] = false;
     }
 
     public function savePrinterOnClick($sender) {
@@ -236,6 +260,33 @@ class Options extends \App\Pages\Base
 
         System::setOptions("printer", $printer);
         $this->setSuccess('saved');
+
+        $this->_tvars['tab2'] = false;
+
+    }
+
+    public function onApiType($sender) {
+        $type = $this->api->atype->getValue();
+        $this->api->aexp->setVisible($type == 1);
+        $this->api->akey->setVisible($type == 1);
+
+        $this->goAnkor('api');
+
+        $this->_tvars['tab2'] = false;
+
+    }
+
+    public function saveApiOnClick($sender) {
+        $api = array();
+        $printer['exp'] = $this->api->aexp->getText();
+        $printer['key'] = $this->api->akey->getText();
+        $printer['atype'] = $this->api->atype->getValue();
+
+        System::setOptions("api", $api);
+        $this->setSuccess('saved');
+
+        $this->_tvars['tab2'] = false;
+
     }
 
     public function filterOnSubmit($sender) {
@@ -261,6 +312,9 @@ class Options extends \App\Pages\Base
         $this->metadatads->setWhere($where);
 
         $this->listpan->metarow->Reload();
+
+        $this->_tvars['tab2'] = true;
+
     }
 
     public function addnewOnClick($sender) {
@@ -272,11 +326,15 @@ class Options extends \App\Pages\Base
         $this->editpan->editform->edit_menugroup->setText('');
 
         $this->editpan->editform->edit_disabled->setChecked(0);
+        $this->_tvars['tab2'] = true;
+
     }
 
     public function mcancelOnClick($sender) {
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
+        $this->_tvars['tab2'] = true;
+
     }
 
     public function metarowOnRow($row) {
@@ -323,6 +381,8 @@ class Options extends \App\Pages\Base
 
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
+
+        $this->_tvars['tab2'] = true;
     }
 
     public function rowdeleteOnClick($sender) {
@@ -330,6 +390,7 @@ class Options extends \App\Pages\Base
         \App\Entity\MetaData::delete($item->meta_id);
 
         $this->listpan->metarow->Reload();
+        $this->_tvars['tab2'] = true;
     }
 
     public function editformOnSubmit($sender) {
@@ -358,6 +419,15 @@ class Options extends \App\Pages\Base
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_meta_name->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
+
+        $this->_tvars['tab2'] = true;
     }
+
+
+    public function afterRender() {
+        // $this->_tvars['tab2'] = false;
+
+    }
+
 
 }

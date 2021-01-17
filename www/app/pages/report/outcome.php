@@ -22,11 +22,16 @@ class Outcome extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('Outcome')) {
             return;
         }
+        $br = "";
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if (strlen($brids) > 0) {
+            $br = " and  branch_id in ({$brids}) ";
+        }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck'))", 'username'), 0));
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN')  {$br}  )", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
         $hlist = \App\Entity\Customer::getHoldList();
         //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
@@ -108,7 +113,7 @@ class Outcome extends \App\Pages\Base
 
 
     private function generateReport() {
-
+        $conn = \ZDB\DB::getConnect();
         $type = $this->filter->type->getValue();
         $user = $this->filter->emp->getValue();
         $cat_id = $this->filter->cat->getValue();
@@ -130,8 +135,29 @@ class Outcome extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
+        // скидка
+
+
+        $sql = "document_id in( select  d.document_id  from `entrylist_view`  e 
+             join `documents_view` d on d.`document_id` = e.`document_id`
+               where e.`item_id` >0  and e.`quantity` <> 0
+               and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order','POSCheck')
+               {$br}  {$u}     and  d.payamount >0 and  d.payamount <  d.amount 
+              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . ")";
+
+        $res = \App\Entity\Doc\Document::find($sql);
+        $disc = 0;
+        foreach ($res as $d) {
+            if ($d->headerdata['paydisc'] > 0) {
+
+                $disc += $d->headerdata['paydisc'];
+            }
+        }
+
+
         $detail = array();
-        $conn = \ZDB\DB::getConnect();
+
         $cat = "";
         if ($type == 5 && $cat_id > 0) {
             $cat = " and cat_id=" . $cat_id;
@@ -161,9 +187,9 @@ class Outcome extends \App\Pages\Base
 
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0 {$u} and e.`quantity` <> 0   {$cat}   {$cust}  
-               and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue')
-               {$br}
+               where e.`item_id` >0  and e.`quantity` <> 0   {$cat}   {$cust}  
+               and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN')
+               {$br}  {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.`itemname`,i.`item_code`
@@ -178,9 +204,9 @@ class Outcome extends \App\Pages\Base
 
         left  join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
-           where   e.`quantity` <>0 {$u}        
-             and d.`meta_name` in ('GoodsIssue','ServiceAct',  'POSCheck','ReturnIssue')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              {$br} AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+           where   e.`quantity` <>0       
+             and d.`meta_name` in ('GoodsIssue','ServiceAct',  'POSCheck','ReturnIssue','TTN')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              {$br} {$u}   AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.`customer_name`,c.`customer_id`
           order  by c.`customer_name`
@@ -188,14 +214,14 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 3) {   //по датам
             $sql = "
-          select e.`document_date` as dt  ,  sum(0-e.`amount`) as summa
+          select e.`document_date` as dt  ,  sum(0-e.`amount`) as summa    ,0 as navar
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0 {$u} and e.`quantity` <>0
-              and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue')           
-               {$br} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+               where e.`item_id` >0  and e.`quantity` <>0
+              and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN')           
+               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.`document_date`
   order  by e.`document_date`
@@ -204,14 +230,14 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 4 || $type == 7) {    //по сервисам
             $sql = "
-         select s.`service_name` as itemname, sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa
+         select s.`service_name` as itemname, sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa    ,0 as navar
               from `entrylist_view`  e
 
               join `services` s on e.`service_id` = s.`service_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`service_id` >0 {$u} and e.`quantity` <>0      {$cust}  
+               where e.`service_id` >0  and e.`quantity` <>0      {$cust}  
               and d.`meta_name` in (  'ServiceAct' ,'POSCheck' )
-               {$br}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.`service_name`
                order  by s.`service_name`      ";
@@ -224,9 +250,9 @@ class Outcome extends \App\Pages\Base
 
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0 {$u} and e.`quantity` <>0
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue')
-                {$br}
+               where e.`item_id` >0  and e.`quantity` <>0
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+                {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by    i.`cat_name`
@@ -255,9 +281,9 @@ class Outcome extends \App\Pages\Base
 
                
                  join `documents_view`  d on d.`document_id` = e.`document_id`
-                   where     e.`quantity` <>0 {$u}
-                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue')    
-                      {$br} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+                   where     e.`quantity` <>0 
+                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN')    
+                      {$br} {$u}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
                       AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})
                 ";
@@ -281,7 +307,15 @@ class Outcome extends \App\Pages\Base
             $rs = $conn->Execute($sql);
         }
 
+
         foreach ($rs as $row) {
+
+            $summa = $row['summa'];
+            if ($row['navar'] != 0) {
+                $row['summa'] += $row['navar'];
+            }
+
+
             $detail[] = array(
                 "code"      => $row['item_code'],
                 "name"      => $row['itemname'],
@@ -303,6 +337,9 @@ class Outcome extends \App\Pages\Base
 
         $header['totsumma'] = H::fa($totsum);
         $header['totnavar'] = H::fa($totnavar);
+        $header['disc'] = H::fa($disc);
+        $header['isdisc'] = $disc > 0;
+        $header['totall'] = H::fa($totsum - $disc);
 
 
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {

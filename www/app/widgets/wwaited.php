@@ -45,7 +45,7 @@ class WWaited extends \Zippy\Html\PageFragment
         }
 
         $waitlist = $this->add(new DataView('waitlist', new ArrayDataSource($data), $this, 'waitlistOnRow'));
-        $waitlist->setPageSize(10);
+        $waitlist->setPageSize(Helper::getPG());
         $this->add(new \Zippy\Html\DataList\Paginator("waitpag", $waitlist));
         $waitlist->Reload();
 

@@ -15,6 +15,12 @@
         <td>Email</td>
         <td colspan="7">{{email}}</td>
     </tr>
+    <tr>
+        <td></td>
+        <td> Доставка</td>
+        <td>{{delivery}}</td>
+        <td colspan="6">Адрес: {{ship_address}}</td>
+    </tr>
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
@@ -50,20 +56,25 @@
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-    <tr>
-        <td></td>
-        <td valign="top"> Доставка</td>
-        <td colspan="4">
-            <p>{{delivery}}</p>
-        </td>
+
+    {{#isdisc}}
+    <tr style="font-weight: bolder;">
+        <td colspan="8" align="right">Знижка:</td>
+        <td align="right">{{paydisc}}</td>
     </tr>
-    <tr>
-        <td></td>
-        <td valign="top"> ТТН</td>
-        <td colspan="4">
-            <p>{{ttn}}</p>
-        </td>
+    {{/isdisc}}
+
+
+    <tr style="font-weight: bolder;">
+
+        <td colspan="8" align="right">До оплати:</td>
+        <td align="right">{{payamount}}</td>
     </tr>
+    <tr style="font-weight: bolder;">
+        <td colspan="8" align="right">Оплата:</td>
+        <td align="right">{{payed}}</td>
+    </tr>
+
 
     <tr>
         <td></td>

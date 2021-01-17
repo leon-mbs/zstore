@@ -58,12 +58,7 @@ class GoodsIssue extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "store_name"      => $this->headerdata["store_name"],
-                        "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
-                        "ship_address"    => $this->headerdata["ship_address"],
-                        "ship_number"     => $this->headerdata["ship_number"],
-                        "delivery_cost"   => H::fa($this->headerdata["delivery_cost"]),
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
-                        "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
 
                         "totalstr"  => $totalstr,
@@ -81,14 +76,6 @@ class GoodsIssue extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-
-        if ($this->headerdata["sent_date"] > 0) {
-            $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
-        }
-        if ($this->headerdata["delivery_date"] > 0) {
-            $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
-        }
-        $header["isdelivery"] = $this->headerdata["delivery"] > 1;
 
         $report = new \App\Report('doc/goodsissue.tpl');
 
@@ -136,6 +123,7 @@ class GoodsIssue extends Document
         $list['Warranty'] = self::getDesc('Warranty');
         $list['ReturnIssue'] = self::getDesc('ReturnIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+        $list['TTN'] = self::getDesc('TTN');
 
         return $list;
     }
@@ -144,8 +132,8 @@ class GoodsIssue extends Document
         return 'РН-000000';
     }
 
-    
-   public function generatePosReport() {
+
+    public function generatePosReport() {
 
         $detail = array();
 
@@ -179,10 +167,10 @@ class GoodsIssue extends Document
 
         return $html;
     }
-   
-   
-  public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_POS,  self::EX_PDF);
+
+
+    public function supportedExport() {
+        return array(self::EX_EXCEL, self::EX_POS, self::EX_PDF);
     }
-   
+
 }

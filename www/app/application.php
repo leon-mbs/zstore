@@ -80,20 +80,22 @@ class Application extends \Zippy\WebApplication
                 $page = new $class;
 
                 //  RESTFul
-                if ($page instanceof \App\RestFul) {
+                if ($page instanceof \App\API\JsonRPCRestFul) {
                     $params = array_slice($api, 2);
                     $page->Execute($params);
                     die;
                 }
                 // JSON-RPC
-                if ($page instanceof \App\JsonRPC) {
+                if ($page instanceof \App\API\JsonRPC) {
                     $page->Execute();
                     die;
                 }
 
                 //для произвольной страницы
                 $params = array_slice($api, 3);
-                call_user_func_array(array($page, $api[2]), $params);
+                if (strlen($api[2]) > 0) {
+                    call_user_func_array(array($page, $api[2]), $params);
+                }
                 die;
             } catch(\Throwable $e) {
                 global $logger;

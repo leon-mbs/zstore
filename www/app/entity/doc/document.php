@@ -13,22 +13,22 @@ class Document extends \ZCL\DB\Entity
 {
 
     // состояния  документа
-    const STATE_NEW        = 1;     //Новый
-    const STATE_EDITED     = 2;  //Отредактирован
-    const STATE_CANCELED   = 3;      //Отменен
-    const STATE_EXECUTED   = 5;      // Проведен
-    const STATE_DELETED    = 6;       //  Удален
-    const STATE_INPROCESS  = 7; // в  работе
-    const STATE_WA         = 8; // ждет подтверждения
-    const STATE_CLOSED     = 9; // Закрыт , доставлен, выполнен
-    const STATE_INSHIPMENT = 11; // Отгружен
-    const STATE_DELIVERED  = 14; // доставлен
-    const STATE_REFUSED    = 15; // отклонен
-    const STATE_SHIFTED    = 16; // отложен
-    const STATE_FAIL       = 17; // Аннулирован
-    const STATE_FINISHED   = 18; // Закончен
-    const STATE_APPROVED   = 19;      //  Готов к выполнению
-    // const STATE_READYTOEXE = 20; // готов к выполнению    
+    const STATE_NEW         = 1;     //Новый
+    const STATE_EDITED      = 2;  //Отредактирован
+    const STATE_CANCELED    = 3;      //Отменен
+    const STATE_EXECUTED    = 5;      // Проведен
+    const STATE_DELETED     = 6;       //  Удален
+    const STATE_INPROCESS   = 7; // в  работе
+    const STATE_WA          = 8; // ждет подтверждения
+    const STATE_CLOSED      = 9; // Закрыт , доставлен, выполнен
+    const STATE_INSHIPMENT  = 11; // Отгружен
+    const STATE_DELIVERED   = 14; // доставлен
+    const STATE_REFUSED     = 15; // отклонен
+    const STATE_SHIFTED     = 16; // отложен
+    const STATE_FAIL        = 17; // Аннулирован
+    const STATE_FINISHED    = 18; // Закончен
+    const STATE_APPROVED    = 19;      //  Готов к выполнению
+    const STATE_READYTOSHIP = 20; // готов к отправке    
     // типы  экспорта
     const EX_WORD  = 1; //  Word
     const EX_EXCEL = 2;    //  Excel
@@ -37,6 +37,12 @@ class Document extends \ZCL\DB\Entity
     const EX_MAIL  = 5;    //  Отправка  email
 
     // const EX_XML_GNAU = 4;
+
+    //доставка
+    const DEL_SELF    = 1;    //  самовывоз
+    const DEL_BOY     = 2;    //  курьер
+    const DEL_SERVICE = 3;    //  служба доставки
+
 
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
@@ -115,17 +121,6 @@ class Document extends \ZCL\DB\Entity
         $this->packData();
     }
 
-    public function checkUniqueNumber() {
-        $this->document_number = trim($this->document_number);
-
-        $doc = Document::getFirst(" document_number = '{$this->document_number}' ");
-        if ($doc instanceof Document) {
-            if ($this->document_id != $doc->document_id) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Упаковка  данных  в  XML
@@ -413,10 +408,26 @@ class Document extends \ZCL\DB\Entity
                 return Helper::l('st_fail');
             case Document::STATE_INPROCESS:
                 return Helper::l('st_inprocess');
+            case Document::STATE_READYTOSHIP:
+                return Helper::l('st_rdshipment');
 
             default:
                 return Helper::l('st_unknow');
         }
+    }
+
+
+    public function checkUniqueNumber() {
+        $this->document_number = trim($this->document_number);
+        $class = explode("\\", get_called_class());
+        $metaname = $class[count($class) - 1];
+        $doc = Document::getFirst("meta_name='" . $metaname . "'  and  document_number = '{$this->document_number}' ");
+        if ($doc instanceof Document) {
+            if ($this->document_id != $doc->document_id) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -451,8 +462,8 @@ class Document extends \ZCL\DB\Entity
         }
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
-
-        return $letter . sprintf("%05d", ++$number);
+        $next = $letter . sprintf("%05d", ++$number);
+        return $next;
     }
 
     /**
@@ -689,6 +700,18 @@ class Document extends \ZCL\DB\Entity
         }
 
         return self::$_metalist[$meta_name];
+    }
+
+    /**
+     * Список  типов  доставки
+     */
+    public static function getDeliveryTypes() {
+        $list = array();
+        $list[self::DEL_SELF] = Helper::l('delself');
+        $list[self::DEL_BOY] = Helper::l('delboy');
+        $list[self::DEL_SERVICE] = Helper::l('delservice');
+
+        return $list;
     }
 
 

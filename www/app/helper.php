@@ -671,72 +671,69 @@ class Helper
         return $list;
     }
 
-    
-    public  static function  exportExcel($data,$header,$filename){
+
+    public static function exportExcel($data, $header, $filename) {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-         
+
         $sheet = $spreadsheet->getActiveSheet();
- 
-        
-            
-            foreach($header  as $k=>$v) {
-                
-                $sheet->setCellValue($k, $v);
-                $sheet->getStyle($k)->applyFromArray([
+
+
+        foreach ($header as $k => $v) {
+
+            $sheet->setCellValue($k, $v);
+            $sheet->getStyle($k)->applyFromArray([
                 'font' => [
-                
-                  'bold' => true 
-                   
-                    ] 
-                ]);               
-                
-            }
-            
-           foreach($data  as $k=>$v) {
-   
-               
-                $sheet->setCellValue($k, $v);
-                             
-                
-            }
-            
-        
- 
-       /*
-        $sheet->getStyle('A1')->applyFromArray([
-            'font' => [
-              'name' => 'Arial',
-              'bold' => true,
-              'italic' => false,
-              'underline' => Font::UNDERLINE_DOUBLE,
-              'strikethrough' => false,
-              'color' => [
-                  'rgb' => '808080'
+
+                    'bold' => true
+
                 ]
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => [
-                        'rgb' => '808080'
-                    ]
-                ],
-            ],
-            'alignment' => [
-                'horizontal' => Alignment::HORIZONTAL_CENTER,
-                'vertical' => Alignment::VERTICAL_CENTER,
-                'wrapText' => true,
-            ]
-        ]);
-        
-        */
+            ]);
+
+        }
+
+        foreach ($data as $k => $v) {
+
+
+            $sheet->setCellValue($k, $v);
+
+
+        }
+
+
+        /*
+         $sheet->getStyle('A1')->applyFromArray([
+             'font' => [
+               'name' => 'Arial',
+               'bold' => true,
+               'italic' => false,
+               'underline' => Font::UNDERLINE_DOUBLE,
+               'strikethrough' => false,
+               'color' => [
+                   'rgb' => '808080'
+                 ]
+             ],
+             'borders' => [
+                 'allBorders' => [
+                     'borderStyle' => Border::BORDER_THIN,
+                     'color' => [
+                         'rgb' => '808080'
+                     ]
+                 ],
+             ],
+             'alignment' => [
+                 'horizontal' => Alignment::HORIZONTAL_CENTER,
+                 'vertical' => Alignment::VERTICAL_CENTER,
+                 'wrapText' => true,
+             ]
+         ]);
+
+         */
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
- 
-   
- 
+
+
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
-        $writer->save('php://output');          
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        $writer->save('php://output');
         die;
     }
 

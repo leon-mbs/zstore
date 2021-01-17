@@ -6,19 +6,17 @@ class APIHelper
 {
     private $type;
     private $api;
-  
+
     public function __construct($type = 'passenger') {
         $this->type = $type;
         $modules = \App\System::getOptions("modules");
-   
 
- 
+
         $this->token = $modules['td_code'];
         $this->email = $modules['td_email'];
-        
-        $this->api = $modules['td_host'];
-        
-        $this->api  =rtrim($this->api,'/') . '/';
+
+
+        $this->api = rtrim($modules['td_host'], '/') . '/api';
 
     }
 
@@ -31,14 +29,14 @@ class APIHelper
         $ask = trim($ask, '&');
 
         $url = $this->api . "?" . $ask;
-        try{
+        try {
             $ret = \Fetch\fetch($this->api . "?" . $ask, [
                 'headers' => [
                     'Accept' => 'application/json',
                 ],
             ])->json(true);
-        }  catch(\Exception $e) {
-           return array('success' => false, 'error' => $e->getMessage());            
+        } catch(\Exception $e) {
+            return array('success' => false, 'error' => $e->getMessage());
         }
 
         if (is_array($ret)) {
@@ -84,14 +82,14 @@ class APIHelper
     }
 
     public function searchByCategory($id, $modif_id) {
-        return $this->fetch(array('cmd' => 'searchByCategory', 'type' => $this->type, 'modif_id' => $modif_id, 'nodeid' => $id));
+        return $this->fetch(array('cmd' => 'searchByCategory', 'type' => $this->type, 'modif_id' => $modif_id, 'node_id' => $id));
 
     }
 
 
     public function searchByBrandAndCode($code, $brand) {
 
-        return $this->fetch(array('cmd' => 'searchByBrandAndCode', 'code' => $code, 'brand' => $brand));
+        return $this->fetch(array('cmd' => 'searchByBrandAndCode', 'partnumber' => $code, 'brand' => $brand));
 
     }
 

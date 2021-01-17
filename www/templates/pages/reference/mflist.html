@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12 col-md-6 col-xl-4">
         <div zippy="mftable">
-            <h3>Кассы и банковские  счета</h3>
+            <h3>Кассы и банковские счета</h3>
             <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
             <table class="table    table-sm">
                 <tr>
@@ -47,27 +47,28 @@
         <form zippy="mfdetail">
             <div class="form-group">
                 <label for="editmf_name">Название</label>
-                <input   class="form-control" zippy="editmf_name"/>
+                <input class="form-control" zippy="editmf_name"/>
             </div>
             <div class="form-check">
-              <input zippy="editbeznal" type="checkbox" class="form-check-input">
-              <label class="form-check-label" for="editbeznal">Безналичный счет</label>
-            
-            </div> 
-                               <div class="form-group">
-            <label for="editbank" data-label="editbank">Банк, МФО </label>
-            <input class="form-control" type="text" zippy="editbank">
+                <input zippy="editbeznal" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="editbeznal">Безналичный счет</label>
+
+            </div>
+            <div class="form-group">
+                <label for="editbank" data-label="editbank">Банк, МФО </label>
+                <input class="form-control" type="text" zippy="editbank">
             </div>
             <div class="form-group">
                 <label for="editbankacc" data-label="editbankacc">Расчетный счет </label>
                 <input class="form-control" type="text" zippy="editbankacc">
             </div>
-             <div class="form-group">
+            <div class="form-group">
                 <label for="editbtran" data-label="editbtran">Процент банка</label>
-                <input style="width:100px" pattern="[0-9\.]+"   class="form-control" zippy="editbtran"/>
-                <small>Процент, который  банк  берет  за  перевод  суммы. Учитывается  как  общепроизводственные  расходы</small>
+                <input style="width:100px" pattern="[0-9\.]+" class="form-control" zippy="editbtran"/>
+                <small>Процент, который банк берет за перевод суммы. Учитывается как общепроизводственные
+                    расходы</small>
             </div>
-          {{#usebranch}}
+            {{#usebranch}}
             <div class="form-group">
                 <label for="editbranch">Филиал</label>
                 <select class="form-control" zippy="editbranch">

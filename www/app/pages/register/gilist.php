@@ -12,6 +12,7 @@ use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
@@ -38,21 +39,17 @@ class GIList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l('Открытые'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
-
 
         $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -64,7 +61,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new TextInput('ship_number'));
-
+        $this->statuspan->statusform->add(new CheckBox('closeorder'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -73,7 +70,6 @@ class GIList extends \App\Pages\Base
     }
 
     public function filterOnSubmit($sender) {
-
 
         $this->statuspan->setVisible(false);
 
@@ -93,6 +89,7 @@ class GIList extends \App\Pages\Base
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('firm', $doc->firm_name));
+        $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -119,15 +116,14 @@ class GIList extends \App\Pages\Base
             $this->_doc->headerdata['document_date'] = time();
             $this->_doc->save();
 
-            $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            if ($this->_doc->state < 4) {
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+            }
+
             $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
 
-
             $this->_doc->save();
-            // if ($order instanceof Document) {
-            //     $order = $order->cast();
-            //     $order->updateStatus(Document::STATE_INSHIPMENT);
-            // }
+
             $this->statuspan->statusform->ship_number->setText('');
             $this->setSuccess('sent');
         }
@@ -135,38 +131,41 @@ class GIList extends \App\Pages\Base
         if ($sender->id == "bdevivered") {
             $this->_doc->updateStatus(Document::STATE_DELIVERED);
 
-            if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
 
-                } else {
-                    $order = Document::load($this->_doc->parent_id);
-                    if ($order->state == Document::STATE_INPROCESS) {
-                        $order->updateStatus(Document::STATE_CLOSED);
-                        $this->setSuccess("order_closed ", $order->document_number);
+            if ($this->statuspan->statusform->closeorder->isChecked()) {   //закрываем заказ
+                $order = Document::load($this->_doc->parent_id);
+                if ($order instanceof \App\Entity\Doc\Document) {
+                    $order = $order->cast();
+                    if ($order->payamount > 0 && $order->payamount > $order->payed) {
+
+                    } else {    //оплачен
+                        if ($order->state == Document::STATE_INPROCESS) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                            $this->setSuccess("order_closed ", $order->document_number);
+                        }
                     }
                 }
             }
 
-
-            $this->_doc->updateStatus(Document::STATE_CLOSED);
+            // $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
 
         if ($sender->id == "bttn") {
-            $d = $this->_doc->getChildren('GoodsReceipt');
+            $d = $this->_doc->getChildren('TTN');
 
             if (count($d) > 0) {
-                $this->setWarn('goodsreceipt_exists');
+                $this->setWarn('ttn_exists');
 
             }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
+            App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
         }
+
         if ($sender->id == "bgar") {
             App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
         }
         if ($sender->id == "bret") {
             App::Redirect("\\App\\Pages\\Doc\\ReturnIssue", 0, $this->_doc->document_id);
         }
-
 
         $this->doclist->Reload(false);
 
@@ -178,7 +177,6 @@ class GIList extends \App\Pages\Base
 
     public function updateStatusButtons() {
 
-
         $this->statuspan->statusform->bdevivered->setVisible(true);
         $this->statuspan->statusform->bttn->setVisible(true);
         $this->statuspan->statusform->bret->setVisible(true);
@@ -186,13 +184,28 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->bgar->setVisible(true);
         $this->statuspan->statusform->ship_number->setVisible(true);
 
+
+        $this->statuspan->statusform->closeorder->setVisible(false);
+        if ($this->_doc->headerdata['order_id'] > 0) {
+            $order = Document::load($this->_doc->headerdata['order_id']);
+            if ($order->payamount == $order->payed) {
+                $this->statuspan->statusform->closeorder->setVisible(true);
+            }
+        }
+
+
+        $this->statuspan->statusform->closeorder->setChecked(false);
+
         $state = $this->_doc->state;
 
-
+        //готов  к  отправке
+        if ($state == Document::STATE_READYTOSHIP) {
+            $this->statuspan->statusform->bdevivered->setVisible(false);
+            $this->statuspan->statusform->bret->setVisible(false);
+            $this->statuspan->statusform->closeorder->setVisible(false);
+        }
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
-
-
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
@@ -205,15 +218,21 @@ class GIList extends \App\Pages\Base
         }
 
         //прячем лишнее
-        if ($this->_doc->meta_name == 'GoodsIssue') {
+        if ($this->_doc->meta_name == 'TTN') {
+            $this->statuspan->statusform->ship_number->setVisible($this->_doc->headerdata['delivery'] > 2);
 
             $this->statuspan->statusform->bttn->setVisible(false);
         }
-        if ($this->_doc->meta_name == 'POSCheck') {
-            $this->statuspan->statusform->bsend->setVisible(false);
+        if ($this->_doc->meta_name == 'GoodsIssue') {
+
             $this->statuspan->statusform->bdevivered->setVisible(false);
-            $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
+            $this->statuspan->statusform->bsend->setVisible(false);
+        }
+        if ($this->_doc->meta_name == 'POSCheck') {
+            $this->statuspan->statusform->bdevivered->setVisible(false);
+            $this->statuspan->statusform->ship_number->setVisible(false);
+            $this->statuspan->statusform->bsend->setVisible(false);
         }
         if ($this->_doc->meta_name == 'Invoice') {
 
@@ -224,7 +243,6 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
         if ($this->_doc->meta_name == 'ReturnIssue') {
-
 
             $this->statuspan->statusform->bsend->setVisible(false);
             $this->statuspan->statusform->bdevivered->setVisible(false);
@@ -266,22 +284,21 @@ class GIList extends \App\Pages\Base
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $header = array();
         $data = array();
-        
-        $i=0;
+
+        $i = 0;
         foreach ($list as $d) {
-             $i++;
-             $data['A'.$i]  =  H::fd($d->document_date) ;
-             $data['B'.$i]  =  $d->document_number ;
-             $data['C'.$i]  =  $d->headerdata['order'] ;
-             $data['D'.$i]  =  $d->customer_name ;
-             $data['E'.$i]  =  $d->amount ;
-             $data['F'.$i]  =  $d->notes ;
-             
+            $i++;
+            $data['A' . $i] = H::fd($d->document_date);
+            $data['B' . $i] = $d->document_number;
+            $data['C' . $i] = $d->headerdata['order'];
+            $data['D' . $i] = $d->customer_name;
+            $data['E' . $i] = $d->amount;
+            $data['F' . $i] = $d->notes;
+
         }
-        
-        H::exportExcel($data,$header,'selllist.xlsx') ;       
-       
- 
+
+        H::exportExcel($data, $header, 'selllist.xlsx');
+
     }
 
 }
@@ -303,13 +320,11 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
-        $where .= " and meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty' ) ";
+        $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state <>   " . Document::STATE_CLOSED;
+            $where .= "  and  (  (payamount >0 and payamount > payed and  state >3 )  or( ( meta_name= 'TTN' and  state <> 9) or (meta_name <> 'TTN' and state <>5)  )  )    ";
         }
         if ($status == 1) {
             $where .= " and  state =  " . Document::STATE_NEW;
@@ -318,7 +333,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and state = " . Document::STATE_INSHIPMENT;
         }
         if ($status == 4) {
-            $where .= " and  amount > payamount";
+            $where .= "  and payamount >0 and  payamount > payed  and  state >3  ";
         }
         $comp = $this->page->filter->searchcomp->getValue();
         if ($comp > 0) {

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <CHECK xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="check01.xsd">
-     
+
     <CHECKHEAD>
 
         <DOCTYPE>0</DOCTYPE>
         <DOCSUBTYPE>0</DOCSUBTYPE>
 
-        
+
         <UID>{{guid}}</UID>
-        
+
         <TIN>{{tin}}</TIN>
 
-         {{#inn}}
+        {{#inn}}
         <IPN>{{inn}}</IPN>
         {{/inn}}
 
@@ -24,9 +24,9 @@
         <ORDERDATE>{{date}}</ORDERDATE>
 
         <ORDERTIME>{{time}}</ORDERTIME>
-     
-         <ORDERNUM>{{docnumber}}</ORDERNUM>
- 
+
+        <ORDERNUM>{{docnumber}}</ORDERNUM>
+
 
         <CASHDESKNUM>{{posinner}}</CASHDESKNUM>
         <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>
@@ -35,51 +35,52 @@
         <CASHIER>{{username}}</CASHIER>
 
         <VER>1</VER>
-     </CHECKHEAD>
-              
+    </CHECKHEAD>
+
     <CHECKTOTAL>
         <SUM>{{amount}}</SUM>
         {{#disc}}
-        <DISCOUNTTYPE>0</DISCOUNTTYPE>   
+        <DISCOUNTTYPE>0</DISCOUNTTYPE>
         <DISCOUNTSUM>{{disc}}</DISCOUNTSUM>
         {{/disc}}
-    </CHECKTOTAL> 
-    
-  
-            
-     {{#pay}} 
-     <CHECKPAY>
-       {{#pays}} 
-         <ROW {{{num}}}>
- 
-            <PAYFORMCD>{{formcode}}</PAYFORMCD>
-         
-            <PAYFORMNM>{{formname}}</PAYFORMNM>
-       
-            <SUM>{{paysum}}</SUM>
-            
-            <PROVIDED>{{payed}}</PROVIDED>
-            {{#rest}}
-            <REMAINS>{{rest}}</REMAINS>
-            {{/rest}}
-        </ROW>
-      {{/pays}} 
-    
-    </CHECKPAY>
-     {{/pay}} 
- 
-    
-    <CHECKBODY>
-          {{#details}}
-          <ROW {{{num}}}>
-      
-            <NAME>{{name}}</NAME>
-          
-            <AMOUNT>{{qty}}</AMOUNT>
-            <PRICE>{{price}}</PRICE>
-         
-            <COST>{{cost}}</COST>
-        </ROW>
-       {{/details}} 
-    </CHECKBODY>        
-</CHECK>
+    </CHECKTOTAL>
+
+
+    {{#pay}}
+    <CHECKPAY>
+        {{#pays}}
+        <ROW
+        {{{num}}}>
+
+        <PAYFORMCD>{{formcode}}</PAYFORMCD>
+
+        <PAYFORMNM>{{formname}}</PAYFORMNM>
+
+        <SUM>{{paysum}}</SUM>
+
+        <PROVIDED>{{payed}}</PROVIDED>
+        {{#rest}}
+        <REMAINS>{{rest}}</REMAINS>
+        {{/rest}}
+    </ROW>
+    {{/pays}}
+
+</CHECKPAY>
+        {{/pay}}
+
+
+<CHECKBODY>
+{{#details}}
+<ROW
+{{{num}}}>
+
+<NAME>{{name}}</NAME>
+
+<AMOUNT>{{qty}}</AMOUNT>
+<PRICE>{{price}}</PRICE>
+
+<COST>{{cost}}</COST>
+</ROW>
+        {{/details}}
+        </CHECKBODY>
+        </CHECK>

@@ -49,7 +49,7 @@ class POSCheck extends Document
 
         $common = \App\System::getOptions('common');
 
-        $firm = H::getFirmData($this->firm_id );
+        $firm = H::getFirmData($this->firm_id);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,

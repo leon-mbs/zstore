@@ -50,19 +50,16 @@ class Order extends \App\Entity\Doc\Document
                         "phone"           => $this->headerdata["phone"],
                         "email"           => $this->headerdata["email"],
                         "delivery"        => $this->headerdata["delivery_name"],
+                        "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "notes"           => $this->notes,
                         "document_number" => $this->document_number,
-                        "total"           => H::fa($this->amount)
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed),
+                        "paydisc"         => H::fa($this->headerdata["paydisc"]),
+                        "isdisc"          => $this->headerdata["paydisc"] > 0,
+            //"prepaid"   => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "payamount"       => H::fa($this->payamount)
         );
-        if ($this->headerdata["delivery"] == 2 || $this->headerdata["delivery"] == 3) {
-            $header['delivery'] = $header['delivery'] . '. по адресу: ' . $this->headerdata["address"];
-        }
-
-        $list = $this->getChildren('GoodsIssue');
-        foreach ($list as $d) {
-
-            $header['ttn'] = $d->document_number;
-        }
 
 
         $report = new \App\Report('doc/order.tpl');
@@ -84,6 +81,7 @@ class Order extends \App\Entity\Doc\Document
         $list['Invoice'] = self::getDesc('Invoice');
         $list['POSCheck'] = self::getDesc('POSCheck');
         $list['Task'] = self::getDesc('Task');
+        $list['TTN'] = self::getDesc('TTN');
 
 
         return $list;
@@ -127,6 +125,30 @@ class Order extends \App\Entity\Doc\Document
         $html = $report->generate($header);
 
         return $html;
+    }
+
+
+    public function Execute() {
+        //$conn = \ZDB\DB::getConnect();
+
+
+        //списываем бонусы
+        if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
+            $customer = \App\Entity\Customer::load($this->customer_id);
+            if ($customer->discount > 0) {
+                return; //процент
+            } else {
+                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
+                $customer->save();
+            }
+        }
+
+
+        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+        }
+
+        return true;
     }
 
 }

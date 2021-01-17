@@ -110,7 +110,7 @@ class PPOHelper
 
         if ($signed['success'] == true) {
 
-     file_put_contents("d:/leon/denwer72/home/local.gost/www/signedask",$signed['data']) ;
+            file_put_contents("d:/leon/denwer72/home/local.gost/www/signedask", $signed['data']);
             $request = curl_init();
 
             curl_setopt_array($request, [
@@ -269,7 +269,7 @@ class PPOHelper
         //реализация
 
         $n = 1;
-      
+
         if ($stat['amount0'] > 0) {
             $header['pays'][] = array(
                 'formname' => H::l('ppo_nal'),
@@ -315,7 +315,7 @@ class PPOHelper
         //возврат
 
         $n = 1;
-      
+
         if ($rstat['amount0'] > 0) {
             $header['paysr'][] = array(
                 'formname' => H::l('ppo_nal'),
@@ -336,8 +336,8 @@ class PPOHelper
             $amountr = $amountr + $rstat['amount1'];
             $n++;
         }
-  
- 
+
+
         $header['amount'] = number_format($amount, 2, '.', '');
         $header['amountr'] = number_format($amountr, 2, '.', '');
         $header['cnt'] = $cnt;
@@ -348,7 +348,7 @@ class PPOHelper
         $report = new \App\Report('zform.xml');
 
         $xml = $report->generate($header);
-   
+
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
 
         return self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
@@ -526,7 +526,7 @@ class PPOHelper
      *
      * @param mixed $doc
      */
-    public static function checkpay($doc,$pos_id,$payed,$payment) {
+    public static function checkpay($doc, $pos_id, $payed, $payment) {
 
 
         $pos = \App\Entity\Pos::load($pos_id);
@@ -601,7 +601,7 @@ class PPOHelper
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
         $firm = \App\Helper::getFirmData($pos->firm_id);
-          $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+        $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
 
 
         $header = array();
@@ -643,7 +643,7 @@ class PPOHelper
 
         $n = 1;
         $header['amount'] = 0;
-        foreach ($doc->unpackDetails('detaildata')   as $item) {
+        foreach ($doc->unpackDetails('detaildata') as $item) {
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->itemname,

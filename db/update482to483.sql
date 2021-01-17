@@ -1,8 +1,10 @@
+ 
 /*
 CREATE TABLE `empacc` (
   `ea_id` int(11) NOT NULL AUTO_INCREMENT,
   `emp_id` int(11) NOT NULL,
   `document_id` int(11) DEFAULT NULL,
+  `acctype` int(11) DEFAULT NULL,
   `createdon` date NOT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `income` decimal(10,2) NOT NULL,
@@ -10,6 +12,8 @@ CREATE TABLE `empacc` (
   PRIMARY KEY (`ea_id`),
   KEY `emp_id` (`emp_id`)
 )  DEFAULT CHARSET=utf8;
+
+
 
 CREATE TABLE `prodproc` (
   `pp_id` int(11) NOT NULL AUTO_INCREMENT,

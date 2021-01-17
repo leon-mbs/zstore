@@ -6,7 +6,7 @@
             Чек № {{document_number}} від {{date}} <br>
         </td>
     </tr>
-        <tr>
+    <tr>
         <td></td>
         <td valign="top"><b>Продавець</b></td>
         <td colspan="5">{{firm_name}}</td>
@@ -20,7 +20,7 @@
         <td></td>
         <td valign="top"><b>Телефон</b></td>
         <td colspan="5">{{phone}}</td>
-    </tr> 
+    </tr>
     <tr>
         <td></td>
         <td valign="top"><b>Термінал</b></td>

@@ -48,8 +48,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
-        $this->docform->add(new Date('sent_date'));
-        $this->docform->add(new Date('delivery_date'));
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
 
@@ -63,11 +61,9 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
-        $this->docform->add(new TextInput('editdelivery_cost', "0"));
-        $this->docform->add(new SubmitButton('bdelivery_cost'))->onClick($this, 'onDelivery_cost');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
-        $this->docform->add(new Label('delivery_cost', 0));
+
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -85,31 +81,25 @@ class GoodsIssue extends \App\Pages\Base
 
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
-        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
-        $this->docform->add(new DropDownChoice('delivery', array(1 => H::l('delself'), 2 => H::l('delboy'), 3 => H::l('delmail')), 1))->onChange($this, 'OnDelivery');
 
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('ship_number'));
-        $this->docform->add(new TextInput('ship_address'));
 
-        $cp =  \App\Session::getSession()->clipboard ;
-        $this->docform->add(new ClickLink('paste',$this,'onPaste'))->setVisible(is_array($cp) && count($cp)>0);
-          
+        $cp = \App\Session::getSession()->clipboard;
+        $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);
+
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('senddoc'))->onClick($this, 'savedocOnClick');
+
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-        $this->docform->add(new Label('weight'))->setVisible(false);
 
-        
-        
+
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -143,16 +133,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->sent_date->setDate($this->_doc->headerdata['sent_date']);
-            $this->docform->delivery_date->setDate($this->_doc->headerdata['delivery_date']);
-            $this->docform->ship_number->setText($this->_doc->headerdata['ship_number']);
-            $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
-            $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
-            $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
-            $this->docform->delivery_cost->setText($this->_doc->headerdata['delivery_cost']);
-            $this->docform->editdelivery_cost->setText($this->_doc->headerdata['delivery_cost']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
@@ -203,11 +185,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
-                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
-                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
-                        $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
-                        $this->docform->delivery_date->setDate($basedoc->headerdata['delivery']);
 
                         $notfound = array();
                         $order = $basedoc->cast();
@@ -237,12 +215,6 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                        //  $this->_orderid = $basedocid;
-                        //  $this->docform->order->setText($basedoc->document_number);
-                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
-                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
-                        $this->docform->sent_date->setDate($basedoc->headerdata['sent_date']);
-                        $this->docform->delivery_date->setDate($basedoc->headerdata['delivery']);
 
                         $notfound = array();
                         $invoice = $basedoc->cast();
@@ -280,9 +252,6 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
 
-                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
-                        $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
-
                         $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->OnChangeCustomer($this->docform->customer);
@@ -318,7 +287,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->_tvars['manlist'][] = array('mitem' => $man);
         }
 
-        $this->OnDelivery($this->docform->delivery);
+
     }
 
     public function detailOnRow($row) {
@@ -499,7 +468,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
-        $this->_doc->headerdata['delivery_cost'] = $this->docform->delivery_cost->getText();
+
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
@@ -518,17 +487,11 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
-        $this->_doc->headerdata['ship_address'] = $this->docform->ship_address->getText();
-        $this->_doc->headerdata['ship_number'] = $this->docform->ship_number->getText();
-        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
+
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
-        $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
-        $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
-        $this->_doc->headerdata['delivery_date'] = $this->docform->delivery_date->getDate();
-        $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
         $this->_doc->headerdata['order_id'] = $this->_orderid;
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -554,6 +517,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
                 // проверка на минус  в  количестве
+
                 $allowminus = System::getOption("common", "allowminus");
                 if ($allowminus != 1) {
 
@@ -569,29 +533,11 @@ class GoodsIssue extends \App\Pages\Base
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
-                if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                    if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
 
-                    } else {
-                        $order = Document::load($this->_doc->parent_id);
-                        if ($order->state == Document::STATE_INPROCESS) {
-                            $order->updateStatus(Document::STATE_CLOSED);
-                        }
-                    }
-                }
             } else {
-                if ($sender->id == 'senddoc') {
-                    if (!$isEdited) {
-                        $this->_doc->updateStatus(Document::STATE_NEW);
-                    }
 
-                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                    $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
-                    //   $this->_doc->headerdata['sent_date'] = time();
-                    $this->_doc->save();
-                } else {
-                    $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-                }
+                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+
             }
 
 
@@ -616,11 +562,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
-    public function onDelivery_cost($sender) {
-        $this->docform->delivery_cost->setText($this->docform->editdelivery_cost->getText());
-        $this->goAnkor("tankor");
-        $this->calcPay();
-    }
 
     public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
@@ -647,20 +588,15 @@ class GoodsIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-        $weight = 0;
+
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
-            if ($item->weight > 0) {
-                $weight = $weight + $item->weight;
-            }
+
         }
         $this->docform->total->setText(H::fa($total));
-        $this->docform->weight->setText(H::l("allweight", $weight));
-        $this->docform->weight->setVisible($weight > 0);
-
 
         $disc = 0;
 
@@ -689,13 +625,11 @@ class GoodsIssue extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
-        $delivery_cost = $this->docform->delivery_cost->getText();
+
         if ($disc > 0) {
             $total -= $disc;
         }
-        if ($delivery_cost > 0) {
-            $total += $delivery_cost;
-        }
+
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
         $this->docform->editpayed->setText(H::fa($total));
@@ -822,6 +756,13 @@ class GoodsIssue extends \App\Pages\Base
             $this->setError("noselstore");
         }
         $c = $this->docform->customer->getKey();
+
+        $noallowfiz = System::getOption("common", "noallowfiz");
+        if ($noallowfiz == 1 && $c == 0) {
+            $this->setError("noselcust");
+        }
+
+
         $p = $this->docform->payment->getValue();
         if ($p == 0) {
             $this->setError("noselpaytype");
@@ -898,9 +839,6 @@ class GoodsIssue extends \App\Pages\Base
                     $this->docform->discount->setVisible(true);
                 }
             }
-            if ($this->docform->ship_address->getText() == '') {
-                $this->docform->ship_address->setText($customer->address);
-            }
 
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
@@ -931,7 +869,6 @@ class GoodsIssue extends \App\Pages\Base
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->address = $this->editcust->editaddress->getText();
-        $this->docform->ship_address->setText($cust->address);
         $cust->phone = $this->editcust->editphone->getText();
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
@@ -956,7 +893,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->discount->setVisible(false);
-        $this->_discount = 0;
+
     }
 
     public function cancelcustOnClick($sender) {
@@ -964,31 +901,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->setVisible(true);
     }
 
-    public function OnDelivery($sender) {
-
-        if ($sender->getValue() == 2 || $sender->getValue() == 3) {
-            $this->docform->senddoc->setVisible(true);
-            $this->docform->execdoc->setVisible(false);
-            $this->docform->ship_address->setVisible(true);
-            $this->docform->ship_number->setVisible(true);
-            $this->docform->sent_date->setVisible(true);
-            $this->docform->sent_date->setVisible(true);
-            $this->docform->delivery_date->setVisible(true);
-            $this->docform->emp->setVisible(true);
-            $this->docform->delivery_cost->setVisible(true);
-        } else {
-            $this->docform->senddoc->setVisible(false);
-            $this->docform->execdoc->setVisible(true);
-            $this->docform->ship_address->setVisible(false);
-            $this->docform->ship_number->setVisible(false);
-            $this->docform->sent_date->setVisible(false);
-            $this->docform->sent_date->setVisible(false);
-            $this->docform->delivery_date->setVisible(false);
-            $this->docform->emp->setVisible(false);
-            $this->docform->delivery_cost->setVisible(false);
-        }
-        $this->calcPay();
-    }
 
     public function onOpenItemSel($sender) {
         $this->wselitem->setVisible(true);
@@ -1019,28 +931,29 @@ class GoodsIssue extends \App\Pages\Base
     }
 
 
-    
-  public function onPaste($sender) {
+    public function onPaste($sender) {
         $store_id = $this->docform->store->getValue();
 
-        $cp =  \App\Session::getSession()->clipboard ;
-      
-        foreach($cp as $it) {
-           $item = Item::load($it->item_id);  
-           if($item==null) continue;
-           $item->quantity  =1;
-           $item->price  =$item->getPrice($this->docform->pricetype->getValue(), $store_id);
-           
-           $this->_itemlist[$item->item_id] = $item;
+        $cp = \App\Session::getSession()->clipboard;
+
+        foreach ($cp as $it) {
+            $item = Item::load($it->item_id);
+            if ($item == null) {
+                continue;
+            }
+            $item->quantity = 1;
+            $item->price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+
+            $this->_itemlist[$item->item_id] = $item;
         }
-  
+
         $this->docform->detail->Reload();
 
-  
+
         $this->calcTotal();
         $this->calcPay();
     }
-   
+
 }
 
 

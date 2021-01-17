@@ -28,9 +28,9 @@ class PayCustList extends \App\Pages\Base
     public  $_pays      = array();
     public  $_totdebet  = 0;
     public  $_totcredit = 0;
-    private  $_docsin = "'GoodsReceipt','InvoiceCust','ReturnIssue' ";
-    private  $_docsout = "'GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct' ";
-    private  $_state = "1,2,3,17,8";
+    private $_docsin    = "'GoodsReceipt','InvoiceCust','ReturnIssue' ";
+    private $_docsout   = "'GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order' ";
+    private $_state     = "1,2,3,17,8";
 
     /**
      *
@@ -111,7 +111,7 @@ class PayCustList extends \App\Pages\Base
              group by c.customer_name,c.phone, c.customer_id, fl
              having fl <> 0 
              order by c.customer_name ";
- 
+
         $this->_custlist = \App\DataItem::query($sql);
         $this->_totcredit = 0;
         $this->_totdebet = 0;
@@ -254,54 +254,49 @@ class PayCustList extends \App\Pages\Base
 
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
 
-            $this->setError('sumoverpay');
-            return;
+            $this->setWarn('sumoverpay');
+
         }
-        $type = Pay::PAY_BASE_INCOME    ; 
-              
-    
-        if (  in_array($this->_doc->meta_name,array('GoodsReceipt','InvoiceCust','ReturnIssue') ) ){
+        $type = Pay::PAY_BASE_INCOME;
+
+
+        if (in_array($this->_doc->meta_name, array('GoodsReceipt', 'InvoiceCust', 'ReturnIssue'))) {
             $amount = 0 - $amount;
             $type = Pay::PAY_BASE_OUTCOME;
         }
-       
-        
-        if($pos_id>0) {
+
+
+        if ($pos_id > 0) {
             $pos = \App\Entity\Pos::load($pos_id);
- 
-            $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc,$pos_id,$amount, $form->payment->getValue());
+
+            $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
             if ($ret['success'] == false && $ret['docnumber'] > 0) {
-                    //повторяем для  нового номера
-                    $pos->fiscdocnumber = $ret['docnumber'];
+                //повторяем для  нового номера
+                $pos->fiscdocnumber = $ret['docnumber'];
+                $pos->save();
+                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+
+            }
+            if ($ret['success'] == false) {
+                $this->setError($ret['data']);
+                return;
+            } else {
+
+                if ($ret['docnumber'] > 0) {
+                    $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                     $pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-
-                }
-                if ($ret['success'] == false) {
-                    $this->setError($ret['data']);
-                    return;
+                    $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                 } else {
-                    
-                    if ($ret['docnumber'] > 0) {
-                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                        $pos->save();
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                    } else {
-                        $this->setError("ppo_noretnumber");
-                        return;
-
-                    }
+                    $this->setError("ppo_noretnumber");
+                    return;
 
                 }
-            
+
+            }
+
         }
-        
-        
-        
 
 
-        
-        
         Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
 
@@ -314,46 +309,44 @@ class PayCustList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $csv = "";
-       
+
         $header = array();
         $data = array();
-        
-        $i=0;
-       
+
+        $i = 0;
+
         if ($sender->id == 'csv') {
             $list = $this->clist->custlist->getDataSource()->getItems(-1, -1, 'customer_name');
 
-        foreach ($list as $c) {
-             $i++;
-             $data['A'.$i]  =  $c->customer_name ;
-             $data['B'.$i]  =  $c->phone ;
-             $data['C'.$i]  =  H::fa($c->fl == -1 ? $c->sam : "") ;
-             $data['D'.$i]  =  H::fa($c->fl == 1 ? $c->sam : "") ;
-       
-             
-        }
-    
-            
-            
-    
+            foreach ($list as $c) {
+                $i++;
+                $data['A' . $i] = $c->customer_name;
+                $data['B' . $i] = $c->phone;
+                $data['C' . $i] = H::fa($c->fl == -1 ? $c->sam : "");
+                $data['D' . $i] = H::fa($c->fl == 1 ? $c->sam : "");
+
+
+            }
+
+
         }
         if ($sender->id == 'csv2') {
             $list = $this->plist->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 
             foreach ($list as $d) {
-                 $i++;
-                 $data['A'.$i]  =  H::fd($d->document_date)  ;
-                 $data['B'.$i]  =  $d->document_number;
-                 $data['C'.$i]  =   H::fa($d->amount);
-                 $data['D'.$i]  =  $d->notes ;
-           
-                 
+                $i++;
+                $data['A' . $i] = H::fd($d->document_date);
+                $data['B' . $i] = $d->document_number;
+                $data['C' . $i] = H::fa($d->amount);
+                $data['D' . $i] = $d->notes;
+
+
             }
- 
+
         }
-            
-        H::exportExcel($data,$header,'baylist.xlsx') ;   
-   
+
+        H::exportExcel($data, $header, 'baylist.xlsx');
+
     }
 
 }

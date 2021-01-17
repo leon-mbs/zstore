@@ -31,7 +31,7 @@ class WOpenDocs extends \Zippy\Html\PageFragment
         }
 
         $doclist = $this->add(new DataView('odoclist', new ArrayDataSource($data), $this, 'doclistOnRow'));
-        $doclist->setPageSize(10);
+        $doclist->setPageSize(Helper::getPG());
         $this->add(new \Zippy\Html\DataList\Paginator("odpag", $doclist));
         $doclist->Reload();
 

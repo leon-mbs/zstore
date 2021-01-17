@@ -450,7 +450,7 @@ class POSCheck extends \App\Pages\Base
         }
         $this->_doc->payamount = $this->docform->payamount->getText();
 
-        $this->_doc->headerdata['time'] = time();
+
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docform->exchange->getText();
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
@@ -480,42 +480,44 @@ class POSCheck extends \App\Pages\Base
         $this->_doc->packDetails('services', $this->_serlist);
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->headerdata['pos'] = $this->docform->pos->getValue();
-        
+
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
-       
-           if ($pos->usefisc == 1 && $sender->id == 'execdoc') {
+
+        if ($pos->usefisc == 1 && $sender->id == 'execdoc') {
 
 
+            $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+            if ($ret['success'] == false && $ret['docnumber'] > 0) {
+                //повторяем для  нового номера
+                $pos->fiscdocnumber = $ret['docnumber'];
+                $pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                if ($ret['success'] == false && $ret['docnumber'] > 0) {
-                    //повторяем для  нового номера
-                    $pos->fiscdocnumber = $ret['docnumber'];
+
+            }
+            if ($ret['success'] == false) {
+                $this->setError($ret['data']);
+                return;
+            } else {
+                //  $this->setSuccess("Выполнено") ;
+                if ($ret['docnumber'] > 0) {
+                    $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                     $pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-
-                }
-                if ($ret['success'] == false) {
-                    $this->setError($ret['data']);
-                    return;
+                    $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                 } else {
-                    //  $this->setSuccess("Выполнено") ;
-                    if ($ret['docnumber'] > 0) {
-                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                        $pos->save();
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                    } else {
-                        $this->setError("ppo_noretnumber");
-                        return;
-
-                    }
+                    $this->setError("ppo_noretnumber");
+                    return;
 
                 }
 
             }
-          
-       
-       
+
+        }
+
+
         $isEdited = $this->_doc->document_id > 0;
+        if ($isEdited == false) {
+            $this->_doc->headerdata['time'] = time();
+        }
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();

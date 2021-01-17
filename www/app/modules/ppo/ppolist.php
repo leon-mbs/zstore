@@ -106,7 +106,7 @@ class PPOList extends \App\Pages\Base
         $row->add(new Label('fn', $item->tr->NumFiscal));
         $row->add(new Label('ln', $item->tr->NumLocal));
         $row->add(new Label('rn', $item->tr->Name));
-        
+
         $row->add(new ClickLink('objdet', $this, 'onObj'));
 
     }
@@ -123,7 +123,7 @@ class PPOList extends \App\Pages\Base
 
     public function updateShifts() {
         $this->_shlist = array();
-        $from = \Carbon\Carbon::now()->addMonth(-1)->startOfMonth()->format('c');
+        $from = \Carbon\Carbon::now()->addMonths(-1)->startOfMonth()->format('c');
         $to = \Carbon\Carbon::now()->format('c');
         $cid = $this->opan->filter->searchcomp->getValue();
         $firm = Firm::load($cid);

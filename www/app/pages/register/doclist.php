@@ -320,7 +320,7 @@ class DocList extends \App\Pages\Base
         //     return;
         $user = System::getUser();
 
-        if (\App\ACL::checkExeDoc($doc, true, false) == false) {
+        if (\App\ACL::checkCancelDoc($doc, true, false) == false) {
             if ($doc->state == Document::STATE_WA && $doc->user_id == $user->user_id) {
                 //свой может  отменить
             } else {
@@ -343,6 +343,10 @@ class DocList extends \App\Pages\Base
         }
 
         $doc->updateStatus(Document::STATE_CANCELED);
+        $doc->payed = 0;  //отменяем  оплату
+        $doc->save();
+
+
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
         $this->resetURL();
@@ -395,26 +399,25 @@ class DocList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-        
+
         $header = array();
         $data = array();
-        
-        $i=0;
+
+        $i = 0;
         foreach ($list as $d) {
-             $i++;
-             $data['A'.$i]  =  H::fd($d->document_date) ;
-             $data['B'.$i]  =  $d->document_number ;
-             $data['C'.$i]  =  $d->meta_desc ;
-             $data['D'.$i]  =  $d->customer_name ;
-             $data['E'.$i]  =  $d->amount ;
-             $data['F'.$i]  =  $d->notes ;
-             
+            $i++;
+            $data['A' . $i] = H::fd($d->document_date);
+            $data['B' . $i] = $d->document_number;
+            $data['C' . $i] = $d->meta_desc;
+            $data['D' . $i] = $d->customer_name;
+            $data['E' . $i] = $d->amount;
+            $data['F' . $i] = $d->notes;
+
         }
-        
-        H::exportExcel($data,$header,'doclist.xlsx') ;
-    
-        
-     
+
+        H::exportExcel($data, $header, 'doclist.xlsx');
+
+
     }
 
 }

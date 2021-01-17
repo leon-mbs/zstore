@@ -42,7 +42,7 @@ class Catalog extends Base
 
         $pr = Helper::getPriceRange($this->group_id);
         $this->sfilter->add(new TextInput('pricefrom'))->setText(floor($pr["minp"]));
-        $this->sfilter->add(new TextInput('priceto'))->setText(ceil($pr["maxp"]));;
+        $this->sfilter->add(new TextInput('priceto'))->setText(ceil($pr["maxp"]));
 
         $this->sfilter->add(new TextInput('searchkey'));
 
@@ -125,7 +125,7 @@ class Catalog extends Base
         $this->sfilter->clean();
         $pr = Helper::getPriceRange($this->group_id);
         $this->sfilter->pricefrom->setText(floor($pr["minp"] / 100));
-        $this->sfilter->priceto->setText(ceil($pr["maxp"] / 100));;
+        $this->sfilter->priceto->setText(ceil($pr["maxp"] / 100));
 
         $this->catlist->Reload();
     }

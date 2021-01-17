@@ -47,7 +47,7 @@ class WMinQty extends \Zippy\Html\PageFragment
         }
 
         $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($this->data), $this, 'mqlistOnRow'));
-        $mqlist->setPageSize(10);
+        $mqlist->setPageSize(Helper::getPG());
         $this->add(new \Zippy\Html\DataList\Paginator("mqpag", $mqlist));
         $mqlist->Reload();
 

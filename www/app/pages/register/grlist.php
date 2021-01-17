@@ -38,12 +38,10 @@ class GRList extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l('all'), 1 => H::l('notexecuted'), 2 => H::l('notpayed')), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('notexecuted'), 2 => H::l('notpayed'), 3 => H::l('all')), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
 
@@ -176,25 +174,25 @@ class GRList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-        
-        
+
+
         $header = array();
         $data = array();
-        
-        $i=0;
+
+        $i = 0;
         foreach ($list as $d) {
-             $i++;
-             $data['A'.$i]  =  H::fd($d->document_date) ;
-             $data['B'.$i]  =  $d->document_number ;
-             $data['C'.$i]  =  $d->customer_name ;
-             $data['D'.$i]  =  $d->amount ;
-             $data['E'.$i]  =  $d->notes ;
-             
+            $i++;
+            $data['A' . $i] = H::fd($d->document_date);
+            $data['B' . $i] = $d->document_number;
+            $data['C' . $i] = $d->customer_name;
+            $data['D' . $i] = $d->amount;
+            $data['E' . $i] = $d->notes;
+
         }
-        
-        H::exportExcel($data,$header,'baylist.xlsx') ;        
-        
- 
+
+        H::exportExcel($data, $header, 'baylist.xlsx');
+
+
     }
 
 }
@@ -216,17 +214,22 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " date(document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
-        $where .= " and meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  ";
+        $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  ";
 
         $status = $this->page->filter->status->getValue();
+
+        if ($status == 0) {
+            $where .= " and ( (payamount > 0 and payamount > payed) or  (state <>" . Document::STATE_EXECUTED . ")) ";
+        }
 
         if ($status == 1) {
             $where .= " and  state <>" . Document::STATE_EXECUTED;
         }
         if ($status == 2) {
             $where .= " and  (payamount > 0 and payamount > payed)";
+        }
+        if ($status == 3) {
+
         }
 
         $comp = $this->page->filter->searchcomp->getValue();

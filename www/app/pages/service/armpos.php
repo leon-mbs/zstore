@@ -257,6 +257,7 @@ class ARMPos extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->form2->barcode->getText());
+        $store = $this->form1->store->getValue();
         $this->form2->barcode->setText('');
         if ($code == '') {
             return;
@@ -264,7 +265,7 @@ class ARMPos extends \App\Pages\Base
 
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$this->pos->store}) and  (item_code = {$code_} or bar_code = {$code_})");
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store}) and  (item_code = {$code_} or bar_code = {$code_})");
 
 
         if ($item == null) {
@@ -272,7 +273,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
 
-        $qty = $item->getQuantity($this->pos->store);
+        $qty = $item->getQuantity($store);
         if ($qty <= 0) {
             $this->setError("noitemonstore", $item->itemname);
         }
@@ -283,14 +284,14 @@ class ARMPos extends \App\Pages\Base
         } else {
 
 
-            $price = $item->getPrice($this->pos->pricetype, $this->pos->store);
+            $price = $item->getPrice($this->pos->pricetype, $store);
             $item->price = $price;
             $item->quantity = 1;
 
             if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
                 $serial = '';
-                $slist = $item->getSerials($this->pos->store);
+                $slist = $item->getSerials($store);
                 if (count($slist) == 1) {
                     $serial = array_pop($slist);
                 }
@@ -359,6 +360,7 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function saverowOnClick($sender) {
+        $store = $this->form1->store->getValue();
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
@@ -383,7 +385,7 @@ class ARMPos extends \App\Pages\Base
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-            $slist = $item->getSerials($this->pos->store);
+            $slist = $item->getSerials($store);
 
             if (in_array($item->snumber, $slist) == false) {
                 $this->setWarn('invalid_serialno');
@@ -467,17 +469,18 @@ class ARMPos extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
+        $store = $this->form1->store->getValue();
 
 
-        $price = $item->getPrice($this->pos->pricetype, $this->pos->store);
-        $qty = $item->getQuantity($this->pos->store);
+        $price = $item->getPrice($this->pos->pricetype, $store);
+        $qty = $item->getQuantity($store);
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
         $this->editdetail->editprice->setText($price);
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $serial = '';
-            $slist = $item->getSerials($this->pos->store);
+            $slist = $item->getSerials($store);
             if (count($slist) == 1) {
                 $serial = array_pop($slist);
             }
@@ -715,9 +718,9 @@ class ARMPos extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
-        $this->form3->customer->setKey(0);   
-        $this->form3->customer->setText('');   
-        $this->form3->payment->setValue(H::getDefMF());   
+        $this->form3->customer->setKey(0);
+        $this->form3->customer->setText('');
+        $this->form3->payment->setValue(H::getDefMF());
         $this->form3->setVisible(false);
         $this->form4->setVisible(true);
 
@@ -731,20 +734,20 @@ class ARMPos extends \App\Pages\Base
         $this->form3->payed->setVisible(true);
         $this->form3->payamount->setVisible(true);
         $this->form3->paydisc->setVisible(true);
-        $this->form3->exchange->setVisible(true);        
-        
+        $this->form3->exchange->setVisible(true);
+
         if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->form3->payed->setVisible(false);
             $this->form3->payamount->setVisible(false);
             $this->form3->paydisc->setVisible(false);
             $this->form3->exchange->setVisible(false);
-        }  
+        }
         if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->form3->payed->setVisible(false);
             //$this->form3->payamount->setVisible(false);
             $this->form3->paydisc->setVisible(false);
             $this->form3->exchange->setVisible(false);
-        }  
+        }
     }
 
 
@@ -787,7 +790,7 @@ class ARMPos extends \App\Pages\Base
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();
-        };
+        }
     }
 
 

@@ -1,5 +1,5 @@
 body {
-    font-family: "Arial", "Helvetica Neue";
+    font-family: "Roboto", "Helvetica Neue";
     background-color: #FaFaFa;
 }
 
@@ -107,5 +107,8 @@ body {
  
 .text-smaller{
    font-size:smaller ;
+}  
+table {
+  font-family: "Arial"
 }  
  

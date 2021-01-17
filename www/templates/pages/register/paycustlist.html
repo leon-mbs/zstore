@@ -1,19 +1,19 @@
 <html>
 <body>
- 
+
 <div class="row">
     <div class="col-12 col-lg-10 col-xl-8 " zippy="clist">
         <h3>Расчеты с контрагентами </h3>
         <div class="navbar nav">
             <form zippy="filter" class="form-inline ">
-   
-                
+
+
                 </select>
                 <label for="holdlist"> Холдинг </label>
                 <select class="form-control mr-2" zippy="holdlist">
                     <option value="0">Не указан</option>
                 </select>
-         
+
                 <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
             </form>
@@ -44,15 +44,15 @@
 
 
             </tr>
-              <tr  >
+            <tr>
 
                 <td></td>
-                <td   class="text-right text-bold">Всего:</td>
+                <td class="text-right text-bold">Всего:</td>
 
                 <td zippy="totcredit" class="text-right text-bold"></td>
                 <td zippy="totdebet" class="text-right  text-bold"></td>
 
-                <td>  </td>
+                <td></td>
 
 
             </tr>
@@ -63,7 +63,7 @@
     <div class="col-12 col-lg-10 col-xl-8 " zippy="plist">
         <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> к списку</a>
         <h3 zippy="cname"></h3>
-        <br><a zippy="csv2">Экспорт  в  Excel</a>
+        <br><a zippy="csv2">Экспорт в Excel</a>
         <table class="table   table-sm   ">
             <tr>
 
@@ -116,9 +116,9 @@
 
                 </select>
                 {{#ppo}}
-               <label for="pos">POS</label>
+                <label for="pos">POS</label>
                 <select class="form-control mr-2" zippy="pos">
-                    <option value="0">Не  выбран</option>
+                    <option value="0">Не выбран</option>
                 </select>
                 {{/ppo}}
                 <label>дата</label>

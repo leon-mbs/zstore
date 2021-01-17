@@ -10,7 +10,18 @@
             <b>На склад:</b> {{to}}
         </td>
     </tr>
-
+    {{#emp}}
+    <tr>
+        <td colspan="6">
+            <b>Спiвробiтник:</b> {{emp}}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <b>Сума:</b> {{examount}}
+        </td>
+    </tr>
+    {{/emp}}
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Назва</th>

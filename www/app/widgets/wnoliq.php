@@ -30,10 +30,14 @@ class WNoliq extends \Zippy\Html\PageFragment
         $this->data = array();
 
 
-        $sql = "select coalesce(sum(st.qty),0) as qty, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1   
+        $sql = "select coalesce(sum(st.qty),0) as qty, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
                {$cstr} and   st.stock_id not  in(select   stock_id    
                from  entrylist_view  
-               where    document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  and  quantity < 0 )  
+               where    document_date >" . $conn->DBDate(strtotime('- 30 day')) . "  and  quantity < 0 ) 
+               and   st.stock_id    in(select   stock_id    
+               from  entrylist_view  
+               where    document_date <" . $conn->DBDate(strtotime('- 30 day')) . "  and  quantity > 0 ) 
+                
                group by  st.itemname,st.item_code,st.storename  
                  ";
 
@@ -46,7 +50,7 @@ class WNoliq extends \Zippy\Html\PageFragment
         }
 
         $noliqlist = $this->add(new DataView('noliqlist', new ArrayDataSource($this->data), $this, 'noliqlistOnRow'));
-        $noliqlist->setPageSize(10);
+        $noliqlist->setPageSize(Helper::getPG());
         $this->add(new \Zippy\Html\DataList\Paginator("noliqpag", $noliqlist));
         $noliqlist->Reload();
 

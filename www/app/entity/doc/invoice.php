@@ -108,6 +108,7 @@ class Invoice extends \App\Entity\Doc\Document
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['Invoice'] = self::getDesc('Invoice');
+        $list['TTN'] = self::getDesc('TTN');
 
         return $list;
     }

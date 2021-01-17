@@ -21,7 +21,7 @@
 
     </tr>
     {{/baseddoc}}
-   {{#cust}}
+    {{#cust}}
     <tr>
         <td colspan="4">
             Заказчик: {{cust}}
