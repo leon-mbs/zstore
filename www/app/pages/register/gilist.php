@@ -12,6 +12,7 @@ use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
@@ -60,6 +61,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new TextInput('ship_number'));
+        $this->statuspan->statusform->add(new CheckBox('closeorder'));
  
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -121,10 +123,7 @@ class GIList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
   
             $this->_doc->save();
-            // if ($order instanceof Document) {
-            //     $order = $order->cast();
-            //     $order->updateStatus(Document::STATE_INSHIPMENT);
-            // }
+       
             $this->statuspan->statusform->ship_number->setText('');
             $this->setSuccess('sent');
         }
@@ -132,19 +131,21 @@ class GIList extends \App\Pages\Base
         if ($sender->id == "bdevivered") {
             $this->_doc->updateStatus(Document::STATE_DELIVERED);
 
-            /*
-            if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
-
-                } else {
-                    $order = Document::load($this->_doc->parent_id);
-                    if ($order->state == Document::STATE_INPROCESS) {
-                        $order->updateStatus(Document::STATE_CLOSED);
-                        $this->setSuccess("order_closed ", $order->document_number);
+         
+            if ($this->statuspan->statusform->closeorder->isChecked()) {   //закрываем заказ
+                $order = Document::load($this->_doc->parent_id);
+                if($order  instanceof \App\Entity\Doc\Document)  {
+                    $order = $order->cast();
+                    if ($order->payamount > 0   && $order->payamount > $order->payed) {  
+                        
+                    }  else {    //оплачен
+                        if ($order->state == Document::STATE_INPROCESS) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                            $this->setSuccess("order_closed ", $order->document_number);
+                        }
                     }
                 }
             }
-            */
 
            // $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
@@ -182,12 +183,27 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->bsend->setVisible(true);
         $this->statuspan->statusform->bgar->setVisible(true);
         $this->statuspan->statusform->ship_number->setVisible(true);
+        
+        
+        $this->statuspan->statusform->closeorder->setVisible(false);        
+        if($this->_doc->headerdata['order_id']>0) {
+            $order = Document::load($this->_doc->headerdata['order_id']);
+            if(  $order->payamount == $order->payed){
+               $this->statuspan->statusform->closeorder->setVisible(true);        
+            }            
+        } 
+
+        
+        
+        $this->statuspan->statusform->closeorder->setChecked(false);
 
         $state = $this->_doc->state;
  
         //готов  к  отправке
         if ($state == Document::STATE_READYTOSHIP) {
              $this->statuspan->statusform->bdevivered->setVisible(false);
+             $this->statuspan->statusform->bret->setVisible(false);
+             $this->statuspan->statusform->closeorder->setVisible(false);
         }
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {

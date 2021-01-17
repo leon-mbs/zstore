@@ -50,10 +50,7 @@ class ItemList extends \App\Pages\Base
 
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
 
-        $this->detailpanel->add(new Form('moveform'))->onSubmit($this, 'OnMove');
-        $this->detailpanel->moveform->add(new DropDownChoice('frompart'));
-        $this->detailpanel->moveform->add(new DropDownChoice('topart'));
-        $this->detailpanel->moveform->add(new TextInput('mqty', '0'));
+      
 
 
         $this->OnFilter(null);
@@ -210,65 +207,10 @@ class ItemList extends \App\Pages\Base
             $name = $name . ', ' . H::fa($stock->partion);
             $st[$stock->stock_id] = $name;
         }
-        $this->detailpanel->moveform->frompart->setOptionList($st);
-        $this->detailpanel->moveform->topart->setOptionList($st);
-        $this->detailpanel->moveform->setVisible(count($st) > 1);
+      
     }
 
-    public function OnMove($sender) {
-        $st1 = $sender->frompart->getValue();
-        $st2 = $sender->topart->getValue();
-        $qty = $sender->mqty->getText();
-        if ($st1 == 0 || $st2 == 0) {
-
-            $this->setError('noselpartion');
-
-            return;
-        }
-        if ($st1 == $st2) {
-            $this->setError('thesamepartion');
-
-            return;
-        }
-        if (($qty > 0) == false) {
-            $this->setError('invalidquantity');
-
-            return;
-        }
-        $st1 = Stock::load($st1);
-        $st2 = Stock::load($st2);
-        if ($qty > $st1->qty) {
-            $this->setError('overqty');
-
-            return;
-        }
-        $doc = \App\Entity\Doc\Document::create('TransItem');
-        $doc->document_number = $doc->nextNumber();
-        if (strlen($doc->document_number) == 0) {
-            $doc->document_number = "ПК-000001";
-        }
-        $doc->document_date = time();
-
-
-        $doc->headerdata['fromitem'] = $st1->stock_id;
-        $doc->headerdata['tostock'] = $st2->stock_id;
-
-        $store = Store::load($st1->store_id);
-        $doc->headerdata['store'] = $store->store_id;
-        $doc->headerdata['storename'] = $store->storename;
-        $doc->headerdata['fromquantity'] = $qty;
-        $doc->headerdata['toquantity'] = $qty;
-        $doc->notes = H::l('partmove');
-        $doc->save();
-        $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
-        $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
-
-        $this->setInfo('partion_moved', $doc->document_number);
-
-        $sender->clean();
-        $this->detailpanel->stocklist->Reload();
-    }
-
+   
     public function oncsv($sender) {
         $store = $this->filter->searchstore->getValue();
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');

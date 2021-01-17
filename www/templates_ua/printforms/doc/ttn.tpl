@@ -18,7 +18,7 @@
  
     <tr>
         <td></td>
-        <td valign="top"><b>Зписано з</b></td>
+        <td valign="top"><b>Склад</b></td>
         <td colspan="5">{{store_name}}</td>
     </tr>
 
@@ -32,15 +32,10 @@
     <tr>
         <td></td>
         <td><b>Доставка</b></td>
-        <td colspan="5">{{delivery_name}}</td>
+        <td  >{{delivery_name}}</td>
+        <td colspan="4">{{ship_address}}</td>
     </tr>
-    {{#ship_address}}
-    <tr>
-        <td></td>
-        <td><b>Адреса</b></td>
-        <td colspan="5">{{ship_address}}</td>
-    </tr>
-    {{/ship_address}}
+ 
     {{#ship_number}}
     <tr>
         <td></td>

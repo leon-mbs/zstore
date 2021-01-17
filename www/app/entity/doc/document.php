@@ -38,6 +38,12 @@ class Document extends \ZCL\DB\Entity
 
     // const EX_XML_GNAU = 4;
 
+    //доставка
+    const DEL_SELF  = 1;    //  самовывоз
+    const DEL_BOY  = 2;    //  курьер
+    const DEL_SERVICE  = 3;    //  служба доставки
+    
+    
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
      *
@@ -697,6 +703,20 @@ class Document extends \ZCL\DB\Entity
         return self::$_metalist[$meta_name];
     }
 
+    /**
+    * Список  типов  доставки
+    */
+    public static function getDeliveryTypes(){
+        $list = array();
+        $list[self::DEL_SELF]       =  Helper::l('delself');
+        $list[self::DEL_BOY]        =  Helper::l('delboy');
+        $list[self::DEL_SERVICE]    =  Helper::l('delservice');
+        
+        return  $list;
+    }
+    
+    
+    
 
     /**
      * Отправка  документа  по  почте

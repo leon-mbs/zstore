@@ -457,8 +457,8 @@ class Search extends \App\Pages\Base
 
         if (strlen($ret['data']) > 0) {
             $this->_tvars['isimage'] = true;
-
-            $this->_tvars['imagepath'] = str_replace('.BMP', '.jpg', $ret['data']);
+            
+            $this->_tvars['imagepath'] = "/proxy.php?im=".  $ret['data'] ;
 
         }
 

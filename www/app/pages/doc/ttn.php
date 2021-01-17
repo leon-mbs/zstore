@@ -70,7 +70,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
-        $this->docform->add(new DropDownChoice('delivery', array(1 => H::l('delself'), 2 => H::l('delboy'), 3 => H::l('delservice')), 1))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes() , Document::DEL_SELF))->onChange($this, 'OnDelivery');
 
         $this->docform->add(new TextInput('order'));
 
@@ -810,12 +810,11 @@ class TTN extends \App\Pages\Base
 
     public function OnDelivery($sender) {
 
-        if ($sender->getValue() == 2 || $sender->getValue() == 3) {
+        if ($sender->getValue() == Document::DEL_BOY || $sender->getValue() == Document::DEL_SERVICE) {
             $this->docform->senddoc->setVisible(true);
             
             $this->docform->ship_address->setVisible(true);
             $this->docform->ship_number->setVisible($sender->getValue() == 3);
-            $this->docform->sent_date->setVisible(true);
             $this->docform->sent_date->setVisible(true);
             $this->docform->delivery_date->setVisible(true);
             $this->docform->emp->setVisible(true);
@@ -825,7 +824,6 @@ class TTN extends \App\Pages\Base
             
             $this->docform->ship_address->setVisible(false);
             $this->docform->ship_number->setVisible(false);
-            $this->docform->sent_date->setVisible(false);
             $this->docform->sent_date->setVisible(false);
             $this->docform->delivery_date->setVisible(false);
             $this->docform->emp->setVisible(false);
