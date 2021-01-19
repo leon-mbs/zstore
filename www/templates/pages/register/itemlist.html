@@ -93,7 +93,7 @@
         <div zippy="pag"></div>
 
     </div>
-    <div class="col-12   col-xl-10" zippy="detailpanel">
+    <div class="col-12   col-lg-10 col-xl-8" zippy="detailpanel">
         <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> К списку</a>
         <h4 zippy="itemdetname"></h4>
         <table class="table   table-responsive-sm   table-sm  table-hover ">
@@ -105,6 +105,9 @@
                 <th class="text-right text-nowrap">Годен до</th>
                 {{/usesnumber}}
                 <th class="text-right text-nowrap">Зак. цена</th>
+                {{#useval}}
+                <th class="  text-nowrap">По курсу</th>
+                {{/useval}}
                 <th class="text-right text-nowrap">Кол.</th>
                 <th class="text-right text-nowrap">На сумму</th>
                 <th class="text-right text-nowrap ">Прод. цена</th>
@@ -119,6 +122,9 @@
 
                 {{/usesnumber}}
                 <td zippy="partion" class="text-right  "></td>
+                 {{#useval}}
+                <td zippy="rate" ></td>
+                 {{/useval}}
                 <td zippy="qty" class="text-right  "></td>
                 <td zippy="amount" class="text-right  "></td>
                 <td zippy="price" class="text-right  "></td>

@@ -600,28 +600,37 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
+                        
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="/index.php?p=App/Pages/Users" class="nav-link">
-                                    <i class="fa    nav-icon"></i>
-                                    <p>&nbsp;&nbsp;Пользователи</p>
-                                </a>
-                            </li>
 
-                            <li class="nav-item">
-                                <a href="/index.php?p=App/Pages/PosList" class="nav-link">
-                                    <i class="fa    nav-icon"></i>
-                                    <p>&nbsp;&nbsp;POS терминалы</p>
-                                </a>
-                            </li>
                             {{#isadmin}}
-
-                            <li class="nav-item">
-                                <a href="/index.php?p=App/Pages/Roles" class="nav-link">
+                         
+                           <li class="nav-item">
+                                <a href="#" class="nav-link">
                                     <i class="fa    nav-icon"></i>
-                                    <p>&nbsp;&nbsp;Роли</p>
+                                    <p>Настройки
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+
                                 </a>
+                                <ul class="nav nav-treeview">
+
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/Options" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;Общие</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/MenuList" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;Настройка меню</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
                             </li>
+
 
 
                             <li class="nav-item">
@@ -641,14 +650,29 @@
                             </li>
                             {{/usebranch}}
 
-
                             <li class="nav-item">
-                                <a href="/index.php?p=App/Pages/Options" class="nav-link">
+                                <a href="/index.php?p=App/Pages/Roles" class="nav-link">
                                     <i class="fa    nav-icon"></i>
-                                    <p>&nbsp;&nbsp;Настройки</p>
+                                    <p>&nbsp;&nbsp;Роли</p>
                                 </a>
                             </li>
+
+                           
                             {{/isadmin}}
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/Users" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;Пользователи</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="/index.php?p=App/Pages/PosList" class="nav-link">
+                                    <i class="fa    nav-icon"></i>
+                                    <p>&nbsp;&nbsp;POS терминалы</p>
+                                </a>
+                            </li>                            
+                            
                         </ul>
 
                     </li>

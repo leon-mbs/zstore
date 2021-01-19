@@ -163,6 +163,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     protected function afterRender() {
+        
         $user = System::getUser();
 
 

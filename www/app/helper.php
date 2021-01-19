@@ -671,6 +671,13 @@ class Helper
         return $list;
     }
 
+    public static  function getValName($vn){
+        if($vn=='valuan')  return   'UAH' ;
+        if($vn=='valusd')  return   'USD' ;
+        if($vn=='valeuro') return  'EUR' ;
+        if($vn=='valrub')  return   'RUB' ;
+    }
+    
 
     public static function exportExcel($data, $header, $filename) {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();

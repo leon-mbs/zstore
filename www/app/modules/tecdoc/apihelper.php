@@ -138,3 +138,4 @@ class APIHelper
         return $this->fetch(array('cmd' => 'getArtVehicles', 'partnumber' => $number, 'brand_id' => $brand_id));
     }
 }
+  
