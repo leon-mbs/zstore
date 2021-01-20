@@ -533,10 +533,7 @@ class Document extends \ZCL\DB\Entity
 
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;
-            $n->message = "Удален документ  <br><br>";
-            $n->message .= "Документ {$this->document_number} удален пользователем  " . System::getUser()->username;
-
-
+            $n->message = H::l('deleteddoc',System::getUser()->username,$this->document_number ) ;
             $n->save();
         }
     }
