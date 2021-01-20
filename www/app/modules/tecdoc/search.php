@@ -461,7 +461,8 @@ class Search extends \App\Pages\Base
         if (strlen($ret['data']) > 0) {
             $this->_tvars['isimage'] = true;
 
-            $this->_tvars['imagepath'] = "/proxy.php?im=" . $ret['data'];
+            //$this->_tvars['imagepath'] = "/proxy.php?im=" . $ret['data'];
+            $this->_tvars['imagepath'] =   $ret['data'];
 
         }
 
