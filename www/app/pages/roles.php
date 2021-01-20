@@ -67,6 +67,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editissue'));
         $this->editpan->editform->add(new CheckBox('edittecdoc'));
         $this->editpan->editform->add(new CheckBox('editppo'));
+        $this->editpan->editform->add(new CheckBox('editnp'));
 
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -197,6 +198,9 @@ class Roles extends \App\Pages\Base
         }
         if (strpos($this->role->modules, 'ppo') !== false) {
             $this->editpan->editform->editppo->setChecked(true);
+        }
+        if (strpos($this->role->modules, 'np') !== false) {
+            $this->editpan->editform->editnp->setChecked(true);
         }
     }
 
@@ -331,6 +335,9 @@ class Roles extends \App\Pages\Base
         }
         if ($this->editpan->editform->editppo->isChecked()) {
             $modules = $modules . ',ppo';
+        }
+        if ($this->editpan->editform->editnp->isChecked()) {
+            $modules = $modules . ',np';
         }
 
         $this->role->modules = trim($modules, ',');

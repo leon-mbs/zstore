@@ -114,7 +114,7 @@ class PayList extends \App\Pages\Base
 
         $id = $sender->pl_id->getText();
 
-
+         $pl = Pay::load($id);
         Pay::cancelPayment($id, $sender->notes->getText());
 
         $conn = \ZDB\DB::getConnect();
