@@ -121,6 +121,7 @@ class Pay extends \ZCL\DB\Entity
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
     }
 
+  
     public static function cancelPayment($id, $comment) {
         $pl = Pay::load($id);
         if ($pl == null) {
@@ -140,7 +141,7 @@ class Pay extends \ZCL\DB\Entity
         $pay->save();
 
     }
-
+    
 
     /**
      * список  расходов  и доходов
