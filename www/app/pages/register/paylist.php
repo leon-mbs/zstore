@@ -111,10 +111,12 @@ class PayList extends \App\Pages\Base
     }
 
     public function delOnClick($sender) {
-
+        
+        
         $id = $sender->pl_id->getText();
 
         $pl = Pay::load($id);
+        $doc = Document::load($pl->document_id);
         // Pay::cancelPayment($id, $sender->notes->getText());
         Pay::delete($id) ;
         $conn = \ZDB\DB::getConnect();
@@ -125,7 +127,18 @@ class PayList extends \App\Pages\Base
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
 
         $this->doclist->Reload(true);
-
+     
+            $user = \App\System::getUser();
+            $admin = \App\Entity\User::getByLogin('admin');
+            
+            $n = new \App\Entity\Notify();
+            $n->user_id = $admin->user_id;
+            $n->dateshow = time();
+            
+            $n->message = H::l('deletedpay',$user->username,$doc->document_number,$sender->notes->getText()) ;
+            $n->save();
+      
+      
         $sender->notes->setText('') ;
         $this->setSuccess('payment_canceled');
         $this->resetURL();

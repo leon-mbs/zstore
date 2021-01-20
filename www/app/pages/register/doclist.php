@@ -288,13 +288,8 @@ class DocList extends \App\Pages\Base
             $this->setError("candeleteadmin");
             return;
         }
-        $f = $doc->checkStates(array(Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
-        if ($f) {
-
-            $this->setError("dochassentorrecieve");
-            return;
-        }
-
+       // $f = $doc->checkStates(array(Document::STATE_EXECUTED ));
+    
         $list = $doc->getChildren();
         if (count($list) > 0) {
             $this->setError("dochaschilld");
@@ -307,7 +302,7 @@ class DocList extends \App\Pages\Base
             $this->setError($del);
             return;
         }
-        $logger->info("Документ  {$doc->document_number} удален  пользователем {$user->username}");
+
         $this->doclist->Reload(true);
         $this->resetURL();
     }

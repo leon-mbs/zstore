@@ -310,10 +310,10 @@ class Outcome extends \App\Pages\Base
 
         foreach ($rs as $row) {
 
-            $summa = $row['summa'];
-            if ($row['navar'] != 0) {
-                $row['summa'] += $row['navar'];
-            }
+           // $summa = $row['summa'];
+           //  if ($row['navar'] != 0) {
+          //      $row['summa'] += $row['navar'];
+          //  }
 
 
             $detail[] = array(
