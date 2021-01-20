@@ -41,20 +41,21 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('username', $user->username));
-
+        //меню
         $this->_tvars["docmenu"] = Helper::generateMenu(1);
         $this->_tvars["repmenu"] = Helper::generateMenu(2);
         $this->_tvars["regmenu"] = Helper::generateMenu(3);
         $this->_tvars["refmenu"] = Helper::generateMenu(4);
         $this->_tvars["sermenu"] = Helper::generateMenu(5);
 
+        
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
 
         $options = System::getOptions('common');
 
-
+        //опции
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
         $this->_tvars["useimages"] = $options['useimages'] == 1;
@@ -67,7 +68,7 @@ class Base extends \Zippy\Html\WebPage
             System::setBranch(0);
         }
         $this->_tvars["smart"] = Helper::generateSmartMenu();
-
+        //модули
         $this->_tvars["shopmenu"] = $_config['modules']['shop'] == 1;
         $this->_tvars["shop"] = $_config['modules']['shop'] == 1;
         $this->_tvars["ocstore"] = $_config['modules']['ocstore'] == 1;
@@ -76,7 +77,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["issue"] = $_config['modules']['issue'] == 1;
         $this->_tvars["tecdoc"] = $_config['modules']['tecdoc'] == 1;
         $this->_tvars["ppo"] = $_config['modules']['ppo'] == 1;
-
+        $this->_tvars["np"] = $_config['modules']['np'] == 1;
+        //доступы к  модулям
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
         }
@@ -97,6 +99,9 @@ class Base extends \Zippy\Html\WebPage
         }
         if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ppo"] = false;
+        }
+        if (strpos(System::getUser()->modules, 'np') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["np"] = false;
         }
 
 
@@ -163,6 +168,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     protected function afterRender() {
+        
         $user = System::getUser();
 
 

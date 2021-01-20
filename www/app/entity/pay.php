@@ -128,9 +128,10 @@ class Pay extends \ZCL\DB\Entity
         }
 
         $pay = new \App\Entity\Pay();
-        $pay->mf_id = $pay->mf;
+        $pay->mf_id = $pl->mf_id;
 
-        $pay->amount = 0 - $pay->amount;
+        $pay->amount = 0 - $pl->amount;
+        $pay->document_id = 0 - $pl->document_id;
 
         $pay->paydate = time();
         $pay->notes = $comment;

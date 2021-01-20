@@ -156,9 +156,11 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
         $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
-
+        $row->add(new Label('rate', ''));
         $item = Item::load($stock->item_id);
-
+        if($this->_tvars["useval"] && $item->rate >0) {
+           $row->rate->setText($item->rate. H::getValName($item->val)); 
+        }
         if ($stock->qty < 0) {
             $row->setAttribute('class', 'text-danger');
         }
