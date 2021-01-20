@@ -114,9 +114,9 @@ class PayList extends \App\Pages\Base
 
         $id = $sender->pl_id->getText();
 
-         $pl = Pay::load($id);
-        Pay::cancelPayment($id, $sender->notes->getText());
-
+        $pl = Pay::load($id);
+        // Pay::cancelPayment($id, $sender->notes->getText());
+        Pay::delete($id) ;
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
@@ -126,7 +126,7 @@ class PayList extends \App\Pages\Base
 
         $this->doclist->Reload(true);
 
-
+        $sender->notes->setText('') ;
         $this->setSuccess('payment_canceled');
         $this->resetURL();
     }
