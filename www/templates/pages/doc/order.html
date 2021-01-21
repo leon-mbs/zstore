@@ -35,13 +35,7 @@
 
             </div>
 
-            <div class="form-group  ">
-                <label for="notes">Примечание </label>
-
-                <textarea class="form-control" zippy="notes"></textarea>
-
-
-            </div>
+         
         </div>
         <div class="col-12 col-md-3">
 
@@ -50,7 +44,7 @@
                 <select class="form-control" zippy="store">
                     <option value="0">Не выбран</option>
                 </select>
-                <span>Если  склад не указан, количество и цена  вычисляется  по  всем  складам</span>
+                <small>Если  склад не указан, количество и цена  вычисляется  по  всем  складам</small>
 
             </div>
             <div class="form-group  ">
@@ -63,8 +57,20 @@
                 <select class="form-control" zippy="payment">
                     <option value="0">Не выбрано</option>
                 </select>
+                <small>Если  оплата в счете или при продаже поставте Не выбрано</small>
             </div>
-            <div class="form-group  ">
+   <div class="form-group  ">
+                <label for="notes">Примечание </label>
+
+                <textarea class="form-control" zippy="notes"></textarea>
+
+
+            </div>            
+
+
+        </div>
+    <div class="col-12 col-md-3">
+              <div class="form-group  ">
                 <label for="delivery">Доставка</label>
 
                 <select class="form-control" zippy="delivery">
@@ -77,8 +83,7 @@
 
                 <textarea zippy="address" class="form-control"></textarea>
 
-            </div>
-
+            </div>      
         </div>
     </div>
     <div class="row">

@@ -11,14 +11,13 @@
                 <label for="document_number">Номер документа</label>
                 <input class="form-control" type="text" zippy="document_number" required="required">
             </div>
+               <div class="form-group">
+                <label for="order">Замовлення</label>
+                <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order">
 
-            <div class="form-group  ">
-                <label for="store">З складу</label>
-
-                <select class="form-control" zippy="store">
-                    <option value="0">Не обрано</option>
-                </select>
+                <small zippy="notesfromorder"></small>
             </div>
+
 
             <div class="form-group  ">
                 <label for="customer">Покупець</label>
@@ -34,28 +33,7 @@
                     <option value="0">Не вибраний</option>
                 </select>
             </div>
-
-
-        </div>
-        <div class="col-12 col-md-4  col-xl-3">
-            <div class="form-group">
-                <label for="document_date"> Дата</label>
-                <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
-            </div>
-            <div class="form-group">
-                <label for="order">Замовлення</label>
-                <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order">
-
-                <small zippy="notesfromorder"></small>
-            </div>
-
-        </div>
-        <div class="form-group  ">
-            <label for="pricetype">Тип ціни</label>
-            <select class="form-control" zippy="pricetype">
-            </select>
-        </div>
-        <div class="form-group  ">
+         <div class="form-group  ">
             <label for="notes">Примітка </label>
 
             <input class="form-control" type="text" zippy="notes">
@@ -63,22 +41,31 @@
 
         </div>
 
+        </div>
+        <div class="col-12 col-md-4  col-xl-3">
+            <div class="form-group">
+                <label for="document_date"> Дата</label>
+                <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
+            </div>
 
-    </div>
-    <div class="col-12 col-md-4  col-xl-3">
-        <div class="form-group">
+               <div class="form-group  ">
+                <label for="store">З складу</label>
+
+                <select class="form-control" zippy="store">
+                    <option value="0">Не обрано</option>
+                </select>
+            </div>
+    
+        <div class="form-group  ">
+            <label for="pricetype">Тип ціни</label>
+            <select class="form-control" zippy="pricetype">
+            </select>
+        </div>
+          <div class="form-group">
             <label for="delivery">Доставка</label>
             <select class="form-control" zippy="delivery">
 
             </select>
-        </div>
-        <div class="form-group">
-            <label data-label="ship_address" for="ship_address">Адреса доставки</label>
-            <textarea class="form-control" type="text" zippy="ship_address"></textarea>
-        </div>
-        <div class="form-group">
-            <label data-label="ship_number" for="ship_number">Номер декларації</label>
-            <input class="form-control" type="text" zippy="ship_number">
         </div>
         <div class="form-group  ">
             <label data-label="emp" for="emp">Відповідальний за доставку</label>
@@ -87,6 +74,24 @@
             </select>
         </div>
 
+
+    </div>
+    <div class="col-12 col-md-4  col-xl-3">
+
+        <div class="form-group">
+            <label data-label="ship_address" for="ship_address">Адреса доставки</label>
+            <textarea class="form-control" type="text" zippy="ship_address"></textarea>
+        </div>
+        <div class="form-group">
+            <label data-label="ship_number" for="ship_number">Номер декларації</label>
+            <input class="form-control" type="text" zippy="ship_number">
+        </div>
+           <div class="form-group">
+                <label data-label="ship_amount" for="ship_amount">Сума витрат за  доставку</label>
+                <input class="form-control" type="text" zippy="ship_amount"  pattern="[0-9\.]+">
+            </div>
+        
+  
         <div class="form-group">
             <label data-label="sent_date" for="sent_date"> Дата відправки</label>
             <input style="width:120px;" class="form-control" type="text" zippy="sent_date" required="required">

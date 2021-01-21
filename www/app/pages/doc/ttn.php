@@ -76,6 +76,7 @@ class TTN extends \App\Pages\Base
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('ship_number'));
+        $this->docform->add(new TextInput('ship_amount'));
         $this->docform->add(new TextArea('ship_address'));
 
         $this->docform->add(new Label('notesfromorder'));
@@ -128,6 +129,7 @@ class TTN extends \App\Pages\Base
             $this->docform->sent_date->setDate($this->_doc->headerdata['sent_date']);
             $this->docform->delivery_date->setDate($this->_doc->headerdata['delivery_date']);
             $this->docform->ship_number->setText($this->_doc->headerdata['ship_number']);
+            $this->docform->ship_amount->setText($this->_doc->headerdata['ship_amount']);
             $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
@@ -446,6 +448,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
         $this->_doc->headerdata['ship_address'] = $this->docform->ship_address->getText();
         $this->_doc->headerdata['ship_number'] = $this->docform->ship_number->getText();
+        $this->_doc->headerdata['ship_amount'] = $this->docform->ship_amount->getText();
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
@@ -800,19 +803,21 @@ class TTN extends \App\Pages\Base
 
             $this->docform->ship_address->setVisible(true);
             $this->docform->ship_number->setVisible($sender->getValue() == 3);
+            $this->docform->ship_amount->setVisible($sender->getValue() == 3);
             $this->docform->sent_date->setVisible(true);
             $this->docform->delivery_date->setVisible(true);
             $this->docform->emp->setVisible(true);
-
+            
         } else {
             $this->docform->senddoc->setVisible(false);
 
             $this->docform->ship_address->setVisible(false);
             $this->docform->ship_number->setVisible(false);
+            $this->docform->ship_amount->setVisible(false);
             $this->docform->sent_date->setVisible(false);
             $this->docform->delivery_date->setVisible(false);
             $this->docform->emp->setVisible(false);
-
+            $this->docform->ship_number->setText(0);
         }
 
     }

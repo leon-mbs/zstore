@@ -98,7 +98,10 @@ class TTN extends Document
             }
         }
 
-
+        //расхода на  доставку
+        if ($this->headerdata['ship_amount'] > 0  ) {
+            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->headerdata['ship_amount'], H::getDefMF(), \App\Entity\Pay::PAY_SALE_OUTCOME);
+        }
         return true;
     }
 
