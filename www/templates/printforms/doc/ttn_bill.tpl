@@ -1,6 +1,6 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
-        <td colspan="3">Накладная №{{document_number}}</td>
+        <td colspan="3">ТТН №{{document_number}}</td>
     </tr>
     <tr>
 
@@ -14,7 +14,7 @@
         <td colspan="2"> {{firm_name}}</td>
     </tr>
 
-
+ 
     <tr>
         <td colspan="3"> Тел. {{phone}}</td>
     </tr>
@@ -27,7 +27,17 @@
     </tr>
 
     {{/customer_name}}
+       {{#order}}
+    <tr>
+        <td colspan="3"> Заказ:</td>
+    </tr>
+    <tr>
 
+        <td colspan="2"> {{order}}</td>
+    </tr>
+     
+ 
+    {{/order}}
 
     {{#_detail}}
     <tr>
@@ -49,5 +59,21 @@
     </tr>
 
 
-    
+    <tr>
+        <td colspan="3"> Дата отправки </td>
+    </tr>
+    <tr>
+
+        <td colspan="2"> {{sent_date}}</td>
+    </tr>
+    {{#ship_number}}  
+   <tr>
+        <td colspan="3"> № декларации</td>
+    </tr>
+    <tr>
+
+        <td colspan="2"> {{ship_number}}</td>
+    </tr>
+    </tr>
+    {{/ship_number}}   
 </table>

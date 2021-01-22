@@ -61,6 +61,7 @@ class TTN extends Document
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "delivery_name"   => $this->headerdata["delivery_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
+                        "ship_amount"           => strlen($this->headerdata["ship_amount"]) > 0 ? H::fa($this->headerdata["ship_amount"] ): false,
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
 
@@ -77,6 +78,70 @@ class TTN extends Document
         }
 
         $report = new \App\Report('doc/ttn.tpl');
+
+        $html = $report->generate($header);
+
+        return $html;
+    }
+
+    public function generatePosReport() {
+
+
+        $i = 1;
+        $detail = array();
+        $weight = 0;
+
+        foreach ($this->unpackDetails('detaildata') as $item) {
+
+
+            $name = $item->itemname;
+            if (strlen($item->snumber) > 0) {
+                $s = ' (' . $item->snumber . ' )';
+                if (strlen($item->sdate) > 0) {
+                    $s = ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
+                }
+                $name .= $s;
+
+            }
+            if ($item->weight > 0) {
+                $weight += $item->weight;
+            }
+
+            $detail[] = array("no"         => $i++,
+                              "tovar_name" => $name,
+                              "tovar_code" => $item->item_code,
+                              "quantity"   => H::fqty($item->quantity),
+                              
+
+                              "price"  => H::fa($item->price),
+                              "amount" => H::fa($item->quantity * $item->price)
+            );
+
+        }
+
+
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                        "firm_name"       => $firm['firm_name'],
+                        "customer_name"   => $this->customer_id ? $this->customer_name : $this->headerdata["customer_name"],
+                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
+                        "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
+                        "document_number" => $this->document_number,
+
+
+                        "total" => H::fa($this->amount),
+        );
+
+
+        if ($this->headerdata["sent_date"] > 0) {
+            $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
+        }
+       
+
+        $report = new \App\Report('doc/ttn_bill.tpl');
 
         $html = $report->generate($header);
 

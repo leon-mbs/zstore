@@ -41,7 +41,7 @@
     {{#ship_number}}
     <tr>
         <td></td>
-        <td><b>Декларация</b></td>
+        <td><b>№ декларации</b></td>
         <td colspan="4">{{ship_number}}</td>
     </tr>
     {{/ship_number}}
@@ -60,7 +60,13 @@
         <td><b>Ответственный</b></td>
         <td colspan="5"> {{emp_name}}</td>
     </tr>
-
+    {{#ship_amount}}
+   <tr>
+        <td></td>
+        <td><b>Стоимость  доставки</b></td>
+        <td colspan="5"> {{ship_amount}}</td>
+    </tr>
+    {{/ship_amount}}
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">

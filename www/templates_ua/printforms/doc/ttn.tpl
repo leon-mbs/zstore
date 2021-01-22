@@ -10,7 +10,7 @@
     <tr>
         <td></td>
 
-        <td valign="top"><b>Продавец</b></td>
+        <td valign="top"><b>Продавець</b></td>
         <td colspan="5">{{firm_name}}</td>
 
     </tr>
@@ -39,7 +39,7 @@
     {{#ship_number}}
     <tr>
         <td></td>
-        <td><b>Декларація</b></td>
+        <td><b>№ декларацii</b></td>
         <td colspan="4">{{ship_number}}</td>
     </tr>
     {{/ship_number}}
@@ -57,6 +57,14 @@
         <td></td>
         <td><b>Відповідальний</b></td>
         <td colspan="5"> {{emp_name}}</td>
+    </tr>
+    {{#ship_amount}}
+   <tr>
+        <td></td>
+        <td><b>Вартiсть  доставки</b></td>
+        <td colspan="5"> {{ship_amount}}</td>
+    </tr>
+    {{/ship_amount}}="5"> {{ship_amount}}</td>
     </tr>
 
 

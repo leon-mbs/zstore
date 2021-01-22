@@ -40,7 +40,7 @@ class EmployeeList extends \App\Pages\Base
 
         $this->employeedetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->employeedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-        $this->employeedetail->add(new TextInput('editlogin'));
+        $this->employeedetail->add(new DropDownChoice('editlogin'));
         $this->employeedetail->add(new TextInput('editemp_name'));
         $this->employeedetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
 
@@ -83,7 +83,15 @@ class EmployeeList extends \App\Pages\Base
         $this->_employee = $sender->owner->getDataItem();
         $this->employeetable->setVisible(false);
         $this->employeedetail->setVisible(true);
-        $this->employeedetail->editlogin->setText($this->_employee->login);
+        
+        if(strlen($this->_employee->login)>0) {
+            $this->employeedetail->editlogin->setOptionList(Employee::getFreeLogins($this->_employee->login));
+            $this->employeedetail->editlogin->setValue($this->_employee->login);    
+        } else {
+            $this->employeedetail->editlogin->setOptionList(Employee::getFreeLogins());
+            $this->employeedetail->editlogin->setValue('0');
+        }
+        
         $this->employeedetail->editemp_name->setText($this->_employee->emp_name);
         $this->employeedetail->editcomment->setText($this->_employee->comment);
         $this->employeedetail->editemail->setText($this->_employee->email);
@@ -109,20 +117,11 @@ class EmployeeList extends \App\Pages\Base
             return;
         }
 
-        $login = trim($this->employeedetail->editlogin->getText());
+        $login = trim($this->employeedetail->editlogin->getValue());
 
-        if (strlen($login) > 0) {
+        if (strlen($login) < 2) {
 
-            $_emp = Employee::getFirst("login = '{$login}'");
-            if ($_emp != null && $_emp->employee_id != $this->_employee->employee_id) {
-                $this->setError('assignedlogin', $_emp->emp_name());
-                return;
-            }
-            $user = \App\Entity\User::getByLogin($login);
-            if ($user == null) {
-                $this->setError('invalidlogin');
-                return;
-            }
+             $login ="";
         }
         $this->_employee->login = $login;
         $this->_employee->emp_name = trim($this->employeedetail->editemp_name->getText());
