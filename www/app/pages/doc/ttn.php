@@ -175,7 +175,7 @@ class TTN extends \App\Pages\Base
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->notesfromorder->setText($basedoc->notes);
-                        $this->docform->ship_address->setText($basedoc->headerdata['address']);
+                        $this->docform->ship_address->setText($basedoc->headerdata['ship_address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
 

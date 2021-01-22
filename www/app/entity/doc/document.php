@@ -533,7 +533,7 @@ class Document extends \ZCL\DB\Entity
 
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;
-            $n->message = H::l('deleteddoc',System::getUser()->username,$this->document_number ) ;
+            $n->message = Helper::l('deleteddoc',System::getUser()->username,$this->document_number ) ;
             $n->save();
         }
     }
