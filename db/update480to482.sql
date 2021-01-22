@@ -1,7 +1,7 @@
 
 update    documents set  payed = payamount  where meta_id in(select meta_id from metadata where  meta_name='Order') ;
 
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Товарно-транспортная накладная', 'TTN', 'Продажи', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'РўРѕРІР°СЂРЅРѕ-С‚СЂР°РЅСЃРїРѕСЂС‚РЅР°СЏ РЅР°РєР»Р°РґРЅР°СЏ', 'TTN', 'РџСЂРѕРґР°Р¶Рё', 0);
 
 CREATE TABLE `shop_images` (
   `image_id` int(11) NOT NULL AUTO_INCREMENT,

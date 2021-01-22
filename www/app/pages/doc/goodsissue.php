@@ -232,6 +232,8 @@ class GoodsIssue extends \App\Pages\Base
 
                         if ($invoice->payamount > 0) {
                             $this->docform->payment->setValue(MoneyFund::PREPAID);// предоплата
+                            $this->OnPayment($this->docform->payment);
+
                         }
 
 
@@ -629,11 +631,15 @@ class GoodsIssue extends \App\Pages\Base
         if ($disc > 0) {
             $total -= $disc;
         }
-
-        $this->docform->editpayamount->setText(H::fa($total));
-        $this->docform->payamount->setText(H::fa($total));
-        $this->docform->editpayed->setText(H::fa($total));
-        $this->docform->payed->setText(H::fa($total));
+        $p = $this->docform->payment->getValue() ;
+        if($p >0 && $p != \App\Entity\MoneyFund::PREPAID ) {
+            $this->docform->editpayamount->setText(H::fa($total));
+            $this->docform->payamount->setText(H::fa($total));
+        }
+        if($p >0  && $p < 10000) {
+            $this->docform->editpayed->setText(H::fa($total));
+            $this->docform->payed->setText(H::fa($total));
+        }
     }
 
     public function OnPayment($sender) {
@@ -648,12 +654,19 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
             $this->docform->paydisc->setVisible(false);
+            $this->docform->payed->setText(0);
+            $this->docform->editpayed->setText(0);
+            $this->docform->payamount->setText(0);
+            $this->docform->editpayamount->setText(0);
+            $this->docform->paydisc->setText(0);
+            $this->docform->editpaydisc->setText(0);
         }
         if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->docform->payed->setVisible(false);
             $this->docform->payed->setText(0);
             $this->docform->editpayed->setText(0);
         }
+        $this->calcPay() ;
     }
 
     public function addcodeOnClick($sender) {

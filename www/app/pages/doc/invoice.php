@@ -56,7 +56,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextInput('customer_print'));
 
-        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -379,6 +379,8 @@ class Invoice extends \App\Pages\Base
             $this->docform->payed->setText(0);
             $this->docform->editpayed->setText(0);
         }
+        $this->calcPay() ;
+        
     }
 
     public function onPayAmount($sender) {
@@ -440,10 +442,20 @@ class Invoice extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
 
-        $this->docform->editpayamount->setText(H::fa($total - $disc));
-        $this->docform->payamount->setText(H::fa($total - $disc));
-        $this->docform->editpayed->setText(H::fa($total - $disc));
-        $this->docform->payed->setText(H::fa($total - $disc));
+        
+        $p = $this->docform->payment->getValue() ;
+        
+        if($p  >0) {
+          $this->docform->editpayamount->setText(H::fa($total));
+          $this->docform->payamount->setText(H::fa($total));
+        
+        }
+        if($p  >0 &&  $p < 10000) {
+            $this->docform->editpayed->setText(H::fa($total));
+            $this->docform->payed->setText(H::fa($total));
+        
+        }
+        
     }
 
     /**
