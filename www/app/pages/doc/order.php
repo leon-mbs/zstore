@@ -50,11 +50,9 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, false), H::getDefMF()))->onChange($this, 'OnPayment');
 
-
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
-
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -62,7 +60,6 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
-
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
@@ -72,13 +69,11 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextArea('address'))->setVisible(false);
 
-
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 

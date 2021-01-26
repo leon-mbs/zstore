@@ -27,7 +27,7 @@ class items extends JsonRPC
         if ($args['cat'] > 0) {
             $w = "cat_id=" . $args['cat'];
         }
-        \App\Helper::log($w);
+        //\App\Helper::log($w);
         foreach (\App\Entity\Item::find($w, 'itemname') as $item) {
             $list[] = array('code' => $item->item_code, 'name' => $item->itemame);
 

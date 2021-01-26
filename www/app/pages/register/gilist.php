@@ -37,20 +37,22 @@ class GIList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('GIList')) {
             return;
         }
+       
+        $this->add(new Panel("listpan")) ;
+        $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->listpan->filter->add(new TextInput('searchnumber'));
+        $this->listpan->filter->add(new TextInput('searchtext'));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
+        $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
-        $this->filter->add(new TextInput('searchnumber'));
-        $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
-        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
-
-        $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->listpan->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
-        $this->add(new Paginator('pag', $doclist));
+        $this->listpan->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
+        $this->listpan->add(new ClickLink('csv', $this, 'oncsv'));
+    
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
@@ -60,20 +62,22 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bnp'))->onClick($this, 'npOnSubmit');
+        
         $this->statuspan->statusform->add(new TextInput('ship_number'));
         $this->statuspan->statusform->add(new CheckBox('closeorder'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->listpan->doclist->Reload();
+        
     }
 
     public function filterOnSubmit($sender) {
 
         $this->statuspan->setVisible(false);
 
-        $this->doclist->Reload(false);
+        $this->listpan->doclist->Reload(false);
     }
 
     public function doclistOnRow($row) {
@@ -106,7 +110,7 @@ class GIList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
-
+         
         if ($sender->id == "bsend") {
             $dec = $this->statuspan->statusform->ship_number->getText();
             $this->_doc->headerdata['sentdate'] = H::fd(time());
@@ -167,10 +171,10 @@ class GIList extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\ReturnIssue", 0, $this->_doc->document_id);
         }
 
-        $this->doclist->Reload(false);
+        $this->listpan->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
-        //todo  отослать писмо 
+ 
 
         $this->updateStatusButtons();
     }
@@ -182,7 +186,8 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->bret->setVisible(true);
         $this->statuspan->statusform->bsend->setVisible(true);
         $this->statuspan->statusform->bgar->setVisible(true);
-        $this->statuspan->statusform->ship_number->setVisible(true);
+        $this->statuspan->statusform->bnp->setVisible(true);
+        $this->statuspan->statusform->ship_number->setVisible(false);
 
 
         $this->statuspan->statusform->closeorder->setVisible(false);
@@ -198,11 +203,13 @@ class GIList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-        //готов  к  отправке
+ 
+       //готов  к  отправке
         if ($state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
             $this->statuspan->statusform->closeorder->setVisible(false);
+            
         }
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
@@ -219,10 +226,17 @@ class GIList extends \App\Pages\Base
 
         //прячем лишнее
         if ($this->_doc->meta_name == 'TTN') {
-            $this->statuspan->statusform->ship_number->setVisible($this->_doc->headerdata['delivery'] > 2);
+            if($this->_doc->headerdata['delivery'] <3) { //не  служба  доставки
+                $this->statuspan->statusform->ship_number->setVisible(false);
+                
+            }
 
             $this->statuspan->statusform->bttn->setVisible(false);
         }
+        if ($this->_doc->meta_name == 'TTN'   ) {
+            $this->statuspan->statusform->bnp->setVisible(true);
+        }
+
         if ($this->_doc->meta_name == 'GoodsIssue') {
 
             $this->statuspan->statusform->bdevivered->setVisible(false);
@@ -263,8 +277,8 @@ class GIList extends \App\Pages\Base
 
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
-        $this->doclist->setSelectedRow($sender->getOwner());
-        $this->doclist->Reload(false);
+        $this->listpan->doclist->setSelectedRow($sender->getOwner());
+        $this->listpan->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
     }
@@ -278,10 +292,16 @@ class GIList extends \App\Pages\Base
         App::Redirect("\\App\\Pages\\Doc\\" . $doc->meta_name, $doc->document_id);
     }
 
+    public function npOnSubmit($sender) {
+         $this->statuspan->setVisible(false);
+         $this->listpan->setVisible(false);
+            
+    }
+
     //оплаты
 
     public function oncsv($sender) {
-        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+        $list = $this->listpan->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $header = array();
         $data = array();
 
@@ -322,7 +342,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
 
-        $status = $this->page->filter->status->getValue();
+        $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {
             $where .= "  and  (  (payamount >0 and payamount > payed and  state >3 )  or( ( meta_name= 'TTN' and  state <> 9) or (meta_name <> 'TTN' and state <>5)  )  )    ";
         }
@@ -335,19 +355,19 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         if ($status == 4) {
             $where .= "  and payamount >0 and  payamount > payed  and  state >3  ";
         }
-        $comp = $this->page->filter->searchcomp->getValue();
+        $comp = $this->page->listpan->filter->searchcomp->getValue();
         if ($comp > 0) {
             $where = $where . " and firm_id = " . $comp;
         }
 
 
-        $st = trim($this->page->filter->searchtext->getText());
+        $st = trim($this->page->listpan->filter->searchtext->getText());
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
             $where .= " and    content like {$st} ";
         }
-        $sn = trim($this->page->filter->searchnumber->getText());
+        $sn = trim($this->page->listpan->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' )  and document_number like  {$sn} ";

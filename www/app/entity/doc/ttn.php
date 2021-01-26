@@ -151,11 +151,7 @@ class TTN extends Document
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-        //расходы на  доставку
-        if ($this->headerdata['ship_amount'] > 0  ) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->headerdata['ship_amount'], H::getDefMF(), \App\Entity\Pay::PAY_SALE_OUTCOME);
-        }
-
+      
         if($this->parent_id >0) {
              $parent = Document::load($this->parent_id);
              if($parent->meta_name=='GoodsIssue') {
@@ -177,6 +173,16 @@ class TTN extends Document
         return true;
     }
 
+    public function onState($oldstate, $state) {
+        if($state == Document::STATE_INSHIPMENT) {
+            //расходы на  доставку
+            if ($this->headerdata['ship_amount'] > 0  ) {
+                \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->headerdata['ship_amount'], H::getDefMF(), \App\Entity\Pay::PAY_SALE_OUTCOME);
+            }
+        }
+
+    }
+    
     public function getRelationBased() {
         $list = array();
         $list['Warranty'] = self::getDesc('Warranty');

@@ -42,6 +42,7 @@ class Document extends \ZCL\DB\Entity
     const DEL_SELF    = 1;    //  самовывоз
     const DEL_BOY     = 2;    //  курьер
     const DEL_SERVICE = 3;    //  служба доставки
+    const DEL_NP = 4;         //  новая почта
 
 
     /**
@@ -706,6 +707,10 @@ class Document extends \ZCL\DB\Entity
         $list = array();
         $list[self::DEL_SELF] = Helper::l('delself');
         $list[self::DEL_BOY] = Helper::l('delboy');
+        if($this->_tvars["np"] == true) {
+            $list[self::DEL_NP] = Helper::l('delnp');    
+        }
+        
         $list[self::DEL_SERVICE] = Helper::l('delservice');
 
         return $list;
