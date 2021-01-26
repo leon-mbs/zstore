@@ -8,13 +8,51 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 col-xl-10">
             <h2>Описание API</h2>
             <h3>Формат обмена</h3>
             <p>Используется JSON RPC</p>
-            <h3>Общие функции</h3>
-            <h4>Получение JWT токена</h4>
-            <p>Логин</p>
+            <h3>Авторизация</h3>
+            
+            <h4>Список функций</h4>
+            <table class="table  table-sm">
+              <tr>
+               <th>Название</th>
+               <th>URL</th>
+               <th>Метод</th>
+               <th> Параметры</th>
+               <th> Примечание</th>
+              </tr>
+              <tr>
+               <td class="text-nowrap">Получить токен</td>
+               <td class="text-nowrap">/api/common</td>
+               <td class="text-nowrap">token </td>
+               <td class="text-nowrap">{"login":"admin","password":"admin"} </td>
+               <td></td>
+              </tr>
+             <tr>
+               <td class="text-nowrap">Список складов</td>
+               <td class="text-nowrap">/api/items</td>
+               <td class="text-nowrap">storelist </td>
+               <td class="text-nowrap"> </td>
+               <td></td>
+              </tr>
+              <tr>
+               <td class="text-nowrap">Список категорий</td>
+               <td  >/api/items</td>
+               <td  >catlist</td>
+               <td  ></td>
+               <td></td>
+              </tr>
+             <tr>
+               <td class="text-nowrap">Номенклатура</td>
+               <td  >/api/items</td>
+               <td  >itemlist</td>
+               <td  >{"cat_id":"10"}</td>
+               <td>Если  категория не задана  возвращается весь  список</td>
+              </tr>
+              
+            </table>
 
         </div>
     </div>

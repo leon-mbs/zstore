@@ -5,12 +5,12 @@ namespace App\API;
 class common extends JsonRPC
 {
 
-    public function login($user, $password) {
+    public function token($args) {
 
 
         $api = \App\System::getOptions('api');
 
-        $user = \App\Helper::login($user, $password);
+        $user = \App\Helper::login($args['login'], $args['password']);
 
         if ($user instanceof \App\Entity\User) {
             $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
