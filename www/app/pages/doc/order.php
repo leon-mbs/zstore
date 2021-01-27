@@ -64,7 +64,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
-        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes()))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np']==1)))->onChange($this, 'OnDelivery');
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextArea('address'))->setVisible(false);

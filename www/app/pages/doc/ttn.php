@@ -70,7 +70,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
-        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes(), Document::DEL_SELF))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np']==1), Document::DEL_SELF))->onChange($this, 'OnDelivery');
 
         $this->docform->add(new TextInput('order'));
 

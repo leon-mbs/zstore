@@ -110,6 +110,15 @@ class ReturnIssue extends \App\Pages\Base
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
 
                     }
+                   if ($basedoc->meta_name == 'TTN') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+
+
+                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+
+                    }
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);

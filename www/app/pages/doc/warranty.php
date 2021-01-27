@@ -81,6 +81,11 @@ class Warranty extends \App\Pages\Base
 
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
                     }
+                   if ($basedoc->meta_name == 'TTN') {
+
+
+                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                    }
                     if ($basedoc->meta_name == 'POSCheck') {
 
 

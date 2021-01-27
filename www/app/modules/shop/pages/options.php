@@ -52,6 +52,7 @@ class Options extends \App\Pages\Base
         $this->shop->uselogin->setChecked($shop['uselogin']);
 
         $this->add(new ClickLink('updateprices'))->onClick($this, 'updatePriceOnClick');
+        $this->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
 
         if (strlen($shop['aboutus']) > 10) {
             $this->texts->aboutus->setText(base64_decode($shop['aboutus']));
@@ -118,6 +119,21 @@ class Options extends \App\Pages\Base
             $p->price = $price;
             $p->save();
         }
+        $this->setSuccess('refreshed');
+    }
+
+   public function updateSiteMapOnClick($sender) {
+        $sm = _ROOT . 'sitemap.xml';
+        @unlink($sm) ;
+        $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
+ 
+        $prods = Product::find(" deleted = 0 ");
+        foreach ($prods as $p) {
+            
+             $xml = $xml .  " <url><loc>"._BASEURL."sp/{$p->product_id}</loc></url>";   
+        }
+        $xml .= "</urlset>";
+        file_put_contents($sm,$xml) ;
         $this->setSuccess('refreshed');
     }
 

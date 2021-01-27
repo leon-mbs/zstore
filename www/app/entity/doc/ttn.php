@@ -187,7 +187,6 @@ class TTN extends Document
         $list = array();
         $list['Warranty'] = self::getDesc('Warranty');
         $list['ReturnIssue'] = self::getDesc('ReturnIssue');
-        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
 
         return $list;
     }

@@ -85,7 +85,7 @@ class Catalog extends Base
         $item = $row->getDataItem();
 
 
-        $row->add(new BookmarkableLink("simage", "/sp/" . $item->product_id))->setValue('/loadimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("simage", "/sp/" . $item->product_id))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("scatname", "/sp/" . $item->product_id))->setValue($item->productname);
         $row->add(new Label("stopsold"))->setVisible($item->topsold == 1);
         $row->add(new Label("snovelty"))->setVisible($item->novelty == 1);
@@ -117,7 +117,7 @@ class Catalog extends Base
 
     public function rOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("rimage", "/sp/" . $item->product_id))->setValue('/loadimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("rimage", "/sp/" . $item->product_id))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("rname", "/sp/" . $item->product_id))->setValue($item->productname);
     }
 

@@ -48,13 +48,13 @@ class Main extends Base
     public function OnCatRow($datarow) {
         $g = $datarow->getDataItem();
         $link = $g->gcnt > 0 ? "/scat/" . $g->group_id : "/pcat/" . $g->group_id;
-        $datarow->add(new BookmarkableLink("scatimg", $link))->setValue("/loadimage.php?id=" . $g->image_id);
+        $datarow->add(new BookmarkableLink("scatimg", $link))->setValue("/loadshopimage.php?id=" . $g->image_id);
         $datarow->add(new BookmarkableLink("scatname", $link))->setValue($g->groupname);
     }
 
     public function OnNewRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("nimage", "/sp/" . $item->product_id))->setValue('/loadimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("nimage", "/sp/" . $item->product_id))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
         $row->add(new BookmarkableLink("nname", "/sp/" . $item->product_id))->setValue($item->productname);
     }
 

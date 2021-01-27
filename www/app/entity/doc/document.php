@@ -703,11 +703,11 @@ class Document extends \ZCL\DB\Entity
     /**
      * Список  типов  доставки
      */
-    public static function getDeliveryTypes() {
+    public static function getDeliveryTypes($np=false) {
         $list = array();
         $list[self::DEL_SELF] = Helper::l('delself');
         $list[self::DEL_BOY] = Helper::l('delboy');
-        if($this->_tvars["np"] == true) {
+        if($np == true) {
             $list[self::DEL_NP] = Helper::l('delnp');    
         }
         

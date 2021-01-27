@@ -73,7 +73,8 @@ class ProductList extends \App\Pages\Base
         $editform->add(new TextInput('ename'));
         $editform->add(new TextInput('ecode'));
         $editform->add(new TextInput('eprice', 0));
-
+      
+ 
         $editform->add(new TextArea('edescshort'));
         $editform->add(new TextArea('edescdet'));
 
@@ -193,7 +194,7 @@ class ProductList extends \App\Pages\Base
         $this->product->item_code = $item->item_code;
 
         $this->editpanel->editform->ename->setText($this->product->productname);
-        $this->editpanel->editform->ecode->setText($this->product->item_code);
+          $this->editpanel->editform->ecode->setText($this->product->item_code);
         $this->editpanel->editform->eprice->setText($item->getPrice($this->op['defpricetype'], $this->op['defstore']));
 
         //подтягиваем бренд если  совпадает имя
@@ -228,7 +229,7 @@ class ProductList extends \App\Pages\Base
         $row->add(new Label("lprice", $item->price));
         //$qty=\App\Entity\Item::getQuantity($item->item_id) ;
         $row->add(new Label("lcnt", $item->getQuantity($this->op['defstore'])));
-        $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadimage.php?id=' . $item->image_id . '&t=t');
+        $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadshopimage.php?id=' . $item->image_id . '&t=t');
     }
 
 //редактирование
@@ -359,7 +360,7 @@ class ProductList extends \App\Pages\Base
                 return;
             }
 
-            $image = new \App\Entity\Image();
+            $image = new \App\Modules\Shop\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
 
@@ -378,7 +379,7 @@ class ProductList extends \App\Pages\Base
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        $row->add(new \Zippy\html\Image("imgitem"))->setUrl('/loadimage.php?id=' . $image->image_id . "&t=t");
+        $row->add(new \Zippy\html\Image("imgitem"))->setUrl('/loadshopimage.php?id=' . $image->image_id . "&t=t");
         $row->add(new ClickLink("icover", $this, "icoverOnClick"))->setVisible($image->image_id != $this->product->image_id);
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }

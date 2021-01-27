@@ -454,8 +454,8 @@ class Search extends \App\Pages\Base
 
         $ret = $api->getImage($part->part_number, $part->brand_id);
         if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
+           // $this->setError($ret['error']);
+           // return;
         }
 
         if (strlen($ret['data']) > 0) {

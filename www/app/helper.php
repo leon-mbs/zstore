@@ -192,6 +192,11 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10001, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => self::l('modtecdocsearch')));
             }
         }
+        if ($_config['modules']['shop'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => self::l('modshopprlist')));
+            }
+        }
 
 
         return $mdata;
