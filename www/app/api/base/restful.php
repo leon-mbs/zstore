@@ -1,6 +1,6 @@
 <?php
 
-namespace App\API;
+namespace App\API\Base;
 
 /**
  * Base class for RESTFul

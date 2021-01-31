@@ -36,7 +36,7 @@ class ProjectList extends \App\Pages\Base
         $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->rolename == 'admins');
         if (!$allow) {
             System::setErrorMsg(H::l('noaccesstopage'));
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
 

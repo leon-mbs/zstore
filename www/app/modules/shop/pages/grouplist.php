@@ -31,7 +31,7 @@ class GroupList extends \App\Pages\Base
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg('noaccesstopage');
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
 

@@ -29,7 +29,7 @@ class Roles extends \App\Pages\Base
 
         if (System::getUser()->userlogin != 'admin') {
             $this->setError('onlyadminaccess');
-            App::RedirectHome();
+            App::RedirectError();
             return false;
         }
 

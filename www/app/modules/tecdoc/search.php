@@ -30,7 +30,7 @@ class Search extends \App\Pages\Base
         if (strpos(System::getUser()->modules, 'tecdoc') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(\App\Helper::l('noaccesstopage'));
 
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
 

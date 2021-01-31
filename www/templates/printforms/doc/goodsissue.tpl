@@ -95,5 +95,7 @@
         <td colspan="7">На сумму <b>{{totalstr}}<b></td>
 
     </tr>
+   <tr><td colspan="7"><b>Отпустил </b>__________________</td></tr>
+   <tr><td colspan="7">&nbsp;</td></tr>
 </table>
 

@@ -19,7 +19,7 @@ class Options extends \App\Pages\Base
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(\App\Helper::l('noaccesstopage'));
 
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
 

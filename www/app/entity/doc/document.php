@@ -417,6 +417,29 @@ class Document extends \ZCL\DB\Entity
         }
     }
 
+   public static function getStateList( ) {
+        $list=array();
+        $list[Document::STATE_NEW]   = Helper::l('st_new') ;
+        $list[Document::STATE_EDITED]= Helper::l('st_edit') ;
+        $list[Document::STATE_CANCELED]= Helper::l('st_canceled') ;
+        $list[Document::STATE_EXECUTED]= Helper::l('st_executed') ;
+        $list[Document::STATE_CLOSED]= Helper::l('st_closed') ;
+        $list[Document::STATE_APPROVED]= Helper::l('st_approved') ;
+        $list[Document::STATE_WA]= Helper::l('st_wa') ;
+        $list[Document::STATE_INSHIPMENT]= Helper::l('st_inshipment') ;
+        $list[Document::STATE_FINISHED]= Helper::l('st_finished') ;
+        $list[Document::STATE_DELIVERED]= Helper::l('st_delivered') ;
+        $list[Document::STATE_REFUSED]= Helper::l('st_refused') ;
+        $list[Document::STATE_SHIFTED]= Helper::l('st_shifted') ;
+        $list[Document::STATE_FAIL]= Helper::l('st_fail') ;
+        $list[Document::STATE_INPROCESS]= Helper::l('st_inprocess') ;
+        $list[Document::STATE_READYTOSHIP]= Helper::l('st_rdshipment') ;
+    
+ 
+        return $list;
+         
+    }
+
 
     public function checkUniqueNumber() {
         $this->document_number = trim($this->document_number);

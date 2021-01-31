@@ -472,7 +472,7 @@ class ARMPos extends \App\Pages\Base
         $store = $this->form1->store->getValue();
 
 
-        $price = $item->getPrice($this->pos->pricetype, $store);
+        $price = $item->getPrice( $this->form1->pricetype->getValue(), $store);
         $qty = $item->getQuantity($store);
 
         $this->editdetail->qtystock->setText(H::fqty($qty));

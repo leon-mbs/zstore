@@ -39,8 +39,9 @@ class DocList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('DocList')) {
             return;
         }
-
-
+     System::setErrorMsg(H::l('aclnoaccessviewreg', 'xxx'));
+            App::RedirectError();
+          return;
         $filter = Filter::getFilter("doclist");
         if ($filter->to == null) {
             $filter->to = time() + (3 * 24 * 3600);
@@ -360,14 +361,14 @@ class DocList extends \App\Pages\Base
         if ($sender->id == "bap") {
             $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
             $this->_doc->updateStatus($newstate);
-
-
+      
             $user = System::getUser();
 
             $n = new \App\Entity\Notify();
             $n->user_id = $this->_doc->user_id;
             $n->dateshow = time();
-            $n->message = "Пользователь <b>{$user->username}</b>  утвердил документ " . $this->_doc->document_number;
+            $n->message =H::l("userapprooveddoc",$user->username,$this->_doc->document_number);
+            
             $n->save();
         }
         if ($sender->id == "bref") {
@@ -380,7 +381,7 @@ class DocList extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = $this->_doc->user_id;
             $n->dateshow = time();
-            $n->message = "Пользователь <b>{$user->username}</b>  отклонил документ " . $this->_doc->document_number;
+            $n->message = H::l("userrefuseddoc",$user->username,$this->_doc->document_number) ;
             $n->message .= "<br> " . $text;
             $n->save();
 

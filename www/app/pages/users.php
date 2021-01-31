@@ -29,7 +29,7 @@ class Users extends \App\Pages\Base
         if (System::getUser()->rolename != 'admins') {
 
             $this->setError('onlyadmisaccess');
-            App::RedirectHome();
+            App::RedirectError();
             return false;
         }
 

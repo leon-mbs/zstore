@@ -144,7 +144,8 @@ class DocView extends \Zippy\Html\PageFragment
         $this->dw_paylist->Reload();
 
         //проводки
-        $this->_itemlist = \App\Entity\Entry::find('stock_id > 0 and coalesce(quantity,0) <> 0  and document_id=' . $this->_doc->document_id);
+        $sql = " select s.stock_id, s.itemname,s.item_code,e.quantity,e.amount  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $this->_doc->document_id ." order  by  s.itemname";
+        $this->_itemlist = \App\Entity\Entry::findBySql($sql) ;
         $this->dw_itemlist->Reload();
 
 
@@ -179,13 +180,13 @@ class DocView extends \Zippy\Html\PageFragment
     //вывод строки  проводок
     public function itemListOnRow($row) {
         $entry = $row->getDataItem();
-        $stock = \App\Entity\Stock::load($entry->stock_id);
-        $row->add(new Label('itname', $stock->itemname));
-        $row->add(new Label('itcode', $stock->item_code));
-        $row->add(new Label('itqty', H::fqty($entry->quantity)));
-        $row->add(new Label('itprice', H::fa($entry->amount / $entry->quantity)));
-        $row->add(new Label('itamount', H::fa($entry->amount)));
 
+        $row->add(new Label('itname', $entry->itemname));
+        $row->add(new Label('itcode', $entry->item_code));
+        $row->add(new Label('itqty',    H::fqty($entry->quantity)));
+        $row->add(new Label('itprice',  H::fa($entry->amount / $entry->quantity)));
+        $row->add(new Label('itamount', H::fa($entry->amount)));
+ 
     }
 
     /**
@@ -276,9 +277,9 @@ class DocView extends \Zippy\Html\PageFragment
 
             $n = new \App\Entity\Notify();
             $n->user_id = $adr;
-            $n->message = "<b>Новый  коментарий к документу:</b> {$this->_doc->meta_desc} {$this->_doc->document_number}  ";
+            $n->message =   "<b>".H::l("newdoccomment").":</b> {$this->_doc->meta_desc} {$this->_doc->document_number}  ";
             $n->message .= "<br> {$msg->message} ";
-            $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">Ответить</a> ";
+            $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$this->_doc->document_id}\">".H::l("toanswer")."</a> ";
             $n->sender_name = $user->username;
             $n->save();
         }

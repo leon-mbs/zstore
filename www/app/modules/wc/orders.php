@@ -28,7 +28,7 @@ class Orders extends \App\Pages\Base
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(H::l('noaccesstopage'));
 
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
 

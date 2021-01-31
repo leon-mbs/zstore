@@ -2,9 +2,10 @@
 
 namespace App\API;
 
-class common extends JsonRPC
+class common extends \App\API\Base\JsonRPC
 {
-
+     
+    //получение  токена
     public function token($args) {
 
 
@@ -25,8 +26,8 @@ class common extends JsonRPC
             $jwt = \Firebase\JWT\JWT::encode($token, $key);
 
 
-        } else {
-            throw new  \Exception('Неверный логин', 1000);
+        } else {                                  
+            throw new  \Exception(\App\Helper::l('invalidlogin'), -1000);
         }
 
         return $jwt;

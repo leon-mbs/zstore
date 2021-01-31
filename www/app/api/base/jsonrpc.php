@@ -1,7 +1,7 @@
 <?php
 
-namespace App\API;
-
+namespace App\API\Base;
+        
 /**
  * Base class for Json RPC
  * based  on https://github.com/datto/php-json-rpc
@@ -13,9 +13,12 @@ abstract class JsonRPC
 
     public function Execute() {
 
-
+      
         $request = file_get_contents('php://input');
-
+      // $request = '{"jsonrpc": "2.0", "method": "token", "params": {"login":"admin","password":"admin"}, "id": 1}';
+       //$request = '{"jsonrpc": "2.0", "method": "checkstatus", "params":{"numbers":["ТТН-00011","ТТН00034"] },   "id": 1}';
+        
+   
         if (!is_string($request)) {
             $response = self::parseError();
         } else {
@@ -23,7 +26,7 @@ abstract class JsonRPC
             $response = $this->processInput($json);
         }
 
-
+       
         if ($response != null) {
             echo json_encode($response, JSON_UNESCAPED_UNICODE);
         } else {
@@ -35,14 +38,14 @@ abstract class JsonRPC
     protected function checkAcess() {
         $api = \App\System::getOptions('api');
         $user = null;
-
+           
         //Bearer
         if ($api['atype'] == 1) {
 
             $jwt = "";
             $headers = apache_request_headers();
             foreach ($headers as $header => $value) {
-                if ($header == "Authorization") {
+                if ($header == "Authorization" ) {
                     $jwt = str_replace("Bearer ", "", $value);
                     $jwt = trim($jwt);
                     break;
@@ -53,7 +56,9 @@ abstract class JsonRPC
 
 
             $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
-
+            if($decoded->exp<time()) {
+                throw new  \Exception(\App\Helper::l('apitokenexpired'), -1002);   
+            }
             $user = \App\Entity\User::load($decoded->user_id);
         }
         //Basic
@@ -61,16 +66,15 @@ abstract class JsonRPC
             $user = \App\Helper::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 
         }
-        //без  авторризации
+        //без  авторизации
         if ($api['atype'] == 3) {
             $user = \App\Entity\User::getByLogin('admin');
         }
         if ($user == null) {
-            throw new  \Exception('Пользователь не  найден', 1001);
+            throw new  \Exception(\App\Helper::l('apiusernotfound'), -1001);
         }
         \App\System::setUser($user);
-
-
+           
         return true;
 
     }
@@ -97,7 +101,7 @@ abstract class JsonRPC
         if (count($input) === 0) {
             return self::requestError();
         }
-
+        $this->checkAcess() ;
         if (isset($input[0])) {
             return $this->processBatchRequests($input);
         }
@@ -207,15 +211,16 @@ abstract class JsonRPC
      */
     private function processQuery($id, $method, $arguments) {
 
-
+       
         if (method_exists($this, $method) == false) {
-            return self::error($id, -32601, "Method '{$method}' not found");
+            return self::error($id, -1005,\App\Helper::l('apimethodnotfound',$method) );
         }
 
         try {
-
-            $result = @call_user_func_array(array($this, $method), array('args' => $arguments));
-        } catch(\Exception $e) {
+      
+           $result = $this->{$method}($arguments);
+            
+        } catch(\Throwable $e) {
             return self::error($id, $e->getCode(), $e->getMessage());
         }
 
@@ -247,7 +252,7 @@ abstract class JsonRPC
      * Returns an error object.
      */
     private static function parseError() {
-        return self::error(null, -32700, 'Parse error');
+        return self::error(null, -1003,\App\Helper::l('apiinvalidformat'));
     }
 
     /**
@@ -262,7 +267,7 @@ abstract class JsonRPC
      * Returns an error object.
      */
     private static function requestError($id = null) {
-        return self::error($id, -32600, 'Invalid Request');
+        return self::error($id, -1004, \App\Helper::l('apiinvalidrequest'));
     }
 
     /**

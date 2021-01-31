@@ -2,7 +2,7 @@
 
 namespace App\API;
 /**
- * возвращает  описание   API
+ * возвращает  описание   API  по  адресу  /api/help
  */
 class help
 {

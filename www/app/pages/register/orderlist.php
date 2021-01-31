@@ -177,7 +177,7 @@ class OrderList extends \App\Pages\Base
         $state = $this->_doc->state;
 
         //доставлен
-        $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
+        $closed = $this->_doc->checkStates(array(Document::STATE_CLOSED));
         //выполняется
         $inproc = $this->_doc->checkStates(array(Document::STATE_INPROCESS));
         //аннулирован
@@ -190,8 +190,8 @@ class OrderList extends \App\Pages\Base
         $list = $this->_doc->getChildren('Invoice');
         $invoice = count($list) > 0;
 
-        $this->statuspan->statusform->bttn->setVisible(!$sent);
-        $this->statuspan->statusform->binv->setVisible(!$sent);
+        $this->statuspan->statusform->bttn->setVisible(!$closed);
+        $this->statuspan->statusform->binv->setVisible(!$closed);
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -241,7 +241,7 @@ class OrderList extends \App\Pages\Base
 
 
         $this->_tvars['askclose'] = false;
-        if ($inproc == false || $sent == false) {
+        if ($inproc == false || $closed == false) {
             $this->_tvars['askclose'] = true;
         }
     }

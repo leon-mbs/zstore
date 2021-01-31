@@ -25,7 +25,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg(H::l('onlyadminpage'));
-            App::RedirectHome();
+            App::RedirectError();
             return false;
         }
 
@@ -244,7 +244,7 @@ class Options extends \App\Pages\Base
         $this->api->aexp->setVisible($type == 1);
         $this->api->akey->setVisible($type == 1);
 
-        $this->goAnkor('api');
+      //  $this->goAnkor('atype');
 
         
 
@@ -252,9 +252,9 @@ class Options extends \App\Pages\Base
 
     public function saveApiOnClick($sender) {
         $api = array();
-        $printer['exp'] = $this->api->aexp->getText();
-        $printer['key'] = $this->api->akey->getText();
-        $printer['atype'] = $this->api->atype->getValue();
+        $api['exp'] = $this->api->aexp->getText();
+        $api['key'] = $this->api->akey->getText();
+        $api['atype'] = $this->api->atype->getValue();
 
         System::setOptions("api", $api);
         $this->setSuccess('saved');
