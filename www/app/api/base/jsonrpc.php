@@ -1,7 +1,7 @@
 <?php
 
 namespace App\API\Base;
-        
+
 /**
  * Base class for Json RPC
  * based  on https://github.com/datto/php-json-rpc
@@ -11,14 +11,16 @@ abstract class JsonRPC
 
     const VERSION = '2.0';
 
-    public function Execute() {
+    public function Execute()
+    {
 
-      
+
         $request = file_get_contents('php://input');
-      // $request = '{"jsonrpc": "2.0", "method": "token", "params": {"login":"admin","password":"admin"}, "id": 1}';
-       //$request = '{"jsonrpc": "2.0", "method": "checkstatus", "params":{"numbers":["ТТН-00011","ТТН00034"] },   "id": 1}';
-        
-   
+        // $request = '{"jsonrpc": "2.0", "method": "token", "params": {"login":"admin","password":"admin"}, "id": 1}';
+        // $request = '{"jsonrpc": "2.0", "method": "checkstatus", "params":{"numbers": ["ID0001"]}, "id": 1}';
+      //  $request = '{"jsonrpc": "2.0", "method": "createorder", "params":{"number":"ID0001","phone":"0971111111","ship_address":"Харьков","items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}] },   "id": 1}';
+
+
         if (!is_string($request)) {
             $response = self::parseError();
         } else {
@@ -26,7 +28,7 @@ abstract class JsonRPC
             $response = $this->processInput($json);
         }
 
-       
+
         if ($response != null) {
             echo json_encode($response, JSON_UNESCAPED_UNICODE);
         } else {
@@ -35,17 +37,18 @@ abstract class JsonRPC
     }
 
 
-    protected function checkAcess() {
+    protected function checkAcess()
+    {
         $api = \App\System::getOptions('api');
         $user = null;
-           
+
         //Bearer
         if ($api['atype'] == 1) {
 
             $jwt = "";
             $headers = apache_request_headers();
             foreach ($headers as $header => $value) {
-                if ($header == "Authorization" ) {
+                if ($header == "Authorization") {
                     $jwt = str_replace("Bearer ", "", $value);
                     $jwt = trim($jwt);
                     break;
@@ -56,8 +59,8 @@ abstract class JsonRPC
 
 
             $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
-            if($decoded->exp<time()) {
-                throw new  \Exception(\App\Helper::l('apitokenexpired'), -1002);   
+            if ($decoded->exp < time()) {
+                throw new  \Exception(\App\Helper::l('apitokenexpired'), -1002);
             }
             $user = \App\Entity\User::load($decoded->user_id);
         }
@@ -74,7 +77,7 @@ abstract class JsonRPC
             throw new  \Exception(\App\Helper::l('apiusernotfound'), -1001);
         }
         \App\System::setUser($user);
-           
+
         return true;
 
     }
@@ -91,7 +94,8 @@ abstract class JsonRPC
      * Returns an array of response/error objects when multiple queries are made.
      * Returns null when no response is necessary.
      */
-    private function processInput($input) {
+    private function processInput($input)
+    {
 
 
         if (!is_array($input)) {
@@ -101,7 +105,7 @@ abstract class JsonRPC
         if (count($input) === 0) {
             return self::requestError();
         }
-        $this->checkAcess() ;
+        $this->checkAcess();
         if (isset($input[0])) {
             return $this->processBatchRequests($input);
         }
@@ -120,7 +124,8 @@ abstract class JsonRPC
      * Returns an array of response/error objects when multiple queries are made.
      * Returns null when no response is necessary.
      */
-    private function processBatchRequests($input) {
+    private function processBatchRequests($input)
+    {
         $replies = array();
 
         foreach ($input as $request) {
@@ -148,7 +153,8 @@ abstract class JsonRPC
      * Returns a response object or an error object.
      * Returns null when no response is necessary.
      */
-    private function processRequest($request) {
+    private function processRequest($request)
+    {
         if (!is_array($request)) {
             return self::requestError();
         }
@@ -209,18 +215,19 @@ abstract class JsonRPC
      * @return array
      * Returns a response object or an error object.
      */
-    private function processQuery($id, $method, $arguments) {
+    private function processQuery($id, $method, $arguments)
+    {
 
-       
+
         if (method_exists($this, $method) == false) {
-            return self::error($id, -1005,\App\Helper::l('apimethodnotfound',$method) );
+            return self::error($id, -1005, \App\Helper::l('apimethodnotfound', $method));
         }
 
         try {
-      
-           $result = $this->{$method}($arguments);
-            
-        } catch(\Throwable $e) {
+
+            $result = $this->{$method}($arguments);
+
+        } catch (\Throwable $e) {
             return self::error($id, $e->getCode(), $e->getMessage());
         }
 
@@ -238,7 +245,8 @@ abstract class JsonRPC
      * @param array $arguments
      * Array of arguments that will be passed to the method.
      */
-    private function processNotification($method, $arguments) {
+    private function processNotification($method, $arguments)
+    {
         if (method_exists($this, $method)) {
             @call_user_func_array(array($this, $method), $arguments);
         }
@@ -251,8 +259,9 @@ abstract class JsonRPC
      * @return array
      * Returns an error object.
      */
-    private static function parseError() {
-        return self::error(null, -1003,\App\Helper::l('apiinvalidformat'));
+    private static function parseError()
+    {
+        return self::error(null, -1003, \App\Helper::l('apiinvalidformat'));
     }
 
     /**
@@ -266,7 +275,8 @@ abstract class JsonRPC
      * @return array
      * Returns an error object.
      */
-    private static function requestError($id = null) {
+    private static function requestError($id = null)
+    {
         return self::error($id, -1004, \App\Helper::l('apiinvalidrequest'));
     }
 
@@ -290,9 +300,10 @@ abstract class JsonRPC
      * @return array
      * Returns an error object.
      */
-    protected static function error($id, $code, $message, $data = null) {
+    protected static function error($id, $code, $message, $data = null)
+    {
         $error = array(
-            'code'    => $code,
+            'code' => $code,
             'message' => $message
         );
 
@@ -302,8 +313,8 @@ abstract class JsonRPC
 
         return array(
             'jsonrpc' => self::VERSION,
-            'id'      => $id,
-            'error'   => $error
+            'id' => $id,
+            'error' => $error
         );
     }
 
@@ -320,11 +331,12 @@ abstract class JsonRPC
      * @return array
      * Returns a response object.
      */
-    private static function response($id, $result) {
+    private static function response($id, $result)
+    {
         return array(
             'jsonrpc' => self::VERSION,
-            'id'      => $id,
-            'result'  => $result
+            'id' => $id,
+            'result' => $result
         );
     }
 

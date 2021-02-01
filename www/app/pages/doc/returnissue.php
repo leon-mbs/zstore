@@ -163,7 +163,7 @@ class ReturnIssue extends \App\Pages\Base
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -185,10 +185,10 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
 
 
-        $this->editdetail->edittovar->setKey($item->stock_id);
+        $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
-        $this->_rowid = $item->stock_id;
+        $this->_rowid = $item->item_id;
 
     }
 

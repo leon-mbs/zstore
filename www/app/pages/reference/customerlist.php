@@ -111,7 +111,7 @@ class CustomerList extends \App\Pages\Base
 
         if (strlen($search) > 0) {
             $search = Customer::qstr('%' . $search . '%');
-            $where .= " and (customer_name like  {$search} or phone like {$search}    )";
+                $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
         }
         if ($type == 1) {
             $where .= " and detail like '%<type>1</type>%'    ";

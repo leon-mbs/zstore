@@ -354,9 +354,14 @@
   "apinodocstate":"Неверный статус документа" ,
   "apinodoctype":"Неверный тип документа",
   "apiinvalidparameters":"Неверные параметры",
-  "apiasccancel":"Пользователь %s запросил  отмену документа %s. причина: %s",
+  "apiasccancel":"Пользователь %s запросил  удаление документа %s. причина: %s",
   "apinodoc":"Документ не найден" ,
   "apinoitems":"Не найдены  ТМЦ" ,
-  "apinumberexists":"Номер документа %s уже существует"
+  "apiitemnotfound":"ТМЦ c кодом %s не найден " ,
+  "apicustnotfound":"Контрагент не  найден" ,
+  "apinumberexists":"Документ с  номером %s уже  существует" ,
+  "apinumber":"Не задан  номер документа"  ,
+  "apientername":"Не задано ниаменование"  ,
+  "apientercode":"Не задан  артикул"
   
 }

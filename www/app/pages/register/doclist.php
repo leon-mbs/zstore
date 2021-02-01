@@ -39,9 +39,7 @@ class DocList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('DocList')) {
             return;
         }
-     System::setErrorMsg(H::l('aclnoaccessviewreg', 'xxx'));
-            App::RedirectError();
-          return;
+ 
         $filter = Filter::getFilter("doclist");
         if ($filter->to == null) {
             $filter->to = time() + (3 * 24 * 3600);

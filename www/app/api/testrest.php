@@ -9,7 +9,8 @@ namespace App\API;
 class TestRest extends \App\API\Base\RestFul
 {
 
-    public function get($params) {
+    public function get($params)
+    {
 
         $this->TextAnswer("Hi");
     }

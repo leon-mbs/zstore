@@ -9,7 +9,8 @@ namespace App\API;
 class TestClass
 {
 
-    public function Hello($p) {
+    public function Hello($p)
+    {
 
         //если  POST
         $request = file_get_contents('php://input');

@@ -4,9 +4,10 @@ namespace App\API;
 
 class common extends \App\API\Base\JsonRPC
 {
-     
+
     //получение  токена
-    public function token($args) {
+    public function token($args)
+    {
 
 
         $api = \App\System::getOptions('api');
@@ -19,14 +20,14 @@ class common extends \App\API\Base\JsonRPC
 
             $token = array(
                 "user_id" => $user->user_id,
-                "iat"     => time(),
-                "exp"     => time() + $exp * 60
+                "iat" => time(),
+                "exp" => time() + $exp * 60
             );
 
             $jwt = \Firebase\JWT\JWT::encode($token, $key);
 
 
-        } else {                                  
+        } else {
             throw new  \Exception(\App\Helper::l('invalidlogin'), -1000);
         }
 
