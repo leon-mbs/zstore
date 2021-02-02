@@ -17,15 +17,27 @@ class docs extends \App\API\Base\JsonRPC
         return $list;
     }
 
+   //список  филиалов
+    public function branchlist()
+    {
+        $list = \App\Entity\Branch::findArray('branch_name','','branch_name') ;
+
+        return $list;
+    }
+
 
     //записать ордер
     public function createorder($args)
     {
+        $options = \App\System::getOptions('common');
 
         if (strlen($args['number']) == 0) {
             throw  new  \Exception(H::l("apinumber"));  //не задан  номер
 
         }
+        
+        
+        
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
@@ -41,6 +53,15 @@ class docs extends \App\API\Base\JsonRPC
                 $doc->customer_id = $args['customer_id'];
         }
         $doc = Document::create('Order');
+        
+        if($options['usebranch']==1   ) {
+            if($args['branch_id']>0) {
+               $doc->branch_id = $args['branch_id']; 
+            } else {
+               throw  new  \Exception(H::l("apinobranch"));
+            }
+        }        
+        
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->state = Document::STATE_NEW;
@@ -206,61 +227,5 @@ class docs extends \App\API\Base\JsonRPC
     }
 
 
-    /*
-     //список  документов
-    public function doclist($args){
-       if(in_array($args['type'],array('Order','TTN'))==false) {
-            throw  new  \Exception('apinodoctype');
-       }
-       $st = Document::getStateList() ;
-       if(in_array($args['status'],array_keys($st))==false) {
-            throw  new  \Exception('apinodocstate');
-       }
-
-       $list = array();
-       $docs = Document::find("state = {$args['status']} and meta_name='".$args['type']."'","document_number");
-       foreach($docs as $doc) {
-          $d = array();
-          $d['document_id']    =  $doc->document_id;
-          $d['document_number']  =  $doc->document_number;
-          $d['document_date']  =  H::fd($doc->document_date);
-          $d['customer_id']    =  $doc->customer_id;
-          $d['customer_name']  =  $doc->customer_name;
-          $d['description']    = base64_encode($doc->notes);
-          $d['delivery']    = $doc->headerdata["delivery"];
-          $d['ship_address']    = $doc->headerdata["ship_address"];
-          $d['total']    =  H::fa($doc->amount) ;
-          $d['status']    =   $doc->state  ;
-          $d['statusname']    =  Document::getStateName($doc->state )  ;
-          if($args['type']=='Order') {
-              $d['payamount']    =  H::fa($doc->payamount) ;
-              $d['payed']    =  H::fa($doc->payed) ;
-          }
-          if($args['type']=='TTN') {
-              $d['weight']    =  $doc->headerdata["weight"] ;
-              $d['ship_number']    =  $doc->headerdata["ship_number"] ;
-              $d['ship_amount']    =  H::fa($doc->headerdata["ship_amount"]) ;
-
-          }
-
-          $detail = array();
-          foreach ($doc->unpackDetails('detaildata') as $item) {
-              $detail[] = array(
-                   "item_id"    => $item->item_id,
-                   "itemname"   => $item->itemname,
-                   "item_code"  => $item->item_code,
-                   "quantity"   => H::fqty($item->quantity),
-                   "price"      => H::fa($item->price),
-                   "msr"        => $item->msr,
-                   "amount"     => H::fa($item->quantity * $item->price)
-                 )  ;
-          }
-
-          $d['items'] = $detail;
-          $list[] = $d;
-       }
-
-       return $list;
-    }
-    */
+    
 }

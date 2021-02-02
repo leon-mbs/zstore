@@ -356,12 +356,13 @@
   "apiinvalidparameters":"Неверные параметры",
   "apiasccancel":"Пользователь %s запросил  удаление документа %s. причина: %s",
   "apinodoc":"Документ не найден" ,
-  "apinoitems":"Не найдены  ТМЦ" ,
-  "apiitemnotfound":"ТМЦ c кодом %s не найден " ,
+  "apinoitems":"Не введены позиции" ,
+  "apiitemnotfound":"ТМЦ c артикулом %s не найден " ,
   "apicustnotfound":"Контрагент не  найден" ,
   "apinumberexists":"Документ с  номером %s уже  существует" ,
   "apinumber":"Не задан  номер документа"  ,
-  "apientername":"Не задано ниаменование"  ,
+  "apinobranch":"Не задан филиал"  ,
+  "apientername":"Не задано наименование"  ,
   "apientercode":"Не задан  артикул"
   
 }
