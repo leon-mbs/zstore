@@ -261,8 +261,8 @@ class MoveItem extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-            App::RedirectBack();
-        } catch(\Exception $ee) {
+            
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
@@ -270,7 +270,8 @@ class MoveItem extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
 
             return;
-        }
+        } 
+        App::RedirectBack();
     }
 
     /**

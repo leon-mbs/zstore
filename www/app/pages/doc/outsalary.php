@@ -128,7 +128,7 @@ class OutSalary extends \App\Pages\Base
             }
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

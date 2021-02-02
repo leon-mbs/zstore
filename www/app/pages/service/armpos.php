@@ -710,7 +710,7 @@ class ARMPos extends \App\Pages\Base
 
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
             $conn->CommitTrans();
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

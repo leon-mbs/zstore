@@ -110,7 +110,7 @@ class PPOHelper
 
         if ($signed['success'] == true) {
 
-            file_put_contents("d:/leon/denwer72/home/local.gost/www/signedask", $signed['data']);
+          
             $request = curl_init();
 
             curl_setopt_array($request, [
@@ -508,7 +508,7 @@ class PPOHelper
 
         $xml = $report->generate($header);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        file_put_contents("z:/xml.xml", $xml);
+        
 
         $ret = self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
         if ($ret['success'] == true) {

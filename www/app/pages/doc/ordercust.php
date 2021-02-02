@@ -278,7 +278,7 @@ class OrderCust extends \App\Pages\Base
             } else {
                 App::Redirect("\\App\\Pages\\Register\\OrderCustList");
             }
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

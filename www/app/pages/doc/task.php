@@ -341,7 +341,7 @@ class Task extends \App\Pages\Base
             } else {
                 App::Redirect("\\App\\Pages\\Register\\TaskList");
             }
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

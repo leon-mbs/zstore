@@ -443,12 +443,12 @@ class Document extends \ZCL\DB\Entity
 
     public function checkUniqueNumber() {
         $this->document_number = trim($this->document_number);
-        $class = explode("\\", get_called_class());
-        $metaname = $class[count($class) - 1];
-        $doc = Document::getFirst("meta_name='" . $metaname . "'  and  document_number = '{$this->document_number}' ");
+       // $class = explode("\\", get_called_class());
+       // $metaname = $class[count($class) - 1];
+        $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' ");
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
-                return false;
+                return;
             }
         }
         return true;
@@ -462,16 +462,16 @@ class Document extends \ZCL\DB\Entity
     public function nextNumber($branch_id = 0) {
 
 
-        $class = explode("\\", get_called_class());
-        $metaname = $class[count($class) - 1];
-        $doc = Document::getFirst("meta_name='" . $metaname . "'", "document_id desc");
+       // $class = explode("\\", get_called_class());
+      //  $metaname = $class[count($class) - 1];
+       // $doc = Document::getFirst("meta_id=" . $this->meta_id , "document_id desc");
         $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($branch_id > 0) {
             $branch = " and branch_id=" . $branch_id;
         }
 
-        $sql = "select document_number from  documents_view where   meta_name='{$metaname}'   {$branch}  order  by document_id desc limit 0,1";
+        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  order  by document_id desc limit 0,1";
         $prevnumber = $conn->GetOne($sql);
         if (strlen($prevnumber) == 0) {
             $prevnumber = $this->getNumberTemplate();

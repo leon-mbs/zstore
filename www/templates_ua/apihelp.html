@@ -9,70 +9,68 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-xl-10  pl-4 pr-4">
-            <h2>Описание API</h2>
-            <p>API предназначено для экспорта заказов и ТТН(товарно-транспортных накдажных) в складскую систему и
-                отслеживания их статусов.
+            <h2>Опис   API</h2>
+            <p>API призначено для  експорту замовлень та ТТН(товарно-транспортних накладних) в складську систему та 
+               відслідковування  їх статусів.
 
             </p>
-            <h3>Формат обмена</h3>
-            <p>В качестве протокола в API используется <a target="_blank" href="https://www.jsonrpc.org/specification">JSON
-                RPC</a>.
-                <br>Сообщение отправляется методом POST и в общем случае имеет вид:
+            <h3>Формат обміну</h3>
+            <p>В  якості протоколу в API використовєтся <a target="_blank" href="https://www.jsonrpc.org/specification">JSON                RPC</a>.
+                <br>Повідомлення відправляєтся методом POST и в загальному має вигляд:
                 <br><code>{"jsonrpc": "2.0", "method": "echo", "params": {"say": "Привет"}, "id": 1}</code>
             <ul>
-                <li>jsonrpc - всегда "2.0"</li>
-                <li>method - вызываемая функция</li>
-                <li>params - параметры (необязательное поле)</li>
-                <li>id - идентификатор запроса</li>
+                <li>jsonrpc - завжди "2.0"</li>
+                <li>method - функция що викликаєтся</li>
+                <li>params - параметри (необов'язкове поле)</li>
+                <li>id - ідентификатор запиту</li>
             </ul>
-            Идентификатор запроса возвращается в ответе и может быть любым но уникальным в случае пакетного (batch)
-            запроса, поскольку сервер может быть асинхронным и вернуть ответы в произвольном порядке. В случае
-            отсутствия идентификатора
-            считается что запрос - нотификация то есть не требует ответа от сервера.
-            <br> Пакетный запрос
+            Ідентификатор запиту повертаєтся  в  відповіді  та  може бути  бедья яким  але унікальним  в  випадку  пакетного (batch)
+            запиту, оскільки сервер  може  бути асинхронним та повернути відповіді в  довільному  порядку. В випадку
+            відсутності ідентифікатору вважаєтся що - запит є нотифікацією і  не потребує відповіді.
+            <br> Пакетний  запит
             <br><code>[{"jsonrpc": "2.0", "method": "echo", "params": {"say": "Привет"}, "id": 1}, {"jsonrpc": "2.0",
             "method": "echo", "params": {"say": "Пока"}, "id": 1} ]</code>
-            <br> Ответ имеет в общем случае вид
+            <br> Відповідь  має  вигляд
             <br>
-            <code> {"jsonrpc": "2.0", "result": {"answer": "Привет"}, "id": 1} </code>
+            <code> {"jsonrpc": "2.0", "result": {"answer": "Привіт"}, "id": 1} </code>
             <ul>
-                <li>jsonrpc - всегда "2.0"</li>
-                <li>result - ответ</li>
-                <li>error - в случае ошибки возвращается вместо result</li>
-                <li>id - соответствующий идентификатор из запроса</li>
+                <li>jsonrpc - завжди "2.0"</li>
+                <li>result - відповідь</li>
+                <li>error - повертаєтся  замість result якщо  помилка</li>
+                <li>id - відповідний  ідентифікатор  з запиту</li>
             </ul>
             </p>
-            <h3>Авторизация</h3>
+            <h3>Авторизація</h3>
             <p>
-                Тип авторизации задается в настройках системы и может быть на основе JWT токена, Basic аутентификации
-                или авторизация может не использоватся (внутри корпоративной сети например).
-                Bearer и Basic аутентификация отправяется стандартным образом в заголовке Authorization.
-                Для Bearer предварительно необходимо получить JWT токен.
+                Тип авторизації задаєтся  в  налаштуваннях та  може бути на на  підставі JWT токену, Basic аутентификації
+                або авторизация может не використовуватись (наприклад  в локальній мережі).
+                Bearer и Basic аутентификація відправляются  стардартним  чином в  заголовку Authorization.
+                Для Bearer попередньо  необхідно  отримати   JWT токен.
             </p>
-            <h4>Список функций</h4>
-            Для логического разделения запросов используется несколько точек входа (endpoints)
+            <h4>Перелік функцій</h4>
+            Для логічного  группавання  запитів  використовуются  окремі  точки  входу (endpoints)
             <table class="table  table-sm table-bordered">
                 <tr>
-                    <th class="text-nowrap text-center  ">Название</th>
+                    <th class="text-nowrap text-center  ">Назва</th>
                     <th class="text-nowrap text-center">URL (endpoint)</th>
                     <th class="text-nowrap text-center">Команда</th>
-                    <th class="text-nowrap text-center">Параметры</th>
-                    <th class="text-nowrap text-center"> Пример</th>
-                    <th class="text-nowrap text-center"> Примечание</th>
+                    <th class="text-nowrap text-center">Параметри</th>
+                    <th class="text-nowrap text-center"> Приклад</th>
+                    <th class="text-nowrap text-center"> Примітка</th>
                 </tr>
 
                 <tr>
-                    <td class="  text-bold">Получить токен</td>
+                    <td class="  text-bold">Отримати токен</td>
                     <td>/api/common</td>
                     <td>token</td>
-                    <td class="text-nowrap">login - логин
+                    <td class="text-nowrap">login - логін
                         <br>password - пароль
                     </td>
                     <td>{"login":"admin","password":"admin"}</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="  text-bold">Список складов</td>
+                    <td class="  text-bold">Список складів</td>
                     <td>/api/items</td>
                     <td>storelist</td>
                     <td></td>
@@ -80,7 +78,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="  text-bold">Список категорий</td>
+                    <td class="  text-bold">Список категорій</td>
                     <td>/api/items</td>
                     <td>catlist</td>
                     <td></td>
@@ -88,7 +86,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="  text-bold">Список артикулов</td>
+                    <td class="  text-bold">Список артикулів</td>
                     <td>/api/items</td>
                     <td>articlelist</td>
                     <td></td>
@@ -99,45 +97,45 @@
                     <td class="  text-bold">Список ТМЦ</td>
                     <td>/api/items</td>
                     <td>itemlist</td>
-                    <td class="text-nowrap">cat_id - id категории</td>
+                    <td class="text-nowrap">cat_id - id категорії</td>
                     <td>{"cat_id":"10"}</td>
-                    <td>Если категория не задана возвращается весь список. Поле descriptiion
-                        возвращается в кодировке base64
+                    <td>Якщо категорія не задана повертаєтся весь список. Поле descriptiion
+                        повертаєтся  в  кодуванні base64
                     </td>
                 </tr>
                 <tr>
-                    <td class="  text-bold">Текущие количества на складах</td>
+                    <td class="  text-bold">Наявні кількость на складах</td>
                     <td>/api/items</td>
                     <td>getqty</td>
-                    <td class="text-nowrap">store_id - id склада</td>
+                    <td class="text-nowrap">store_id - id складу</td>
                     <td>{"store_id":"1"}</td>
-                    <td>Если склад не задан возвращается весь список.</td>
+                    <td>Якщо склад не задано  повертаєтся весь список.</td>
                 </tr>
                 <tr>
-                    <td class="  text-bold">Записать ТМЦ</td>
+                    <td class="  text-bold">Записати ТМЦ</td>
                     <td>/api/items</td>
                     <td>save</td>
-                    <td class="text-nowrap">itemname - наименование, обязательное поле
-                        <br>item_code - артикул, обязательное поле
+                    <td class="text-nowrap">itemname - найменування, обов'язкове поле
+                        <br>item_code - артикул, обов'язкове поле
                         <br>bar_code - штрих-код
                         <br>measure - ед. измерения
-                        <br>manufacturer - производитель, бренд
-                        <br>cat_id - id категории
-                        <br>price1,... - отпускные цены
-                        <br> desсription - описание, кодированное в base64
+                        <br>manufacturer - виробник, бренд
+                        <br>cat_id - id категорії
+                        <br>price1,... - відпускні ціни
+                        <br> desсription - опис,  в base64
                     </td>
                     <td>{
                         "item_code":"К001","bar_code":"К001","itemname":"testapi","description":"","measure":"шт","manufacturer":"",
                         "cat_id":"0","price1":50}
                     </td>
-                    <td>Если артикул (item_code) существует то ТМЦ перезаписывается, если отсутствует то создается новая
-                        запись.
+                    <td>Якщо артикул (item_code) існує то ТМЦ перезаписуєтся, якщо відсутній то створюєтся новий 
+                        запис.
                     </td>
                 </tr>
 
 
                 <tr>
-                    <td class="  text-bold">Список контрагентов</td>
+                    <td class="  text-bold">Список контрагентів</td>
                     <td>/api/customers</td>
                     <td>list</td>
                     <td></td>
@@ -145,50 +143,48 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="  text-bold">Записать контрагента</td>
+                    <td class="  text-bold">Записати контрагента</td>
                     <td>/api/customers</td>
                     <td>save</td>
                     <td class="text-nowrap">customer_id - id контрагента
-                        <br> customer_name - наименование, обязательное поле
-                        <br> phone - телефон, рекомендуется вводить в виде 10 цифр
+                        <br> customer_name - найменування, обов1язкове поле
+                        <br> phone - телефон, рекомендується вводити як 10 цифр
                         <br> email - email
                         <br> city - город
-                        <br> address - адрес
-                        <br> desсription - описание, кодированное в base64
+                        <br> address - адреса
+                        <br> desсription - опис,  в base64
                     </td>
 
                     <td> {"customer_id":"8","customer_name":"\"ООО
                         Вектор2\"","phone":"0991111111","email":"test@ukr.net","city":"","address":""}
                     </td>
-                    <td>Если customer_id больше нуля то контрагент перезаписывается, если равно нулю или отсутствует то
-                        создается новый.
+                    <td>Якщо customer_id більше нуля то контрагент перезаписуєтся, якщо дорівнює нулю або відсутній то
+                        створюєтся новий.
                     </td>
 
                 </tr>
                 <tr>
-                    <td class="text-nowrap text-bold">Список статусов документов</td>
+                    <td class="text-nowrap text-bold">Список статусів документів</td>
                     <td>/api/docs</td>
                     <td>statuslist</td>
                     <td></td>
                     <td></td>
-                    <td>Не все статусы подходят ко всем типам документов</td>
+                    <td>Не всіі  статуси  підходять  до  всіх типів документів</td>
                 </tr>
                 <tr>
-                    <td class="  text-bold">Создание заказа если обработка и оплата выполняется в складской системе</td>
+                    <td class="  text-bold">Створення  замовлення  якщо  замовлення обробляєтся  на  стороні складскької системи </td>
                     <td>/api/docs</td>
                     <td>createorder</td>
-                    <td class="text-nowrap">number - номер документа. Уникальное значение, связаное с заказом
-                        экспортирующей системы. Обязательное поле
-                        <br> phone - телефон, на случай если контакт отличается от телефона контрагента
-                        <br> email - email, на случай если контакт отличается от email контрагента
-                        <br> ship_address - адрес доставки, и прочие данные доставки
-                        <br> decription - коментарий в base64
-                        <br> amount - итого по документу которое к оплате. На слчучай если отличается от итогов по
-                        позициям (например изза скидки)
-                        <br> items - список позиций
+                    <td class="text-nowrap">number - номер документу. Унікальне значення  пов'язане  з  замовленням  в  основній системі
+                        <br> phone - телефон, на випадок якщо телефон контакту відрізняєтся від телефона контрагента
+                        <br> email - email, на випадок якщо email контакту відрізняєтся від email контрагента
+                        <br> ship_address - адреса доставки, та  інші дані доставки
+                        <br> decription - коментар в base64
+                        <br> amount - всього по документу що  до оплати. На випадок  якщо  відрізняется  від  всього  по  позаціях (наприклад  зза  снижки)
+                        <br> items - список позицій
                         <br> item_code - артикул
-                        <br> quantity - количество
-                        <br> price - цена
+                        <br> quantity - кількість
+                        <br> price - ціна
                     </td>
                     <td>
                         {"number":"ID0001","phone":"0971111111","ship_address":"Харьков","items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}]
@@ -196,22 +192,20 @@
                     </td>
                     <td></td>
                 </tr>
-                <tr>
-                    <td class="  text-bold">Создание ТТН если нужно только списание со склада</td>
+               <tr>
+                    <td class="  text-bold">Створення  ТТН якщо  потрібно  тільки списання  зі  складуц </td>
                     <td>/api/docs</td>
                     <td>createttn</td>
-                    <td class="text-nowrap">number - номер документа. Уникальное значение, связаное с заказом
-                        экспортирующей системы. Обязательное поле
-                        <br> phone - телефон, на случай если контакт отличается от телефона контрагента
-                        <br> email - email, на случай если контакт отличается от email контрагента
-                        <br> ship_address - адрес доставки, и прочие данные доставки
-                        <br> decription - коментарий в base64
-                        <br> amount - итого по документу которое к оплате. На случай если отличается от итогов по
-                        позициям (например изза скидки)
-                        <br> items - список позиций
+                    <td class="text-nowrap">number - номер документу. Унікальне значення  пов'язане  з  замовленням  в  основній системі
+                        <br> phone - телефон, на випадок якщо телефон контакту відрізняєтся від телефона контрагента
+                        <br> email - email, на випадок якщо email контакту відрізняєтся від email контрагента
+                        <br> ship_address - адреса доставки, та  інші дані доставки
+                        <br> decription - коментар в base64
+                        <br> amount - всього по документу що  до оплати. На випадок  якщо  відрізняется  від  всього  по  позаціях (наприклад  зза  снижки)
+                        <br> items - список позицій
                         <br> item_code - артикул
-                        <br> quantity - количество
-                        <br> price - цена
+                        <br> quantity - кількість
+                        <br> price - ціна
                     </td>
                     <td>
                         {"number":"ID0001","phone":"0971111111","ship_address":"Харьков","items":[{"item_code":"cbs500-1","quantity":2,"price":234},{"item_code":"ID0018","quantity":2,"price":234}]
@@ -219,58 +213,57 @@
                     </td>
                     <td></td>
                 </tr>
+ 
                 <tr>
-                    <td class="  text-bold">Статусы документов по списку номеров</td>
+                    <td class="  text-bold">Статуси документів по списку номерів</td>
                     <td>/api/docs</td>
                     <td>checkstatus</td>
-                    <td class="text-nowrap">numbers - список номеров документов</td>
+                    <td class="text-nowrap">numbers - список номерів документів</td>
                     <td>{"numbers":["З-00002","ТТН00034"] }</td>
-                    <td>Возвращаются только те документы которые созданы через API. По возвращенным статусам обновляется
-                        состояние заказов в экспортируюшей системе
+                    <td>Повертаются тільки ті документи які  створені через API. По  поверненим  статусам  оновляются статуси замовлень  в  основній системі
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap text-bold">Запрос на удаление.</td>
+                    <td class="text-nowrap text-bold">Запит на видалення.</td>
                     <td>/api/docs</td>
                     <td>cancel</td>
-                    <td class="text-nowrap">number - номер документа<br>reason - причина</td>
+                    <td class="text-nowrap">number - номер документу<br>reason - причина</td>
                     <td>{"number": "ТТН00034","reason":"Тест" }</td>
-                    <td> Запрос администратору склада на удаление документа. Например если заказ отменен но уже
-                        экспортирован.
+                    <td> Запрос адміністратору складу на видалення документу. Наприклад  якщо замовлення відмінено але  вже  експортовано.
                     </td>
                 </tr>
             </table>
-            <h4>Коды ошибок</h4>
+            <h4>Коди помилок</h4>
             <table class="table table-sm" style="width:400px;">
                 <tr>
                     <td>-1000</td>
-                    <td>Неверный логин</td>
+                    <td>Невірний логін</td>
                 </tr>
                 <tr>
                     <td>-1001</td>
-                    <td>Пользователь не найден</td>
+                    <td>Користовач не  знайдений</td>
                 </tr>
                 <tr>
                     <td>-1002</td>
-                    <td>Просроченый токен</td>
+                    <td>Просрочений токен</td>
                 </tr>
                 <tr>
                     <td>-1003</td>
-                    <td>Неверный синтаксис</td>
+                    <td>Невірний синтаксис</td>
                 </tr>
                 <tr>
                     <td>-1004</td>
-                    <td>Неверный запрос</td>
+                    <td>Невірний запит</td>
                 </tr>
                 <tr>
                     <td>-1005</td>
-                    <td>Неверная команда</td>
+                    <td>Невірна команда</td>
                 </tr>
 
             </table>
         </div>
     </div>
 </div>
-  <br> <br>
+ <br> <br>
 </body>
 </html>

@@ -549,7 +549,7 @@ class GoodsIssue extends \App\Pages\Base
             } else {
                 App::Redirect("\\App\\Pages\\Register\\GIList");
             }
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

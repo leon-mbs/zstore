@@ -287,7 +287,7 @@ class ProdReceipt extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

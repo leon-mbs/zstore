@@ -369,7 +369,7 @@ class InvoiceCust extends \App\Pages\Base
             } else {
                 App::Redirect("\\App\\Pages\\Register\\GRList");
             }
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
