@@ -683,7 +683,7 @@ class PPOHelper
         $amount1 = number_format($amount1, 2, '.', '');
         $amount2 = number_format($amount2, 2, '.', '');
         $amount3 = number_format($amount3, 2, '.', '');
-        $sql = "insert into zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon) values ({$pos_id},{$checktype}, {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . ")";
+        $sql = "insert into ppo_zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon) values ({$pos_id},{$checktype}, {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . ")";
 
         $conn->Execute($sql);
 
@@ -692,14 +692,14 @@ class PPOHelper
     public static function clearStat($pos_id) {
         $conn = \ZDB\DB::getConnect();
 
-        $conn->Execute("delete from zformstat where  pos_id=" . $pos_id);
+        $conn->Execute("delete from ppo_zformstat where  pos_id=" . $pos_id);
 
     }
 
     public static function getStat($pos_id, $ret = false) {
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  zformstat where  pos_id=" . $pos_id;
+        $sql = "select count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where  pos_id=" . $pos_id;
         if ($ret == true) {
             $sql = $sql . "  and checktype =3"; //возврат
         } else {
