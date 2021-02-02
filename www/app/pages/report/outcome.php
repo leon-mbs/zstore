@@ -138,13 +138,13 @@ class Outcome extends \App\Pages\Base
         // скидка
 
 
-        $sql = "document_id in( select  d.document_id  from `entrylist_view`  e 
-             join `documents_view` d on d.`document_id` = e.`document_id`
-               where e.`item_id` >0  and e.`quantity` <> 0
-               and d.`meta_name` in ('GoodsIssue','ServiceAct','Task','Order','POSCheck')
+        $sql = "document_id in( select  d.document_id  from  
+               `documents_view` d  
+               where    d.state >3 and 
+                 d.`meta_name` in ('GoodsIssue', 'Order',  'POSCheck')
                {$br}  {$u}     and  d.payamount >0 and  d.payamount <  d.amount 
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . ")";
+              AND DATE(d.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(d.document_date) <= " . $conn->DBDate($to) . ")";
 
         $res = \App\Entity\Doc\Document::find($sql);
         $disc = 0;
@@ -188,7 +188,7 @@ class Outcome extends \App\Pages\Base
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <> 0   {$cat}   {$cust}  
-               and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN')
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
                {$br}  {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -205,7 +205,7 @@ class Outcome extends \App\Pages\Base
         left  join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
            where   e.`quantity` <>0       
-             and d.`meta_name` in ('GoodsIssue','ServiceAct',  'POSCheck','ReturnIssue','TTN')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+             and d.`meta_name` in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               {$br} {$u}   AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.`customer_name`,c.`customer_id`
@@ -323,11 +323,11 @@ class Outcome extends \App\Pages\Base
                 "qty"       => H::fqty($row['qty']),
                 "navar"     => H::fa($row['navar']),
                 "navarsign" => $row['navar'] > 0,
-                "summa"     => H::fa($row['summa'])
+                "summa"     => H::fa($row['summa']+$row['navar'])
             );
 
             $totnavar += $row['navar'];
-            $totsum += $row['summa'];
+            $totsum += ($row['summa']+$row['navar']);
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),

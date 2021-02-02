@@ -96,7 +96,7 @@ class GoodsIssue extends Document
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price*$k, 0 - $st->quantity);
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion , 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price*$k - $st->partion); //Для АВС 
                 $sc->save();
@@ -110,8 +110,8 @@ class GoodsIssue extends Document
                 return; //процент
             } else {
                 $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                if($customer->bonus <0) {
-                   $customer->bonus =0;
+                if($customer->bonus < 0) {
+                   $customer->bonus = 0;
                 }
                 $customer->save();
             }

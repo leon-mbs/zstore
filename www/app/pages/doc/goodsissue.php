@@ -757,8 +757,13 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         if (false == $this->_doc->checkUniqueNumber()) {
-            $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('nouniquedocnumber_created');
+            $next = $this->_doc->nextNumber() ;
+            $this->docform->document_number->setText($next);
+            $this->_doc->document_number =  $next;
+            if(strlen($next)==0) {
+                $this->setError('docnumbercancreated');    
+            }
+            
         }
 
         if (count($this->_itemlist) == 0) {

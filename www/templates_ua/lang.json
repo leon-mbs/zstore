@@ -185,6 +185,7 @@
   "noitemonstore": "Товара %s нема  на  складі",
   "enterdocnumber": "Введіть номер документу",
   "nouniquedocnumber_created": "Не унікальний номер документу. Створено новий номер",
+  "docnumbercancreated": "Не  створено унiкального номера документу. ",
   "nouniquedocnumber": "Не унікальний номер документу ",
   "noselpaytype": "Не вказано  спосіб  оплати",
   "entername": "Введіть найменування",

@@ -138,7 +138,7 @@ class POSCheck extends Document
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-
+   
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
@@ -158,6 +158,9 @@ class POSCheck extends Document
                 //процент
             } else {
                 $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
+                if($customer->bonus < 0) {
+                   $customer->bonus = 0;
+                }
                 $customer->save();
             }
         }

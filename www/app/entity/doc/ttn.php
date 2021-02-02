@@ -163,7 +163,7 @@ class TTN extends Document
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price - $st->partion); //Для АВС 
                 $sc->save();

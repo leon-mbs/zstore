@@ -592,7 +592,7 @@ class ARMPos extends \App\Pages\Base
 
     public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
-        $this->_docform->setVisible(true);
+        $this->form3->setVisible(true);
     }
 
     public function savedocOnClick($sender) {
@@ -605,9 +605,12 @@ class ARMPos extends \App\Pages\Base
             $this->form3->document_number->setText($this->_doc->document_number);
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $this->_docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('nouniquedocnumber_created');
-            return;
+             $next = $this->_doc->nextNumber() ;
+             $this->form3->document_number->setText($next);
+             $this->_doc->document_number =  $next;
+            if(strlen($next)==0) {
+                $this->setError('docnumbercancreated');    
+            }    
         }
         $this->_doc->document_date = $this->form3->document_date->getDate();
         $this->_doc->notes = $this->form3->notes->getText();

@@ -101,6 +101,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->email = $sender->email->getText();
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
 
+        $this->user->deffirm = $sender->deffirm->getValue();
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();

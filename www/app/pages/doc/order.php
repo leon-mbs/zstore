@@ -85,11 +85,13 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->editdetail->add(new Label('qtystock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
 
         //добавление нового кантрагента
         $this->add(new Form('editcust'))->setVisible(false);
@@ -109,6 +111,7 @@ class Order extends \App\Pages\Base
             $this->OnDelivery($this->docform->delivery);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -139,8 +142,7 @@ class Order extends \App\Pages\Base
         }
         $this->OnPayment($this->docform->payment);
         
-        $this->calcTotal();
-        $this->calcPay();
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -260,7 +262,7 @@ class Order extends \App\Pages\Base
             return;
         }
 
-        $this->calcTotal();
+         
 
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
@@ -378,8 +380,12 @@ class Order extends \App\Pages\Base
             $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('nouniquedocnumber_created');
+            $next = $this->_doc->nextNumber() ;
+            $this->docform->document_number->setText($next);
+             $this->_doc->document_number =  $next;
+           if(strlen($next)==0) {
+                $this->setError('docnumbercancreated');    
+            }
         }
         if (count($this->_tovarlist) == 0) {
             $this->setError("noenteritem");
@@ -431,7 +437,7 @@ class Order extends \App\Pages\Base
                     $this->docform->discount->setText("Бонусы " . $customer->bonus);
                     $this->docform->discount->setVisible(true);
                 }
-            }
+            }      
         }
 
 
@@ -590,6 +596,16 @@ class Order extends \App\Pages\Base
         }
         $this->calcPay() ;
         
+    }
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edittovar->setKey($item_id);
+        $this->editdetail->edittovar->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edittovar);
+    }
+   public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->wselitem->setPriceType($this->docform->pricetype->getValue());
+        $this->wselitem->Reload();
     }
 
 }

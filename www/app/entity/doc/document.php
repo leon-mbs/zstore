@@ -443,12 +443,10 @@ class Document extends \ZCL\DB\Entity
 
     public function checkUniqueNumber() {
         $this->document_number = trim($this->document_number);
-       // $class = explode("\\", get_called_class());
-       // $metaname = $class[count($class) - 1];
         $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' ");
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
-                return;
+                return false;
             }
         }
         return true;
@@ -461,14 +459,10 @@ class Document extends \ZCL\DB\Entity
      */
     public function nextNumber($branch_id = 0) {
 
-
-       // $class = explode("\\", get_called_class());
-      //  $metaname = $class[count($class) - 1];
-       // $doc = Document::getFirst("meta_id=" . $this->meta_id , "document_id desc");
-        $conn = \ZDB\DB::getConnect();
+      $conn = \ZDB\DB::getConnect();
         $branch = "";
-        if ($branch_id > 0) {
-            $branch = " and branch_id=" . $branch_id;
+        if ($this->branch_id > 0) {
+            $branch = " and branch_id=" . $this->branch_id;
         }
 
         $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  order  by document_id desc limit 0,1";
@@ -486,8 +480,23 @@ class Document extends \ZCL\DB\Entity
         }
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
-        $next = $letter . sprintf("%05d", ++$number);
-        return $next;
+        for($i=0;$i<10;$$i++) {
+            $next = $letter . sprintf("%05d", ++$number);    
+            if ($this->branch_id > 0) {
+                $branch = " and branch_id=" . $this->$branch_id;
+            }
+            
+            
+            $ch = $conn->GetOne("select count(*) from documents     where   meta_id='{$this->meta_id}'   {$branch} and document_number=".$conn->qstr($next) );
+            if($ch==0) {
+                return  $next;
+            }
+            
+        }
+        
+        
+        return '';
+        
     }
 
     /**
