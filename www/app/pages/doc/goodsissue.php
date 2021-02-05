@@ -201,6 +201,11 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->total->setText($order->amount);
 
                         $this->OnChangeCustomer($this->docform->customer);
+                        if ($order->payamount > 0) {
+                            $this->docform->payment->setValue(MoneyFund::PREPAID);// предоплата
+                            $this->OnPayment($this->docform->payment);
+
+                        }
 
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');

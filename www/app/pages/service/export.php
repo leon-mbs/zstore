@@ -140,19 +140,17 @@ class Export extends \App\Pages\Base
             $data['E' . $i] = $item->item_code;
             $data['F' . $i] = $item->bar_code;
             $price = H::fa($item->getPrice($pt));
-            $data['G' . $i] = H::fa($price);
+            $data['G' . $i] = array('value'=> H::fa($price),'format'=>'number','align'=>'right') ;
 
             if ($t == 1) {
                 $qty = H::fqty($item->getQuantity($store));
-                $data['H' . $i] = H::fqty($qty);
+                $data['H' . $i] = array('value'=> H::fqty($qty),'format'=>'number','align'=>'right')  ;
             }
-
 
         }
 
         H::exportExcel($data, $header, 'items_' . date('Y_m_d', time()) . '.xlsx');
-
-
+ 
     }
 
 
@@ -186,23 +184,23 @@ class Export extends \App\Pages\Base
         $i = 0;
         foreach ($this->_docs as $doc) {
             $i++;
-            $data['A' . $i] = $doc->document_number;
-            $data['B' . $i] = H::fd($doc->document_date);
-            $data['C' . $i] = $doc->customer_name;
+            $data['A' . $i] = array('value'=> $doc->document_number, 'bold'=>true);
+            $data['B' . $i] = array('value'=>$doc->document_date,'format'=>'date', 'bold'=>true)  ;
+            $data['C' . $i] = array('value'=> $doc->customer_name, 'bold'=>true); 
             $n = 1;
             foreach ($doc->unpackDetails('detaildata') as $item) {
                 $i++;
                 $data['B' . $i] = $n++;
                 $data['C' . $i] = $item->itemname;
                 $data['D' . $i] = $item->item_code;
-                $data['E' . $i] = H::fqty($item->quantity);
-                $data['F' . $i] = H::fa($item->price);
+                $data['E' . $i] = array('value'=> H::fqty($item->quantity),'format'=>'number','align'=>'right')   ;
+                $data['F' . $i] = array('value'=> H::fa($item->price),'format'=>'number','align'=>'right')   ;
 
             }
 
             $i++;
-            $data['A' . $i] = H::l("total") . ": ";
-            $data['B' . $i] = H::fa($doc->amount);
+            $data['A' . $i] = array('value'=> H::l("total") . ": ", 'bold'=>true,'align'=>'right') ;
+            $data['B' . $i] = array('value'=> H::fa($item->amount),'format'=>'number','bold'=>true,'align'=>'right') ;
             $i++;
         }
 

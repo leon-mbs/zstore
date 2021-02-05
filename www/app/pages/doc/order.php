@@ -261,9 +261,7 @@ class Order extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-
-         
-
+ 
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
@@ -487,7 +485,8 @@ class Order extends \App\Pages\Base
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);
-
+        $this->docform->phone->setText( $cust->phone);
+ 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->discount->setVisible(false);
@@ -502,7 +501,7 @@ class Order extends \App\Pages\Base
 
     public function OnDelivery($sender) {
 
-        if ($sender->getValue() == Document::DEL_BOY || $sender->getValue() == Document::DEL_SERVICE) {
+        if ($sender->getValue() == Document::DEL_NP || Document::DEL_BOY || $sender->getValue() == Document::DEL_SERVICE) {
             $this->docform->address->setVisible(true);
         } else {
             $this->docform->address->setVisible(false);

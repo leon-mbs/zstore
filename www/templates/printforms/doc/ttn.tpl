@@ -30,6 +30,17 @@
         <td colspan="5">{{order}}</td>
     </tr>
     {{/order}}
+   <tr>
+        <td></td>
+        <td><b>Телефон</b></td>
+        <td colspan="5">{{phone}}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><b>Email</b></td>
+        <td colspan="5">{{email}}</td>
+    </tr>
+    
     <tr>
         <td></td>
         <td><b>Доставка</b></td>

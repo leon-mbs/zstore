@@ -440,10 +440,17 @@ class Document extends \ZCL\DB\Entity
          
     }
 
-
+    /**
+    * проверка  номера  на  уникальность
+    * 
+    */
     public function checkUniqueNumber() {
         $this->document_number = trim($this->document_number);
-        $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' ");
+        $branch = "";
+        if ($this->branch_id > 0) {
+            $branch = " and branch_id=" . $this->branch_id;
+        }        
+        $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' {$branch}");
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
                 return false;
@@ -452,17 +459,16 @@ class Document extends \ZCL\DB\Entity
         return true;
     }
 
-    /**
-     * Возвращает  следующий  номер  при  автонумерации
-     *
-     * @return mixed
-     */
+ 
     public function nextNumber($branch_id = 0) {
 
       $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($this->branch_id > 0) {
             $branch = " and branch_id=" . $this->branch_id;
+        }
+        if ($branch_id > 0) {
+            $branch = " and branch_id=" . $branch_id;
         }
 
         $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  order  by document_id desc limit 0,1";
@@ -482,9 +488,7 @@ class Document extends \ZCL\DB\Entity
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
         for($i=0;$i<10;$$i++) {
             $next = $letter . sprintf("%05d", ++$number);    
-            if ($this->branch_id > 0) {
-                $branch = " and branch_id=" . $this->$branch_id;
-            }
+  
             
             
             $ch = $conn->GetOne("select count(*) from documents     where   meta_id='{$this->meta_id}'   {$branch} and document_number=".$conn->qstr($next) );

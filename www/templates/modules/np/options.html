@@ -22,35 +22,42 @@
         <h5>Данные  отправителя</h5>
         
         <form zippy="oform">
- 
-           <div class="form-group">
-                <label for="area">Область</label>
-                <select   zippy="area" class="form-control   "  ></select>
-            </div>
-           <div class="form-group">
-                <label for="city">Город</label>
-                <select  zippy="city" class="form-control  "  ></select>
-            </div>
-          <div class="form-group">
-                <label for="point">Отделение</label>
-                <select  zippy="point" class="form-control  "  ></select>
-            </div>
-           <div class="form-group">
+             <div class="form-group">
                 <label for="lastname">Фамилия</label>
-                <input type="text" zippy="lastname" class="form-control" required="required"/>
+                <input type="text" zippy="lastname" class="form-control"  />
             </div>
             <div class="form-group">
                 <label for="firstname">Имя</label>
-                <input type="text" zippy="firstname" class="form-control" required="required"/>
+                <input type="text" zippy="firstname" class="form-control"  />
             </div>
            <div class="form-group">
                 <label for="middlename">Отчество</label>
-                <input type="text" zippy="middlename" class="form-control" required="required"/>
+                <input type="text" zippy="middlename" class="form-control"  />
             </div>
            <div class="form-group">
-                <label for="tel">Тел.</label>
-                <input type="text" zippy="tel" class="form-control" required="required"/>
+                <label for="tel">Тел. только  цифры </label>
+                <input type="text" zippy="tel" class="form-control"  />
             </div>
+           <div class="form-group">
+                <label for="area">Область</label>
+                
+                <select   zippy="area" class="form-control   "  >
+                <option value="0">Не  выбрано</option>
+                </select>
+            </div>
+           <div class="form-group">
+                <label for="city">Город</label>
+                <select  zippy="city" class="form-control  "  >
+                <option value="0">Не  выбрано</option>
+                </select>
+            </div>
+          <div class="form-group">
+                <label for="point">Отделение</label>
+                <select  zippy="point" class="form-control  "  >
+                <option value="0">Не  выбрано</option>
+                </select>
+            </div>
+
 
  
             <div class="form-group">

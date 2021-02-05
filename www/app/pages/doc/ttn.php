@@ -78,6 +78,8 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new TextInput('ship_number'));
         $this->docform->add(new TextInput('ship_amount'));
         $this->docform->add(new TextArea('ship_address'));
+        $this->docform->add(new TextInput('email'));
+        $this->docform->add(new TextInput('phone'));
 
         $this->docform->add(new Label('notesfromorder'));
 
@@ -133,6 +135,8 @@ class TTN extends \App\Pages\Base
             $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
+            $this->docform->email->setText($this->_doc->headerdata['email']);
+            $this->docform->phone->setText($this->_doc->headerdata['phone']);
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -148,10 +152,8 @@ class TTN extends \App\Pages\Base
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_orderid = $this->_doc->headerdata['order_id'];
 
-
             $this->docform->firm->setValue($this->_doc->firm_id);
             $this->OnChangeCustomer($this->docform->customer);
-
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
@@ -485,6 +487,8 @@ class TTN extends \App\Pages\Base
         $this->_doc->headerdata['delivery_date'] = $this->docform->delivery_date->getDate();
         $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
         $this->_doc->headerdata['order_id'] = $this->_orderid;
+        $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
+        $this->_doc->headerdata['email'] = $this->docform->email->getText();
 
         if ($this->checkForm() == false) {
             return;
@@ -767,6 +771,8 @@ class TTN extends \App\Pages\Base
             if ($this->docform->ship_address->getText() == '') {
                 $this->docform->ship_address->setText($customer->address);
             }
+            $this->docform->phone->setText($customer->phone);
+            $this->docform->email->setText($customer->email);
 
         }
 
@@ -813,6 +819,7 @@ class TTN extends \App\Pages\Base
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);
+        $this->docform->phone->setText( $cust->phone);
 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);

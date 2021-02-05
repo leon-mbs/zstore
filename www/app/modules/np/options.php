@@ -68,7 +68,7 @@ class Options extends \App\Pages\Base
         $pointref = $this->oform->point->getValue();
         $point = $this->oform->point->getValueName();
         $lastname = $this->oform->lastname->getText();
-        $firstnameo = $this->oform->firstname->getText();
+        $firstname = $this->oform->firstname->getText();
         $middlename = $this->oform->middlename->getText();
         $tel = $this->oform->tel->getText();
          

@@ -19,7 +19,7 @@
         <td></td>
         <td> Доставка</td>
         <td>{{delivery}}</td>
-        <td colspan="6">Адрес: {{ship_address}}</td>
+        <td colspan="6">Адреса: {{ship_address}}</td>
     </tr>
 
     <tr>

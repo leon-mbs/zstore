@@ -64,6 +64,8 @@ class TTN extends Document
                         "ship_amount"           => strlen($this->headerdata["ship_amount"]) > 0 ? H::fa($this->headerdata["ship_amount"] ): false,
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
+                        "phone"           => $this->headerdata["phone"],
+                        "email"           => $this->headerdata["email"],
 
 
                         "total" => H::fa($this->amount),

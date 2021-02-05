@@ -17,6 +17,7 @@ class Pay extends \ZCL\DB\Entity
 
     const PAY_OTHER_INCOME = 2;   //прочие доходы
     const PAY_FIN          = 3;   //доходы от  фин.  деятельности
+    const PAY_INV          = 4;   //Инвестиции
 
 
     const PAY_BASE_OUTCOME     = 50;    //операционные расходы  
@@ -155,6 +156,7 @@ class Pay extends \ZCL\DB\Entity
 
             $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[PAY::PAY_FIN] = \App\Helper::l('pt_fin');
+            $list[PAY::PAY_INV] = \App\Helper::l('pt_inv');
 
         }
 

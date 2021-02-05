@@ -2,8 +2,7 @@
 
 namespace App\Pages\Report;
 
-use App\Entity\Customer;
-use App\Entity\Doc\Document;
+use App\Entity\Item;
 use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -12,23 +11,21 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- * Заказанные товары
+ * Неликвидные товары
  */
-class CustOrder extends \App\Pages\Base
+class NoLiq extends \App\Pages\Base
 {
 
     public function __construct() {
         parent::__construct();
 
-        if (false == \App\ACL::checkShowReport('CustOrder')) {
+        if (false == \App\ACL::checkShowReport('NoLiq')) {
             return;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-
-        $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='OrderCust'  and state= " . Document::STATE_INPROCESS . ")";
-        $this->filter->add(new DropDownChoice('cust', Customer::findArray('customer_name', $where, 'customer_name'), 0));
-
+       
+        $this->filter->add(new DropDownChoice('mqty', array("1"=>"1","3"=>"3","6"=>"6","12"=>"12"), 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
@@ -62,48 +59,46 @@ class CustOrder extends \App\Pages\Base
 
     private function generateReport() {
 
-        $cust = $this->filter->cust->getValue();
+        $mqty = $this->filter->mqty->getValue();
 
-
-        $detail = array();
-
-        $where = "   meta_name='OrderCust'  and  state= " . Document::STATE_INPROCESS;
-        if ($cust > 0) {
-            $where .= " and customer_id=" . $cust;
-        }
-        $docs = Document::find($where);
-        $total = 0;
-        $items = array();
-
-        foreach ($docs as $doc) {
-
-            foreach ($doc->unpackDetails('detaildata') as $item) {
-                if (!isset($items[$item->itemname])) {
-                    $items[$item->itemname] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0);
-                }
-                $items[$item->itemname]['qty'] += $item->quantity;
-                $total += $item->amount;
-            }
+      
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = " and st.store_id in ({$cstr})    ";
         }
 
-        $names = array_keys($items);
-        sort($names);  //соартируем по  алфавиту
+        $conn = $conn = \ZDB\DB::getConnect();
+        $this->data = array();
+        $date =  strtotime('-'.$mqty.' month')  ;
+     
+        $sql = "select coalesce(sum(st.qty),0) as qty, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
+               {$cstr} and   st.stock_id not  in(select   stock_id    
+               from  entrylist_view  
+               where    document_date >" . $conn->DBDate($date) . "  and  quantity < 0 ) 
+               and   st.stock_id    in(select   stock_id    
+               from  entrylist_view  
+               where    document_date <" . $conn->DBDate($date) . "  and  quantity > 0 ) 
+                
+               group by  st.itemname,st.item_code,st.storename 
+               order by  qty  desc
+                 ";
 
-        foreach ($names as $name) {
-            $item = $items[$name];
-
-            $detail[] = array('name' => $item['itemname'], 'msr' => $item['msr'], 'qty' => H::fqty($item['qty']));
+       
+        $detail = array(); 
+        $res = $conn->Execute($sql);
+        foreach ($res as $item) {
+          $item['qty'] = H::fqty($item['qty'] );
+          $detail[] =  $item;
+          
         }
 
+   
 
         $header = array(
             "_detail"       => $detail,
-            'total'         => H::fa($total),
-            'cust'          => $cust > 0,
-            'date'          => \App\Helper::fd(time()),
-            'customer_name' => $this->filter->cust->getValueName()
+            'mqty' => $this->filter->mqty->getValue()
         );
-        $report = new \App\Report('report/custorder.tpl');
+        $report = new \App\Report('report/noliq.tpl');
 
         $html = $report->generate($header);
 

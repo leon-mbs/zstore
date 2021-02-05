@@ -688,16 +688,17 @@ class Helper
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
         $sheet = $spreadsheet->getActiveSheet();
-
-
+ 
         foreach ($header as $k => $v) {
 
             $sheet->setCellValue($k, $v);
             $sheet->getStyle($k)->applyFromArray([
                 'font' => [
-
                     'bold' => true
-
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'wrapText' => false,
                 ]
             ]);
 
@@ -705,13 +706,37 @@ class Helper
 
         foreach ($data as $k => $v) {
 
-
-            $sheet->setCellValue($k, $v);
-
-
+            if(is_array($v)) {
+                $c = $sheet->getCell($k)   ;
+                $style = $sheet->getStyle($k)   ;
+                if($v['format']=='date') {
+                    $v['value']= date('d/m/Y',$v['value'])   ;
+                    $c->setValue($v['value'])  ;
+                    $style->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DDMMYYYY)  ;
+                } else 
+                if($v['format']=='number') {
+                    $c->setValueExplicit($v['value'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC) ;
+                   
+                }  else {
+                    $c->setValueExplicit( $v['value'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING) ;
+                }
+                 if($v['bold']==true) {
+                     $style->getFont()->setBold(true) ;
+                 }
+                 if($v['align']=='right') {
+                     $style->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT ) ; ;
+                 }
+                                
+            }   else {
+              //  $sheet->setCellValue($k, $v );
+                $c = $sheet->getCell($k)   ;
+                $c->setValue($v)  ;
+                $c->setValueExplicit( $v, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING) ;
+                
+            }
+     
         }
-
-
+ 
         /*
          $sheet->getStyle('A1')->applyFromArray([
              'font' => [
@@ -741,8 +766,7 @@ class Helper
 
          */
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-
-
+ 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         $writer->save('php://output');
