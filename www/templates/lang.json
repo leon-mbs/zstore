@@ -366,6 +366,9 @@
   "apinobranch":"Не задан филиал"  ,
   "apientername":"Не задано наименование"  ,
   "apientercode":"Не задан  артикул" ,
-  "npnoweight":"Не задан вес"
+  "npnoweight":"Не задан вес",
+  "npnodesc":"Не задано описание"  ,
+  "npnewdec":"Создана  декларация  номер %s",
+  "contract":"Договор" 
   
 }

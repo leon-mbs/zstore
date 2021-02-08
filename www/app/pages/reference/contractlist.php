@@ -54,7 +54,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
         $this->contractdetail->add(new DropDownChoice('editcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->contractdetail->add(new DropDownChoice('editemp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
-        $this->contractdetail->add(new DropDownChoice('editpay', Contract::PayList(), 0));
+        
         $this->contractdetail->add(new \Zippy\Html\Form\File('scan'));
 
         $this->contractdetail->add(new CheckBox('editdisabled'));
@@ -87,7 +87,7 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label('term', H::fd($item->createdon) . ' - ' . H::fd($item->enddate)));
         $row->add(new Label('customer', $item->customer_name));
         $row->add(new Label('firm', $item->firm_name));
-        $row->add(new Label('payname', $item->payname));
+  
         $row->add(new Label('emp', $item->emp_name));
         $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0);
         $row->hasnotes->setAttribute('title', $item->desc);
@@ -134,8 +134,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
         $this->contractdetail->editcomp->setValue($this->_contract->firm_id);
         $this->contractdetail->editemp->setValue($this->_contract->emp_id);
-        $this->contractdetail->editpay->setValue($this->_contract->pay);
-
+    
     }
 
     public function addOnClick($sender) {
@@ -177,8 +176,6 @@ class ContractList extends \App\Pages\Base
 
         $this->_contract->emp_id = $this->contractdetail->editemp->getValue();
         $this->_contract->emp_name = $this->contractdetail->editemp->getValueName();
-        $this->_contract->pay = $this->contractdetail->editpay->getValue();
-        $this->_contract->payname = $this->contractdetail->editpay->getValueName();
         $this->_contract->disabled = $this->contractdetail->editdisabled->isChecked() ? 1 : 0;
 
         $this->_contract->save();

@@ -342,7 +342,7 @@ class IncomeItem extends \App\Pages\Base
             if(strlen($next)==0) {
                 $this->setError('docnumbercancreated');    
             }
-             ф
+            
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");

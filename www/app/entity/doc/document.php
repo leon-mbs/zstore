@@ -93,6 +93,7 @@ class Document extends \ZCL\DB\Entity
 
         $this->headerdata = array();
         $this->detaildata = array();
+        $this->headerdata['contract_id'] =0;        
     }
 
     /**
@@ -226,8 +227,8 @@ class Document extends \ZCL\DB\Entity
         return "";
     }
 
-    /**
-     * Выполнение документа - обновление склада, бухгалтерские проводки и  т.д.
+    /**                                                                          
+     * Выполнение документа - обновление склада
      *
      */
     public function Execute() {

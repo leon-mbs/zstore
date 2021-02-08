@@ -134,7 +134,82 @@
       <h4>Создание  декларации  НП</h4>
       <form zippy="npform">
       <div class="row" >
+    <div class="col-12 col-md-6 col-xl-4" >
+             <div class="form-group  ">
+                <label   for="npw">Вес</label>
+               
+                <input pattern="[0-9\.]+" type="text" zippy="npw" class="form-control"  />
+                
+            </div>
+             <div class="form-group  ">
+                <label   for="npplaces">Кол.мест</label>
+            
+                <input pattern="[0-9]+" type="text" zippy="npplaces" class="form-control"  />
+               
+           </div>
+             <div class="form-group  ">
+                <label   for="npcost">Оценка, грн</label>
+               
+                <input pattern="[0-9]+" type="text" zippy="npcost" class="form-control"  />
+               
+           </div>
+            <div class="form-group  ">
+                <label   for="npdate">Дата  отправки</label>
+               
+                <input   type="text" zippy="npdate" class="form-control"  />
+                 
+           </div>
+           <div class="form-group  ">
+                <label   for="npst">Тип  доставки</label>
+                
+                <select   zippy="npst" class="form-control   "  >
+                
+                </select>
+                 
+           </div>
+          <div class="form-group  ">
+                <label   for="nppt">Кто оплачивает</label>
+               
+                <select   zippy="nppt" class="form-control   "  >
+                
+                </select>
+                
+           </div>
+         <div class="form-group  ">
+                <label   for="nppm">Тип  оплаты</label>
+               
+                <select   zippy="nppm" class="form-control   "  >
+                
+                </select>
+               
+           </div>
+            <div class="form-group  ">
+                <label   for="npback">Обратная доставка,грн   </label>
+               
+                <input pattern="[0-9]+" type="text" zippy="npback" class="form-control"  />
+                
+           </div>
+           
+      
+            <div class="form-group  ">
+                <label   for="npdesc">Описание</label>
+               
+                  <textarea    zippy="npdesc" class="form-control"   ></textarea>
+                
+          </div>
+
+       
+    </div>
+   
       <div class="col-12 col-md-4 col-xl-3" >
+           <div class="form-group  ">
+                <label   for="npseltype">Тип  отправителя</label>
+               
+                <select   zippy="npseltype" class="form-control   "  >
+                
+                </select>
+               
+           </div>
 
            <div class="form-group">
                 <label for="sellastname">Фамилия отправителя</label>
@@ -165,13 +240,26 @@
                 </select>
             </div>
           <div class="form-group">
-                <label for="selpoint">Отделение</label>
+                <label data-label="selpoint" for="selpoint">Отделение</label>
                 <select  zippy="selpoint" class="form-control  "  >
                 <option value="0">Не  выбрано</option>
                 </select>
             </div>   
+            <div class="form-group">
+                <label data-label="seladdress" for="seladdress">Адрес</label>
+                <input type="text" zippy="seladdress" class="form-control"   />
+            </div>
+            
      </div>
       <div class="col-12 col-md-4 col-xl-3" >
+          <div class="form-group  ">
+                <label   for="npbaytype">Тип  получателя</label>
+               
+                <select   zippy="npbaytype" class="form-control   "  >
+                
+                </select>
+               
+           </div>
              <div class="form-group">
                 <label for="baylastname">Фамилия получателя</label>
                 <input type="text" zippy="baylastname" class="form-control"  />
@@ -201,79 +289,18 @@
                  </select>
             </div>
           <div class="form-group">
-                <label for="baypoint">Отделение</label>
+                <label data-label="baypoint" for="baypoint">Отделение</label>
                 <select  zippy="baypoint" class="form-control  "  >
               <option value="0">Не  выбрано</option>
                  </select>
-            </div>      
-     </div>
-      <div class="col-12 col-md-6 col-xl-4" >
-             <div class="form-group row">
-                <label class="col-6" for="npw">Вес</label>
-                <div class="col-6">
-                <input pattern="[0-9\.]+" type="text" zippy="npw" class="form-control"  />
-                </div>
+            </div>    
+            <div class="form-group">
+                <label data-label="bayaddress" for="bayaddress">Адрес</label>
+                <input type="text" zippy="bayaddress" class="form-control"   />
             </div>
-             <div class="form-group row">
-                <label class="col-6" for="npplaces">Кол.мест</label>
-               <div class="col-6">
-                <input pattern="[0-9]+" type="text" zippy="npplaces" class="form-control"  />
-                </div>
-           </div>
-             <div class="form-group row">
-                <label class="col-6" for="npcost">Оценка, грн</label>
-               <div class="col-6">
-                <input pattern="[0-9]+" type="text" zippy="npcost" class="form-control"  />
-                </div>
-           </div>
-            <div class="form-group row">
-                <label class="col-6" for="npdate">Дата  отправки</label>
-               <div class="col-6">
-                <input   type="text" zippy="npdate" class="form-control"  />
-                </div>
-           </div>
-           <div class="form-group row">
-                <label class="col-6" for="npst">Тип  доставки</label>
-                <div class="col-6">
-                <select   zippy="npst" class="form-control   "  >
-                
-                </select>
-                </div>
-           </div>
-          <div class="form-group row">
-                <label class="col-6" for="nppt">Кто оплачивает</label>
-                <div class="col-6">
-                <select   zippy="nppt" class="form-control   "  >
-                
-                </select>
-                </div>
-           </div>
-         <div class="form-group row">
-                <label class="col-6" for="nppm">Тип  оплаты</label>
-                <div class="col-6">
-                <select   zippy="nppm" class="form-control   "  >
-                
-                </select>
-                </div>
-           </div>
-            <div class="form-group row">
-                <label class="col-6" for="npback">Обратная доставка,грн   </label>
-               <div class="col-6">
-                <input pattern="[0-9]+" type="text" zippy="npback" class="form-control"  />
-                </div>
-           </div>
-           
-      
-            <div class="form-group row">
-                <label class="col-6" for="npdesc">Описание</label>
-                <div class="col-6">
-                  <textarea    zippy="npdesc" class="form-control"   ></textarea>
-                 </div>
-          </div>
 
-       
-    </div>
-  
+     </div>
+   
       <div class="col-12  col-md-8 col-xl-6 pb-4 pt-4" >
       <h4>Данные  по  ТТН</h4>
       <table class="table   table-sm">

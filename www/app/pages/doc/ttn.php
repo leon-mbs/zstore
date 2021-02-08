@@ -228,7 +228,7 @@ class TTN extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
 
-                       $itemlist = $basedoc->unpackDetails('detaildata');
+                        $itemlist = $basedoc->unpackDetails('detaildata');
                         $k = 1;      //учитываем  скидку
                         if($basedoc->headerdata["paydisc"]>0 && $basedoc->amount >0) {
                             $k =  ($basedoc->amount - $basedoc->headerdata["paydisc"])/$basedoc->amount ;
@@ -853,7 +853,7 @@ class TTN extends \App\Pages\Base
             $this->docform->sent_date->setVisible(false);
             $this->docform->delivery_date->setVisible(false);
             $this->docform->emp->setVisible(false);
-            $this->docform->ship_number->setText(0);
+            $this->docform->ship_number->setText();
         }
 
     }

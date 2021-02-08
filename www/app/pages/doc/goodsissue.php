@@ -502,13 +502,11 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['order_id'] = $this->_orderid;
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-
-
+ 
         $this->_doc->amount = $this->docform->total->getText();
 
         $isEdited = $this->_doc->document_id > 0;
-
-
+ 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {

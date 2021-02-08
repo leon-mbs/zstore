@@ -83,7 +83,7 @@ class Orders extends \App\Pages\Base
             foreach ($data['orders'] as $ocorder) {
 
 
-                $isorder = Document::findCnt(" (meta_name='Order' or meta_name='GoodsIssue') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
+                $isorder = Document::findCnt(" (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'");
                 if ($isorder > 0) { //уже импортирован
                     continue;
                 }
@@ -203,7 +203,7 @@ class Orders extends \App\Pages\Base
         $this->_neworders = array();
         $this->neworderslist->Reload();
     }
-
+    //только  списание
     public function onOutcome($sender) {
         $modules = System::getOptions("modules");
         $store = $this->filter2->store->getValue();
@@ -247,10 +247,10 @@ class Orders extends \App\Pages\Base
         foreach ($this->_neworders as $shoporder) {
 
 
-            $neworder = Document::create('GoodsIssue');
+            $neworder = Document::create('TTN');
             $neworder->document_number = $neworder->nextNumber();
             if (strlen($neworder->document_number) == 0) {
-                $neworder->document_number = 'РН-00001';
+                $neworder->document_number = 'ТТН-00001';
             }
 
             //товары
@@ -280,18 +280,19 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['store'] = $store;
             $neworder->headerdata['store_name'] = $this->filter2->store->getValueName();
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
-            $neworder->headerdata['payment'] = $kassa;
+         
             $neworder->customer_id = $modules['occustomer_id'];
 
             $neworder->amount = round($totalpr);
 
             if ($shoporder->total > $totalpr) {
-                $neworder->headerdata['delivery_cost'] = $shoporder->total - $totalpr;
-                $neworder->headerdata['delivery'] = 2;
+                $neworder->headerdata['ship_amount'] = $shoporder->total - $totalpr;
+                $neworder->headerdata['delivery'] = Document::DEL_SELF;
+                $neworder->headerdata['delivery_name'] = \App\Helper::l('delself');
             }
 
-            $neworder->payamount = round($shoporder->total);
-            $neworder->payed = round($shoporder->total);
+            $neworder->payamount = 0;
+            $neworder->payed = 0;
             $neworder->notes = "OC номер:{$shoporder->order_id};";
             $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
             if (strlen($shoporder->email) > 0) {
@@ -305,6 +306,7 @@ class Orders extends \App\Pages\Base
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
             $neworder->updateStatus(Document::STATE_EXECUTED);
+            $neworder->updateStatus(Document::STATE_DELIVERED);
 
             $i++;
         }
