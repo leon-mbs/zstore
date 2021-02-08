@@ -1,0 +1,255 @@
+<?php
+
+namespace App\Pages\Register;
+
+use App\Application as App;
+use App\Entity\Doc\Document;
+use App\Helper as H;
+use App\Entity\Firm;
+use App\Entity\Customer;
+use App\System;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\Paginator;
+use Zippy\Html\Form\Date;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
+
+/**
+ * журнал  договоров
+ */
+class ContractList extends \App\Pages\Base
+{
+
+    private $_doc = null;
+
+    /**
+     *
+     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
+     * @return DocList
+     */
+    public function __construct() {
+        parent::__construct();
+        if (false == \App\ACL::checkShowReg('ContractList')) {
+            return;
+        }
+
+        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+
+        $this->filter->add(new TextInput('searchnumber'));
+
+        $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
+
+
+        $doclist = $this->add(new DataView('doclist', new ContractDataSource($this), $this, 'doclistOnRow'));
+        $doclist->setSelectedClass('table-success');
+
+        $this->add(new Paginator('pag', $doclist));
+        $doclist->setPageSize(H::getPG());
+
+
+        $this->add(new Panel("statuspan"))->setVisible(false);
+
+        $this->statuspan->add(new Form('statusform'));
+
+        $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bshift'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
+
+
+        $this->statuspan->add(new \App\Widgets\DocView('docview'));
+
+        $this->filterOnSubmit(null);
+        $this->add(new ClickLink('csv', $this, 'oncsv'));
+    }
+
+    public function filterOnSubmit($sender) {
+
+
+        $this->statuspan->setVisible(false);
+
+        $this->doclist->Reload(false);
+    }
+
+    public function doclistOnRow($row) {
+        $doc = $row->getDataItem();
+
+        $row->add(new Label('number', $doc->document_number));
+
+        $row->add(new Label('date', H::fd($doc->document_date)));
+        $row->add(new Label('enddate', H::fd($doc->headerdata['enddate'])));
+        
+     
+        $row->add(new Label('firm', $doc->firm_name));
+        $row->add(new Label('customer', $doc->customer_name));
+
+        $row->add(new Label('state', Document::getStateName($doc->state)));
+
+        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
+        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        if ($doc->state < Document::STATE_EXECUTED) {
+            $row->edit->setVisible(true);
+        } else {
+            $row->edit->setVisible(false);
+        }
+    }
+
+    public function statusOnSubmit($sender) {
+        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
+            return;
+        }
+
+        $state = $this->_doc->state;
+
+        if ($sender->id == "bttn") {
+            $d = $this->_doc->getChildren('GoodsReceipt');
+
+            if (count($d) > 0) {
+                $this->setWarn('goodsreceipt_exists');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
+            return;
+        }
+        if ($sender->id == "bret") {
+            $d = $this->_doc->getChildren('RetCustIssue');
+
+
+            if (count($d) > 0) {
+
+                $this->setWarn('return_exists');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
+            return;
+        }
+        $this->doclist->Reload(false);
+
+        $this->statuspan->setVisible(false);
+        //todo  отослать писмо 
+
+        $this->updateStatusButtons();
+    }
+
+    public function updateStatusButtons() {
+
+        $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name == 'InvoiceCust');
+        $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name == 'GoodsReceipt');
+
+        //новый     
+        if ($this->_doc->state < Document::STATE_EXECUTED) {
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bret->setVisible(false);
+        }
+        if ($this->_doc->meta_name == 'RetCustIssue') {
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bret->setVisible(false);
+        }
+    }
+
+    //просмотр
+    public function showOnClick($sender) {
+
+        $this->_doc = $sender->owner->getDataItem();
+        if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
+            return;
+        }
+
+        $this->statuspan->setVisible(true);
+        $this->statuspan->docview->setDoc($this->_doc);
+        $this->doclist->setSelectedRow($sender->getOwner());
+        $this->doclist->Reload(false);
+        $this->updateStatusButtons();
+        $this->goAnkor('dankor');
+    }
+
+    public function editOnClick($sender) {
+        $doc = $sender->getOwner()->getDataItem();
+        if (false == \App\ACL::checkEditDoc($doc, true)) {
+            return;
+        }
+
+        App::Redirect("\\App\\Pages\\Doc\\" . $doc->meta_name, $doc->document_id);
+    }
+     public function OnAutoCustomer($sender) {
+        return Customer::getList($sender->getText(), 2);
+    }
+    public function oncsv($sender) {
+        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+
+
+        $header = array();
+        $data = array();
+
+        $i = 0;
+        foreach ($list as $d) {
+            $i++;
+            $data['A' . $i] = H::fd($d->document_date);
+            $data['B' . $i] = $d->document_number;
+            $data['C' . $i] = $d->firm_name;
+            $data['C' . $i] = $d->customer_name;
+         
+
+        }
+
+        H::exportExcel($data, $header, 'contractlist.xlsx');
+
+
+    }
+
+}
+
+/**
+ *  Источник  данных  для   списка  документов
+ */
+class ContractDataSource implements \Zippy\Interfaces\DataSource
+{
+
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+        $user = System::getUser();
+
+        $conn = \ZDB\DB::getConnect();
+
+        $where = "   meta_name  in('Contract' )  ";
+
+   
+
+        $cust = $this->page->filter->searchcust->getKey();
+        if ($cust > 0) {
+            $where = $where . " and customer_id = " . $cust;
+        }
+
+     
+        $sn = trim($this->page->filter->searchnumber->getText());
+        if (strlen($sn) > 1) { // игнорируем другие поля
+            $sn = $conn->qstr('%' . $sn . '%');
+            $where = " meta_name  in('Contract' )  and document_number like  {$sn} ";
+        }
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Document::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+        $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
+
+        return $docs;
+    }
+
+    public function getItem($id) {
+
+    }
+
+}

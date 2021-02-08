@@ -49,7 +49,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true ), H::getDefMF()))->onChange($this, 'OnPayment');
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -478,7 +478,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
-        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
+        if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID  ) {
             $this->_doc->headerdata['paydisc'] = 0;
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
@@ -514,13 +514,14 @@ class GoodsIssue extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
+            
             $this->_doc->save();
+             
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-
-
+ 
                 // проверка на минус  в  количестве
 
                 $allowminus = System::getOption("common", "allowminus");
@@ -534,11 +535,9 @@ class GoodsIssue extends \App\Pages\Base
                         }
                     }
                 }
-
-
+ 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-
-
+ 
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -794,9 +793,8 @@ class GoodsIssue extends \App\Pages\Base
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
             $this->setError("mustsel_cust");
         }
-        if ($c == 0) {
-            // $this->setError("noselcust");
-        }
+     
+
 
         return !$this->isError();
     }
@@ -939,7 +937,7 @@ class GoodsIssue extends \App\Pages\Base
         $c = $this->docform->customer->getKey();
         $f = $this->docform->firm->getValue();
 
-        $ar = \App\Entity\Contract::getList($c, $f);
+        $ar = Document::findArray('document_number',"firm_id={$f}  and customer_id={$c}  and state=". Document::STATE_INPROCESS ,'document_number') ;
 
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {

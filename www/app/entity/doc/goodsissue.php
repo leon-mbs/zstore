@@ -71,9 +71,9 @@ class GoodsIssue extends Document
         );
 
         if ($this->headerdata["contract_id"] > 0) {
-            $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
-            $header['contract'] = $contract->contract_number;
-            $header['createdon'] = H::fd($contract->createdon);
+            $contract = Document::load($this->headerdata["contract_id"]);
+            $header['contract'] = $contract->document_number;
+            $header['createdon'] = H::fd($contract->document_date);
         }
 
 

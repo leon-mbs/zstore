@@ -3,53 +3,44 @@
 <div class="row">
     <div class="col-12 col-xl-10">
 
-        <h3>Журнал закупок </h3>
+        <h3>Журнал договоров </h3>
 
 
         <div class="navbar nav">
             <form zippy="filter" class="form-inline ">
 
-
                 <label for="searchnumber"> № </label>
 
                 <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
-                <select class="form-control mr-2" zippy="status">
-                </select>
-
-
-                <label for="searchcomp">Покупатель</label>
-                <select zippy="searchcomp" class="form-control mr-sm-2">
-                    <option value="0">Не выбран</option>
-                </select>
-
-
-                <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
-
-
+                <label for="searchcust">контрагент</label>
+    
+                <input class="form-control mr-2" type="text" zippy="searchcust" placeholder="Начните вводить...">
+             
                 <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
             </form>
         </div>
-        <a href="/index.php?p=App/Pages/Doc/GoodsReceipt" class="btn btn-info mt-2 mb-3">Создать</a>
+        <a href="/index.php?p=App/Pages/Doc/Contract" class="btn btn-info mt-2 mb-3">Создать</a>
         <br><a zippy="csv">Экспорт в Excel</a>
 
         <table class="table   table-sm   ">
             <tr>
 
                 <th>Номер</th>
-                <th>Дата</th>
+                <th>Дата начала</th>
+                <th>Дата окончания</th>
 
-                <th>Поставщик</th>
-            
+                <th>Контрагент</th>
+                
                 <th>Компания</th>
-               
+                
 
                 <th class="text-right">Сумма</th>
 
                 <th>Статус</th>
 
-                <th>Примечание</th>
+              
                 <th></th>
 
 
@@ -58,15 +49,16 @@
 
                 <td zippy="number"></td>
                 <td class="text-nowrap" zippy="date"></td>
+                <td class="text-nowrap" zippy="enddate"></td>
 
                 <td zippy="customer"></td>
-              
+            
                 <td zippy="firm"></td>
             
                 <td zippy="amount" class="text-right"></td>
 
                 <td class="text-nowrap" zippy="state"></td>
-                <td zippy="onotes"></td>
+             
 
                 <td class="text-nowrap">
                     <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
@@ -93,8 +85,9 @@
 
         <div class="navbar nav">
             <form zippy="statusform" class="form-inline ">
-                <button zippy="bttn" class="btn btn-primary  mr-2"><i class="fa fa-truck"></i> Создать приход</button>
-                <button zippy="bret" class="btn btn-primary  mr-2"><i class="fa fa-undo"></i> Создать возврат</button>
+                <button zippy="binp" class="btn btn-primary  mr-2"> На выполнение</button>
+                <button zippy="bshift" class="btn btn-warning  mr-2">Отложить</button>
+                <button zippy="bclose" class="btn btn-success  mr-2">Закрыть</button>
 
 
             </form>

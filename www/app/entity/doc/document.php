@@ -81,6 +81,7 @@ class Document extends \ZCL\DB\Entity
         $this->customer_id = 0;
         $this->branch_id = 0;
         $this->parent_id = 0;
+        $this->amount = 0;
         $this->payamount = 0;
         $this->payed = 0;
 
