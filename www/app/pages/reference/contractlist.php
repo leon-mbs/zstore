@@ -62,7 +62,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->contractdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
-        $this->add(new Panel('docpan'))->setVisible(true);
+        $this->add(new Panel('docpan'))->setVisible(false);
         $this->docpan->add(new Label("cname"));
         $this->docpan->add(new Label("totsumma"));
         $this->docpan->add(new Label("totdolg"));

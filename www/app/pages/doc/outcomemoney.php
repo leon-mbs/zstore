@@ -17,6 +17,7 @@ use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Customer;
 use App\Entity\Employee;
 
+
 /**
  * Страница    расходный ордер
  */
@@ -32,13 +33,16 @@ class OutcomeMoney extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('detail', array(), 0))->onChange($this,'OnDetail');
         $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(2), 0));
+        $this->docform->add(new DropDownChoice('contract', array(), 0)) ;
+        $this->docform->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0)) ;
+
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('amount'));
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->docform->add(new DropDownChoice('emp', Employee::findArray("emp_name", "disabled<>1", "emp_name")));
-
+        $this->docform->customer->onChange($this,'OnCustomer')   ;
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -50,6 +54,7 @@ class OutcomeMoney extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
+            $this->docform->detail->setValue($this->_doc->headerdata['detail']);
 
             $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
@@ -65,6 +70,10 @@ class OutcomeMoney extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+        $this->OnDetail($this->docform->detail);
+        $this->OnCustomer($this->docform->customer);
+        $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
+        
     }
 
     public function savedocOnClick($sender) {
@@ -76,6 +85,9 @@ class OutcomeMoney extends \App\Pages\Base
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paymentname'] = $this->docform->payment->getValueName();
         $this->_doc->headerdata['type'] = $this->docform->mtype->getValue();
+        $this->_doc->headerdata['detail'] = $this->docform->detail->getValue();
+        $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
+        $this->_doc->headerdata['contract_number'] = $this->docform->contract->getValueName();
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
 
@@ -138,7 +150,31 @@ class OutcomeMoney extends \App\Pages\Base
             $this->setError("noentersum");
         }
         if ($this->docform->mtype->getValue() == 0) {
-            $this->setWarn("noseloutcome");
+            $this->setError("noseloutcome");
+        }
+        if ($this->docform->detail->getValue() == 1) {
+            
+            if($this->_doc->customer_id==0 ) {
+               $this->setError("noselcust");    
+            }
+            
+        }
+        if ($this->docform->detail->getValue() == 2) {
+            
+            if($this->_doc->customer_id==0 ) {
+               $this->setError("noselcust");    
+            }
+            if($this->_doc->headerdata['contract_id']==0 ) {
+               $this->setError("noselcontract");    
+            }
+            
+        }
+        if ($this->docform->detail->getValue() == 3) {
+            
+            if($this->_doc->headerdata['emp']==0 ) {
+               $this->setError("noempselected");    
+            }
+            
         }
 
         return !$this->isError();
@@ -151,4 +187,30 @@ class OutcomeMoney extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 2);
     }
+    
+   public function OnCustomer($sender) {
+        $c = $this->docform->customer->getKey();
+   
+        $ar = \App\Entity\Contract::getList($c );
+        $this->docform->contract->setOptionList($ar);
+            
+    }
+  
+    public function OnDetail($sender) {
+       $this->docform->emp->setVisible(false); 
+       $this->docform->customer->setVisible(false); 
+       $this->docform->contract->setVisible(false); 
+       if($sender->getValue()==1) {
+          $this->docform->customer->setVisible(true);     
+       }
+       if($sender->getValue()==2) {
+          $this->docform->contract->setVisible(true);     
+          $this->docform->customer->setVisible(true);      
+       }
+       if($sender->getValue()==3) {
+           $this->docform->emp->setVisible(true);     
+          
+       }
+    }
+    
 }

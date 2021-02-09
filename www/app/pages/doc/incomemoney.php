@@ -36,6 +36,7 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('detail', array(), 0))->onChange($this,'OnDetail');
         $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(1), Pay::PAY_BASE_INCOME));
         $this->docform->add(new DropDownChoice('contract', array(), 0)) ;
+        $this->docform->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0)) ;
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
@@ -71,6 +72,9 @@ class IncomeMoney extends \App\Pages\Base
             return;
         }
         $this->OnDetail($this->docform->detail);
+        $this->OnCustomer($this->docform->customer);
+        $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
+        
     }
 
     public function savedocOnClick($sender) {
@@ -83,6 +87,8 @@ class IncomeMoney extends \App\Pages\Base
         $this->_doc->headerdata['paymentname'] = $this->docform->payment->getValueName();
         $this->_doc->headerdata['type'] = $this->docform->mtype->getValue();
         $this->_doc->headerdata['detail'] = $this->docform->detail->getValue();
+        $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
+        $this->_doc->headerdata['contract_number'] = $this->docform->contract->getValueName();
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
 
@@ -147,9 +153,32 @@ class IncomeMoney extends \App\Pages\Base
         }
         if ($this->docform->mtype->getValue() == 0) {
 
-            $this->setWarn("noselincome");
+            $this->setError("noselincome");
         }
-
+         if ($this->docform->detail->getValue() == 1) {
+            
+            if($this->_doc->customer_id==0 ) {
+               $this->setError("noselcust");    
+            }
+            
+        }
+        if ($this->docform->detail->getValue() == 2) {
+            
+            if($this->_doc->customer_id==0 ) {
+               $this->setError("noselcust");    
+            }
+            if($this->_doc->headerdata['contract_id']==0 ) {
+               $this->setError("noselcontract");    
+            }
+            
+        }
+         if ($this->docform->detail->getValue() == 3) {
+            
+            if($this->_doc->headerdata['emp']==0 ) {
+               $this->setError("noempselected");    
+            }
+            
+        }
         return !$this->isError();
     }
 
@@ -158,11 +187,17 @@ class IncomeMoney extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(), 2);
+        return Customer::getList($sender->getText());
     }
+ 
     public function OnCustomer($sender) {
-         
+        $c = $this->docform->customer->getKey();
+   
+        $ar = \App\Entity\Contract::getList($c );
+        $this->docform->contract->setOptionList($ar);
+            
     }
+  
     public function OnDetail($sender) {
        $this->docform->emp->setVisible(false); 
        $this->docform->customer->setVisible(false); 
@@ -172,7 +207,7 @@ class IncomeMoney extends \App\Pages\Base
        }
        if($sender->getValue()==2) {
           $this->docform->contract->setVisible(true);     
-           
+          $this->docform->customer->setVisible(true);      
        }
        if($sender->getValue()==3) {
            $this->docform->emp->setVisible(true);     

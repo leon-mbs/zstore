@@ -30,6 +30,7 @@ class OutcomeMoney extends Document
             'date'            => H::fd($this->document_date),
             "notes"           => $this->notes,
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
+            "contract"        => $this->headerdata["contract_id"] > 0 ? $this->headerdata["contract_number"]: false,
             "emp"             => strlen($this->headerdata["emp_name"]) > 0 ? $this->headerdata["emp_name"] : false,
             "from"            => $this->headerdata["paymentname"],
             "type"            => $pt[$this->headerdata["type"]],

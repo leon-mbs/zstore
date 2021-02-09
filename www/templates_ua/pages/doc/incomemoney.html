@@ -14,7 +14,10 @@
                 <label for="document_number">Номер документа</label>
                 <input class="form-control" type="text" zippy="document_number">
             </div>
-            <div class="form-group  ">
+            <div class="form-group">
+                <label for="document_date"> Дата</label>
+                <input class="form-control" type="text" zippy="document_date" required="required">
+            </div>          <div class="form-group  ">
                 <label for="payment">На рахунок</label>
                 <select class="form-control" zippy="payment">
                 </select>
@@ -32,21 +35,33 @@
 
         </div>
         <div class="col-12 col-md-4 col-xl-3">
-            <div class="form-group">
-                <label for="document_date"> Дата</label>
-                <input class="form-control" type="text" zippy="document_date" required="required">
+             <div class="form-group">
+                <label for="detail">Деталiзацiя</label>
+                <select class="form-control" zippy="detail">
+                    <option value="0">Не вказана</option>
+                    <option value="1">По контрагентах</option>
+                    <option value="2">По угодах</option>
+                    <option value="3">По особових рахунках</option>
+                </select>
             </div>
+        
             <div class="form-group">
-                <label for="customer">Контрагент</label>
+                <label data-label="customer" for="customer">Контрагент</label>
                 <input class="form-control" type="text" zippy="customer">
             </div>
             <div class="form-group">
-                <label for="emp">Спiвробiтник</label>
+                <label data-label="contract" for="contract">Угода</label>
+                <select class="form-control  " zippy="contract">
+                    <option value="0">Не вибрана</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-label="emp" for="emp">Спiвробiтник</label>
                 <select class="form-control select2" zippy="emp">
                     <option value="0">Не вибраний</option>
                 </select>
             </div>
-
+ 
             <div class="form-group  ">
                 <label for="notes">Примітка </label>
 
