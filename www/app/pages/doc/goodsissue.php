@@ -185,6 +185,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
+                        $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
 
 
                         $notfound = array();
@@ -229,6 +230,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
+                        $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
 
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -937,8 +939,7 @@ class GoodsIssue extends \App\Pages\Base
         $c = $this->docform->customer->getKey();
         $f = $this->docform->firm->getValue();
 
-        $ar = Document::findArray('document_number',"firm_id={$f}  and customer_id={$c}  and state=". Document::STATE_INPROCESS ,'document_number') ;
-
+        $ar = \App\Entity\Contract::getList($c, $f);
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {
             $this->docform->contract->setVisible(true);

@@ -63,14 +63,7 @@ class Contract extends \ZCL\DB\Entity
         return true;
     }
 
-    public static function PayList() {
-        return array(
-            1 => \App\Helper::l('cnal'),
-            2 => \App\Helper::l('cbeznal'),
-            3 => \App\Helper::l('ckredit'),
-            4 => \App\Helper::l('creal')
-        );
-    }
+ 
 
     public static function getList($c, $f = 0) {
 
@@ -109,6 +102,26 @@ class Contract extends \ZCL\DB\Entity
 
 
         return $ar;
+    }
+    /**
+    * к оплате
+    * 
+    */
+    public function getForPay() {
+
+        $amount =0;
+
+        $where = "  customer_id={$this->customer_id} and payamount >0 and payamount > payed and content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
+
+        $res = \App\Entity\Doc\Document::find($where );
+        foreach ($res as $doc) {
+           
+           $amount += ($doc->payamount - $doc->payed ) ;
+               
+        }
+
+
+        return $amount;
     }
 
 
