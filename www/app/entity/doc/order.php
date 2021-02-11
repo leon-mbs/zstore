@@ -128,27 +128,28 @@ class Order extends \App\Entity\Doc\Document
     }
 
 
-    public function Execute() {
-        //$conn = \ZDB\DB::getConnect();
+ 
 
-
-        //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-            $customer = \App\Entity\Customer::load($this->customer_id);
-            if ($customer->discount > 0) {
-                return; //процент
-            } else {
-                $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                $customer->save();
+    
+    protected function onState($oldstate, $state) {
+       
+        if($state== self::STATE_INPROCESS) {
+              //списываем бонусы
+            if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
+                $customer = \App\Entity\Customer::load($this->customer_id);
+                if ($customer->discount > 0) {
+                    return; //процент
+                } else {
+                    $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
+                    $customer->save();
+                }
             }
+
+
+            if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+                \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            }          
         }
 
-
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
-        }
-
-        return true;
     }
-
 }

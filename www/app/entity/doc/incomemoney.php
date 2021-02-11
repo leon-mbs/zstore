@@ -16,31 +16,7 @@ class IncomeMoney extends Document
   
         Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
 
-        
-        if( $this->headerdata['contract_id']>0) {
-            $amount =  $this->amount;
-            $c = \App\Entity\Contract::load($this->headerdata['contract_id']);    
-            foreach($c->getDocs()  as $doc){
-                 if($doc->payamount >0 && $doc->payamount > $doc->payed )  {
-                     $p = $doc->payamount - $doc->payed;
-                     if($amount  >$p) {
-                         $doc->payed += $p;
-                       //  $doc->save();
-                         $amount  -= $p;
-                     } else {
-                        $doc->payed +=  $amount ;
-                      //  $doc->save();
-                        break;
-                     
-                     }
-                     
-                 }
-                
-            }
-            
-        }
-        
-        
+    
         return true;
     }
 

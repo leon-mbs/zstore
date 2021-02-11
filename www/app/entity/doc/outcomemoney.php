@@ -17,7 +17,7 @@ class OutcomeMoney extends Document
 
         Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
 
-
+  
         return true;
     }
 

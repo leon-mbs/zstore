@@ -201,13 +201,10 @@ class OutcomeMoney extends \App\Pages\Base
        $this->docform->customer->setVisible(false); 
        $this->docform->contract->setVisible(false); 
        if($sender->getValue()==1) {
-          $this->docform->customer->setVisible(true);     
-       }
-       if($sender->getValue()==2) {
           $this->docform->contract->setVisible(true);     
           $this->docform->customer->setVisible(true);      
        }
-       if($sender->getValue()==3) {
+       if($sender->getValue()==2) {
            $this->docform->emp->setVisible(true);     
           
        }

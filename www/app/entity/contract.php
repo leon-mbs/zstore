@@ -68,12 +68,12 @@ class Contract extends \ZCL\DB\Entity
     public static function getList($c, $f = 0) {
 
         $ar = array();
-        if (strlen($f) == 0) {
-            $f = 0;
-        }
-        if ($c > 0) {
-            $where = "disabled <> 1 and customer_id={$c} and coalesce(firm_id,0) = {$f} ";
 
+        if ($c > 0) {
+            $where = "disabled <> 1 and customer_id={$c} ";
+            if($f >0) {
+               $where .=   " and firm_id =  ".$f;  
+            }
             $res = Contract::find($where, 'contract_number');
             foreach ($res as $k => $v) {
                 $ar[$k] = $v->contract_number . ' ' . $v->shortdesc;
@@ -95,7 +95,7 @@ class Contract extends \ZCL\DB\Entity
 
         $where = "  customer_id={$this->customer_id} and  content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
 
-        $res = \App\Entity\Doc\Document::find($where, 'document_id desc');
+        $res = \App\Entity\Doc\Document::find($where, 'document_id asc');
         foreach ($res as $k => $v) {
             $ar[$k] = $v;
         }

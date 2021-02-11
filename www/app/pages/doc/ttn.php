@@ -853,7 +853,7 @@ class TTN extends \App\Pages\Base
             $this->docform->sent_date->setVisible(false);
             $this->docform->delivery_date->setVisible(false);
             $this->docform->emp->setVisible(false);
-            $this->docform->ship_number->setText();
+            $this->docform->ship_number->setText('');
         }
 
     }

@@ -6,6 +6,7 @@ use App\Entity\Contract;
 use App\Entity\Customer;
 use App\Entity\Employee;
 use App\Entity\Firm;
+use App\Entity\Pay;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -72,6 +73,12 @@ class ContractList extends \App\Pages\Base
         $this->docpan->dtable->setPageSize(H::getPG());
         $this->docpan->add(new \Zippy\Html\DataList\Paginator('dpag', $this->docpan->dtable));
 
+        $this->docpan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
+        $this->docpan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->docpan->payform->add(new TextInput('pamount'));
+        $this->docpan->payform->add(new TextInput('pcomment'));
+        $this->docpan->payform->add(new Date('pdate', time()));
+        $this->docpan->payform->setVisible(false);
 
         if ($id > 0) {
             $c = Contract::load($id);
@@ -104,7 +111,7 @@ class ContractList extends \App\Pages\Base
             $row->scanlink->setLink(_BASEURL . 'loadfile.php?id=' . $item->file_id);
 
         }
-
+   
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -231,6 +238,8 @@ class ContractList extends \App\Pages\Base
      
         $this->docpan->dtable->getDataSource()->setArray($dlist);
         $this->docpan->dtable->Reload();
+        $this->docpan->payform->setVisible($totdolg>0);
+        $this->docpan->payform->pamount->setText(H::fa($totdolg)) ;
     }
 
     public function doclistOnRow($row) {
@@ -242,6 +251,44 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label("ddolg", H::fa($doc->payamount - $doc->payed)));
     }
 
+    public function payOnSubmit($sender) {
+          
+          $amount = $sender->pamount->getText();
+          $pdate = $sender->pdate->getDate();
+          $comment = $sender->pcomment->getText();
+          if(strlen($comment)==0)$comment= H::l('bycontract', $this->_contract->contract_number);
+          
+             foreach($this->_contract->getDocs()  as $doc){
+                
+                  
+                 if($doc->payamount >0 && $doc->payamount > $doc->payed )  {
+                     $p = $doc->payamount - $doc->payed;
+                     if($amount  >$p) {
+        
+                        $amount  -= $p;
+                     } else {
+                         
+                        $p = $amount;   
+                        $amount =0;
+                     }
+                     if(in_array($doc->meta_name,array('GoodsReceipt','InvoiceCust' )) ) {
+                          Pay::addPayment($doc->document_id, $pdate, 0-$p, $sender->payment->getValue(),  Pay::PAY_BASE_OUTCOME, $comment);    
+                     } else {
+                          Pay::addPayment($doc->document_id, $pdate, $p, $sender->payment->getValue(), Pay::PAY_BASE_INCOME, $comment);    
+                         
+                     }
+                      
+                     if($amount == 0)  break;          
+                 }
+                
+            }
+            
+        $this->contracttable->contractlist->Reload(false);  
+        $this->contracttable->setVisible(true);
+     
+        $this->docpan->setVisible(false);     
+    }
+    
 
 }
 

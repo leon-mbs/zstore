@@ -66,7 +66,7 @@
                     </td>
                     <td><a zippy="scanlink" title="Скачать скан"> <i class="fa fa-paperclip"></i> </a></td>
                     <td> <i zippy="forpay" title="Не оплачен" class="fa fa-credit-card"></i></td>
-                    <td ><a zippy="show" title="Документы"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
+                    <td ><a zippy="show" title="Документы"><i class="fa fa-eye"></i> </a></td>
 
 
                     <td  ><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
@@ -146,7 +146,7 @@
         </div>
     </div>
 </form>
-
+  
 <div zippy="docpan" class="row">
     <div class="col-md-8 col-xl-6">
         <h5 zippy="cname"></h5>
@@ -177,7 +177,28 @@
             </tr>
         </table>
         <div zippy="dpag"></div>
+ </div>        
+ <div class="col-md-10 col-xl-8">
+    <div class="navbar nav">
+            <form zippy="payform" class="form-inline ">
+                <label>К оплате</label>
+                <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сумма..."
+                       class="form-control mr-2">
+                <label for="payment">счет</label>
+                <select class="form-control mr-2" zippy="payment">
 
+                </select>
+   
+                <label>дата</label>
+                <input zippy="pdate" style="width:100px;" class="form-control mr-2">
+                <input zippy="pcomment" placeholder="Комментарий..." class="form-control mr-2">
+
+                <button type="submit" class="  btn btn-info  mr-2 ">Оплатить</button>
+
+
+            </form>
+            <small>Оплата  будет распределена  по  документам начиная  с  более  ранних</small>
+        </div>
     </div>
 </div>
 

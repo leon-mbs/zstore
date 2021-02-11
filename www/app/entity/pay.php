@@ -13,12 +13,10 @@ class Pay extends \ZCL\DB\Entity
 {
 
     //типы платежей - затраты и доходы
-    const PAY_BASE_INCOME = 1;     //операционные доходы  
-
+    const PAY_BASE_INCOME  = 1;     //операционные доходы  
     const PAY_OTHER_INCOME = 2;   //прочие доходы
     const PAY_FIN          = 3;   //доходы от  фин.  деятельности
-    const PAY_INV          = 4;   //Инвестиции
-
+    
 
     const PAY_BASE_OUTCOME     = 50;    //операционные расходы  
     const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
@@ -29,6 +27,7 @@ class Pay extends \ZCL\DB\Entity
     const PAY_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку  
     const PAY_OTHER_OUTCOME    = 57;   //прочие расходы
     const PAY_DIVIDEND_OUTCOME = 58;   //распределение прибыли
+    const PAY_INV              = 59;        //Инвестиции
 
     protected function init() {
         $this->pl_id = 0;
@@ -156,8 +155,7 @@ class Pay extends \ZCL\DB\Entity
 
             $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[PAY::PAY_FIN] = \App\Helper::l('pt_fin');
-            $list[PAY::PAY_INV] = \App\Helper::l('pt_inv');
-
+ 
         }
 
         if ($type != 1) {
@@ -170,6 +168,7 @@ class Pay extends \ZCL\DB\Entity
             $list[PAY::PAY_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
             $list[PAY::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
             $list[PAY::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
+            $list[PAY::PAY_INV] = \App\Helper::l('pt_inv');
 
         }
 
