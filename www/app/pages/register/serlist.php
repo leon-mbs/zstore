@@ -55,6 +55,7 @@ class SerList extends \App\Pages\Base
         $this->statuspan->add(new Form('statusform'));
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
@@ -132,6 +133,9 @@ class SerList extends \App\Pages\Base
         if ($sender->id == "binproc") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
         }
+       if ($sender->id == "bfin") {
+            $this->_doc->updateStatus(Document::STATE_FINISHED);
+        }
 
         if ($sender->id == "bclose") {
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
@@ -157,6 +161,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->bfin->setVisible(false);
         }
 
 
@@ -168,6 +173,18 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
+            $this->statuspan->statusform->bfin->setVisible(true);
+        }
+
+       // выполнен
+        if ($state == Document::STATE_FINISHED) {
+
+            $this->statuspan->statusform->binproc->setVisible(false);
+            $this->statuspan->statusform->bclose->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->bfin->setVisible(false);
         }
 
         //закрыт
@@ -177,6 +194,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->bfin->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
     }
