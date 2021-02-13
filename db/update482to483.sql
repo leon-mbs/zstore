@@ -26,4 +26,16 @@ CREATE TABLE `prodproc` (
   
 )  DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE `subscribes` (
+  `sub_id` int(11) NOT NULL AUTO_INCREMENT,
+  `doc_type` int(11) DEFAULT NULL,
+  `doc_state` int(11) DEFAULT NULL,
+  `reciever_type` int(11) DEFAULT NULL,
+  `reciever_id` int(11) DEFAULT NULL,
+  `subs_type` int(11) DEFAULT NULL,
+  `detail` LONGTEXT DEFAULT NULL,
+   PRIMARY KEY (`sub_id`)
+  
+)  DEFAULT CHARSET=utf8;
 */

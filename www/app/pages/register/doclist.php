@@ -51,7 +51,7 @@ class DocList extends \App\Pages\Base
             $filter->customer_name = '';
 
             $filter->searchnumber = '';
-            $filter->searchopen = 0;
+          
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
@@ -63,7 +63,7 @@ class DocList extends \App\Pages\Base
         $this->filter->searchcust->setKey($filter->customer);
         $this->filter->searchcust->setText($filter->customer_name);
         $this->filter->add(new TextInput('searchnumber', $filter->searchnumber));
-        $this->filter->add(new CheckBox('searchopen', $filter->searchopen));
+        
 
         if (strlen($filter->docgroup) > 0) {
             $this->filter->docgroup->setValue($filter->docgroup);
@@ -114,7 +114,7 @@ class DocList extends \App\Pages\Base
         $filter->customer_name = '';
 
         $filter->searchnumber = '';
-        $filter->searchopen = 0;
+        
 
         $this->filter->clean();
         $this->filter->to->setDate(time());
@@ -132,7 +132,7 @@ class DocList extends \App\Pages\Base
         $filter->doctype = $this->filter->doctype->getValue();
         $filter->customer = $this->filter->searchcust->getKey();
         $filter->customer_name = $this->filter->searchcust->getText();
-        $filter->searchopen = $this->filter->searchopen->isChecked() ? 1:0;
+        
 
 
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
@@ -440,9 +440,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if ($filter->customer > 0) {
             $where .= " and customer_id  ={$filter->customer} ";
         }
-        if ($filter->searchopen == 1 ) {
-            $where .= " and  (  state <4 or ( meta_name='TTN' and state != 14 )   )    ";
-        }
+  
 
         $sn = $filter->searchnumber;
 

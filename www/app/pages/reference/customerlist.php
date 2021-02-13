@@ -239,7 +239,9 @@ class CustomerList extends \App\Pages\Base
                 return;
             }
         }
-        if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL()) {
+        $this->_customer->phone = \App\Util::handlePhone($this->_customer->phone) ;
+         
+         if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL()) {
             $this->setError("tel10", Helper::PhoneL());
             return;
         }
@@ -252,7 +254,7 @@ class CustomerList extends \App\Pages\Base
         }
 
 
-        $this->_customer->Save();
+        $this->_customer->save();
         $this->customerdetail->setVisible(false);
         $this->customertable->setVisible(true);
         $this->customertable->customerlist->Reload();

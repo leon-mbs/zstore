@@ -260,29 +260,6 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
-    public function editOnClick($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $this->editdetail->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->editdetail->editquantity->setText($item->quantity);
-        $this->editdetail->editprice->setText($item->price);
-        $this->editdetail->editsnumber->setText($item->snumber);
-        $this->editdetail->editsdate->setDate($item->sdate);
-
-
-        $this->editdetail->edititem->setKey($item->item_id);
-        $this->editdetail->edititem->setText($item->itemname);
-
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
-
-        $this->_rowid = $item->rowid;
-    }
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -347,6 +324,29 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->_rowid = 0;
+    }
+     public function editOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $this->editdetail->setVisible(true);
+        $this->docform->setVisible(false);
+
+        $this->editdetail->editquantity->setText($item->quantity);
+        $this->editdetail->editprice->setText($item->price);
+        $this->editdetail->editsnumber->setText($item->snumber);
+        $this->editdetail->editsdate->setDate($item->sdate);
+
+
+        $this->editdetail->edititem->setKey($item->item_id);
+        $this->editdetail->edititem->setText($item->itemname);
+
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
+
+        $this->_rowid = $item->rowid;
     }
 
     public function saverowOnClick($sender) {
@@ -789,7 +789,8 @@ class GoodsReceipt extends \App\Pages\Base
         $cust->customer_name = $custname;
         $cust->address = $this->editcust->editaddress->getText();
         $cust->phone = $this->editcust->editphone->getText();
-
+        $cust->phone = \App\Util::handlePhone($cust->phone) ;
+ 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
             $this->setError("tel10", H::PhoneL());

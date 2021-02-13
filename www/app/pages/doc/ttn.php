@@ -321,13 +321,113 @@ class TTN extends \App\Pages\Base
             return;
         }
 
-        $tovar = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$tovar->tovar_id]);
+      
+        $item = $sender->owner->getDataItem();
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+
+     $this->docform->detail->Reload();
+        $this->calcTotal();
+
+    }
+   public function addcodeOnClick($sender) {
+        $code = trim($this->docform->barcode->getText());
+        $this->docform->barcode->setText('');
+        if ($code == '') {
+            return;
+        }
+        
+        
+       foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->bar_code == $code || $_item->item_code == $code) {
+                $this->_itemlist[$ri]->quantity += 1;
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->CalcPay();
+                return;
+            }
+        }        
+        
+        
+        
+        $store_id = $this->docform->store->getValue();
+        if ($store_id == 0) {
+            $this->setError('noselstore');
+            return;
+        }
+
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
+
+
+        if ($item == null) {
+
+            $this->setWarn("noitemcode", $code);
+            return;
+        }
+
+
+        $store_id = $this->docform->store->getValue();
+
+        $qty = $item->getQuantity($store_id);
+        if ($qty <= 0) {
+
+            $this->setWarn("noitemonstore", $item->itemname);
+        }
+
+
+        if ($this->_itemlist[$item->item_id] instanceof Item) {
+            $this->_itemlist[$item->item_id]->quantity += 1;
+        } else {
+
+
+            $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
+            $item->price = $price;
+            $item->quantity = 1;
+
+            if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+
+                $serial = '';
+                $slist = $item->getSerials($store_id);
+                if (count($slist) == 1) {
+                    $serial = array_pop($slist);
+                }
+
+
+                if (strlen($serial) == 0) {
+                    $this->setWarn('needs_serial');
+                    $this->editdetail->setVisible(true);
+                    $this->docform->setVisible(false);
+
+
+                    $this->editdetail->edittovar->setKey($item->item_id);
+                    $this->editdetail->edittovar->setText($item->itemname);
+                    $this->editdetail->editserial->setText('');
+                    $this->editdetail->editquantity->setText('1');
+                    $this->editdetail->editprice->setText($item->price);
+
+
+                    return;
+                } else {
+                    $item->snumber = $serial;
+                }
+            }
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
+           
+            $this->_itemlist[$item->rowid] = $item;
+        }
         $this->docform->detail->Reload();
         $this->calcTotal();
 
+
+        $this->_rowid = 0;
     }
 
     public function addrowOnClick($sender) {
@@ -354,7 +454,15 @@ class TTN extends \App\Pages\Base
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editserial->setText($item->serial);
 
-        $this->_rowid = $item->item_id;
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
+
+        $this->_rowid = $item->rowid;
+
     }
 
     public function saverowOnClick($sender) {
@@ -401,23 +509,16 @@ class TTN extends \App\Pages\Base
 
         }
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
-
+        if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
         }
+        $this->_itemlist[$item->rowid] = $item;
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
         $this->_rowid = 0;
+
 
         $this->editdetail->setVisible(false);
         $this->wselitem->setVisible(false);
@@ -603,83 +704,7 @@ class TTN extends \App\Pages\Base
 
     }
 
-    public function addcodeOnClick($sender) {
-        $code = trim($this->docform->barcode->getText());
-        $this->docform->barcode->setText('');
-        if ($code == '') {
-            return;
-        }
-        $store_id = $this->docform->store->getValue();
-        if ($store_id == 0) {
-            $this->setError('noselstore');
-            return;
-        }
-
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
-
-
-        if ($item == null) {
-
-            $this->setWarn("noitemcode", $code);
-            return;
-        }
-
-
-        $store_id = $this->docform->store->getValue();
-
-        $qty = $item->getQuantity($store_id);
-        if ($qty <= 0) {
-
-            $this->setWarn("noitemonstore", $item->itemname);
-        }
-
-
-        if ($this->_itemlist[$item->item_id] instanceof Item) {
-            $this->_itemlist[$item->item_id]->quantity += 1;
-        } else {
-
-
-            $price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
-            $item->price = $price;
-            $item->quantity = 1;
-
-            if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-
-                $serial = '';
-                $slist = $item->getSerials($store_id);
-                if (count($slist) == 1) {
-                    $serial = array_pop($slist);
-                }
-
-
-                if (strlen($serial) == 0) {
-                    $this->setWarn('needs_serial');
-                    $this->editdetail->setVisible(true);
-                    $this->docform->setVisible(false);
-
-
-                    $this->editdetail->edittovar->setKey($item->item_id);
-                    $this->editdetail->edittovar->setText($item->itemname);
-                    $this->editdetail->editserial->setText('');
-                    $this->editdetail->editquantity->setText('1');
-                    $this->editdetail->editprice->setText($item->price);
-
-
-                    return;
-                } else {
-                    $item->snumber = $serial;
-                }
-            }
-            $this->_itemlist[$item->item_id] = $item;
-        }
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-
-
-        $this->_rowid = 0;
-    }
-
+ 
     /**
      * Валидация   формы
      *
@@ -800,7 +825,8 @@ class TTN extends \App\Pages\Base
         $cust->address = $this->editcust->editaddress->getText();
         $this->docform->ship_address->setText($cust->address);
         $cust->phone = $this->editcust->editphone->getText();
-
+        $cust->phone = \App\Util::handlePhone($cust->phone) ;
+ 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
             $this->setError("tel10", H::PhoneL());

@@ -471,7 +471,8 @@ class ServiceAct extends \App\Pages\Base
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editphone->getText();
-
+        $cust->phone = \App\Util::handlePhone($cust->phone) ;
+ 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("tel10", H::PhoneL());
             return;

@@ -64,6 +64,7 @@ class ServiceAct extends Document
 
             $sc = new Entry($this->document_id, 0 - $ser->price, $ser->quantity);
             $sc->setService($ser->service_id);
+   
             $sc->setExtCode($ser->price); //Для АВС 
             //$sc->setCustomer($this->customer_id);
             $sc->save();
