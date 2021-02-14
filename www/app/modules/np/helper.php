@@ -52,5 +52,9 @@ class Helper extends  \LisDev\Delivery\NovaPoshtaApi2
           return $cities   ;
      }
     
+     //проверка  экспрес накладной
+     public function check($dec){
+         
+     }
      
 }

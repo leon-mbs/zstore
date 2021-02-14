@@ -34,10 +34,7 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('area' ))->onChange($this,'onArea');
         $form->add(new DropDownChoice('city' ))->onChange($this,'onCity');
         $form->add(new DropDownChoice('point' ));
-        $form->add(new TextInput('lastname' ));
-        $form->add(new TextInput('firstname' ));
-        $form->add(new TextInput('middlename' ));
-        $form->add(new TextInput('tel' ));
+ 
  
         $form->onSubmit($this, 'savedataOnClick');
         
@@ -67,11 +64,7 @@ class Options extends \App\Pages\Base
         $city = $this->oform->city->getValueName();
         $pointref = $this->oform->point->getValue();
         $point = $this->oform->point->getValueName();
-        $lastname = $this->oform->lastname->getText();
-        $firstname = $this->oform->firstname->getText();
-        $middlename = $this->oform->middlename->getText();
-        $tel = $this->oform->tel->getText();
-         
+    
         $modules = System::getOptions("modules");
         
         $modules['nparea']     = $area;
@@ -80,10 +73,7 @@ class Options extends \App\Pages\Base
         $modules['npcityref']  = $cityref;
         $modules['nppoint']    = $point;
         $modules['nppointref'] = $pointref;
-        $modules['nplastname']      = $lastname;
-        $modules['npfirstname']     = $firstname;
-        $modules['npmiddlename']    = $middlename;
-        $modules['nptel']      = $tel;
+ 
 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
@@ -94,11 +84,7 @@ class Options extends \App\Pages\Base
           $modules = System::getOptions("modules");
           if(strlen($modules['npapikey'])==0)  return;
 
-          $this->oform->lastname->setText($modules['nplastname']) ;
-          $this->oform->firstname->setText($modules['npfirstname']) ;
-          $this->oform->middlename->setText($modules['npmiddlename']) ;
-          $this->oform->tel->setText($modules['nptel']) ;
-           
+   
           $api =  new  Helper()  ;
        
           $areas = $api->getAreaList() ;
