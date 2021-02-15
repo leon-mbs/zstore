@@ -107,17 +107,25 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
 
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
-
+                        
+                        $itemlist = $basedoc->unpackDetails('detaildata') ;
+                        
+                        $this->_itemlist = array() ;
+                        foreach($itemlist as $item) {
+                           $this->_tovarlist[$item->item_id]= $item;
+                        }
                     }
                    if ($basedoc->meta_name == 'TTN') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
-
+                        $itemlist = $basedoc->unpackDetails('detaildata') ;
+                        
+                        $this->_itemlist = array() ;
+                        foreach($itemlist as $item) {
+                           $this->_tovarlist[$item->item_id]= $item;
+                        }
                     }
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -125,7 +133,12 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
 
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                        $itemlist = $basedoc->unpackDetails('detaildata') ;
+                        
+                        $this->_itemlist = array() ;
+                        foreach($itemlist as $item) {
+                           $this->_tovarlist[$item->item_id]= $item;
+                        }
 
                     }
                 }

@@ -27,7 +27,7 @@ use Zippy\Html\Link\SubmitLink;
 class RetCustIssue extends \App\Pages\Base
 {
 
-    public  $_tovarlist = array();
+    public  $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
@@ -94,7 +94,7 @@ class RetCustIssue extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
 
-            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
         } else {
             $this->_doc = Document::create('RetCustIssue');
@@ -109,8 +109,12 @@ class RetCustIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                        $itemlist = $basedoc->unpackDetails('detaildata') ;
+                        
+                        $this->_itemlist = array() ;
+                        foreach($itemlist as $item) {
+                           $this->_itemlist[$item->item_id]= $item;
+                        }
 
                     }
                 }
@@ -118,7 +122,7 @@ class RetCustIssue extends \App\Pages\Base
             }
         }
 
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
@@ -147,9 +151,9 @@ class RetCustIssue extends \App\Pages\Base
         }
 
         $tovar = $sender->owner->getDataItem();
-        // unset($this->_tovarlist[$tovar->tovar_id]);
+        // unset($this->_itemlist[$tovar->tovar_id]);
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -172,7 +176,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
 
 
-        $this->editdetail->edittovar->setKey($item->stock_id);
+        $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
         $qty = $item->getQuantity();
@@ -199,7 +203,7 @@ class RetCustIssue extends \App\Pages\Base
 
 
         unset($this->_itemlist[$this->_rowid]);
-        $this->_tovarlist[$item->item_id] = $item;
+        $this->_itemlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -251,7 +255,7 @@ class RetCustIssue extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
-        $this->_doc->packDetails('detaildata', $this->_tovarlist);
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
@@ -302,7 +306,7 @@ class RetCustIssue extends \App\Pages\Base
 
         $total = 0;
 
-        foreach ($this->_tovarlist as $item) {
+        foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
@@ -340,7 +344,7 @@ class RetCustIssue extends \App\Pages\Base
                 $this->setError('docnumbercancreated');    
             }
         }
-        if (count($this->_tovarlist) == 0) {
+        if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");
         }
         if (($this->docform->store->getValue() > 0) == false) {
@@ -358,7 +362,7 @@ class RetCustIssue extends \App\Pages\Base
 
     public function OnChangeStore($sender) {
         //очистка  списка  товаров
-        $this->_tovarlist = array();
+        $this->_itemlist = array();
         $this->docform->detail->Reload();
     }
 
