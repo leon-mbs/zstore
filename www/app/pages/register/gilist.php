@@ -54,6 +54,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->listpan->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->listpan->add(new ClickLink('statusNP', $this, 'onNP'));
     
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -110,6 +111,12 @@ class GIList extends \App\Pages\Base
 
         $this->statuspan->setVisible(false);
 
+        $this->listpan->doclist->Reload(false);
+    }
+  
+    public function onNP($sender) {
+
+       
         $this->listpan->doclist->Reload(false);
     }
 
@@ -642,7 +649,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {
-            $where .= "  and  (  (payamount >0 and payamount > payed and  state >3 )  or( ( meta_name= 'TTN' and  state <> 9) or (meta_name <> 'TTN' and state <>5)  )  )    ";
+            $where .= "  and  (  (payamount >0 and payamount > payed and  state >3 )  or(  state >3 and  state  not in(14,5,9) )   )      ";
         }
         if ($status == 1) {
             $where .= " and  state =  " . Document::STATE_NEW;

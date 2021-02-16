@@ -161,6 +161,11 @@ class TTN extends Document
              }
         }
         
+        if(  $this->headerdata['nostore']==1) {
+            return;
+        }
+ 
+        
         foreach ($this->unpackDetails('detaildata') as $item) {
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
@@ -183,6 +188,22 @@ class TTN extends Document
             }
         }
 
+        if($this->parent_id > 0) {
+            $order = Document::load($this->parent_id);
+            
+            $list = $order->getChildren('TTN');
+
+            if (count($list) ==1) {   //только  эта  ТТН
+                if($state == Document::STATE_DELIVERED && $order->state == Document::STATE_INSHIPMENT) {
+                    $order->updateStatus(Document::STATE_DELIVERED) ;
+                }
+                if($state == Document::STATE_INSHIPMENT && $order->state == Document::STATE_INPROCESS) {
+                    $order->updateStatus(Document::STATE_INSHIPMENT) ;
+                }
+                
+            }            
+        }
+        
     }
     
     public function getRelationBased() {

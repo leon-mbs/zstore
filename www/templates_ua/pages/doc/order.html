@@ -30,7 +30,10 @@
                 <input zippy="email" class="form-control">
 
             </div>
-
+          <div class="form-check">
+                        <input zippy="production" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="production">Виробництво пiд замовлення</label>
+                    </div>
  
         </div>
         <div class="col-12 col-md-3">
@@ -38,13 +41,9 @@
                 <label for="document_date"> Дата</label>
                 <input class="form-control" type="text" zippy="document_date" required="required">
             </div>
-            <div class="form-group  ">
-                <label for="store">З складу</label>
-                <select class="form-control" zippy="store">
-                    <option value="0">Не обрано</option>
-                </select>
-                <small>Якщо  склад не вказано, кiлькiсть  i цiна вираховуются   по  всiм  складам</small>
-            </div>
+    
+   
+            
             <div class="form-group  ">
                 <label for="pricetype">Тип ціни</label>
                 <select class="form-control" zippy="pricetype">
@@ -58,6 +57,7 @@
                <small>Якщо  оплата  в разунку або  при  проодажi поставте Не выбрано</small>
                  
             </div>
+               
              <div class="form-group  ">
                 <label for="notes">Примітка </label>
 

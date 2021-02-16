@@ -548,6 +548,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+       
+         
     }
 
     public function savedocOnClick($sender) {

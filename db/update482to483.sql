@@ -1,5 +1,5 @@
  
- INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(85, 2, 'Неликвидные товары', 'NoLiq', 'Склад', 0);
+ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(85, 2, '??????????? ??????', 'NoLiq', '?????', 0);
  
  
 /*
@@ -56,7 +56,7 @@ CREATE TABLE `cust_acc` (
   CONSTRAINT `cust_acc_fk2` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`contract_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
 
-CREATE   `cust_acc_view` AS 
+CREATE  VIEW `cust_acc_view` AS 
   select 
     `ca`.`ca_id` AS `ca_id`,
     `ca`.`customer_id` AS `customer_id`,
@@ -71,3 +71,5 @@ CREATE   `cust_acc_view` AS
     `ct`.`contract_number` AS `contract_number` 
   from 
     (((`cust_acc` `ca` join `documents_view` `d` on((`ca`.`document_id` = `d`.`document_id`))) join `customers` `c` on((`c`.`customer_id` = `ca`.`customer_id`))) left join `contracts` `ct` on((`ca`.`contract_id` = `ct`.`contract_id`)));
+    
+    

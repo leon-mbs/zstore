@@ -7,7 +7,7 @@ use App\Entity\Customer;
 use App\Entity\MoneyFund;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
-use App\Entity\Store;
+ 
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -18,6 +18,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -42,7 +43,7 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
+        $this->docform->add(new CheckBox('production' ));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
@@ -109,7 +110,7 @@ class Order extends \App\Pages\Base
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->OnDelivery($this->docform->delivery);
-            $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->production->setChecked($this->_doc->headerdata['production']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->total->setText($this->_doc->amount);
 
@@ -232,6 +233,8 @@ class Order extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+       $this->wselitem->setVisible(false);
+         
     }
 
     public function cancelrowOnClick($sender) {
@@ -244,6 +247,8 @@ class Order extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->wselitem->setVisible(false);
+         
     }
 
     public function savedocOnClick($sender) {
@@ -269,7 +274,7 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['production'] = $this->docform->production->isChecked() ? 1:0;
 
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
@@ -407,7 +412,7 @@ class Order extends \App\Pages\Base
         $price = $item->getPrice($this->docform->pricetype->getValue());
 
 
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity( )));
         $this->editdetail->editprice->setText($price);
 
         $this->updateAjax(array('qtystock', 'editprice'));

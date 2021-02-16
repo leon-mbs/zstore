@@ -20,6 +20,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -51,6 +52,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new Date('sent_date'));
         $this->docform->add(new Date('delivery_date'));
+      $this->docform->add(new CheckBox('nostore' ));
 
 
         $this->docform->add(new TextInput('barcode'));
@@ -137,6 +139,7 @@ class TTN extends \App\Pages\Base
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
+            $this->docform->nostore->setChecked($this->_doc->headerdata['nostore']);
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -173,14 +176,14 @@ class TTN extends \App\Pages\Base
 
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->notesfromorder->setText($basedoc->notes);
                         $this->docform->ship_address->setText($basedoc->headerdata['ship_address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
-
-
+                        
+                        if($basedoc->headerdata['production']==1)   $this->docform->nostore->setChecked(true)  ;
                         $notfound = array();
                         $order = $basedoc->cast();
 
@@ -590,6 +593,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
+        $this->_doc->headerdata['nostore'] = $this->docform->nostore->isChecked()?1:0;
 
         if ($this->checkForm() == false) {
             return;
@@ -861,7 +865,7 @@ class TTN extends \App\Pages\Base
 
     public function OnDelivery($sender) {
 
-        if ($sender->getValue() == Document::DEL_BOY || $sender->getValue() == Document::DEL_SERVICE) {
+        if ($sender->getValue() != Document::DEL_SELF ) {
             $this->docform->senddoc->setVisible(true);
 
             $this->docform->ship_address->setVisible(true);
