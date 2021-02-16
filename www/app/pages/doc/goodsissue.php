@@ -265,12 +265,11 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
-
-
+                     
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
+                             $item->price = $item->getPrice($basedoc->headerdata['pricetype']); //последние  цены
                             $this->_itemlist[$item->item_id] = $item;
-                        }
+                        }       
                         $this->calcTotal();
                         $this->calcPay();
                     }
@@ -656,6 +655,7 @@ class GoodsIssue extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
+            if($isEdited==false)  $this->_doc->document_id=0;
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);

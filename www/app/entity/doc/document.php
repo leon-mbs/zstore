@@ -246,11 +246,15 @@ class Document extends \ZCL\DB\Entity
         try {
             // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+          
             //удаляем освободившиеся стоки
             $conn->Execute("delete from store_stock where stock_id not in (select coalesce(stock_id,0) from entrylist) ");
 
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
+
+           //отменяем проводлки  по  лицевым  счетам  контрагентов   
+            $conn->Execute("delete from cust_acc where document_id = " . $this->document_id);
 
 
             // возвращаем бонусы

@@ -131,6 +131,7 @@ class OutSalary extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
+            if($isEdited==false)  $this->_doc->document_id=0;
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);

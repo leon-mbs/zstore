@@ -77,9 +77,14 @@ class Warranty extends \App\Pages\Base
                     $this->docform->customer->setText($basedoc->headerdata['customer_name']);
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
+                        $this->_tovarlist = array();
+                        $itemlist = $basedoc->unpackDetails('detaildata');
+                        foreach($itemlist as $it) {
+                   
+                           $this->_tovarlist[$it->item_id] = $it ;
+                        }
 
-
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                        
                     }
                    if ($basedoc->meta_name == 'TTN') {
 
@@ -236,6 +241,7 @@ class Warranty extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
+            if($isEdited==false)  $this->_doc->document_id=0;
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
