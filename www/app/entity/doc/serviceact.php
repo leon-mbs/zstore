@@ -23,7 +23,9 @@ class ServiceAct extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
-                              "price"        => H::fa($ser->price)
+                              "qty"         => H::fqty($ser->quantity),
+                              "price"        => H::fa($ser->price) ,
+                              "amount"        => H::fa($ser->price*$ser->quantity)
             );
         }
 
@@ -62,7 +64,7 @@ class ServiceAct extends Document
 
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - $ser->price, $ser->quantity);
+            $sc = new Entry($this->document_id, 0 - ($ser->price*$ser->quantity), $ser->quantity);
             $sc->setService($ser->service_id);
    
             $sc->setExtCode($ser->price); //Для АВС 
@@ -114,8 +116,10 @@ class ServiceAct extends Document
         foreach ($this->unpackDetails('detaildata') as $ser) {
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
-                              "price"        => H::fa($ser->price)
-            );
+                              "qty"         => H::fqty($ser->quantity),
+                              "price"        => H::fa($ser->price) ,
+                              "amount"        => H::fa($ser->price*$ser->quantity)
+           );
         }
         $header['slist'] = $detail;
 
