@@ -91,7 +91,7 @@ class GoodsIssue extends Document
         if($this->headerdata["paydisc"]>0 && $this->amount >0) {
             $k =  ($this->amount - $this->headerdata["paydisc"])/$this->amount ;
         }
-
+        $amount=0;
         foreach ($this->unpackDetails('detaildata') as $item) {
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
@@ -100,14 +100,16 @@ class GoodsIssue extends Document
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price*$k - $st->partion); //Для АВС 
                 $sc->save();
+                $amount +=   $item->price*$k *$st->quantity;
             }
         }
-
+        \App\Entity\CustAcc::Create($this, $amount) ;
+        
         //списываем бонусы
         if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
             if ($customer->discount > 0) {
-                return; //процент
+                //процент
             } else {
                 $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
                 if($customer->bonus < 0) {
@@ -116,10 +118,10 @@ class GoodsIssue extends Document
                 $customer->save();
             }
         }
-
-
+ 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            \App\Entity\CustAcc::Create($this,0-$this->payed) ;
         }
 
         return true;

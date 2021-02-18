@@ -40,7 +40,7 @@ class IncomeMoney extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('amount'));
+        $this->docform->add(new TextInput('amount'));  
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this,'OnCustomer')   ;
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -203,7 +203,7 @@ class IncomeMoney extends \App\Pages\Base
        $this->docform->emp->setVisible(false); 
        $this->docform->customer->setVisible(false); 
        $this->docform->contract->setVisible(false); 
-       if($sender->getValue()==1) {
+       if($sender->getValue()==1 ) {
           $this->docform->contract->setVisible(true);     
           $this->docform->customer->setVisible(true);      
        }

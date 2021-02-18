@@ -21,7 +21,7 @@ class Document extends \ZCL\DB\Entity
     const STATE_INPROCESS   = 7; // в  работе
     const STATE_WA          = 8; // ждет подтверждения
     const STATE_CLOSED      = 9; // Закрыт , доставлен, выполнен
-    const STATE_INSHIPMENT  = 11; // Отгружен
+    const STATE_INSHIPMENT  = 11; // В доставке
     const STATE_DELIVERED   = 14; // доставлен
     const STATE_REFUSED     = 15; // отклонен
     const STATE_SHIFTED     = 16; // отложен

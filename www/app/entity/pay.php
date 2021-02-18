@@ -27,7 +27,8 @@ class Pay extends \ZCL\DB\Entity
     const PAY_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку  
     const PAY_OTHER_OUTCOME    = 57;   //прочие расходы
     const PAY_DIVIDEND_OUTCOME = 58;   //распределение прибыли
-    const PAY_INV              = 59;        //Инвестиции
+    const PAY_INV              = 59;   //Инвестиции
+    const PAY_BANK             = 60;   //Банковское  обслуживание
 
     protected function init() {
         $this->pl_id = 0;
@@ -105,7 +106,7 @@ class Pay extends \ZCL\DB\Entity
                 $pay->mf_id = $mf_id;
                 $pay->document_id = $document_id;
                 $pay->amount = 0 - ($amount * $mf->btran / 100);
-                $pay->paytype = Pay::PAY_BASE_OUTCOME;
+                $pay->paytype = Pay::PAY_BANK;
                 $pay->paydate = $paydate;
                 $pay->notes = \App\Helper::l('bankproc');
                 $pay->user_id = \App\System::getUser()->user_id;
@@ -169,6 +170,7 @@ class Pay extends \ZCL\DB\Entity
             $list[PAY::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
             $list[PAY::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
             $list[PAY::PAY_INV] = \App\Helper::l('pt_inv');
+            $list[PAY::PAY_BANK] = \App\Helper::l('pt_bank');
 
         }
 

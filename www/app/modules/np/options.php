@@ -34,6 +34,7 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('area' ))->onChange($this,'onArea');
         $form->add(new DropDownChoice('city' ))->onChange($this,'onCity');
         $form->add(new DropDownChoice('point' ));
+        $form->add(new TextInput('tel' ))->setText($modules['nptel']);
  
  
         $form->onSubmit($this, 'savedataOnClick');
@@ -73,6 +74,7 @@ class Options extends \App\Pages\Base
         $modules['npcityref']  = $cityref;
         $modules['nppoint']    = $point;
         $modules['nppointref'] = $pointref;
+        $modules['nptel'] = $this->oform->tel->getText();
  
 
         System::setOptions("modules", $modules);

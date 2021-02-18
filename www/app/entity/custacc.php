@@ -17,16 +17,20 @@ class CustAcc extends \ZCL\DB\Entity
         
     }
     
+ 
     public  static function  Create($doc,$amount,$notes='')   {
-         if($doc >0) {    //если передано  id
+         if(is_numeric($doc) && $doc >0) {    //если передано  id
              $doc = \App\Entity\Doc\Document::load($doc) ;
          }
          if(($doc->customer_id >0) == false ) return;
+         if($amount ==0 ) return;
+         
          if(strlen($notes)==0)  $notes = $doc->meta_desc;
          $ca = new  CustAcc();
          $ca->document_id = $doc->document_id;
          $ca->customer_id = $doc->customer_id;
          $ca->notes = $notes;
+         $ca->amount = $amount;
          if($doc->headerdata['contract_id']>0) {
              $ca->contract_id = $doc->headerdata['contract_id'];
          }

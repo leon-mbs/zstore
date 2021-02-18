@@ -36,7 +36,7 @@
         <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-info mt-2 mb-3">Создать СФ</a>
         <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-info mt-2 mb-3">Создать ТТН</a>
         {{#np}}
-        <br><a zipy="statusNP" >Обновить статусы  Новой Почты</a>
+        <br><b><a zippy="statusNP" >Обновить статусы  Новой Почты</a>  </b>
         {{/np}}
         <br> <a zippy="csv">Экспорт в Excel</a>
 
@@ -134,7 +134,7 @@
 </div>
 
 <div  zippy="nppan">
-      <h4>Создание  декларации  НП</h4>
+      <h4>Создание  экспресс-накладной  НП</h4>
       <form zippy="npform">
       <div class="row" >
     <div class="col-12 col-md-6 col-xl-4" >
@@ -199,6 +199,10 @@
    
       <div class="col-12 col-md-4 col-xl-3" >
        
+            <div class="form-group">
+                <label for="seltel">Тел. отправителя</label>
+                <input type="text" zippy="seltel" class="form-control"  />
+            </div>
 
      
              <div class="form-group">

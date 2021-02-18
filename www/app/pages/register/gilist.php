@@ -82,6 +82,7 @@ class GIList extends \App\Pages\Base
         $npform->add(new DropDownChoice('selarea' ))->onChange($this,'onSelArea');
         $npform->add(new DropDownChoice('selcity' ))->onChange($this,'onSelCity');
         $npform->add(new DropDownChoice('selpoint' ));
+        $npform->add(new TextInput('seltel' ));
  
         $npform->add(new DropDownChoice('bayarea' ))->onChange($this,'onBayArea');
         $npform->add(new DropDownChoice('baycity' ))->onChange($this,'onBayCity');
@@ -114,11 +115,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->doclist->Reload(false);
     }
   
-    public function onNP($sender) {
 
-       
-        $this->listpan->doclist->Reload(false);
-    }
 
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
@@ -410,8 +407,9 @@ class GIList extends \App\Pages\Base
           if(strlen($modules['npcityref'])>0) {
               $this->onSelCity($this->nppan->npform->selcity) ;
               $this->nppan->npform->selpoint->setValue($modules['nppointref']);              
-          }     
-          
+           }     
+          $this->nppan->npform->seltel->setText($modules['nptel']);              
+        
           $list = $this->_doc->unpackDetails('detaildata');
           $w = 0;
           $p = 0;
@@ -613,7 +611,7 @@ class GIList extends \App\Pages\Base
              $this->_doc->headerdata['delivery_date'] =strtotime($result['data'][0]['EstimatedDeliveryDate']);
              $this->_doc->headerdata['ship_amount'] = $result['data'][0]['CostOnSite'];
              $this->_doc->headerdata['ship_number'] = $result['data'][0]['IntDocNumber'];
-             $this->_doc->headerdata['ship_numberref'] = $result['data']['Ref'];
+             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
              $this->_doc->save();
              $this->setSuccess(H::l("npnewdec",$this->_doc->headerdata['ship_number']));             
              
@@ -626,6 +624,46 @@ class GIList extends \App\Pages\Base
          }
             
     }   
+    
+    
+    public function onNP($sender) {
+        
+        $api =  new  \App\Modules\NP\Helper() ;
+        $errors=array();
+        $docs = Document::find("meta_name='TTN'  and  state in(11,20) ");
+        foreach($docs as $ttn){
+            if(strlen($ttn->headerdata['ship_numberref'])==0)  continue;
+            
+            $cnt=0;
+            $decstate = $api->documentsTracking($ttn->headerdata['ship_number'])  ;
+            $st=$decstate['data'][0]['Status'] ;
+            $code=$decstate['data'][0]['StatusCode'] ;
+            
+            // 9,10,11,106 - получено
+            //4,5,6,7,8,41,101 - в  пути
+            //102,103,104,108,105,2,3  проблемы
+            if(in_array($code,array(9,10,11,106))) {
+                $ttn->updateStatus(Document::STATE_DELIVERED) ;
+                $cnt++;
+            }
+            if(in_array($code,array(4,5,6,7,8,41,101))) {
+                $ttn->updateStatus(Document::STATE_INSHIPMENT) ;
+                $cnt++;
+            }
+            if(in_array($code,array( 102,103,104,108,105,2,3))) {
+               $errors[]= $ttn->headerdata['ship_number']." -  ".  $st;
+            }
+            if(count($errors)>0){
+               $this->setError( Implode('<br>',$errors)) ;  
+            } else {
+               $this->setSuccess("npupdated",$cnt) ;
+            }
+            
+        }
+       
+        $this->listpan->doclist->Reload();
+    }    
+    
 }
 
 /**

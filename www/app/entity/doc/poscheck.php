@@ -173,7 +173,7 @@ class POSCheck extends Document
 
             $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0);
             $sc->setService($ser->service_id);
-            $sc->setExtCode(0 - ($ser->price * $ser->quantity)); //Для АВС 
+            $sc->setExtCode(0 - ($ser->price  )); //Для АВС 
 
             $sc->save();
         }
