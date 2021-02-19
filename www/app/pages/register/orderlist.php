@@ -171,6 +171,7 @@ class OrderList extends \App\Pages\Base
     }
 
     public function updateStatusButtons() {
+        $common = System::getOptions("common");
 
         $this->statuspan->statusform->bclose->setVisible(true);
 
@@ -185,8 +186,7 @@ class OrderList extends \App\Pages\Base
 
 
         //проверяем  что есть ТТН
-        $list = $this->_doc->getChildren('TTN');
-        $ttn = count($list) > 0;
+ 
         $list = $this->_doc->getChildren('Invoice');
         $invoice = count($list) > 0;
 
@@ -212,9 +212,7 @@ class OrderList extends \App\Pages\Base
 
         }
 
-        if ($ttn) {
-            $this->statuspan->statusform->bref->setVisible(false);
-        }
+  
         if ($ref) {
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
@@ -244,6 +242,24 @@ class OrderList extends \App\Pages\Base
         if ($inproc == false || $closed == false) {
             $this->_tvars['askclose'] = true;
         }
+        
+         $order = $this->_doc->cast();
+             //проверяем  что уже есть отправка
+            $list = $order->getChildren('TTN');
+
+            if (count($list) > 0 && $common['numberttn']<>1) {
+              $this->statuspan->statusform->bttn->setVisible(false);
+ 
+            }
+            $list = $order->getChildren('GoodsIssue');
+
+            if (count($list) > 0 && $common['numberttn']<>1) {
+              $this->statuspan->statusform->bttn->setVisible(false);
+ 
+            }       
+                
+        
+        
     }
 
     //просмотр

@@ -97,20 +97,20 @@ class Pay extends \ZCL\DB\Entity
         $pay->notes = $comment;
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
-
+         
         $mf = \App\Entity\MoneyFund::load($mf_id);
         if ($mf instanceof \App\Entity\MoneyFund) {
             //банковский процент
             if ($mf->beznal == 1 and $mf->btran > 0) {
-                $pay = new \App\Entity\Pay();
-                $pay->mf_id = $mf_id;
-                $pay->document_id = $document_id;
-                $pay->amount = 0 - ($amount * $mf->btran / 100);
-                $pay->paytype = Pay::PAY_BANK;
-                $pay->paydate = $paydate;
-                $pay->notes = \App\Helper::l('bankproc');
-                $pay->user_id = \App\System::getUser()->user_id;
-                $pay->save();
+                $payb = new \App\Entity\Pay();
+                $payb->mf_id = $mf_id;
+                $payb->document_id = $document_id;
+                $payb->amount = 0 - ($amount * $mf->btran / 100);
+                $payb->paytype = Pay::PAY_BANK;
+                $payb->paydate = $paydate;
+                $payb->notes = \App\Helper::l('bankproc');
+                $payb->user_id = \App\System::getUser()->user_id;
+                $payb->save();
             }
         }
 
@@ -120,6 +120,8 @@ class Pay extends \ZCL\DB\Entity
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $document_id;
         $payed = $conn->GetOne($sql);
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
+        
+        return $pay;
     }
 
   

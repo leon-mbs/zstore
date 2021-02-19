@@ -187,18 +187,22 @@ class TTN extends Document
                 \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->headerdata['ship_amount'], H::getDefMF(), \App\Entity\Pay::PAY_SALE_OUTCOME);
             }
         }
+        $common = \App\System::getOptions("common");
 
         if($this->parent_id > 0) {
             $order = Document::load($this->parent_id);
             
             $list = $order->getChildren('TTN');
 
-            if (count($list) ==1) {   //только  эта  ТТН
+            if (count($list) ==1 && $common['numberttn']<>1) {   //только  эта  ТТН
                 if($state == Document::STATE_DELIVERED && $order->state == Document::STATE_INSHIPMENT) {
                     $order->updateStatus(Document::STATE_DELIVERED) ;
                 }
                 if($state == Document::STATE_INSHIPMENT && $order->state == Document::STATE_INPROCESS) {
                     $order->updateStatus(Document::STATE_INSHIPMENT) ;
+                }
+                if($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
+                    $order->updateStatus(Document::STATE_READYTOSHIP) ;
                 }
                 
             }            

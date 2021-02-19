@@ -192,12 +192,7 @@ class GIList extends \App\Pages\Base
         }
 
         if ($sender->id == "bttn") {
-            $d = $this->_doc->getChildren('TTN');
-
-            if (count($d) > 0) {
-                $this->setWarn('ttn_exists');
-
-            }
+     
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
         }
 
@@ -304,6 +299,10 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bgar->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
+        
+        
+   
+        
     }
 
     //просмотр
@@ -361,7 +360,10 @@ class GIList extends \App\Pages\Base
          $this->nppan->setVisible(true);
          $this->nppan->npform->clean() ;
  
-          $modules = System::getOptions("modules");
+     
+       
+      
+         $modules = System::getOptions("modules");
   
        
           $this->nppan->npform->npplaces->setText(1) ;
@@ -393,7 +395,7 @@ class GIList extends \App\Pages\Base
           }
         
           $this->nppan->npform->nppt->setOptionList($stlist) ;
-          $this->nppan->npform->nppt->setValue('Sender');
+          $this->nppan->npform->nppt->setValue('Recipient');
           
           $this->nppan->npform->bayarea->setOptionList($areas) ;
           $this->nppan->npform->selarea->setOptionList($areas) ;
@@ -446,7 +448,10 @@ class GIList extends \App\Pages\Base
           }
           
           $this->nppan->npform->baytel->setText($tel);
-          $this->nppan->npform->bayfirstname->setText($c->customer_name);
+          $name = explode(' ',$c->customer_name) ;
+          $this->nppan->npform->bayfirstname->setText($name[0]);
+          $this->nppan->npform->baymiddlename->setText($name[1]);
+          $this->nppan->npform->baylastname->setText($name[2]);
                
           $this->nppan->npform->npttncust->setText( $cust) ;  
           $this->nppan->npform->npttaddress->setText( $this->_doc->headerdata["ship_address"]) ;  
@@ -517,15 +522,16 @@ class GIList extends \App\Pages\Base
             $params['SeatsAmount'] = $this->nppan->npform->npplaces->getText()  ;
             $params['Description'] = trim($this->nppan->npform->npdesc->getText() ) ;
             $params['CargoType'] = 'Cargo' ;
+            
             $params['Weight'] = $this->nppan->npform->npw->getText()  ;
             $moneyback = $this->nppan->npform->npback->getText()   ;
             if($moneyback>0) {   //если  введена  обратная сумма
                $params['BackwardDeliveryData']  = array(
                 'PayerType' => 'Recipient',
                 'CargoType' => 'Money',
-                'RedeliveryString' => $moneyback );
+                'RedeliveryString' =>$moneyback );
             }
-            
+          
           
              //проверка  введеных параметров
             if(($params['Weight']>0)==false){
@@ -537,6 +543,7 @@ class GIList extends \App\Pages\Base
                 return;
             }        
          $api =  new  \App\Modules\NP\Helper() ;
+         
          $sender=array();
          $recipient=array();
          
@@ -625,7 +632,7 @@ class GIList extends \App\Pages\Base
             
     }   
     
-    
+    //обновление  статусов
     public function onNP($sender) {
         
         $api =  new  \App\Modules\NP\Helper() ;

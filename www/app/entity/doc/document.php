@@ -253,9 +253,7 @@ class Document extends \ZCL\DB\Entity
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
 
-           //отменяем проводлки  по  лицевым  счетам  контрагентов   
-            $conn->Execute("delete from cust_acc where document_id = " . $this->document_id);
-
+         
 
             // возвращаем бонусы
             if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {

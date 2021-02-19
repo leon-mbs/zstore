@@ -103,7 +103,6 @@ class GoodsIssue extends Document
                 $amount +=   $item->price*$k *$st->quantity;
             }
         }
-        \App\Entity\CustAcc::Create($this, $amount) ;
         
         //списываем бонусы
         if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
@@ -121,7 +120,6 @@ class GoodsIssue extends Document
  
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
-            \App\Entity\CustAcc::Create($this,0-$this->payed) ;
         }
 
         return true;

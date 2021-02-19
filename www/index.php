@@ -64,5 +64,5 @@ try {
         echo $e->getFile() . '<br>';
     }
 }  
-//Devqwe123*  zippy00_dev zippy00.ftp.tools
+ 
 // 3f217d4c7b7458d3d00207b177d8776c
