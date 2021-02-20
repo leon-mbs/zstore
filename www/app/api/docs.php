@@ -10,34 +10,30 @@ use \App\Helper as H;
 class docs extends \App\API\Base\JsonRPC
 {
     //список  статусов
-    public function statuslist()
-    {
+    public function statuslist() {
         $list = \App\Entity\Doc\Document::getStateList();
 
         return $list;
     }
 
-   //список  филиалов
-    public function branchlist()
-    {
-        $list = \App\Entity\Branch::findArray('branch_name','','branch_name') ;
+    //список  филиалов
+    public function branchlist() {
+        $list = \App\Entity\Branch::findArray('branch_name', '', 'branch_name');
 
         return $list;
     }
 
 
     //записать ордер
-    public function createorder($args)
-    {
+    public function createorder($args) {
         $options = \App\System::getOptions('common');
 
         if (strlen($args['number']) == 0) {
             throw  new  \Exception(H::l("apinumber"));  //не задан  номер
 
         }
-        
-        
-        
+
+
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
@@ -47,21 +43,22 @@ class docs extends \App\API\Base\JsonRPC
 
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
-            if ($c == null)
+            if ($c == null) {
                 throw  new  \Exception(H::l("apicustnotfound"));
-            else
+            } else {
                 $doc->customer_id = $args['customer_id'];
+            }
         }
         $doc = Document::create('Order');
-        
-        if($options['usebranch']==1   ) {
-            if($args['branch_id']>0) {
-               $doc->branch_id = $args['branch_id']; 
+
+        if ($options['usebranch'] == 1) {
+            if ($args['branch_id'] > 0) {
+                $doc->branch_id = $args['branch_id'];
             } else {
-               throw  new  \Exception(H::l("apinobranch"));
+                throw  new  \Exception(H::l("apinobranch"));
             }
-        }        
-        
+        }
+
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->state = Document::STATE_NEW;
@@ -94,12 +91,15 @@ class docs extends \App\API\Base\JsonRPC
         } else {
             throw  new  \Exception(H::l("apinoitems"));
         }
-        if (count($details) == 0) throw  new  \Exception(H::l("apinoitems"));
+        if (count($details) == 0) {
+            throw  new  \Exception(H::l("apinoitems"));
+        }
         $doc->packDetails('detaildata', $details);
-        if ($args['total'] > 0)
+        if ($args['total'] > 0) {
             $doc->amount = $args['total'];
-        else
+        } else {
             $doc->amount = $total;
+        }
 
         $doc->payamount = $doc->amount;
 
@@ -109,8 +109,7 @@ class docs extends \App\API\Base\JsonRPC
     }
 
     //записать ТТН
-    public function createttn($args)
-    {
+    public function createttn($args) {
 
         if (strlen($args['number']) == 0) {
             throw  new  \Exception(H::l("apinumber"));  //не задан  номер
@@ -125,10 +124,11 @@ class docs extends \App\API\Base\JsonRPC
 
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
-            if ($c == null)
+            if ($c == null) {
                 throw  new  \Exception(H::l("apicustnotfound"));
-            else
+            } else {
                 $doc->customer_id = $args['customer_id'];
+            }
         }
         $doc = Document::create('TTN');
         $doc->document_number = $doc->nextNumber();
@@ -163,12 +163,15 @@ class docs extends \App\API\Base\JsonRPC
         } else {
             throw  new  \Exception(H::l("apinoitems"));
         }
-        if (count($details) == 0) throw  new  \Exception(H::l("apinoitems"));
+        if (count($details) == 0) {
+            throw  new  \Exception(H::l("apinoitems"));
+        }
         $doc->packDetails('detaildata', $details);
-        if ($args['total'] > 0)
+        if ($args['total'] > 0) {
             $doc->amount = $args['total'];
-        else
+        } else {
             $doc->amount = $total;
+        }
 
         $doc->payamount = $doc->amount;
 
@@ -178,8 +181,7 @@ class docs extends \App\API\Base\JsonRPC
     }
 
     // проверка  статусов документов по  списку  номеров
-    public function checkstatus($args)
-    {
+    public function checkstatus($args) {
         $list = array();
 
         if (!is_array($args['numbers'])) {
@@ -191,8 +193,8 @@ class docs extends \App\API\Base\JsonRPC
             $doc = Document::getFirst("  content   like  {$num1} or content   like  {$num2}  ");
             if ($doc instanceof Document) {
                 $list[] = array(
-                    "number" => $num,
-                    "status" => $doc->state,
+                    "number"     => $num,
+                    "status"     => $doc->state,
                     "statusname" => Document::getStateName($doc->state)
                 );
             }
@@ -202,8 +204,7 @@ class docs extends \App\API\Base\JsonRPC
     }
 
     //запрос на  отмену
-    public function cancel($args)
-    {
+    public function cancel($args) {
         $doc = null;
         if (strlen($args['number']) > 0) {
             $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -227,5 +228,4 @@ class docs extends \App\API\Base\JsonRPC
     }
 
 
-    
 }

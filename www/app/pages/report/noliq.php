@@ -24,8 +24,8 @@ class NoLiq extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-       
-        $this->filter->add(new DropDownChoice('mqty', array("1"=>"1","3"=>"3","6"=>"6","12"=>"12"), 1));
+
+        $this->filter->add(new DropDownChoice('mqty', array("1" => "1", "3" => "3", "6" => "6", "12" => "12"), 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
@@ -61,7 +61,7 @@ class NoLiq extends \App\Pages\Base
 
         $mqty = $this->filter->mqty->getValue();
 
-      
+
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = " and st.store_id in ({$cstr})    ";
@@ -69,8 +69,8 @@ class NoLiq extends \App\Pages\Base
 
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();
-        $date =  strtotime('-'.$mqty.' month')  ;
-     
+        $date = strtotime('-' . $mqty . ' month');
+
         $sql = "select coalesce(sum(st.qty),0) as qty, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
                {$cstr} and   st.stock_id not  in(select   stock_id    
                from  entrylist_view  
@@ -83,20 +83,19 @@ class NoLiq extends \App\Pages\Base
                order by  qty  desc
                  ";
 
-       
-        $detail = array(); 
+
+        $detail = array();
         $res = $conn->Execute($sql);
         foreach ($res as $item) {
-          $item['qty'] = H::fqty($item['qty'] );
-          $detail[] =  $item;
-          
+            $item['qty'] = H::fqty($item['qty']);
+            $detail[] = $item;
+
         }
 
-   
 
         $header = array(
-            "_detail"       => $detail,
-            'mqty' => $this->filter->mqty->getValue()
+            "_detail" => $detail,
+            'mqty'    => $this->filter->mqty->getValue()
         );
         $report = new \App\Report('report/noliq.tpl');
 

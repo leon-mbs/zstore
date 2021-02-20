@@ -79,14 +79,14 @@ class Warranty extends \App\Pages\Base
                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->_tovarlist = array();
                         $itemlist = $basedoc->unpackDetails('detaildata');
-                        foreach($itemlist as $it) {
-                   
-                           $this->_tovarlist[$it->item_id] = $it ;
+                        foreach ($itemlist as $it) {
+
+                            $this->_tovarlist[$it->item_id] = $it;
                         }
 
-                        
+
                     }
-                   if ($basedoc->meta_name == 'TTN') {
+                    if ($basedoc->meta_name == 'TTN') {
 
 
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
@@ -241,7 +241,9 @@ class Warranty extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            if($isEdited==false)  $this->_doc->document_id=0;
+            if ($isEdited == false) {
+                $this->_doc->document_id = 0;
+            }
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
@@ -259,11 +261,11 @@ class Warranty extends \App\Pages\Base
             $this->setError("noenteritem");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-             $next = $this->_doc->nextNumber() ;
+            $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
-             $this->_doc->document_number =  $next;
-           if(strlen($next)==0) {
-                $this->setError('docnumbercancreated');    
+            $this->_doc->document_number = $next;
+            if (strlen($next) == 0) {
+                $this->setError('docnumbercancreated');
             }
         }
         return !$this->isError();

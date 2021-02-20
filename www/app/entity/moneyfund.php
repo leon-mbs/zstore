@@ -14,7 +14,7 @@ class MoneyFund extends \ZCL\DB\Entity
     //  const BEZNAL = 10000;
     const PREPAID = 10001;
     const CREDIT  = 10002;
-   
+
 
     protected function init() {
         $this->mf_id = 0;
@@ -83,7 +83,7 @@ class MoneyFund extends \ZCL\DB\Entity
      * @param mixed $beznal добавить пункт  В  кредит
      * @param mixed $prepaid добавить пункт  Была предоплата
      */
-    public static function getList($credit = false, $prepaid = false ) {
+    public static function getList($credit = false, $prepaid = false) {
         $ml = array();
         if ($credit) {
             $ml[self::CREDIT] = \App\Helper::l("credit");
@@ -93,7 +93,7 @@ class MoneyFund extends \ZCL\DB\Entity
         if ($prepaid) {
             $ml[self::PREPAID] = \App\Helper::l("prepaid");
         }
-    
+
         foreach (MoneyFund::findArray("mf_name", "") as $k => $v) {
             $ml[$k] = $v;
         }

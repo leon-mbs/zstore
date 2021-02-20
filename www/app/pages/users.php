@@ -35,8 +35,8 @@ class Users extends \App\Pages\Base
 
 
         $this->add(new Panel("listpan"));
-        $this->listpan->add(new Form('filter'))->onSubmit($this,'OnFilter');
-        $this->listpan->filter->add(new DropDownChoice('searchrole',\App\entity\UserRole::findArray('rolename','','rolename'),0)) ;
+        $this->listpan->add(new Form('filter'))->onSubmit($this, 'OnFilter');
+        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\entity\UserRole::findArray('rolename', '', 'rolename'), 0));
 
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource($this), $this, 'OnUserRow'))->Reload();
@@ -206,7 +206,7 @@ class Users extends \App\Pages\Base
     }
 
     public function OnFilter($sender) {
-        $this->listpan->userrow->Reload(); 
+        $this->listpan->userrow->Reload();
     }
 }
 
@@ -214,21 +214,22 @@ class UserDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;
+
     public function __construct($page) {
-    
+
         $this->page = $page;
     }
-    
-    private function getWhere(){
+
+    private function getWhere() {
         $sql = '';
         $role = $this->page->listpan->filter->searchrole->getValue();
-        if($role > 0) {
-           $sql = 'role_id=' .$role;
+        if ($role > 0) {
+            $sql = 'role_id=' . $role;
         }
-        
+
         return $sql;
     }
-    
+
     public function getItemCount() {
         return User::findCnt($this->getWhere());
     }

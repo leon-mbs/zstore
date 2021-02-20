@@ -43,7 +43,7 @@ class Employee extends \ZCL\DB\Entity
         $this->email = (string)($xml->email[0]);
         $this->phone = (string)($xml->phone[0]);
         $this->comment = (string)($xml->comment[0]);
-  
+
         parent::afterLoad();
     }
 
@@ -55,22 +55,22 @@ class Employee extends \ZCL\DB\Entity
         $login = Employee::qstr($login);
         return Employee::getFirst("login=" . $login);
     }
-    
-   
-    public static function getFreeLogins($include="") {
-        $conn = \ZDB\DB::getConnect() ;
-        $sql = "select distinct  userlogin from users where userlogin not in (select  login  from  employees)" ;
-        
+
+
+    public static function getFreeLogins($include = "") {
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select distinct  userlogin from users where userlogin not in (select  login  from  employees)";
+
         if (strlen($include) > 0) {
-           $sql .=  "  or userlogin=" . $conn->qstr($include);
+            $sql .= "  or userlogin=" . $conn->qstr($include);
         }
-        $sql .=  "  order  by  userlogin ";
-        
+        $sql .= "  order  by  userlogin ";
+
         $list = array();
-        foreach($conn->GetCol($sql) as $login) {
+        foreach ($conn->GetCol($sql) as $login) {
             $list[$login] = $login;
         }
-        return $list ;
+        return $list;
     }
 
     public static function getConstraint() {

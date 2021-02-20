@@ -16,7 +16,7 @@ class Pay extends \ZCL\DB\Entity
     const PAY_BASE_INCOME  = 1;     //операционные доходы  
     const PAY_OTHER_INCOME = 2;   //прочие доходы
     const PAY_FIN          = 3;   //доходы от  фин.  деятельности
-    
+
 
     const PAY_BASE_OUTCOME     = 50;    //операционные расходы  
     const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
@@ -97,7 +97,7 @@ class Pay extends \ZCL\DB\Entity
         $pay->notes = $comment;
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
-         
+
         $mf = \App\Entity\MoneyFund::load($mf_id);
         if ($mf instanceof \App\Entity\MoneyFund) {
             //банковский процент
@@ -120,11 +120,11 @@ class Pay extends \ZCL\DB\Entity
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $document_id;
         $payed = $conn->GetOne($sql);
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
-        return  $payed;
-        
+        return $payed;
+
     }
 
-  
+
     public static function cancelPayment($id, $comment) {
         $pl = Pay::load($id);
         if ($pl == null) {
@@ -135,7 +135,7 @@ class Pay extends \ZCL\DB\Entity
         $pay->mf_id = $pl->mf_id;
 
         $pay->amount = 0 - $pl->amount;
-        $pay->document_id =   $pl->document_id;
+        $pay->document_id = $pl->document_id;
 
         $pay->paydate = time();
         $pay->notes = $comment;
@@ -144,7 +144,7 @@ class Pay extends \ZCL\DB\Entity
         $pay->save();
 
     }
-    
+
 
     /**
      * список  расходов  и доходов
@@ -158,7 +158,7 @@ class Pay extends \ZCL\DB\Entity
 
             $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[PAY::PAY_FIN] = \App\Helper::l('pt_fin');
- 
+
         }
 
         if ($type != 1) {

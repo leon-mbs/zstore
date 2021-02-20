@@ -29,9 +29,9 @@ class Entry extends \ZCL\DB\Entity
     }
 
     protected function init() {
- 
+
         $this->extcode = 0;
-    
+
     }
 
     protected function afterLoad() {

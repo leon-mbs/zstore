@@ -11,7 +11,7 @@
                 <label for="document_number">Номер документа</label>
                 <input class="form-control" type="text" zippy="document_number" required="required">
             </div>
-         
+
             <div class="form-group  ">
                 <label for="customer">Покупатель</label>
                 <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
@@ -32,14 +32,14 @@
 
             </div>
 
-        <div class="form-check">
+            <div class="form-check">
                 <input zippy="production" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="production">Производство  под заказ</label>
-            </div>     
+                <label class="form-check-label" for="production">Производство под заказ</label>
+            </div>
         </div>
         <div class="col-12 col-md-3">
 
-           <div class="form-group">
+            <div class="form-group">
                 <label for="document_date"> Дата</label>
                 <input class="form-control" type="text" zippy="document_date" required="required">
             </div>
@@ -53,21 +53,21 @@
                 <select class="form-control" zippy="payment">
                     <option value="0">Не выбрано</option>
                 </select>
-                <small>Если  оплата в счете или при продаже поставте Не выбрано</small>
+                <small>Если оплата в счете или при продаже поставте Не выбрано</small>
             </div>
-                    
-   <div class="form-group  ">
+
+            <div class="form-group  ">
                 <label for="notes">Примечание </label>
 
                 <textarea class="form-control" zippy="notes"></textarea>
 
 
-            </div>            
+            </div>
 
 
         </div>
-    <div class="col-12 col-md-3">
-              <div class="form-group  ">
+        <div class="col-12 col-md-3">
+            <div class="form-group  ">
                 <label for="delivery">Доставка</label>
 
                 <select class="form-control" zippy="delivery">
@@ -80,7 +80,7 @@
 
                 <textarea zippy="address" class="form-control"></textarea>
 
-            </div>      
+            </div>
         </div>
     </div>
     <div class="row">
@@ -234,18 +234,18 @@
 
 </form>
 
-    <div class="row">
-        <div class="col-12 col-md-4 col-xl-3">
-<form zippy="editdetail">
-    <h4>Ввод товара </h4>
+<div class="row">
+    <div class="col-12 col-md-4 col-xl-3">
+        <form zippy="editdetail">
+            <h4>Ввод товара </h4>
 
 
             <div class="form-group">
                 <label for="edittovar">Название</label>
                 <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
-                 <a zippy="openitemsel">Открыть справочник</a>
+                <a zippy="openitemsel">Открыть справочник</a>
                 <br>Наличие : <span zippy="qtystock"></span>
-                
+
 
             </div>
             <div class="form-group">
@@ -268,14 +268,14 @@
                 &nbsp; <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-light ">
             </div>
 
-        </form> 
-        </div>
-  <div class="col-12 col-md-8 col-xl-8">
+        </form>
+    </div>
+    <div class="col-12 col-md-8 col-xl-8">
         <div zippy="wselitem"></div>
 
 
-    </div>          
     </div>
+</div>
 
 <form zippy="editcust">
     <h3>&nbsp;Новый контрагент </h3>
@@ -297,7 +297,7 @@
                 <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-light ">
             </div>
         </div>
-            
+
     </div>
 </form>
 

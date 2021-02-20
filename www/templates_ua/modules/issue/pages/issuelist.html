@@ -197,7 +197,7 @@
             </div>
             <div class="form-group">
                 <label for="editcontent">Опис</label>
-                <textarea   class="form-control" zippy="editcontent"></textarea>
+                <textarea class="form-control" zippy="editcontent"></textarea>
             </div>
             <div class="form-group">
                 <label for="editproj">Проект </label>
@@ -237,32 +237,30 @@
 </div>
 
 
- 
-
 <script>
- 
+
     $(function () {
-    // Summernote
-   
-$('#editcontent').summernote({
-    height: 200,
-    lang: 'ru-RU',
- 
- 
-    callbacks: {
-        onEnter: function (e) {
-            e.preventDefault();
-        },
-        onPaste: function (e) {
-          
-            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-            e.preventDefault();
-            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-        }
-    }
-});
-    
-  })
+        // Summernote
+
+        $('#editcontent').summernote({
+            height: 200,
+            lang: 'ru-RU',
+
+
+            callbacks: {
+                onEnter: function (e) {
+                    e.preventDefault();
+                },
+                onPaste: function (e) {
+
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                }
+            }
+        });
+
+    })
 
     function check_deleteissue() {
         return confirm('Удалить задачу?');

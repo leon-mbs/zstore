@@ -133,7 +133,7 @@ class SerList extends \App\Pages\Base
         if ($sender->id == "binproc") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
         }
-       if ($sender->id == "bfin") {
+        if ($sender->id == "bfin") {
             $this->_doc->updateStatus(Document::STATE_FINISHED);
         }
 
@@ -176,7 +176,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bfin->setVisible(true);
         }
 
-       // выполнен
+        // выполнен
         if ($state == Document::STATE_FINISHED) {
 
             $this->statuspan->statusform->binproc->setVisible(false);

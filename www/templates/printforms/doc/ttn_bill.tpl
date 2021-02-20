@@ -14,7 +14,7 @@
         <td colspan="2"> {{firm_name}}</td>
     </tr>
 
- 
+
     <tr>
         <td colspan="3"> Тел. {{phone}}</td>
     </tr>
@@ -27,7 +27,7 @@
     </tr>
 
     {{/customer_name}}
-       {{#order}}
+    {{#order}}
     <tr>
         <td colspan="3"> Заказ:</td>
     </tr>
@@ -35,8 +35,8 @@
 
         <td colspan="2"> {{order}}</td>
     </tr>
-     
- 
+
+
     {{/order}}
 
     {{#_detail}}
@@ -60,14 +60,14 @@
 
 
     <tr>
-        <td colspan="3"> Дата отправки </td>
+        <td colspan="3"> Дата отправки</td>
     </tr>
     <tr>
 
         <td colspan="2"> {{sent_date}}</td>
     </tr>
-    {{#ship_number}}  
-   <tr>
+    {{#ship_number}}
+    <tr>
         <td colspan="3"> № декларации</td>
     </tr>
     <tr>
@@ -75,5 +75,5 @@
         <td colspan="2"> {{ship_number}}</td>
     </tr>
     </tr>
-    {{/ship_number}}   
+    {{/ship_number}}
 </table>

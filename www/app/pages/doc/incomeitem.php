@@ -307,7 +307,9 @@ class IncomeItem extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            if($isEdited==false)  $this->_doc->document_id=0;
+            if ($isEdited == false) {
+                $this->_doc->document_id = 0;
+            }
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
@@ -337,13 +339,13 @@ class IncomeItem extends \App\Pages\Base
             $this->setError("enterdocnumber");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $next = $this->_doc->nextNumber() ;
+            $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
-            $this->_doc->document_number =  $next;
-            if(strlen($next)==0) {
-                $this->setError('docnumbercancreated');    
+            $this->_doc->document_number = $next;
+            if (strlen($next) == 0) {
+                $this->setError('docnumbercancreated');
             }
-            
+
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");

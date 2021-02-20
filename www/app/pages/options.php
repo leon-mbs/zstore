@@ -160,7 +160,7 @@ class Options extends \App\Pages\Base
 
         $this->onApiType($this->api->atype);
 
-        }
+    }
 
 
     public function saveCommonOnClick($sender) {
@@ -206,7 +206,7 @@ class Options extends \App\Pages\Base
         $this->setSuccess('saved');
         System::setCache('labels', null);
 
-        
+
     }
 
 
@@ -221,7 +221,7 @@ class Options extends \App\Pages\Base
         System::setOptions("val", $val);
         $this->setSuccess('saved');
 
-        
+
     }
 
     public function savePrinterOnClick($sender) {
@@ -238,7 +238,6 @@ class Options extends \App\Pages\Base
         System::setOptions("printer", $printer);
         $this->setSuccess('saved');
 
-        
 
     }
 
@@ -247,9 +246,8 @@ class Options extends \App\Pages\Base
         $this->api->aexp->setVisible($type == 1);
         $this->api->akey->setVisible($type == 1);
 
-      //  $this->goAnkor('atype');
+        //  $this->goAnkor('atype');
 
-        
 
     }
 
@@ -262,12 +260,8 @@ class Options extends \App\Pages\Base
         System::setOptions("api", $api);
         $this->setSuccess('saved');
 
-      
 
     }
 
-   
-   
- 
 
 }

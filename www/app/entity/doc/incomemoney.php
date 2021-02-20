@@ -13,11 +13,13 @@ class IncomeMoney extends Document
 {
 
     public function Execute() {
-  
-        $payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
-         if($payed >0 ) $this->payed = $payed;
 
-    
+        $payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'], $this->headerdata['type'], $this->notes);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
+
+
         return true;
     }
 
@@ -30,7 +32,7 @@ class IncomeMoney extends Document
             'date'            => H::fd($this->document_date),
             "notes"           => $this->notes,
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
-            "contract"        => $this->headerdata["contract_id"] > 0 ? $this->headerdata["contract_number"]: false,
+            "contract"        => $this->headerdata["contract_id"] > 0 ? $this->headerdata["contract_number"] : false,
             "emp"             => strlen($this->headerdata["emp_name"]) > 0 ? $this->headerdata["emp_name"] : false,
             "type"            => $pt[$this->headerdata["type"]],
             "to"              => $this->headerdata["paymentname"],

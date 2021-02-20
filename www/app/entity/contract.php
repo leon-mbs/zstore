@@ -31,6 +31,7 @@ class Contract extends \ZCL\DB\Entity
         $this->pay = (int)($xml->pay[0]);
         $this->file_id = (int)($xml->file_id[0]);
         $this->emp_id = (int)($xml->emp_id[0]);
+        $this->ctype = (int)($xml->ctype[0]);
         $this->enddate = (int)($xml->enddate[0]);
 
 
@@ -57,13 +58,13 @@ class Contract extends \ZCL\DB\Entity
         $this->details .= "<pay>{$this->pay}</pay>";
         $this->details .= "<file_id>{$this->file_id}</file_id>";
         $this->details .= "<emp_id>{$this->emp_id}</emp_id>";
+        $this->details .= "<ctype>{$this->ctype}</ctype>";
         $this->details .= "<enddate>{$this->enddate}</enddate>";
         $this->details .= "</details>";
 
         return true;
     }
 
- 
 
     public static function getList($c, $f = 0) {
 
@@ -71,8 +72,8 @@ class Contract extends \ZCL\DB\Entity
 
         if ($c > 0) {
             $where = "disabled <> 1 and customer_id={$c} ";
-            if($f >0) {
-               $where .=   " and firm_id =  ".$f;  
+            if ($f > 0) {
+                $where .= " and firm_id =  " . $f;
             }
             $res = Contract::find($where, 'contract_number');
             foreach ($res as $k => $v) {
@@ -103,23 +104,44 @@ class Contract extends \ZCL\DB\Entity
 
         return $ar;
     }
+
     /**
-    * к оплате
-    * 
-    */
-    public function getForPay() {
+     * к оплате
+     *
+     */
+    public function getDolg() {
 
-        $amount =0;
+        $amount = 0;
+   
 
-        $where = "  customer_id={$this->customer_id} and payamount >0 and payamount > payed and content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
-
-        $res = \App\Entity\Doc\Document::find($where );
-        foreach ($res as $doc) {
-           
-           $amount += ($doc->payamount - $doc->payed ) ;
-               
+        $where = "  customer_id={$this->customer_id} and   content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
+        if($this->ctype==1){
+            $_docs  = " and ( meta_name in('GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+  
+            $sql .=  "
+        select   sum((case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) ) as sam 
+            from `documents_view`  
+            where   {$where} and   (payamount >0  or  payed >0) {$_docs}  and state not in (1,2,3,17,8)   and payamount <> payed 
+            
+            ";        
+        } else 
+        if($this->ctype==2) {
+            $_docs   = " and ( meta_name in('GoodsReceipt','InvoiceCust','ReturnIssue')  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+ 
+            $sql .=  "
+        select   sum((case when   meta_name='IncomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) ) as sam 
+            from `documents_view`  
+            where   {$where} and   (payamount >0  or  payed >0) {$_docs}  and state not in (1,2,3,17,8)   and payamount <> payed 
+            
+            ";        
+         
         }
-
+        else {
+            return  0;
+        }
+        $conn = \ZDB\DB::getConnect() ;
+        $amount = $conn->GetOne($sql);
+         
 
         return $amount;
     }

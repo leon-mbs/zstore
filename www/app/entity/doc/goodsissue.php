@@ -73,7 +73,7 @@ class GoodsIssue extends Document
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
-            $header['createdon'] = H::fd($contract->createdon);            
+            $header['createdon'] = H::fd($contract->createdon);
         }
 
 
@@ -88,22 +88,22 @@ class GoodsIssue extends Document
         //$conn = \ZDB\DB::getConnect();
 
         $k = 1;   //учитываем  скидку
-        if($this->headerdata["paydisc"]>0 && $this->amount >0) {
-            $k =  ($this->amount - $this->headerdata["paydisc"])/$this->amount ;
+        if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
+            $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
         }
-        $amount=0;
+        $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion , 0 - $st->quantity);
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->setExtCode($item->price*$k - $st->partion); //Для АВС 
+                $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->save();
-                $amount +=   $item->price*$k *$st->quantity;
+                $amount += $item->price * $k * $st->quantity;
             }
         }
-        
+
         //списываем бонусы
         if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
@@ -111,17 +111,19 @@ class GoodsIssue extends Document
                 //процент
             } else {
                 $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                if($customer->bonus < 0) {
-                   $customer->bonus = 0;
+                if ($customer->bonus < 0) {
+                    $customer->bonus = 0;
                 }
                 $customer->save();
             }
         }
- 
+
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
-                   if($payed >0 ) $this->payed = $payed;
- 
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
+
         }
 
         return true;

@@ -310,10 +310,10 @@ class Outcome extends \App\Pages\Base
 
         foreach ($rs as $row) {
 
-           // $summa = $row['summa'];
-           //  if ($row['navar'] != 0) {
-          //      $row['summa'] += $row['navar'];
-          //  }
+            // $summa = $row['summa'];
+            //  if ($row['navar'] != 0) {
+            //      $row['summa'] += $row['navar'];
+            //  }
 
 
             $detail[] = array(
@@ -323,11 +323,11 @@ class Outcome extends \App\Pages\Base
                 "qty"       => H::fqty($row['qty']),
                 "navar"     => H::fa($row['navar']),
                 "navarsign" => $row['navar'] > 0,
-                "summa"     => H::fa($row['summa']+$row['navar'])
+                "summa"     => H::fa($row['summa'] + $row['navar'])
             );
 
             $totnavar += $row['navar'];
-            $totsum += ($row['summa']+$row['navar']);
+            $totsum += ($row['summa'] + $row['navar']);
         }
 
         $header = array('datefrom' => \App\Helper::fd($from),

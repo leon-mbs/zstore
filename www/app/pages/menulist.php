@@ -29,7 +29,7 @@ class  MenuList extends \App\Pages\Base
             return false;
         }
 
- 
+
         $this->metadatads = new \ZCL\DB\EntityDataSource("\\App\\Entity\\MetaData", "", "description");
 
         $this->add(new Panel('listpan'));
@@ -55,9 +55,9 @@ class  MenuList extends \App\Pages\Base
         $this->editpan->editform->add(new DropDownChoice('edit_meta_type', \App\Entity\MetaData::getNames()));
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
 
-         
+
     }
- 
+
 
     public function filterOnSubmit($sender) {
 
@@ -83,7 +83,6 @@ class  MenuList extends \App\Pages\Base
 
         $this->listpan->metarow->Reload();
 
-     
 
     }
 
@@ -96,14 +95,14 @@ class  MenuList extends \App\Pages\Base
         $this->editpan->editform->edit_menugroup->setText('');
 
         $this->editpan->editform->edit_disabled->setChecked(0);
-        
+
 
     }
 
     public function mcancelOnClick($sender) {
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
-        
+
 
     }
 
@@ -152,7 +151,7 @@ class  MenuList extends \App\Pages\Base
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
 
-        
+
     }
 
     public function rowdeleteOnClick($sender) {
@@ -160,7 +159,7 @@ class  MenuList extends \App\Pages\Base
         \App\Entity\MetaData::delete($item->meta_id);
 
         $this->listpan->metarow->Reload();
-        
+
     }
 
     public function editformOnSubmit($sender) {
@@ -190,11 +189,8 @@ class  MenuList extends \App\Pages\Base
         $this->editpan->editform->edit_meta_name->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
 
-        
+
     }
-
-
-    
 
 
 }

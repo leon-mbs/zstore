@@ -110,7 +110,7 @@ class ARMPos extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new Label('qtystock'));
-         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -284,7 +284,7 @@ class ARMPos extends \App\Pages\Base
         if ($this->_itemlist[$item->item_id] instanceof Item) {
             $this->_itemlist[$item->item_id]->quantity += 1;
         } else {
-         
+
 
             $price = $item->getPrice($this->form1->pricetype->getValue(), $store);
             $item->price = $price;
@@ -408,8 +408,8 @@ class ARMPos extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->editdetail->editserial->setText("");
-       $this->wselitem->setVisible(false);
-        
+        $this->wselitem->setVisible(false);
+
         $this->calcTotal();
     }
 
@@ -451,17 +451,19 @@ class ARMPos extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
     }
+
     public function onOpenItemSel($sender) {
         $this->wselitem->setVisible(true);
         $this->wselitem->setPriceType($this->form1->pricetype->getValue());
         $this->wselitem->Reload();
     }
-  public function onSelectItem($item_id, $itemname) {
+
+    public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edittovar->setKey($item_id);
         $this->editdetail->edittovar->setText($itemname);
         $this->OnChangeItem($this->editdetail->edittovar);
     }
-    
+
     private function calcTotal() {
 
         $total = 0;
@@ -487,7 +489,7 @@ class ARMPos extends \App\Pages\Base
         $store = $this->form1->store->getValue();
 
 
-        $price = $item->getPrice( $this->form1->pricetype->getValue(), $store);
+        $price = $item->getPrice($this->form1->pricetype->getValue(), $store);
         $qty = $item->getQuantity($store);
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
@@ -580,7 +582,7 @@ class ARMPos extends \App\Pages\Base
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editphone->getText();
-        $cust->phone = \App\Util::handlePhone($cust->phone) ;
+        $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("tel10", H::PhoneL());
@@ -621,12 +623,12 @@ class ARMPos extends \App\Pages\Base
             $this->form3->document_number->setText($this->_doc->document_number);
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-             $next = $this->_doc->nextNumber() ;
-             $this->form3->document_number->setText($next);
-             $this->_doc->document_number =  $next;
-            if(strlen($next)==0) {
-                $this->setError('docnumbercancreated');    
-            }    
+            $next = $this->_doc->nextNumber();
+            $this->form3->document_number->setText($next);
+            $this->_doc->document_number = $next;
+            if (strlen($next) == 0) {
+                $this->setError('docnumbercancreated');
+            }
         }
         $this->_doc->document_date = $this->form3->document_date->getDate();
         $this->_doc->notes = $this->form3->notes->getText();
@@ -692,8 +694,8 @@ class ARMPos extends \App\Pages\Base
                     }
                 }
             }
-            
-            if ($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true ) {
+
+            if ($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
 
 
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);

@@ -110,7 +110,7 @@ class PPOHelper
 
         if ($signed['success'] == true) {
 
-          
+
             $request = curl_init();
 
             curl_setopt_array($request, [
@@ -508,7 +508,7 @@ class PPOHelper
 
         $xml = $report->generate($header);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        
+
 
         $ret = self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
         if ($ret['success'] == true) {

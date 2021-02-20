@@ -358,7 +358,9 @@ class Invoice extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            if($isEdited==false)  $this->_doc->document_id=0;
+            if ($isEdited == false) {
+                $this->_doc->document_id = 0;
+            }
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
@@ -380,8 +382,8 @@ class Invoice extends \App\Pages\Base
             $this->docform->payed->setText(0);
             $this->docform->editpayed->setText(0);
         }
-        $this->calcPay() ;
-        
+        $this->calcPay();
+
     }
 
     public function onPayAmount($sender) {
@@ -443,20 +445,20 @@ class Invoice extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
 
-        
-        $p = $this->docform->payment->getValue() ;
-        
-        if($p  >0) {
-          $this->docform->editpayamount->setText(H::fa($total));
-          $this->docform->payamount->setText(H::fa($total));
-        
+
+        $p = $this->docform->payment->getValue();
+
+        if ($p > 0) {
+            $this->docform->editpayamount->setText(H::fa($total));
+            $this->docform->payamount->setText(H::fa($total));
+
         }
-        if($p  >0 &&  $p < 10000) {
+        if ($p > 0 && $p < 10000) {
             $this->docform->editpayed->setText(H::fa($total));
             $this->docform->payed->setText(H::fa($total));
-        
+
         }
-        
+
     }
 
     /**
@@ -468,11 +470,11 @@ class Invoice extends \App\Pages\Base
             $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $next = $this->_doc->nextNumber() ;
+            $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
-            $this->_doc->document_number =  $next;
-            if(strlen($next)==0) {
-                $this->setError('docnumbercancreated');    
+            $this->_doc->document_number = $next;
+            if (strlen($next) == 0) {
+                $this->setError('docnumbercancreated');
             }
         }
         if (count($this->_tovarlist) == 0) {
@@ -561,8 +563,8 @@ class Invoice extends \App\Pages\Base
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustphone->getText();
-        $cust->phone = \App\Util::handlePhone($cust->phone) ;
- 
+        $cust->phone = \App\Util::handlePhone($cust->phone);
+
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("tel10", H::PhoneL());
             return;

@@ -21,18 +21,18 @@ use Zippy\Html\Panel;
 class PayBayList extends \App\Pages\Base
 {
 
-    private $_doc       = null;
-    private $_cust      = null;
-    public  $_custlist  = array();
-    
-    public  $_doclist   = array();
-    public  $_pays      = array();
-    public  $_totamount  = 0;
- 
-    private $_docs    = " and ( meta_name in('GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
-    private $_state     = "1,2,3,17,8";
+    private $_doc      = null;
+    private $_cust     = null;
+    public  $_custlist = array();
 
- 
+    public $_doclist   = array();
+    public $_pays      = array();
+    public $_totamount = 0;
+
+    private $_docs  = " and ( meta_name in('GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+    private $_state = "1,2,3,17,8";
+
+
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PayBayList')) {
@@ -42,11 +42,11 @@ class PayBayList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('holdlist', \App\Entity\Customer::getHoldList(), 0));
 
         $this->add(new Panel("clist"));
-      
+
         $this->clist->add(new Label("totamount"));
 
         $this->clist->add(new DataView('custlist', new ArrayDataSource($this, '_custlist'), $this, 'custlistOnRow'));
-  
+
 
         $this->add(new Panel("plist"))->setVisible(false);
         $this->plist->add(new Label("cname"));
@@ -106,14 +106,12 @@ class PayBayList extends \App\Pages\Base
              order by c.customer_name ";
 
         $this->_custlist = \App\DataItem::query($sql);
-      
+
         $this->_totamount = 0;
 
         $this->clist->custlist->Reload();
         $this->clist->totamount->setText(H::fa($this->_totamount));
-      
-       
-        
+
 
     }
 
@@ -121,15 +119,15 @@ class PayBayList extends \App\Pages\Base
         $cust = $row->getDataItem();
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
-        $row->add(new Label('amount', H::fa(  $cust->sam  )));
-       
+        $row->add(new Label('amount', H::fa($cust->sam)));
+
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
 
-        $this->_totamount +=  $cust->sam  ;
-      
+        $this->_totamount += $cust->sam;
+
 
     }
-  
+
     //список документов
     public function showdocsOnClick($sender) {
 
@@ -140,7 +138,7 @@ class PayBayList extends \App\Pages\Base
         $this->clist->setVisible(false);
         $this->plist->setVisible(true);
     }
-  
+
     public function updateDocs() {
 
         $docs = " and meta_name in({$this->_docs})  ";
@@ -157,7 +155,7 @@ class PayBayList extends \App\Pages\Base
         $this->plist->doclist->Reload();
     }
 
- 
+
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
@@ -168,9 +166,9 @@ class PayBayList extends \App\Pages\Base
 
         $row->add(new Label('payamount', H::fa(($doc->payamount > 0) ? $doc->payamount : "")));
         $row->add(new Label('payed', H::fa(($doc->payed > 0) ? $doc->payed : "")));
-        if( $doc->meta_name=='OutcomeMoney') {
-           $row->payamount->setText(H::fa(($doc->payed > 0) ? $doc->payed : ""))  ;
-           $row->payed->setText( H::fa(($doc->payamount > 0) ? $doc->payamount : ""))  ;
+        if ($doc->meta_name == 'OutcomeMoney') {
+            $row->payamount->setText(H::fa(($doc->payed > 0) ? $doc->payed : ""));
+            $row->payed->setText(H::fa(($doc->payamount > 0) ? $doc->payamount : ""));
         }
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -216,7 +214,7 @@ class PayBayList extends \App\Pages\Base
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed)); 
+        $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed));
         $this->paypan->payform->pcomment->setText("");;
         $this->paypan->pname->setText($this->_doc->document_number);;
 
@@ -313,8 +311,7 @@ class PayBayList extends \App\Pages\Base
                 $i++;
                 $data['A' . $i] = $c->customer_name;
                 $data['B' . $i] = $c->phone;
-                $data['C' . $i] = H::fa(  $c->sam  );
-        
+                $data['C' . $i] = H::fa($c->sam);
 
 
             }

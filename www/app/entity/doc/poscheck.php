@@ -138,7 +138,7 @@ class POSCheck extends Document
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-   
+
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
@@ -158,8 +158,8 @@ class POSCheck extends Document
                 //процент
             } else {
                 $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                if($customer->bonus < 0) {
-                   $customer->bonus = 0;
+                if ($customer->bonus < 0) {
+                    $customer->bonus = 0;
                 }
                 $customer->save();
             }
@@ -173,13 +173,15 @@ class POSCheck extends Document
 
             $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0);
             $sc->setService($ser->service_id);
-            $sc->setExtCode(0 - ($ser->price  )); //Для АВС 
+            $sc->setExtCode(0 - ($ser->price)); //Для АВС
 
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $payed > 0) {
-          $payed =   \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
-          if($payed >0 ) $this->payed = $payed;
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
         }
 
         return true;

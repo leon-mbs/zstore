@@ -8,8 +8,7 @@ use \App\Helper as H;
 class items extends \App\API\Base\JsonRPC
 {
     // список категорий  ТМЦ
-    public function catlist()
-    {
+    public function catlist() {
 
 
         $list = array();
@@ -21,8 +20,7 @@ class items extends \App\API\Base\JsonRPC
     }
 
     //список  складов
-    public function storelist()
-    {
+    public function storelist() {
 
 
         $list = array();
@@ -34,8 +32,7 @@ class items extends \App\API\Base\JsonRPC
     }
 
     // список артикулов
-    public function articlelist()
-    {
+    public function articlelist() {
 
 
         $list = array();
@@ -43,15 +40,16 @@ class items extends \App\API\Base\JsonRPC
 
         $res = $conn->GetCol("select item_code from items order  by  item_code");
         foreach ($res as $code) {
-            if (strlen($code) > 0) $list[] = $code;
+            if (strlen($code) > 0) {
+                $list[] = $code;
+            }
         }
 
         return $list;
     }
 
     //  список  ТМЦ
-    public function itemlist()
-    {
+    public function itemlist() {
 
         $list = array();
         $w = 'disabled<> 1 ';
@@ -67,23 +65,33 @@ class items extends \App\API\Base\JsonRPC
             $it =
 
             $it = array(
-                'item_code' => $item->item_code,
-                'bar_code' => $item->bar_code,
-                'itemname' => $item->itemname,
-                'description' => base64_encode($item->description),
-                'measure' => $item->msr,
+                'item_code'    => $item->item_code,
+                'bar_code'     => $item->bar_code,
+                'itemname'     => $item->itemname,
+                'description'  => base64_encode($item->description),
+                'measure'      => $item->msr,
                 'manufacturer' => $item->manufacturer,
-                'cat_name' => $item->cat_name,
-                'cat_id' => $item->cat_id
+                'cat_name'     => $item->cat_name,
+                'cat_id'       => $item->cat_id
 
             );
 
 
-            if (strlen($item->price1) > 0) $it['price1'] = $item->price1;
-            if (strlen($item->price2) > 0) $it['price2'] = $item->price2;
-            if (strlen($item->price3) > 0) $it['price3'] = $item->price3;
-            if (strlen($item->price4) > 0) $it['price4'] = $item->price4;
-            if (strlen($item->price5) > 0) $it['price5'] = $item->price5;
+            if (strlen($item->price1) > 0) {
+                $it['price1'] = $item->price1;
+            }
+            if (strlen($item->price2) > 0) {
+                $it['price2'] = $item->price2;
+            }
+            if (strlen($item->price3) > 0) {
+                $it['price3'] = $item->price3;
+            }
+            if (strlen($item->price4) > 0) {
+                $it['price4'] = $item->price4;
+            }
+            if (strlen($item->price5) > 0) {
+                $it['price5'] = $item->price5;
+            }
 
             $list[] = $it;
         }
@@ -93,8 +101,7 @@ class items extends \App\API\Base\JsonRPC
     }
 
     //  количества на  складе
-    public function getqty()
-    {
+    public function getqty() {
         $list = array();
         $conn = \ZDB\DB::getConnect();
 
@@ -109,7 +116,7 @@ class items extends \App\API\Base\JsonRPC
             $list[] = array(
 
                 'item_code' => $row['item_code'],
-                'qty' => H::fqty($row['qty'])
+                'qty'       => H::fqty($row['qty'])
 
             );
         }
@@ -121,8 +128,7 @@ class items extends \App\API\Base\JsonRPC
 
 
     // запись  ТМЦ.
-    public function save($args)
-    {
+    public function save($args) {
         if (strlen($args['item_code']) == 0) {
             throw  new \Exception(H::l("apientercode"));
         }
@@ -142,11 +148,21 @@ class items extends \App\API\Base\JsonRPC
         $item->description = @base64_decode($args['description']);
         $item->cat_id = $args['cat_id'];
 
-        if ($args['price1'] > 0) $item->price1 = $args['price1'];
-        if ($args['price2'] > 0) $item->price2 = $args['price2'];
-        if ($args['price3'] > 0) $item->price3 = $args['price3'];
-        if ($args['price4'] > 0) $item->price4 = $args['price4'];
-        if ($args['price5'] > 0) $item->price5 = $args['price5'];
+        if ($args['price1'] > 0) {
+            $item->price1 = $args['price1'];
+        }
+        if ($args['price2'] > 0) {
+            $item->price2 = $args['price2'];
+        }
+        if ($args['price3'] > 0) {
+            $item->price3 = $args['price3'];
+        }
+        if ($args['price4'] > 0) {
+            $item->price4 = $args['price4'];
+        }
+        if ($args['price5'] > 0) {
+            $item->price5 = $args['price5'];
+        }
 
         if (strlen($item->itemname) == 0) {
             throw  new \Exception(H::l("apientername"));

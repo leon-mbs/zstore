@@ -78,8 +78,10 @@ class RetCustIssue extends Document
 
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-        $payed =     \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
-          if($payed >0 ) $this->payed = $payed;
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
         }
 
 
