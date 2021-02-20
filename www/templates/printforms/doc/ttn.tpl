@@ -30,7 +30,7 @@
         <td colspan="5">{{order}}</td>
     </tr>
     {{/order}}
-   <tr>
+    <tr>
         <td></td>
         <td><b>Телефон</b></td>
         <td colspan="5">{{phone}}</td>
@@ -40,7 +40,7 @@
         <td><b>Email</b></td>
         <td colspan="5">{{email}}</td>
     </tr>
-    
+
     <tr>
         <td></td>
         <td><b>Доставка</b></td>
@@ -72,9 +72,9 @@
         <td colspan="5"> {{emp_name}}</td>
     </tr>
     {{#ship_amount}}
-   <tr>
+    <tr>
         <td></td>
-        <td><b>Стоимость  доставки</b></td>
+        <td><b>Стоимость доставки</b></td>
         <td colspan="5"> {{ship_amount}}</td>
     </tr>
     {{/ship_amount}}

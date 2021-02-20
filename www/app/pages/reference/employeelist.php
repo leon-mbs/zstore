@@ -83,15 +83,15 @@ class EmployeeList extends \App\Pages\Base
         $this->_employee = $sender->owner->getDataItem();
         $this->employeetable->setVisible(false);
         $this->employeedetail->setVisible(true);
-        
-        if(strlen($this->_employee->login)>0) {
+
+        if (strlen($this->_employee->login) > 0) {
             $this->employeedetail->editlogin->setOptionList(Employee::getFreeLogins($this->_employee->login));
-            $this->employeedetail->editlogin->setValue($this->_employee->login);    
+            $this->employeedetail->editlogin->setValue($this->_employee->login);
         } else {
             $this->employeedetail->editlogin->setOptionList(Employee::getFreeLogins());
             $this->employeedetail->editlogin->setValue('0');
         }
-        
+
         $this->employeedetail->editemp_name->setText($this->_employee->emp_name);
         $this->employeedetail->editcomment->setText($this->_employee->comment);
         $this->employeedetail->editemail->setText($this->_employee->email);
@@ -121,7 +121,7 @@ class EmployeeList extends \App\Pages\Base
 
         if (strlen($login) < 2) {
 
-             $login ="";
+            $login = "";
         }
         $this->_employee->login = $login;
         $this->_employee->emp_name = trim($this->employeedetail->editemp_name->getText());

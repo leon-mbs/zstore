@@ -35,7 +35,7 @@
         </td>
     </tr>
     {{/contract}}
-   {{#emp}}
+    {{#emp}}
     <tr>
         <td colspan="4">
             <b>Спiвробiтник:</b> {{emp}}

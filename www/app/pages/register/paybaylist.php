@@ -21,19 +21,18 @@ use Zippy\Html\Panel;
 class PayBayList extends \App\Pages\Base
 {
 
-    private $_doc       = null;
-    private $_cust      = null;
-    public  $_custlist  = array();
-    
-    public  $_doclist   = array();
-    public  $_pays      = array();
-    public  $_totamount  = 0;
- 
-     
-    private $_docs    = "'GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order' ";
-    private $_state     = "1,2,3,17,8";
+    private $_doc      = null;
+    private $_cust     = null;
+    public  $_custlist = array();
 
- 
+    public $_doclist   = array();
+    public $_pays      = array();
+    public $_totamount = 0;
+
+    private $_docs  = " and ( meta_name in('GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+    private $_state = "1,2,3,17,8";
+
+
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PayBayList')) {
@@ -43,11 +42,10 @@ class PayBayList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('holdlist', \App\Entity\Customer::getHoldList(), 0));
 
         $this->add(new Panel("clist"));
-      
+
         $this->clist->add(new Label("totamount"));
 
         $this->clist->add(new DataView('custlist', new ArrayDataSource($this, '_custlist'), $this, 'custlistOnRow'));
-        
 
 
         $this->add(new Panel("plist"))->setVisible(false);
@@ -98,24 +96,22 @@ class PayBayList extends \App\Pages\Base
             $hold = " where  c.detail like '%<holding>{$holding}</holding>%'";
         }
 
-        $sql = "select c.customer_name,c.phone, c.customer_id,sum(sam) as sam  from (
-        select customer_id,   coalesce( (payamount - payed),0) as sam,  
-          meta_name in({$this->_docs})   from `documents_view`  
-            where {$br}  meta_name in({$this->_docs})  and   payamount > 0 and payamount <> payed  and state not in ({$this->_state})   
+        $sql = "select c.customer_name,c.phone, c.customer_id,coalesce(sum(sam),0) as sam  from (
+        select customer_id,  (case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) as sam 
+            from `documents_view`  
+            where {$br}     (payamount >0  or  payed >0) {$this->_docs}  and state not in ({$this->_state})   and payamount <> payed 
             ) t join customers c  on t.customer_id = c.customer_id    {$hold}
              group by c.customer_name,c.phone, c.customer_id 
              having sam <> 0 
              order by c.customer_name ";
 
         $this->_custlist = \App\DataItem::query($sql);
-      
+
         $this->_totamount = 0;
 
         $this->clist->custlist->Reload();
         $this->clist->totamount->setText(H::fa($this->_totamount));
-      
-       
-        
+
 
     }
 
@@ -123,15 +119,15 @@ class PayBayList extends \App\Pages\Base
         $cust = $row->getDataItem();
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
-        $row->add(new Label('amount', H::fa(  $cust->sam  )));
-       
+        $row->add(new Label('amount', H::fa($cust->sam)));
+
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
 
-        $this->_totamount += ($cust->fl == -1 ? $cust->sam : 0);
-      
+        $this->_totamount += $cust->sam;
+
 
     }
-  
+
     //список документов
     public function showdocsOnClick($sender) {
 
@@ -142,7 +138,7 @@ class PayBayList extends \App\Pages\Base
         $this->clist->setVisible(false);
         $this->plist->setVisible(true);
     }
-  
+
     public function updateDocs() {
 
         $docs = " and meta_name in({$this->_docs})  ";
@@ -154,12 +150,12 @@ class PayBayList extends \App\Pages\Base
         }
 
 
-        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  <> payed  and state not in ({$this->_state})    {$docs}", "(payamount - payed) desc");
+        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and (payamount >0  or  payed >0) and payamount <> payed  and state not in ({$this->_state})   {$this->_docs} ", "document_date");
 
         $this->plist->doclist->Reload();
     }
 
- 
+
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
@@ -168,10 +164,12 @@ class PayBayList extends \App\Pages\Base
         $row->add(new Label('date', H::fd($doc->document_date)));
 
 
-        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
-
-        $row->add(new Label('payamount', H::fa($doc->payamount - $doc->payed)));
-
+        $row->add(new Label('payamount', H::fa(($doc->payamount > 0) ? $doc->payamount : "")));
+        $row->add(new Label('payed', H::fa(($doc->payed > 0) ? $doc->payed : "")));
+        if ($doc->meta_name == 'OutcomeMoney') {
+            $row->payamount->setText(H::fa(($doc->payed > 0) ? $doc->payed : ""));
+            $row->payed->setText(H::fa(($doc->payamount > 0) ? $doc->payamount : ""));
+        }
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
@@ -216,7 +214,7 @@ class PayBayList extends \App\Pages\Base
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed)); 
+        $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed));
         $this->paypan->payform->pcomment->setText("");;
         $this->paypan->pname->setText($this->_doc->document_number);;
 
@@ -313,8 +311,7 @@ class PayBayList extends \App\Pages\Base
                 $i++;
                 $data['A' . $i] = $c->customer_name;
                 $data['B' . $i] = $c->phone;
-                $data['C' . $i] = H::fa(  $c->sam  );
-        
+                $data['C' . $i] = H::fa($c->sam);
 
 
             }

@@ -42,7 +42,7 @@ class Document extends \ZCL\DB\Entity
     const DEL_SELF    = 1;    //  самовывоз
     const DEL_BOY     = 2;    //  курьер
     const DEL_SERVICE = 3;    //  служба доставки
-    const DEL_NP = 4;         //  новая почта
+    const DEL_NP      = 4;         //  новая почта
 
 
     /**
@@ -94,7 +94,7 @@ class Document extends \ZCL\DB\Entity
 
         $this->headerdata = array();
         $this->detaildata = array();
-        $this->headerdata['contract_id'] =0;        
+        $this->headerdata['contract_id'] = 0;
     }
 
     /**
@@ -228,7 +228,7 @@ class Document extends \ZCL\DB\Entity
         return "";
     }
 
-    /**                                                                          
+    /**
      * Выполнение документа - обновление склада
      *
      */
@@ -246,14 +246,13 @@ class Document extends \ZCL\DB\Entity
         try {
             // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
-          
+
             //удаляем освободившиеся стоки
             $conn->Execute("delete from store_stock where stock_id not in (select coalesce(stock_id,0) from entrylist) ");
 
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
 
-         
 
             // возвращаем бонусы
             if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
@@ -421,39 +420,39 @@ class Document extends \ZCL\DB\Entity
         }
     }
 
-   public static function getStateList( ) {
-        $list=array();
-        $list[Document::STATE_NEW]   = Helper::l('st_new') ;
-        $list[Document::STATE_EDITED]= Helper::l('st_edit') ;
-        $list[Document::STATE_CANCELED]= Helper::l('st_canceled') ;
-        $list[Document::STATE_EXECUTED]= Helper::l('st_executed') ;
-        $list[Document::STATE_CLOSED]= Helper::l('st_closed') ;
-        $list[Document::STATE_APPROVED]= Helper::l('st_approved') ;
-        $list[Document::STATE_WA]= Helper::l('st_wa') ;
-        $list[Document::STATE_INSHIPMENT]= Helper::l('st_inshipment') ;
-        $list[Document::STATE_FINISHED]= Helper::l('st_finished') ;
-        $list[Document::STATE_DELIVERED]= Helper::l('st_delivered') ;
-        $list[Document::STATE_REFUSED]= Helper::l('st_refused') ;
-        $list[Document::STATE_SHIFTED]= Helper::l('st_shifted') ;
-        $list[Document::STATE_FAIL]= Helper::l('st_fail') ;
-        $list[Document::STATE_INPROCESS]= Helper::l('st_inprocess') ;
-        $list[Document::STATE_READYTOSHIP]= Helper::l('st_rdshipment') ;
-    
- 
+    public static function getStateList() {
+        $list = array();
+        $list[Document::STATE_NEW] = Helper::l('st_new');
+        $list[Document::STATE_EDITED] = Helper::l('st_edit');
+        $list[Document::STATE_CANCELED] = Helper::l('st_canceled');
+        $list[Document::STATE_EXECUTED] = Helper::l('st_executed');
+        $list[Document::STATE_CLOSED] = Helper::l('st_closed');
+        $list[Document::STATE_APPROVED] = Helper::l('st_approved');
+        $list[Document::STATE_WA] = Helper::l('st_wa');
+        $list[Document::STATE_INSHIPMENT] = Helper::l('st_inshipment');
+        $list[Document::STATE_FINISHED] = Helper::l('st_finished');
+        $list[Document::STATE_DELIVERED] = Helper::l('st_delivered');
+        $list[Document::STATE_REFUSED] = Helper::l('st_refused');
+        $list[Document::STATE_SHIFTED] = Helper::l('st_shifted');
+        $list[Document::STATE_FAIL] = Helper::l('st_fail');
+        $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
+        $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
+
+
         return $list;
-         
+
     }
 
     /**
-    * проверка  номера  на  уникальность
-    * 
-    */
+     * проверка  номера  на  уникальность
+     *
+     */
     public function checkUniqueNumber() {
         $this->document_number = trim($this->document_number);
         $branch = "";
         if ($this->branch_id > 0) {
             $branch = " and branch_id=" . $this->branch_id;
-        }        
+        }
         $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' {$branch}");
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
@@ -463,10 +462,10 @@ class Document extends \ZCL\DB\Entity
         return true;
     }
 
- 
+
     public function nextNumber($branch_id = 0) {
 
-      $conn = \ZDB\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($this->branch_id > 0) {
             $branch = " and branch_id=" . $this->branch_id;
@@ -490,21 +489,20 @@ class Document extends \ZCL\DB\Entity
         }
 
         $letter = preg_replace('/[0-9]/', '', $prevnumber);
-        for($i=0;$i<10;$$i++) {
-            $next = $letter . sprintf("%05d", ++$number);    
-  
-            
-            
-            $ch = $conn->GetOne("select count(*) from documents     where   meta_id='{$this->meta_id}'   {$branch} and document_number=".$conn->qstr($next) );
-            if($ch==0) {
-                return  $next;
+        for ($i = 0; $i < 10; $$i++) {
+            $next = $letter . sprintf("%05d", ++$number);
+
+
+            $ch = $conn->GetOne("select count(*) from documents     where   meta_id='{$this->meta_id}'   {$branch} and document_number=" . $conn->qstr($next));
+            if ($ch == 0) {
+                return $next;
             }
-            
+
         }
-        
-        
+
+
         return '';
-        
+
     }
 
     /**
@@ -574,7 +572,7 @@ class Document extends \ZCL\DB\Entity
 
             $n = new \App\Entity\Notify();
             $n->user_id = $admin->user_id;
-            $n->message = Helper::l('deleteddoc',System::getUser()->username,$this->document_number ) ;
+            $n->message = Helper::l('deleteddoc', System::getUser()->username, $this->document_number);
             $n->save();
         }
     }
@@ -743,14 +741,14 @@ class Document extends \ZCL\DB\Entity
     /**
      * Список  типов  доставки
      */
-    public static function getDeliveryTypes($np=false) {
+    public static function getDeliveryTypes($np = false) {
         $list = array();
         $list[self::DEL_SELF] = Helper::l('delself');
         $list[self::DEL_BOY] = Helper::l('delboy');
-        if($np == true) {
-            $list[self::DEL_NP] = Helper::l('delnp');    
+        if ($np == true) {
+            $list[self::DEL_NP] = Helper::l('delnp');
         }
-        
+
         $list[self::DEL_SERVICE] = Helper::l('delservice');
 
         return $list;

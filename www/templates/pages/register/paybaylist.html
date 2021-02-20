@@ -8,7 +8,6 @@
             <form zippy="filter" class="form-inline ">
 
 
-               
                 <label for="holdlist"> Холдинг </label>
                 <select class="form-control mr-2" zippy="holdlist">
                     <option value="0">Не указан</option>
@@ -27,7 +26,7 @@
                 <th>Тел.</th>
                 <th class="text-right">К оплате</th>
 
-              
+
                 <th></th>
 
 
@@ -38,7 +37,7 @@
                 <td zippy="phone"></td>
 
                 <td zippy="amount" class="text-right"></td>
-               
+
 
                 <td><a zippy="showdocs">Документы</a></td>
 
@@ -50,19 +49,20 @@
                 <td class="text-right text-bold">Всего:</td>
 
                 <td zippy="totamount" class="text-right text-bold"></td>
-                 
+
                 <td></td>
 
 
             </tr>
 
         </table>
-       
+
     </div>
 
     <div class="col-12 col-lg-10 col-xl-8 " zippy="plist">
         <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> к списку</a>
         <h3 zippy="cname"></h3>
+        <small><i class="fa fa-exclamation-circle"></i> Для  оплаты  по  договорам  а  не  отдельным документам  используются  кассовые  ордера</small>
         <br><a zippy="csv2">Экспорт в Excel</a>
         <table class="table   table-sm   ">
             <tr>
@@ -72,8 +72,8 @@
                 <th>Дата</th>
 
 
-                <th class="text-right">Сумма</th>
-                <th class="text-right">К оплате</th>
+                <th class="text-right">Расход</th>
+                <th class="text-right">Приход</th>
 
 
                 <th></th>
@@ -86,8 +86,8 @@
                 <td zippy="number"></td>
                 <td zippy="date"></td>
 
-                <td zippy="amount" class="text-right"></td>
                 <td zippy="payamount" class="text-right"></td>
+                <td zippy="payed" class="text-right"></td>
 
 
                 <td class="text-nowrap">

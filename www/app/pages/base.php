@@ -48,7 +48,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["refmenu"] = Helper::generateMenu(4);
         $this->_tvars["sermenu"] = Helper::generateMenu(5);
 
-        
+
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
@@ -168,7 +168,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     protected function afterRender() {
-        
+
         $user = System::getUser();
 
 

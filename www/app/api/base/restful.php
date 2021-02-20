@@ -13,8 +13,7 @@ abstract class RestFul
      *
      * @param array $params
      */
-    public function Execute($params)
-    {
+    public function Execute($params) {
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $this->get($params);
@@ -30,57 +29,47 @@ abstract class RestFul
         };
     }
 
-    public function get($params)
-    {
+    public function get($params) {
         $this->FailAnswer();
     }
 
-    public function post($params)
-    {
+    public function post($params) {
         $this->FailAnswer();
     }
 
-    public function put($params)
-    {
+    public function put($params) {
         $this->FailAnswer();
     }
 
-    public function delete($params)
-    {
+    public function delete($params) {
         $this->FailAnswer();
     }
 
-    protected function JsonAnswer($json)
-    {
+    protected function JsonAnswer($json) {
         header("Content-type: application/json");
         echo $json;
     }
 
-    protected function XMLAnswer($xml)
-    {
+    protected function XMLAnswer($xml) {
         header("Content-type: text/xml");
         echo $xml;
     }
 
-    protected function CSVAnswer($csv)
-    {
+    protected function CSVAnswer($csv) {
         header("Content-type: text/csv");
         echo $csv;
     }
 
-    protected function TextAnswer($text)
-    {
+    protected function TextAnswer($text) {
         header("Content-type: text/plain");
         echo $text;
     }
 
-    protected function OKAnswer()
-    {
+    protected function OKAnswer() {
         http_response_code(200);
     }
 
-    protected function FailAnswer()
-    {
+    protected function FailAnswer() {
         http_response_code(400);
     }
 

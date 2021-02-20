@@ -44,8 +44,8 @@
         <th width="20" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;">Опис</th>
-        <th style="border: 1px solid black;"   align="right">Вартість</th>
-        <th style="border: 1px solid black;"   align="right">Сума</th>
+        <th style="border: 1px solid black;" align="right">Вартість</th>
+        <th style="border: 1px solid black;" align="right">Сума</th>
 
     </tr>
     {{#_detail}}

@@ -61,7 +61,7 @@ class TTN extends Document
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "delivery_name"   => $this->headerdata["delivery_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
-                        "ship_amount"           => strlen($this->headerdata["ship_amount"]) > 0 ? H::fa($this->headerdata["ship_amount"] ): false,
+                        "ship_amount"     => strlen($this->headerdata["ship_amount"]) > 0 ? H::fa($this->headerdata["ship_amount"]) : false,
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
                         "phone"           => $this->headerdata["phone"],
@@ -113,7 +113,7 @@ class TTN extends Document
                               "tovar_name" => $name,
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
-                              
+
 
                               "price"  => H::fa($item->price),
                               "amount" => H::fa($item->quantity * $item->price)
@@ -141,7 +141,7 @@ class TTN extends Document
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
         }
-       
+
 
         $report = new \App\Report('doc/ttn_bill.tpl');
 
@@ -153,19 +153,19 @@ class TTN extends Document
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
 
-      
-        if($this->parent_id >0) {
-             $parent = Document::load($this->parent_id);
-             if($parent->meta_name=='GoodsIssue') {
+
+        if ($this->parent_id > 0) {
+            $parent = Document::load($this->parent_id);
+            if ($parent->meta_name == 'GoodsIssue') {
                 return;//проводки выполняются  в  РН 
-             }
+            }
         }
-        
-        if(  $this->headerdata['nostore']==1) {
+
+        if ($this->headerdata['nostore'] == 1) {
             return;
         }
- 
-        
+
+
         foreach ($this->unpackDetails('detaildata') as $item) {
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
@@ -181,35 +181,38 @@ class TTN extends Document
     }
 
     public function onState($oldstate, $state) {
-        if($state == Document::STATE_INSHIPMENT) {
+        if ($state == Document::STATE_INSHIPMENT) {
             //расходы на  доставку
-            if ($this->headerdata['ship_amount'] > 0  ) {
-                \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->headerdata['ship_amount'], H::getDefMF(), \App\Entity\Pay::PAY_SALE_OUTCOME);
+            if ($this->headerdata['ship_amount'] > 0) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['ship_amount'], H::getDefMF(), \App\Entity\Pay::PAY_SALE_OUTCOME);
+                if ($payed > 0) {
+                    $this->payed = $payed;
+                }
             }
         }
         $common = \App\System::getOptions("common");
 
-        if($this->parent_id > 0) {
+        if ($this->parent_id > 0) {
             $order = Document::load($this->parent_id);
-            
+
             $list = $order->getChildren('TTN');
 
-            if (count($list) ==1 && $common['numberttn']<>1) {   //только  эта  ТТН
-                if($state == Document::STATE_DELIVERED && $order->state == Document::STATE_INSHIPMENT) {
-                    $order->updateStatus(Document::STATE_DELIVERED) ;
+            if (count($list) == 1 && $common['numberttn'] <> 1) {   //только  эта  ТТН
+                if ($state == Document::STATE_DELIVERED && $order->state == Document::STATE_INSHIPMENT) {
+                    $order->updateStatus(Document::STATE_DELIVERED);
                 }
-                if($state == Document::STATE_INSHIPMENT && $order->state == Document::STATE_INPROCESS) {
-                    $order->updateStatus(Document::STATE_INSHIPMENT) ;
+                if ($state == Document::STATE_INSHIPMENT && $order->state == Document::STATE_INPROCESS) {
+                    $order->updateStatus(Document::STATE_INSHIPMENT);
                 }
-                if($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
-                    $order->updateStatus(Document::STATE_READYTOSHIP) ;
+                if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
+                    $order->updateStatus(Document::STATE_READYTOSHIP);
                 }
-                
-            }            
+
+            }
         }
-        
+
     }
-    
+
     public function getRelationBased() {
         $list = array();
         $list['Warranty'] = self::getDesc('Warranty');

@@ -28,7 +28,7 @@
         </td>
     </tr>
     {{/customer}}
-   {{#contract}}
+    {{#contract}}
     <tr>
         <td colspan="4">
             <b>Договор:</b> {{contract}}

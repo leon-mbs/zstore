@@ -2,347 +2,338 @@
 <body>
 <h2>Налаштування </h2>
 <div class="row">
-          
 
 
-               
+    <div class="col-12  col-md-5 col-xl-4  ">
 
-                        <div class="col-12  col-md-5 col-xl-4  ">
+        <div class="card">
+            <div class="card-body">
+                <h4>Загальнi налаштування</h4>
 
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4>Загальнi налаштування</h4>
-
-                                    <form zippy="common">
-                                        <div class="form-group">
-                                            <label for="shopname">Назва сайту </label>
-                                            <input class="form-control" type="text" zippy="shopname">
-                                            <small> Назва для логотипу та сторiнки логiну. </small>
-                                        </div>
-
-                                        <div class="form-group  ">
-                                            <label for="partiontype">Тип партійного обліку</label>
-                                            <select class="form-control" zippy="partiontype"> </select>
-                                            <small>Облік окремо по кожній закупівельній ціні дозволяє точно враховувати
-                                                прибуток але ускладнює списання партій</small>
-
-                                        </div>
-
-                                        <div class="form-group  ">
-                                            <label>Типи відпускних цін</label>
-                                            <input class="form-control" type="text" zippy="price1" required="required">
-                                            <input class="form-control" type="text" zippy="price2">
-                                            <input class="form-control" type="text" zippy="price3">
-                                            <input class="form-control" type="text" zippy="price4">
-                                            <input class="form-control" type="text" zippy="price5">
-                                            <small>Введіть найменування типів цін. Непотрібні поля залиште
-                                                порожніми</small>
-
-                                        </div>
-                                        <div class="form-group  ">
-                                            <label for="qtydigits">Знаків після точки в кількості</label>
-
-                                            <select style="width:75px;" class="form-control" zippy="qtydigits">
-                                                <option value='0'>0</option>
-                                                <option value='1'>1</option>
-                                                <option value='2'>2</option>
-                                                <option value='3'>3</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group  ">
-                                            <label for="amdigits">Округлення в вартості</label>
-
-                                            <select class="form-control" zippy="amdigits">
-                                                <option value='0'>Без копійок</option>
-                                                <option value='1'>До 1 копійки</option>
-                                                <option value='5'>До 5 копійок</option>
-                                                <option value='10'>До 10 копійок</option>
-
-                                            </select>
-                                        </div>
-                                        <div class="form-group  ">
-                                            <label for="dateformat">Формат дати</label>
-
-                                            <select class="form-control" zippy="dateformat">
-                                                <option value='d.m.Y'>dd.mm.yyyy</option>
-                                                <option value='d-m-Y'>dd-mm-yyyy</option>
-                                                <option value='d/m/Y'>dd/mm/yyyy</option>
-                                                <option value='Y.m.d'>yyyy.mm.dd</option>
-                                                <option value='Y-m-d'>yyyy-mm-dd</option>
-                                                <option value='Y/m/d'>yyyy/mm/dd</option>
-
-                                            </select>
-                                        </div>
-                                        <div class="form-group  ">
-                                            <label for="phonel">Довжина номера телефону</label>
-
-                                            <select style="width:75px" class="form-control" zippy="phonel">
-
-
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="defprice">Націнка за замовчуванням, у відсотках</label>
-                                            <input style="width:100px" pattern="[0-9]+" class="form-control" type="text"
-                                                   zippy="defprice">
-                                            <small>Використовується якщо не задана ціна в товарі або в категорії
-                                                товару</small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="curr">Назва валюти обліку</label>
-                                            <select class="form-control" zippy="curr"> </select>
-                                            <small>Для сум прописом в друкованих формах</small>
-                                        </div>
-
-
-                                        <div class="form-check">
-                                            <input zippy="autoarticle" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="autoarticle"> Автоматично створювати
-                                                артикули</label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title="Автоматична генерація номерів артикулів для товарів"></i>
-                                        </div>
-
-
-                                        <div class="form-check">
-                                            <input zippy="usesnumber" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="usesnumber">Облік ТМЦ за серіями
-                                                (партіями) виробника</label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title="Окремий облік по кожній партії виробника з урахуванням терміну придатності. Чи використовує конкретний товар облік по партіях вказується в картці товару."></i>
-                                        </div>
-
-                                        <div class="form-check">
-                                            <input zippy="useimages" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="useimages">Зображення в
-                                                номенклатурі </label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title="   Можливість додавання зображень в довідник товарів"></i>
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="usescanner" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="usescanner">Підтримка сканера штрих
-                                                кодів </label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title="Використання сканера штрих кодів для введення товарів в видаткової накладної "></i>
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="usebranch" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="usebranch">Використання філій </label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title="Філії (наприклад торгові точки) використовуються для поділу доступу до ресурсів. Сотпруднікі філії мають доступ до документів, складах і кас тільки даного філіала. Отпускние ціни товарів запам'ятовуються в прив'язці до поточного філії.Філії (наприклад торгові точки) використовуються для поділу доступу до ресурсів. Співробітники філії мають доступ до документів, складах і кас тільки даного філіалу. Відпускні ціни товарів запам'ятовуються в прив'язці до поточного філії.    "></i>
-                                        </div>
-
-
-                                        <div class="form-check">
-                                            <input zippy="allowminus" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="allowminus">Дозволити списання в
-                                                мiнус </label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title=" Дозвiл  списувати таку  кiлькiсть  що призводить до  мiнусового залишку  на  складi  "></i>
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="noallowfiz" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="noallowfiz">Не дозволяти накладнi без
-                                                контрагента </label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title=" Покупець  обовязково  мае  бути заданий  та  занесений в  довiдник "></i>
-                                        </div>
-
-                                        <div class="form-check">
-                                            <input zippy="useval" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="useval">Валюта в закупiвлi</label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title=" Можливiсть вводити накладну в  валютi  та  перерахунку  курсовоi рiзнимцi при  продажу.  "></i>
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="capcha" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="capcha">Капча на формi логiну</label>
-                                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                               title=" Додатковий захист вiд несанкцiонованого доступу "></i>
-                                        </div>
-                                   <div class="form-check">
-                                        <input zippy="numberttn" type="checkbox" class="form-check-input">
-                                        <label class="form-check-label" for="numberttn">Кiлька  вiдправок на  одне  замовлення</label>
-                                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                           title=" Можливiсть  створити кiлька  накладних на  одне  замовлення. Але  якщо ввiмкнено - не  виконуется перевiрка наявностi ТТН та  автоматичноi  змiни  статуса замовленя по  ТТН "></i>
-                                    </div>
-                                        
-                                        <div class="form-group  "><br>
-                                            <label for="ts_start">Початок рабочого дня</label>
-
-                                            <input style="width:75px;" class="form-control" zippy="ts_start"
-                                                   pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
-
-
-                                        </div>
-                                        <div class="form-group  ">
-                                            <label for="ts_end">Кiнець рабочого дня</label>
-
-                                            <input style="width:75px;" class="form-control" zippy="ts_end"
-                                                   pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
-
-
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="ts_break">Перерва, хв .</label>
-                                            <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text"
-                                                   zippy="ts_break">
-                                        </div>
-                                        <div class="form-group">
-                                            <button class="btn btn-primary" type="submit">Зберегти</button>
-                                        </div>
-
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12  col-md-5 col-xl-4  ">
-
-                            {{#useval}}
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4>Курси валют </h4>
-                                    <form zippy="valform">
-                                        <div class="form-group">
-                                            <label for="valuan">Гривня</label>
-                                            <input zippy="valuan" style="width:100px" pattern="[0-9\.]+"
-                                                   class="form-control" type="text">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="valusd">Долар</label>
-                                            <input zippy="valusd" style="width:100px" pattern="[0-9\.]+"
-                                                   class="form-control" type="text">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="valeuro">Евро</label>
-                                            <input zippy="valeuro" style="width:100px" pattern="[0-9\.]+"
-                                                   class="form-control" type="text">
-
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="valrub">Рубль</label>
-                                            <input zippy="valrub" style="width:100px" pattern="[0-9\.]+"
-                                                   class="form-control" type="text">
-
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="valprice" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="valprice">Враховувати курсову рiзницю
-                                                при продажу </label>
-
-                                        </div>
-
-                                        <div class="form-group">
-                                            <button class="btn btn-primary" type="submit">Зберегти</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            {{/useval}}
-
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4>Налаштування принтера</h4>
-                                    <small>Налаштування вузького принтера для друку чеків і етикеток</small>
-                                    <form zippy="printer">
-                                        <div class="form-group">
-                                            <label for="pwidth">Ширина друку </label>
-                                            <input style="width:60px" class="form-control" type="text" zippy="pwidth">
-                                            <small class="form-text text-muted">Наприклад '100%' або '40mm' </small>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="pwidth">Параметри для етикеток і цінників</label>
-                                        </div>
-                                        <div class="form-group  ">
-                                            <label for="pfontsize">Розмiр шрифту</label>
-                                            <select style="width:100px" class="form-control" zippy="pfontsize">
-                                            </select>
-                                        </div>
-                                        <div class="form-group  ">
-                                            <label for="pricetype">Тип ціни</label>
-                                            <select class="form-control" zippy="pricetype">
-                                            </select>
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="pname" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="pname">Друкувати назву</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="pcode" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="pcode">Друкувати артикул</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="pprice" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="pprice">Друкувати ціну</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input zippy="pbarcode" type="checkbox" class="form-check-input">
-                                            <label class="form-check-label" for="pbarcode">Друкувати штрих код</label>
-                                        </div>
-                                        <div class="form-group  ">
-                                            <label for="barcodetype">Тип коду</label>
-                                            <select class="form-control" zippy="barcodetype">
-                                            </select>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <button class="btn btn-primary" type="submit">Зберегти</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-                    
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4>Налаштування API</h4>
-                                    <small>Налаштування API для доступу до даних з iнших систем</small>
-                                    <form zippy="api">
-
-                                        <div class="form-group  ">
-                                            <label for="atype">Тип авторизацii</label>
-                                            <select class="form-control" zippy="atype">
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label data-label="akey" for="akey">Ключ</label>
-                                            <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
-                                            <small data-label="akey">Довiльне латиничне слово для шифрування
-                                                токену<small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label data-label="aexp" for="aexp">Час життя токену в хв.</label>
-                                            <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
-
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <button class="btn btn-primary" type="submit">Сохранить</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                           
-                        </div>
+                <form zippy="common">
+                    <div class="form-group">
+                        <label for="shopname">Назва сайту </label>
+                        <input class="form-control" type="text" zippy="shopname">
+                        <small> Назва для логотипу та сторiнки логiну. </small>
                     </div>
 
-         
+                    <div class="form-group  ">
+                        <label for="partiontype">Тип партійного обліку</label>
+                        <select class="form-control" zippy="partiontype"> </select>
+                        <small>Облік окремо по кожній закупівельній ціні дозволяє точно враховувати
+                            прибуток але ускладнює списання партій</small>
 
-             
-     
+                    </div>
 
-       
+                    <div class="form-group  ">
+                        <label>Типи відпускних цін</label>
+                        <input class="form-control" type="text" zippy="price1" required="required">
+                        <input class="form-control" type="text" zippy="price2">
+                        <input class="form-control" type="text" zippy="price3">
+                        <input class="form-control" type="text" zippy="price4">
+                        <input class="form-control" type="text" zippy="price5">
+                        <small>Введіть найменування типів цін. Непотрібні поля залиште
+                            порожніми</small>
 
-            <script>
-                function check_rowdelete() {
-                    return confirm("Видалити запис?")
-                }
-            </script>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="qtydigits">Знаків після точки в кількості</label>
+
+                        <select style="width:75px;" class="form-control" zippy="qtydigits">
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                        </select>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="amdigits">Округлення в вартості</label>
+
+                        <select class="form-control" zippy="amdigits">
+                            <option value='0'>Без копійок</option>
+                            <option value='1'>До 1 копійки</option>
+                            <option value='5'>До 5 копійок</option>
+                            <option value='10'>До 10 копійок</option>
+
+                        </select>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="dateformat">Формат дати</label>
+
+                        <select class="form-control" zippy="dateformat">
+                            <option value='d.m.Y'>dd.mm.yyyy</option>
+                            <option value='d-m-Y'>dd-mm-yyyy</option>
+                            <option value='d/m/Y'>dd/mm/yyyy</option>
+                            <option value='Y.m.d'>yyyy.mm.dd</option>
+                            <option value='Y-m-d'>yyyy-mm-dd</option>
+                            <option value='Y/m/d'>yyyy/mm/dd</option>
+
+                        </select>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="phonel">Довжина номера телефону</label>
+
+                        <select style="width:75px" class="form-control" zippy="phonel">
+
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="defprice">Націнка за замовчуванням, у відсотках</label>
+                        <input style="width:100px" pattern="[0-9]+" class="form-control" type="text"
+                               zippy="defprice">
+                        <small>Використовується якщо не задана ціна в товарі або в категорії
+                            товару</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="curr">Назва валюти обліку</label>
+                        <select class="form-control" zippy="curr"> </select>
+                        <small>Для сум прописом в друкованих формах</small>
+                    </div>
+
+
+                    <div class="form-check">
+                        <input zippy="autoarticle" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="autoarticle"> Автоматично створювати
+                            артикули</label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="Автоматична генерація номерів артикулів для товарів"></i>
+                    </div>
+
+
+                    <div class="form-check">
+                        <input zippy="usesnumber" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="usesnumber">Облік ТМЦ за серіями
+                            (партіями) виробника</label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="Окремий облік по кожній партії виробника з урахуванням терміну придатності. Чи використовує конкретний товар облік по партіях вказується в картці товару."></i>
+                    </div>
+
+                    <div class="form-check">
+                        <input zippy="useimages" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="useimages">Зображення в
+                            номенклатурі </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="   Можливість додавання зображень в довідник товарів"></i>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="usescanner" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="usescanner">Підтримка сканера штрих
+                            кодів </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="Використання сканера штрих кодів для введення товарів в видаткової накладної "></i>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="usebranch" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="usebranch">Використання філій </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="Філії (наприклад торгові точки) використовуються для поділу доступу до ресурсів. Сотпруднікі філії мають доступ до документів, складах і кас тільки даного філіала. Отпускние ціни товарів запам'ятовуються в прив'язці до поточного філії.Філії (наприклад торгові точки) використовуються для поділу доступу до ресурсів. Співробітники філії мають доступ до документів, складах і кас тільки даного філіалу. Відпускні ціни товарів запам'ятовуються в прив'язці до поточного філії.    "></i>
+                    </div>
+
+
+                    <div class="form-check">
+                        <input zippy="allowminus" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="allowminus">Дозволити списання в
+                            мiнус </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title=" Дозвiл  списувати таку  кiлькiсть  що призводить до  мiнусового залишку  на  складi  "></i>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="noallowfiz" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="noallowfiz">Не дозволяти накладнi без
+                            контрагента </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title=" Покупець  обовязково  мае  бути заданий  та  занесений в  довiдник "></i>
+                    </div>
+
+                    <div class="form-check">
+                        <input zippy="useval" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="useval">Валюта в закупiвлi</label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title=" Можливiсть вводити накладну в  валютi  та  перерахунку  курсовоi рiзнимцi при  продажу.  "></i>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="capcha" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="capcha">Капча на формi логiну</label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title=" Додатковий захист вiд несанкцiонованого доступу "></i>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="numberttn" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="numberttn">Кiлька вiдправок на одне замовлення</label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title=" Можливiсть  створити кiлька  накладних на  одне  замовлення. Але  якщо ввiмкнено - не  виконуется перевiрка наявностi ТТН та  автоматичноi  змiни  статуса замовленя по  ТТН "></i>
+                    </div>
+
+                    <div class="form-group  "><br>
+                        <label for="ts_start">Початок рабочого дня</label>
+
+                        <input style="width:75px;" class="form-control" zippy="ts_start"
+                               pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
+
+
+                    </div>
+                    <div class="form-group  ">
+                        <label for="ts_end">Кiнець рабочого дня</label>
+
+                        <input style="width:75px;" class="form-control" zippy="ts_end"
+                               pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
+
+
+                    </div>
+                    <div class="form-group">
+                        <label for="ts_break">Перерва, хв .</label>
+                        <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text"
+                               zippy="ts_break">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Зберегти</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12  col-md-5 col-xl-4  ">
+
+        {{#useval}}
+        <div class="card">
+            <div class="card-body">
+                <h4>Курси валют </h4>
+                <form zippy="valform">
+                    <div class="form-group">
+                        <label for="valuan">Гривня</label>
+                        <input zippy="valuan" style="width:100px" pattern="[0-9\.]+"
+                               class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="valusd">Долар</label>
+                        <input zippy="valusd" style="width:100px" pattern="[0-9\.]+"
+                               class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="valeuro">Евро</label>
+                        <input zippy="valeuro" style="width:100px" pattern="[0-9\.]+"
+                               class="form-control" type="text">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="valrub">Рубль</label>
+                        <input zippy="valrub" style="width:100px" pattern="[0-9\.]+"
+                               class="form-control" type="text">
+
+                    </div>
+                    <div class="form-check">
+                        <input zippy="valprice" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="valprice">Враховувати курсову рiзницю
+                            при продажу </label>
+
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Зберегти</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{/useval}}
+
+        <div class="card">
+            <div class="card-body">
+                <h4>Налаштування принтера</h4>
+                <small>Налаштування вузького принтера для друку чеків і етикеток</small>
+                <form zippy="printer">
+                    <div class="form-group">
+                        <label for="pwidth">Ширина друку </label>
+                        <input style="width:60px" class="form-control" type="text" zippy="pwidth">
+                        <small class="form-text text-muted">Наприклад '100%' або '40mm' </small>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="pwidth">Параметри для етикеток і цінників</label>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="pfontsize">Розмiр шрифту</label>
+                        <select style="width:100px" class="form-control" zippy="pfontsize">
+                        </select>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="pricetype">Тип ціни</label>
+                        <select class="form-control" zippy="pricetype">
+                        </select>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="pname" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="pname">Друкувати назву</label>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="pcode" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="pcode">Друкувати артикул</label>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="pprice" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="pprice">Друкувати ціну</label>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="pbarcode" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="pbarcode">Друкувати штрих код</label>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="barcodetype">Тип коду</label>
+                        <select class="form-control" zippy="barcodetype">
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Зберегти</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-body">
+                <h4>Налаштування API</h4>
+                <small>Налаштування API для доступу до даних з iнших систем</small>
+                <form zippy="api">
+
+                    <div class="form-group  ">
+                        <label for="atype">Тип авторизацii</label>
+                        <select class="form-control" zippy="atype">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-label="akey" for="akey">Ключ</label>
+                        <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
+                        <small data-label="akey">Довiльне латиничне слово для шифрування
+                            токену<small>
+                    </div>
+                    <div class="form-group">
+                        <label data-label="aexp" for="aexp">Час життя токену в хв.</label>
+                        <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    function check_rowdelete() {
+        return confirm("Видалити запис?")
+    }
+</script>
 
 </body>
 </html>

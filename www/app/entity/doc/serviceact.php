@@ -23,9 +23,9 @@ class ServiceAct extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
-                              "qty"         => H::fqty($ser->quantity),
-                              "price"        => H::fa($ser->price) ,
-                              "amount"        => H::fa($ser->price*$ser->quantity)
+                              "qty"          => H::fqty($ser->quantity),
+                              "price"        => H::fa($ser->price),
+                              "amount"       => H::fa($ser->price * $ser->quantity)
             );
         }
 
@@ -64,15 +64,18 @@ class ServiceAct extends Document
 
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - ($ser->price*$ser->quantity), $ser->quantity);
+            $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), $ser->quantity);
             $sc->setService($ser->service_id);
-   
+
             $sc->setExtCode($ser->price); //Для АВС 
             //$sc->setCustomer($this->customer_id);
             $sc->save();
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
+            if ($payed > 0) {
+                $this->payed = $payed;
+            }
         }
 
         return true;
@@ -116,10 +119,10 @@ class ServiceAct extends Document
         foreach ($this->unpackDetails('detaildata') as $ser) {
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
-                              "qty"         => H::fqty($ser->quantity),
-                              "price"        => H::fa($ser->price) ,
-                              "amount"        => H::fa($ser->price*$ser->quantity)
-           );
+                              "qty"          => H::fqty($ser->quantity),
+                              "price"        => H::fa($ser->price),
+                              "amount"       => H::fa($ser->price * $ser->quantity)
+            );
         }
         $header['slist'] = $detail;
 

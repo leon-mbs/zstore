@@ -55,7 +55,8 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
         $this->contractdetail->add(new DropDownChoice('editcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->contractdetail->add(new DropDownChoice('editemp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
-        
+        $this->contractdetail->add(new DropDownChoice('editctype',array() , 0));
+
         $this->contractdetail->add(new \Zippy\Html\Form\File('scan'));
 
         $this->contractdetail->add(new CheckBox('editdisabled'));
@@ -96,22 +97,20 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label('term', H::fd($item->createdon) . ' - ' . H::fd($item->enddate)));
         $row->add(new Label('customer', $item->customer_name));
         $row->add(new Label('firm', $item->firm_name));
-  
+
+        $dolg = $item->getDolg() ;
+        $row->add(new Label('dolg', $dolg <>0 ? H::fa($dolg) :"" ));
         $row->add(new Label('emp', $item->emp_name));
         $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0);
         $row->hasnotes->setAttribute('title', $item->desc);
 
-        $dolg=$item->getForPay();
-        
-        $row->add(new Label('forpay'))->setVisible($dolg > 0);
-        
         $row->add(new \Zippy\Html\Link\BookmarkableLink('scanlink'))->setVisible(false);
         if ($item->file_id > 0) {
             $row->scanlink->setVisible(true);
             $row->scanlink->setLink(_BASEURL . 'loadfile.php?id=' . $item->file_id);
 
         }
-   
+
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -147,7 +146,8 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
         $this->contractdetail->editcomp->setValue($this->_contract->firm_id);
         $this->contractdetail->editemp->setValue($this->_contract->emp_id);
-    
+        $this->contractdetail->editctype->setValue($this->_contract->ctype);
+
     }
 
     public function addOnClick($sender) {
@@ -178,6 +178,11 @@ class ContractList extends \App\Pages\Base
         $this->_contract->firm_id = $this->contractdetail->editcomp->getValue();
         if ($this->_contract->firm_id == 0) {
             $this->setError("noselfirm");
+            return;
+        }
+        $this->_contract->ctype = $this->contractdetail->editctype->getValue();
+        if ($this->_contract->ctype == 0) {
+            $this->setError("noselctype");
             return;
         }
 
@@ -227,19 +232,19 @@ class ContractList extends \App\Pages\Base
 
 
         $dlist = $this->_contract->getDocs();
-        $totsumma=0;
-        $totdolg=0;
-        foreach($dlist as $d){
-           $totsumma += $d->payamount;
-           $totdolg += ($d->payamount - $d->payed);
+        $totsumma = 0;
+      
+        foreach ($dlist as $d) {
+            $totsumma += $d->amount;
+            
         }
         $this->docpan->totsumma->setText(H::fa($totsumma));
-        $this->docpan->totdolg->setText(H::fa($totdolg));
-     
+    
+
         $this->docpan->dtable->getDataSource()->setArray($dlist);
         $this->docpan->dtable->Reload();
-        $this->docpan->payform->setVisible($totdolg>0);
-        $this->docpan->payform->pamount->setText(H::fa($totdolg)) ;
+        $this->docpan->payform->setVisible($totdolg > 0);
+        $this->docpan->payform->pamount->setText(H::fa($totdolg));
     }
 
     public function doclistOnRow($row) {
@@ -247,48 +252,52 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label("dnum", $doc->document_number));
         $row->add(new Label("dtype", $doc->meta_desc));
         $row->add(new Label("ddate", H::fd($doc->document_date)));
-        $row->add(new Label("dsumma", H::fa($doc->payamount)));
-        $row->add(new Label("ddolg", H::fa($doc->payamount - $doc->payed)));
+        $row->add(new Label("dsumma", H::fa($doc->amount)));
+      
     }
 
     public function payOnSubmit($sender) {
-          
-          $amount = $sender->pamount->getText();
-          $pdate = $sender->pdate->getDate();
-          $comment = $sender->pcomment->getText();
-          if(strlen($comment)==0)$comment= H::l('bycontract', $this->_contract->contract_number);
-          
-             foreach($this->_contract->getDocs()  as $doc){
-                
-                  
-                 if($doc->payamount >0 && $doc->payamount > $doc->payed )  {
-                     $p = $doc->payamount - $doc->payed;
-                     if($amount  >$p) {
-        
-                        $amount  -= $p;
-                     } else {
-                         
-                        $p = $amount;   
-                        $amount =0;
-                     }
-                     if(in_array($doc->meta_name,array('GoodsReceipt','InvoiceCust' )) ) {
-                          Pay::addPayment($doc->document_id, $pdate, 0-$p, $sender->payment->getValue(),  Pay::PAY_BASE_OUTCOME, $comment);    
-                     } else {
-                          Pay::addPayment($doc->document_id, $pdate, $p, $sender->payment->getValue(), Pay::PAY_BASE_INCOME, $comment);    
-                         
-                     }
-                      
-                     if($amount == 0)  break;          
-                 }
-                
+
+        $amount = $sender->pamount->getText();
+        $pdate = $sender->pdate->getDate();
+        $comment = $sender->pcomment->getText();
+        if (strlen($comment) == 0) {
+            $comment = H::l('bycontract', $this->_contract->contract_number);
+        }
+
+        foreach ($this->_contract->getDocs() as $doc) {
+
+
+            if ($doc->payamount > 0 && $doc->payamount > $doc->payed) {
+                $p = $doc->payamount - $doc->payed;
+                if ($amount > $p) {
+
+                    $amount -= $p;
+                } else {
+
+                    $p = $amount;
+                    $amount = 0;
+                }
+                if (in_array($doc->meta_name, array('GoodsReceipt', 'InvoiceCust'))) {
+                    Pay::addPayment($doc->document_id, $pdate, 0 - $p, $sender->payment->getValue(), Pay::PAY_BASE_OUTCOME, $comment);
+                } else {
+                    Pay::addPayment($doc->document_id, $pdate, $p, $sender->payment->getValue(), Pay::PAY_BASE_INCOME, $comment);
+
+                }
+
+                if ($amount == 0) {
+                    break;
+                }
             }
-            
-        $this->contracttable->contractlist->Reload(false);  
+
+        }
+
+        $this->contracttable->contractlist->Reload(false);
         $this->contracttable->setVisible(true);
-     
-        $this->docpan->setVisible(false);     
+
+        $this->docpan->setVisible(false);
     }
-    
+
 
 }
 

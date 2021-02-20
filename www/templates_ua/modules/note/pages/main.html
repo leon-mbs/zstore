@@ -243,7 +243,6 @@
 <!-- /.modal -->
 
 
-
 <script>
     $('#nodeedit').modal({
         show: false
@@ -278,30 +277,29 @@
         return confirm('Удалить узел');
     }
 
- 
 
     function fav() {
 
     }
 
-$('#editdetail').summernote({
-    height: 400,
-    lang: 'uk-UA',
- 
- 
-    callbacks: {
-        onEnter: function (e) {
-            e.preventDefault();
-        },
-        onPaste: function (e) {
-          
-            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-            e.preventDefault();
-            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+    $('#editdetail').summernote({
+        height: 400,
+        lang: 'uk-UA',
+
+
+        callbacks: {
+            onEnter: function (e) {
+                e.preventDefault();
+            },
+            onPaste: function (e) {
+
+                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                e.preventDefault();
+                document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+            }
         }
-    }
-});    
-    
+    });
+
 </script>
 </body>
 

@@ -73,8 +73,8 @@ class ProductList extends \App\Pages\Base
         $editform->add(new TextInput('ename'));
         $editform->add(new TextInput('ecode'));
         $editform->add(new TextInput('eprice', 0));
-      
- 
+
+
         $editform->add(new TextArea('edescshort'));
         $editform->add(new TextArea('edescdet'));
 
@@ -194,7 +194,7 @@ class ProductList extends \App\Pages\Base
         $this->product->item_code = $item->item_code;
 
         $this->editpanel->editform->ename->setText($this->product->productname);
-          $this->editpanel->editform->ecode->setText($this->product->item_code);
+        $this->editpanel->editform->ecode->setText($this->product->item_code);
         $this->editpanel->editform->eprice->setText($item->getPrice($this->op['defpricetype'], $this->op['defstore']));
 
         //подтягиваем бренд если  совпадает имя

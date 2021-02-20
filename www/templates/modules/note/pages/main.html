@@ -117,7 +117,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editdetail">Содержание</label>
-                        <textarea   class="form-control" zippy="editdetail"></textarea>
+                        <textarea class="form-control" zippy="editdetail"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="editacctype">Тип доступа</label>
@@ -289,32 +289,33 @@
         return confirm('Удалить узел');
     }
 
-  
+
     function fav() {
 
     }
-   $(function () {
-    // Summernote
-   
-$('#editdetail').summernote({
-    height: 400,
-    lang: 'ru-RU',
- 
- 
-    callbacks: {
-        onEnter: function (e) {
-            e.preventDefault();
-        },
-        onPaste: function (e) {
-          
-            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-            e.preventDefault();
-            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-        }
-    }
-});
-    
-  })
+
+    $(function () {
+        // Summernote
+
+        $('#editdetail').summernote({
+            height: 400,
+            lang: 'ru-RU',
+
+
+            callbacks: {
+                onEnter: function (e) {
+                    e.preventDefault();
+                },
+                onPaste: function (e) {
+
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                }
+            }
+        });
+
+    })
 </script>
 </body>
 

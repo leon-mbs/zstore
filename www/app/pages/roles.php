@@ -50,15 +50,15 @@ class Roles extends \App\Pages\Base
 
 
         //виджеты
-     
+
         $this->editpan->editform->add(new CheckBox('editwdebitors'));
-    
+
         $this->editpan->editform->add(new CheckBox('editwminqty'));
         $this->editpan->editform->add(new CheckBox('editwsdate'));
         $this->editpan->editform->add(new CheckBox('editwrdoc'));
         $this->editpan->editform->add(new CheckBox('editwinfo'));
         $this->editpan->editform->add(new CheckBox('editwgraph'));
- 
+
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
@@ -150,11 +150,10 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->metaaccess->metarow->Reload();
 
 
-      
         if (strpos($this->role->widgets, 'wdebitors') !== false) {
             $this->editpan->editform->editwdebitors->setChecked(true);
         }
-        
+
         if (strpos($this->role->widgets, 'wminqty') !== false) {
             $this->editpan->editform->editwminqty->setChecked(true);
         }
@@ -164,13 +163,13 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->widgets, 'wrdoc') !== false) {
             $this->editpan->editform->editwrdoc->setChecked(true);
         }
-       if (strpos($this->role->widgets, 'winfo') !== false) {
+        if (strpos($this->role->widgets, 'winfo') !== false) {
             $this->editpan->editform->editwinfo->setChecked(true);
         }
-      if (strpos($this->role->widgets, 'wgraph') !== false) {
+        if (strpos($this->role->widgets, 'wgraph') !== false) {
             $this->editpan->editform->editwgraph->setChecked(true);
         }
-   
+
 
         if (strpos($this->role->modules, 'ocstore') !== false) {
             $this->editpan->editform->editocstore->setChecked(true);
@@ -277,11 +276,11 @@ class Roles extends \App\Pages\Base
 
         $widgets = "";
 
-      
+
         if ($this->editpan->editform->editwdebitors->isChecked()) {
             $widgets = $widgets . ',wdebitors';
         }
-       
+
         if ($this->editpan->editform->editwminqty->isChecked()) {
             $widgets = $widgets . ',wminqty';
         }
@@ -297,7 +296,7 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editwgraph->isChecked()) {
             $widgets = $widgets . ',wgraph';
         }
-  
+
 
         $this->role->widgets = trim($widgets, ',');
 

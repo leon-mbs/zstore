@@ -139,9 +139,8 @@ class Application extends \Zippy\WebApplication
             self::$app->LoadPage($pages[$uri]);
         }
     }
-   
-   public static function RedirectError()
-    {
-        self::Redirect("\\App\\Pages\\Error") ;
+
+    public static function RedirectError() {
+        self::Redirect("\\App\\Pages\\Error");
     }
 }

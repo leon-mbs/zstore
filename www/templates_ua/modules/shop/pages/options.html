@@ -101,73 +101,69 @@
         </form>
     </div>
 
-  
+
     <script>    var conf = {
         language: "ru",
         customConfig: '/assets/js/ckeditor/config.js',
         filebrowserBrowseUrl: '',
         filebrowserUploadUrl: '/upload.php'
     }
- 
-    
-    
-     $(function () {
-    // Summernote
-   
-$('#aboutus').summernote({
-    height: 400,
-    lang: 'uk-UA',
-   
-    callbacks: {
-        onEnter: function (e) {
-            e.preventDefault();
-        },
-        onPaste: function (e) {
-          
-            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-            e.preventDefault();
-            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-        }
-    }
-});
-$('#aboutus').summernote({
-    height: 400,
-    lang: 'uk-UA',
-   
-    callbacks: {
-        onEnter: function (e) {
-            e.preventDefault();
-        },
-        onPaste: function (e) {
-          
-            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-            e.preventDefault();
-            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-        }
-    }
-});
-$('#delivery').summernote({
-    height: 400,
-    lang: 'uk-UA',
-   
-    callbacks: {
-        onEnter: function (e) {
-            e.preventDefault();
-        },
-        onPaste: function (e) {
-          
-            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-            e.preventDefault();
-            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-        }
-    }
-});    
-  })   
-    
-    
-    
- 
-    
+
+
+    $(function () {
+        // Summernote
+
+        $('#aboutus').summernote({
+            height: 400,
+            lang: 'uk-UA',
+
+            callbacks: {
+                onEnter: function (e) {
+                    e.preventDefault();
+                },
+                onPaste: function (e) {
+
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                }
+            }
+        });
+        $('#aboutus').summernote({
+            height: 400,
+            lang: 'uk-UA',
+
+            callbacks: {
+                onEnter: function (e) {
+                    e.preventDefault();
+                },
+                onPaste: function (e) {
+
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                }
+            }
+        });
+        $('#delivery').summernote({
+            height: 400,
+            lang: 'uk-UA',
+
+            callbacks: {
+                onEnter: function (e) {
+                    e.preventDefault();
+                },
+                onPaste: function (e) {
+
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                }
+            }
+        });
+    })
+
+
     </script>
 
 </body>

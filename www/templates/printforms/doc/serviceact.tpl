@@ -44,8 +44,8 @@
         <th width="20" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Наименование</th>
         <th style="border: 1px solid black;">Описание</th>
-        <th style="border: 1px solid black;"   align="right">Стоимость</th>
-        <th style="border: 1px solid black;"   align="right">Сумма</th>
+        <th style="border: 1px solid black;" align="right">Стоимость</th>
+        <th style="border: 1px solid black;" align="right">Сумма</th>
 
     </tr>
     {{#_detail}}

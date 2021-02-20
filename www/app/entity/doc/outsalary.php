@@ -15,7 +15,10 @@ class OutSalary extends Document
     public function Execute() {
 
 
-        Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_SALARY_OUTCOME);
+        $payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], \App\Entity\Pay::PAY_SALARY_OUTCOME);
+        if ($payed > 0) {
+            $this->payed = $payed;
+        }
 
         return true;
     }

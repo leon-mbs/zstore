@@ -40,7 +40,7 @@ class DocList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('DocList')) {
             return;
         }
- 
+
         $filter = Filter::getFilter("doclist");
         if ($filter->to == null) {
             $filter->to = time() + (3 * 24 * 3600);
@@ -51,7 +51,7 @@ class DocList extends \App\Pages\Base
             $filter->customer_name = '';
 
             $filter->searchnumber = '';
-          
+
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
@@ -63,7 +63,7 @@ class DocList extends \App\Pages\Base
         $this->filter->searchcust->setKey($filter->customer);
         $this->filter->searchcust->setText($filter->customer_name);
         $this->filter->add(new TextInput('searchnumber', $filter->searchnumber));
-        
+
 
         if (strlen($filter->docgroup) > 0) {
             $this->filter->docgroup->setValue($filter->docgroup);
@@ -114,7 +114,7 @@ class DocList extends \App\Pages\Base
         $filter->customer_name = '';
 
         $filter->searchnumber = '';
-        
+
 
         $this->filter->clean();
         $this->filter->to->setDate(time());
@@ -132,7 +132,6 @@ class DocList extends \App\Pages\Base
         $filter->doctype = $this->filter->doctype->getValue();
         $filter->customer = $this->filter->searchcust->getKey();
         $filter->customer_name = $this->filter->searchcust->getText();
-        
 
 
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
@@ -151,13 +150,12 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('cust', $doc->customer_name ));
+        $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('branch', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
         $row->add(new Label('waitapp'))->setVisible($doc->state == Document::STATE_WA);
 
         $date = new \Carbon\Carbon();
@@ -200,7 +198,7 @@ class DocList extends \App\Pages\Base
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
-            $row->waitpay->setVisible(false);
+
 
             $row->isplanned->setVisible(false);
             $row->basedon->setVisible(false);
@@ -292,8 +290,8 @@ class DocList extends \App\Pages\Base
             $this->setError("candeleteadmin");
             return;
         }
-       // $f = $doc->checkStates(array(Document::STATE_EXECUTED ));
-    
+        // $f = $doc->checkStates(array(Document::STATE_EXECUTED ));
+
         $list = $doc->getChildren();
         if (count($list) > 0) {
             $this->setError("dochaschilld");
@@ -364,14 +362,14 @@ class DocList extends \App\Pages\Base
         if ($sender->id == "bap") {
             $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
             $this->_doc->updateStatus($newstate);
-      
+
             $user = System::getUser();
 
             $n = new \App\Entity\Notify();
             $n->user_id = $this->_doc->user_id;
             $n->dateshow = time();
-            $n->message =H::l("userapprooveddoc",$user->username,$this->_doc->document_number);
-            
+            $n->message = H::l("userapprooveddoc", $user->username, $this->_doc->document_number);
+
             $n->save();
         }
         if ($sender->id == "bref") {
@@ -384,7 +382,7 @@ class DocList extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = $this->_doc->user_id;
             $n->dateshow = time();
-            $n->message = H::l("userrefuseddoc",$user->username,$this->_doc->document_number) ;
+            $n->message = H::l("userrefuseddoc", $user->username, $this->_doc->document_number);
             $n->message .= "<br> " . $text;
             $n->save();
 
@@ -440,7 +438,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if ($filter->customer > 0) {
             $where .= " and customer_id  ={$filter->customer} ";
         }
-  
+
 
         $sn = $filter->searchnumber;
 

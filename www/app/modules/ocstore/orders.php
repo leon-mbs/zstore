@@ -203,6 +203,7 @@ class Orders extends \App\Pages\Base
         $this->_neworders = array();
         $this->neworderslist->Reload();
     }
+
     //только  списание
     public function onOutcome($sender) {
         $modules = System::getOptions("modules");
@@ -280,7 +281,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['store'] = $store;
             $neworder->headerdata['store_name'] = $this->filter2->store->getValueName();
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
-         
+
             $neworder->customer_id = $modules['occustomer_id'];
 
             $neworder->amount = round($totalpr);
