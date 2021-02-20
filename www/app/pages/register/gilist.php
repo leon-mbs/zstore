@@ -130,8 +130,7 @@ class GIList extends \App\Pages\Base
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('firm', $doc->firm_name));
-        $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
-
+        
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         if ($doc->state < Document::STATE_EXECUTED) {

@@ -362,5 +362,7 @@
   "contract":"Угода", 
   "noselcontract":"Не вибрана  угода", 
   "bycontract":"Оплата по угодi %s"  , 
-  "npupdated":"Оновлено %s ТТН"   
+  "npupdated":"Оновлено %s ТТН"    
+   
+  
 }

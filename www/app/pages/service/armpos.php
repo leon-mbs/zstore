@@ -110,10 +110,12 @@ class ARMPos extends \App\Pages\Base
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
         $this->editdetail->add(new Label('qtystock'));
+         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
 
         $this->add(new Form('editserdetail'))->setVisible(false);
         $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
@@ -406,6 +408,8 @@ class ARMPos extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->editdetail->editserial->setText("");
+       $this->wselitem->setVisible(false);
+        
         $this->calcTotal();
     }
 
@@ -438,6 +442,7 @@ class ARMPos extends \App\Pages\Base
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->form2->setVisible(true);
+        $this->wselitem->setVisible(false);
         //очищаем  форму
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
@@ -446,7 +451,17 @@ class ARMPos extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
     }
-
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->wselitem->setPriceType($this->form1->pricetype->getValue());
+        $this->wselitem->Reload();
+    }
+  public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edittovar->setKey($item_id);
+        $this->editdetail->edittovar->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edittovar);
+    }
+    
     private function calcTotal() {
 
         $total = 0;
@@ -677,8 +692,8 @@ class ARMPos extends \App\Pages\Base
                     }
                 }
             }
-
-            if ($this->pos->usefisc == 1) {
+            
+            if ($this->pos->usefisc == 1 && $this->_tvars['ppo'] == true ) {
 
 
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);

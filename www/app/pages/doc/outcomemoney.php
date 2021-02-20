@@ -33,7 +33,7 @@ class OutcomeMoney extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('detail', array(), 0))->onChange($this,'OnDetail');
+        $this->docform->add(new DropDownChoice('detail', array(), 1))->onChange($this,'OnDetail');
         $this->docform->add(new DropDownChoice('mtype', Pay::getPayTypeList(2), 0));
         $this->docform->add(new DropDownChoice('contract', array(), 0)) ;
         $this->docform->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0)) ;
@@ -95,7 +95,8 @@ class OutcomeMoney extends \App\Pages\Base
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->customer_id = $this->docform->customer->getKey();
-
+        $this->_doc->payed=$this->_doc->amount;
+        $this->_doc->payment=0;
         if ($this->checkForm() == false) {
             return;
         }
@@ -154,21 +155,14 @@ class OutcomeMoney extends \App\Pages\Base
         if ($this->docform->mtype->getValue() == 0) {
             $this->setError("noseloutcome");
         }
-        if ($this->docform->detail->getValue() == 1) {
+      
+    
+        if ($this->docform->detail->getValue() == 1 || $this->docform->detail->getValue() == 2) {
             
             if($this->_doc->customer_id==0 ) {
                $this->setError("noselcust");    
             }
-            
-        }
-        if ($this->docform->detail->getValue() == 2) {
-            
-            if($this->_doc->customer_id==0 ) {
-               $this->setError("noselcust");    
-            }
-            if($this->_doc->headerdata['contract_id']==0 ) {
-               $this->setError("noselcontract");    
-            }
+           
             
         }
         if ($this->docform->detail->getValue() == 3) {
@@ -187,7 +181,7 @@ class OutcomeMoney extends \App\Pages\Base
     }
 
     public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(), 2);
+        return Customer::getList($sender->getText() );
     }
     
    public function OnCustomer($sender) {
@@ -202,11 +196,11 @@ class OutcomeMoney extends \App\Pages\Base
        $this->docform->emp->setVisible(false); 
        $this->docform->customer->setVisible(false); 
        $this->docform->contract->setVisible(false); 
-       if($sender->getValue()==1  ) {
+       if($sender->getValue()==1 || $sender->getValue()==2  ) {
           $this->docform->contract->setVisible(true);     
           $this->docform->customer->setVisible(true);      
        }
-       if($sender->getValue()==2) {
+       if($sender->getValue()==3) {
            $this->docform->emp->setVisible(true);     
           
        }

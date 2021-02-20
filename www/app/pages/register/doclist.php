@@ -157,7 +157,6 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('waitpay'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
         $row->add(new Label('waitapp'))->setVisible($doc->state == Document::STATE_WA);
 
         $date = new \Carbon\Carbon();
@@ -200,7 +199,7 @@ class DocList extends \App\Pages\Base
             $row->edit->setVisible(true);
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
-            $row->waitpay->setVisible(false);
+            
 
             $row->isplanned->setVisible(false);
             $row->basedon->setVisible(false);

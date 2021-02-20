@@ -101,10 +101,7 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0);
         $row->hasnotes->setAttribute('title', $item->desc);
 
-        $dolg=$item->getForPay();
-        
-        $row->add(new Label('forpay'))->setVisible($dolg > 0);
-        
+          
         $row->add(new \Zippy\Html\Link\BookmarkableLink('scanlink'))->setVisible(false);
         if ($item->file_id > 0) {
             $row->scanlink->setVisible(true);

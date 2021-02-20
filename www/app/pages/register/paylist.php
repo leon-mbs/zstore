@@ -92,8 +92,8 @@ class PayList extends \App\Pages\Base
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $user = \App\System::getUser();
-        $row->add(new ClickLink('del'))->setVisible($user->rolename == 'admins');
-        $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
+     //   $row->add(new ClickLink('del'))->setVisible($user->rolename == 'admins');
+      //  $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
     }
 
     //просмотр
