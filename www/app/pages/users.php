@@ -29,14 +29,17 @@ class Users extends \App\Pages\Base
         if (System::getUser()->rolename != 'admins') {
 
             $this->setError('onlyadmisaccess');
-            App::RedirectHome();
+            App::RedirectError();
             return false;
         }
 
 
         $this->add(new Panel("listpan"));
+        $this->listpan->add(new Form('filter'))->onSubmit($this,'OnFilter');
+        $this->listpan->filter->add(new DropDownChoice('searchrole',\App\entity\UserRole::findArray('rolename','','rolename'),0)) ;
+
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
-        $this->listpan->add(new DataView("userrow", new UserDataSource(), $this, 'OnUserRow'))->Reload();
+        $this->listpan->add(new DataView("userrow", new UserDataSource($this), $this, 'OnUserRow'))->Reload();
 
 
         $this->add(new Panel("editpan"))->setVisible(false);
@@ -202,20 +205,36 @@ class Users extends \App\Pages\Base
         $row->add(new CheckBox('editbr', new Bind($item, 'editbr')));
     }
 
-
+    public function OnFilter($sender) {
+        $this->listpan->userrow->Reload(); 
+    }
 }
 
 class UserDataSource implements \Zippy\Interfaces\DataSource
 {
 
-    //private $model, $db;
-
+    private $page;
+    public function __construct($page) {
+    
+        $this->page = $page;
+    }
+    
+    private function getWhere(){
+        $sql = '';
+        $role = $this->page->listpan->filter->searchrole->getValue();
+        if($role > 0) {
+           $sql = 'role_id=' .$role;
+        }
+        
+        return $sql;
+    }
+    
     public function getItemCount() {
-        return User::findCnt();
+        return User::findCnt($this->getWhere());
     }
 
     public function getItems($start, $count, $orderbyfield = null, $desc = true) {
-        return User::find('', $orderbyfield, $count, $start);
+        return User::find($this->getWhere(), "userlogin", $count, $start);
     }
 
     public function getItem($id) {

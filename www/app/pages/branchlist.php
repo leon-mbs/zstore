@@ -26,7 +26,7 @@ class BranchList extends \App\Pages\Base
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('К странице имеет  доступ только администратор ');
-            App::RedirectHome();
+            App::RedirectError();
             return false;
         }
 

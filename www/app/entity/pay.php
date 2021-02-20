@@ -13,11 +13,10 @@ class Pay extends \ZCL\DB\Entity
 {
 
     //типы платежей - затраты и доходы
-    const PAY_BASE_INCOME = 1;     //операционные доходы  
-
+    const PAY_BASE_INCOME  = 1;     //операционные доходы  
     const PAY_OTHER_INCOME = 2;   //прочие доходы
     const PAY_FIN          = 3;   //доходы от  фин.  деятельности
-
+    
 
     const PAY_BASE_OUTCOME     = 50;    //операционные расходы  
     const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
@@ -28,6 +27,8 @@ class Pay extends \ZCL\DB\Entity
     const PAY_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку  
     const PAY_OTHER_OUTCOME    = 57;   //прочие расходы
     const PAY_DIVIDEND_OUTCOME = 58;   //распределение прибыли
+    const PAY_INV              = 59;   //Инвестиции
+    const PAY_BANK             = 60;   //Банковское  обслуживание
 
     protected function init() {
         $this->pl_id = 0;
@@ -96,20 +97,20 @@ class Pay extends \ZCL\DB\Entity
         $pay->notes = $comment;
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
-
+         
         $mf = \App\Entity\MoneyFund::load($mf_id);
         if ($mf instanceof \App\Entity\MoneyFund) {
             //банковский процент
             if ($mf->beznal == 1 and $mf->btran > 0) {
-                $pay = new \App\Entity\Pay();
-                $pay->mf_id = $mf_id;
-                $pay->document_id = $document_id;
-                $pay->amount = 0 - ($amount * $mf->btran / 100);
-                $pay->paytype = Pay::PAY_BASE_OUTCOME;
-                $pay->paydate = $paydate;
-                $pay->notes = \App\Helper::l('bankproc');
-                $pay->user_id = \App\System::getUser()->user_id;
-                $pay->save();
+                $payb = new \App\Entity\Pay();
+                $payb->mf_id = $mf_id;
+                $payb->document_id = $document_id;
+                $payb->amount = 0 - ($amount * $mf->btran / 100);
+                $payb->paytype = Pay::PAY_BANK;
+                $payb->paydate = $paydate;
+                $payb->notes = \App\Helper::l('bankproc');
+                $payb->user_id = \App\System::getUser()->user_id;
+                $payb->save();
             }
         }
 
@@ -119,6 +120,8 @@ class Pay extends \ZCL\DB\Entity
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $document_id;
         $payed = $conn->GetOne($sql);
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
+        
+        return $pay;
     }
 
   
@@ -155,7 +158,7 @@ class Pay extends \ZCL\DB\Entity
 
             $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[PAY::PAY_FIN] = \App\Helper::l('pt_fin');
-
+ 
         }
 
         if ($type != 1) {
@@ -168,6 +171,8 @@ class Pay extends \ZCL\DB\Entity
             $list[PAY::PAY_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
             $list[PAY::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
             $list[PAY::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
+            $list[PAY::PAY_INV] = \App\Helper::l('pt_inv');
+            $list[PAY::PAY_BANK] = \App\Helper::l('pt_bank');
 
         }
 

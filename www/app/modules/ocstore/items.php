@@ -26,7 +26,7 @@ class Items extends \App\Pages\Base
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(H::l('noaccesstopage'));
 
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
         $modules = System::getOptions("modules");

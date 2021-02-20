@@ -282,9 +282,9 @@ class ARMPos extends \App\Pages\Base
         if ($this->_itemlist[$item->item_id] instanceof Item) {
             $this->_itemlist[$item->item_id]->quantity += 1;
         } else {
+         
 
-
-            $price = $item->getPrice($this->pos->pricetype, $store);
+            $price = $item->getPrice($this->form1->pricetype->getValue(), $store);
             $item->price = $price;
             $item->quantity = 1;
 
@@ -472,7 +472,7 @@ class ARMPos extends \App\Pages\Base
         $store = $this->form1->store->getValue();
 
 
-        $price = $item->getPrice($this->pos->pricetype, $store);
+        $price = $item->getPrice( $this->form1->pricetype->getValue(), $store);
         $qty = $item->getQuantity($store);
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
@@ -565,6 +565,7 @@ class ARMPos extends \App\Pages\Base
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editphone->getText();
+        $cust->phone = \App\Util::handlePhone($cust->phone) ;
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("tel10", H::PhoneL());
@@ -592,7 +593,7 @@ class ARMPos extends \App\Pages\Base
 
     public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
-        $this->_docform->setVisible(true);
+        $this->form3->setVisible(true);
     }
 
     public function savedocOnClick($sender) {
@@ -605,9 +606,12 @@ class ARMPos extends \App\Pages\Base
             $this->form3->document_number->setText($this->_doc->document_number);
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $this->_docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('nouniquedocnumber_created');
-            return;
+             $next = $this->_doc->nextNumber() ;
+             $this->form3->document_number->setText($next);
+             $this->_doc->document_number =  $next;
+            if(strlen($next)==0) {
+                $this->setError('docnumbercancreated');    
+            }    
         }
         $this->_doc->document_date = $this->form3->document_date->getDate();
         $this->_doc->notes = $this->form3->notes->getText();
@@ -710,7 +714,7 @@ class ARMPos extends \App\Pages\Base
 
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
             $conn->CommitTrans();
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());

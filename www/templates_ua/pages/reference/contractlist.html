@@ -61,14 +61,13 @@
                     <td zippy="payname"></td>
 
                     <td zippy="shortdesc"></td>
-                    <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i>
-                    </td>
+                    <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i>                    </td>
                     <td><a zippy="scanlink" title="Зкачати скан"> <i class="fa fa-paperclip"></i> </a></td>
-                    <td><a zippy="show" title="Документи"><i class="fa fa-file-invoice"></i> &nbsp;&nbsp;</a></td>
-
-
-                    <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
-                            zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
+                    <td> <i zippy="forpay" title="Не оплачений" class="fa fa-credit-card"></i></td>
+                    <td ><a zippy="show" title="Документи"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
+  
+                    <td  ><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                    <a       zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
                 </tr>
             </table>
             <div zippy="pag"></div>
@@ -151,20 +150,59 @@
 </form>
 
 <div zippy="docpan" class="row">
-    <div class="col-md-6 col-xl-4">
+    <div class="col-md-8 col-xl-6">
         <h5 zippy="cname"></h5>
         <a zippy="back">До списку</a>
         <table class="table table-sm">
+           <tr>
+             <th>Тип</th>
+             <th>Номер</th>
+             <th>Дата</th>
+             <th class="text-right">До оплати</th>
+             <th class="text-right">Борг</th>
+             </tr> 
+        
             <tr zippy="dtable">
-                <td zippy="dnum"></td>
                 <td zippy="dtype"></td>
+                <td zippy="dnum"></td>
                 <td zippy="ddate" class="text-nowrap"></td>
                 <td zippy="dsumma" class="text-right"></td>
+                <td zippy="ddolg" class="text-right"></td>
             </tr>
-        </table>
+           <tr  >
+                <th  ></th>
+                <th  ></th>
+                
+                <th class="text-right"   >Всього:</th>
+                <th zippy="totsumma" class="text-right"></th>
+                <th zippy="totdolg" class="text-right"></th>
+            </tr>
+       </table>
         <div zippy="dpag"></div>
 
     </div>
+ <div class="col-md-10 col-xl-8">
+    <div class="navbar nav">
+            <form zippy="payform" class="form-inline ">
+                <label>До оплати</label>
+                <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
+                       class="form-control mr-2">
+                <label for="payment">касса</label>
+                <select class="form-control mr-2" zippy="payment">
+
+                </select>
+   
+                <label>дата</label>
+                <input zippy="pdate" style="width:100px;" class="form-control mr-2">
+                <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
+
+                <button type="submit" class="  btn btn-info  mr-2 ">Внести оплату</button>
+
+
+            </form>
+            <small>Оплата  буде  розподiлена  по  документах починаючи з  бiльш раннiх</small>
+        </div>
+    </div>    
 </div>
 
 

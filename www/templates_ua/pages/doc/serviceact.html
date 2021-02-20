@@ -88,19 +88,23 @@
             <table class="table  table-sm">
                 <tr>
                     <th>Назва</th>
+                    <th>Кiл.</th>
                     <th>Опис</th>
 
 
                     <th class="text-right">Вартість</th>
+                    <th class="text-right">Сума</th>
 
 
                     <th width="50"></th>
                 </tr>
                 <tr zippy="detail">
                     <td zippy="item"></td>
+                    <td zippy="qty"></td>
                     <td zippy="desc"></td>
 
                     <td zippy="price" class="text-right"></td>
+                    <td zippy="amount" class="text-right"></td>
 
 
                     <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i
@@ -108,24 +112,24 @@
                     </td>
                 </tr>
                 <tr style="font-weight: bolder;">
-                    <td colspan="2" class="text-right">Всього:</td>
+                    <td colspan="4" class="text-right">Всього:</td>
                     <td zippy="total" class="text-right"></td>
                     <td></td>
                 </tr>
                 <tr style="font-weight: bolder;">
-                    <td colspan="2" class="text-right"><span data-label="paydisc">Знижка:</span></td>
+                    <td colspan="4" class="text-right"><span data-label="paydisc">Знижка:</span></td>
                     <td zippy="paydisc" class="text-right"></td>
                     <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                             class="fa fa-edit"></i></a></td>
                 </tr>
                 <tr style="font-weight: bolder;">
-                    <td colspan="2" class="text-right"><span data-label="payamount">До оплати:</span></td>
+                    <td colspan="4" class="text-right"><span data-label="payamount">До оплати:</span></td>
                     <td zippy="payamount" class="text-right"></td>
                     <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                            data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                 </tr>
                 <tr style="font-weight: bolder;">
-                    <td colspan="2" class="text-right"><span data-label="payed">Внесена оплата:</span></td>
+                    <td colspan="4" class="text-right"><span data-label="payed">Внесена оплата:</span></td>
                     <td zippy="payed" class="text-right"></td>
                     <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal"
                            data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
@@ -232,6 +236,10 @@
             <div class="form-group">
                 <label for="editdesc">Опис </label>
                 <textarea class="form-control " zippy="editdesc"></textarea>
+            </div>
+          <div class="form-group">
+                <label for="editqty">Кiлькiсть </label>
+                <input class="form-control " zippy="editqty"> 
             </div>
 
             <div class="form-group">

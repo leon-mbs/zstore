@@ -63,11 +63,6 @@ try {
         echo $e->getLine() . '<br>';
         echo $e->getFile() . '<br>';
     }
-} catch (Exception $e) { //для обратной совместимости
-    if ($e instanceof ADODB_Exception) {
-
-        \ZDB\DB::getConnect()->CompleteTrans(false); // откат транзакции
-    }
-    $msg = $e->getMessage();
-    $logger->error($e);
-}
+}  
+ 
+// 3f217d4c7b7458d3d00207b177d8776c

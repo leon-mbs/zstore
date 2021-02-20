@@ -141,27 +141,32 @@ class Helper
             if (!in_array($item['meta_id'], $aclview) && $user->rolename != 'admins') {
                 continue;
             }
-
+            $icon='';
 
             switch((int)$item['meta_type']) {
                 case 1 :
                     $dir = "Pages/Doc";
+                    $icon= "<i class=\"nav-icon fa fa-file\"></i>";
                     break;
                 case 2 :
                     $dir = "Pages/Report";
+                    $icon= "<i class=\"nav-icon fa fa-chart-bar\"></i>";
                     break;
                 case 3 :
                     $dir = "Pages/Register";
+                    $icon= "<i class=\"nav-icon fa fa-list\"></i>";
                     break;
                 case 4 :
                     $dir = "Pages/Reference";
+                    $icon= "<i class=\"nav-icon fa fa-book\"></i>";
                     break;
                 case 5 :
                     $dir = "Pages/Service";
+                    $icon= "<i class=\"nav-icon fas fa-project-diagrame\"></i>";
                     break;
             }
 
-            $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$item['description']}</a> ";
+            $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mb-1 mr-2\" href=\"/index.php?p=App/{$dir}/{$item['meta_name']}\">{$icon} {$item['description']}</a> ";
         }
         $role = \App\Entity\UserRole::load($user->role_id);
 
@@ -169,7 +174,7 @@ class Helper
         $smartmenu = explode(',', $smartmenu);
         foreach ($mod as $p) {
             if (in_array($p->meta_id, $smartmenu)) {
-                $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/Modules{$p->meta_name}\">{$p->description}</a> ";
+                $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/Modules{$p->meta_name}\">  <i class=\"nav-icon fa fa-puzzle-piece\"></i> {$p->description}</a> ";
             }
 
         }
@@ -190,6 +195,11 @@ class Helper
         if ($_config['modules']['tecdoc'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'tecdoc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10001, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => self::l('modtecdocsearch')));
+            }
+        }
+        if ($_config['modules']['shop'] == 1) {
+            if ($role->rolename == 'admins' || strpos($role->modules, 'shop') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10002, 'meta_name' => "/Shop/Pages/ProductList", 'meta_type' => 6, 'description' => self::l('modshopprlist')));
             }
         }
 
@@ -683,16 +693,17 @@ class Helper
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
         $sheet = $spreadsheet->getActiveSheet();
-
-
+ 
         foreach ($header as $k => $v) {
 
             $sheet->setCellValue($k, $v);
             $sheet->getStyle($k)->applyFromArray([
                 'font' => [
-
                     'bold' => true
-
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'wrapText' => false,
                 ]
             ]);
 
@@ -700,13 +711,37 @@ class Helper
 
         foreach ($data as $k => $v) {
 
-
-            $sheet->setCellValue($k, $v);
-
-
+            if(is_array($v)) {
+                $c = $sheet->getCell($k)   ;
+                $style = $sheet->getStyle($k)   ;
+                if($v['format']=='date') {
+                    $v['value']= date('d/m/Y',$v['value'])   ;
+                    $c->setValue($v['value'])  ;
+                    $style->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DDMMYYYY)  ;
+                } else 
+                if($v['format']=='number') {
+                    $c->setValueExplicit($v['value'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC) ;
+                   
+                }  else {
+                    $c->setValueExplicit( $v['value'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING) ;
+                }
+                 if($v['bold']==true) {
+                     $style->getFont()->setBold(true) ;
+                 }
+                 if($v['align']=='right') {
+                     $style->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT ) ; ;
+                 }
+                                
+            }   else {
+              //  $sheet->setCellValue($k, $v );
+                $c = $sheet->getCell($k)   ;
+                $c->setValue($v)  ;
+                $c->setValueExplicit( $v, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING) ;
+                
+            }
+     
         }
-
-
+ 
         /*
          $sheet->getStyle('A1')->applyFromArray([
              'font' => [
@@ -736,8 +771,7 @@ class Helper
 
          */
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-
-
+ 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         $writer->save('php://output');

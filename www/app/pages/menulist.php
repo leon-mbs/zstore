@@ -25,7 +25,7 @@ class  MenuList extends \App\Pages\Base
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg(H::l('onlyadminpage'));
-            App::RedirectHome();
+            App::RedirectError();
             return false;
         }
 

@@ -35,7 +35,7 @@ class PPOList extends \App\Pages\Base
         if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(H::l('noaccesstopage'));
 
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
         $modules = System::getOptions("modules");

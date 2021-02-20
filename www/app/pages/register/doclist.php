@@ -16,6 +16,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SortLink;
@@ -39,8 +40,7 @@ class DocList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('DocList')) {
             return;
         }
-
-
+ 
         $filter = Filter::getFilter("doclist");
         if ($filter->to == null) {
             $filter->to = time() + (3 * 24 * 3600);
@@ -51,6 +51,7 @@ class DocList extends \App\Pages\Base
             $filter->customer_name = '';
 
             $filter->searchnumber = '';
+          
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
@@ -62,6 +63,7 @@ class DocList extends \App\Pages\Base
         $this->filter->searchcust->setKey($filter->customer);
         $this->filter->searchcust->setText($filter->customer_name);
         $this->filter->add(new TextInput('searchnumber', $filter->searchnumber));
+        
 
         if (strlen($filter->docgroup) > 0) {
             $this->filter->docgroup->setValue($filter->docgroup);
@@ -112,6 +114,7 @@ class DocList extends \App\Pages\Base
         $filter->customer_name = '';
 
         $filter->searchnumber = '';
+        
 
         $this->filter->clean();
         $this->filter->to->setDate(time());
@@ -129,6 +132,7 @@ class DocList extends \App\Pages\Base
         $filter->doctype = $this->filter->doctype->getValue();
         $filter->customer = $this->filter->searchcust->getKey();
         $filter->customer_name = $this->filter->searchcust->getText();
+        
 
 
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
@@ -147,7 +151,7 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
 
-        $row->add(new Label('cust', $doc->headerdata['customer_name']));
+        $row->add(new Label('cust', $doc->customer_name ));
         $row->add(new Label('branch', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
@@ -360,14 +364,14 @@ class DocList extends \App\Pages\Base
         if ($sender->id == "bap") {
             $newstate = $this->_doc->headerdata['_state_before_approve_'] > 0 ? $this->_doc->headerdata['_state_before_approve_'] : Document::STATE_APPROVED;
             $this->_doc->updateStatus($newstate);
-
-
+      
             $user = System::getUser();
 
             $n = new \App\Entity\Notify();
             $n->user_id = $this->_doc->user_id;
             $n->dateshow = time();
-            $n->message = "Пользователь <b>{$user->username}</b>  утвердил документ " . $this->_doc->document_number;
+            $n->message =H::l("userapprooveddoc",$user->username,$this->_doc->document_number);
+            
             $n->save();
         }
         if ($sender->id == "bref") {
@@ -380,7 +384,7 @@ class DocList extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = $this->_doc->user_id;
             $n->dateshow = time();
-            $n->message = "Пользователь <b>{$user->username}</b>  отклонил документ " . $this->_doc->document_number;
+            $n->message = H::l("userrefuseddoc",$user->username,$this->_doc->document_number) ;
             $n->message .= "<br> " . $text;
             $n->save();
 
@@ -436,6 +440,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if ($filter->customer > 0) {
             $where .= " and customer_id  ={$filter->customer} ";
         }
+  
 
         $sn = $filter->searchnumber;
 

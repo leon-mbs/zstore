@@ -135,6 +135,40 @@ class Util
         return $arr;
     }
 
+    //очистка  номера  телефона
+    public static function handlePhone($tel){
+        $tel = str_replace(' ','',$tel)  ;
+        $tel = preg_replace("/[^0-9.]/", "",$tel);     
+        return $tel;
+    }
+    
+    //генерация слуяайного цвета
+    public static function genColor(){
+        $color = dechex(rand(0x000000, 0xFFFFFF));
+        return $color;
+    }   
+    
+    // возвращает  прошлые месяцы  с  названиями  и датами начала  и конца
+    public static function genPastMonths($num){
+        $mlist =  Util::getMonth()  ;
+ 
+        $list = array();
+        
+        $dt = new \Carbon\Carbon;
+        $dt->subMonth();
+        for($i=1;$i<=$num;$i++) {
+            $mon[]=  $mlist[$dt->month];  
+            $to = $dt->endOfMonth()->timestamp; 
+            $from = $dt->startOfMonth()->timestamp;
+            $list[]  = array('number'=>$dt->month,'name'=>$mlist[$dt->month],'start'=>$from,'end'=>$to);
+            $dt->subMonth(); 
+            
+        }
+        $list = array_reverse($list) ;
+          
+        return $list;
+    }   
+      
 }
 
 // Convert digital Russian currency representation

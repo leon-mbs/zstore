@@ -63,24 +63,17 @@ class Contract extends \ZCL\DB\Entity
         return true;
     }
 
-    public static function PayList() {
-        return array(
-            1 => \App\Helper::l('cnal'),
-            2 => \App\Helper::l('cbeznal'),
-            3 => \App\Helper::l('ckredit'),
-            4 => \App\Helper::l('creal')
-        );
-    }
+ 
 
     public static function getList($c, $f = 0) {
 
         $ar = array();
-        if (strlen($f) == 0) {
-            $f = 0;
-        }
-        if ($c > 0) {
-            $where = "disabled <> 1 and customer_id={$c} and coalesce(firm_id,0) = {$f} ";
 
+        if ($c > 0) {
+            $where = "disabled <> 1 and customer_id={$c} ";
+            if($f >0) {
+               $where .=   " and firm_id =  ".$f;  
+            }
             $res = Contract::find($where, 'contract_number');
             foreach ($res as $k => $v) {
                 $ar[$k] = $v->contract_number . ' ' . $v->shortdesc;
@@ -102,13 +95,33 @@ class Contract extends \ZCL\DB\Entity
 
         $where = "  customer_id={$this->customer_id} and  content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
 
-        $res = \App\Entity\Doc\Document::find($where, 'document_id desc');
+        $res = \App\Entity\Doc\Document::find($where, 'document_id asc');
         foreach ($res as $k => $v) {
             $ar[$k] = $v;
         }
 
 
         return $ar;
+    }
+    /**
+    * к оплате
+    * 
+    */
+    public function getForPay() {
+
+        $amount =0;
+
+        $where = "  customer_id={$this->customer_id} and payamount >0 and payamount > payed and content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
+
+        $res = \App\Entity\Doc\Document::find($where );
+        foreach ($res as $doc) {
+           
+           $amount += ($doc->payamount - $doc->payed ) ;
+               
+        }
+
+
+        return $amount;
     }
 
 

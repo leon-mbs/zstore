@@ -78,7 +78,7 @@ class ItemSel extends \Zippy\Html\PageFragment
      */
     public function Reload() {
         $this->wisfilter->clean();
-        $this->ReloadData();
+        $this->ReloadData($this->wisfilter);
     }
 
     public function OnSelect($sender, $data) {
@@ -86,7 +86,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->_page->{$this->_event}($item->item_id, $item->itemname);
     }
 
-    public function ReloadData() {
+    public function ReloadData($sender) {
 
         $where = "disabled <> 1";
         $text = trim($this->wisfilter->wissearchkey->getText());

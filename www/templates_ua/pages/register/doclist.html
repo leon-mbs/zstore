@@ -1,7 +1,7 @@
 <html>
 <body>
 <div class="row">
-    <div class="col-12 col-xl-10">
+    <div class="col-12 col-xl-11">
 
         <h3>Журнал документів
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
@@ -13,27 +13,27 @@
 
         <div class="navbar nav  ">
             <form zippy="filter" class="form-inline ">
+                 <input placeholder="Номер..." class="form-control mr-2" type="text" zippy="searchnumber"
+                       style="width:120px"  title="Якщо  пошук по номеру iншi елементи  фiльтру  iгноруются">
 
                 <label for="from">З </label>
-                <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
+                <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
 
 
                 <label for="to"> по </label>
-                <input type="text" class="form-control mr-sm-2 " style="width:110px" zippy="to">
+                <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
 
 
                 <label for="doctype"> Тип </label>
-                <select class="form-control mr-sm-2  " zippy="doctype">
+                <select class="form-control mr-sm-1  " zippy="doctype">
                     <option value="0">Не встановлено</option>
                 </select>
                 <label for="searchcust"> Контрагент </label>
-                <input placeholder="Почніть вводити..." class="form-control mr-2" type="text" zippy="searchcust">
+                <input placeholder="Почніть вводити..." class="form-control mr-1" type="text" zippy="searchcust">
 
-                <input placeholder="Номер..." class="form-control mr-2" type="text" zippy="searchnumber"
-                       style="width:100px">
+             
 
-
-                <input type="submit" class="mr-2  btn btn-outline-success  " value="ОК">
+                <input type="submit" class="  mr-2  btn btn-outline-success  " value="ОК">
                 <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
 
 

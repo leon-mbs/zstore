@@ -26,7 +26,7 @@ class FirmList extends \App\Pages\Base
 
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg(H::l('onlyadminpage'));
-            \App\Application::RedirectHome();
+            \App\Application::RedirectError();
             return false;
         }
 

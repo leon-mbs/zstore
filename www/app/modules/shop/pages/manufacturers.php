@@ -18,7 +18,7 @@ class Manufacturers extends \App\Pages\Base
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg('noaccesstopage');
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
 

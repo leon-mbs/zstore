@@ -31,7 +31,7 @@ class GroupList extends \App\Pages\Base
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg('noaccesstopage');
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
 
@@ -124,7 +124,7 @@ class GroupList extends \App\Pages\Base
 
         $this->groupform->group_image->setUrl('/assets/images/noimage.jpg');
         if ($this->group->image_id > 0) {
-            $this->groupform->group_image->setUrl('/loadimage.php?id=' . $this->group->image_id);
+            $this->groupform->group_image->setUrl('/loadshopimage.php?id=' . $this->group->image_id);
         }
         $this->UpdateAttrList();
         //у верхнего  уровня  нет картинок
@@ -203,7 +203,7 @@ class GroupList extends \App\Pages\Base
             }
 
 
-            $image = new \App\Entity\Image();
+            $image = new \App\Modules\Shop\Entity\Image();
             $image->content = file_get_contents($filedata['tmp_name']);
 
             $thumb = new \App\Thumb($filedata['tmp_name']);
@@ -214,7 +214,7 @@ class GroupList extends \App\Pages\Base
             $image->save();
             $this->group->image_id = $image->image_id;
             $this->group->save();
-            $this->groupform->group_image->setUrl('/loadimage.php?id=' . $this->group->image_id);
+            $this->groupform->group_image->setUrl('/loadshopimage.php?id=' . $this->group->image_id);
         }
     }
 

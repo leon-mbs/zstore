@@ -2,11 +2,12 @@
 
 namespace App\API;
 /**
- * возвращает  описание   API
+ * возвращает  описание   API  по  адресу  /api/help
  */
 class help
 {
-    function __construct() {
+    function __construct()
+    {
 
         global $_config;
 

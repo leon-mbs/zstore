@@ -242,7 +242,6 @@
 </div>
 <!-- /.modal -->
 
-<script src="/assets/js/ckeditor/ckeditor.js" type="text/javascript"></script>
 
 
 <script>
@@ -279,19 +278,30 @@
         return confirm('Удалить узел');
     }
 
-    if ($('#editdetail').length) {
-        CKEDITOR.replace('editdetail', {
-            language: "ru",
-            customConfig: '/assets/js/ckeditor/config.js',
-            filebrowserBrowseUrl: '',
-            filebrowserUploadUrl: '/upload.php'
-        });
-    }
+ 
 
     function fav() {
 
     }
 
+$('#editdetail').summernote({
+    height: 400,
+    lang: 'uk-UA',
+ 
+ 
+    callbacks: {
+        onEnter: function (e) {
+            e.preventDefault();
+        },
+        onPaste: function (e) {
+          
+            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+            e.preventDefault();
+            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+        }
+    }
+});    
+    
 </script>
 </body>
 

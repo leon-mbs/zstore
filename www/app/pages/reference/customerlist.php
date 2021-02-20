@@ -111,7 +111,7 @@ class CustomerList extends \App\Pages\Base
 
         if (strlen($search) > 0) {
             $search = Customer::qstr('%' . $search . '%');
-            $where .= " and (customer_name like  {$search} or phone like {$search}    )";
+                $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
         }
         if ($type == 1) {
             $where .= " and detail like '%<type>1</type>%'    ";
@@ -239,7 +239,9 @@ class CustomerList extends \App\Pages\Base
                 return;
             }
         }
-        if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL()) {
+        $this->_customer->phone = \App\Util::handlePhone($this->_customer->phone) ;
+         
+         if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL()) {
             $this->setError("tel10", Helper::PhoneL());
             return;
         }
@@ -252,7 +254,7 @@ class CustomerList extends \App\Pages\Base
         }
 
 
-        $this->_customer->Save();
+        $this->_customer->save();
         $this->customerdetail->setVisible(false);
         $this->customertable->setVisible(true);
         $this->customertable->customerlist->Reload();

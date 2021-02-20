@@ -2,15 +2,17 @@
 
 namespace App\API;
 
-class common extends JsonRPC
+class common extends \App\API\Base\JsonRPC
 {
 
-    public function login($user, $password) {
+    //получение  токена
+    public function token($args)
+    {
 
 
         $api = \App\System::getOptions('api');
 
-        $user = \App\Helper::login($user, $password);
+        $user = \App\Helper::login($args['login'], $args['password']);
 
         if ($user instanceof \App\Entity\User) {
             $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
@@ -18,15 +20,15 @@ class common extends JsonRPC
 
             $token = array(
                 "user_id" => $user->user_id,
-                "iat"     => time(),
-                "exp"     => time() + $exp * 60
+                "iat" => time(),
+                "exp" => time() + $exp * 60
             );
 
             $jwt = \Firebase\JWT\JWT::encode($token, $key);
 
 
         } else {
-            throw new  \Exception('Неверный логин', 1000);
+            throw new  \Exception(\App\Helper::l('invalidlogin'), -1000);
         }
 
         return $jwt;

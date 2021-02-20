@@ -80,13 +80,13 @@ class Application extends \Zippy\WebApplication
                 $page = new $class;
 
                 //  RESTFul
-                if ($page instanceof \App\API\JsonRPCRestFul) {
+                if ($page instanceof \App\API\Base\RestFul) {
                     $params = array_slice($api, 2);
                     $page->Execute($params);
                     die;
                 }
                 // JSON-RPC
-                if ($page instanceof \App\API\JsonRPC) {
+                if ($page instanceof \App\API\Base\JsonRPC) {
                     $page->Execute();
                     die;
                 }
@@ -139,5 +139,9 @@ class Application extends \Zippy\WebApplication
             self::$app->LoadPage($pages[$uri]);
         }
     }
-
+   
+   public static function RedirectError()
+    {
+        self::Redirect("\\App\\Pages\\Error") ;
+    }
 }

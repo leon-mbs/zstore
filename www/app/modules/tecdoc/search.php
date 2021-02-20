@@ -30,7 +30,7 @@ class Search extends \App\Pages\Base
         if (strpos(System::getUser()->modules, 'tecdoc') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(\App\Helper::l('noaccesstopage'));
 
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
 
@@ -316,7 +316,8 @@ class Search extends \App\Pages\Base
             $item->brand_id = $row['brand_id'];
             $this->_ds[] = $item;
         }
-        $this->tlist->itemlist->Reload();
+       $this->OnItemList();
+
 
         if (count($this->_ds) > 0) {
 
@@ -351,7 +352,8 @@ class Search extends \App\Pages\Base
             $item->brand_id = $row['brand_id'];
             $this->_ds[] = $item;
         }
-        $this->tlist->itemlist->Reload();
+            $this->OnItemList();
+
 
         if (count($this->_ds) > 0) {
             $this->tpanel->setVisible(false);
@@ -385,7 +387,8 @@ class Search extends \App\Pages\Base
             $item->brand_id = $row['brand_id'];
             $this->_ds[] = $item;
         }
-        $this->tlist->itemlist->Reload();
+            $this->OnItemList();
+
 
         if (count($this->_ds) > 0) {
             $this->tpanel->setVisible(false);
@@ -404,6 +407,32 @@ class Search extends \App\Pages\Base
         $this->tview->setVisible(false);
     }
 
+   private function OnItemList() {
+         $modules = System::getOptions("modules");
+       
+         $items=array();
+         foreach($this->_ds   as $it ){
+            $it->qty='';
+            
+            $item = Item::getFirst("manufacturer=" . Item::qstr($it->supplier_name) . " and item_code=" . Item::qstr($it->part_number));
+            if($item !=null) {
+                $it->qty= $item->getQuantity($modules['td_store']);
+                $it->price = $item->getPrice($modules['td_pricetype'], $modules['td_store']) ;
+            }
+            
+            
+            $items[]=$it; 
+         }
+         
+         usort($items,function($a,$b){ return $a->qty < $b->qty;  })  ;
+         
+         $this->_ds = $items;
+         $this->tlist->itemlist->Reload()  ;      
+
+        
+    }
+      
+    
     public function listOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label("lbrand", $item->supplier_name));
@@ -454,8 +483,8 @@ class Search extends \App\Pages\Base
 
         $ret = $api->getImage($part->part_number, $part->brand_id);
         if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
+           // $this->setError($ret['error']);
+           // return;
         }
 
         if (strlen($ret['data']) > 0) {
@@ -498,6 +527,8 @@ class Search extends \App\Pages\Base
         if (count($ret['data']) > 0) {
             $this->_tvars['isrep'] = true;
             foreach ($ret['data'] as $r) {
+                $q='';
+                $p='';
 
                 $item = Item::getFirst("manufacturer=" . Item::qstr($r['supplier']) . " and item_code=" . Item::qstr($r['replacenbr']));
 
@@ -512,6 +543,8 @@ class Search extends \App\Pages\Base
 
                 $this->_tvars['rep'][] = array('sup' => $r['supplier'], 'num' => $r['replacenbr'], 'q' => $q, 'p' => $p);
             }
+            usort($this->_tvars['rep'],function($a,$b){ return $a['q'] < $b['q'];  })  ;
+  
         }
 
 
@@ -549,6 +582,8 @@ class Search extends \App\Pages\Base
             $this->_tvars['iscross'] = true;
             foreach ($ret['data'] as $c) {
                 $item = Item::getFirst("manufacturer=" . Item::qstr($c['description']) . " and item_code=" . Item::qstr($c['crossnumber']));
+                $q='';
+                $p='';
 
                 if ($item instanceof Item) {
                     $modules = System::getOptions("modules");
@@ -562,6 +597,8 @@ class Search extends \App\Pages\Base
 
                 $this->_tvars['crosslist'][] = array('desc' => $c['description'], 'cross' => $c['crossnumber'], 'q' => $q, 'p' => $p);
             }
+            usort($this->_tvars['crosslist'],function($a,$b){ return $a['q'] < $b['q'];  })  ;
+              
         }
 
         //Применимость

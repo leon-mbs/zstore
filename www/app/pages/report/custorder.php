@@ -67,7 +67,7 @@ class CustOrder extends \App\Pages\Base
 
         $detail = array();
 
-        $where = "   meta_name='OrderCust'  and state= " . Document::STATE_INPROCESS;
+        $where = "   meta_name='OrderCust'  and  state= " . Document::STATE_INPROCESS;
         if ($cust > 0) {
             $where .= " and customer_id=" . $cust;
         }

@@ -148,7 +148,7 @@ class ABC extends \App\Pages\Base
                        join items on entrylist_view.item_id = items.item_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
-                    WHERE   extcode <>0  and meta_name in('GoodsIssue','ReturnIssue') 
+                    WHERE   extcode <>0  and meta_name in('GoodsIssue', 'POSCheck','ReturnIssue','TTN') 
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br} 
@@ -200,7 +200,7 @@ class ABC extends \App\Pages\Base
                     FROM  `entrylist_view` 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck')  
+                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck','Order')  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     AND customers.details not like '%<isholding>1</isholding>%' 
@@ -252,7 +252,7 @@ class ABC extends \App\Pages\Base
                     FROM  `entrylist_view` 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck')  
+                    WHERE   entrylist_view.amount <0 and meta_name in('GoodsIssue','POSCheck','TTN')  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br} 

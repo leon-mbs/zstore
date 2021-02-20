@@ -49,7 +49,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new TextInput('device'));
         $this->docform->add(new TextInput('devsn'));
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -77,6 +77,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
 
 
+        $this->editdetail->add(new TextInput('editqty'));
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextArea('editdesc'));
 
@@ -152,7 +153,9 @@ class ServiceAct extends \App\Pages\Base
         $row->add(new Label('desc', $service->desc));
 
 
+        $row->add(new Label('qty', H::fqty($service->quantity)));
         $row->add(new Label('price', H::fa($service->price)));
+        $row->add(new Label('amount', H::fa($service->price*$service->quantity)));
 
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -167,6 +170,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editdesc->setText(($service->desc));
 
         $this->editdetail->editprice->setText($service->price);
+        $this->editdetail->editqty->setText($service->quantity);
 
         $this->editdetail->editservice->setValue($service->service_id);
 
@@ -193,6 +197,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editdesc->setText('');
 
         $this->editdetail->editprice->setText(0);
+        $this->editdetail->editqty->setText("1");
     }
 
     public function saverowOnClick($sender) {
@@ -204,8 +209,9 @@ class ServiceAct extends \App\Pages\Base
         $service = Service::load($id);
 
         $service->price = $this->editdetail->editprice->getText();
+        $service->quantity = $this->editdetail->editqty->getText();
         $service->desc = $this->editdetail->editdesc->getText();
-        $service->quantity = 1;
+     
 
         $this->_servicelist[$service->service_id] = $service;
         $this->editdetail->setVisible(false);
@@ -301,9 +307,10 @@ class ServiceAct extends \App\Pages\Base
 
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
+            if($isEdited==false)  $this->_doc->document_id=0;
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
@@ -320,7 +327,7 @@ class ServiceAct extends \App\Pages\Base
         $total = 0;
 
         foreach ($this->_servicelist as $item) {
-            $item->amount = $item->price;
+            $item->amount = $item->price*$item->quantity;
 
             $total = $total + $item->amount;
         }
@@ -398,8 +405,12 @@ class ServiceAct extends \App\Pages\Base
             $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('nouniquedocnumber_created');
+            $next = $this->_doc->nextNumber() ;
+            $this->docform->document_number->setText($next);
+              $this->_doc->document_number =  $next;
+          if(strlen($next)==0) {
+                $this->setError('docnumbercancreated');    
+            }
         }
         if (count($this->_servicelist) == 0) {
             $this->setError("noenterpos");
@@ -467,7 +478,8 @@ class ServiceAct extends \App\Pages\Base
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editphone->getText();
-
+        $cust->phone = \App\Util::handlePhone($cust->phone) ;
+ 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("tel10", H::PhoneL());
             return;

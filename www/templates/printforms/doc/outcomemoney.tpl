@@ -28,6 +28,13 @@
         </td>
     </tr>
     {{/customer}}
+   {{#contract}}
+    <tr>
+        <td colspan="4">
+            <b>Договор:</b> {{contract}}
+        </td>
+    </tr>
+    {{/contract}}
     {{#emp}}
     <tr>
         <td colspan="4">

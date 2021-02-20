@@ -45,7 +45,7 @@ class ACL
 
         if ($showerror == true) {
             System::setErrorMsg(H::l('aclnoaccessviewreport', self::$_metasdesc[$rep]));
-            App::RedirectHome();
+            App::RedirectError();
         }
         return false;
     }
@@ -67,7 +67,7 @@ class ACL
 
         System::setErrorMsg(H::l('aclnoaccessviewref', self::$_metasdesc[$ref]));
 
-        App::RedirectHome();
+        App::RedirectError();
         return false;
     }
 
@@ -130,7 +130,7 @@ class ACL
 
         if ($showerror == true) {
             System::setErrorMsg(H::l('aclnoaccessviewreg', self::$_metasdesc[$reg]));
-            App::RedirectHome();
+            App::RedirectError();
         }
         return false;
     }
@@ -149,7 +149,7 @@ class ACL
             if ($user->user_id != $doc->user_id) {
                 System::setErrorMsg(H::l('aclnoaccessviewdoc', self::$_metasdesc[$doc->meta_name]));
                 if ($inreg == false) {
-                    App::RedirectHome();
+                    App::RedirectError();
                 }
                 return false;
             }
@@ -167,7 +167,7 @@ class ACL
             System::setErrorMsg(H::l('aclnoaccessviewdoc', self::$_metasdesc[$doc->meta_name]));
 
             if ($inreg == false) {
-                App::RedirectHome();
+                App::RedirectError();
             }
         }
         return false;
@@ -189,7 +189,7 @@ class ACL
                 System::setErrorMsg(H::l('aclnoaccesseditdoc', self::$_metasdesc[$doc->meta_name]));
 
                 if ($inreg == false) {
-                    App::RedirectHome();
+                    App::RedirectError();
                 }
                 return false;
             }
@@ -206,7 +206,7 @@ class ACL
 
             System::setErrorMsg(H::l('aclnoaccesseditdoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
-                App::RedirectHome();
+                App::RedirectError();
             }
         }
 
@@ -229,7 +229,7 @@ class ACL
                 System::setErrorMsg(H::l('aclnoaccessdeldoc', self::$_metasdesc[$doc->meta_name]));
 
                 if ($inreg == false) {
-                    App::RedirectHome();
+                    App::RedirectError();
                 }
                 return false;
             }
@@ -246,7 +246,7 @@ class ACL
 
             System::setErrorMsg(H::l('aclnoaccessdeldoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
-                App::RedirectHome();
+                App::RedirectError();
             }
         }
 
@@ -276,7 +276,7 @@ class ACL
         if ($showerror == true) {
             System::setErrorMsg(H::l('aclnoaccessexedoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
-                App::RedirectHome();
+                App::RedirectError();
             }
         }
 
@@ -306,7 +306,7 @@ class ACL
         if ($showerror == true) {
             System::setErrorMsg(H::l('aclnoaccessstatedoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
-                App::RedirectHome();
+                App::RedirectError();
             }
         }
 
@@ -335,7 +335,7 @@ class ACL
         if ($showerror == true) {
             System::setErrorMsg(H::l('aclnoaccesscanceldoc', self::$_metasdesc[$doc->meta_name]));
             if ($inreg == false) {
-                App::RedirectHome();
+                App::RedirectError();
             }
         }
 
@@ -362,7 +362,7 @@ class ACL
             System::setErrorMsg(H::l('aclnoaccessviewser', self::$_metasdesc[$ser]));
 
 
-            App::RedirectHome();
+            App::RedirectError();
         }
         return false;
     }

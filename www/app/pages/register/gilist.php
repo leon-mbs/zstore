@@ -9,12 +9,14 @@ use App\Entity\Firm;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -37,20 +39,23 @@ class GIList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('GIList')) {
             return;
         }
+       
+        $this->add(new Panel("listpan")) ;
+        $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->listpan->filter->add(new TextInput('searchnumber'));
+        $this->listpan->filter->add(new TextInput('searchtext'));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
+        $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
-        $this->filter->add(new TextInput('searchnumber'));
-        $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('newed'), 2 => H::l('sended'), 4 => H::l('notpayed'), 3 => H::l('all')), 0));
-        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
-
-        $doclist = $this->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->listpan->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
 
-        $this->add(new Paginator('pag', $doclist));
+        $this->listpan->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
+        $this->listpan->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->listpan->add(new ClickLink('statusNP', $this, 'onNP'));
+    
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
@@ -60,21 +65,57 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bnp'))->onClick($this, 'npshowOnSubmit');
+        
         $this->statuspan->statusform->add(new TextInput('ship_number'));
         $this->statuspan->statusform->add(new CheckBox('closeorder'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->listpan->doclist->Reload();
+
+        //новая  почта
+        $this->add(new Panel("nppan"))->setVisible(false);
+        $npform = $this->nppan->add(new  Form("npform"));
+        $npform->onSubmit($this,"npOnSubmit") ;
+        $npform->add(new  ClickLink("npcancel",$this,"npOnCancel")) ;
+        $npform->add(new DropDownChoice('selarea' ))->onChange($this,'onSelArea');
+        $npform->add(new DropDownChoice('selcity' ))->onChange($this,'onSelCity');
+        $npform->add(new DropDownChoice('selpoint' ));
+        $npform->add(new TextInput('seltel' ));
+ 
+        $npform->add(new DropDownChoice('bayarea' ))->onChange($this,'onBayArea');
+        $npform->add(new DropDownChoice('baycity' ))->onChange($this,'onBayCity');
+        $npform->add(new DropDownChoice('baypoint' ));
+        $npform->add(new TextInput('baylastname' ));
+        $npform->add(new TextInput('bayfirstname' ));
+        $npform->add(new TextInput('baymiddlename' ));
+        $npform->add(new TextInput('baytel' ));
+        $npform->add(new TextInput('npw' ));
+        $npform->add(new TextInput('npplaces' ));
+        $npform->add(new TextInput('npcost' ));
+        $npform->add(new TextArea('npdesc' ));
+        $npform->add(new  Date('npdate' ));
+     //   $npform->add(new DropDownChoice('npst' ))->onChange($this,'onST');
+        $npform->add(new DropDownChoice('nppt' ));
+        $npform->add(new DropDownChoice('nppm' ));
+        $npform->add(new TextInput('npback' ));
+        $npform->add(new Label('npttncust' ));
+        $npform->add(new Label('npttaddress' ));
+        $npform->add(new Label('npttnnotes' ));
+        
+        $npform->add(new DataView('npitemlist', new ArrayDataSource(array()), $this, 'nplistOnRow'));
+         
     }
 
     public function filterOnSubmit($sender) {
 
         $this->statuspan->setVisible(false);
 
-        $this->doclist->Reload(false);
+        $this->listpan->doclist->Reload(false);
     }
+  
+
 
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
@@ -106,13 +147,13 @@ class GIList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
-
+         
         if ($sender->id == "bsend") {
             $dec = $this->statuspan->statusform->ship_number->getText();
-            $this->_doc->headerdata['sentdate'] = H::fd(time());
             if (strlen($dec) > 0) {
                 $this->_doc->headerdata['ship_number'] = $dec;
             }
+            $this->_doc->headerdata['sentdate'] = H::fd(time());
             $this->_doc->headerdata['document_date'] = time();
             $this->_doc->save();
 
@@ -124,7 +165,7 @@ class GIList extends \App\Pages\Base
 
             $this->_doc->save();
 
-            $this->statuspan->statusform->ship_number->setText('');
+            $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']);
             $this->setSuccess('sent');
         }
 
@@ -151,12 +192,7 @@ class GIList extends \App\Pages\Base
         }
 
         if ($sender->id == "bttn") {
-            $d = $this->_doc->getChildren('TTN');
-
-            if (count($d) > 0) {
-                $this->setWarn('ttn_exists');
-
-            }
+     
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
         }
 
@@ -167,10 +203,10 @@ class GIList extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\ReturnIssue", 0, $this->_doc->document_id);
         }
 
-        $this->doclist->Reload(false);
+        $this->listpan->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
-        //todo  отослать писмо 
+ 
 
         $this->updateStatusButtons();
     }
@@ -182,7 +218,8 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->bret->setVisible(true);
         $this->statuspan->statusform->bsend->setVisible(true);
         $this->statuspan->statusform->bgar->setVisible(true);
-        $this->statuspan->statusform->ship_number->setVisible(true);
+        $this->statuspan->statusform->bnp->setVisible(false);
+        $this->statuspan->statusform->ship_number->setVisible(false);
 
 
         $this->statuspan->statusform->closeorder->setVisible(false);
@@ -198,11 +235,13 @@ class GIList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-        //готов  к  отправке
+ 
+       //готов  к  отправке
         if ($state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
             $this->statuspan->statusform->closeorder->setVisible(false);
+            
         }
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
@@ -219,10 +258,19 @@ class GIList extends \App\Pages\Base
 
         //прячем лишнее
         if ($this->_doc->meta_name == 'TTN') {
-            $this->statuspan->statusform->ship_number->setVisible($this->_doc->headerdata['delivery'] > 2);
+            if($this->_doc->headerdata['delivery'] <3) { //не  служба  доставки
+                $this->statuspan->statusform->ship_number->setVisible(false);
+                
+            }
 
             $this->statuspan->statusform->bttn->setVisible(false);
         }
+        if ($this->_doc->meta_name == 'TTN' &&  $this->_doc->state = Document::STATE_READYTOSHIP ) {
+            $this->statuspan->statusform->bnp->setVisible(true);
+            $this->statuspan->statusform->ship_number->setVisible(true);
+            
+        }
+
         if ($this->_doc->meta_name == 'GoodsIssue') {
 
             $this->statuspan->statusform->bdevivered->setVisible(false);
@@ -251,6 +299,10 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bgar->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
         }
+        
+        
+   
+        
     }
 
     //просмотр
@@ -262,9 +314,10 @@ class GIList extends \App\Pages\Base
         }
 
         $this->statuspan->setVisible(true);
+        $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']);        
         $this->statuspan->docview->setDoc($this->_doc);
-        $this->doclist->setSelectedRow($sender->getOwner());
-        $this->doclist->Reload(false);
+        $this->listpan->doclist->setSelectedRow($sender->getOwner());
+        $this->listpan->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
     }
@@ -278,10 +331,9 @@ class GIList extends \App\Pages\Base
         App::Redirect("\\App\\Pages\\Doc\\" . $doc->meta_name, $doc->document_id);
     }
 
-    //оплаты
 
     public function oncsv($sender) {
-        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+        $list = $this->listpan->doclist->getDataSource()->getItems(-1, -1, 'document_id');
         $header = array();
         $data = array();
 
@@ -300,7 +352,325 @@ class GIList extends \App\Pages\Base
         H::exportExcel($data, $header, 'selllist.xlsx');
 
     }
+    
+   //функции НП
+   public function npshowOnSubmit($sender) {
+         $this->statuspan->setVisible(false);
+         $this->listpan->setVisible(false);
+         $this->nppan->setVisible(true);
+         $this->nppan->npform->clean() ;
+ 
+     
+       
+      
+         $modules = System::getOptions("modules");
+  
+       
+          $this->nppan->npform->npplaces->setText(1) ;
+          $this->nppan->npform->npcost->setText(0) ;
+          $this->nppan->npform->npdate->setDate(time()) ;
+        
+          $api =  new  \App\Modules\NP\Helper() ;
+       
+          $areas = $api->getAreaList() ;
+       //   $st = $api->getServiceTypes() ;
+       //   $ct = $api->getTypesOfCounterparties() ;
+          $pf = $api->getPaymentForms() ;
+         // $ct = $api->getCargoTypes()  ;
+           $tp = $api->getTypesOfPayers()  ;
+          
+      
+          //тип оплаты
+          $stlist = array();
+          foreach($pf['data'] as $r){
+             $stlist[$r['Ref']]=$r['Description']; 
+          }
+        
+          $this->nppan->npform->nppm->setOptionList($stlist) ;
+          $this->nppan->npform->nppm->setValue('Cash');
+          //кто оплачивает
+          $stlist = array();
+          foreach($tp['data'] as $r){
+             $stlist[$r['Ref']]=$r['Description']; 
+          }
+        
+          $this->nppan->npform->nppt->setOptionList($stlist) ;
+          $this->nppan->npform->nppt->setValue('Recipient');
+          
+          $this->nppan->npform->bayarea->setOptionList($areas) ;
+          $this->nppan->npform->selarea->setOptionList($areas) ;
+     
+          $this->nppan->npform->selarea->setValue($modules['nparearef']) ;
+          
+          if(strlen($modules['nparearef'])>0) {
+              $this->onSelArea($this->nppan->npform->selarea) ;
+              $this->nppan->npform->selcity->setValue($modules['npcityref']);
+          }
+          if(strlen($modules['npcityref'])>0) {
+              $this->onSelCity($this->nppan->npform->selcity) ;
+              $this->nppan->npform->selpoint->setValue($modules['nppointref']);              
+           }     
+          $this->nppan->npform->seltel->setText($modules['nptel']);              
+        
+          $list = $this->_doc->unpackDetails('detaildata');
+          $w = 0;
+          $p = 0;
+          foreach($list as $it){
+              if($it->weight>0) $w +=  $it->weight;
+              $p = $p +($it->quantity*$it->price)  ;
+          }
+          $this->nppan->npform->npitemlist->getDataSource()->setArray($list);
+          $this->nppan->npform->npitemlist->Reload();  
 
+          $this->nppan->npform->npw->setText($w) ;
+          $this->nppan->npform->npback->setText( intval($p)) ;
+          $this->nppan->npform->npcost->setText( intval($p)) ;
+
+          $order = Document::load($this->_doc->parent_id);            
+          if($order instanceof Document) {
+             if($order->payamount>0) {
+                 $this->nppan->npform->npback->setText( intval($order->payamount)) ;
+                 $this->nppan->npform->npcost->setText( intval($order->payamount)) ;
+             
+             }
+             
+          }
+          
+          $c = \App\Entity\Customer::load($this->_doc->customer_id) ;
+          $cust = $c->customer_name;
+          $tel='';
+          if(strlen($this->_doc->headerdata["phone"])>0)  {
+             $cust = $cust.', '.$this->_doc->headerdata["phone"]; 
+             $tel = $this->_doc->headerdata["phone"];   
+          } else {
+             $cust = $cust.', '.$cust->phone;    
+             $tel = $cust->phone;
+          }
+          
+          $this->nppan->npform->baytel->setText($tel);
+          $name = explode(' ',$c->customer_name) ;
+          $this->nppan->npform->bayfirstname->setText($name[0]);
+          $this->nppan->npform->baymiddlename->setText($name[1]);
+          $this->nppan->npform->baylastname->setText($name[2]);
+               
+          $this->nppan->npform->npttncust->setText( $cust) ;  
+          $this->nppan->npform->npttaddress->setText( $this->_doc->headerdata["ship_address"]) ;  
+          $this->nppan->npform->npttnnotes->setText( $this->_doc->notes) ;  
+    }
+
+    public function nplistOnRow($row) {
+        $item = $row->getDataItem() ;
+        $row->add(new  Label("npitemname",$item->itemname));
+        $row->add(new  Label("npitemcode",$item->item_code));
+        $row->add(new  Label("npitemw",$item->weight));
+        $row->add(new  Label("npitemqty",H::fqty($item->quantity)));
+        $row->add(new  Label("npitemprice",H::fa($item->price)));
+      
+    }
+   public function onSelArea($sender) {
+  
+        $api =  new  \App\Modules\NP\Helper()  ;
+        $list = $api->getCityList($sender->getValueName()) ;
+ 
+         
+       $this->nppan->npform->selcity->setOptionList($list) ;
+      
+    }
+    public function onSelCity($sender) {
+  
+         $api =  new  \App\Modules\NP\Helper()  ;
+        $list = $api->getPointList($sender->getValue()) ;
+ 
+         
+        $this->nppan->npform->selpoint->setOptionList($list) ;
+      
+    }
+  public function onBayArea($sender) {
+  
+         $api =  new  \App\Modules\NP\Helper()  ;
+        $list = $api->getCityList($sender->getValueName()) ;
+ 
+         
+       $this->nppan->npform->baycity->setOptionList($list) ;
+      
+    }
+    public function onBayCity($sender) {
+  
+         $api =  new  \App\Modules\NP\Helper()  ;
+         $list = $api->getPointList($sender->getValue()) ;
+ 
+         
+         $this->nppan->npform->baypoint->setOptionList($list) ;
+      
+    }
+
+     public function npOnCancel($sender) {
+         $this->statuspan->setVisible(false);
+         $this->listpan->setVisible(true);
+         $this->nppan->setVisible(false);
+            
+    }
+
+    public function npOnSubmit($sender) {
+            $params = array();
+     
+            $params['DateTime'] =  date('d.m.Y',$this->nppan->npform->npdate->getDate()) ;
+            $params['ServiceType'] = 'WarehouseWarehouse'  ;
+            $params['PaymentMethod'] = $this->nppan->npform->nppm->getValue()  ;
+            $params['PayerType'] = $this->nppan->npform->nppt->getValue()  ;
+            $params['Cost'] = $this->nppan->npform->npcost->getText()  ;
+            $params['SeatsAmount'] = $this->nppan->npform->npplaces->getText()  ;
+            $params['Description'] = trim($this->nppan->npform->npdesc->getText() ) ;
+            $params['CargoType'] = 'Cargo' ;
+            
+            $params['Weight'] = $this->nppan->npform->npw->getText()  ;
+            $moneyback = $this->nppan->npform->npback->getText()   ;
+            if($moneyback>0) {   //если  введена  обратная сумма
+               $params['BackwardDeliveryData']  = array(
+                'PayerType' => 'Recipient',
+                'CargoType' => 'Money',
+                'RedeliveryString' =>$moneyback );
+            }
+          
+          
+             //проверка  введеных параметров
+            if(($params['Weight']>0)==false){
+                $this->setError(H::l('npnoweight'));
+                return;
+            }
+            if(strlen( $params['Description'])==0){
+                $this->setError(H::l('npnodesc'));
+                return;
+            }        
+         $api =  new  \App\Modules\NP\Helper() ;
+         
+         $sender=array();
+         $recipient=array();
+         
+         try{
+             
+             
+          $result = $api->model('Counterparty')->getCounterparties("Sender");
+          if($result['success']==FALSE) {
+             $errors = implode(',',$result['errors']) ;
+             $this->setError($errors);  
+             return;            
+          }
+          
+          $resultc = $api->model('Counterparty')->getCounterpartyContactPersons($result['data'][0]['Ref']);
+          if($resultc['success']==FALSE) {
+             $errors = implode(',',$result['errors']) ;
+             $this->setError($errors);  
+             return;            
+          }
+            
+ 
+            $sender['Sender']= $result['data'][0]['Ref'];
+            $sender['SendersPhone']= $this->nppan->npform->seltel->getText();
+            $sender['CitySender']= $this->nppan->npform->selcity->getValue();
+          //  $sender['Region']= $this->nppan->npform->selarea->getValue();
+          //  $sender['Warehouse']= $this->nppan->npform->selpoint->getValue();
+            $sender['SenderType']= $result['data'][0]['CounterpartyType'];
+            $sender['ContactSender']= $resultc['data'][0]['Ref'];
+        
+   
+         
+            $recipient['FirstName']= $this->nppan->npform->bayfirstname->getText();
+            $recipient['MiddleName']= $this->nppan->npform->baymiddlename->getText();
+            $recipient['LastName']= $this->nppan->npform->baylastname->getText();
+            $recipient['Phone']= $this->nppan->npform->baytel->getText();
+            $recipient['Email']= '';
+            $recipient['CounterpartyType']= 'PrivatePerson';
+            $recipient['CounterpartyProperty']= 'Recipient';      
+        
+            $result = $api->model('Counterparty')->save($recipient);       
+     
+          if($result['success']==FALSE) {
+             $errors = implode(',',$result['errors']) ;
+             $this->setError($errors);  
+             return;            
+          }  
+          
+        
+          
+            $recipient['Recipient']= $result['data'][0]['Ref'];          
+            $recipient['ContactRecipient']= $result['data'][0]['ContactPerson']['data'][0]['Ref'];
+            $recipient['CityRecipient']= $this->nppan->npform->baycity->getValue();
+            $recipient['RecipientsPhone']= $this->nppan->npform->baytel->getValue();
+            $recipient['Region']= $this->nppan->npform->bayarea->getValue();
+            $recipient['Warehouse']= $this->nppan->npform->baypoint->getValue();
+            $recipient['RecipientType']= $result['data'][0]['CounterpartyType'];
+            $recipient['RecipientAddress']=  $recipient['Warehouse'];
+          
+               
+            $paramsInternetDocument = array_merge($sender, $recipient, $params);
+        
+            $result = $api->model('InternetDocument')->save($paramsInternetDocument);
+            
+         
+
+         }catch(\Throwable $e) {
+             $this->setError($e->getMessage());
+             return;
+         }
+         if($result['success']==TRUE) {
+             
+             $this->_doc->headerdata['delivery_date'] =strtotime($result['data'][0]['EstimatedDeliveryDate']);
+             $this->_doc->headerdata['ship_amount'] = $result['data'][0]['CostOnSite'];
+             $this->_doc->headerdata['ship_number'] = $result['data'][0]['IntDocNumber'];
+             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
+             $this->_doc->save();
+             $this->setSuccess(H::l("npnewdec",$this->_doc->headerdata['ship_number']));             
+             
+             $this->statuspan->setVisible(false);
+             $this->listpan->setVisible(true);
+             $this->nppan->setVisible(false);
+         } else {
+             $errors = implode(',',$result['errors']) ;
+             $this->setError($errors);
+         }
+            
+    }   
+    
+    //обновление  статусов
+    public function onNP($sender) {
+        
+        $api =  new  \App\Modules\NP\Helper() ;
+        $errors=array();
+        $docs = Document::find("meta_name='TTN'  and  state in(11,20) ");
+        foreach($docs as $ttn){
+            if(strlen($ttn->headerdata['ship_numberref'])==0)  continue;
+            
+            $cnt=0;
+            $decstate = $api->documentsTracking($ttn->headerdata['ship_number'])  ;
+            $st=$decstate['data'][0]['Status'] ;
+            $code=$decstate['data'][0]['StatusCode'] ;
+            
+            // 9,10,11,106 - получено
+            //4,5,6,7,8,41,101 - в  пути
+            //102,103,104,108,105,2,3  проблемы
+            if(in_array($code,array(9,10,11,106))) {
+                $ttn->updateStatus(Document::STATE_DELIVERED) ;
+                $cnt++;
+            }
+            if(in_array($code,array(4,5,6,7,8,41,101))) {
+                $ttn->updateStatus(Document::STATE_INSHIPMENT) ;
+                $cnt++;
+            }
+            if(in_array($code,array( 102,103,104,108,105,2,3))) {
+               $errors[]= $ttn->headerdata['ship_number']." -  ".  $st;
+            }
+            if(count($errors)>0){
+               $this->setError( Implode('<br>',$errors)) ;  
+            } else {
+               $this->setSuccess("npupdated",$cnt) ;
+            }
+            
+        }
+       
+        $this->listpan->doclist->Reload();
+    }    
+    
 }
 
 /**
@@ -322,9 +692,9 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
         $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
 
-        $status = $this->page->filter->status->getValue();
+        $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {
-            $where .= "  and  (  (payamount >0 and payamount > payed and  state >3 )  or( ( meta_name= 'TTN' and  state <> 9) or (meta_name <> 'TTN' and state <>5)  )  )    ";
+            $where .= "  and  (  (payamount >0 and payamount > payed and  state >3 )  or(  state >3 and  state  not in(14,5,9) )   )      ";
         }
         if ($status == 1) {
             $where .= " and  state =  " . Document::STATE_NEW;
@@ -335,19 +705,19 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         if ($status == 4) {
             $where .= "  and payamount >0 and  payamount > payed  and  state >3  ";
         }
-        $comp = $this->page->filter->searchcomp->getValue();
+        $comp = $this->page->listpan->filter->searchcomp->getValue();
         if ($comp > 0) {
             $where = $where . " and firm_id = " . $comp;
         }
 
 
-        $st = trim($this->page->filter->searchtext->getText());
+        $st = trim($this->page->listpan->filter->searchtext->getText());
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
             $where .= " and    content like {$st} ";
         }
-        $sn = trim($this->page->filter->searchnumber->getText());
+        $sn = trim($this->page->listpan->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' )  and document_number like  {$sn} ";

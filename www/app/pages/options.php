@@ -25,7 +25,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg(H::l('onlyadminpage'));
-            App::RedirectHome();
+            App::RedirectError();
             return false;
         }
 
@@ -53,6 +53,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('allowminus'));
         $this->common->add(new CheckBox('noallowfiz'));
         $this->common->add(new CheckBox('capcha'));
+        $this->common->add(new CheckBox('numberttn'));
         $this->common->add(new TextInput('price1'));
         $this->common->add(new TextInput('price2'));
         $this->common->add(new TextInput('price3'));
@@ -96,6 +97,7 @@ class Options extends \App\Pages\Base
         $this->common->noallowfiz->setChecked($common['noallowfiz']);
         $this->common->allowminus->setChecked($common['allowminus']);
         $this->common->capcha->setChecked($common['capcha']);
+        $this->common->numberttn->setChecked($common['numberttn']);
         $this->common->useval->setChecked($common['useval']);
 
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
@@ -194,6 +196,7 @@ class Options extends \App\Pages\Base
         $common['allowminus'] = $this->common->allowminus->isChecked() ? 1 : 0;
         $common['useval'] = $this->common->useval->isChecked() ? 1 : 0;
         $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
+        $common['numberttn'] = $this->common->numberttn->isChecked() ? 1 : 0;
 
 
         System::setOptions("common", $common);
@@ -244,7 +247,7 @@ class Options extends \App\Pages\Base
         $this->api->aexp->setVisible($type == 1);
         $this->api->akey->setVisible($type == 1);
 
-        $this->goAnkor('api');
+      //  $this->goAnkor('atype');
 
         
 
@@ -252,9 +255,9 @@ class Options extends \App\Pages\Base
 
     public function saveApiOnClick($sender) {
         $api = array();
-        $printer['exp'] = $this->api->aexp->getText();
-        $printer['key'] = $this->api->akey->getText();
-        $printer['atype'] = $this->api->atype->getValue();
+        $api['exp'] = $this->api->aexp->getText();
+        $api['key'] = $this->api->akey->getText();
+        $api['atype'] = $this->api->atype->getValue();
 
         System::setOptions("api", $api);
         $this->setSuccess('saved');

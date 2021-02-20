@@ -29,11 +29,9 @@ class Entry extends \ZCL\DB\Entity
     }
 
     protected function init() {
-        $this->customer_id = 0;
-        $this->employee_id = 0;
+ 
         $this->extcode = 0;
-        $this->stock_id = 0;
-        $this->service_id = 0;
+    
     }
 
     protected function afterLoad() {

@@ -107,8 +107,25 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
 
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                        
+                        $itemlist = $basedoc->unpackDetails('detaildata') ;
+                        
+                        $this->_itemlist = array() ;
+                        foreach($itemlist as $item) {
+                           $this->_tovarlist[$item->item_id]= $item;
+                        }
+                    }
+                   if ($basedoc->meta_name == 'TTN') {
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
 
+                        $itemlist = $basedoc->unpackDetails('detaildata') ;
+                        
+                        $this->_itemlist = array() ;
+                        foreach($itemlist as $item) {
+                           $this->_tovarlist[$item->item_id]= $item;
+                        }
                     }
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -116,7 +133,12 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
 
-                        $this->_tovarlist = $basedoc->unpackDetails('detaildata');
+                        $itemlist = $basedoc->unpackDetails('detaildata') ;
+                        
+                        $this->_itemlist = array() ;
+                        foreach($itemlist as $item) {
+                           $this->_tovarlist[$item->item_id]= $item;
+                        }
 
                     }
                 }
@@ -154,7 +176,7 @@ class ReturnIssue extends \App\Pages\Base
         $tovar = $sender->owner->getDataItem();
         // unset($this->_tovarlist[$tovar->tovar_id]);
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->stock_id => $this->_tovarlist[$tovar->stock_id]));
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -176,10 +198,10 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
 
 
-        $this->editdetail->edittovar->setKey($item->stock_id);
+        $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
-        $this->_rowid = $item->stock_id;
+        $this->_rowid = $item->item_id;
 
     }
 
@@ -325,9 +347,10 @@ class ReturnIssue extends \App\Pages\Base
 
             $conn->CommitTrans();
             App::RedirectBack();
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
+            if($isEdited==false)  $this->_doc->document_id=0;
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
@@ -374,8 +397,12 @@ class ReturnIssue extends \App\Pages\Base
             $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('nouniquedocnumber_created');
+             $next = $this->_doc->nextNumber() ;
+            $this->docform->document_number->setText($next);
+              $this->_doc->document_number =  $next;
+          if(strlen($next)==0) {
+                $this->setError('docnumbercancreated');    
+            }
         }
         if (count($this->_tovarlist) == 0) {
             $this->setError("noenteritem");

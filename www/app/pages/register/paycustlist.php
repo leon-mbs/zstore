@@ -24,6 +24,7 @@ class PayCustList extends \App\Pages\Base
     private $_doc       = null;
     private $_cust      = null;
     public  $_custlist  = array();
+    public  $_custlistover  = array();
     public  $_doclist   = array();
     public  $_pays      = array();
     public  $_totdebet  = 0;
@@ -50,6 +51,7 @@ class PayCustList extends \App\Pages\Base
         $this->clist->add(new Label("totdebet"));
 
         $this->clist->add(new DataView('custlist', new ArrayDataSource($this, '_custlist'), $this, 'custlistOnRow'));
+        $this->clist->add(new DataView('custlistover', new ArrayDataSource($this, '_custlistover'), $this, 'custlistOverOnRow'));
 
 
         $this->add(new Panel("plist"))->setVisible(false);
@@ -117,9 +119,21 @@ class PayCustList extends \App\Pages\Base
         $this->_totdebet = 0;
 
         $this->clist->custlist->Reload();
-
         $this->clist->totdebet->setText(H::fa($this->_totdebet));
         $this->clist->totcredit->setText(H::fa($this->_totcredit));
+       
+        $sql = "select c.customer_name,  c.customer_id,sum(sam) as sam  from (
+        select customer_id,   coalesce( (payed - payamount   ),0) as sam  
+            from `documents_view`  
+            where {$br}  payed > 0 and payamount < payed  and state not in ({$this->_state})   
+            ) t join customers c  on t.customer_id = c.customer_id    {$hold}
+             group by c.customer_name,  c.customer_id 
+        
+             order by c.customer_name ";
+
+        $this->_custlistover = \App\DataItem::query($sql);
+        $this->clist->custlistover->Reload();
+
     }
 
     public function custlistOnRow($row) {
@@ -130,6 +144,19 @@ class PayCustList extends \App\Pages\Base
         $row->add(new Label('debet', H::fa($cust->fl == 1 ? H::fa($cust->sam) : "")));
 
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
+
+        $this->_totcredit += ($cust->fl == -1 ? $cust->sam : 0);
+        $this->_totdebet += ($cust->fl == 1 ? $cust->sam : 0);
+
+
+    }
+   public function custlistOverOnRow($row) {
+        $cust = $row->getDataItem();
+        $row->add(new RedirectLink('customer_nameover', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
+        
+        $row->add(new Label('overpay',   H::fa($cust->sam) ));
+       
+        $row->add(new ClickLink('showdocsover'))->onClick($this, 'showdocsoverOnClick');
 
         $this->_totcredit += ($cust->fl == -1 ? $cust->sam : 0);
         $this->_totdebet += ($cust->fl == 1 ? $cust->sam : 0);
@@ -147,14 +174,23 @@ class PayCustList extends \App\Pages\Base
         $this->clist->setVisible(false);
         $this->plist->setVisible(true);
     }
+   public function showdocsoverOnClick($sender) {
+
+        $this->_cust = $sender->owner->getDataItem();
+        $this->plist->cname->setText($this->_cust->customer_name);
+        $this->updateDocsOver();
+
+        $this->clist->setVisible(false);
+        $this->plist->setVisible(true);
+    }
 
     public function updateDocs() {
 
         if ($this->_cust->fl == -1) {
-            $docs = " meta_name in({$this->_docsin})  ";
+            $docs = " and meta_name in({$this->_docsin})  ";
         }
         if ($this->_cust->fl == 1) {
-            $docs = " meta_name    in({$this->_docsout})  ";
+            $docs = " and meta_name    in({$this->_docsout})  ";
         }
 
         $br = "";
@@ -164,7 +200,22 @@ class PayCustList extends \App\Pages\Base
         }
 
 
-        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  > payed  and state not in ({$this->_state})  and {$docs}", "(payamount - payed) desc");
+        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payamount > 0 and payamount  > payed  and state not in ({$this->_state})    {$docs}", "(payamount - payed) desc");
+
+        $this->plist->doclist->Reload();
+    }
+
+  public function updateDocsOver() {
+
+     
+        $br = "";
+        $c = \App\ACL::getBranchConstraint();
+        if (strlen($c) > 0) {
+            $br = " {$c} and ";
+        }
+
+
+        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and payed > 0 and payamount  < payed  and state not in ({$this->_state})   ", "(payed - payamount) desc");
 
         $this->plist->doclist->Reload();
     }
@@ -225,7 +276,7 @@ class PayCustList extends \App\Pages\Base
 
         $this->goAnkor('dankor');
 
-        $this->paypan->payform->pamount->setText($this->_doc->payamount - $this->_doc->payed);;
+        $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed)); 
         $this->paypan->payform->pcomment->setText("");;
         $this->paypan->pname->setText($this->_doc->document_number);;
 
@@ -252,7 +303,7 @@ class PayCustList extends \App\Pages\Base
         }
 
 
-        if ($amount > $this->_doc->payamount - $this->_doc->payed) {
+        if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 
             $this->setWarn('sumoverpay');
 

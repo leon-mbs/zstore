@@ -39,7 +39,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         ///цикл  по товарам
         foreach ($comparelist->list as $product) {
 
-            $result .= ("<th ><img style=\"height:128px\" src=\"/loadimage.php?id={$product->image_id}&t=t\"><br><a href=\"/sp/{$product->product_id}\">" . $product->productname . "</a> <a href=\"{$url}:{$product->product_id}\"><i class=\"fa fa-trash text-danger\" ></a></th>");
+            $result .= ("<th ><img style=\"height:128px\" src=\"/loadshopimage.php?id={$product->image_id}&t=t\"><br><a href=\"/sp/{$product->product_id}\">" . $product->productname . "</a> <a href=\"{$url}:{$product->product_id}\"><i class=\"fa fa-trash text-danger\" ></a></th>");
             $attributes = Helper::getAttributeValuesByProduct($product);
             //цикл по  атрибутам для  получения значений
 

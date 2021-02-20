@@ -81,7 +81,7 @@ class GoodsReceipt extends Document
         $common = \App\System::getOptions("common");
         if ($this->amount == 0) {
             // return;
-        }
+        }    
         //аналитика
         foreach ($this->unpackDetails('detaildata') as $item) {
 
@@ -107,11 +107,11 @@ class GoodsReceipt extends Document
 
             $sc = new Entry($this->document_id, $item->amount, $item->quantity);
             $sc->setStock($stock->stock_id);
-            $sc->setExtCode($item->amount); //Для АВС 
+            $sc->setExtCode($item->price); //Для АВС 
             // $sc->setCustomer($this->customer_id);
 
             $sc->save();
-
+    
 
             //запоминаем  курс
             if (strlen($this->headerdata['val']) > 1 && $this->headerdata['rate'] != 0 && $this->headerdata['rate'] != 1) {
@@ -123,7 +123,7 @@ class GoodsReceipt extends Document
 
 
         }
-
+  
 
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_OUTCOME);

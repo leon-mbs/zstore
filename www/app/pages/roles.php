@@ -29,7 +29,7 @@ class Roles extends \App\Pages\Base
 
         if (System::getUser()->userlogin != 'admin') {
             $this->setError('onlyadminaccess');
-            App::RedirectHome();
+            App::RedirectError();
             return false;
         }
 
@@ -50,15 +50,15 @@ class Roles extends \App\Pages\Base
 
 
         //виджеты
-        $this->editpan->editform->add(new CheckBox('editwplanned'));
+     
         $this->editpan->editform->add(new CheckBox('editwdebitors'));
-        $this->editpan->editform->add(new CheckBox('editwnoliq'));
+    
         $this->editpan->editform->add(new CheckBox('editwminqty'));
         $this->editpan->editform->add(new CheckBox('editwsdate'));
         $this->editpan->editform->add(new CheckBox('editwrdoc'));
-        $this->editpan->editform->add(new CheckBox('editwopendoc'));
-        $this->editpan->editform->add(new CheckBox('editwwaited'));
-        $this->editpan->editform->add(new CheckBox('editwreserved'));
+        $this->editpan->editform->add(new CheckBox('editwinfo'));
+        $this->editpan->editform->add(new CheckBox('editwgraph'));
+ 
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
@@ -150,15 +150,11 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->metaaccess->metarow->Reload();
 
 
-        if (strpos($this->role->widgets, 'wplanned') !== false) {
-            $this->editpan->editform->editwplanned->setChecked(true);
-        }
+      
         if (strpos($this->role->widgets, 'wdebitors') !== false) {
             $this->editpan->editform->editwdebitors->setChecked(true);
         }
-        if (strpos($this->role->widgets, 'wnoliq') !== false) {
-            $this->editpan->editform->editwnoliq->setChecked(true);
-        }
+        
         if (strpos($this->role->widgets, 'wminqty') !== false) {
             $this->editpan->editform->editwminqty->setChecked(true);
         }
@@ -168,15 +164,13 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->widgets, 'wrdoc') !== false) {
             $this->editpan->editform->editwrdoc->setChecked(true);
         }
-        if (strpos($this->role->widgets, 'wopendoc') !== false) {
-            $this->editpan->editform->editwopendoc->setChecked(true);
+       if (strpos($this->role->widgets, 'winfo') !== false) {
+            $this->editpan->editform->editwinfo->setChecked(true);
         }
-        if (strpos($this->role->widgets, 'wwaited') !== false) {
-            $this->editpan->editform->editwwaited->setChecked(true);
+      if (strpos($this->role->widgets, 'wgraph') !== false) {
+            $this->editpan->editform->editwgraph->setChecked(true);
         }
-        if (strpos($this->role->widgets, 'wreserved') !== false) {
-            $this->editpan->editform->editwreserved->setChecked(true);
-        }
+   
 
         if (strpos($this->role->modules, 'ocstore') !== false) {
             $this->editpan->editform->editocstore->setChecked(true);
@@ -283,15 +277,11 @@ class Roles extends \App\Pages\Base
 
         $widgets = "";
 
-        if ($this->editpan->editform->editwplanned->isChecked()) {
-            $widgets = $widgets . ',wplanned';
-        }
+      
         if ($this->editpan->editform->editwdebitors->isChecked()) {
             $widgets = $widgets . ',wdebitors';
         }
-        if ($this->editpan->editform->editwnoliq->isChecked()) {
-            $widgets = $widgets . ',wnoliq';
-        }
+       
         if ($this->editpan->editform->editwminqty->isChecked()) {
             $widgets = $widgets . ',wminqty';
         }
@@ -301,16 +291,13 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editwrdoc->isChecked()) {
             $widgets = $widgets . ',wrdoc';
         }
-        if ($this->editpan->editform->editwopendoc->isChecked()) {
-            $widgets = $widgets . ',wopendoc';
+        if ($this->editpan->editform->editwinfo->isChecked()) {
+            $widgets = $widgets . ',winfo';
         }
-        if ($this->editpan->editform->editwwaited->isChecked()) {
-            $widgets = $widgets . ',wwaited';
+        if ($this->editpan->editform->editwgraph->isChecked()) {
+            $widgets = $widgets . ',wgraph';
         }
-        if ($this->editpan->editform->editwreserved->isChecked()) {
-            $widgets = $widgets . ',wreserved';
-        }
-
+  
 
         $this->role->widgets = trim($widgets, ',');
 

@@ -7,7 +7,7 @@ use App\Entity\Customer;
 use App\Entity\MoneyFund;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
-use App\Entity\Store;
+ 
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -18,6 +18,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -42,19 +43,17 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
+        $this->docform->add(new CheckBox('production' ));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, false), H::getDefMF()))->onChange($this, 'OnPayment');
-
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, false), MoneyFund::CREDIT))->onChange($this, 'OnPayment');
 
         $this->docform->add(new TextInput('editpaydisc'));
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
-
 
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -63,22 +62,19 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
-
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
-        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes()))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np']==1)))->onChange($this, 'OnDelivery');
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextArea('address'))->setVisible(false);
-
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
@@ -90,11 +86,13 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->editdetail->add(new Label('qtystock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
 
         //добавление нового кантрагента
         $this->add(new Form('editcust'))->setVisible(false);
@@ -112,8 +110,9 @@ class Order extends \App\Pages\Base
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->OnDelivery($this->docform->delivery);
-            $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->production->setChecked($this->_doc->headerdata['production']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -144,8 +143,7 @@ class Order extends \App\Pages\Base
         }
         $this->OnPayment($this->docform->payment);
         
-        $this->calcTotal();
-        $this->calcPay();
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -235,6 +233,8 @@ class Order extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+       $this->wselitem->setVisible(false);
+         
     }
 
     public function cancelrowOnClick($sender) {
@@ -247,6 +247,8 @@ class Order extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->wselitem->setVisible(false);
+         
     }
 
     public function savedocOnClick($sender) {
@@ -264,9 +266,7 @@ class Order extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-
-        $this->calcTotal();
-
+ 
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
@@ -274,7 +274,7 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['production'] = $this->docform->production->isChecked() ? 1:0;
 
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
@@ -326,9 +326,10 @@ class Order extends \App\Pages\Base
             }
             App::Redirect("\\App\\Pages\\Register\\OrderList");
 
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
+            if($isEdited==false)  $this->_doc->document_id=0;
             $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
@@ -383,8 +384,12 @@ class Order extends \App\Pages\Base
             $this->setError('enterdocnumber');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
-            $this->docform->document_number->setText($this->_doc->nextNumber());
-            $this->setError('nouniquedocnumber_created');
+            $next = $this->_doc->nextNumber() ;
+            $this->docform->document_number->setText($next);
+             $this->_doc->document_number =  $next;
+           if(strlen($next)==0) {
+                $this->setError('docnumbercancreated');    
+            }
         }
         if (count($this->_tovarlist) == 0) {
             $this->setError("noenteritem");
@@ -407,7 +412,7 @@ class Order extends \App\Pages\Base
         $price = $item->getPrice($this->docform->pricetype->getValue());
 
 
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity( )));
         $this->editdetail->editprice->setText($price);
 
         $this->updateAjax(array('qtystock', 'editprice'));
@@ -436,7 +441,7 @@ class Order extends \App\Pages\Base
                     $this->docform->discount->setText("Бонусы " . $customer->bonus);
                     $this->docform->discount->setVisible(true);
                 }
-            }
+            }      
         }
 
 
@@ -468,7 +473,8 @@ class Order extends \App\Pages\Base
         $cust = new Customer();
         $cust->customer_name = $custname;
         $cust->phone = $this->editcust->editcustphone->getText();
-
+        $cust->phone = \App\Util::handlePhone($cust->phone) ;
+ 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("tel10", H::PhoneL());
             return;
@@ -486,7 +492,8 @@ class Order extends \App\Pages\Base
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);
-
+        $this->docform->phone->setText( $cust->phone);
+ 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->discount->setVisible(false);
@@ -501,7 +508,7 @@ class Order extends \App\Pages\Base
 
     public function OnDelivery($sender) {
 
-        if ($sender->getValue() == Document::DEL_BOY || $sender->getValue() == Document::DEL_SERVICE) {
+        if ($sender->getValue() == Document::DEL_NP || Document::DEL_BOY || $sender->getValue() == Document::DEL_SERVICE) {
             $this->docform->address->setVisible(true);
         } else {
             $this->docform->address->setVisible(false);
@@ -595,6 +602,16 @@ class Order extends \App\Pages\Base
         }
         $this->calcPay() ;
         
+    }
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edittovar->setKey($item_id);
+        $this->editdetail->edittovar->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edittovar);
+    }
+   public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->wselitem->setPriceType($this->docform->pricetype->getValue());
+        $this->wselitem->Reload();
     }
 
 }

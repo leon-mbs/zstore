@@ -112,12 +112,12 @@ class Customer extends \ZCL\DB\Entity
      */
     public static function getList($search = '', $type = 0) {
 
-        $conn = \ZDB\DB::getConnect();
+      
 
         $where = "status=0 and detail not like '%<isholding>1</isholding>%' ";
         if (strlen($search) > 0) {
-            $search = $conn->qstr('%' . $search . '%');
-            $where .= " and  (customer_name like {$search}  or phone like {$search} ) ";
+            $search =  Customer::qstr('%' . $search . '%');
+            $where .= " and  (customer_name like {$search}  or phone like {$search}  or email like {$search} ) ";
         }
         if ($type > 0) {
             $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";

@@ -78,7 +78,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editdesc"> Описание </label>
-                        <textarea style="height:400px" class="form-control mr-2" zippy="editdesc"></textarea>
+                        <textarea   class="form-control mr-2" zippy="editdesc"></textarea>
                     </div>
                 </div>
                 <div class="col-12 col-md-4  col-xl-4">
@@ -173,17 +173,30 @@
     </div>
 </div>
 
-<script src="/assets/js/ckeditor/ckeditor.js" type="text/javascript"></script>
-
-
+ 
 <script>
-    if ($(' #editdesc').length) {
-        CKEDITOR.replace('editdesc', {
-            language: "ru",
-            customConfig: '/assets/js/ckeditor/config.js',
-            filebrowserBrowseUrl: '', filebrowserUploadUrl: '/upload.php'
-        });
+    $(function () {
+    // Summernote
+   
+$('#editdesc').summernote({
+    height: 400,
+    lang: 'ru-RU',
+ 
+ 
+    callbacks: {
+        onEnter: function (e) {
+            e.preventDefault();
+        },
+        onPaste: function (e) {
+          
+            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+            e.preventDefault();
+            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+        }
     }
+});
+    
+  })
 </script>
 </body>
 </html>

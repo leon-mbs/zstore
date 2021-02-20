@@ -105,6 +105,7 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
+    
     }
 
     public function OnFilter($sender) {
@@ -183,6 +184,12 @@ class ItemList extends \App\Pages\Base
         }
 
         $row->add(new Label('price', implode(',', $plist)));
+      
+        if(\App\System::getUser()->rolename!='admins') {
+           $row->partion->setText('') ; 
+           $row->amount->setText('')  ; 
+        }        
+        
     }
 
     public function backOnClick($sender) {

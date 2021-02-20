@@ -20,7 +20,7 @@
                                         <label for="partiontype">Тип партионного учета</label>
                                         <select class="form-control" zippy="partiontype"> </select>
                                         <small class="form-text text-muted">Учет отдельно по каждой закупочной цене
-                                            позволяет точно учтитывать
+                                            позволяет точно учитывать
                                             прибыль но осложняет списание партий</small>
 
                                     </div>
@@ -158,6 +158,12 @@
                                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                            title=" Дополнительная защита  от несанкционированого доступа "></i>
                                     </div>
+                                    <div class="form-check">
+                                        <input zippy="numberttn" type="checkbox" class="form-check-input">
+                                        <label class="form-check-label" for="numberttn">Несколько  отправок  на  один заказ</label>
+                                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                           title=" Возможность  создания  нескольких накладных на  один  заказ. Но  если  включено - не производится  проверка наличия ТТН и автоматической смены  статуса  заказа по  ТТН "></i>
+                                    </div>
 
 
                                     <div class="form-group  "><br>
@@ -283,7 +289,7 @@
                             </div>
                         </div>
 
-                        {{#hideblock}}
+                       
                         <div class="card">
                             <div class="card-body">
                                 <h4>Настройка API</h4>
@@ -314,7 +320,7 @@
                                 </form>
                             </div>
                         </div>
-                        {{/hideblock}}
+                     
 
 
                     </div>

@@ -36,8 +36,8 @@ class ProductView extends Base
         $this->_title = $product->productname;
         $this->_description = $product->description;
         //  $this->_keywords = $product->description;
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadimage.php?id={$product->image_id}&t=t");
-        $this->product_image->setAttribute('href', "/loadimage.php?id={$product->image_id}");
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}&t=t");
+        $this->product_image->setAttribute('href', "/loadshopimage.php?id={$product->image_id}");
 
         $this->add(new Label('productname', $product->productname));
         $this->add(new Label('onstore'));
@@ -221,8 +221,8 @@ class ProductView extends Base
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
 
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadimage.php?id={$image->image_id}&t=t");
-        $row->product_thumb->setAttribute('href', "/loadimage.php?id={$image->image_id}");
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('product_thumb'))->setValue("/loadshopimage.php?id={$image->image_id}&t=t");
+        $row->product_thumb->setAttribute('href', "/loadshopimage.php?id={$image->image_id}");
     }
 
 }

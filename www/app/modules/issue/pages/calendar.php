@@ -28,7 +28,7 @@ class Calendar extends \App\Pages\Base
         $allow = (strpos($user->modules, 'issue') !== false || $user->rolename == 'admins');
         if (!$allow) {
             System::setErrorMsg(H::l('noaccesstopage'));
-            App::RedirectHome();
+            App::RedirectError();
             return;
         }
         $this->add(new Panel('listpan'));
