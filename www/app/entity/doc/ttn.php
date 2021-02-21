@@ -181,6 +181,7 @@ class TTN extends Document
     }
 
     public function onState($oldstate, $state) {
+        
         if ($state == Document::STATE_INSHIPMENT) {
             //расходы на  доставку
             if ($this->headerdata['ship_amount'] > 0) {

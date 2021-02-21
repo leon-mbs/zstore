@@ -129,7 +129,7 @@ class Order extends \App\Entity\Doc\Document
 
 
     protected function onState($oldstate, $state) {
-
+        
         if ($state == self::STATE_INPROCESS) {
             //списываем бонусы
             if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {

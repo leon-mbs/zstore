@@ -5,6 +5,7 @@ namespace App\Pages;
 use App\Application as App;
 use App\Entity\Branch;
 use App\System;
+use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
@@ -25,9 +26,10 @@ class BranchList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('К странице имеет  доступ только администратор ');
-            App::RedirectError();
+           System::setErrorMsg(H::l('onlyadminpage'));
+            \App\Application::RedirectError();
             return false;
+
         }
 
 
