@@ -48,7 +48,7 @@ class Subscribe extends \ZCL\DB\Entity
 
     public  static  function onDocumentState($metaname,$state) {
        
-       $list = self::find('disabled <> 1 and sub_type= '. self::TYPE_DOCSTATE) ;
+   //    $list = self::find('disabled <> 1 and sub_type= '. self::TYPE_DOCSTATE) ;
        
         
     }
