@@ -25,14 +25,13 @@ class Main extends Base
         $user = System::getUser();
 
         $this->_tvars['wminqty'] = strpos(System::getUser()->widgets, 'wminqty') !== false;
-        $this->_tvars['wdebitors'] = strpos(System::getUser()->widgets, 'wdebitors') !== false;
         $this->_tvars['wsdate'] = strpos(System::getUser()->widgets, 'wsdate') !== false;
         $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets, 'wrdoc') !== false;
         $this->_tvars['winfo'] = strpos(System::getUser()->widgets, 'winfo') !== false;
         $this->_tvars['wgraph'] = strpos(System::getUser()->widgets, 'wgraph') !== false;
         if ($user->rolename == 'admins') {
             $this->_tvars['wminqty'] = true;
-            $this->_tvars['wdebitors'] = true;
+        
             $this->_tvars['wsdate'] = true;
             $this->_tvars['wrdoc'] = true;
             $this->_tvars['winfo'] = true;
@@ -98,32 +97,7 @@ class Main extends Base
 
         }
 
-        //документы к  оплате
-        if ($this->_tvars['wdebitors'] == true) {
-            $data = array();
-
-            $sql = "select * from (
-            select meta_desc,document_number, customer_name,  abs( payamount - payed)  as am 
-            from `documents_view` d where 1=1 {$br} and  payamount > 0 and payamount <> payed  and state not in (1,2,3,17)  and meta_name in('GoodsReceipt','GoodsIssue','Task','ServiceAct') 
-              
-            ) t  order by am desc  ";
-
-
-            $rs = $conn->Execute($sql);
-            foreach ($rs as $row) {
-                $data[] = new \App\DataItem($row);
-            }
-            if (count($data) == 0) {
-                $this->_tvars['wdebitors'] = false;
-            }
-            $list = $this->add(new DataView('ddoclist', new ArrayDataSource($data), $this, 'OnRow'));
-
-            $list->setPageSize(10);
-            $this->add(new  Paginator("wdpag", $list));
-            $list->Reload();
-
-        }
-        //недавние  документы
+         //недавние  документы
         if ($this->_tvars['wrdoc'] == true) {
             $data = array();
 
@@ -277,11 +251,7 @@ class Main extends Base
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
-        $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where d.payamount >0  and d.payamount > d.payed    
-         {$br}        ";
-
-        $this->_tvars['bidforpay'] = $conn->GetOne($sql);
-
+        
         $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where  qty >0     
         {$cstr}        ";
 
