@@ -4,6 +4,7 @@ namespace App\Pages;
 
 use App\Entity\Pos;
 use App\Helper as H;
+use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\DropDownChoice;
@@ -25,8 +26,10 @@ class PosList extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('PosList')) {
-            return;
+        if (System::getUser()->rolename != 'admins') {
+            System::setErrorMsg(H::l('onlyadminsaccess'));
+            \App\Application::RedirectError();
+            return false;
         }
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 

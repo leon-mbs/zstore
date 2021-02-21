@@ -360,16 +360,18 @@ class Document extends \ZCL\DB\Entity
         $this->save();
 
         if ($oldstate != $state) {
-            $this->onState($oldstate, $state);
+            $doc = $this->cast();
+            $doc->onState($oldstate, $state);
+            \App\Entity\Subscribe::onDocumentState($doc->meta_name,$state) ;            
         }
 
         return true;
     }
 
-    //обработяик  изменения  статусов
+    //обработчик  изменения  статусов
     protected function onState($oldstate, $state) {
 
-
+     
     }
 
     /**
