@@ -54,7 +54,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->listpan->add(new ClickLink('csv', $this, 'oncsv'));
-        $this->listpan->add(new ClickLink('statusNP', $this, 'onNP'));
+        
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -66,6 +66,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bgar'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bnp'))->onClick($this, 'npshowOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bdecl'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->statusform->add(new TextInput('ship_number'));
         $this->statuspan->statusform->add(new CheckBox('closeorder'));
@@ -147,10 +148,7 @@ class GIList extends \App\Pages\Base
         $state = $this->_doc->state;
 
         if ($sender->id == "bsend") {
-            $dec = $this->statuspan->statusform->ship_number->getText();
-            if (strlen($dec) > 0) {
-                $this->_doc->headerdata['ship_number'] = $dec;
-            }
+
             $this->_doc->headerdata['sentdate'] = H::fd(time());
             $this->_doc->headerdata['document_date'] = time();
             $this->_doc->save();
@@ -163,7 +161,7 @@ class GIList extends \App\Pages\Base
 
             $this->_doc->save();
 
-            $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']);
+     
             $this->setSuccess('sent');
         }
 
@@ -188,7 +186,16 @@ class GIList extends \App\Pages\Base
 
             // $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
-
+ 
+        if ($sender->id == "bdecl") {
+            $dec = $this->statuspan->statusform->ship_number->getText();
+            if (strlen($dec) > 0) {
+                $this->_doc->headerdata['ship_number'] = $dec;
+            }
+            $this->_doc->save(); 
+            $this->setSuccess("saved"); 
+            $this->statuspan->setVisible(false);
+        }
         if ($sender->id == "bttn") {
 
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
@@ -218,6 +225,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->bgar->setVisible(true);
         $this->statuspan->statusform->bnp->setVisible(false);
         $this->statuspan->statusform->ship_number->setVisible(false);
+        $this->statuspan->statusform->bdecl->setVisible(false);
 
 
         $this->statuspan->statusform->closeorder->setVisible(false);
@@ -244,28 +252,26 @@ class GIList extends \App\Pages\Base
         //отправлен
         if ($state == Document::STATE_INSHIPMENT) {
             $this->statuspan->statusform->bsend->setVisible(false);
-            $this->statuspan->statusform->ship_number->setVisible(false);
         }
         // Доставлен
         if ($state == Document::STATE_DELIVERED) {
 
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bsend->setVisible(false);
-            $this->statuspan->statusform->ship_number->setVisible(false);
         }
 
         //прячем лишнее
         if ($this->_doc->meta_name == 'TTN') {
             if ($this->_doc->headerdata['delivery'] < 3) { //не  служба  доставки
                 $this->statuspan->statusform->ship_number->setVisible(false);
+                $this->statuspan->statusform->bdecl->setVisible(false);
 
             }
 
             $this->statuspan->statusform->bttn->setVisible(false);
         }
-        if ($this->_doc->meta_name == 'TTN' && $this->_doc->state = Document::STATE_READYTOSHIP) {
+        if ($this->_doc->meta_name == 'TTN' && $this->_doc->state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bnp->setVisible(true);
-            $this->statuspan->statusform->ship_number->setVisible(true);
 
         }
 
@@ -273,12 +279,10 @@ class GIList extends \App\Pages\Base
 
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
-            $this->statuspan->statusform->bsend->setVisible(false);
         }
         if ($this->_doc->meta_name == 'POSCheck') {
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->ship_number->setVisible(false);
-            $this->statuspan->statusform->bsend->setVisible(false);
         }
         if ($this->_doc->meta_name == 'Invoice') {
 
@@ -286,7 +290,6 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bdevivered->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
             $this->statuspan->statusform->bgar->setVisible(false);
-            $this->statuspan->statusform->ship_number->setVisible(false);
         }
         if ($this->_doc->meta_name == 'ReturnIssue') {
 
@@ -295,10 +298,13 @@ class GIList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
             $this->statuspan->statusform->bgar->setVisible(false);
-            $this->statuspan->statusform->ship_number->setVisible(false);
         }
 
+        if ($this->_doc->meta_name == 'TTN' && $this->_doc->state != Document::STATE_DELIVERED) {
+            $this->statuspan->statusform->ship_number->setVisible(true);
+            $this->statuspan->statusform->bdecl->setVisible(true);
 
+        }
     }
 
     //просмотр
@@ -526,10 +532,11 @@ class GIList extends \App\Pages\Base
         $params['Weight'] = $this->nppan->npform->npw->getText();
         $moneyback = $this->nppan->npform->npback->getText();
         if ($moneyback > 0) {   //если  введена  обратная сумма
-            $params['BackwardDeliveryData'] = array(
+            $params['BackwardDeliveryData'] =  array(array(
                 'PayerType'        => 'Recipient',
                 'CargoType'        => 'Money',
-                'RedeliveryString' => $moneyback);
+                'RedeliveryString' => $moneyback)
+        );
         }
 
 
@@ -572,6 +579,7 @@ class GIList extends \App\Pages\Base
             //  $sender['Warehouse']= $this->nppan->npform->selpoint->getValue();
             $sender['SenderType'] = $result['data'][0]['CounterpartyType'];
             $sender['ContactSender'] = $resultc['data'][0]['Ref'];
+            $sender['SenderAddress'] = $this->nppan->npform->selpoint->getValue();
 
 
             $recipient['FirstName'] = $this->nppan->npform->bayfirstname->getText();
@@ -595,10 +603,10 @@ class GIList extends \App\Pages\Base
             $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
             $recipient['CityRecipient'] = $this->nppan->npform->baycity->getValue();
             $recipient['RecipientsPhone'] = $this->nppan->npform->baytel->getValue();
-            $recipient['Region'] = $this->nppan->npform->bayarea->getValue();
-            $recipient['Warehouse'] = $this->nppan->npform->baypoint->getValue();
+       //     $recipient['Region'] = $this->nppan->npform->bayarea->getValue();
+        //    $recipient['Warehouse'] = $this->nppan->npform->baypoint->getValue();
             $recipient['RecipientType'] = $result['data'][0]['CounterpartyType'];
-            $recipient['RecipientAddress'] = $recipient['Warehouse'];
+            $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getValue();
 
 
             $paramsInternetDocument = array_merge($sender, $recipient, $params);
@@ -629,47 +637,7 @@ class GIList extends \App\Pages\Base
 
     }
 
-    //обновление  статусов
-    public function onNP($sender) {
-
-        $api = new  \App\Modules\NP\Helper();
-        $errors = array();
-        $docs = Document::find("meta_name='TTN'  and  state in(11,20) ");
-        foreach ($docs as $ttn) {
-            if (strlen($ttn->headerdata['ship_numberref']) == 0) {
-                continue;
-            }
-
-            $cnt = 0;
-            $decstate = $api->documentsTracking($ttn->headerdata['ship_number']);
-            $st = $decstate['data'][0]['Status'];
-            $code = $decstate['data'][0]['StatusCode'];
-
-            // 9,10,11,106 - получено
-            //4,5,6,7,8,41,101 - в  пути
-            //102,103,104,108,105,2,3  проблемы
-            if (in_array($code, array(9, 10, 11, 106))) {
-                $ttn->updateStatus(Document::STATE_DELIVERED);
-                $cnt++;
-            }
-            if (in_array($code, array(4, 5, 6, 7, 8, 41, 101))) {
-                $ttn->updateStatus(Document::STATE_INSHIPMENT);
-                $cnt++;
-            }
-            if (in_array($code, array(102, 103, 104, 108, 105, 2, 3))) {
-                $errors[] = $ttn->headerdata['ship_number'] . " -  " . $st;
-            }
-            if (count($errors) > 0) {
-                $this->setError(Implode('<br>', $errors));
-            } else {
-                $this->setSuccess("npupdated", $cnt);
-            }
-
-        }
-
-        $this->listpan->doclist->Reload();
-    }
-
+   
 }
 
 /**

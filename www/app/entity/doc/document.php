@@ -248,7 +248,7 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
 
             //удаляем освободившиеся стоки
-            $conn->Execute("delete from store_stock where stock_id not in (select coalesce(stock_id,0) from entrylist) ");
+            $conn->Execute("delete from store_stock where stock_id not in (select  stock_id  from entrylist) ");
 
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);

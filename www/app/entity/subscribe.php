@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Helper as H;
+
 /**
  * Класс-сущность  подписка  на  событие
  *
@@ -10,24 +12,32 @@ namespace App\Entity;
  */
 class Subscribe extends \ZCL\DB\Entity
 {
-    const TYPE_DOCSTATE =1;
 
-    protected function init() {
-        $this->cat_id = 0;
-    }
-
+    //типы  событий
+    const EVENT_DOCSTATE =1;
+    
+    //типы сообщений
+    const MSG_NOTIFY = 1;
+    const MSG_EMAIL = 2;
+    const MSG_SMS = 3;
+    const MSG_VIBER = 4;
+  
+    //типы  получателей
+    const RSV_CUSTOMER =1;
+    const RSV_DOCAUTHOR =2;
+    const RSV_USER =3;
  
-
+    protected function init() {
+        $this->sub_id = 0;
+    }
+  
     protected function afterLoad() {
-
-
+ 
         $xml = @simplexml_load_string($this->detail);
 
         $this->docmetaname = (string)($xml->docmetaname[0]);
         $this->docstate = (int)($xml->docstate[0]);
-      
-
-
+ 
         parent::afterLoad();
     }
 
@@ -38,9 +48,7 @@ class Subscribe extends \ZCL\DB\Entity
 
         $this->detail .= "<docmetaname>{$this->docmetaname}</docmetaname>";
         $this->detail .= "<docstate>{$this->docstate}</docstate>";
-   
-
-
+ 
         $this->detail .= "</detail>";
 
         return true;
@@ -49,7 +57,36 @@ class Subscribe extends \ZCL\DB\Entity
     public  static  function onDocumentState($metaname,$state) {
        
    //    $list = self::find('disabled <> 1 and sub_type= '. self::TYPE_DOCSTATE) ;
-       
+         
+    }
+    
+    
+    
+    public static function getEventList(){
+        $list = array();
+        $list[self::EVENT_DOCSTATE]=  H::l("sb_docstate");
+        
+        return  $list;
+        
+    }
+    public static function getMsgList(){
+        $list = array();
+        $list[self::MSG_NOTIFY]=  H::l("");
+        $list[self::RSV_DOCAUTHOR]=  H::l("");
+        $list[self::MSG_SMS]=  H::l("");
+        $list[self::MSG_VIBER]=  H::l("");
+        
+        return  $list;
+        
+    }
+    public static function getRecieverList(){
+        $list = array();
+        $list[self::RSV_CUSTOMER]=  H::l("");
+        $list[self::MSG_EMAIL]=  H::l("");
+        $list[self::RSV_USER]=  H::l("");
+        
+        
+        return  $list;
         
     }
     

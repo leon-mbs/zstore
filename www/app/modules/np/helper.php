@@ -52,8 +52,30 @@ class Helper extends \LisDev\Delivery\NovaPoshtaApi2
     }
 
     //проверка  экспрес накладной
-    public function check($dec) {
-        return $this->model('TrackingDocument"')->getStatusDocuments($dec);
+    public function check($docs) {
+        $ar = array() ;
+        foreach($docs as $track) {
+            $ar[]=array('DocumentNumber' => $track) ;
+        }
+        if(count($ar)==0)  return  array();
+        
+        $params = array('Documents' => $ar);
+        $list = array();
+        
+        $res = $this
+            ->model('TrackingDocument')
+            ->method('getStatusDocuments')
+            ->params($params)
+            ->execute();        
+        
+        if($res['success']==true) {
+            foreach($res['data'] as  $row) {
+               $list[$row['Number']]=  array('StatusCode'=>$row['StatusCode'],'Status'=>$row['Status']);
+            }
+            
+        }
+        return  $list;
+
         /*
         1    Нова пошта очікує надходження від відправника
 2    Видалено

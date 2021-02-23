@@ -1,4 +1,4 @@
- 
+ /*
   CREATE TABLE `subscribes` (
   `sub_id` int(11) NOT NULL AUTO_INCREMENT,
   `sub_type` int(11) DEFAULT NULL,
@@ -12,7 +12,7 @@
   
 ) engine=InnoDB  DEFAULT CHARSET=utf8;
 
- /*    
+     
  
 CREATE TABLE `empacc` (
   `ea_id` int(11) NOT NULL AUTO_INCREMENT,

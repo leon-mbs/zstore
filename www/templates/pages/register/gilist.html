@@ -35,9 +35,7 @@
                 <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-info mt-2 mb-3">Создать РН</a>&nbsp;
                 <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-info mt-2 mb-3">Создать СФ</a>
                 <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-info mt-2 mb-3">Создать ТТН</a>
-                {{#np}}
-                <br><b><a zippy="statusNP">Обновить статусы Новой Почты</a> </b>
-                {{/np}}
+ 
                 <br> <a zippy="csv">Экспорт в Excel</a>
 
                 <table class="table   table-sm   ">
@@ -107,10 +105,8 @@
                 <div class="navbar nav">
                     <form zippy="statusform" class="form-inline ">
                         {{#np}}
-                        <button zippy="bnp" type="submit" class="  btn btn-success  mr-2 ">Декларация НП</button>
+                        <button zippy="bnp" type="submit" class="  btn btn-success  mr-2 " title="Создать экспрес-накладную Новой Почты">Отправка НП</button>
                         {{/np}}
-                        <input zippy="ship_number" style="width:250px;" placeholder="Номер декларации"
-                               class="form-control mr-sm-2">
                         <button zippy="bsend" type="submit" class="  btn btn-success  mr-2 ">Отправить</button>
                         <button zippy="bdevivered" type="submit" class="  btn btn-success  mr-2 ">Доставлено</button>
                         <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрыть ордер</span>
@@ -118,7 +114,10 @@
                         <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Создать ТТН</button>
                         <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">Гарантийный талон</button>
                         <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Возврат</button>
-
+                      &nbsp;&nbsp;&nbsp;<span data-label="ship_number" > № декларации </span> <i data-label="ship_number"  class="fa fa-info-circle " data-toggle="tooltip" data-placement="top" title="Номер  декларации  службы доставки."></i> 
+                      <input zippy="ship_number" style="width:250px;"   class="form-control mr-sm-2"> <input class="btn btn-outline-info" zippy="bdecl"  type="submit" value="OK">
+                        
+             
                     </form>
                 </div>
             </div>

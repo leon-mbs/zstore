@@ -5,7 +5,7 @@
 <body>
 <div class="row">
     <div class="col-12 col-md-10 col-xl-8">
-        <div zippy="firmtable">
+        <div zippy="plist">
             <h3>Подписки на  события </h3>
              <a  zippy="addnew" class="btn btn-info">Добавить</a>
              <table class="table  table-sm">
@@ -17,16 +17,96 @@
                 <th> </th>
                 
                </tr>
-               <tr zippy="slist">
+               <tr zippy="subslist">
                 <td> </td>
                 <td> </td>
                 <td> </td>
                 <td> </td>
-                <td> </td>
+                <td> <a zippy="edit"><i class="fa fa-edit"></i> </a> </td>
                 
                </tr>
                
              </table>
         </div>
     </div>
-</div>            
+ </div>
+ 
+
+    <form zippy="editform">      <h4>Редактирование  подписки</h4>
+  <div class="row">
+    
+     <div class="col-12 col-md-4 col-xl-3">
+      
+             <div class="form-group">
+                <label for="editeventtype">Тип события</label>
+                <select   class="form-control" zippy="editeventtype">
+                    
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editdoctype">Тип  документа</label>
+                <select   class="form-control" zippy="editdoctype">
+                   <option value="1">Не  выбран</option> 
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editstate">Статус</label>
+                <select   class="form-control" zippy="editstate">
+                      <option value="1">Не  выбран</option> 
+                 
+                </select>
+            </div>
+           <div class="form-group">
+                <label for="editrecievertype">Получатель</label>
+                <select   class="form-control" zippy="editrecievertype">
+                    
+                </select>
+            </div>           
+
+          <div class="form-group">
+                <label for="editrecievertype">Пользователь</label>
+                <select   class="form-control" zippy="editrecievertype">
+                    
+                </select>
+            </div>           
+
+            
+
+            <div class="form-check">
+                <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="editdisabled">Деактивировано</label>
+            </div>
+        
+            
+            </div>  
+           <div class="col-12 col-md-6 col-xl-4">
+  
+            
+            <div class="form-group">
+                <label for="editmsgttype">Тип сообщения</label>
+                <select   class="form-control" zippy="editmsgttype">
+                    
+                </select>
+            </div>         
+            </div> 
+    <div class="col-12  ">    
+                <div class="form-group">
+                <a zippy="cancel"     class="btn btn-outline-info mr-4 ">Отменить</a>
+                <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary mr-4  ">
+                <a zippy="delete"     class="btn btn-danger mr-4  "> Удалить</a>
+                
+            </div>
+             </div>   
+     </div>         
+    </form>
+    
+    
+         
+   
+              <script>
+    function check_delete() {
+        return confirm("Удалить  подписку?")
+    }
+</script>
+</body>   
+</html>   
