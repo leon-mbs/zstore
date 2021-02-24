@@ -83,6 +83,7 @@ class Order extends \App\Pages\Base
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('editdesc'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
@@ -157,6 +158,7 @@ class Order extends \App\Pages\Base
 
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('desc', $item->desc));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
@@ -183,6 +185,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
+        $this->editdetail->editdesc->setText("");
         $this->docform->setVisible(false);
         $this->_rowid = 0;
     }
@@ -194,6 +197,7 @@ class Order extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
+        $this->editdetail->editdesc->setText($item->desc);
 
 
         $this->editdetail->edittovar->setKey($item->item_id);
@@ -217,6 +221,7 @@ class Order extends \App\Pages\Base
 
 
         $item->price = $this->editdetail->editprice->getText();
+        $item->desc = $this->editdetail->editdesc->getText();
 
 
         unset($this->_tovarlist[$this->_rowid]);

@@ -38,6 +38,7 @@ class Order extends \App\Entity\Doc\Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "price"      => H::fa($item->price),
                                   "msr"        => $item->msr,
+                                  "desc"        => $item->desc,
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }

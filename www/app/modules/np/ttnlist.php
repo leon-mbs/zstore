@@ -53,11 +53,9 @@ class TTNList extends \App\Pages\Base
         $row->add(new Label('state', $doc->headerdata['sn_state'] ));
         
    
-        $link= "https://my.novaposhta.ua/orders/printMarking85x85/orders[]/".$doc->headerdata['ship_number']."/type/pdf/apiKey/".$this->_apikey;
+        $link= "https://my.novaposhta.ua/orders/printMarking100x100/orders[]/".$doc->headerdata['ship_number']."/type/pdf/apiKey/".$this->_apikey;
         $row->add(new BookmarkableLink('print'))->setLink($link);
-                                                                  
-        
-
+  
     }  
     
     

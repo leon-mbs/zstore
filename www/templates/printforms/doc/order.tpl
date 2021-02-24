@@ -3,27 +3,27 @@
     <tr>
         <td></td>
         <td>Заказчик</td>
-        <td colspan="7">{{customer_name}}</td>
+        <td colspan="8">{{customer_name}}</td>
     </tr>
     <tr>
         <td></td>
         <td>Телефон</td>
-        <td colspan="7">{{phone}}</td>
+        <td colspan="8">{{phone}}</td>
     </tr>
     <tr>
         <td></td>
         <td>Email</td>
-        <td colspan="7">{{email}}</td>
+        <td colspan="8">{{email}}</td>
     </tr>
     <tr>
         <td></td>
         <td> Доставка</td>
         <td>{{delivery}}</td>
-        <td colspan="6">Адрес: {{ship_address}}</td>
+        <td colspan="7">Адрес: {{ship_address}}</td>
     </tr>
 
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="10" valign="middle">
             Заказ № {{document_number}} от {{date}}
         </td>
     </tr>
@@ -34,6 +34,7 @@
         </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">  </th>
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кол.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Цена</th>
@@ -45,6 +46,7 @@
         <td colspan="2">{{{tovar_name}}}</td>
         <td colspan="2" valign="top">{{tovar_code}}</td>
         <td valign="top">{{msr}}</td>
+        <td valign="top">{{desc}}</td>
 
         <td align="right" valign="top">{{quantity}}</td>
         <td align="right" valign="top">{{price}}</td>
@@ -52,25 +54,25 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="8" align="right">Итого:</td>
+        <td style="border-top:1px #000 solid;" colspan="9" align="right">Итого:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
 
     {{#isdisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">Скидка:</td>
+        <td colspan="9" align="right">Скидка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
 
 
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">К оплате:</td>
+        <td colspan="9" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">Оплата:</td>
+        <td colspan="9" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
 
@@ -78,7 +80,7 @@
     <tr>
         <td></td>
         <td valign="top"> Комментарий</td>
-        <td colspan="4">
+        <td colspan="5">
             <p>{{notes}}</p>
         </td>
     </tr>
