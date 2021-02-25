@@ -363,5 +363,7 @@
   "contract": "Угода",
   "noselcontract": "Не вибрана  угода",
   "bycontract": "Оплата по угодi %s",
-  "noselctype": "Не вибрано тип  угоди"
+  "noselctype": "Не вибрано тип  угоди",
+  "noselpayment": "Не вибрано рахунок",
+  "paymentseq": "Рахунки  однаковi" 
 }

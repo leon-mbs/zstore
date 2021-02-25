@@ -57,6 +57,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('editcity'));
         $this->customerdetail->add(new TextInput('editcustomername'));
         $this->customerdetail->add(new TextInput('editphone'));
+        $this->customerdetail->add(new TextInput('editviber'));
         $this->customerdetail->add(new TextInput('editemail'));
         $this->customerdetail->add(new CheckBox('editjurid'));
         $this->customerdetail->add(new CheckBox('editisholding'));
@@ -163,6 +164,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->customerdetail->editcustomername->setText($this->_customer->customer_name);
         $this->customerdetail->editphone->setText($this->_customer->phone);
+        $this->customerdetail->editviber->setText($this->_customer->viber);
         $this->customerdetail->editemail->setText($this->_customer->email);
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->editcity->setText($this->_customer->city);
@@ -214,6 +216,7 @@ class CustomerList extends \App\Pages\Base
             return;
         }
         $this->_customer->phone = $this->customerdetail->editphone->getText();
+        $this->_customer->viber = $this->customerdetail->editviber->getText();
         $this->_customer->email = $this->customerdetail->editemail->getText();
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->city = $this->customerdetail->editcity->getText();
