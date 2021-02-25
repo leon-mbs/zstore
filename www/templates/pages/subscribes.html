@@ -46,13 +46,13 @@
             <div class="form-group">
                 <label for="editdoctype">Тип  документа</label>
                 <select   class="form-control" zippy="editdoctype">
-                   <option value="1">Не  выбран</option> 
+                   <option value="0">Не  выбран</option> 
                 </select>
             </div>
             <div class="form-group">
                 <label for="editstate">Статус</label>
                 <select   class="form-control" zippy="editstate">
-                      <option value="1">Не  выбран</option> 
+                      <option value="0">Не  выбран</option> 
                  
                 </select>
             </div>
@@ -64,18 +64,15 @@
             </div>           
 
           <div class="form-group">
-                <label for="editrecievertype">Пользователь</label>
-                <select   class="form-control" zippy="editrecievertype">
-                    
+                <label for="edituser">Пользователь</label>
+                <select   class="form-control" zippy="edituser">
+              <option value="0">Не  выбран</option>        
                 </select>
             </div>           
 
             
 
-            <div class="form-check">
-                <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="editdisabled">Деактивировано</label>
-            </div>
+          
         
             
             </div>  
@@ -83,11 +80,22 @@
   
             
             <div class="form-group">
-                <label for="editmsgttype">Тип сообщения</label>
-                <select   class="form-control" zippy="editmsgttype">
-                    
+                <label for="editmsgtype">Тип сообщения</label>
+                <select   class="form-control" zippy="editmsgtype">
+                    <option value="0">Не  выбрано</option>  
                 </select>
-            </div>         
+            </div>      
+            <div class="form-group">
+                <label for="editmsgtext">Тип сообщения</label>
+                <textarea style="height:100px"   class="form-control" zippy="editmsgtext">
+                    
+                </textarea>
+            </div>      
+            
+  <div class="form-check">
+                <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="editdisabled">Деактивировано</label>
+            </div>               
             </div> 
     <div class="col-12  ">    
                 <div class="form-group">

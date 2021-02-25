@@ -1,12 +1,12 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
-        <td colspan="4" align="center">
+        <td colspan="5" align="center">
             Наряд № {{document_number}} вiд {{document_date}}
         </td>
     </tr>
     {{#pareaname}}
     <tr>
-        <td colspan="4">
+        <td colspan="5">
             Вироб. ділянка: {{pareaname}}
         </td>
 
@@ -15,7 +15,7 @@
 
     {{#baseddoc}}
     <tr>
-        <td colspan="4">
+        <td colspan="5">
             Замовлення: {{baseddoc}}
         </td>
 
@@ -24,7 +24,7 @@
 
     {{#cust}}
     <tr>
-        <td colspan="4">
+        <td colspan="5">
             Замовник: {{cust}}
         </td>
 
@@ -33,7 +33,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="4" style="text-align: left;">Роботи</th>
+        <th colspan="5" style="text-align: left;">Роботи</th>
 
     </tr>
     <tr style="font-weight: bolder;">
@@ -42,6 +42,7 @@
         <th style="border: 1px solid black;" width="50" align="right">Кiл</th>
         <th style="border: 1px solid black;" width="50" align="right">Сума</th>
         <th style="border: 1px solid black;" width="50" align="right">Годин</th>
+        <th style="border: 1px solid black;"   > </th>
 
 
     </tr>
@@ -52,6 +53,7 @@
         <td align="right">{{quantity}}</td>
         <td align="right">{{cost}}</td>
         <td align="right">{{hours}}</td>
+        <td  >{{desc}}</td>
 
 
     </tr>
@@ -60,13 +62,13 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="4" style="text-align: left;">Виконавці</th>
+        <th colspan="5" style="text-align: left;">Виконавці</th>
 
     </tr>
     {{#_detail3}}
     <tr>
 
-        <td colspan="4">{{emp_name}}</td>
+        <td colspan="5">{{emp_name}}</td>
 
 
     </tr>
@@ -77,13 +79,13 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="4" style="text-align: left;">Устаткування</th>
+        <th colspan="5" style="text-align: left;">Устаткування</th>
 
     </tr>
     {{#_detail2}}
     <tr>
 
-        <td colspan="2">{{eq_name}}</td>
+        <td colspan="3">{{eq_name}}</td>
 
         <td colspan="2">{{code}}</td>
 
@@ -91,7 +93,7 @@
     {{/_detail2}}
     {{/iseq}}
     <tr>
-        <td colspan="4">
+        <td colspan="5">
             {{notes}}
         </td>
 

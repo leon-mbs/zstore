@@ -69,21 +69,21 @@ class Subscribe extends \ZCL\DB\Entity
         return  $list;
         
     }
-    public static function getMsgList(){
+    public static function getMsgTypeList(){
         $list = array();
-        $list[self::MSG_NOTIFY]=  H::l("");
-        $list[self::RSV_DOCAUTHOR]=  H::l("");
-        $list[self::MSG_SMS]=  H::l("");
-        $list[self::MSG_VIBER]=  H::l("");
+        $list[self::MSG_NOTIFY]=  H::l("sb_msgnotify");
+        $list[self::MSG_EMAIL]=  H::l("sb_msgemail");
+        $list[self::MSG_SMS]=  H::l("sb_msgsms");
+        $list[self::MSG_VIBER]=  H::l("sb_msgviber");
         
         return  $list;
         
     }
     public static function getRecieverList(){
         $list = array();
-        $list[self::RSV_CUSTOMER]=  H::l("");
-        $list[self::MSG_EMAIL]=  H::l("");
-        $list[self::RSV_USER]=  H::l("");
+        $list[self::RSV_CUSTOMER]=  H::l("sb_rsvcust");
+        $list[self::RSV_DOCAUTHOR]=  H::l("sb_rsvda");
+        $list[self::RSV_USER]=  H::l("sb_rsvuser");
         
         
         return  $list;

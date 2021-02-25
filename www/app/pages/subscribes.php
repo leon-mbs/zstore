@@ -12,6 +12,7 @@ use Zippy\Html\Form\Button;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Label;
@@ -41,11 +42,14 @@ class Subscribes extends \App\Pages\Base
          
         $this->add(new  Form('editform'))->setVisible(false);
         $this->editform->add(new CheckBox('editdisabled'));
+        $this->editform->add(new TextArea('editmsgtext'));
 
         $this->editform->add(new DropDownChoice('editeventtype', Subscribe::getEventList(),1));
         $this->editform->add(new DropDownChoice('editdoctype', H::getDocTypes(),0));
         $this->editform->add(new DropDownChoice('editstate', \App\Entity\Doc\Document::getStateList(),0));
         $this->editform->add(new DropDownChoice('editrecievertype', Subscribe::getRecieverList(),1));
+        $this->editform->add(new DropDownChoice('editmsgtype', Subscribe::getMsgTypeList(),0));
+        $this->editform->add(new DropDownChoice('edituser', \App\Entity\User::findArray('username','','username'),0));
            
           
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'OnSave');
@@ -54,7 +58,9 @@ class Subscribes extends \App\Pages\Base
 
         $this->Reload() ;
     }
-    
+    private function update(){
+        
+    }
     
     public function sublistOnRow($row) {
         

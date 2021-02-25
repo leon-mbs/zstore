@@ -11,5 +11,5 @@
   
 ) engine=InnoDB  DEFAULT CHARSET=utf8;
 
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Перемещение  денег', 'MoveMoney', 'Платежи', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'РџРµСЂРµРјРµС‰РµРЅРёРµ  РґРµРЅРµРі', 'MoveMoney', 'РџР»Р°С‚РµР¶Рё', 0);
      

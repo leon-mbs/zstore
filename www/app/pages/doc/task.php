@@ -36,7 +36,6 @@ class Task extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0, $date = null) {
         parent::__construct();
 
-
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new \ZCL\BT\DatePicker('document_date'))->setDate(time());
@@ -61,6 +60,7 @@ class Task extends \App\Pages\Base
         $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")));
 
         $this->editdetail->add(new TextInput('editqty'));
+        $this->editdetail->add(new TextInput('editdesc'));
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
@@ -147,6 +147,7 @@ class Task extends \App\Pages\Base
 
 
         $row->add(new Label('quantity', $service->quantity));
+        $row->add(new Label('desc', $service->desc));
 
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -162,6 +163,7 @@ class Task extends \App\Pages\Base
 
 
         $this->editdetail->editqty->setText('1');
+        $this->editdetail->editdesc->setText('');
     }
 
     public function editOnClick($sender) {
@@ -171,6 +173,7 @@ class Task extends \App\Pages\Base
 
 
         $this->editdetail->editqty->setText($service->quantity);
+        $this->editdetail->editdesc->setText($service->desc);
 
         $this->editdetail->editservice->setValue($service->service_id);
     }
@@ -195,6 +198,7 @@ class Task extends \App\Pages\Base
 
 
         $service->quantity = $this->editdetail->editqty->getText();
+        $service->desc = $this->editdetail->editdesc->getText();
         $service->price = $service->cost;
         if (strlen($service->price) == 0) {
             $service->price = 0;

@@ -364,6 +364,14 @@
   "noselcontract": "Не вибрана  угода",
   "bycontract": "Оплата по угодi %s",
   "noselctype": "Не вибрано тип  угоди",
+  "sb_docstate": "Изменения  статуса  документа",
+  "sb_msgnotify": "Системне  повiдомлення",
+  "sb_msgemail": "E-mail",
+  "sb_msgsms": "SMS",
+  "sb_msgviber": "Viber",
+  "sb_rsvcust": "Контрагент",
+  "sb_rsvda": "Автор документу",
+  "sb_rsvuser": "Користувач  системи",
   "noselpayment": "Не вибрано рахунок",
   "paymentseq": "Рахунки  однаковi" 
 }

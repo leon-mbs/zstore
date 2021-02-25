@@ -376,6 +376,13 @@
   "bycontract": "Оплата по договору %s",
   "noselctype": "Не вибран тип  договора" , 
   "sb_docstate": "Изменения  статуса  документа",
+  "sb_msgnotify": "Системное  уведомление",
+  "sb_msgemail": "E-mail",
+  "sb_msgsms": "SMS",
+  "sb_msgviber": "Viber",
+  "sb_rsvcust": "Контрагент",
+  "sb_rsvda": "Автор документа",
+  "sb_rsvuser": "Пользователь  системы",
   "noselpayment": "Не выбрано счет",
   "paymentseq": "Счета одинаковые"   
 }
