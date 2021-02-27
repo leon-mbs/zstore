@@ -5,7 +5,8 @@
   `reciever_type` int(11) DEFAULT NULL,
  
   `msg_type` int(11) DEFAULT NULL,
-  `detail` LONGTEXT DEFAULT NULL,
+  `detail` TEXT DEFAULT NULL,
+  `msgtext` TEXT DEFAULT NULL,
   `disabled`  int(1)  DEFAULT 0,
    PRIMARY KEY (`sub_id`)
   

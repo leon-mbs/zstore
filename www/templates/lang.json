@@ -380,9 +380,14 @@
   "sb_msgemail": "E-mail",
   "sb_msgsms": "SMS",
   "sb_msgviber": "Viber",
-  "sb_rsvcust": "Контрагент",
+  "sb_rsvcust": "Контрагент документа",
   "sb_rsvda": "Автор документа",
   "sb_rsvuser": "Пользователь  системы",
+  "sb_errtext": "Не  введен текст  сообщения",
+  "sb_errmtype": "Не  указан  тип  сообщения",
+  "sb_erruser": "Не  указан  пользователь",
+  "sb_rsvuser": "Пользователь  системы",
+  "sb_subject": "Уведомление  с %s",
   "noselpayment": "Не выбрано счет",
   "paymentseq": "Счета одинаковые"   
 }

@@ -374,7 +374,7 @@ class Item extends \ZCL\DB\Entity
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
             $partname = self::qstr($partname);
-            $criteria .= "  and  (itemname like {$like} or item_code = {$partname}   or   bar_code = {$partname} )";
+            $criteria .= "  and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
         }
 
         $itemlist = self::find($criteria);

@@ -272,7 +272,7 @@ class Import extends \App\Pages\Base
             $amount = 0;
             $itlist = array();
             foreach ($newitems as $item) {
-                $itlist[] = $item;
+                $itlist[$item->item_id] = $item;
                 $amount = $amount + ($item->quantity * $item->price);
             }
             $doc->packDetails('detaildata', $itlist);
@@ -543,7 +543,7 @@ class Import extends \App\Pages\Base
             $amount = 0;
             $itlist = array();
             foreach ($items as $item) {
-                $itlist[] = $item;
+                $itlist[$item->item_id] = $item;
                 $amount = $amount + ($item->quantity * $item->price);
             }
             $doc->packDetails('detaildata', $itlist);

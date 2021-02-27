@@ -11,6 +11,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\File;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -104,6 +105,7 @@ class Options extends \App\Pages\Base
         $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
         $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
 
+        //валюты
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
         $this->valform->add(new TextInput('valuan'));
         $this->valform->add(new TextInput('valusd'));
@@ -121,6 +123,7 @@ class Options extends \App\Pages\Base
         $this->valform->valrub->setText($val['valrub']);
         $this->valform->valprice->setChecked($val['valprice']);
 
+        //печать
         $this->add(new Form('printer'))->onSubmit($this, 'savePrinterOnClick');
         $this->printer->add(new TextInput('pwidth'));
         $this->printer->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList()));
@@ -145,6 +148,7 @@ class Options extends \App\Pages\Base
         $this->printer->pbarcode->setChecked($printer['pbarcode']);
         $this->printer->pprice->setChecked($printer['pprice']);
 
+        //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
 
         $this->api->add(new TextInput('akey'));
@@ -159,6 +163,34 @@ class Options extends \App\Pages\Base
         $this->api->atype->setValue($api['atype']);
 
         $this->onApiType($this->api->atype);
+       
+        //SMS
+        $this->add(new Form('sms'));
+
+        $this->sms->add(new SubmitButton('smssubmit'))->onClick($this, 'saveSMSOnClick');
+        $this->sms->add(new SubmitButton('smstest'))->onClick($this, 'testSMSOnClick');
+        $this->sms->add(new Label('semysmssite'));
+        $this->sms->add(new Label('turbosmssite'));
+        $this->sms->add(new Label('smsflysite'));
+        $this->sms->add(new TextInput('turbosmstoken'));
+        $this->sms->add(new TextInput('smssemytoken'));
+        $this->sms->add(new TextInput('smssemydevid'));
+        $this->sms->add(new TextInput('smstestphone'));
+        $this->sms->add(new TextInput('smstesttext'));
+        $this->sms->add(new TextInput('flysmslogin'));
+        $this->sms->add(new TextInput('flysmspass'));
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", '2' => "TurboSMS",'3'=>'SMS-Fly'),  0))->onChange($this, 'onSMSType');
+        $sms = System::getOptions("sms");
+ 
+        $this->sms->smssemytoken->setText($sms['smssemytoken']);
+        $this->sms->smssemydevid->setValue($sms['smssemydevid']);
+        $this->sms->flysmslogin->setText($sms['flysmslogin']);
+        $this->sms->flysmspass->setValue($sms['flysmspass']);
+        $this->sms->turbosmstoken->setValue($sms['turbosmstoken']);
+      
+        $this->sms->smstype->setValue($sms['smstype']);
+
+        $this->onSMSType($this->sms->smstype);
 
     }
 
@@ -251,6 +283,7 @@ class Options extends \App\Pages\Base
 
     }
 
+ 
     public function saveApiOnClick($sender) {
         $api = array();
         $api['exp'] = $this->api->aexp->getText();
@@ -262,6 +295,48 @@ class Options extends \App\Pages\Base
 
 
     }
+  
+   public function onSMSType($sender) {
+        $type = $this->sms->smstype->getValue();
+        $this->sms->smssemytoken->setVisible($type == 1);
+        $this->sms->smssemydevid->setVisible($type == 1);
+        $this->sms->turbosmstoken->setVisible($type == 2);
+        $this->sms->flysmslogin->setVisible($type == 3);
+        $this->sms->flysmspass->setVisible($type == 3);
+        
+        
+        $this->sms->semysmssite->setVisible($type == 1);
+        $this->sms->turbosmssite->setVisible($type == 2);
+        $this->sms->smsflysite->setVisible($type == 3);
 
+        //  $this->goAnkor('atype');
+ 
+    }
+
+    public function saveSMSOnClick($sender) {
+        $sms = array();
+        $sms['turbosmstoken'] = $this->sms->turbosmstoken->getText();
+        $sms['smssemytoken'] = $this->sms->smssemytoken->getText();
+        $sms['smssemydevid'] = $this->sms->smssemydevid->getText();
+        $sms['flysmslogin'] = $this->sms->flysmslogin->getText();
+        $sms['flysmspass'] = $this->sms->flysmspass->getText();
+        $sms['smstype'] = $this->sms->smstype->getValue();
+
+        System::setOptions("sms", $sms);
+        $this->setSuccess('saved');
+        
+    }
+    
+    public function testSMSOnClick($sender) {
+ 
+      $res =  \App\Entity\Subscribe::sendSMS($this->sms->smstestphone->getText(),$this->sms->smstesttext->getText()) ;
+      if(strlen($res)==0) {
+          $this->setSuccess('success');
+      }  else {
+          $this->setError($res) ;
+      }
+      
+      
+    }
 
 }

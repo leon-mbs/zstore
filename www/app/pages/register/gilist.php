@@ -113,7 +113,7 @@ class GIList extends \App\Pages\Base
 
         $this->statuspan->setVisible(false);
 
-        $this->listpan->doclist->Reload(false);
+        $this->listpan->doclist->Reload();
     }
 
 

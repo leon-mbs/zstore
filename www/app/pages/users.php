@@ -106,7 +106,7 @@ class Users extends \App\Pages\Base
         $emp =  \App\Entity\Employee::getByLogin($this->user->userlogin) ;
         
         $this->user->email = $this->editpan->editform->editemail->getText();
-        $this->user->userlogin = $this->editpan->editform->editlogin->getText();
+           $this->user->userlogin = $this->editpan->editform->editlogin->getText();
         if ($emp  != null && $this->user->userlogin != $emp->login){
             $emp->login =   $this->user->userlogin;
             $emp->save();

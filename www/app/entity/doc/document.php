@@ -362,7 +362,7 @@ class Document extends \ZCL\DB\Entity
         if ($oldstate != $state) {
             $doc = $this->cast();
             $doc->onState($oldstate, $state);
-            \App\Entity\Subscribe::onDocumentState($doc->meta_name,$state) ;            
+            \App\Entity\Subscribe::onDocumentState($doc->document_id,$state) ;            
         }
 
         return true;

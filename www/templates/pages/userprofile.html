@@ -3,19 +3,21 @@
 <body>
 
 <div class="row ">
-    <div class="col-10 col-lg-3 col-md-4">
+    <div class="col-10 col-lg-6 col-md-8">
 
         <h4>Мой профиль</h4>
+
+        
+        
         <form role="form" zippy="profileform">
+<div class="row ">
+<div class="col-12 col-md-6 ">         
+         
             <div class="form-group">
                 <label for="userlogin">Логин</label>
                 <span zippy="userlogin" class="form-control-plaintext"></span>
             </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" zippy="email">
-            </div>
             <div class="form-group  ">
                 <label for="defstore">Компания по умолчанию</label>
 
@@ -45,7 +47,8 @@
 
                 </select>
             </div>
-            <div class="form-group  ">
+   
+        <div class="form-group  ">
                 <label for="mainpage">Главная страница</label>
 
                 <select class="form-control" zippy="mainpage">
@@ -57,15 +60,42 @@
                 <input zippy="hidesidebar" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="hidesidebar">Прятать боковое меню </label>
 
+            </div>   
+   
+     </div>
+           
+ 
+<div class="col-12 col-md-6 ">         
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" zippy="email">
             </div>
+             <div class="form-group">
+                <label for="phone">Телефон</label>
+                <input   class="form-control" zippy="phone">
+            </div>
+             <div class="form-group">
+                <label for="viber">Viber</label>
+                <input   class="form-control" zippy="viber">
+            </div>
+          
+    
+     </div>
 
+   
+   
+<div class="col-12   ">         
 
             <div class="form-group  ">
                 <button type="submit" zippy="submitpass" class="btn btn-primary">Сохранить</button>
             </div>
+            
+            </div>
+    </div>
+            
         </form>
     </div>
-    <div class="col-10 col-lg-3 col-md-4">
+    <div class="col-10 col-md-4 col-lg-3 ">
 
         <h4>Смена пароля</h4>
         <form role="form" zippy="passwordform">
@@ -82,9 +112,8 @@
 
             <button type="submit" zippy="submitpass" class="btn btn-primary">Сохранить</button>
         </form>
-    </div>
-    <div class="col-10 col-lg-3 col-md-4">
-
+         <br>
+         
         <h4>Сообщение пользователю</h4>
         <form zippy="msgform" role="form">
             <div class="form-group  ">

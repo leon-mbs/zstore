@@ -88,6 +88,8 @@ class User extends \ZCL\DB\Entity
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
         $this->pagesize = (int)$options['pagesize'];
+        $this->phone = (string)$options['phone'];
+        $this->viber = (string)$options['viber'];
 
 
         $this->hidesidebar = (int)$options['hidesidebar'];
@@ -107,6 +109,8 @@ class User extends \ZCL\DB\Entity
 
         $acl['aclbranch'] = $this->aclbranch;
         $acl['onlymy'] = $this->onlymy;
+        $acl['phone'] = $this->phone;
+        $acl['viber'] = $this->viber;
 
         $this->acl = serialize($acl);
 

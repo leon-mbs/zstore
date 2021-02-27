@@ -13,15 +13,15 @@
                 <th>Тип события</th>
                 <th>Тип сообщения</th>
                 <th>Получатель</th>
-                <th>Описание</th>
+                <th> </th>
                 <th> </th>
                 
                </tr>
                <tr zippy="subslist">
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
+                <td zippy="sub_typename"> </td>
+                <td zippy="msg_typename"> </td>
+                <td zippy="reciever_typename"> </td>
+                <td zippy="desc"> </td>
                 <td> <a zippy="edit"><i class="fa fa-edit"></i> </a> </td>
                 
                </tr>
@@ -44,13 +44,13 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="editdoctype">Тип  документа</label>
+                <label data-label="editdoctype" for="editdoctype">Тип  документа</label>
                 <select   class="form-control" zippy="editdoctype">
                    <option value="0">Не  выбран</option> 
                 </select>
             </div>
             <div class="form-group">
-                <label for="editstate">Статус</label>
+                <label data-label="editstate" for="editstate">Статус</label>
                 <select   class="form-control" zippy="editstate">
                       <option value="0">Не  выбран</option> 
                  
@@ -64,9 +64,9 @@
             </div>           
 
           <div class="form-group">
-                <label for="edituser">Пользователь</label>
+                <label data-label="edituser" for="edituser">Пользователь</label>
                 <select   class="form-control" zippy="edituser">
-              <option value="0">Не  выбран</option>        
+                   <option value="0">Не  выбран</option>        
                 </select>
             </div>           
 
@@ -86,7 +86,7 @@
                 </select>
             </div>      
             <div class="form-group">
-                <label for="editmsgtext">Тип сообщения</label>
+                <label for="editmsgtext">Текст сообщения</label>
                 <textarea style="height:100px"   class="form-control" zippy="editmsgtext">
                     
                 </textarea>

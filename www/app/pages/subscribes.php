@@ -44,10 +44,10 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new CheckBox('editdisabled'));
         $this->editform->add(new TextArea('editmsgtext'));
 
-        $this->editform->add(new DropDownChoice('editeventtype', Subscribe::getEventList(),1));
+        $this->editform->add(new DropDownChoice('editeventtype', Subscribe::getEventList(),Subscribe::EVENT_DOCSTATE))->onChange($this,'update');
         $this->editform->add(new DropDownChoice('editdoctype', H::getDocTypes(),0));
         $this->editform->add(new DropDownChoice('editstate', \App\Entity\Doc\Document::getStateList(),0));
-        $this->editform->add(new DropDownChoice('editrecievertype', Subscribe::getRecieverList(),1));
+        $this->editform->add(new DropDownChoice('editrecievertype', Subscribe::getRecieverList(),Subscribe::RSV_CUSTOMER))->onChange($this,'update');
         $this->editform->add(new DropDownChoice('editmsgtype', Subscribe::getMsgTypeList(),0));
         $this->editform->add(new DropDownChoice('edituser', \App\Entity\User::findArray('username','','username'),0));
            
@@ -58,35 +58,94 @@ class Subscribes extends \App\Pages\Base
 
         $this->Reload() ;
     }
-    private function update(){
-        
+    public function update($sender){
+       $et =  $this->editform->editeventtype->getValue();
+       
+       $this->editform->editdoctype->setVisible($et==Subscribe::EVENT_DOCSTATE) ;
+       $this->editform->editstate->setVisible($et==Subscribe::EVENT_DOCSTATE) ;
+       $rt =  $this->editform->editrecievertype->getValue();
+       $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER) ;
+       
     }
     
     public function sublistOnRow($row) {
+        $sub = $row->getDataItem(); 
         
+        $row->add(new Label('sub_typename',$sub->sub_typename));
+        $row->add(new Label('msg_typename',$sub->msg_typename));
+        $row->add(new Label('reciever_typename',$sub->reciever_typename));
+        $desc=array();
+        if($sub->doctype>0) $desc[]= $sub->doctypename ;
+        if($sub->state>0) $desc[]= $sub->statename ;
+        if($sub->user_id>0) $desc[]= $sub->username ;
+        $row->add(new Label('desc',implode(', ',$desc)));
         
         
         $row->add(new ClickLink('edit',$this,'OnEdit'));
+        $row->setAttribute('style', $sub->disabled == 1 ? 'color: #aaa' : null);
+        
     }
-    
-    
-    
-    
+      
     public function onAdd($sender) {
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
         $this->editform->clean();
         $this->_sub = new Subscribe();
-        
+        $this->editform->editeventtype->setValue(Subscribe::EVENT_DOCSTATE)  ;      
+        $this->editform->editrecievertype->setValue(Subscribe::EVENT_DOCSTATE) ;       
+        $this->update($this->editform->editeventtype)  ;
     }
      public function OnEdit($sender) {
         $this->_sub = $sender->getOwner()->getDataItem();   
+
+        $this->editform->editeventtype->setValue($this->_sub->sub_type);
+        $this->editform->editrecievertype->setValue($this->_sub->reciever_type);
+        $this->editform->editmsgtype->setValue($this->_sub->msg_type);
+        $this->editform->edituser->setValue($this->_sub->user_id);
+        $this->editform->editdoctype->setValue($this->_sub->doctype);
+        $this->editform->editstate->setValue($this->_sub->state);
         
+        $this->editform->editmsgtext->setText($this->_sub->msgtext)  ;
+        $this->editform->editdisabled->setCheCked($this->_sub->disabled)  ;
+       
+        $this->update($this->editform->editeventtype)  ;
+        $this->plist->setVisible(false);
+        $this->editform->setVisible(true);
         
     }
     public function OnSave($sender) {
-          
         
+        
+        $this->_sub->sub_type =  $this->editform->editeventtype->getValue();
+        $this->_sub->sub_typename =  $this->editform->editeventtype->getValueName();
+        $this->_sub->reciever_type =  $this->editform->editrecievertype->getValue();
+        $this->_sub->reciever_typename =  $this->editform->editrecievertype->getValueName();
+        $this->_sub->msg_type =  $this->editform->editmsgtype->getValue();
+        $this->_sub->msg_typename =  $this->editform->editmsgtype->getValueName();
+        $this->_sub->user_id =  $this->editform->edituser->getValue();
+        $this->_sub->username =  $this->editform->edituser->getValueName();
+        $this->_sub->doctype =  $this->editform->editdoctype->getValue();
+        $this->_sub->doctypename =  $this->editform->editdoctype->getValueName();
+        $this->_sub->state =  $this->editform->editstate->getValue();
+        $this->_sub->statename =  $this->editform->editstate->getValueName();
+        
+        $this->_sub->msgtext = trim($this->editform->editmsgtext->getText()) ;
+        $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1:0;
+
+        if( $this->_sub->msg_type==0) {
+            $this->setError('sb_errmtype') ;
+            return;
+        }
+        if( $this->_sub->reciever_type==Subscribe::RSV_USER && $this->_sub->user_id==0) {
+            $this->setError('sb_erruser') ;
+            return;
+        }
+  
+        if(strlen($this->_sub->msgtext)==0) {
+            $this->setError('sb_errtext') ;
+            return;
+           
+        }
         $this->_sub->save();
         $this->Reload()  ;
         $this->plist->setVisible(true);

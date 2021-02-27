@@ -32,6 +32,8 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmit');
         $form->add(new Label('userlogin', $this->user->userlogin));
         $form->add(new TextInput('email', $this->user->email));
+        $form->add(new TextInput('phone', $this->user->phone));
+        $form->add(new TextInput('viber', $this->user->viber));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
 
 
@@ -99,6 +101,8 @@ class UserProfile extends \App\Pages\Base
     public function onsubmit($sender) {
 
         $this->user->email = $sender->email->getText();
+        $this->user->phone = $sender->phone->getText();
+        $this->user->viber = $sender->viber->getText();
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
 
         $this->user->deffirm = $sender->deffirm->getValue();

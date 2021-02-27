@@ -369,9 +369,14 @@
   "sb_msgemail": "E-mail",
   "sb_msgsms": "SMS",
   "sb_msgviber": "Viber",
-  "sb_rsvcust": "Контрагент",
+  "sb_rsvcust": "Контрагент документу",
   "sb_rsvda": "Автор документу",
   "sb_rsvuser": "Користувач  системи",
+  "sb_errtext": "Не  введений текст  сообщения",
+  "sb_errmtype": "Не  вказаний  тип  повiдомлення",
+  "sb_erruser": "Не  вказаний  користувач",
+  "sb_subject": "Повiдомлення з  %s",
+
   "noselpayment": "Не вибрано рахунок",
   "paymentseq": "Рахунки  однаковi" 
 }
