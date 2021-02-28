@@ -336,7 +336,7 @@
   "saved": "Збережено",
   "newdoccomment": "Новий коментар до документу",
   "toanswer": "Вiдповiсти",
-  "userrefuseddoc": "Користувач <b>%s</b>вiдхиоив документ  %s",
+  "userrefuseddoc": "Користувач <b>%s</b>вiдхилив документ  %s",
   "userapprooveddoc": "Користувач <b>%s</b> затвердив документ %s",
   "apitokenexpired": "Просроченый токен",
   "apiusernotfound": "Користувача не знайдено",

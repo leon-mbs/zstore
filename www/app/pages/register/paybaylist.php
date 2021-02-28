@@ -99,7 +99,7 @@ class PayBayList extends \App\Pages\Base
         $sql = "select c.customer_name,c.phone, c.customer_id,coalesce(sum(sam),0) as sam  from (
         select customer_id,  (case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) as sam 
             from `documents_view`  
-            where {$br}     (payamount >0  or  payed >0) {$this->_docs}  and state not in ({$this->_state})   and payamount <> payed 
+            where {$br}     (payamount >0  or  payed >0) {$this->_docs}  and state not in ({$this->_state})   and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))
             ) t join customers c  on t.customer_id = c.customer_id    {$hold}
              group by c.customer_name,c.phone, c.customer_id 
              having sam <> 0 
@@ -150,7 +150,7 @@ class PayBayList extends \App\Pages\Base
         }
 
 
-        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and (payamount >0  or  payed >0) and payamount <> payed  and state not in ({$this->_state})   {$this->_docs} ", "document_date");
+        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and (payamount >0  or  payed >0) and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))  and state not in ({$this->_state})   {$this->_docs} ", "document_date");
 
         $this->plist->doclist->Reload();
     }

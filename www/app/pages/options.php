@@ -179,7 +179,7 @@ class Options extends \App\Pages\Base
         $this->sms->add(new TextInput('smstesttext'));
         $this->sms->add(new TextInput('flysmslogin'));
         $this->sms->add(new TextInput('flysmspass'));
-        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", '2' => "TurboSMS",'3'=>'SMS-Fly'),  0))->onChange($this, 'onSMSType');
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", /*'2' => "TurboSMS", */'3'=>'SMS-Fly'),  0))->onChange($this, 'onSMSType');
         $sms = System::getOptions("sms");
  
         $this->sms->smssemytoken->setText($sms['smssemytoken']);

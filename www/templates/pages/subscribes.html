@@ -84,13 +84,22 @@
                 <select   class="form-control" zippy="editmsgtype">
                     <option value="0">Не  выбрано</option>  
                 </select>
-            </div>      
+            </div>  
+           <div class="form-group">
+                <label data-label="editmsgsubject" for="editmsgsubject">Тема сообщения</label>
+                <input    class="form-control" zippy="editmsgsubject">
+                    
+                
+            </div>
             <div class="form-group">
                 <label for="editmsgtext">Текст сообщения</label>
-                <textarea style="height:100px"   class="form-control" zippy="editmsgtext">
+                <textarea style="height:150px"   class="form-control" zippy="editmsgtext">
                     
                 </textarea>
+                <a href="javascript:void(0);" data-toggle="modal"
+                                              data-target="#modaltag">Описание  тегов <small><i class="fa fa-info-circle"></i></small></a>
             </div>      
+                
             
   <div class="form-check">
                 <input zippy="editdisabled" type="checkbox" class="form-check-input">
@@ -108,7 +117,64 @@
      </div>         
     </form>
     
-    
+      <div id="modaltag" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog  ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Описание  тегов</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                     Теги используются  для  подстановки  данных  из контекста (например  документа). 
+                     Для  системных уведомлений и e-mail в разметке   можно использовать HTML  
+                     <br>
+                     Допускаются  следющие  теги
+                     <table  >
+                     <tr><td><small><b>{customer_name}</b></small> </td><td><small>Имя контрагента</small></td></tr>
+                     <tr><td><small><b>{document_number}</b></small>< /td><td><small>Номер документа</small></td></tr>
+                     <tr><td><small><b>{document_date}</b></small> </td><td><small>Дата документа</small></td></tr>
+                     <tr><td><small><b>{amount}</b></small> </td><td><small>Сумма  по  документу</small></td></tr>
+                     <tr><td><small><b>{forpay} </b></small></td><td><small>К оплате</small></td></tr>
+                   
+                     </table>
+                     
+                     Для  вывода  списков, например  позиций  документа нужно  заключить  вывод в теги
+                     {#list}  и  {/list>} <br>
+                     Внутри строки  списка  допускаются  следующие  теги
+                     <table  >
+                     <tr><td><small><b>{item_name}</b></small> </td><td><small>Наименование  товара</small></td></tr>
+                     <tr><td><small><b>{item_code}</b></small>< /td><td><small>Артикул</small></td></tr>
+                     <tr><td><small><b>{item_barcode}</b></small> </td><td><small>Штрих-код</small></td></tr>
+                     <tr><td><small><b>{msr}</b></small> </td><td><small>Ед. измерения</small></td></tr>
+                     <tr><td><small><b>{qty} </b></small></td><td><small>Количество</small></td></tr>
+                     <tr><td><small><b>{price} </b></small></td><td><small>Цена</small></td></tr>
+                     <tr><td><small><b>{summa} </b></small></td><td><small>Сумма  по строке</small></td></tr>
+                   
+                     </table>
+                     Например:<br>
+                     <p class="text-bold">
+                     Привет  {customer_name}&lt;br> <br> 
+                     Мы  впарили  тебе  следующее <br>
+                     &lt;table>  <br>
+                       &lt;tr> &lt;th>Товар</th> &lt;th align="right" >Кол. &lt;/th> &lt;/tr><br>
+                      {#list} <br>
+                      &lt;tr> &lt;td>{item_name} &lt;/td> &lt;td align="right" >{qty} &lt;/td>&lt;/tr> <br>
+                      {/list} <br>
+                     &lt;/table>&lt;br>   <br> 
+                      К оплате  {forpay}  как  с  куста &lt;br><br> 
+                      Прайсы  по   &lt;a href="http://price.com/">ссылке&lt;/a>&lt;br><br> 
+                     Пока, лошара
+                     </p>
+                     
+                     
+                </div>
+
+            </div>
+        </div>
+    </div>  
          
    
               <script>

@@ -43,12 +43,13 @@ class Subscribes extends \App\Pages\Base
         $this->add(new  Form('editform'))->setVisible(false);
         $this->editform->add(new CheckBox('editdisabled'));
         $this->editform->add(new TextArea('editmsgtext'));
+        $this->editform->add(new TextInput('editmsgsubject'));
 
         $this->editform->add(new DropDownChoice('editeventtype', Subscribe::getEventList(),Subscribe::EVENT_DOCSTATE))->onChange($this,'update');
         $this->editform->add(new DropDownChoice('editdoctype', H::getDocTypes(),0));
         $this->editform->add(new DropDownChoice('editstate', \App\Entity\Doc\Document::getStateList(),0));
         $this->editform->add(new DropDownChoice('editrecievertype', Subscribe::getRecieverList(),Subscribe::RSV_CUSTOMER))->onChange($this,'update');
-        $this->editform->add(new DropDownChoice('editmsgtype', Subscribe::getMsgTypeList(),0));
+        $this->editform->add(new DropDownChoice('editmsgtype', Subscribe::getMsgTypeList(),0))->onChange($this,'update');;
         $this->editform->add(new DropDownChoice('edituser', \App\Entity\User::findArray('username','','username'),0));
            
           
@@ -65,6 +66,8 @@ class Subscribes extends \App\Pages\Base
        $this->editform->editstate->setVisible($et==Subscribe::EVENT_DOCSTATE) ;
        $rt =  $this->editform->editrecievertype->getValue();
        $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER) ;
+       $mt =  $this->editform->editmsgtype->getValue();
+       $this->editform->editmsgsubject->setVisible($mt==Subscribe::MSG_EMAIL) ;
        
     }
     
@@ -106,6 +109,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editstate->setValue($this->_sub->state);
         
         $this->editform->editmsgtext->setText($this->_sub->msgtext)  ;
+        $this->editform->editmsgsubject->setText($this->_sub->msgsubject)  ;
         $this->editform->editdisabled->setCheCked($this->_sub->disabled)  ;
        
         $this->update($this->editform->editeventtype)  ;
@@ -130,6 +134,7 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->statename =  $this->editform->editstate->getValueName();
         
         $this->_sub->msgtext = trim($this->editform->editmsgtext->getText()) ;
+        $this->_sub->msgsubject = trim($this->editform->editmsgsubject->getText()) ;
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1:0;
 
         if( $this->_sub->msg_type==0) {

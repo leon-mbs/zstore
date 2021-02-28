@@ -41,6 +41,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->msg_typename = (string)($xml->msg_typename[0]);
         $this->statename = (string)($xml->statename[0]);
         $this->doctypename = (string)($xml->doctypename[0]);
+        $this->msgsubject = (string)($xml->msgsubject[0]);
         $this->username = (string)($xml->username[0]);
         $this->user_id = (int)($xml->user_id[0]);
         $this->state = (int)($xml->state[0]);
@@ -63,6 +64,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<doctypename>{$this->doctypename}</doctypename>";
         $this->detail .= "<statename>{$this->statename}</statename>";
         $this->detail .= "<username>{$this->username}</username>";
+        $this->detail .= "<msgsubject>{$this->msgsubject}</msgsubject>";
  
  
         $this->detail .= "</detail>";
@@ -86,7 +88,7 @@ class Subscribe extends \ZCL\DB\Entity
         $list[self::MSG_NOTIFY]=  H::l("sb_msgnotify");
         $list[self::MSG_EMAIL]=  H::l("sb_msgemail");
         $list[self::MSG_SMS]=  H::l("sb_msgsms");
-        $list[self::MSG_VIBER]=  H::l("sb_msgviber");
+      //  $list[self::MSG_VIBER]=  H::l("sb_msgviber");
         
         return  $list;
         
@@ -109,15 +111,16 @@ class Subscribe extends \ZCL\DB\Entity
         $list = self::find('disabled <> 1 and sub_type= '. self::EVENT_DOCSTATE) ;
         foreach($list  as $sub) {
              if($sub->doctype != $doc->meta_id) continue;
+             if($sub->state != $state) continue;
              $phone='';
-             $viber='';
+           //  $viber='';
              $email='';
              $notify= 0 ;
              if($sub->reciever_type == self::RSV_CUSTOMER)   {
                    $c = \App\Entity\Customer::load($doc->customer_id) ;
                    if($c != null) {
                       $phone = $c->phone;   
-                      $viber = $c->viber;   
+                     // $viber = $c->viber;   
                       $email = $c->email;   
                          
                    }
@@ -126,7 +129,7 @@ class Subscribe extends \ZCL\DB\Entity
                    $u = \App\Entity\User::load($doc->user_id) ;
                    if($u != null) {
                       $phone = $u->phone;   
-                      $viber = $u->viber;   
+                   //   $viber = $u->viber;   
                       $email = $u->email;   
                       $notify = $doc->user_id;   
                     
@@ -137,7 +140,7 @@ class Subscribe extends \ZCL\DB\Entity
                    $u = \App\Entity\User::load($sub->user_id) ;
                    if($u != null) {
                       $phone = $u->phone;   
-                      $viber = $u->viber;   
+                    //  $viber = $u->viber;   
                       $email = $u->email;   
                       $notify = $doc->user_id;   
                     
@@ -149,11 +152,11 @@ class Subscribe extends \ZCL\DB\Entity
                  self::sendSMS($phone,$text) ;
              }
              if(strlen($email)>0 && $sub->msg_type == self::MSG_EMAIL) {
-                 self::sendEmail($email,$text) ;
+                 self::sendEmail($email,$text,$sub->msgsubject) ;
              }
-             if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
-                self::sendViber($viber,$text) ; 
-             }
+          //   if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
+          //      self::sendViber($viber,$text) ; 
+          //   }
              if($notify>0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify,$text) ; 
              }
@@ -168,14 +171,54 @@ class Subscribe extends \ZCL\DB\Entity
     * @param mixed $doc
     */
     public function getText($doc){
-        return $this->msgtext;
+        //в  разметке  одинарные
+        $this->msgtext = str_replace('{','{{',$this->msgtext) ;
+        $this->msgtext = str_replace('}','}}',$this->msgtext) ;
+        
+        $header  = array();       
+        
+        $header['document_number']=$doc->document_number ;
+        $header['document_date']= \App\Helper::fd($doc->document_date) ;
+        $header['amount']= \App\Helper::fa($doc->amount) ;
+        $header['forpay']= \App\Helper::fa($doc->payamount) ;
+        $header['customer_name']=  $doc->customer_name  ;
+        
+        $table=array();
+        foreach($doc->unpackDetails('detaildata') as  $item) {
+           $table[] = array('item_name'=>$item->itemname,
+                          'item_code'=>$item->item_code,
+                          'item_barcode'=>$item->bar_code,
+                          'msr'=>$item->msr,
+                          'qty'=>\App\Helper::fqty($item->quantity),
+                          'price'=>\App\Helper::fa($item->price),
+                          'summa'=>\App\Helper::fa($item->price*$item->quantity) 
+           ) ;
+        }
+        
+        
+        $header['list']   = $table;
+        
+        try
+        {
+           $m = new \Mustache_Engine();
+           $text = $m->render($this->msgtext, $header);
+ 
+
+            return $text;           
+            
+        }   catch(\Exception $e) {
+            return  "Ошибка  разметки" ;
+        }
+        
+        
+        
     }
     
      
-    public  static function sendEmail($email,$text) {
+    public  static function sendEmail($email,$text,$subject) {
         $common = System::getOptions("common");
  
-        H::sendLetter($text,'',$email,H::l('sb_subject',$common['shopname'])) ;
+        H::sendLetter($text,'',$email,$subject)  ;
     }
     public  static function sendViber($viber,$text) {
         

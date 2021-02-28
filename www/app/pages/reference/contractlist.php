@@ -41,11 +41,12 @@ class ContractList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
         $this->add(new Panel('contracttable'))->setVisible(true);
-        $this->contracttable->add(new DataView('contractlist', new ContractDataSource($this), $this, 'contractlistOnRow'))->Reload();
+        $this->contracttable->add(new DataView('contractlist', new ContractDataSource($this), $this, 'contractlistOnRow'));
         $this->contracttable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->contracttable->contractlist->setPageSize(H::getPG());
         $this->contracttable->add(new \Zippy\Html\DataList\Paginator('pag', $this->contracttable->contractlist));
-
+        $this->contracttable->contractlist->Reload() ;
+        
         $this->add(new Form('contractdetail'))->setVisible(false);
         $this->contractdetail->add(new Date('editcreatedon', time()));
         $this->contractdetail->add(new Date('editenddate', strtotime("+1 month", time())));
@@ -66,21 +67,15 @@ class ContractList extends \App\Pages\Base
 
         $this->add(new Panel('docpan'))->setVisible(false);
         $this->docpan->add(new Label("cname"));
-        $this->docpan->add(new Label("totsumma"));
-        $this->docpan->add(new Label("totdolg"));
+        
+        
 
         $this->docpan->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
         $this->docpan->add(new DataView('dtable', new ArrayDataSource(array()), $this, 'doclistOnRow'));
         $this->docpan->dtable->setPageSize(H::getPG());
         $this->docpan->add(new \Zippy\Html\DataList\Paginator('dpag', $this->docpan->dtable));
 
-        $this->docpan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->docpan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
-        $this->docpan->payform->add(new TextInput('pamount'));
-        $this->docpan->payform->add(new TextInput('pcomment'));
-        $this->docpan->payform->add(new Date('pdate', time()));
-        $this->docpan->payform->setVisible(false);
-
+     
         if ($id > 0) {
             $c = Contract::load($id);
             $this->filter->searchkey->setText($c->contract_number);
@@ -218,6 +213,8 @@ class ContractList extends \App\Pages\Base
 
     public function OnFilter($sender) {
         $this->contracttable->contractlist->Reload();
+        $this->docpan->setVisible(false);
+         
     }
 
     public function OnAutoCustomer($sender) {
@@ -232,19 +229,11 @@ class ContractList extends \App\Pages\Base
 
 
         $dlist = $this->_contract->getDocs();
-        $totsumma = 0;
-      
-        foreach ($dlist as $d) {
-            $totsumma += $d->amount;
-            
-        }
-        $this->docpan->totsumma->setText(H::fa($totsumma));
     
 
         $this->docpan->dtable->getDataSource()->setArray($dlist);
         $this->docpan->dtable->Reload();
-        $this->docpan->payform->setVisible($totdolg > 0);
-        $this->docpan->payform->pamount->setText(H::fa($totdolg));
+      
     }
 
     public function doclistOnRow($row) {
@@ -256,48 +245,7 @@ class ContractList extends \App\Pages\Base
       
     }
 
-    public function payOnSubmit($sender) {
-
-        $amount = $sender->pamount->getText();
-        $pdate = $sender->pdate->getDate();
-        $comment = $sender->pcomment->getText();
-        if (strlen($comment) == 0) {
-            $comment = H::l('bycontract', $this->_contract->contract_number);
-        }
-
-        foreach ($this->_contract->getDocs() as $doc) {
-
-
-            if ($doc->payamount > 0 && $doc->payamount > $doc->payed) {
-                $p = $doc->payamount - $doc->payed;
-                if ($amount > $p) {
-
-                    $amount -= $p;
-                } else {
-
-                    $p = $amount;
-                    $amount = 0;
-                }
-                if (in_array($doc->meta_name, array('GoodsReceipt', 'InvoiceCust'))) {
-                    Pay::addPayment($doc->document_id, $pdate, 0 - $p, $sender->payment->getValue(), Pay::PAY_BASE_OUTCOME, $comment);
-                } else {
-                    Pay::addPayment($doc->document_id, $pdate, $p, $sender->payment->getValue(), Pay::PAY_BASE_INCOME, $comment);
-
-                }
-
-                if ($amount == 0) {
-                    break;
-                }
-            }
-
-        }
-
-        $this->contracttable->contractlist->Reload(false);
-        $this->contracttable->setVisible(true);
-
-        $this->docpan->setVisible(false);
-    }
-
+     
 
 }
 
