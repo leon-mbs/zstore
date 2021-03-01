@@ -17,7 +17,7 @@ class Price extends \App\Pages\Base
 
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReport('ItemActivity')) {
+        if (false == \App\ACL::checkShowReport('Price')) {
             return;
         }
 

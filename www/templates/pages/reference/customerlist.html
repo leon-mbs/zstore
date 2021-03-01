@@ -16,10 +16,7 @@
                     <select zippy="searchtype" class="form-control mr-sm-2">
                         <option value="0">Все</option>
                     </select>
-                    <label for="searchstatus">статус</label>
-                    <select zippy="searchstatus" class="form-control mr-sm-2">
-
-                    </select>
+                
                     <label for="searchholding">дочерняя для</label>
                     <select zippy="searchholding" class="form-control mr-sm-2">
                         <option value="0">Не указан</option>
@@ -37,7 +34,9 @@
                     <td zippy="customername" class="text-nowrap"></td>
                     <td zippy="customerphone" class="text-nowrap"></td>
                     <td zippy="customeremail" class="text-nowrap"></td>
-                    <td zippy="customercomment"></td>
+                  
+                    <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
+                    
                     <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланированные события"></i></td>
                     <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарии"></i></td>
                     <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикрепленные  файлы  "></i></td>
@@ -132,7 +131,7 @@
         </div>
         <div class="form-group">
             <label for="editcomment">Примечание</label>
-            <textarea class="form-control" zippy="editcomment"></textarea>
+            <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
         </div>
     </div>
     <div class="w-100"></div>

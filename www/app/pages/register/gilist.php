@@ -34,7 +34,7 @@ class GIList extends \App\Pages\Base
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
-    public function __construct() {
+    public function __construct($doc=0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('GIList')) {
             return;
@@ -107,6 +107,10 @@ class GIList extends \App\Pages\Base
 
         $npform->add(new DataView('npitemlist', new ArrayDataSource(array()), $this, 'nplistOnRow'));
 
+        if($doc>0) {
+            $this->_doc = Document::load($doc);  
+            $this->npshowOnSubmit( $this->statuspan->statusform->bnp);;
+        }
     }
 
     public function filterOnSubmit($sender) {
@@ -411,7 +415,7 @@ class GIList extends \App\Pages\Base
             $this->nppan->npform->selpoint->setValue($modules['nppointref']);
         }
         $this->nppan->npform->seltel->setText($modules['nptel']);
-
+        $this->nppan->npform->npdesc->setText($this->_doc->notes) ;
         $list = $this->_doc->unpackDetails('detaildata');
         $w = 0;
         $p = 0;

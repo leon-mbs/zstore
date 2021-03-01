@@ -14,7 +14,7 @@ class Customer extends \ZCL\DB\Entity
 
     const STATUS_ACTUAL   = 0;  //актуальный
     const STATUS_DISABLED = 1; //не используется
-    const STATUS_WAIT     = 2; //потенциальный
+   // const STATUS_WAIT     = 2; //потенциальный
 
 
     const TYPE_BAYER  = 1; //покупатель
@@ -38,6 +38,8 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<isholding>{$this->isholding}</isholding>";
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
+        $this->detail .= "<created>{$this->created}</created>";
+        $this->detail .= "<user_id>{$this->user_id}</user_id>";
 
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
@@ -57,6 +59,8 @@ class Customer extends \ZCL\DB\Entity
         $this->jurid = (int)($xml->jurid[0]);
         $this->shopcust_id = (int)($xml->shopcust_id[0]);
         $this->isholding = (int)($xml->isholding[0]);
+        $this->user_id = (int)($xml->user_id[0]);
+        $this->created = (int)($xml->created[0]);
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);
         $this->address = (string)($xml->address[0]);

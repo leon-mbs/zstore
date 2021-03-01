@@ -14,12 +14,9 @@
                     <input class="form-control mr-sm-2" type="text" zippy="searchkey">
                     <label for="searchtype">Тип</label>
                     <select zippy="searchtype" class="form-control mr-sm-2">
-                        <option value="0">Усе</option>
+                        <option value="0">Усi</option>
                     </select>
-                    <label for="searchstatus">статус</label>
-                    <select zippy="searchstatus" class="form-control mr-sm-2">
-
-                    </select>
+                
                     <label for="searchholding">дочiрня для</label>
                     <select zippy="searchholding" class="form-control mr-sm-2">
                         <option value="0">Не вказано</option>
@@ -37,7 +34,7 @@
                     <td zippy="customername" class="text-nowrap"></td>
                     <td zippy="customerphone" class="text-nowrap"></td>
                     <td zippy="customeremail" class="text-nowrap"></td>
-                    <td zippy="customercomment"></td>
+                    <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
                     <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Заплановані події"></i></td>
                     <td><i zippy="hasmsg" class="fa fa-comments" title="Коментарі"></i></td>
                     <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикріплені файли  "></i></td>
@@ -131,7 +128,7 @@
         </div>
         <div class="form-group">
             <label for="editcomment">Примітка</label>
-            <textarea class="form-control" zippy="editcomment"></textarea>
+            <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
         </div>
     </div>
     <div class="w-100"></div>
