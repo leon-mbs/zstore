@@ -199,7 +199,7 @@ class TTN extends Document
             $list = $order->getChildren('TTN');
 
             if (count($list) == 1 && $common['numberttn'] <> 1) {   //только  эта  ТТН
-                if ($state == Document::STATE_DELIVERED && ($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP || $order->state == Document::STATE_INPROCESS))) {
+                if ($state == Document::STATE_DELIVERED && ($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP || $order->state == Document::STATE_INPROCESS))  {
                     $order->updateStatus(Document::STATE_DELIVERED);
                 }
                 if ($state == Document::STATE_INSHIPMENT && ($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) )  {

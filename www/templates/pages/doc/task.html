@@ -86,6 +86,35 @@
 
 
             </table>
+            <a class="btn btn-outline-primary btn-sm" zippy="addprod">Добавить готовую  продукцию или  полуфабрикат</a>
+
+            <h5>Готовая продукция</h5>
+            <table class="table  table-sm">
+                <tr>
+                    <th>Название</th>
+                    <th class="text-right">Кол.</th>
+                    <th  > </th>
+
+
+                    <th width="75"></th>
+                </tr>
+                <tr zippy="detailprod">
+                    <td zippy="prod"></td>
+
+
+                    <td zippy="quantityprod" class="text-right"></td>
+                    <td zippy="descprod"  ></td>
+
+
+                    <td>
+                        <a zippy="editprod"><i class="fa fa-edit"></i></a>
+                        <a zippy="deleteprod"><i class="fa fa-trash"></i></a>
+
+                    </td>
+                </tr>
+
+
+            </table>
 
             <a class="btn btn-outline-primary btn-sm" zippy="addemp">Добавить исполнителя</a>
             <h5>Исполнители</h5>
@@ -138,7 +167,7 @@
 
 
 <form zippy="editdetail">
-    <h3>Редактирование </h3>
+    <h3>Работа </h3>
     <div class="row">
         <div class="col-12 col-md-4 col-xl-3">
 
@@ -163,6 +192,36 @@
             <div class="form-group">
                 <input zippy="saverow" type="submit" value="Сохранить" class="btn btn-outline-primary">
                 <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-light ">
+            </div>
+        </div>
+    </div>
+</form>
+<form zippy="editdetailprod">
+    <h3>Продукция </h3>
+    <div class="row">
+        <div class="col-12 col-md-4 col-xl-3">
+
+            <div class="form-group">
+                <label for="editprod">Продукция </label>
+                <select zippy="editprod" class="form-control select2">
+                    <option>Не выбрано</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="editqtyprod">Кол. </label>
+                <input class="form-control" type="text" zippy="editqtyprod" pattern="[0-9]+" value="1"
+                       style="width: 50px;">
+            </div>
+         <div class="form-group">
+                <label for="editdescprod">Коментарий  </label>
+                <input class="form-control" type="text" zippy="editdescprod"                          >
+            </div>
+
+            <div class="form-group">
+                <input zippy="saverowprod" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                <input type="button" zippy="cancelrowprod" value="Отменить" class="btn btn-light ">
             </div>
         </div>
     </div>
