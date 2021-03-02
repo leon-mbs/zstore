@@ -57,6 +57,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
@@ -118,8 +119,10 @@ class OrderList extends \App\Pages\Base
 
 
         //проверяем  что есть ТТН
-        $list = $this->_doc->getChildren('GoodsIssue');
+        $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
+        $list = $this->_doc->getChildren('GoodsIssue');
+        $gi = count($list) > 0;
         $list = $this->_doc->getChildren('Invoice');
         $invoice = count($list) > 0;
 
@@ -156,6 +159,14 @@ class OrderList extends \App\Pages\Base
             return;
         }
 
+       if ($sender->id == "bgi") {
+            if ($invoice) {
+                $this->setWarn('goodsissue_exists');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+            return;
+        }
+
 
         if ($sender->id == "bclose") {
 
@@ -185,13 +196,10 @@ class OrderList extends \App\Pages\Base
         $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED));
 
 
-        //проверяем  что есть ТТН
-
-        $list = $this->_doc->getChildren('Invoice');
-        $invoice = count($list) > 0;
-
+ 
         $this->statuspan->statusform->bttn->setVisible(!$closed);
         $this->statuspan->statusform->binv->setVisible(!$closed);
+        $this->statuspan->statusform->bgi->setVisible(!$closed);
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -201,6 +209,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
 
         } else {
@@ -218,6 +227,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
         }
 
 
@@ -227,6 +237,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
@@ -257,6 +268,10 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
 
         }
+         //проверяем  что есть ТТН
+
+        $list = $this->_doc->getChildren('Invoice');
+        if(count($list) > 0)  $this->statuspan->statusform->binv->setVisible(false);
 
 
     }
@@ -451,7 +466,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = "  meta_name  = 'Order'   document_number like  {$sn} ";
+            $where = "  meta_name  = 'Order' and  document_number like  {$sn} ";
         }
 
         return $where;

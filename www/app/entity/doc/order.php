@@ -22,7 +22,8 @@ class Order extends \App\Entity\Doc\Document
             if (isset($detail[$item->item_id])) {
                 $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
-
+                
+                /*
                 $ocstoreopt = @unserialize($item->octoreoptions);  //опции с  опенкарта
                 if (is_array($ocstoreopt)) {
                     $t = "<table cellspacing='0' cellpadding='1' style='font-size:smaller'><tr><td style='padding: 1px;'>Опции:</td><td style='padding: 1px;'></td></tr>";
@@ -31,7 +32,7 @@ class Order extends \App\Entity\Doc\Document
                     }
                     $t .= "</table>";
                     $item->itemname = $item->itemname . $t;
-                }
+                }   */
                 $detail[] = array("no"         => $i++,
                                   "tovar_name" => $item->itemname,
                                   "tovar_code" => $item->item_code,
@@ -72,7 +73,7 @@ class Order extends \App\Entity\Doc\Document
 
 
     protected function getNumberTemplate() {
-        return 'ЗК-000000';
+        return 'З-000000';
     }
 
     public function getRelationBased() {
@@ -129,7 +130,7 @@ class Order extends \App\Entity\Doc\Document
     }
 
 
-    protected function onState($oldstate, $state) {
+    protected function onState(  $state) {
         
         if ($state == self::STATE_INPROCESS) {
             //списываем бонусы

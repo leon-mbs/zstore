@@ -361,15 +361,21 @@ class Document extends \ZCL\DB\Entity
 
         if ($oldstate != $state) {
             $doc = $this->cast();
-            $doc->onState($oldstate, $state);
+            $doc->onState(  $state);
             \App\Entity\Subscribe::onDocumentState($doc->document_id,$state) ;            
         }
 
         return true;
     }
 
-    //обработчик  изменения  статусов
-    protected function onState($oldstate, $state) {
+    
+    /**
+    * обработчик  изменения  статусов
+    * переопределяется в  дочерних документах
+    * 
+    * @param mixed $state    новый  статус
+    */
+    protected function onState(  $state) {
 
      
     }
