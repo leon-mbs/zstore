@@ -29,7 +29,7 @@ class Task extends \App\Pages\Base
 {
 
     private $_doc;
-    public  $_proclist = array();
+    public  $_prodlist = array();
     public  $_servicelist = array();
     public  $_eqlist      = array();
     public  $_emplist     = array();
@@ -40,7 +40,7 @@ class Task extends \App\Pages\Base
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
-        $this->docform->add(new \ZCL\BT\DatePicker('document_date'))->setDate(time());
+        $this->docform->add(new \ZCL\BT\DateTimePicker('document_date'))->setDate(time());
 
         $this->docform->add(new TextArea('notes'));
         $this->docform->add(new TextInput('taskhours', "0"));
@@ -68,12 +68,12 @@ class Task extends \App\Pages\Base
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         //prod
         $this->add(new Form('editdetailprod'))->setVisible(false);
-        $this->editdetail->add(new DropDownChoice('editprod', Item::findArray("itemname", "item_type in(4,5) and disabled<>1", "itemname")));
+        $this->editdetailprod->add(new DropDownChoice('editprod', Item::findArray("itemname", "item_type in(4,5) and disabled<>1", "itemname")));
 
-        $this->editdetail->add(new TextInput('editqtyprod'));
-        $this->editdetail->add(new TextInput('editdescprod'));
-        $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
-        $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
+        $this->editdetailprod->add(new TextInput('editqtyprod'));
+        $this->editdetailprod->add(new TextInput('editdescprod'));
+        $this->editdetailprod->add(new Button('cancelrowprod'))->onClick($this, 'cancelrowOnClick');
+        $this->editdetailprod->add(new SubmitButton('saverowprod'))->onClick($this, 'saverowOnClick');
 
         //employer
         $this->add(new Form('editdetail3'))->setVisible(false);

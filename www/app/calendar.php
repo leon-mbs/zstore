@@ -7,7 +7,14 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
 
     private $event = null;
     private $data  = array();
+   private $view  = 'month';
 
+   public function __construct($id,$view='month') {
+        parent::__construct($id);
+        $this->view =  $view;
+   }    
+    
+    
     public final function RenderImpl() {
         global $_config;
         $id = $this->getAttribute('id');
@@ -36,7 +43,7 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
         center: 'title',
         right: ' prev,next'
          },
-         defaultView: 'month',
+         defaultView: '{$this->view}',
          eventTextColor:'white',
          minTime: '08:00:00',
          maxTime: '20:00:00',
