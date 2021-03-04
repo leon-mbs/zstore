@@ -182,7 +182,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                       // $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);

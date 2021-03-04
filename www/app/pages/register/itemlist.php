@@ -270,7 +270,7 @@ class ItemList extends \App\Pages\Base
 
         }
 
-        H::exportExcel($data, $header, 'stocklist.xlsx');
+        H::exportExcel($data, $header, 'itemlist.xlsx');
 
     }
 

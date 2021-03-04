@@ -8,6 +8,7 @@ use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
 use App\Entity\Stock;
 use App\Entity\Item;
 use App\DataItem;
@@ -24,6 +25,8 @@ class Main extends Base
 
         $user = System::getUser();
 
+        
+                
         $this->_tvars['wminqty'] = strpos(System::getUser()->widgets, 'wminqty') !== false;
         $this->_tvars['wsdate'] = strpos(System::getUser()->widgets, 'wsdate') !== false;
         $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets, 'wrdoc') !== false;
@@ -66,7 +69,7 @@ class Main extends Base
                 $this->_tvars['wsdate'] =  false;
             }
 
-
+            $this->add(new  ClickLink('sdcsv',$this,'onSDcsv')) ;
             $sdlist = $this->add(new DataView('sdlist', new ArrayDataSource($data), $this, 'sdlistOnRow'));
             $sdlist->setPageSize(10);
             $this->add(new  Paginator("sdpag", $sdlist));
@@ -89,7 +92,8 @@ class Main extends Base
             if (count($data) == 0) {
                 $this->_tvars['wminqty'] =  false;
             }
-            $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'mqlistOnRow'));
+              $this->add(new  ClickLink('mqcsv',$this,'onMQcsv')) ;
+          $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'mqlistOnRow'));
             $mqlist->setPageSize(10);
             $this->add(new  Paginator("mqpag", $mqlist));
             $mqlist->Reload();
@@ -112,6 +116,7 @@ class Main extends Base
             if (count($data) == 0) {
                 $this->_tvars['wrdoc'] =  false;
             }
+                 $this->add(new  ClickLink('rdcsv',$this,'onRDcsv')) ;
 
             $doclist = $this->add(new DataView('rdoclist', new ArrayDataSource($data), $this, 'doclistOnRow'));
             $doclist->setPageSize(10);
@@ -302,9 +307,41 @@ class Main extends Base
         $row->add(new \Zippy\Html\Link\RedirectLink("wrd_number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
     }
 
+    
+    public function onRDcsv($sender){
+         $list = $this->tasktab->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
+
+
+        $header = array();
+        $data = array();
+
+        $i = 0;
+        foreach ($list as $task) {
+            $i++;
+            $data['A' . $i] = $task->document_number;
+            $data['B' . $i] = $task->notes;
+            $data['C' . $i] = H::fdt($task->document_date);
+            $data['D' . $i] = $task->headerdata['taskhours'];
+            $data['E' . $i] = Document::getStateName($task->state);
+            $data['F' . $i] = $task->notes;
+
+        }
+
+        H::exportExcel($data, $header, 'taskslist.xlsx');       
+    }
+    public function onSDcsv($sender){
+        
+    }
+    public function onMQcsv($sender){
+        
+    }
+    
     /*
     public function test($args,$post) {
         
       return "test"; 
     }  */
+    
+    
+    
 }
