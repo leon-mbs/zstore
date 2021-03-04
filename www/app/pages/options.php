@@ -179,6 +179,7 @@ class Options extends \App\Pages\Base
         $this->sms->add(new TextInput('smstesttext'));
         $this->sms->add(new TextInput('flysmslogin'));
         $this->sms->add(new TextInput('flysmspass'));
+        $this->sms->add(new TextInput('flysmsan'));
         $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", /*'2' => "TurboSMS", */'3'=>'SMS-Fly'),  0))->onChange($this, 'onSMSType');
         $sms = System::getOptions("sms");
  
@@ -186,6 +187,7 @@ class Options extends \App\Pages\Base
         $this->sms->smssemydevid->setValue($sms['smssemydevid']);
         $this->sms->flysmslogin->setText($sms['flysmslogin']);
         $this->sms->flysmspass->setValue($sms['flysmspass']);
+        $this->sms->flysmsan->setValue($sms['flysmsan']);
         $this->sms->turbosmstoken->setValue($sms['turbosmstoken']);
       
         $this->sms->smstype->setValue($sms['smstype']);
@@ -303,6 +305,7 @@ class Options extends \App\Pages\Base
         $this->sms->turbosmstoken->setVisible($type == 2);
         $this->sms->flysmslogin->setVisible($type == 3);
         $this->sms->flysmspass->setVisible($type == 3);
+        $this->sms->flysmsan->setVisible($type == 3);
         
         
         $this->sms->semysmssite->setVisible($type == 1);
@@ -320,6 +323,7 @@ class Options extends \App\Pages\Base
         $sms['smssemydevid'] = $this->sms->smssemydevid->getText();
         $sms['flysmslogin'] = $this->sms->flysmslogin->getText();
         $sms['flysmspass'] = $this->sms->flysmspass->getText();
+        $sms['flysmsan'] = $this->sms->flysmsan->getText();
         $sms['smstype'] = $this->sms->smstype->getValue();
 
         System::setOptions("sms", $sms);
