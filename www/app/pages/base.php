@@ -26,14 +26,26 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
-
-        $this->branch_id = System::getBranch();
-        $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
-        if (count($blist) == 1) {
-            $k = array_keys($blist);//если  одна
-            $this->branch_id = array_pop($k);
-            System::setBranch($this->branch_id);
+        
+       $options = System::getOptions('common');
+        
+        
+         //опции
+        $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
+        $this->_tvars["usescanner"] = $options['usescanner'] == 1;
+        $this->_tvars["useimages"] = $options['useimages'] == 1;
+        $this->_tvars["usebranch"] = $options['usebranch'] == 1;
+        $this->_tvars["useval"] = $options['useval'] == 1;
+        
+        $blist = array();
+        if($this->_tvars["usebranch"]==true) {
+            $this->branch_id = System::getBranch();
+            $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
+            if (count($blist) == 1) {
+                $k = array_keys($blist);//если  одна
+                $this->branch_id = array_pop($k);
+                System::setBranch($this->branch_id);
+            }
         }
         //форма  филиалов       
         $this->add(new \Zippy\Html\Form\Form('nbform'));
@@ -53,15 +65,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
 
-        $options = System::getOptions('common');
-
-        //опции
-        $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
-        $this->_tvars["usescanner"] = $options['usescanner'] == 1;
-        $this->_tvars["useimages"] = $options['useimages'] == 1;
-        $this->_tvars["usebranch"] = $options['usebranch'] == 1;
-        $this->_tvars["useval"] = $options['useval'] == 1;
-
+ 
+ 
 
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;

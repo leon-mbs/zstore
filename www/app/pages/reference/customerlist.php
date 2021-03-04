@@ -40,7 +40,6 @@ class CustomerList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
-        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL => Helper::l("isactul"), Customer::STATUS_DISABLED => Helper::l("notused"), Customer::STATUS_WAIT => Helper::l("potential")), Customer::STATUS_ACTUAL));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
 
 
@@ -57,12 +56,13 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('editcity'));
         $this->customerdetail->add(new TextInput('editcustomername'));
         $this->customerdetail->add(new TextInput('editphone'));
+        $this->customerdetail->add(new TextInput('editviber'));
         $this->customerdetail->add(new TextInput('editemail'));
         $this->customerdetail->add(new CheckBox('editjurid'));
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
-        $this->customerdetail->add(new DropDownChoice('editstatus', array(Customer::STATUS_ACTUAL => 'Актуальный', Customer::STATUS_DISABLED => 'Не используется', Customer::STATUS_WAIT => 'Потенциальный'), Customer::STATUS_ACTUAL));
+        $this->customerdetail->add(new DropDownChoice('editstatus', array(0 => Helper::l("isactual"), 1 => Helper::l("notused")), 0));
         $this->customerdetail->add(new TextInput('discount'));
         $this->customerdetail->add(new TextInput('bonus'));
         $this->customerdetail->add(new TextArea('editcomment'));
@@ -103,11 +103,11 @@ class CustomerList extends \App\Pages\Base
     }
 
     public function OnSearch($sender) {
-        $status = $this->filter->searchstatus->getValue();
+         
         $type = $this->filter->searchtype->getValue();
         $holding = $this->filter->searchholding->getValue();
         $search = trim($this->filter->searchkey->getText());
-        $where = "status=" . $status;
+        $where = "1=1" ;
 
         if (strlen($search) > 0) {
             $search = Customer::qstr('%' . $search . '%');
@@ -139,7 +139,11 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('customername', $item->customer_name));
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
-        $row->add(new Label('customercomment', $item->comment));
+ 
+ 
+        $row->add(new Label('customercomment'))->setVisible(strlen($item->comment) > 0 && $item->comment == strip_tags($item->comment));
+        $row->customercomment->setAttribute('title', $item->comment);
+        
         $row->add(new Label('hasmsg'))->setVisible($item->mcnt > 0);
         $row->add(new Label('hasfiles'))->setVisible($item->fcnt > 0);
         $row->add(new Label('isplanned'))->setVisible($item->ecnt > 0);
@@ -147,6 +151,9 @@ class CustomerList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        
+        $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
+        
     }
 
     public function editOnClick($sender) {
@@ -163,6 +170,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->customerdetail->editcustomername->setText($this->_customer->customer_name);
         $this->customerdetail->editphone->setText($this->_customer->phone);
+        $this->customerdetail->editviber->setText($this->_customer->viber);
         $this->customerdetail->editemail->setText($this->_customer->email);
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->editcity->setText($this->_customer->city);
@@ -214,6 +222,7 @@ class CustomerList extends \App\Pages\Base
             return;
         }
         $this->_customer->phone = $this->customerdetail->editphone->getText();
+        $this->_customer->viber = $this->customerdetail->editviber->getText();
         $this->_customer->email = $this->customerdetail->editemail->getText();
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->city = $this->customerdetail->editcity->getText();
@@ -253,7 +262,10 @@ class CustomerList extends \App\Pages\Base
             }
         }
 
-
+        if($this->_customer->customer_id==0){ //новый
+           $this->_customer->created = time(); 
+           $this->_customer->user_id = System::getUser()->user_id; 
+        }
         $this->_customer->save();
         $this->customerdetail->setVisible(false);
         $this->customertable->setVisible(true);

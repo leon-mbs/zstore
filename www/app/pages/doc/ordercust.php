@@ -60,6 +60,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editcustcode'));
         $this->editdetail->add(new TextInput('editprice'));
+         $this->editdetail->add(new TextInput('editdesc'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
@@ -93,7 +94,18 @@ class OrderCust extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                }
+                    if ($basedoc->meta_name == 'Order') {
+                      
+                        $order = $basedoc->cast();
+                        
+                        $this->docform->total->setText($order->amount);
+ 
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->calcTotal();
+                         
+
+                    }
+               }
             }
         }
         $this->calcTotal();
@@ -113,6 +125,7 @@ class OrderCust extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('desc', $item->desc));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -129,6 +142,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->editcustcode->setText($item->custcode);
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
+    $this->editdetail->editdesc->setText($item->desc);
 
 
         $this->editdetail->edititem->setKey($item->item_id);
@@ -152,6 +166,7 @@ class OrderCust extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
+        $this->editdetail->editdesc->setText("");
         $this->_rowid = 0;
         $this->editdetail->editprice->setText("0");
     }
@@ -176,6 +191,7 @@ class OrderCust extends \App\Pages\Base
         if ($item->price == 0) {
             $this->setWarn("no_price");
         }
+        $item->desc = $this->editdetail->editdesc->getText();
 
 
         $tarr = array();

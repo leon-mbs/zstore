@@ -56,7 +56,11 @@ class OrderList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bsent'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bdel'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
@@ -118,14 +122,22 @@ class OrderList extends \App\Pages\Base
 
 
         //проверяем  что есть ТТН
-        $list = $this->_doc->getChildren('GoodsIssue');
+        $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
+        $list = $this->_doc->getChildren('GoodsIssue');
+        $gi = count($list) > 0;
         $list = $this->_doc->getChildren('Invoice');
         $invoice = count($list) > 0;
 
 
         if ($sender->id == "binp") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
+        }
+       if ($sender->id == "bsent") {
+            $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+        }
+       if ($sender->id == "bdel") {
+            $this->_doc->updateStatus(Document::STATE_DELIVERED);
         }
         if ($sender->id == "bref") {
             $this->_doc->updateStatus(Document::STATE_REFUSED);
@@ -156,6 +168,19 @@ class OrderList extends \App\Pages\Base
             return;
         }
 
+       if ($sender->id == "bgi") {
+            if ($invoice) {
+                $this->setWarn('goodsissue_exists');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+            return;
+        }
+        if ($sender->id == "bco") {
+        
+            App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
+            return;
+        }
+
 
         if ($sender->id == "bclose") {
 
@@ -174,7 +199,7 @@ class OrderList extends \App\Pages\Base
         $common = System::getOptions("common");
 
         $this->statuspan->statusform->bclose->setVisible(true);
-
+ 
         $state = $this->_doc->state;
 
         //доставлен
@@ -184,14 +209,9 @@ class OrderList extends \App\Pages\Base
         //аннулирован
         $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED));
 
+        $this->statuspan->statusform->bsent->setVisible(false);
+        $this->statuspan->statusform->bdel->setVisible(false);
 
-        //проверяем  что есть ТТН
-
-        $list = $this->_doc->getChildren('Invoice');
-        $invoice = count($list) > 0;
-
-        $this->statuspan->statusform->bttn->setVisible(!$closed);
-        $this->statuspan->statusform->binv->setVisible(!$closed);
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -201,13 +221,18 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
+            $this->statuspan->statusform->bsent->setVisible(false);
+            $this->statuspan->statusform->bdel->setVisible(false);
 
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->binp->setVisible(false);
+            $this->statuspan->statusform->bco->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
 
         }
@@ -218,20 +243,51 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bsent->setVisible(false);
+            $this->statuspan->statusform->bdel->setVisible(false);
         }
 
-
+         if ($state == Document::STATE_INPROCESS) {
+            $this->statuspan->statusform->bsent->setVisible(true);
+            $this->statuspan->statusform->bdel->setVisible(true);
+  
+            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->binv->setVisible(true);
+            $this->statuspan->statusform->bgi->setVisible(true);
+            
+         }
+         if ($state == Document::STATE_INSHIPMENT) {
+            $this->statuspan->statusform->bdel->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+          
+         }
+       if ($state == Document::STATE_DELIVERED) {
+         
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->bref->setVisible(false);
+          
+         }
         //закрыт
         if ($state == Document::STATE_CLOSED) {
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
-        }
+            $this->statuspan->statusform->bsent->setVisible(false);
+            $this->statuspan->statusform->bdel->setVisible(false);
+       }
 
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             $this->statuspan->statusform->bclose->setVisible(false);
@@ -254,10 +310,15 @@ class OrderList extends \App\Pages\Base
         $list = $order->getChildren('GoodsIssue');
 
         if (count($list) > 0 && $common['numberttn'] <> 1) {
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
 
         }
+        
 
+        $list = $this->_doc->getChildren('Invoice');
+        if(count($list) > 0)  $this->statuspan->statusform->binv->setVisible(false);
+
+        
 
     }
 
@@ -451,7 +512,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = "  meta_name  = 'Order'   document_number like  {$sn} ";
+            $where = "  meta_name  = 'Order' and  document_number like  {$sn} ";
         }
 
         return $where;

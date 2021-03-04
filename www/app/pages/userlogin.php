@@ -31,7 +31,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->setError('');
 
 
-        $curver = 'v4.8.3';
+        $curver = 'v4.8.4';
         $this->_tvars['curversion'] = $curver;
 
         //проверка  новой версии        
@@ -147,7 +147,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->setError('invalidloginalert');
             $this->loginform->setVisible(false);
             if (strlen($admin->email) > 0) {
-                Helper::sendLetter($msg, $admin->email, $admin->email, "Zippy Store alert");
+                Helper::sendLetter($msg, '', $admin->email, "Zippy Store alert");
             }
 
         }

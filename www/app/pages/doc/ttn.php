@@ -59,7 +59,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore())) ;
 
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
@@ -90,6 +90,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('senddoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('sendnp'))->onClick($this, 'savedocOnClick');
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
@@ -664,17 +665,23 @@ class TTN extends \App\Pages\Base
                       }
                   } */
             } else {
-                if ($sender->id == 'senddoc') {
+                if ($sender->id == 'senddoc' || $sender->id == 'sendnp') {
 
 
                     if (!$isEdited) {
                         $this->_doc->updateStatus(Document::STATE_NEW);
                     }
 
-                    $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                    $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                     if ($sender->id == 'senddoc')$this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+                     if ($sender->id == 'sendnp') {
+                         $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
+                         
+                     }
                     //   $this->_doc->headerdata['sent_date'] = time();
-                    $this->_doc->save();
+                   // $this->_doc->save();
+                    
+                    
                 } else {
                     $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
                 }
@@ -682,7 +689,11 @@ class TTN extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-
+             if ($sender->id == 'sendnp') {
+                         
+                         App::Redirect('\App\Pages\Register\GIList',$this->_doc->document_id) ;
+                         return; 
+             }
             App::Redirect("\\App\\Pages\\Register\\GIList");
 
         } catch(\Throwable $ee) {
@@ -765,11 +776,7 @@ class TTN extends \App\Pages\Base
         App::RedirectBack();
     }
 
-    public function OnChangeStore($sender) {
-        //очистка  списка  товаров
-        $this->_itemlist = array();
-        $this->docform->detail->Reload();
-    }
+   
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
@@ -878,9 +885,11 @@ class TTN extends \App\Pages\Base
     }
 
     public function OnDelivery($sender) {
+        
 
         if ($sender->getValue() != Document::DEL_SELF) {
             $this->docform->senddoc->setVisible(true);
+            $this->docform->sendnp->setVisible(true);
 
             $this->docform->ship_address->setVisible(true);
             $this->docform->ship_number->setVisible($sender->getValue() == 3);
@@ -891,7 +900,7 @@ class TTN extends \App\Pages\Base
 
         } else {
             $this->docform->senddoc->setVisible(false);
-
+        
             $this->docform->ship_address->setVisible(false);
             $this->docform->ship_number->setVisible(false);
             $this->docform->ship_amount->setVisible(false);
@@ -900,7 +909,7 @@ class TTN extends \App\Pages\Base
             $this->docform->emp->setVisible(false);
             $this->docform->ship_number->setText('');
         }
-
+        $this->docform->sendnp->setVisible($sender->getValue() == Document::DEL_NP);
     }
 
     public function onOpenItemSel($sender) {

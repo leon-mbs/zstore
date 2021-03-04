@@ -103,10 +103,15 @@ class Users extends \App\Pages\Base
 
     public function saveOnClick($sender) {
 
-
+        $emp =  \App\Entity\Employee::getByLogin($this->user->userlogin) ;
+        
         $this->user->email = $this->editpan->editform->editemail->getText();
-        $this->user->userlogin = $this->editpan->editform->editlogin->getText();
-
+           $this->user->userlogin = $this->editpan->editform->editlogin->getText();
+        if ($emp  != null && $this->user->userlogin != $emp->login){
+            $emp->login =   $this->user->userlogin;
+            $emp->save();
+        }
+        
         $user = User::getByLogin($this->user->userlogin);
         if ($user instanceof User) {
             if ($user->user_id != $this->user->user_id) {

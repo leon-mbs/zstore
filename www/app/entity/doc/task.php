@@ -33,6 +33,7 @@ class Task extends Document
             }
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
+                              "desc" => $ser->desc,
                               "quantity"     => H::fqty($ser->quantity),
                               "cost"         => H::fa($ser->cost * $ser->quantity),
 

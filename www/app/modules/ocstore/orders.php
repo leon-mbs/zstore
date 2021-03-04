@@ -151,7 +151,14 @@ class Orders extends \App\Pages\Base
                 }
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = round($product['price']);
-                $tovar->octoreoptions = serialize($product['_options_']);
+                $desc='';
+                if(array($product['_options_'] )) {
+                    foreach($product['_options_'] as $k => $v){
+                       $desc= $desc . $k.':'.$v.';'; 
+                    }
+                }
+                //$tovar->octoreoptions = serialize($product['_options_']);
+                $tovar->desc = $desc;
 
                 $tlist[] = $tovar;
             }

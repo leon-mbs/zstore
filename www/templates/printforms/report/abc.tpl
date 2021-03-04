@@ -6,52 +6,52 @@
     </tr>
     <tr style="font-weight: bolder;">
 
-        <th width="300px" style="border-bottom:1px #000 solid;">Название</th>
-        <th width="100px" style="border-bottom:1px #000 solid;" align="right">Знач., тыс.</th>
-        <th width="80px" style="border-bottom:1px #000 solid;" align="right">%</th>
-        <th width="30px" style="border-bottom:1px #000 solid;"></th>
+        <th   style="border-bottom:1px #000 solid;">Название</th>
+        <th   style="border-bottom:1px #000 solid;" align="right">Знач., тыс.</th>
+        <th   style="border-bottom:1px #000 solid;" align="right">%</th>
+        <th   style="border-bottom:1px #000 solid;"></th>
     </tr>
     {{#_detail}}
     <tr>
 
-        <td width="300px" style="background-color: {{color}} ;">{{name}}</td>
-        <td width="100px" style="background-color: {{color}} ;" align="right">{{value}} &nbsp;</td>
-        <td width="80px" style="background-color: {{color}} ;" align="right">{{perc}} &nbsp;</td>
-        <td width="30px" style="background-color: {{color}} ;">{{group}}</td>
+        <td   style="background-color: {{color}} ;">{{name}}</td>
+        <td   style="background-color: {{color}} ;" align="right">{{value}} &nbsp;</td>
+        <td   style="background-color: {{color}} ;" align="right">{{perc}} &nbsp;</td>
+        <td   style="background-color: {{color}} ;">{{group}}</td>
 
     </tr>
     {{/_detail}}
 
     <tr>
 
-        <td width="300px" align="right"><b>Всего A:</b></td>
-        <td width="100px" align="right"><b>{{totala}}</b> &nbsp;</td>
-        <td width="80px" align="right"> &nbsp;</td>
-        <td width="30px"></td>
+        <td   align="right"><b>Всего A:</b></td>
+        <td    align="right"><b>{{totala}}</b> &nbsp;</td>
+        <td   align="right"> &nbsp;</td>
+        <td  ></td>
 
     </tr>
     <tr>
 
-        <td width="300px" align="right"><b>Всего B:</b></td>
-        <td width="100px" align="right"><b>{{totalb}}</b> &nbsp;</td>
-        <td width="80px" align="right"> &nbsp;</td>
-        <td width="30px"></td>
+        <td   align="right"><b>Всего B:</b></td>
+        <td   align="right"><b>{{totalb}}</b> &nbsp;</td>
+        <td   align="right"> &nbsp;</td>
+        <td  ></td>
 
     </tr>
     <tr>
 
-        <td width="300px" align="right"><b>Всего C:</b></td>
-        <td width="100px" align="right"><b>{{totalc}}</b> &nbsp;</td>
-        <td width="80px" align="right"> &nbsp;</td>
-        <td width="30px"></td>
+        <td   align="right"><b>Всего C:</b></td>
+        <td   align="right"><b>{{totalc}}</b> &nbsp;</td>
+        <td   align="right"> &nbsp;</td>
+        <td  ></td>
 
     </tr>
     <tr>
 
-        <td width="300px" align="right"><b>Всего:</b></td>
-        <td width="100px" align="right"><b>{{total}}</b> &nbsp;</td>
-        <td width="80px" align="right"> &nbsp;</td>
-        <td width="30px"></td>
+        <td   align="right"><b>Всего:</b></td>
+        <td   align="right"><b>{{total}}</b> &nbsp;</td>
+        <td   align="right"> &nbsp;</td>
+        <td  ></td>
 
     </tr>
 </table>

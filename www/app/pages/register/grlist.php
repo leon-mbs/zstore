@@ -71,7 +71,7 @@ class GRList extends \App\Pages\Base
 
         $this->statuspan->setVisible(false);
 
-        $this->doclist->Reload(false);
+        $this->doclist->Reload();
     }
 
     public function doclistOnRow($row) {

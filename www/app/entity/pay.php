@@ -154,25 +154,25 @@ class Pay extends \ZCL\DB\Entity
     public static function getPayTypeList($type = 0) {
         $list = array();
         if ($type != 2) {
-            $list[PAY::PAY_BASE_INCOME] = \App\Helper::l('pt_inprod');
+            $list[self::PAY_BASE_INCOME] = \App\Helper::l('pt_inprod');
 
-            $list[PAY::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
-            $list[PAY::PAY_FIN] = \App\Helper::l('pt_fin');
+            $list[self::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
+            $list[self::PAY_FIN] = \App\Helper::l('pt_fin');
 
         }
 
         if ($type != 1) {
-            $list[PAY::PAY_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
-            $list[PAY::PAY_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
-            $list[PAY::PAY_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
-            $list[PAY::PAY_SALE_OUTCOME] = \App\Helper::l('pt_outsell');
-            $list[PAY::PAY_SALARY_OUTCOME] = \App\Helper::l('pt_outsalary');
-            $list[PAY::PAY_TAX_OUTCOME] = \App\Helper::l('pt_outtax');
-            $list[PAY::PAY_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
-            $list[PAY::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
-            $list[PAY::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
-            $list[PAY::PAY_INV] = \App\Helper::l('pt_inv');
-            $list[PAY::PAY_BANK] = \App\Helper::l('pt_bank');
+            $list[self::PAY_BASE_OUTCOME] = \App\Helper::l('pt_outprod');
+            $list[self::PAY_COMMON_OUTCOME] = \App\Helper::l('pt_outcommon');
+            $list[self::PAY_ADMIN_OUTCOME] = \App\Helper::l('pt_outadm');
+            $list[self::PAY_SALE_OUTCOME] = \App\Helper::l('pt_outsell');
+            $list[self::PAY_SALARY_OUTCOME] = \App\Helper::l('pt_outsalary');
+            $list[self::PAY_TAX_OUTCOME] = \App\Helper::l('pt_outtax');
+            $list[self::PAY_BILL_OUTCOME] = \App\Helper::l('pt_outrent');
+            $list[self::PAY_DIVIDEND_OUTCOME] = \App\Helper::l('pt_outcap');
+            $list[self::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
+            $list[self::PAY_INV] = \App\Helper::l('pt_inv');
+            $list[self::PAY_BANK] = \App\Helper::l('pt_bank');
 
         }
 

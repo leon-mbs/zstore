@@ -25,7 +25,8 @@ class OrderCust extends Document
                               "quantity" => H::fqty($item->quantity),
                               "price"    => H::fa($item->price),
                               "msr"      => $item->msr,
-                              "amount"   => H::fa($item->quantity * $item->price)
+                                  "desc"        => $item->desc,
+                             "amount"   => H::fa($item->quantity * $item->price)
             );
         }
 
@@ -46,7 +47,7 @@ class OrderCust extends Document
 
 
     protected function getNumberTemplate() {
-        return 'ЗКП-000000';
+        return 'ЗП-000000';
     }
 
     public function getRelationBased() {

@@ -6,13 +6,13 @@
 <div class="row">
     <div class="col-12 col-md-10 col-xl-8">
         <div zippy="plist">
-            <h3>Подписки на  события </h3>
-             <a  zippy="addnew" class="btn btn-info">Добавить</a>
+            <h3>Підписки на події </h3>
+             <a  zippy="addnew" class="btn btn-info">Додати</a>
              <table class="table  table-sm">
                <tr>
-                <th>Тип события</th>
-                <th>Тип сообщения</th>
-                <th>Получатель</th>
+                <th>Тип події</th>
+                <th>Тип повiдомлення</th>
+                <th>Отримувач</th>
                 <th> </th>
                 <th> </th>
                 
@@ -32,85 +32,80 @@
  </div>
  
 
-    <form zippy="editform">      <h4>Редактирование  подписки</h4>
+    <form zippy="editform">      <h4>Редагування</h4>
   <div class="row">
     
      <div class="col-12 col-md-4 col-xl-3">
       
              <div class="form-group">
-                <label for="editeventtype">Тип события</label>
+                <label for="editeventtype">Тип події</label>
                 <select   class="form-control" zippy="editeventtype">
                     
                 </select>
             </div>
             <div class="form-group">
-                <label data-label="editdoctype" for="editdoctype">Тип  документа</label>
+                <label data-label="editdoctype" for="editdoctype">Тип  документу</label>
                 <select   class="form-control" zippy="editdoctype">
-                   <option value="0">Не  выбран</option> 
+                   <option value="0">Не  вибрано</option> 
                 </select>
             </div>
             <div class="form-group">
                 <label data-label="editstate" for="editstate">Статус</label>
                 <select   class="form-control" zippy="editstate">
-                      <option value="0">Не  выбран</option> 
+                      <option value="0">Не  вибрано</option> 
                  
                 </select>
             </div>
            <div class="form-group">
-                <label for="editrecievertype">Получатель</label>
+                <label for="editrecievertype">Отримувач</label>
                 <select   class="form-control" zippy="editrecievertype">
                     
                 </select>
             </div>           
 
           <div class="form-group">
-                <label data-label="edituser" for="edituser">Пользователь</label>
+                <label data-label="edituser" for="edituser">Користувач</label>
                 <select   class="form-control" zippy="edituser">
-                   <option value="0">Не  выбран</option>        
+                   <option value="0">Не  вибрано</option>        
                 </select>
             </div>           
- 
-            
-
-          
-        
-            
+              
             </div>  
            <div class="col-12 col-md-6 col-xl-4">
   
             
             <div class="form-group">
-                <label for="editmsgtype">Тип сообщения</label>
+                <label for="editmsgtype">Тип повiдомлення</label>
                 <select   class="form-control" zippy="editmsgtype">
-                    <option value="0">Не  выбрано</option>  
+                    <option value="0">Не  вибрано</option>  
                 </select>
             </div>  
            <div class="form-group">
-                <label data-label="editmsgsubject" for="editmsgsubject">Тема сообщения</label>
+                <label data-label="editmsgsubject" for="editmsgsubject">Тема повiдомлення</label>
                 <input    class="form-control" zippy="editmsgsubject">
                     
                 
             </div>
             <div class="form-group">
-                <label for="editmsgtext">Текст сообщения</label>
+                <label for="editmsgtext">Текст повiдомлення</label>
                 <textarea style="height:150px"   class="form-control" zippy="editmsgtext">
                     
                 </textarea>
                 <a href="javascript:void(0);" data-toggle="modal"
-                                              data-target="#modaltag">Описание  тегов <small><i class="fa fa-info-circle"></i></small></a>
+                                              data-target="#modaltag">Опис   тегiв <small><i class="fa fa-info-circle"></i></small></a>
             </div>      
                 
             
   <div class="form-check">
                 <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="editdisabled">Деактивировано</label>
+                <label class="form-check-label" for="editdisabled">Деактивовано</label>
             </div>               
             </div> 
     <div class="col-12  ">    
                 <div class="form-group">
-                <a zippy="cancel"     class="btn btn-outline-info mr-4 ">Отменить</a>
+                <a zippy="cancel"     class="btn btn-outline-info mr-4 ">Скасувати</a>
                 <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary mr-4  ">
-                <a zippy="delete"     class="btn btn-danger mr-4  "> Удалить</a>
+                <a zippy="delete"     class="btn btn-danger mr-4  "> Видалити</a>
                 
             </div>
              </div>   
@@ -122,49 +117,50 @@
         <div class="modal-dialog  ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Описание  тегов</h5>
+                    <h5 class="modal-title">Опис   тегiв</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                     Теги используются  для  подстановки  данных  из контекста (например  документа). 
-                     Для  системных уведомлений и e-mail в разметке   можно использовать HTML  
-                     <br>
-                     Допускаются  следующие  теги
+                     Теги використовуються для підстановки даних з контексту (наприклад документа).
+                      Для системних повідомлень та e-mail в розмітці можна використовувати HTML
+                      <br>
+                      Допускаються наступні теги
                      <table  >
-                     <tr><td><small><b>{customer_name}</b></small> </td><td><small>Имя контрагента</small></td></tr>
-                     <tr><td><small><b>{document_number}</b></small>< /td><td><small>Номер документа</small></td></tr>
-                     <tr><td><small><b>{document_date}</b></small> </td><td><small>Дата документа</small></td></tr>
-                     <tr><td><small><b>{amount}</b></small> </td><td><small>Сумма  по  документу</small></td></tr>
-                     <tr><td><small><b>{forpay} </b></small></td><td><small>К оплате</small></td></tr>
+                     <tr><td><small><b>{customer_name}</b></small> </td><td><small>Им'я контрагента</small></td></tr>
+                     <tr><td><small><b>{document_number}</b></small>< /td><td><small>Номер документу</small></td></tr>
+                     <tr><td><small><b>{document_date}</b></small> </td><td><small>Дата документу</small></td></tr>
+                     <tr><td><small><b>{amount}</b></small> </td><td><small>Сума  по  документу</small></td></tr>
+                     <tr><td><small><b>{forpay} </b></small></td><td><small>До сплати</small></td></tr>
                    
                      </table>
                      
-                     Для  вывода  списков, например  позиций  документа нужно  заключить  вывод в теги
-                     {#list}  и  {/list>} <br>
-                     Внутри строки  списка  допускаются  следующие  теги
+                    Для виведення списків, наприклад позицій документа потрібно вкласти  данi мiж тегами
+                      {#list}  та  {/list>}  
+                    <br>  Усередині рядка списку допускаються наступні теги
+                 
                      <table  >
-                     <tr><td><small><b>{item_name}</b></small> </td><td><small>Наименование  товара</small></td></tr>
+                     <tr><td><small><b>{item_name}</b></small> </td><td><small>Найменуватся  товару</small></td></tr>
                      <tr><td><small><b>{item_code}</b></small>< /td><td><small>Артикул</small></td></tr>
                      <tr><td><small><b>{item_barcode}</b></small> </td><td><small>Штрих-код</small></td></tr>
-                     <tr><td><small><b>{msr}</b></small> </td><td><small>Ед. измерения</small></td></tr>
-                     <tr><td><small><b>{qty} </b></small></td><td><small>Количество</small></td></tr>
-                     <tr><td><small><b>{price} </b></small></td><td><small>Цена</small></td></tr>
-                     <tr><td><small><b>{summa} </b></small></td><td><small>Сумма  по строке</small></td></tr>
+                     <tr><td><small><b>{msr}</b></small> </td><td><small>Од. вимiру</small></td></tr>
+                     <tr><td><small><b>{qty} </b></small></td><td><small>Кiлькiсть</small></td></tr>
+                     <tr><td><small><b>{price} </b></small></td><td><small>Цiна</small></td></tr>
+                     <tr><td><small><b>{summa} </b></small></td><td><small>Сума  по строцi</small></td></tr>
                    
                      </table>
-                     Например:<br>
+                     Наприклад:<br>
                      <p class="text-bold">
-                     Привет  {customer_name}&lt;br> <br> 
-                     Мы  впарили  тебе  следующее <br>
+                     Привiт  {customer_name}&lt;br> <br> 
+                     Ми  впарили  тобi наступне <br>
                      &lt;table>  <br>
-                       &lt;tr> &lt;th>Товар</th> &lt;th align="right" >Кол. &lt;/th> &lt;/tr><br>
+                       &lt;tr> &lt;th>Товар</th> &lt;th align="right" >Кiл. &lt;/th> &lt;/tr><br>
                       {#list} <br>
                       &lt;tr> &lt;td>{item_name} &lt;/td> &lt;td align="right" >{qty} &lt;/td>&lt;/tr> <br>
                       {/list} <br>
                      &lt;/table>&lt;br>   <br> 
-                      К оплате  {forpay}  чистоганом &lt;br><br> 
+                      До сплати  {forpay}  чистоганом &lt;br><br> 
                       Прайсы  по   &lt;a href="http://price.com/">ссылке&lt;/a>&lt;br><br> 
                       Пока, лошара
                      </p>

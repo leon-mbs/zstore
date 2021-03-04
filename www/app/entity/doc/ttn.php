@@ -180,7 +180,7 @@ class TTN extends Document
         return true;
     }
 
-    public function onState($oldstate, $state) {
+    public function onState(  $state) {
         
         if ($state == Document::STATE_INSHIPMENT) {
             //расходы на  доставку
@@ -199,10 +199,10 @@ class TTN extends Document
             $list = $order->getChildren('TTN');
 
             if (count($list) == 1 && $common['numberttn'] <> 1) {   //только  эта  ТТН
-                if ($state == Document::STATE_DELIVERED && $order->state == Document::STATE_INSHIPMENT) {
+                if ($state == Document::STATE_DELIVERED && ($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP || $order->state == Document::STATE_INPROCESS))  {
                     $order->updateStatus(Document::STATE_DELIVERED);
                 }
-                if ($state == Document::STATE_INSHIPMENT && $order->state == Document::STATE_INPROCESS) {
+                if ($state == Document::STATE_INSHIPMENT && ($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) )  {
                     $order->updateStatus(Document::STATE_INSHIPMENT);
                 }
                 if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {

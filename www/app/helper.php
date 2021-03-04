@@ -227,7 +227,9 @@ class Helper
     }
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
-
+        global $_config;
+        if(strlen($emailfrom)==0) $emailfrom = $_config['smtp']['user'] ;
+        
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
         $mail->setFrom($emailfrom);
         $mail->addAddress($emailto);
@@ -370,6 +372,15 @@ class Helper
     public static function log($msg) {
         global $logger;
         $logger->debug($msg);
+    }
+   /**
+     * логгирование    ошибок
+     *
+     * @param mixed $msg
+     */
+    public static function logerror($msg) {
+        global $logger;
+        $logger->error($msg);
     }
 
     /**
@@ -695,8 +706,7 @@ class Helper
             return 'RUB';
         }
     }
-
-
+ 
     public static function exportExcel($data, $header, $filename) {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
@@ -786,5 +796,6 @@ class Helper
         $writer->save('php://output');
         die;
     }
-
+      
+    
 }

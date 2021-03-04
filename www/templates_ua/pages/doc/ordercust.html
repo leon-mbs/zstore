@@ -46,7 +46,8 @@
                     <th>Найменування</th>
                     <th>Код</th>
                     <th>Од.</th>
-                    <th class="text-right">Кіл.</th>
+                    <th  > </th>
+                <th class="text-right">Кіл.</th>
                     <th class="text-right">Ціна</th>
 
                     <th class="text-right">Сума</th>
@@ -58,7 +59,8 @@
                     <td zippy="item"></td>
                     <td zippy="code"></td>
                     <td zippy="msr"></td>
-                    <td zippy="quantity" class="text-right"></td>
+                <td zippy="desc"  ></td>
+             <td zippy="quantity" class="text-right"></td>
                     <td zippy="price" class="text-right"></td>
 
                     <td zippy="amount" class="text-right"></td>
@@ -67,7 +69,7 @@
                     </td>
                 </tr>
                 <tr style="font-weight: bolder;">
-                    <td colspan="5" class="text-right">Всього:</td>
+                    <td colspan="7" class="text-right">Всього:</td>
                     <td zippy="total" class="text-right"></td>
                     <td></td>
                 </tr>
@@ -128,6 +130,11 @@
                 <input autocomplete="off" class="form-control" type="text" zippy="editprice" required="required"
                        pattern="[0-9\.]+"
                        style="width: 100px;">
+            </div>
+                 <div class="form-group">
+                <label for="editdesc">Комментар </label>
+                <input   class="form-control" type="text" zippy="editdesc"     >
+
             </div>
 
             <div class="form-group">
