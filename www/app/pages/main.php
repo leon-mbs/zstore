@@ -24,9 +24,7 @@ class Main extends Base
         parent::__construct();
 
         $user = System::getUser();
-
-        
-                
+                 
         $this->_tvars['wminqty'] = strpos(System::getUser()->widgets, 'wminqty') !== false;
         $this->_tvars['wsdate'] = strpos(System::getUser()->widgets, 'wsdate') !== false;
         $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets, 'wrdoc') !== false;
@@ -93,7 +91,7 @@ class Main extends Base
                 $this->_tvars['wminqty'] =  false;
             }
               $this->add(new  ClickLink('mqcsv',$this,'onMQcsv')) ;
-          $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'mqlistOnRow'));
+            $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'mqlistOnRow'));
             $mqlist->setPageSize(10);
             $this->add(new  Paginator("mqpag", $mqlist));
             $mqlist->Reload();
@@ -116,9 +114,9 @@ class Main extends Base
             if (count($data) == 0) {
                 $this->_tvars['wrdoc'] =  false;
             }
-                 $this->add(new  ClickLink('rdcsv',$this,'onRDcsv')) ;
+            $this->add(new  ClickLink('rdcsv',$this,'onRDcsv')) ;
 
-            $doclist = $this->add(new DataView('rdoclist', new ArrayDataSource($data), $this, 'doclistOnRow'));
+            $doclist = $this->add(new DataView('rdoclist', new ArrayDataSource($data), $this, 'rdoclistOnRow'));
             $doclist->setPageSize(10);
             $this->add(new  Paginator("wrpag", $doclist));
 
@@ -288,17 +286,8 @@ class Main extends Base
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
         $row->add(new Label('wmq_minqty', H::fqty($item->minqty)));
     }
-
-    public function OnRow($row) {
-        $item = $row->getDataItem();
-
-        $row->add(new Label('wdbt_cust', $item->customer_name));
-        $row->add(new Label('wdbt_amount', H::fa($item->am)));
-        $row->add(new Label('wdbt_type', $item->meta_desc));
-        $row->add(new Label('wdbt_number', $item->document_number));
-    }
-
-    public function doclistOnRow($row) {
+ 
+    public function rdoclistOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->document_date))));
@@ -309,31 +298,88 @@ class Main extends Base
 
     
     public function onRDcsv($sender){
-         $list = $this->tasktab->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
-
-
+            $data = array();
+            $conn = $conn = \ZDB\DB::getConnect();
+            $user = System::getUser();
+ 
+            $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where  1=1 {$br}  and  l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time())) . " limit  0,100";
+  
+            $rc = $conn->Execute($sql);
+ 
         $header = array();
         $data = array();
 
-        $i = 0;
-        foreach ($list as $task) {
+        $i=0;
+        foreach ($rc as $row) {
             $i++;
-            $data['A' . $i] = $task->document_number;
-            $data['B' . $i] = $task->notes;
-            $data['C' . $i] = H::fdt($task->document_date);
-            $data['D' . $i] = $task->headerdata['taskhours'];
-            $data['E' . $i] = Document::getStateName($task->state);
-            $data['F' . $i] = $task->notes;
-
+            $data['A' . $i] =  \App\Helper::fd(strtotime($row['document_date']));
+            $data['B' . $i] = $row['meta_desc'];
+            $data['C' . $i] = array('value' => H::fa($row['amount']),'format'=>'number');
         }
 
-        H::exportExcel($data, $header, 'taskslist.xlsx');       
+        H::exportExcel($data, $header, 'recentlydoc.xlsx');       
     }
     public function onSDcsv($sender){
-        
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if (strlen($brids) > 0) {
+            $br = " and d.branch_id in ({$brids}) ";
+        }
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = " and  store_id in ({$cstr})    ";
+        }
+
+        $conn = $conn = \ZDB\DB::getConnect();
+       $stock = Stock::find(" {$cstr} qty > 0 and sdate is not null  and sdate <  ADDDATE( now(), INTERVAL 7 day)  ");
+             $header = array();
+        $data = array();
+
+        $i=0;
+        foreach ($stock as $st) {
+            $i++;
+            $data['A' . $i] = $st->storename;
+            $data['B' . $i] = $st->itemname;
+            $data['C' . $i] = $st->snumber;
+            $data['D' . $i] = H::fd($st->sdate);
+            $data['E' . $i] = array('value' =>H::fqty($st->qty),'format'=>'number'); 
+       
+        }
+       H::exportExcel($data, $header, 'termitem.xlsx');       
+          
     }
     public function onMQcsv($sender){
-        
+         $brids = \App\ACL::getBranchIDsConstraint();
+        if (strlen($brids) > 0) {
+            $br = " and d.branch_id in ({$brids}) ";
+        }
+        $cstr = \App\Acl::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = " and  store_id in ({$cstr})    ";
+        }
+     $conn = $conn = \ZDB\DB::getConnect();
+          
+             $sql = "select t.qty, i.`minqty`,i.`itemname`,i.`item_code`,s.`storename`  from (select  item_id,store_id,coalesce(sum( `qty`),0) as qty   from  store_stock where 1=1 
+            {$cstr} group by item_id,store_id   ) t
+            join items  i  on t.item_id = i.item_id
+            join stores s  on t.store_id = s.store_id
+            where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 ";
+          $rc = $conn->Execute($sql);
+             $header = array();
+        $data = array();
+
+        $i=0;
+        foreach ($rc as $row) {
+              $i++;
+          $data['A' . $i] = $row['storename'];
+            $data['B' . $i] = $row['itemname'];
+            $data['C' . $i] = $row['item_code'];
+            $data['D' . $i] = H::fd($row['sdate']);
+            $data['E' . $i] = array('value' =>H::fqty($row['qty']),'format'=>'number'); 
+            $data['F' . $i] = array('value' =>H::fqty($row['minqty']),'format'=>'number'); 
+       
+        }
+       H::exportExcel($data, $header, 'minqty.xlsx');       
+    
     }
     
     /*
