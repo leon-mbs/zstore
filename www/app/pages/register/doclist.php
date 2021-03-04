@@ -119,6 +119,7 @@ class DocList extends \App\Pages\Base
         $this->filter->clean();
         $this->filter->to->setDate(time());
         $this->filter->from->setDate(time() - (7 * 24 * 3600));
+        $this->filter->doctype->setValue(0);
         $this->filterOnSubmit($this->filter);
     }
 
