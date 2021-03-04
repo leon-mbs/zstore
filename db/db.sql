@@ -195,8 +195,7 @@ CREATE TABLE `entrylist` (
   CONSTRAINT `entrylist_ibfk_2` FOREIGN KEY (`stock_id`) REFERENCES `store_stock` (`stock_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=908 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-ALTER DATABASE `zstore` CHARACTER SET utf8 COLLATE utf8_general_ci ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+ /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = latin1 */ ;
@@ -221,9 +220,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-ALTER DATABASE `zstore` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
-ALTER DATABASE `zstore` CHARACTER SET utf8 COLLATE utf8_general_ci ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+ /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = latin1 */ ;
@@ -247,7 +244,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-ALTER DATABASE `zstore` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
 DROP TABLE IF EXISTS `entrylist_view`;
 /*!50001 DROP VIEW IF EXISTS `entrylist_view`*/;
 SET @saved_cs_client     = @@character_set_client;
