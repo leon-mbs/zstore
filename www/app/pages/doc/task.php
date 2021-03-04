@@ -72,8 +72,8 @@ class Task extends \App\Pages\Base
 
         $this->editdetailprod->add(new TextInput('editqtyprod'));
         $this->editdetailprod->add(new TextInput('editdescprod'));
-        $this->editdetailprod->add(new Button('cancelrowprod'))->onClick($this, 'cancelrowOnClick');
-        $this->editdetailprod->add(new SubmitButton('saverowprod'))->onClick($this, 'saverowOnClick');
+        $this->editdetailprod->add(new Button('cancelrowprod'))->onClick($this, 'cancelrowprodOnClick');
+        $this->editdetailprod->add(new SubmitButton('saverowprod'))->onClick($this, 'saverowprodOnClick');
 
         //employer
         $this->add(new Form('editdetail3'))->setVisible(false);
@@ -477,7 +477,7 @@ class Task extends \App\Pages\Base
 
             $this->setError('enterdatedoc');
         }
-        if (count($this->_servicelist) == 0) {
+        if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
             $this->setError("noenterpos");
         }
 

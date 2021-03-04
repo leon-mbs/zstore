@@ -59,6 +59,33 @@
     </tr>
     {{/_detail}}
 
+    <tr style="font-weight: bolder;">
+
+        <th colspan="5" style="text-align: left;">Готова  продукцiя</th>
+
+    </tr>
+    <tr style="font-weight: bolder;">
+        <th width="20" style="border: 1px solid black;">№</th>
+        <th style="border: 1px solid black;">Найменування</th>
+        <th style="border: 1px solid black;" width="50" align="right">Кол.</th>
+        <th style="border: 1px solid black;" width="50" align="right"> </th>
+        <th style="border: 1px solid black;" width="50" align="right"> </th>
+        <th style="border: 1px solid black;"    > </th>
+
+
+    </tr>
+    {{#_detailprod}}
+    <tr>
+        <td>{{no}}</td>
+        <td>{{itemname}}</td>
+        <td align="right">{{quantity}}</td>
+        <td align="right"> </td>
+        <td align="right"> </td>
+        <td  >{{desc}}</td>
+
+
+    </tr>
+    {{/_detailprod}}
 
     <tr style="font-weight: bolder;">
 

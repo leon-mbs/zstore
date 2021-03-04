@@ -14,7 +14,7 @@ class Task extends Document
 {
     protected function init() {
         parent::init();
-        $this->tasktype = 0;//0 - услуги,1- производство
+       // $this->tasktype = 0;//0 - услуги,1- производство
 
     }
 
@@ -57,6 +57,19 @@ class Task extends Document
             );
         }
 
+        
+       $detailprod = array();
+
+        foreach ($this->unpackDetails('prodlist') as $item) {
+          
+            $detailprod[] = array("no"           => $i++,
+                              "itemname" => $item->itemname,
+                              "desc" => $item->desc,
+                              "quantity"     => H::fqty($item->quantity)  );
+                           
+        }
+        
+        
         $header = array('date'            => H::fd($this->document_date),
                         "pareaname"       => strlen($this->headerdata["pareaname"]) > 0 ? $this->headerdata["pareaname"] : false,
                         "document_date"   => H::fd($this->document_date),
@@ -65,6 +78,7 @@ class Task extends Document
                         "baseddoc"        => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
                         "cust"            => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "_detail"         => $detail,
+                        "_detailprod"         => $detailprod,
                         "_detail2"        => $detail2,
                         "iseq"            => count($detail2) > 0,
                         "_detail3"        => $detail3
