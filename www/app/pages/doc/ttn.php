@@ -220,9 +220,9 @@ class TTN extends \App\Pages\Base
                         }
 
                         $this->_itemlist = array();
-                        foreach ($itemlist as $it) {
+                        foreach ($itemlist as $i=>$it) {
                             $it->price = $it->price * $k;
-                            $this->_itemlist[$it->item_id] = $it;
+                            $this->_itemlist[$i] = $it;
                         }
                         $this->calcTotal();
 
@@ -636,7 +636,7 @@ class TTN extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
 
-                /*
+                
                 // проверка на минус  в  количестве
                 $allowminus = System::getOption("common", "allowminus");
                 if ($allowminus != 1) {
@@ -649,7 +649,7 @@ class TTN extends \App\Pages\Base
                         }
                     }
                 }
-                   */
+                  
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);

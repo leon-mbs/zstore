@@ -172,10 +172,17 @@ class Order extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $tovar = $sender->owner->getDataItem();
-     
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
-        $this->docform->detail->Reload();
+        $item = $sender->owner->getDataItem();
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
+
+        $this->_tovarlist = array_diff_key($this->_tovarlist, array($item->rowid => $this->_tovarlist[$item->rowid]));
+    
+         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
     }
@@ -202,7 +209,15 @@ class Order extends \App\Pages\Base
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
-        $this->_rowid = $item->item_id;
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
+
+        $this->_rowid = $item->rowid;
+
     }
 
     public function saverowOnClick($sender) {
@@ -223,8 +238,17 @@ class Order extends \App\Pages\Base
         $item->desc = $this->editdetail->editdesc->getText();
 
 
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$item->item_id] = $item;
+        if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_tovarlist) > 0 ? max(array_keys($this->_tovarlist)) : 0;
+            $item->rowid = $next + 1;
+        }
+        $this->_tovarlist[$item->rowid] = $item;
+
+        $this->_rowid = 0;
+        
+ 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

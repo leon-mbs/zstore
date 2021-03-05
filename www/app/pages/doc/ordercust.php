@@ -142,14 +142,21 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->editcustcode->setText($item->custcode);
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
-    $this->editdetail->editdesc->setText($item->desc);
+        $this->editdetail->editdesc->setText($item->desc);
 
 
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid = $item->rowid;
+
     }
 
     public function deleteOnClick($sender) {
@@ -157,10 +164,15 @@ class OrderCust extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$item->item_id]);
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
-        $this->docform->detail->Reload();
+        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+      $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {
@@ -194,24 +206,15 @@ class OrderCust extends \App\Pages\Base
         $item->desc = $this->editdetail->editdesc->getText();
 
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
-
+         if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
         }
+        $this->_itemlist[$item->rowid] = $item;
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
         $this->_rowid = 0;
-
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
