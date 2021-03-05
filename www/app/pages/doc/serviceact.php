@@ -174,7 +174,17 @@ class ServiceAct extends \App\Pages\Base
 
         $this->editdetail->editservice->setValue($service->service_id);
 
-        $this->_rowid = $service->service_id;
+        
+        if ($service->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+           $service->_rowid = $service->service_id;
+        }
+
+        $this->_rowid = $service->rowid;
+          
+        
     }
 
     public function deleteOnClick($sender) {
@@ -182,9 +192,19 @@ class ServiceAct extends \App\Pages\Base
             return;
         }
 
-        $service = $sender->owner->getDataItem();
+        $item = $sender->owner->getDataItem();
 
-        $this->_servicelist = array_diff_key($this->_servicelist, array($service->service_id => $this->_servicelist[$service->service_id]));
+   
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
+
+        $this->_servicelist = array_diff_key($this->_servicelist, array($item->rowid => $this->_servicelist[$item->rowid]));
+        
+        
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -213,7 +233,20 @@ class ServiceAct extends \App\Pages\Base
         $service->desc = $this->editdetail->editdesc->getText();
 
 
-        $this->_servicelist[$service->service_id] = $service;
+ 
+        
+       if ($this->_rowid > 0) {
+            $service->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_servicelist) > 0 ? max(array_keys($this->_servicelist)) : 0;
+            $service->rowid = $next + 1;
+        }
+        $this->_servicelist[$service->rowid] = $service;
+
+        $this->_rowid = 0;
+        
+        
+        
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

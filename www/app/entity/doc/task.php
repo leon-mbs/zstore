@@ -12,6 +12,7 @@ use App\Helper as H;
  */
 class Task extends Document
 {
+ 
     protected function init() {
         parent::init();
        // $this->tasktype = 0;//0 - услуги,1- производство

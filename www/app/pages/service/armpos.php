@@ -375,7 +375,7 @@ class ARMPos extends \App\Pages\Base
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = H::fa($this->editdetail->editprice->getText());
 
         if ($item->quantity > $qstock) {
             $this->setWarn('inserted_extra_count');
@@ -424,7 +424,7 @@ class ARMPos extends \App\Pages\Base
 
         $ser->quantity = $this->editserdetail->editserquantity->getText();
 
-        $ser->price = $this->editserdetail->editserprice->getText();
+        $ser->price =H::fa( $this->editserdetail->editserprice->getText());
 
         $this->_serlist[$ser->service_id] = $ser;
         $this->editserdetail->setVisible(false);

@@ -460,6 +460,7 @@ class Helper
         if (strlen($qty) == 0) {
             return '';
         }
+        $qty = str_replace(',','.',$qty) ;
 
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
@@ -479,7 +480,7 @@ class Helper
         if (strlen($am) == 0) {
             return '';
         }
-
+        $am = str_replace(',','.',$am) ;
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
             return number_format($am, 2, '.', '');

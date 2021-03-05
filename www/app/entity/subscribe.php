@@ -250,7 +250,11 @@ class Subscribe extends \ZCL\DB\Entity
                     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);     
                     $output = curl_exec($curl);
-                    curl_close($curl);
+                 if (curl_errno($curl) > 0) {
+
+                    return  'Curl error: ' . curl_error($curl);
+
+                    }                   curl_close($curl);
                     $output = json_decode($output,true) ;
                     if($output['code']<>0) {
                         \App\Helper::logerror($output['error']) ;
@@ -282,7 +286,11 @@ class Subscribe extends \ZCL\DB\Entity
                     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);     
                     curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json" ));
                     $output = curl_exec($curl);
-                    curl_close($curl);
+                  if (curl_errno($curl) > 0) {
+
+                    return  'Curl error: ' . curl_error($curl);
+
+                    }                  curl_close($curl);
                     $output = json_decode($output,true) ;
                     if($output['response_code']<>0) {
                         \App\Helper::logerror($output['response_status']) ;
@@ -295,15 +303,18 @@ class Subscribe extends \ZCL\DB\Entity
            if($sms['smstype']==3) {  //sms  fly
           
                // $text = iconv('windows-1251', 'utf-8', htmlspecialchars('Заметьте, что когда герой фильма подписывает договор с Сатаной, он не подписывает копию договора и не получает ее.'));
-    
+               $an ='';
+               if(strlen($sms['flysmsan'])>0) {
+                  $an = "source=\"{$sms['flysmsan']}\"";    
+               }
+               
+               
                $lifetime = 4; // срок жизни сообщения 4 часа
              
-                   
-          
                 $myXML      = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
                 $myXML     .= "<request>"."\n";
                 $myXML     .= "<operation>SENDSMS</operation>"."\n";
-                $myXML     .= '        <message   lifetime="'.$lifetime.'"  >'."\n";
+                $myXML     .= '        <message   lifetime="'.$lifetime.'" '.$an.' >'."\n";
                 $myXML     .= "        <body>".$text."</body>"."\n";
                 $myXML     .= "        <recipient>".$phone."</recipient>"."\n";
                 $myXML     .=  "</message>"."\n";
@@ -313,12 +324,18 @@ class Subscribe extends \ZCL\DB\Entity
                 curl_setopt($ch, CURLOPT_USERPWD , $sms['flysmslogin'].':'.$sms['flysmspass']);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
                 curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_URL, 'http://sms-fly.com/api/api.noai.php');
+                curl_setopt($ch, CURLOPT_URL, 'http://sms-fly.com/api/api.php');
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Accept: text/xml"));
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $myXML);
                 $response = curl_exec($ch);
-                curl_close($ch);         
+                
+                if (curl_errno($ch) > 0) {
+
+                    return  'Curl error: ' . curl_error($ch);
+
+                    }
+                    curl_close($ch); 
                 if(strpos($response,'ACCEPT') >0) return '';
                 \App\Helper::logerror($response) ;
                 return  $response;

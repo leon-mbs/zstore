@@ -34,6 +34,8 @@ class Task extends \App\Pages\Base
     public  $_eqlist      = array();
     public  $_emplist     = array();
     private $_basedocid   = 0;
+       private $_rowidser     = 0;
+       private $_rowidprod     = 0;
 
     public function __construct($docid = 0, $basedocid = 0, $date = null) {
         parent::__construct();
@@ -127,7 +129,7 @@ class Task extends \App\Pages\Base
                     }
                     if ($basedoc->meta_name == 'Order') {
                         $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
-                        //$this->_prodlist = $basedoc->unpackDetails('detaildata');
+                        $this->_prodlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
             }
@@ -174,7 +176,7 @@ class Task extends \App\Pages\Base
 
 
         $this->editdetail->editservice->setValue(0);
-
+        $this->_rowidser  =0;
 
         $this->editdetail->editqty->setText('1');
         $this->editdetail->editdesc->setText('');
@@ -184,7 +186,15 @@ class Task extends \App\Pages\Base
         $service = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
+         if ($service->_rowidser > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $service->_rowidser = $service->service_id;
+        }
 
+        $this->_rowidser = $service->_rowidser;
+  
 
         $this->editdetail->editqty->setText($service->quantity);
         $this->editdetail->editdesc->setText($service->desc);
@@ -197,10 +207,16 @@ class Task extends \App\Pages\Base
             return;
         }
         $service = $sender->owner->getDataItem();
+         if ($service->_rowidser > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $service->_rowidser = $service->service_id;
+        }
 
-        $this->_servicelist = array_diff_key($this->_servicelist, array($service->service_id => $this->_servicelist[$service->service_id]));
-        $this->docform->detail->Reload();
-    }
+        $this->_servicelist = array_diff_key($this->_servicelist, array($service->_rowidser => $this->_servicelist[$service->_rowidser]));
+
+      }
 
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
@@ -217,7 +233,20 @@ class Task extends \App\Pages\Base
         if (strlen($service->price) == 0) {
             $service->price = 0;
         }
-        $this->_servicelist[$service->service_id] = $service;
+        
+        
+        if ($this->_rowidser > 0) {
+            $service->_rowidser = $this->_rowidser;
+        } else {
+            $next = count($this->_servicelist) > 0 ? max(array_keys($this->_servicelist)) : 0;
+            $service->_rowidser = $next + 1;
+        }
+        $this->_servicelist[$service->_rowidser] = $service;
+
+        $this->_rowidser = 0;
+        
+        
+  
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
 
@@ -237,6 +266,7 @@ class Task extends \App\Pages\Base
 
 
         $this->editdetailprod->editprod->setValue(0);
+        $this->_rowidprod  =0;
 
 
         $this->editdetailprod->editqtyprod->setText('1');
@@ -270,11 +300,19 @@ class Task extends \App\Pages\Base
         $this->editdetailprod->setVisible(true);
         $this->docform->setVisible(false);
 
+         if ($item->_rowidprod > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->_rowidprod = $item->item_id;
+        }
 
-        $this->editdetail->editqtyprod->setText($item->quantity);
-        $this->editdetail->editdescprod->setText($item->desc);
+        $this->_rowidprod = $item->_rowidprod;
 
-        $this->editdetail->editprod->setValue($item->item_id);
+        $this->editdetailprod->editqtyprod->setText($item->quantity);
+        $this->editdetailprod->editdescprod->setText($item->desc);
+
+        $this->editdetailprod->editprod->setValue($item->item_id);
     }
 
     public function deleteprodOnClick($sender) {
@@ -282,9 +320,16 @@ class Task extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
+         if ($item->_rowidprod > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->_rowidprod = $item->item_id;
+        }
 
-        $this->_prodlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
-        $this->docform->detailprod->Reload();
+        $this->_prodlist = array_diff_key($this->_prodlist, array($item->_rowidprod => $this->_prodlist[$item->_rowidprod]));
+
+         $this->docform->detailprod->Reload();
     }
 
     public function saverowprodOnClick($sender) {
@@ -298,9 +343,18 @@ class Task extends \App\Pages\Base
 
         $item->quantity = $this->editdetailprod->editqtyprod->getText();
         $item->desc = $this->editdetailprod->editdescprod->getText();
-         
-     
-        $this->_prodlist[$item->item_id] = $item;
+        
+           
+        if ($this->_rowidprod > 0) {
+            $item->_rowidprod = $this->_rowidprod;
+        } else {
+            $next = count($this->_prodlist) > 0 ? max(array_keys($this->_prodlist)) : 0;
+            $item->_rowidprod = $next + 1;
+        }
+        $this->_prodlist[$item->_rowidprod] = $item;
+
+        $this->_rowidprod = 0;
+      
         $this->editdetailprod->setVisible(false);
         $this->docform->setVisible(true);
 
