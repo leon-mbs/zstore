@@ -41,6 +41,7 @@ class CustomerList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
+        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL =>Helper::l("isactual")  , Customer::STATUS_DISABLED => Helper::l("notused"), Customer::STATUS_WAIT => Helper::l("islead")), Customer::STATUS_ACTUAL));
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
@@ -62,7 +63,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
-        $this->customerdetail->add(new DropDownChoice('editstatus', array(0 => Helper::l("isactual"), 1 => Helper::l("notused")), 0));
+        $this->customerdetail->add(new DropDownChoice('editstatus', array(0 => Helper::l("isactual"), 1 => Helper::l("notused"), Customer::STATUS_WAIT => Helper::l("islead")), 0));
         $this->customerdetail->add(new TextInput('discount'));
         $this->customerdetail->add(new TextInput('bonus'));
         $this->customerdetail->add(new TextArea('editcomment'));
@@ -103,11 +104,12 @@ class CustomerList extends \App\Pages\Base
     }
 
     public function OnSearch($sender) {
-         
+          $status = $this->filter->searchstatus->getValue();
+       
         $type = $this->filter->searchtype->getValue();
         $holding = $this->filter->searchholding->getValue();
         $search = trim($this->filter->searchkey->getText());
-        $where = "1=1" ;
+        $where = "status=" . $status;
 
         if (strlen($search) > 0) {
             $search = Customer::qstr('%' . $search . '%');
