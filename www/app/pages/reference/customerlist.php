@@ -18,6 +18,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Link\SortLink;
 
 /**
  * Страница контрагентов
@@ -41,15 +42,17 @@ class CustomerList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
-        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL =>Helper::l("isactual")  , Customer::STATUS_DISABLED => Helper::l("notused"), Customer::STATUS_WAIT => Helper::l("islead")), Customer::STATUS_ACTUAL));
+        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL =>Helper::l("isactual")  , Customer::STATUS_DISABLED => Helper::l("notused"), Customer::STATUS_LEAD => Helper::l("islead")), Customer::STATUS_ACTUAL));
 
 
         $this->add(new Panel('customertable'))->setVisible(true);
-        $this->customertable->add(new DataView('customerlist', new \ZCL\DB\EntityDataSource('\App\Entity\Customer', '', 'customer_name'), $this, 'customerlistOnRow'));
+        $this->customertable->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
         $this->customertable->customerlist->setPageSize(Helper::getPG());
         $this->customertable->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->customerlist));
         $this->customertable->customerlist->setSelectedClass('table-success');
         $this->customertable->customerlist->Reload();
+        $this->customertable->add(new SortLink("sortdoc", "docs", $this, "onSort"));
+        $this->customertable->add(new SortLink("sortname", "customer_name", $this, "onSort"));
 
         $this->customertable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('customerdetail'))->setVisible(false);
@@ -63,7 +66,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
-        $this->customerdetail->add(new DropDownChoice('editstatus', array(0 => Helper::l("isactual"), 1 => Helper::l("notused"), Customer::STATUS_WAIT => Helper::l("islead")), 0));
+        $this->customerdetail->add(new DropDownChoice('editstatus', array(0 => Helper::l("isactual"), 1 => Helper::l("notused"), Customer::STATUS_LEAD => Helper::l("islead")), 0));
         $this->customerdetail->add(new TextInput('discount'));
         $this->customerdetail->add(new TextInput('bonus'));
         $this->customerdetail->add(new TextArea('editcomment'));
@@ -104,33 +107,7 @@ class CustomerList extends \App\Pages\Base
     }
 
     public function OnSearch($sender) {
-          $status = $this->filter->searchstatus->getValue();
-       
-        $type = $this->filter->searchtype->getValue();
-        $holding = $this->filter->searchholding->getValue();
-        $search = trim($this->filter->searchkey->getText());
-        $where = "status=" . $status;
-
-        if (strlen($search) > 0) {
-            $search = Customer::qstr('%' . $search . '%');
-            $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
-        }
-        if ($type == 1) {
-            $where .= " and detail like '%<type>1</type>%'    ";
-        }
-        if ($type == 2) {
-            $where .= " and detail like '%<type>2</type>%'    ";
-        }
-        if ($type == 5) {
-            $where .= " and detail like '%<isholding>1</isholding>%'    ";
-        }
-        if ($holding > 0) {
-            $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
-        }
-
-
-        $this->customertable->customerlist->getDataSource()->setWhere($where);
-
+        
         $this->customertable->customerlist->Reload();
         $this->contentview->setVisible(false);
     }
@@ -141,21 +118,37 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('customername', $item->customer_name));
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
- 
- 
+        $row->add(new Label('docs', $item->docs))->setVisible($item->docs>0);
+   
         $row->add(new Label('customercomment'))->setVisible(strlen($item->comment) > 0 && $item->comment == strip_tags($item->comment));
         $row->customercomment->setAttribute('title', $item->comment);
         
         $row->add(new Label('hasmsg'))->setVisible($item->mcnt > 0);
         $row->add(new Label('hasfiles'))->setVisible($item->fcnt > 0);
         $row->add(new Label('isplanned'))->setVisible($item->ecnt > 0);
-
+       
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         
         $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
         
+    }
+ 
+   public function onSort($sender) {
+        $sortfield = $sender->fileld;
+        $sortdir = $sender->dir;
+
+        $this->customertable->sortdoc->Reset();
+ 
+
+
+        $this->customertable->customerlist->setSorting($sortfield, $sortdir);
+
+
+        $sender->fileld = $sortfield;
+        $sender->dir = $sortdir;
+        $this->customertable->customerlist->Reload();
     }
 
     public function editOnClick($sender) {
@@ -461,6 +454,63 @@ class CustomerList extends \App\Pages\Base
         $contr = $sender->owner->getDataItem();
 
         \App\Application::Redirect("\\App\\Pages\\Reference\\ContractList", $contr->contract_id);
+    }
+
+}
+
+class CustomerDataSource implements \Zippy\Interfaces\DataSource
+{
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere() {
+      
+
+         $conn = \ZDB\DB::getConnect();
+     
+         $status =$this->page->filter->searchstatus->getValue();
+       
+        $type = $this->page->filter->searchtype->getValue();
+        $holding = $this->page->filter->searchholding->getValue();
+        $search = trim($this->page->filter->searchkey->getText());
+        $where = "status=" . $status;
+
+        if (strlen($search) > 0) {
+            $search = Customer::qstr('%' . $search . '%');
+            $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
+        }
+        if ($type == 1) {
+            $where .= " and detail like '%<type>1</type>%'    ";
+        }
+        if ($type == 2) {
+            $where .= " and detail like '%<type>2</type>%'    ";
+        }
+        if ($type == 5) {
+            $where .= " and detail like '%<isholding>1</isholding>%'    ";
+        }
+        if ($holding > 0) {
+            $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
+        }
+
+      
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Customer::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+        $docs = Customer::find($this->getWhere(), $sortfield . " " . $asc, $count, $start,"*, coalesce(  (select  count(*) from  documents where  documents.customer_id= customers_view.customer_id and documents.state>3 ),0)  as docs");
+
+        return $docs;
+    }
+
+    public function getItem($id) {
+
     }
 
 }

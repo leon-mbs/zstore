@@ -14,7 +14,7 @@ class Customer extends \ZCL\DB\Entity
 
     const STATUS_ACTUAL   = 0;  //актуальный
     const STATUS_DISABLED = 1; //не используется
-    const STATUS_WAIT     = 2; //потенциальный
+    const STATUS_LEAD     = 2; //лид
 
 
     const TYPE_BAYER  = 1; //покупатель

@@ -29,18 +29,30 @@
                 </form>
             </div>
             <a zippy="addnew" class="btn btn-primary">Додати контрагента</a>
-            <br>
-            <table class="table table-hover   table-sm">
-
+           
+            <table class="table table-hover   table-sm mt-2">
+                     <tr>
+                    <th ><a zippy="sortname">Им'я</a> </th>
+                    <th >Тел.</th>
+                    <th >E-Mail</th>
+                    <th  ><a zippy="sortdoc">Док.</a> </th>
+                    <th> </th>
+                    <th> </th>
+                
+                    <th> </th>
+                    <th> </th>
+                    <th> </th>
+                </tr>
                 <tr zippy="customerlist">
                     <td zippy="customername" class="text-nowrap"></td>
                     <td zippy="customerphone" class="text-nowrap"></td>
                     <td zippy="customeremail" class="text-nowrap"></td>
+                    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>
                     <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
                     <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Заплановані події"></i></td>
                     <td><i zippy="hasmsg" class="fa fa-comments" title="Коментарі"></i></td>
                     <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикріплені файли  "></i></td>
-
+                      
                     <td style="white-space:  nowrap"> &nbsp;&nbsp;
                         <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
                         &nbsp;<a zippy="contentlist" title="Редагувати додаткові дані"><i class="fa fa-eye"></i></a>
