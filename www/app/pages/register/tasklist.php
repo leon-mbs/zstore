@@ -74,7 +74,7 @@ class TaskList extends \App\Pages\Base
 
         $this->tasktab->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->caltab->add(new \App\Calendar('calendar','agendaWeek'))->setEvent($this, 'OnCal');
+        $this->caltab->add(new \App\Calendar('calendar' ))->setEvent($this, 'OnCal');
 
         $this->updateTasks();
         $this->updateCal();
@@ -90,7 +90,9 @@ class TaskList extends \App\Pages\Base
 
         $this->caltab->setVisible($sender->id == 'tabc');
         $this->tasktab->setVisible($sender->id == 'tabs');
-
+        $this->updateTasks();
+        $this->updateCal();
+   
     }
 
 
@@ -286,11 +288,11 @@ class TaskList extends \App\Pages\Base
             }
             if (strlen($item->headerdata['taskhours']) == 0) {
                 $item->headerdata['taskhours'] = 0;
-            }
-            $d = floor($item->headerdata['taskhours'] / 8);
-            $end_date = $item->document_date + (3600 * 24 * $d);
-
-            $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->document_date, $end_date, $col);
+            }                                           
+            $d =  ($item->headerdata['taskhours']  );
+            $end_date =  $item->headerdata['start'] + round(3600   * $d) ;
+        
+            $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->headerdata['start'], $end_date, $col);
         }
 
 
@@ -309,8 +311,7 @@ class TaskList extends \App\Pages\Base
         if ($action['action'] == 'click') {
 
             $task = Document::load($action['id']);
-            //  $type = H::getMetaType($task->meta_id);
-            // $class = "\\App\\Pages\\Doc\\" . $type['meta_name'];
+    
             $class = "\\App\\Pages\\Doc\\Task";
 
 
@@ -322,30 +323,53 @@ class TaskList extends \App\Pages\Base
             $start = strtotime($action['id'] . ' 9:00');
 
             Application::Redirect("\\App\\Pages\\Doc\\Task", 0, 0, $start);
+            return;
         }
+        if ($task->state == Document::STATE_CLOSED) {
+           return;
+        }        
         if ($action['action'] == 'move') {
             $task = Task::load($action['id']);
-            $task->document_date = $task->document_date + $action['delta'];
-            if ($task->state == Document::STATE_CLOSED) {
-                return;
+           
+            if($action['years'] <> 0) {
+                   $task->headerdata['start']  = strtotime($action['years'] .' years',$task->headerdata['start'])  ;
+            
             }
-            $task->save();
-            $this->updateCal();
-            $this->updateTasks();
+            if($action['months'] <> 0) {
+                 $task->headerdata['start']  = strtotime($action['months'] .' months',$task->headerdata['start'])  ;
+              
+            }
+            if($action['days'] <> 0) {
+                $task->headerdata['start']  = strtotime($action['days'] .' days',$task->headerdata['start'])  ;
+            }
+            if($action['ms'] <> 0) {
+               $task->headerdata['start'] = $task->headerdata['start'] + $action['ms'];
+            }
+            
+            $task->document_date = $task->headerdata['start'];
+           
+      
+          
         }
         if ($action['action'] == 'resize') {
             $task = Document::load($action['id']);
-            $task->hours = $task->hours + ($action['delta'] / 3600);
-            $task->end_date = $task->end_date + ($action['delta'] / 3600);
-
-
-            if ($task->state == Document::STATE_CLOSED) {
-                return;
+            if($action['startdelta'] !=0) {
+              $task->document_date = $task->document_date + ($action['startdelta']  );    
+              $task->headerdata['start']  =  $task->headerdata['start']   +  ($action['enddelta']/3600  ) ;
+              $task->headerdata['taskhours']  = $task->headerdata['taskhours'] +  (0-$action['enddelta']/3600  );    
+        
             }
-            $task->save();
-            $this->updateCal();
-            $this->updateTasks();
+            if($action['enddelta'] != 0) {
+              $task->headerdata['taskhours']  = $task->headerdata['taskhours'] +  $action['enddelta']/3600   ;    
+             
+            }
+           
+           
         }
+             $task->save();
+            
+          //  $this->updateCal();
+          //  $this->updateTasks();
     }
 
     public function OnFilter($sender) {
@@ -379,3 +403,6 @@ class TaskList extends \App\Pages\Base
     }
 
 }
+
+ 
+  

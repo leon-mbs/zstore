@@ -379,5 +379,7 @@
   "sb_subject": "Повiдомлення з  %s",
 
   "noselpayment": "Не вибрано рахунок",
-  "paymentseq": "Рахунки  однаковi" 
-}
+  "paymentseq": "Рахунки  однаковi" ,
+  "custcreated": "Доданий  %s користувачем %s",   
+  "custlastdoc": "Останнiй документ %s вiд %s. Всього %s"  
+  }

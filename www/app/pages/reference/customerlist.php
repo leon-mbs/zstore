@@ -75,6 +75,12 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('contentview'))->setVisible(false);
+        $this->contentview->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
+        $this->contentview->add(new Label('concname')) ;
+        $this->contentview->add(new Label('concreated')) ;
+        $this->contentview->add(new Label('conlastdoc')) ;
+    
+    
         $this->contentview->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $this->contentview->addfileform->add(new \Zippy\Html\Form\File('addfile'));
         $this->contentview->addfileform->add(new TextInput('adddescfile'));
@@ -270,6 +276,7 @@ class CustomerList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->customertable->setVisible(true);
         $this->customerdetail->setVisible(false);
+        $this->contentview->setVisible(false);
     }
 
     //просмотр контента
@@ -277,13 +284,31 @@ class CustomerList extends \App\Pages\Base
         $this->_customer = $sender->owner->getDataItem();
         $this->customerdetail->setVisible(false);
         $this->contentview->setVisible(true);
+        $this->customertable->setVisible(false);
+        $this->contentview->concname->setText($this->_customer->customer_name);
+        $created ='';
+        $lastdoc ='';
+        if($this->_customer->created >0) {
+            $user = \App\Entity\User::load($this->_customer->user_id);
+            $created = Helper::l('custcreated',Helper::fd($this->_customer->created),$user->username) ;
+        }
+        $doc = \App\Entity\Doc\Document::getFirst("customer_id=".$this->_customer->customer_id, 'document_id desc');
+        if($doc  instanceof \App\Entity\Doc\Document) {
+              $lastdoc = Helper::l('custlastdoc',$doc->document_number,Helper::fd($doc->document_date),$this->_customer->docs) ;
+         
+        }
+                
+        $this->contentview->concreated->setText($created);
+        $this->contentview->conlastdoc->setText($lastdoc);
+
+    
         $this->updateFiles();
         $this->updateMessages();
         $this->updateEvents();
         $this->updateContrs();
         $this->customertable->customerlist->setSelectedRow($sender->getOwner());
         $this->customertable->customerlist->Reload();
-        $this->goAnkor('contentviewlink');
+       // $this->goAnkor('contentviewlink');
     }
 
     //контент

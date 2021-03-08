@@ -421,7 +421,7 @@ class GIList extends \App\Pages\Base
         $p = 0;
         foreach ($list as $it) {
             if ($it->weight > 0) {
-                $w += $it->weight;
+                $w += ($it->weight*$it->quantity);
             }
             $p = $p + ($it->quantity * $it->price);
         }

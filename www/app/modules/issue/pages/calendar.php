@@ -171,6 +171,7 @@ class Calendar extends \App\Pages\Base
             $this->_tl = TimeLine::load($action['id']);
 
             $this->Open();
+            return;
         }
         if ($action['action'] == 'add') {
             $this->_tl = new TimeLine();
@@ -178,25 +179,48 @@ class Calendar extends \App\Pages\Base
 
             $this->OnAdd(null);
             $this->_tl->createdOn = $start;
+            return;
         }
         if ($action['action'] == 'move') {
             $tl = TimeLine::load($action['id']);
             $tl->createdon = $tl->createdon + $action['delta'];
-
+            if($action['years'] <> 0) {
+                   $tl->createdon  = strtotime($action['years'] .' years',$tl->createdon)  ;
+            
+            }
+            if($action['months'] <> 0) {
+                 $tl->createdon  = strtotime($action['months'] .' months',$tl->createdon)  ;
+              
+            }
+            if($action['days'] <> 0) {
+                $tl->createdon = strtotime($action['days'] .' days',$tl->createdon)  ;
+            }
+            if($action['ms'] <> 0) {
+               $tl->createdon = $tl->createdon + $action['ms'];
+            }
             $tl->save();
-            $this->updateCal();
-            $this->listpan->timelist->Reload();
+          
         }
         if ($action['action'] == 'resize') {
             $tl = TimeLine::load($action['id']);
-
-            $tl->duration = $tl->duration + ($action['delta'] / 3600);
-
+           
+            if($action['startdelta'] !=0) {
+                
+              $tl->createdon = $tl->createdon + ($action['startdelta'] / 3600);
+              $tl->duration = $tl->duration - ($action['startdelta'] / 3600);
+             
+            } 
+           
+            if($action['enddelta'] != 0) {
+   
+            $tl->duration = $tl->duration + ($action['enddelta'] / 3600);
+            }
             $tl->save();
 
-            $this->updateCal();
-            $this->listpan->timelist->Reload();
+            
         }
+    //        $this->updateCal();
+    //        $this->listpan->timelist->Reload();
     }
 
 }

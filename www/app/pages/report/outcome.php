@@ -137,7 +137,7 @@ class Outcome extends \App\Pages\Base
 
         // скидка
 
-
+        /*
         $sql = "document_id in( select  d.document_id  from  
                `documents_view` d  
                where    d.state >3 and 
@@ -154,7 +154,7 @@ class Outcome extends \App\Pages\Base
                 $disc += $d->headerdata['paydisc'];
             }
         }
-
+        */
 
         $detail = array();
 

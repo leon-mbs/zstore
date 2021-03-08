@@ -435,5 +435,26 @@ class Item extends \ZCL\DB\Entity
         return $list;
     }
 
+    /**
+    * себестоимость  для  готовой продукции
+    * 
+    */
+    public function  getProdprice(){
+        $price = 0;
+        if ($this->zarp > 0) {
+            $price += $this->zarp;
+        }
+        $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
 
+        if (count($ilist) > 0) {
+            foreach ($ilist as $iset) {
+                $it = \App\Entity\Item::load($iset->item_id);
+                $pr = $it->getLastPartion(0);
+                $price += ($iset->qty * $pr);
+            }
+        } 
+        
+        
+        return  $price;     
+    }
 }
