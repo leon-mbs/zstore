@@ -19,7 +19,9 @@ class Customer extends \ZCL\DB\Entity
 
     const TYPE_BAYER  = 1; //покупатель
     const TYPE_SELLER = 2; //поставщик
-
+ 
+    
+    
     protected function init() {
         $this->customer_id = 0;
         $this->customer_name = '';
@@ -40,7 +42,9 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<viber>{$this->viber}</viber>";
         $this->detail .= "<created>{$this->created}</created>";
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
-
+        
+        $this->detail .= "<leadstatus><![CDATA[{$this->leadstatus}]]></leadstatus>";
+        $this->detail .= "<leadsource><![CDATA[{$this->leadsource}]]></leadsource>";
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
@@ -66,6 +70,8 @@ class Customer extends \ZCL\DB\Entity
         $this->address = (string)($xml->address[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
+        $this->leadsource = (string)($xml->leadsource[0]);
+        $this->leadstatus = (string)($xml->leadstatus[0]);
 
         parent::afterLoad();
     }
@@ -142,5 +148,15 @@ class Customer extends \ZCL\DB\Entity
         return Customer::findArray("customer_name", $where, "customer_name");
     }
 
-
+    public  static  function getLeadSources(){
+        $list = array();
+        return  $list;
+    }
+    public  static  function getLeadStatuses(){
+        $list = array();
+        return  $list;
+        
+    }
+    
+    
 }

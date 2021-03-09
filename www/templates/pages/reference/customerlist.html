@@ -8,37 +8,51 @@
         <div zippy="customertable">
             <h2>Справочник контрагентов </h2>
             <div class="navbar nav  ">
+                <form zippy="leadf" class="form-inline ">
+                    <input   zippy="chleads" type="checkbox"> Режим  работы с  лидами
+                </form>
+            </div>
+             <div class="navbar nav  ">
                 <form zippy="filter" class="form-inline ">
 
                     <label for="searchkey">Поиск</label>
                     <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                      {{^leadmode}}
                     <label for="searchtype">Тип</label>
                     <select zippy="searchtype" class="form-control mr-sm-2">
                         <option value="0">Все</option>
                     </select>
-                        <label for="searchstatus">статус</label>
-                    <select zippy="searchstatus" class="form-control mr-sm-2">
-                           </select>
-                    <label for="searchholding">дочерняя для</label>
+                 
+                    <label for="searchholding">дочерний для</label>
                     <select zippy="searchholding" class="form-control mr-sm-2">
                         <option value="0">Не указан</option>
                     </select>
-
+                       {{/leadmode}}
+                       {{#leadmode}} 
+                       <label for="searchleadstate">состояние</label>
+                        <select zippy="searchleadstate" class="form-control mr-sm-2">
+                            <option value="0">Не указано</option>
+                        </select>    
+                       {{/leadmode}} 
                     <input class="btn btn-outline-success   " type="submit" value="ОК">
 
                 </form>
             </div>
-            <a zippy="addnew" class="btn btn-primary">Добавить контрагента</a>
-             
+         
+            <a zippy="addnew" class="btn btn-primary">Добавить нового</a>
+         
+     
             <table class="table table-hover   table-sm mt-2">
                 <tr>
                     <th ><a zippy="sortname">Имя</a> </th>
                     <th >Тел.</th>
                     <th >E-Mail</th>
-                    <th  ><a zippy="sortdoc">Док.</a> </th>
+              {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
+                 {{#leadmode}}     <th>Статус лида</th>     {{/leadmode}} 
                     <th> </th>
                     <th> </th>
                 
+                  
                     <th> </th>
                     <th> </th>
                     <th> </th>
@@ -47,14 +61,14 @@
                     <td zippy="customername" class="text-nowrap"></td>
                     <td zippy="customerphone" class="text-nowrap"></td>
                     <td zippy="customeremail" class="text-nowrap"></td>
-                    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>
-                  
+                  {{/leadmode}}    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
+                  {{#leadmode}}     <td zippy="leadstatus">  </td>     {{/leadmode}}    
                     <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
                     
-                    <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланированные события"></i></td>
-                    <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарии"></i></td>
+                     <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарии"></i></td>
                     <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикрепленные  файлы  "></i></td>
-                
+                           <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Заплановані події"></i></td>
+          
                     <td style="white-space:  nowrap"> &nbsp;&nbsp;
                         <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
                         &nbsp;<a zippy="contentlist" title="Редактировать дополнительные данные"><i
@@ -72,12 +86,12 @@
 
 
 <form class="row" zippy="customerdetail" method="post">
-    <h4>&nbsp; Редактировать контрагента</h4>
+    <h4>&nbsp; Редактировать  </h4>
     <div class="w-100"></div>
     <div class="col-12 col-md-4 ">
 
         <div class="form-group">
-            <label for="editcustomername">Контрагент</label>
+            <label for="editcustomername">Наименование</label>
             <input required="required" class="form-control" zippy="editcustomername"/>
         </div>
 
@@ -101,6 +115,16 @@
 
             </select>
         </div>
+        {{#leadmode}} 
+        <div class="form-group">
+            <label for="editleadsource">Источник лида</label>
+            <select class="form-control" zippy="editleadsource">
+
+            </select>
+        </div>
+         {{/leadmode}} 
+        
+        {{^leadmode}} 
         <div class="form-group">
             <label for="edittype">Тип</label>
             <select zippy="edittype" class="form-control">
@@ -118,7 +142,7 @@
                 <option value="0">Не выбрано</option>
             </select>
         </div>
-
+        {{/leadmode}} 
 
     </div>
     <div class="col-12 col-md-4 ">

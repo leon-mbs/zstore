@@ -38,12 +38,17 @@ class CustomerList extends \App\Pages\Base
             return;
         }
 
+        $this->add(new Form('leadf'));
+        $this->leadf->add(new CheckBox('chleads'))->onChange($this, 'OnLeadMode');
+       
+        
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
-        $this->filter->add(new DropDownChoice('searchstatus', array(Customer::STATUS_ACTUAL =>Helper::l("isactual")  , Customer::STATUS_DISABLED => Helper::l("notused"), Customer::STATUS_LEAD => Helper::l("islead")), Customer::STATUS_ACTUAL));
-
+     
+        $this->filter->add(new DropDownChoice('searchleadstate', Customer::getHoldList(), 0));
+    
 
         $this->add(new Panel('customertable'))->setVisible(true);
         $this->customertable->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
@@ -55,6 +60,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->add(new SortLink("sortname", "customer_name", $this, "onSort"));
 
         $this->customertable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+         
         $this->add(new Form('customerdetail'))->setVisible(false);
         $this->customerdetail->add(new TextInput('editaddress'));
         $this->customerdetail->add(new TextInput('editcity'));
@@ -70,6 +76,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('discount'));
         $this->customerdetail->add(new TextInput('bonus'));
         $this->customerdetail->add(new TextArea('editcomment'));
+        $this->customerdetail->add(new DropDownChoice('editleadsource',Customer::getLeadStatuses(),0));
 
         $this->customerdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->customerdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -110,9 +117,18 @@ class CustomerList extends \App\Pages\Base
                 $this->show();
             }
         }
+        
+        $this->_tvars['leadmode']= false;
     }
 
-    public function OnSearch($sender) {
+    public function OnLeadMode($sender) {
+        
+        $this->_tvars['leadmode'] = $sender->isChecked();
+        $this->filter->clean();
+        $this->customertable->customerlist->Reload();
+        
+    }
+   public function OnSearch($sender) {
         
         $this->customertable->customerlist->Reload();
         $this->contentview->setVisible(false);
@@ -124,6 +140,7 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('customername', $item->customer_name));
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
+        $row->add(new Label('leadstatus', $item->leadstatusname));
         $row->add(new Label('docs', $item->docs))->setVisible($item->docs>0);
    
         $row->add(new Label('customercomment'))->setVisible(strlen($item->comment) > 0 && $item->comment == strip_tags($item->comment));
@@ -495,31 +512,36 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
       
 
          $conn = \ZDB\DB::getConnect();
-     
-         $status =$this->page->filter->searchstatus->getValue();
-       
+        
+         
         $type = $this->page->filter->searchtype->getValue();
         $holding = $this->page->filter->searchholding->getValue();
         $search = trim($this->page->filter->searchkey->getText());
-        $where = "status=" . $status;
+        
+        $isleads = $this->page->leadf->chleads->isChecked() ;
+        if($isleads==false)  {
+            $where = "status < 2 " ;
 
-        if (strlen($search) > 0) {
-            $search = Customer::qstr('%' . $search . '%');
-            $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
+            if (strlen($search) > 0) {
+                $search = Customer::qstr('%' . $search . '%');
+                $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
+            }
+            if ($type == 1) {
+                $where .= " and detail like '%<type>1</type>%'    ";
+            }
+            if ($type == 2) {
+                $where .= " and detail like '%<type>2</type>%'    ";
+            }
+            if ($type == 5) {
+                $where .= " and detail like '%<isholding>1</isholding>%'    ";
+            }
+            if ($holding > 0) {
+                $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
+            }
+        } else {
+             $where = "status = 3 " ;
+ 
         }
-        if ($type == 1) {
-            $where .= " and detail like '%<type>1</type>%'    ";
-        }
-        if ($type == 2) {
-            $where .= " and detail like '%<type>2</type>%'    ";
-        }
-        if ($type == 5) {
-            $where .= " and detail like '%<isholding>1</isholding>%'    ";
-        }
-        if ($holding > 0) {
-            $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
-        }
-
       
         return $where;
     }

@@ -23,21 +23,21 @@
         <h3>Календар робочого часу</h3>
         <a zippy="addtime" class="btn btn-info mt-2 mb-3">Додати</a>
 
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link  active" href="#caltab" data-toggle="tab">Календар</li>
-            <li class="nav-item"><a class="nav-link " href="#tasktab" data-toggle="tab">Перелік</li>
+       <div class="mt-1" style="font-size: 1.5rem">
+           
+            <a zippy="tabc"><span class="{{{tabcbadge}}}">  Календар    </span> </a>    &nbsp;&nbsp;
+            <a zippy="tabs"><span class="{{{tabsbadge}}}">  Список</span> </a>
 
-
-        </ul>
-        <div class="tab-content">
-            <div id="caltab" class="tab-pane active  ">
+        </div>
+  
+       
+            <div zippy="caltab"   >
 
                 <div zippy='calendar'></div>
-
-
+ 
             </div>
 
-            <div id="tasktab" class="tab-pane  ">
+            <div zippy="tasktab" >
 
                 <div class="row">
                     <div class="col-12  col-md-10  col-xl-8  ">
@@ -81,10 +81,10 @@
                 </div>
 
 
-            </div> <!-- tasktab -->
+            </div>  
 
 
-        </div>
+        
 
 
     </div>
