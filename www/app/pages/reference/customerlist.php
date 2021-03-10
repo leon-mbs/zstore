@@ -47,7 +47,8 @@ class CustomerList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
         $this->filter->add(new DropDownChoice('searchholding', Customer::getHoldList(), 0));
      
-        $this->filter->add(new DropDownChoice('searchleadstate', Customer::getHoldList(), 0));
+        $this->filter->add(new DropDownChoice('searchleadsource', Customer::getLeadSources(), "0"));
+        $this->filter->add(new DropDownChoice('searchleadstatus', Customer::getLeadStatuses(), "0"));
     
 
         $this->add(new Panel('customertable'))->setVisible(true);
@@ -58,6 +59,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->customerlist->Reload();
         $this->customertable->add(new SortLink("sortdoc", "docs", $this, "onSort"));
         $this->customertable->add(new SortLink("sortname", "customer_name", $this, "onSort"));
+        $this->customertable->add(new SortLink("sortleadstatus", "leadstatus", $this, "onSort"));
 
         $this->customertable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
          
@@ -72,11 +74,14 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
-        $this->customerdetail->add(new DropDownChoice('editstatus', array(0 => Helper::l("isactual"), 1 => Helper::l("notused"), Customer::STATUS_LEAD => Helper::l("islead")), 0));
+        
+        $this->customerdetail->add(new CheckBox('editdisabled'  ));
+        
         $this->customerdetail->add(new TextInput('discount'));
         $this->customerdetail->add(new TextInput('bonus'));
         $this->customerdetail->add(new TextArea('editcomment'));
-        $this->customerdetail->add(new DropDownChoice('editleadsource',Customer::getLeadStatuses(),0));
+        $this->customerdetail->add(new DropDownChoice('editleadsource',Customer::getLeadSources(),"0"));
+        $this->customerdetail->add(new DropDownChoice('editleadstatus',Customer::getLeadStatuses(),"0"));
 
         $this->customerdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->customerdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -86,7 +91,12 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->add(new Label('concname')) ;
         $this->contentview->add(new Label('concreated')) ;
         $this->contentview->add(new Label('conlastdoc')) ;
-    
+        $this->contentview->add(new Label('conphone')) ;
+        $this->contentview->add(new Label('conemail')) ;
+        $this->contentview->add(new ClickLink('convert',$this,'onConvert')) ;
+        $this->contentview->add(new Form('conlstform' )) ;
+        $this->contentview->conlstform->add(new DropDownChoice('conleadstatus',Customer::getLeadStatuses()  ))->onChange($this,'OnSelStatus') ;
+        
     
         $this->contentview->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $this->contentview->addfileform->add(new \Zippy\Html\Form\File('addfile'));
@@ -140,7 +150,7 @@ class CustomerList extends \App\Pages\Base
         $row->add(new Label('customername', $item->customer_name));
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
-        $row->add(new Label('leadstatus', $item->leadstatusname));
+        $row->add(new Label('leadstatus', $item->leadstatus));
         $row->add(new Label('docs', $item->docs))->setVisible($item->docs>0);
    
         $row->add(new Label('customercomment'))->setVisible(strlen($item->comment) > 0 && $item->comment == strip_tags($item->comment));
@@ -196,8 +206,10 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->bonus->setText($this->_customer->bonus);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
+        $this->customerdetail->editleadsource->setValue($this->_customer->leadsource);
+        $this->customerdetail->editleadstatus->setValue($this->_customer->leadstatus);
         $this->customerdetail->editholding->setValue($this->_customer->holding);
-        $this->customerdetail->editstatus->setValue($this->_customer->status);
+        $this->customerdetail->editdisabled->setChecked($this->_customer->status==1);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
         $this->customerdetail->editisholding->setChecked($this->_customer->isholding);
 
@@ -224,9 +236,10 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->setVisible(true);
         // Очищаем  форму
         $this->customerdetail->clean();
-        $this->_customer = new Customer();
-
+  
         $this->contentview->setVisible(false);
+        
+        $this->_customer = new Customer();
     }
 
     public function saveOnClick($sender) {
@@ -250,7 +263,25 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->type = $this->customerdetail->edittype->getValue();
         $this->_customer->holding = $this->customerdetail->editholding->getValue();
         $this->_customer->holding_name = $this->customerdetail->editholding->getValueName();
-        $this->_customer->status = $this->customerdetail->editstatus->getValue();
+        
+        if($this->_tvars['leadmode']==true) {
+           $this->_customer->leadsource = $this->customerdetail->editleadsource->getValue();
+           $this->_customer->leadstatus = $this->customerdetail->editleadstatus->getValue();
+           $this->_customer->status = 2;  
+           if( $this->_customer->leadsource=="0") {
+              $this->setError("enterleadsource");
+              return;
+           }
+           if( $this->_customer->leadstatus=="0") {
+              $this->setError("enterleadstatus");
+              return;
+           }
+           
+           
+        }  else {
+           $this->_customer->status = $this->customerdetail->editdisabled->isChecked() ?1:0;    
+        }
+        
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
         if ($this->_customer->isholding == 1 && $this->_customer->holding > 0) {
@@ -317,7 +348,11 @@ class CustomerList extends \App\Pages\Base
                 
         $this->contentview->concreated->setText($created);
         $this->contentview->conlastdoc->setText($lastdoc);
-
+        $this->contentview->conphone->setText($this->_customer->phone);
+        $this->contentview->conemail->setText($this->_customer->email);
+        $this->contentview->conphone->setVisible(strlen($this->_customer->phone)>0);
+        $this->contentview->conemail->setVisible(strlen($this->_customer->email)>0);
+        $this->contentview->conlstform->conleadstatus->setValue($this->_customer->leadstatus);
     
         $this->updateFiles();
         $this->updateMessages();
@@ -498,6 +533,21 @@ class CustomerList extends \App\Pages\Base
         \App\Application::Redirect("\\App\\Pages\\Reference\\ContractList", $contr->contract_id);
     }
 
+    public function OnSelStatus($sender){
+       $this->_customer->leadstatus = $sender->getValue();
+       $this->_customer->save();    
+    }
+    public function onConvert($sender){
+        $this->leadf->chleads->setChecked(false);
+        $this->_tvars['leadmode'] = false;
+        
+        $this->filter->clean();
+        $this->customertable->customerlist->Reload();
+        $this->_customer->status = 0; 
+        $this->show() ;
+              
+    }
+    
 }
 
 class CustomerDataSource implements \Zippy\Interfaces\DataSource
@@ -539,8 +589,25 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
                 $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
             }
         } else {
-             $where = "status = 3 " ;
- 
+            $searchleadsource = $this->page->filter->searchleadsource->getValue();
+            $searchleadstatus = $this->page->filter->searchleadstatus->getValue();
+         
+            
+            $where = "status = 2 " ;
+            if (strlen($search) > 0) {
+                $search = Customer::qstr('%' . $search . '%');
+                $where .= " and (customer_name like  {$search} or phone like {$search} or email like {$search}    )";
+            }
+            if (strlen($searchleadsource) > 1) {
+                $searchleadsource = Customer::qstr( $searchleadsource );
+                $where .= " and (leadsource =  {$searchleadsource}    )";
+            }
+            if (strlen($searchleadstatus) > 1) {
+                $searchleadstatus = Customer::qstr( $searchleadstatus );
+                $where .= " and (leadstatus =  {$searchleadstatus}    )";
+            }
+        
+
         }
       
         return $where;
@@ -551,9 +618,10 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $docs = Customer::find($this->getWhere(), $sortfield . " " . $asc, $count, $start,"*, coalesce(  (select  count(*) from  documents where  documents.customer_id= customers_view.customer_id and documents.state>3 ),0)  as docs");
-
-        return $docs;
+       
+           return Customer::find($this->getWhere(), $sortfield . " " . $asc, $count, $start,"*, coalesce(  (select  count(*) from  documents where  documents.customer_id= customers_view.customer_id and documents.state>3 ),0)  as docs");
+        
+     
     }
 
     public function getItem($id) {

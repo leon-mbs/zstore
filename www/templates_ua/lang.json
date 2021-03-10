@@ -381,5 +381,8 @@
   "noselpayment": "Не вибрано рахунок",
   "paymentseq": "Рахунки  однаковi" ,
   "custcreated": "Доданий  %s користувачем %s",   
-  "custlastdoc": "Останнiй документ %s вiд %s. Всього %s"  
+  "custlastdoc": "Останнiй документ %s вiд %s. Всього %s",   
+  "enterleadsource": "Не  введено джероло  лiда",    
+  "enterleadstatus": "Не  введений стан  лiда"   
+  
   }

@@ -9,7 +9,7 @@
             <h2>Справочник контрагентов </h2>
             <div class="navbar nav  ">
                 <form zippy="leadf" class="form-inline ">
-                    <input   zippy="chleads" type="checkbox"> Режим  работы с  лидами
+                    <input   zippy="chleads" type="checkbox"> <b>Режим  работы с  лидами </b>
                 </form>
             </div>
              <div class="navbar nav  ">
@@ -29,16 +29,34 @@
                     </select>
                        {{/leadmode}}
                        {{#leadmode}} 
-                       <label for="searchleadstate">состояние</label>
-                        <select zippy="searchleadstate" class="form-control mr-sm-2">
+                       <label for="searchleadsource">источник</label>
+                        <select zippy="searchleadsource" class="form-control mr-2">
+                            <option value="0">Не указан</option>
+                        </select>    
+                       <label for="searchleadstatus">состояние</label>
+                        <select zippy="searchleadstatus" class="form-control mr-2">
                             <option value="0">Не указано</option>
                         </select>    
                        {{/leadmode}} 
-                    <input class="btn btn-outline-success   " type="submit" value="ОК">
+                    <input class="btn btn-outline-success   " type="submit" value="ОК"  >
 
                 </form>
-            </div>
-         
+                    {{#leadmode}}  
+                     <a class="btn btn-outline-success    "  ><i class="fa fa-cog"> Источники лидов</i> </a>
+                  &nbsp; <a class="btn btn-outline-success    "  ><i class="fa fa-cog"> Состояния лидов</i> </a>
+                     {{/leadmode}}            
+               </div>
+             {{#leadmode}}  
+            <div class="mb-4 ml-2">
+              <a   data-toggle="collapse" href="#collapsestat"   aria-expanded="false" aria-controls="collapseExample">
+                <h5  ><i class="fa fa-chart-bar"></i> Статистика  <i style="font-size:smaller" class="fa fa-angle-down"></i></h5>
+              </a>
+            
+            <div class="collapse" id="collapsestat">
+            
+             </div>
+             </div>
+             {{/leadmode}}  
             <a zippy="addnew" class="btn btn-primary">Добавить нового</a>
          
      
@@ -47,8 +65,8 @@
                     <th ><a zippy="sortname">Имя</a> </th>
                     <th >Тел.</th>
                     <th >E-Mail</th>
-              {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
-                 {{#leadmode}}     <th>Статус лида</th>     {{/leadmode}} 
+                 {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
+                 {{#leadmode}}     <th><a zippy="sortleadstatus">Состояние лида</a> </th>     {{/leadmode}} 
                     <th> </th>
                     <th> </th>
                 
@@ -61,8 +79,10 @@
                     <td zippy="customername" class="text-nowrap"></td>
                     <td zippy="customerphone" class="text-nowrap"></td>
                     <td zippy="customeremail" class="text-nowrap"></td>
-                  {{/leadmode}}    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
-                  {{#leadmode}}     <td zippy="leadstatus">  </td>     {{/leadmode}}    
+                  {{^leadmode}}    <td class="text-right" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
+                  {{#leadmode}}  
+                     <td zippy="leadstatus">  </td>  
+                     {{/leadmode}}    
                     <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
                     
                      <td><i zippy="hasmsg" class="fa fa-comments" title="Комментарии"></i></td>
@@ -93,6 +113,9 @@
         <div class="form-group">
             <label for="editcustomername">Наименование</label>
             <input required="required" class="form-control" zippy="editcustomername"/>
+              {{#leadmode}}  
+            <small>Можно использовать  контакт  как временное  имя</small>
+              {{/leadmode}}  
         </div>
 
         <div class="form-group">
@@ -109,17 +132,18 @@
         </div>
 
 
-        <div class="form-group">
-            <label for="editstatus">Статус</label>
-            <select class="form-control" zippy="editstatus">
-
-            </select>
-        </div>
+    
         {{#leadmode}} 
         <div class="form-group">
             <label for="editleadsource">Источник лида</label>
             <select class="form-control" zippy="editleadsource">
-
+                   <option value="0">Не указан</option>
+            </select>
+        </div>
+       <div class="form-group">
+            <label for="editleadstatus">Состояние лида</label>
+            <select class="form-control" zippy="editleadstatus">
+               <option value="0">Не указано</option>
             </select>
         </div>
          {{/leadmode}} 
@@ -142,11 +166,16 @@
                 <option value="0">Не выбрано</option>
             </select>
         </div>
+          <div class="form-check">
+                <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="editdisabled">Больше не используется</label>
+            </div>        
         {{/leadmode}} 
 
     </div>
+         
     <div class="col-12 col-md-4 ">
-        <div class="form-group">
+    {{^leadmode}}      <div class="form-group">
             <label for="editcity">Город</label>
             <input class="form-control" zippy="editcity"/>
         </div>
@@ -167,11 +196,13 @@
             <input zippy="editjurid" type="checkbox" class="form-check-input">
             <label class="form-check-label" for="editjurid">Юр. лицо</label>
         </div>
-        <div class="form-group">
+       {{/leadmode}} 
+            <div class="form-group">
             <label for="editcomment">Примечание</label>
             <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
         </div>
-    </div>
+    </div>    
+ 
     <div class="w-100"></div>
     <div class="col-12 col-md-4 ">
         <div class="form-group">
@@ -188,9 +219,31 @@
     <div class="col-12 pb-4">
     <a zippy="back"><i class="fa fa-arrow-circle-left"></i> К списку</a>
     <h4 zippy=concname></h4>
-     <span style="display:block" zippy="concreated"></span>
-     <span style="display:block" zippy="conlastdoc"></span> 
+  
+    <table>
+    <tr><td colspan="2">
+     <span  zippy="concreated"></span>
+     </td></tr>
+     <tr><td colspan="2">
+     <span  zippy="conlastdoc"></span> 
+     </td></tr>
+     <tr><td ><span data-label="conphone">Phone</span></td><td><span zippy="conphone"></span></td></tr>
+     <tr><td ><span data-label="conemail">E-Mail</span></td><td><span zippy="conemail"></span></td></tr>
+     </table>
      
+      {{#leadmode}} 
+     
+          <form zippy="conlstform" class="form-inline ">
+          <label for="conleadstatus"> Состояние</label> 
+          <select zippy="conleadstatus" class="form-control mr-4"></select>
+          &nbsp;&nbsp; <a zippy="convert"> <i class="fa fa-gavel"></i> Конвертировать в контрагента </a>
+          </form>
+     
+       
+           
+     
+        {{/leadmode}} 
+    
     </div>
     <div class="col-4 col-xl-3 ">
         <h5> Расписание событий </h5>

@@ -43,8 +43,6 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<created>{$this->created}</created>";
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
         
-        $this->detail .= "<leadstatus><![CDATA[{$this->leadstatus}]]></leadstatus>";
-        $this->detail .= "<leadsource><![CDATA[{$this->leadsource}]]></leadsource>";
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
@@ -70,9 +68,7 @@ class Customer extends \ZCL\DB\Entity
         $this->address = (string)($xml->address[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
-        $this->leadsource = (string)($xml->leadsource[0]);
-        $this->leadstatus = (string)($xml->leadstatus[0]);
-
+  
         parent::afterLoad();
     }
 
@@ -150,10 +146,15 @@ class Customer extends \ZCL\DB\Entity
 
     public  static  function getLeadSources(){
         $list = array();
+        $list['src1'] = 'src1';
+        $list['src2'] = 'src2';
         return  $list;
     }
+   
     public  static  function getLeadStatuses(){
         $list = array();
+        $list['st1'] = 'st1';
+        $list['st2'] = 'st2';
         return  $list;
         
     }
