@@ -40,6 +40,13 @@
         <td colspan="7">{{firm_name}}</td>
 
     </tr>
+    <tr>
+
+        <td></td>
+        <td> Адрес</td>
+        <td colspan="7">{{firm_address}}</td>
+
+    </tr>
     {{/isfirm}}
 
     {{#isbank}}

@@ -32,6 +32,14 @@
         <td colspan="7">{{firm_name}}</td>
 
     </tr>
+    <tr>
+
+        <td></td>
+        <td> Адреса</td>
+        <td colspan="7">{{firm_address}}</td>
+
+    </tr>
+
     {{/isfirm}}
     {{#iscontract}}
     <tr>
