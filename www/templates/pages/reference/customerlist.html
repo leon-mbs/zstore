@@ -42,8 +42,8 @@
 
                 </form>
                     {{#leadmode}}  
-                     <a class="btn btn-outline-success    "  ><i class="fa fa-cog"> Источники лидов</i> </a>
-                  &nbsp; <a class="btn btn-outline-success    "  ><i class="fa fa-cog"> Состояния лидов</i> </a>
+                     <a class="btn btn-outline-success"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Источники лидов</i> </a>
+                  &nbsp; <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Состояния лидов</i> </a>
                      {{/leadmode}}            
                </div>
              {{#leadmode}}  
@@ -344,6 +344,23 @@
     </div>
 </div>
 
+
+<form zippy="leadsourcesform">
+     <div class="row">
+     <div class="col-12  col-md-6 col-xl-4">
+     <h5>Редактирование  источников  лидов</h5>
+     <a  zippy="addnewsource">Новый</a>
+    
+     <table class="table table-sm">
+       <tr zippy="leadsourceslist">
+       <td><input style="width:250px;" zippy="leadsourcename"  ></td>
+       <td><a zippy="delsource"> <i class="fa fa-trash"></i></a></td>
+     </table>
+     <input zippy="leadsourcesave"  type="submit"  value="Сохранить" class="btn  btn-info">
+     <a  zippy="leadsourcecancel" class="btn btn-outline-primary ">Отмена</a>
+     </div>
+     </div>
+</form>
 
 </body>
 </html>

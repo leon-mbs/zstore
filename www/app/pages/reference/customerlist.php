@@ -17,6 +17,7 @@ use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SortLink;
 
@@ -31,6 +32,7 @@ class CustomerList extends \App\Pages\Base
     public  $_msglist    = array();
     public  $_eventlist  = array();
     public  $_contrtlist = array();
+    public  $_leadsourceslist = array();
 
     public function __construct($id = 0) {
         parent::__construct();
@@ -38,6 +40,7 @@ class CustomerList extends \App\Pages\Base
             return;
         }
 
+        
         $this->add(new Form('leadf'));
         $this->leadf->add(new CheckBox('chleads'))->onChange($this, 'OnLeadMode');
        
@@ -121,6 +124,20 @@ class CustomerList extends \App\Pages\Base
 
         $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));
 
+        
+        $this->add(new ClickLink('leadsourcesedit',$this,'onLeadSourcesList'));
+        $this->add(new ClickLink('leadstatusesedit',$this,'onLeadStatusesList'));
+        
+        $this->add(new Form('leadsourcesform'))->setVisible(false) ;
+        $this->leadsourcesform->add(new SubmitButton('leadsourcesave'))->onClick($this, 'OnSaveLeadSource');
+        $this->leadsourcesform->add(new SubmitLink('addnewsource'))->onClick($this, 'OnAddLeadSource');
+        $this->leadsourcesform->add(new ClickLink('leadsourcecancel'))->onClick($this, 'OnCancelLeadSource');
+        
+        $this->leadsourcesform->add(new DataView('leadsourceslist', new ArrayDataSource(new Bind($this, '_leadsourceslist')), $this, 'leadsourceListOnRow'));
+        
+        
+        
+        
         if ($id > 0) {
             $this->_customer = Customer::load($id);
             if ($this->_customer instanceof Customer) {
@@ -312,7 +329,7 @@ class CustomerList extends \App\Pages\Base
         }
 
         if($this->_customer->customer_id==0){ //новый
-           $this->_customer->created = time(); 
+           $this->_customer->createdon = time(); 
            $this->_customer->user_id = System::getUser()->user_id; 
         }
         $this->_customer->save();
@@ -338,7 +355,7 @@ class CustomerList extends \App\Pages\Base
         $lastdoc ='';
         if($this->_customer->created >0) {
             $user = \App\Entity\User::load($this->_customer->user_id);
-            $created = Helper::l('custcreated',Helper::fd($this->_customer->created),$user->username) ;
+            $created = Helper::l('custcreated',Helper::fd($this->_customer->createdon),$user->username) ;
         }
         $doc = \App\Entity\Doc\Document::getFirst("customer_id=".$this->_customer->customer_id, 'document_id desc');
         if($doc  instanceof \App\Entity\Doc\Document) {
@@ -547,6 +564,64 @@ class CustomerList extends \App\Pages\Base
         $this->show() ;
               
     }
+    
+    //редактирование  источников
+    public function onLeadSourcesList($sender){
+       $options = System::getOptions('common' ) ;
+       $this->_leadsourceslist = $options['leadsources'];
+       if(is_array($this->_leadsourceslist)==false)$this->_leadsourceslist = array();
+       
+       $this->customertable->setVisible(false); 
+       $this->leadsourcesform->setVisible(true); 
+       $this->leadsourcesform->leadsourceslist->Reload(); 
+    }
+    public function OnSaveLeadSource($sender){
+
+       $this->customertable->setVisible(true); 
+       $this->leadsourcesform->setVisible(false); 
+       
+       $options = System::getOptions('common' ) ;
+       $options['leadsources'] = $this->_leadsourceslist;
+       System::setOptions('common',$options ) ; 
+       
+       $this->filter->searchleadsource->setOptionList(Customer::getLeadSources());
+       $this->filter->searchleadstatus->setOptionList(Customer::getLeadStatuses());
+       $this->customerdetail->editleadsource->setOptionList(Customer::getLeadSources());
+       $this->customerdetail->editleadstatus->setOptionList(Customer::getLeadStatuses());
+           
+    }
+    public function OnAddLeadSource($sender){
+         $ls = new \App\DataItem() ;
+         $ls->name='';
+         $ls->id=time();
+         $this->_leadsourceslist[$ls->id]= $ls;
+         $this->leadsourcesform->leadsourceslist->Reload(); 
+         
+         
+    }
+    
+  public function OnCancelLeadSource($sender){
+       $this->customertable->setVisible(true); 
+       $this->leadsourcesform->setVisible(false); 
+ 
+    }
+    
+    
+    public function leadsourceListOnRow($row){
+         $item = $row->getDataItem();
+         $row->add(new TextInput('leadsourcename',new  Bind($item,'name')))  ;
+         $row->add(new  ClickLink('delsource',$this,'onDelLeadSource')); 
+    }
+    
+    public function onDelLeadSource($sender) {
+        $item = $sender->getOwner()->getDataItem() ;
+       
+        $this->_leadsourceslist = array_diff_key($this->_leadsourceslist, array($item->id => $this->_leadsourceslist[$item->id]));
+          
+        $this->leadsourcesform->leadsourceslist->Reload(); 
+         
+    }
+    
     
 }
 

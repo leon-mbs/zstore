@@ -1,4 +1,7 @@
-ALTER TABLE `customers` ADD `leadstatus` VARCHAR(255) NULL , ADD `leadsource` VARCHAR(255) NULL ;
+ALTER TABLE `customers` 
+  ADD `createdon` Date , 
+  ADD `leadstatus` VARCHAR(255) NULL , 
+  ADD `leadsource` VARCHAR(255) NULL ;
 
 ALTER VIEW `customers_view` AS 
   select 
@@ -11,6 +14,7 @@ ALTER VIEW `customers_view` AS
     `customers`.`city` AS `city`,
     `customers`.`leadsource` AS `leadsource`,
     `customers`.`leadstatus` AS `leadstatus`,
+    `customers`.`createdon` AS `createdon`,
     (
   select 
     count(0) 

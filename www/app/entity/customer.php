@@ -26,6 +26,7 @@ class Customer extends \ZCL\DB\Entity
         $this->customer_id = 0;
         $this->customer_name = '';
         $this->status = 0;
+        $this->createdon = time();
     }
 
     protected function beforeSave() {
@@ -40,7 +41,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<isholding>{$this->isholding}</isholding>";
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
-        $this->detail .= "<created>{$this->created}</created>";
+     
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
         
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
@@ -62,12 +63,14 @@ class Customer extends \ZCL\DB\Entity
         $this->shopcust_id = (int)($xml->shopcust_id[0]);
         $this->isholding = (int)($xml->isholding[0]);
         $this->user_id = (int)($xml->user_id[0]);
-        $this->created = (int)($xml->created[0]);
+       
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);
         $this->address = (string)($xml->address[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
+  
+       $this->createdon = strtotime($this->createdon);
   
         parent::afterLoad();
     }
@@ -145,16 +148,30 @@ class Customer extends \ZCL\DB\Entity
     }
 
     public  static  function getLeadSources(){
+        $options = \App\System::getOptions('common' ) ;
+        
+        if(is_array($options['leadsources'])==false)$options['leadsources'] = array();
+
         $list = array();
-        $list['src1'] = 'src1';
-        $list['src2'] = 'src2';
+        foreach($options['leadsources'] as $item){
+          $list[$item->name] = $item->name;  
+        }
+        
+       
         return  $list;
     }
    
     public  static  function getLeadStatuses(){
+       $options = \App\System::getOptions('common' ) ;
+        
+        if(is_array($options['leadstatuses'])==false)$options['leadstatuses'] = array();
+
         $list = array();
-        $list['st1'] = 'st1';
-        $list['st2'] = 'st2';
+        foreach($options['leadstatuses'] as $item){
+          $list[$item->name] = $item->name;  
+        }
+        
+       
         return  $list;
         
     }
