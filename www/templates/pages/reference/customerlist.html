@@ -1,6 +1,9 @@
 <html>
-<head>
-</head>
+ <head>
+    <link rel="stylesheet" href="/assets/css/chart.css">
+
+  
+ </head>
 
 <body>
 <div class="row">
@@ -42,19 +45,21 @@
 
                 </form>
                     {{#leadmode}}  
+                   
                      <a class="btn btn-outline-success"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Источники лидов</i> </a>
                   &nbsp; <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Состояния лидов</i> </a>
                      {{/leadmode}}            
                </div>
              {{#leadmode}}  
             <div class="mb-4 ml-2">
-              <a   data-toggle="collapse" href="#collapsestat"   aria-expanded="false" aria-controls="collapseExample">
-                <h5  ><i class="fa fa-chart-bar"></i> Статистика  <i style="font-size:smaller" class="fa fa-angle-down"></i></h5>
-              </a>
+             
             
-            <div class="collapse" id="collapsestat">
-            
-             </div>
+              
+                <a zippy="showstat"><i class="fa fa-chart-area"></i> Статистика</a>
+           
+                
+                
+                
              </div>
              {{/leadmode}}  
             <a zippy="addnew" class="btn btn-primary">Добавить нового</a>
@@ -246,6 +251,9 @@
     
     </div>
     <div class="col-4 col-xl-3 ">
+    <div class="card">
+    <div class="card-body">
+    
         <h5> Расписание событий </h5>
         <table class="table table-sm">
             <tr zippy="dw_eventlist">
@@ -282,9 +290,13 @@
             </div>
             <input class="btn btn-outline-success  " type="submit" value="Добавить">
         </form>
+     </div>
+     </div>
     </div>
     <div class="col-4 col-xl-3 ">
-        <h5> Коментарии </h5>
+     <div class="card">
+    <div class="card-body">
+       <h5> Коментарии </h5>
         <table class="table table-sm">
             <tr zippy="dw_msglist">
                 <td>
@@ -305,8 +317,12 @@
             <input class="btn btn-outline-success  " type="submit" value="Добавить">
         </form>
     </div>
+    </div>
+    </div>
     <div class="col-4 col-xl-3 ">
-        <h5> Прикрепленные файлы </h5>
+      <div class="card">
+    <div class="card-body">
+      <h5> Прикрепленные файлы </h5>
         <table class="table table-sm">
             <tr zippy="dw_files">
                 <td><a zippy="filename" target="_blank"></a></td>
@@ -331,8 +347,12 @@
 
         </form>
     </div>
+    </div>
+    </div>
     <div class="col-4 col-xl-3 ">
-        <h5> Договора </h5>
+      <div class="card">
+    <div class="card-body">
+      <h5> Договора </h5>
         <table class="table table-sm">
             <tr zippy="dw_contr">
                 <td><a title="Перейти" zippy="contract"></a></td>
@@ -342,6 +362,8 @@
         </table>
 
     </div>
+    </div>
+    </div>
 </div>
 
 
@@ -349,7 +371,8 @@
      <div class="row">
      <div class="col-12  col-md-6 col-xl-4">
      <h5>Редактирование  источников  лидов</h5>
-     <a  zippy="addnewsource">Новый</a>
+     <small>Источники  лидов например 'инстаграм', 'звонок'...</small>  <br>
+     <a  zippy="addnewsource">Добавить</a>
     
      <table class="table table-sm">
        <tr zippy="leadsourceslist">
@@ -362,5 +385,217 @@
      </div>
 </form>
 
+<form zippy="leadstatusesform">
+     <div class="row">
+     <div class="col-12  col-md-6 col-xl-4">
+     <h5>Редактирование  состояний  лидов</h5>
+     <small>Состояние лида например 'ждет информацию', 'переговоры'...</small>  <br>
+     <a  zippy="addnewstatus">Добавить</a>
+    
+     <table class="table table-sm">
+       <tr zippy="leadstatuseslist">
+       <td><input style="width:250px;" zippy="leadstatusname"  ></td>
+       <td><a zippy="delstatus"> <i class="fa fa-trash"></i></a></td>
+     </table>
+     <input zippy="leadstatussave"  type="submit"  value="Сохранить" class="btn  btn-info">
+     <a  zippy="leadstatuscancel" class="btn btn-outline-primary ">Отмена</a>
+     </div>
+     </div>
+</form>
+  {{#leadmode}}  
+
+  
+<div    zippy="statpan">
+
+&nbsp;      <a zippy="closestat"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>
+<div class="row"   >
+       <div   class="col-12  col-md-6  col-xl-4  ">
+          <div class="card">
+    <div class="card-body">
+      
+
+                <canvas style="width:100%" id="statusesg"></canvas>
+             
+      </div>
+      </div>
+      </div>
+       <div   class="col-12  col-md-6  col-xl-4  ">
+          <div class="card">
+    <div class="card-body">
+      
+
+                <canvas style="width:100%" id="sourcesg"></canvas>
+             
+      </div>
+      </div>
+      </div>
+       <div   class="col-12  col-md-6  col-xl-4  ">
+         <div class="card">
+    <div class="card-body">
+       
+       
+                <canvas style="width:100%" id="sourcescustg"></canvas>
+             
+      </div>
+      </div>
+      </div>
+  
+    </div>  
+      
+ </div>  
+  
+  
+  
+  
+  
+  
+  
+  
+  <script language="javascript" src="/assets/js/chart.js"></script>
+
+<script>
+    //состояниея лидов
+    var pieData1       = {
+      labels: {{{gr1title}}},
+      datasets: [
+        {
+          data: {{{gr1data}}},
+          backgroundColor : {{{gr1color}}},
+        }
+      ]
+    }
+
+ 
+    var pieOptions1     = {
+      maintainAspectRatio : false,
+      responsive : true,
+      title: {
+            display: true,
+            text: 'Состояния  лидов',
+            position: 'top' 
+            
+        },
+        legend: {
+            display: true,
+            position: 'right',
+            labels: {
+                boxWidth: 10,
+                fontColor: '#111',
+                padding:  2
+            }
+        },
+        tooltips: {
+            enabled: true
+        },      
+      
+      
+    }
+    
+     var pieData2       = {
+      labels: {{{gr2title}}},
+      datasets: [
+        {
+          data: {{{gr2data}}},
+          backgroundColor : {{{gr2color}}},
+        }
+      ]
+    }
+
+ 
+    var pieOptions2     = {
+      maintainAspectRatio : false,
+      responsive : true,
+      title: {
+            display: true,
+            text: 'Источники  лидов',
+            position: 'top' 
+            
+        },
+        legend: {
+            display: true,
+            position: 'right',
+            labels: {
+                boxWidth: 10,
+                fontColor: '#111',
+                padding:  2
+            }
+        },
+        tooltips: {
+            enabled: true
+        },      
+      
+      
+    }
+    
+     var pieData3       = {
+      labels: {{{gr3title}}},
+      datasets: [
+        {
+          data: {{{gr3data}}},
+          backgroundColor : {{{gr3color}}},
+        }
+      ]
+    }
+
+ 
+    var pieOptions3     = {
+      maintainAspectRatio : false,
+      responsive : true,
+      title: {
+            display: true,
+            text: 'Источники  конвертированых  лидов',
+            position: 'top' 
+            
+        },
+        legend: {
+            display: true,
+            position: 'right',
+            labels: {
+                boxWidth: 10,
+                fontColor: '#111',
+                padding:  2
+            }
+        },
+        tooltips: {
+            enabled: true
+        },      
+      
+      
+    }
+    
+    
+    window.onload = function() {
+    
+        
+        new Chart($('#statusesg').get(0).getContext('2d'), {
+          type: 'pie',
+          data: pieData1,
+          options: pieOptions1
+        })
+        
+  
+    
+        
+        new Chart($('#sourcesg').get(0).getContext('2d'), {
+          type: 'pie',
+          data: pieData2,
+          options: pieOptions2
+        })
+        
+   
+        
+        new Chart($('#sourcescustg').get(0).getContext('2d'), {
+          type: 'pie',
+          data: pieData3,
+          options: pieOptions3
+        })
+        
+        
+      
+  };  
+    </script> 
+   
+   {{/leadmode}}  
+   
 </body>
 </html>

@@ -242,7 +242,7 @@ class Orders extends \App\Pages\Base
 
                     $qty = $tovar->getQuantity($store);
                     if ($qty < $tovar->quantity) {
-                        $this->setError("nominus", \App\Helper::fqty($qty), $tovar->item_name);
+                        $this->setError("nominus", \App\Helper::fqty($qty), $tovar->itemname);
                         return;
                     }
 

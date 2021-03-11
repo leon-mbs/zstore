@@ -534,6 +534,10 @@ class GIList extends \App\Pages\Base
         $params['CargoType'] = 'Cargo';
 
         $params['Weight'] = $this->nppan->npform->npw->getText();
+        if($params['SeatsAmount']  >1) {
+           $params['Weight']  = number_format($params['Weight'] / $params['SeatsAmount'] , 1, '.', '');
+        }
+        
         $moneyback = $this->nppan->npform->npback->getText();
         if ($moneyback > 0) {   //если  введена  обратная сумма
             $params['BackwardDeliveryData'] =  array(array(

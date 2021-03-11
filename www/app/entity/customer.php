@@ -26,6 +26,7 @@ class Customer extends \ZCL\DB\Entity
         $this->customer_id = 0;
         $this->customer_name = '';
         $this->status = 0;
+        $this->fromlead = 0;
         $this->createdon = time();
     }
 
@@ -36,6 +37,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<discount>{$this->discount}</discount>";
         $this->detail .= "<bonus>{$this->bonus}</bonus>";
         $this->detail .= "<type>{$this->type}</type>";
+        $this->detail .= "<fromlead>{$this->fromlead}</fromlead>";
         $this->detail .= "<jurid>{$this->jurid}</jurid>";
         $this->detail .= "<shopcust_id>{$this->shopcust_id}</shopcust_id>";
         $this->detail .= "<isholding>{$this->isholding}</isholding>";
@@ -63,6 +65,7 @@ class Customer extends \ZCL\DB\Entity
         $this->shopcust_id = (int)($xml->shopcust_id[0]);
         $this->isholding = (int)($xml->isholding[0]);
         $this->user_id = (int)($xml->user_id[0]);
+        $this->fromlead = (int)($xml->fromlead[0]);
        
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);
@@ -154,6 +157,7 @@ class Customer extends \ZCL\DB\Entity
 
         $list = array();
         foreach($options['leadsources'] as $item){
+          if(strlen($item->name)==0) continue;
           $list[$item->name] = $item->name;  
         }
         
@@ -162,13 +166,14 @@ class Customer extends \ZCL\DB\Entity
     }
    
     public  static  function getLeadStatuses(){
-       $options = \App\System::getOptions('common' ) ;
+        $options = \App\System::getOptions('common' ) ;
         
         if(is_array($options['leadstatuses'])==false)$options['leadstatuses'] = array();
 
         $list = array();
         foreach($options['leadstatuses'] as $item){
-          $list[$item->name] = $item->name;  
+            if(strlen($item->name)==0) continue;
+            $list[$item->name] = $item->name;  
         }
         
        

@@ -49,7 +49,7 @@ class TTNList extends \App\Pages\Base
         $row->add(new Label('document_number', $doc->document_number));
         $row->add(new Label('ship_number', $doc->headerdata['ship_number']));
         $row->add(new Label('customer_name', $doc->customer_name));
-        $row->add(new Label('amount', H::l($doc->amount) ));
+        $row->add(new Label('amount', H::fa($doc->amount) ));
         $row->add(new Label('state', $doc->headerdata['sn_state'] ));
         
    
@@ -65,10 +65,10 @@ class TTNList extends \App\Pages\Base
         $this->_doclist = array();
         $api = new  \App\Modules\NP\Helper();
         $errors = array();
-        $docs = Document::find("content like '%<ship_numberref>%' and  meta_name = 'TTN' and state in(11,20) ");
+        $docs = Document::find("content like '%<ship_number>%' and  meta_name = 'TTN' and state in(11,20) ");
         $tracks = array();
         foreach ($docs as $ttn) {
-            $tracks[]=$ttn->headerdata['ship_number'];
+           if(strlen($ttn->headerdata['ship_number'])>0) $tracks[]=$ttn->headerdata['ship_number'];
         }
         
         $statuses = $api->check($tracks);
@@ -76,7 +76,7 @@ class TTNList extends \App\Pages\Base
         foreach ($docs as $ttn) {
             
             $decl = $ttn->headerdata['ship_number']; 
-
+            if(strlen($decl)==0) continue;
             $cnt = 0;
            
            
@@ -112,16 +112,7 @@ class TTNList extends \App\Pages\Base
         $this->doclist->Reload();
     }
     
-   public function printOnClick($sender) {
-        $ttn = $sender->getOwner()->getDataItem();
-        $decl = $ttn->headerdata['ship_number'];
-       
-        $api = new  \App\Modules\NP\Helper();
  
-        
-        $html="";
-        $this->updateAjax(array(), "  $('#tag').html('{$html}') ; $('#pform').modal()");
-    }
     
 }
 

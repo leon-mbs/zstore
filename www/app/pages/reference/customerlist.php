@@ -65,6 +65,9 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->add(new SortLink("sortleadstatus", "leadstatus", $this, "onSort"));
 
         $this->customertable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+        $this->customertable->add(new ClickLink('showstat'))->onClick($this, 'showStat');
+        $this->add(new Panel('statpan'))->setVisible(false);
+        $this->statpan->add(new ClickLink('closestat'))->onClick($this, 'closeStat');
          
         $this->add(new Form('customerdetail'))->setVisible(false);
         $this->customerdetail->add(new TextInput('editaddress'));
@@ -120,13 +123,9 @@ class CustomerList extends \App\Pages\Base
 
         $this->contentview->dw_eventlist->setPageSize(10);
         $this->contentview->add(new \Zippy\Html\DataList\Paginator('eventpag', $this->contentview->dw_eventlist));
-
-
-        $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));
-
-        
-        $this->add(new ClickLink('leadsourcesedit',$this,'onLeadSourcesList'));
-        $this->add(new ClickLink('leadstatusesedit',$this,'onLeadStatusesList'));
+         
+        $this->customertable->add(new ClickLink('leadsourcesedit',$this,'onLeadSourcesList'));
+        $this->customertable->add(new ClickLink('leadstatusesedit',$this,'onLeadStatusesList'));
         
         $this->add(new Form('leadsourcesform'))->setVisible(false) ;
         $this->leadsourcesform->add(new SubmitButton('leadsourcesave'))->onClick($this, 'OnSaveLeadSource');
@@ -136,7 +135,16 @@ class CustomerList extends \App\Pages\Base
         $this->leadsourcesform->add(new DataView('leadsourceslist', new ArrayDataSource(new Bind($this, '_leadsourceslist')), $this, 'leadsourceListOnRow'));
         
         
+        $this->add(new Form('leadstatusesform'))->setVisible(false) ;
+        $this->leadstatusesform->add(new SubmitButton('leadstatussave'))->onClick($this, 'OnSaveLeadStatus');
+        $this->leadstatusesform->add(new SubmitLink('addnewstatus'))->onClick($this, 'OnAddLeadStatus');
+        $this->leadstatusesform->add(new ClickLink('leadstatuscancel'))->onClick($this, 'OnCancelLeadStatus');
         
+        $this->leadstatusesform->add(new DataView('leadstatuseslist', new ArrayDataSource(new Bind($this, '_leadstatuseslist')), $this, 'leadstatusListOnRow'));
+        
+        
+        $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));
+       
         
         if ($id > 0) {
             $this->_customer = Customer::load($id);
@@ -153,6 +161,8 @@ class CustomerList extends \App\Pages\Base
         $this->_tvars['leadmode'] = $sender->isChecked();
         $this->filter->clean();
         $this->customertable->customerlist->Reload();
+        
+        
         
     }
    public function OnSearch($sender) {
@@ -552,7 +562,9 @@ class CustomerList extends \App\Pages\Base
 
     public function OnSelStatus($sender){
        $this->_customer->leadstatus = $sender->getValue();
-       $this->_customer->save();    
+       $this->_customer->save();   
+       $this->customertable->customerlist->Reload();
+          
     }
     public function onConvert($sender){
         $this->leadf->chleads->setChecked(false);
@@ -561,6 +573,8 @@ class CustomerList extends \App\Pages\Base
         $this->filter->clean();
         $this->customertable->customerlist->Reload();
         $this->_customer->status = 0; 
+        $this->_customer->fromlead = 1;  
+        
         $this->show() ;
               
     }
@@ -585,9 +599,7 @@ class CustomerList extends \App\Pages\Base
        System::setOptions('common',$options ) ; 
        
        $this->filter->searchleadsource->setOptionList(Customer::getLeadSources());
-       $this->filter->searchleadstatus->setOptionList(Customer::getLeadStatuses());
        $this->customerdetail->editleadsource->setOptionList(Customer::getLeadSources());
-       $this->customerdetail->editleadstatus->setOptionList(Customer::getLeadStatuses());
            
     }
     public function OnAddLeadSource($sender){
@@ -600,7 +612,7 @@ class CustomerList extends \App\Pages\Base
          
     }
     
-  public function OnCancelLeadSource($sender){
+    public function OnCancelLeadSource($sender){
        $this->customertable->setVisible(true); 
        $this->leadsourcesform->setVisible(false); 
  
@@ -622,7 +634,150 @@ class CustomerList extends \App\Pages\Base
          
     }
     
+    //редактирование  состояний
+    public function onLeadStatusesList($sender){
+       $options = System::getOptions('common' ) ;
+       $this->_leadstatuseslist = $options['leadstatuses'];
+       if(is_array($this->_leadstatuseslist)==false)$this->_leadstatuseslist = array();
+       
+       $this->customertable->setVisible(false); 
+       $this->leadstatusesform->setVisible(true); 
+       $this->leadstatusesform->leadstatuseslist->Reload(); 
+    }
+    public function OnSaveLeadStatus($sender){
+
+       $this->customertable->setVisible(true); 
+       $this->leadstatusesform->setVisible(false); 
+       
+       $options = System::getOptions('common' ) ;
+       $options['leadstatuses'] = $this->_leadstatuseslist;
+       System::setOptions('common',$options ) ; 
+       
+       
+       $this->filter->searchleadstatus->setOptionList(Customer::getLeadStatuses());
+       $this->customerdetail->editleadstatus->setOptionList(Customer::getLeadStatuses());
+           
+    }
+    public function OnAddLeadStatus($sender){
+         $ls = new \App\DataItem() ;
+         $ls->name='';
+         $ls->id=time();
+         $this->_leadstatuseslist[$ls->id]= $ls;
+         $this->leadstatusesform->leadstatuseslist->Reload(); 
+         
+         
+    }
     
+    public function OnCancelLeadStatus($sender){
+       $this->customertable->setVisible(true); 
+       $this->leadstatusesform->setVisible(false); 
+ 
+    }
+    
+    
+    public function leadstatusListOnRow($row){
+         $item = $row->getDataItem();
+         $row->add(new TextInput('leadstatusname',new  Bind($item,'name')))  ;
+         $row->add(new  ClickLink('delstatus',$this,'onDelLeadStatus')); 
+    }
+    
+    public function onDelLeadStatus($sender) {
+        $item = $sender->getOwner()->getDataItem() ;
+       
+        $this->_leadstatuseslist = array_diff_key($this->_leadstatuseslist, array($item->id => $this->_leadstatuseslist[$item->id]));
+          
+        $this->leadstatusesform->leadstatuseslist->Reload(); 
+         
+    }
+    
+    
+    public    function showStat($sender){
+          $this->customertable->setVisible(false);
+          $this->statpan->setVisible(true);
+        
+          $conn = $conn = \ZDB\DB::getConnect();
+          $sql = " 
+         SELECT   leadstatus,coalesce(count(*),0) as cnt   FROM customers 
+             WHERE   
+              status =2
+              
+             GROUP BY  leadstatus   
+                         
+        ";
+
+        $rs = $conn->Execute($sql);
+        $title = array();
+        $data = array();
+        $color = array();   
+  
+
+        foreach ($rs as $row) {
+            $data[] =  $row['cnt'];
+            $title[] = $row['leadstatus'];
+            $color[] = '#' . \App\Util::genColor();
+        }
+        $this->_tvars['gr1title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
+        $this->_tvars['gr1data'] = json_encode($data);
+        $this->_tvars['gr1color'] = json_encode($color);
+        
+        
+       $sql = " 
+         SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
+             WHERE   
+              status =2
+              
+             GROUP BY  leadsource   
+                         
+        ";
+
+        $rs = $conn->Execute($sql);
+        $title = array();
+        $data = array();
+        $color = array();   
+  
+
+        foreach ($rs as $row) {
+            $data[] =  $row['cnt'];
+            $title[] = $row['leadsource'];
+            $color[] = '#' . \App\Util::genColor();
+        }
+        $this->_tvars['gr2title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
+        $this->_tvars['gr2data'] = json_encode($data);
+        $this->_tvars['gr2color'] = json_encode($color);
+        
+      $sql = " 
+         SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
+             WHERE   
+              status =0  and  detail like '%<fromlead>1</fromlead>%'
+              
+             GROUP BY  leadsource   
+                         
+        ";
+
+        $rs = $conn->Execute($sql);
+        $title = array();
+        $data = array();
+        $color = array();   
+  
+
+        foreach ($rs as $row) {
+            $data[] =  $row['cnt'];
+            $title[] = $row['leadsource'];
+            $color[] = '#' . \App\Util::genColor();
+        }
+        $this->_tvars['gr3title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
+        $this->_tvars['gr3data'] = json_encode($data);
+        $this->_tvars['gr3color'] = json_encode($color);
+        
+        
+        
+    
+    } 
+    
+     public    function closeStat($sender){
+          $this->customertable->setVisible(true);
+          $this->statpan->setVisible(false);
+     }
 }
 
 class CustomerDataSource implements \Zippy\Interfaces\DataSource
@@ -704,3 +859,4 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
+  
