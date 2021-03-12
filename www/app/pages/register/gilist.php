@@ -100,6 +100,7 @@ class GIList extends \App\Pages\Base
         //   $npform->add(new DropDownChoice('npst' ))->onChange($this,'onST');
         $npform->add(new DropDownChoice('nppt'));
         $npform->add(new DropDownChoice('nppm'));
+        $npform->add(new DropDownChoice('nppmback'));
         $npform->add(new TextInput('npback'));
         $npform->add(new Label('npttncust'));
         $npform->add(new Label('npttaddress'));
@@ -392,6 +393,8 @@ class GIList extends \App\Pages\Base
 
         $this->nppan->npform->nppm->setOptionList($stlist);
         $this->nppan->npform->nppm->setValue('Cash');
+        $this->nppan->npform->nppmback->setOptionList($stlist);
+        $this->nppan->npform->nppmback->setValue('Cash');
         //кто оплачивает
         $stlist = array();
         foreach ($tp['data'] as $r) {
@@ -543,6 +546,7 @@ class GIList extends \App\Pages\Base
             $params['BackwardDeliveryData'] =  array(array(
                 'PayerType'        => 'Recipient',
                 'CargoType'        => 'Money',
+                'PaymentMethod'    => $this->nppan->npform->nppmback->getValue(),
                 'RedeliveryString' => $moneyback)
         );
         }
