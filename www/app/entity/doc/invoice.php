@@ -42,6 +42,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
+                        "firm_address"       => $firm['address'],
                         "logo"            => _BASEURL . $firm['logo'],
                         "islogo"          => strlen($firm['logo']) > 0,
                         "stamp"           => _BASEURL . $firm['stamp'],

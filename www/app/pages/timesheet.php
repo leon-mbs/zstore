@@ -76,7 +76,7 @@ class TimeSheet extends \App\Pages\Base
         $tagen->add(new DataView('llist', new ArrayDataSource($this, '_list'), $this, 'listOnRow'));
         $tstat->add(new DataView('lstat', new ArrayDataSource($this, '_stat'), $this, 'statOnRow'));
 
-        $tcal->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
+        $tcal->add(new \App\Calendar('calendar'  ))->setEvent($this, 'OnCal');
 
 
         $this->add(new Form('editform'))->onSubmit($this, 'timeOnSubmit');
@@ -220,8 +220,7 @@ class TimeSheet extends \App\Pages\Base
         foreach ($this->_list as $item) {
 
             $col = "#bbb";
-
-
+ 
             if ($item->t_type == TimeItem::TIME_WORK) {
                 $col = "#007bff";
             }
@@ -245,7 +244,7 @@ class TimeSheet extends \App\Pages\Base
             }
 
 
-            $tasks[] = new \App\CEvent($item->time_id, date('H:i', $item->t_start) . ' - ' . date('H:i', $item->t_end), $item->t_start, $item->t_end, $col);
+            $tasks[] = new \App\CEvent($item->time_id, '', $item->t_start, $item->t_end, $col);
         }
 
 

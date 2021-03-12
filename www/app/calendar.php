@@ -2,16 +2,18 @@
 
 namespace App;
 
-class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Requestable
+class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Requestable,\Zippy\Interfaces\AjaxRender
 {
 
     private $event = null;
     private $data  = array();
-   private $view  = 'month';
+    private $view  = 'dayGridMonth';
+  
 
-   public function __construct($id,$view='month') {
+   public function __construct($id  ) {
         parent::__construct($id);
-        $this->view =  $view;
+        $this->view =  'dayGridMonth' ;
+      
    }    
     
     
@@ -23,11 +25,18 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
         if ($_config['common']['lang'] == 'ua') {
             $lang = 'ua';
         }
-
+      
         if (count($this->data) > 0) {
             $ev = ",events: [";
             foreach ($this->data as $dt) {
-                $ev .= "  { id  : '{$dt->id}',title  : '{$dt->title}', start  : '{$dt->start}' ,            end  : '{$dt->end}' ,  color :  '{$dt->color}'},";
+               
+                $ev .= "  {  id     : '{$dt->id}',
+                             title  : '{$dt->title}',    
+                             start  :  {$dt->start} , 
+                             end    :  {$dt->end} , 
+                             backgroundColor: '{$dt->color}', 
+                        
+                             allDay         : false },";
             }
             $ev = rtrim($ev, ',');
             $ev .= "]";
@@ -35,58 +44,66 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
 
         $js = <<<EOT
          
-         
-            $("#{$id}").fullCalendar({ 
+          var calendarEl = document.getElementById('{$id}');
+        var Calendar = FullCalendar.Calendar;
+ 
+           var calendar = new Calendar(calendarEl, { 
               
-             header: {
-        left: '',
+      headerToolbar: {
+        left  : 'prev,next today',
         center: 'title',
-        right: ' prev,next'
-         },
-         defaultView: '{$this->view}',
-         eventTextColor:'white',
-         minTime: '08:00:00',
-         maxTime: '20:00:00',
-         eventClick: function(calEvent, jsEvent, view) {
-             var url ='{$url}:'   + 'click:'+ calEvent.id ;
-             window.location= url;
-         
-         
-        }, 
-         dayClick: function(date, jsEvent, view) {
-             var dt =date.toISOString();   
-              
-             
-             var url ='{$url}:'   + 'add:'+ dt;
-             window.location= url;
-              
-         
-        }, 
-  editable: true,
-  eventResize: function(event, delta, revertFunc) {
-
+        right : 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      initialView: '{$this->view}' ,
+      
+      themeSystem: 'bootstrap' ,
+      editable: true,
+      droppable: true,
      
-
-              var url ='{$url}:'   + 'resize:'+ event.id +':' +delta;
+         eventClick: function(info) {
+             var url ='{$url}:'   + 'click:'+ info.event.id ;
+            
              window.location= url;
-    
-
-  } ,       
- eventDrop: function(event, delta, revertFunc) {
+         
+         
+        }, 
+         dateClick: function(info) {
                
-               var url ='{$url}:'   + 'move:'+ event.id +':' +delta;
+             var url ='{$url}:'   + 'add:'+ info.dateStr;
+            
              window.location= url;
+              
+         
+        },   
+             
+  eventResize: function(info) {
 
-     
+           
+              var url ='{$url}:'   + 'resize:'+ info.event.id +':' + info.startDelta.milliseconds + ':' + info.endDelta.milliseconds +'&ajax=true' ;
+            
+            // window.location= url;
+             getUpdate(url)  ;
 
   } ,       
-         locale: '{$lang}' 
-          {$ev} 
+ eventDrop: function(info) {
+               
+               var url ='{$url}:'   + 'move:'+ info.event.id +':' + info.delta.years+':' + info.delta.months+':' + info.delta.days+':' + info.delta.milliseconds +'&ajax=true' ;
+                                                      
+              // window.location= url;
+             getUpdate(url)  ;
 
+  } ,        
+         locale: '{$lang}' 
+          {$ev}
         
+         
 
       
-      });         
+
+      
+      });   
+      
+        calendar.render();      
 EOT;
 
         Application::$app->getResponse()->addJavaScript($js, true);
@@ -98,7 +115,12 @@ EOT;
 
         $action['action'] = $params[0];
         $action['id'] = $params[1];
-        $action['delta'] = $params[2];
+        $action['startdelta'] = $params[2];
+        $action['enddelta'] = $params[3];
+        $action['years'] = $params[2];
+        $action['months'] = $params[3];
+        $action['days'] = $params[4];
+        $action['ms'] = $params[5];
 
 
         if ($action['action'] == 'add') {
@@ -106,10 +128,14 @@ EOT;
             $action['date'] = strtotime($dt);
         }
         if ($action['action'] == 'resize') {
-            $action['delta'] = $action['delta'] / 1000;
+            $action['startdelta'] = $action['startdelta'] / 1000;
+            $action['enddelta'] = $action['enddelta'] / 1000;
         }
         if ($action['action'] == 'move') {
-            $action['delta'] = $action['delta'] / 1000;
+            $action['years'] = $action['years']  ;
+            $action['month'] = $action['month']  ;
+            $action['days'] = $action['days']  ;
+            $action['ms'] = $action['ms']/1000  ;
         }
 
         if ($this->event != null) {
@@ -125,7 +151,10 @@ EOT;
     public function setData($data) {
         $this->data = $data;
     }
+     public function AjaxAnswer() {
 
+        return '';
+    }
 }
 
 class CEvent
@@ -136,9 +165,11 @@ class CEvent
     public function __construct($id, $title, $start, $end, $color) {
         $this->id = $id;
         $this->title = $title;
-        $this->start = date("Y-m-d H:i", $start);
-        $this->end = date("Y-m-d H:i", $end);
+        $this->start = "new Date(".date("Y", $start).", ".( date("m", $start)  -1).", ".date("d", $start).",".date("H", $start).",".date("i", $start).")"  ;
+        $this->end = "new Date(".date("Y", $end).", ".( date("m", $end)  -1).", ".date("d", $end).",".date("H", $end).",".date("i", $end).")"  ;
+     //   $this->end = date("Y-m-dTH:i", $end);
         $this->color = $color;
     }
 
 }
+

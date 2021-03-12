@@ -102,6 +102,13 @@ class ProdReceipt extends \App\Pages\Base
 
                     $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                     $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                    
+                    foreach($basedoc->unpackDetails('prodlist') as $item){
+                       $item->price = $item->getProdprice();
+                       $this->_itemlist[$item->item_id]=  $item;
+                    }
+                    
+                    
                 }
 
             }
@@ -356,19 +363,9 @@ class ProdReceipt extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getValue();
         $item = \App\Entity\Item::load($id);
-        $price = 0;
-        if ($item->zarp > 0) {
-            $price += $item->zarp;
-        }
-        $ilist = \App\Entity\ItemSet::find("pitem_id=" . $id);
 
-        if (count($ilist) > 0) {
-            foreach ($ilist as $iset) {
-                $it = \App\Entity\Item::load($iset->item_id);
-                $pr = $it->getLastPartion(0);
-                $price += ($iset->qty * $pr);
-            }
-        }
+        
+        $price = $item->getProdprice();
         $this->editdetail->editprice->setText($price > 0 ? H::fa($price) : '');
 
         $this->updateAjax(array('editprice'));

@@ -100,6 +100,7 @@ class GIList extends \App\Pages\Base
         //   $npform->add(new DropDownChoice('npst' ))->onChange($this,'onST');
         $npform->add(new DropDownChoice('nppt'));
         $npform->add(new DropDownChoice('nppm'));
+        $npform->add(new DropDownChoice('nppmback'));
         $npform->add(new TextInput('npback'));
         $npform->add(new Label('npttncust'));
         $npform->add(new Label('npttaddress'));
@@ -392,6 +393,8 @@ class GIList extends \App\Pages\Base
 
         $this->nppan->npform->nppm->setOptionList($stlist);
         $this->nppan->npform->nppm->setValue('Cash');
+        $this->nppan->npform->nppmback->setOptionList($stlist);
+        $this->nppan->npform->nppmback->setValue('Cash');
         //кто оплачивает
         $stlist = array();
         foreach ($tp['data'] as $r) {
@@ -421,7 +424,7 @@ class GIList extends \App\Pages\Base
         $p = 0;
         foreach ($list as $it) {
             if ($it->weight > 0) {
-                $w += $it->weight;
+                $w += ($it->weight*$it->quantity);
             }
             $p = $p + ($it->quantity * $it->price);
         }
@@ -534,11 +537,16 @@ class GIList extends \App\Pages\Base
         $params['CargoType'] = 'Cargo';
 
         $params['Weight'] = $this->nppan->npform->npw->getText();
+        if($params['SeatsAmount']  >1) {
+           $params['Weight']  = number_format($params['Weight'] / $params['SeatsAmount'] , 1, '.', '');
+        }
+        
         $moneyback = $this->nppan->npform->npback->getText();
         if ($moneyback > 0) {   //если  введена  обратная сумма
             $params['BackwardDeliveryData'] =  array(array(
                 'PayerType'        => 'Recipient',
                 'CargoType'        => 'Money',
+                'PaymentMethod'    => $this->nppan->npform->nppmback->getValue(),
                 'RedeliveryString' => $moneyback)
         );
         }

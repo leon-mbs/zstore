@@ -450,6 +450,7 @@ class Task extends \App\Pages\Base
 
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
+        $this->_doc->headerdata['start'] = $this->_doc->document_date;
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->customer_id = $this->docform->customer->getKey();

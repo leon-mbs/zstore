@@ -390,5 +390,9 @@
   "sb_rsvuser": "Пользователь  системы",
   "sb_subject": "Уведомление  с %s",
   "noselpayment": "Не выбрано счет",
-  "paymentseq": "Счета одинаковые"   
+  "paymentseq": "Счета одинаковые" ,  
+  "custcreated": "Добавлен  %s пользователем %s",   
+  "custlastdoc": "Последний документ %s от %s. Всего %s" ,   
+  "enterleadsource": "Не  введен источник  лида",    
+  "enterleadstatus": "Не  введено состояние  лида"   
 }
