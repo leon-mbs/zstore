@@ -135,26 +135,7 @@ class Outcome extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
-        // скидка
-
-        /*
-        $sql = "document_id in( select  d.document_id  from  
-               `documents_view` d  
-               where    d.state >3 and 
-                 d.`meta_name` in ('GoodsIssue', 'Order',  'POSCheck')
-               {$br}  {$u}     and  d.payamount >0 and  d.payamount <  d.amount 
-              AND DATE(d.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(d.document_date) <= " . $conn->DBDate($to) . ")";
-
-        $res = \App\Entity\Doc\Document::find($sql);
-        $disc = 0;
-        foreach ($res as $d) {
-            if ($d->headerdata['paydisc'] > 0) {
-
-                $disc += $d->headerdata['paydisc'];
-            }
-        }
-        */
+   
 
         $detail = array();
 
