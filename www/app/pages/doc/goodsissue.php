@@ -135,6 +135,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->fromprod->setChecked($this->_doc->headerdata['fromprod']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
             $this->docform->payamount->setText($this->_doc->payamount);
@@ -1016,7 +1017,8 @@ class GoodsIssue extends \App\Pages\Base
          $this->docform->fromprod->setVisible(false);
          foreach ($this->_itemlist as $item) {
             if($item->item_type == Item::TYPE_PROD) {
-               $this->docform->fromprod->setVisible(true);       
+               $this->docform->fromprod->setVisible(true);   
+                   
                return;
             }
 

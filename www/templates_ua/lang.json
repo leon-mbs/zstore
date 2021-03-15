@@ -382,6 +382,7 @@
   "paymentseq": "Рахунки  однаковi" ,
   "custcreated": "Доданий  %s користувачем %s",   
   "custlastdoc": "Останнiй документ %s вiд %s. Всього %s",   
+  "noselfprice": "Не  розрахована собівартість готової продукції %s",    
   "enterleadsource": "Не  введено джероло  лiда",    
   "enterleadstatus": "Не  введений стан  лiда"   
   

@@ -98,8 +98,9 @@ class GoodsIssue extends Document
           //оприходуем  с  производства
             if( $this->headerdata['fromprod'] ==1 && $item->item_type==Item::TYPE_PROD) {
                 $price = $item->getProdprice() ;
+             
                 if($price ==0){
-                    throw new \Exception(H::l('test')) ;
+                    throw new \Exception(H::l('noselfprice',$item->itemname)) ;
                    
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
