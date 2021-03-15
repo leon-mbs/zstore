@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Entity\Entry;
+use App\Entity\Item;
 use App\Helper as H;
 
 /**
@@ -85,7 +86,6 @@ class GoodsIssue extends Document
     }
 
     public function Execute() {
-        //$conn = \ZDB\DB::getConnect();
 
         $k = 1;   //учитываем  скидку
         if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
@@ -93,6 +93,27 @@ class GoodsIssue extends Document
         }
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
+         
+         
+          //оприходуем  с  производства
+            if( $this->headerdata['fromprod'] ==1 && $item->item_type==Item::TYPE_PROD) {
+                $price = $item->getProdprice() ;
+                if($price ==0){
+                    throw new \Exception(H::l('test')) ;
+                   
+                }
+                $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
+
+                $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
+                $sc->setStock($stock->stock_id);
+                 
+
+                $sc->save();
+         
+            }         
+          
+         
+            //продажа
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
@@ -102,8 +123,18 @@ class GoodsIssue extends Document
                 $sc->save();
                 $amount += $item->price * $k * $st->quantity;
             }
+            
+
+            
+            
         }
 
+         
+        
+        
+        
+        
+        
         //списываем бонусы
         if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);

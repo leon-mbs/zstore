@@ -14,12 +14,21 @@
                 <input class="form-control" type="text" zippy="document_number" required="required">
             </div>
             <div class="form-group  ">
-                <label for="store">На склад</label>
+                <label for="store">Оприходовать на склад</label>
                 <select class="form-control" zippy="store">
                     <option value="0">Не выбран</option>
                 </select>
             </div>
-
+            <div class="form-group  ">
+                <label for="storefrom">Списать сырье и материалы 
+                      <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="Списать  материалы, указаные в  комплектации  готовой продукции с  указаного  склада.                   Имеет  смысл для  производств  с коротким  циклом например когда                     материалы  списываются  в  тот  же день  что и оприходуется  продукция  "></i>
+                </label>
+                <select class="form-control" zippy="storefrom">
+                    <option value="0">Не выбрано</option>
+                </select>
+                  
+            </div> 
         </div>
         <div class="col-12 col-md-3">
             <div class="form-group">
@@ -39,13 +48,13 @@
                 <input class="form-control" type="text" zippy="notes">
 
             </div>
-
+      
 
         </div>
     </div>
     <div class="row">
         <div class="col-10">
-            <a zippy="addrow">Добавить позицию</a>
+            <a zippy="addrow" class="btn btn-outline-primary  ">Добавить позицию</a>
             <table class="table  table-sm">
                 <tr>
 
