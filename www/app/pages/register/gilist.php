@@ -236,7 +236,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->closeorder->setVisible(false);
         if ($this->_doc->headerdata['order_id'] > 0) {
             $order = Document::load($this->_doc->headerdata['order_id']);
-            if ($order->payamount == $order->payed) {
+            if ($order->payamount == $order->payed || $order->headerdata['payment']==0) {
                 $this->statuspan->statusform->closeorder->setVisible(true);
             }
         }

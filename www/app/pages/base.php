@@ -221,9 +221,21 @@ class Base extends \Zippy\Html\WebPage
     }
  
     private function generateTosats() {
-          
+        
         $this->_tvars["toasts"] = array();
-       // $this->_tvars["toasts"][]   = array('title'=>"title:\"Задайте  склад  по  умолчанию  в  профиле\"")  ;
-            
+        if(\App\Session::getSession()->toasts == true) return;//уже показан        
+        
+        $user = System::getUser() ;
+        if($user->defstore ==0)  {
+           $this->_tvars["toasts"][]   = array('title'=>"title:\"".Helper::l("nodefstore")."\"")  ;    
+        }
+        if($user->deffirm ==0)  {
+           $this->_tvars["toasts"][]   = array('title'=>"title:\"".Helper::l("nodeffirm")."\"")  ;    
+        }
+        if($user->defmf ==0)  {
+           $this->_tvars["toasts"][]   = array('title'=>"title:\"".Helper::l("nodefmf")."\"")  ;    
+        }
+        
+         \App\Session::getSession()->toasts = true;    
     }
 }

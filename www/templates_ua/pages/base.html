@@ -758,6 +758,17 @@
 
 
 <script>
+  {{#toasts}}
+   $(document).Toasts('create', {
+         icon: 'fa fa-exclamation-triangle text-warning',
+         position:'bottomRight',
+         {{{title}}}
+       
+       })
+      
+  {{/toasts}}
+
+
     toastr.options = {
         "closeButton": true,
         "debug": false,
