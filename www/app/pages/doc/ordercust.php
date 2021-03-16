@@ -172,7 +172,7 @@ class OrderCust extends \App\Pages\Base
         }
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
-      $this->docform->detail->Reload();
+        $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {

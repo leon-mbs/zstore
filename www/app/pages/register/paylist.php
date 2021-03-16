@@ -16,6 +16,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\BookmarkableLink;
 
 /**
  * журнал платежей
@@ -92,8 +93,8 @@ class PayList extends \App\Pages\Base
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $user = \App\System::getUser();
-        //   $row->add(new ClickLink('del'))->setVisible($user->rolename == 'admins');
-        //  $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
+          $row->add(new BookmarkableLink('del'))->setVisible($user->rolename == 'admins');
+         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
     }
 
     //просмотр
@@ -116,9 +117,11 @@ class PayList extends \App\Pages\Base
         $id = $sender->pl_id->getText();
 
         $pl = Pay::load($id);
+ 
+
         $doc = Document::load($pl->document_id);
-        // Pay::cancelPayment($id, $sender->notes->getText());
-        Pay::delete($id);
+        Pay::cancelPayment($id, $sender->notes->getText());
+       
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;

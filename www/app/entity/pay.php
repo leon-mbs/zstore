@@ -16,7 +16,8 @@ class Pay extends \ZCL\DB\Entity
     const PAY_BASE_INCOME  = 1;     //операционные доходы  
     const PAY_OTHER_INCOME = 2;   //прочие доходы
     const PAY_FIN          = 3;   //доходы от  фин.  деятельности
-
+    const PAY_CANCEL_CUST = 5;    //отмена  платежа  покупки
+ 
 
     const PAY_BASE_OUTCOME     = 50;    //операционные расходы  
     const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
@@ -29,7 +30,8 @@ class Pay extends \ZCL\DB\Entity
     const PAY_DIVIDEND_OUTCOME = 58;   //распределение прибыли
     const PAY_INV              = 59;   //Инвестиции
     const PAY_BANK             = 60;   //Банковское  обслуживание
-
+    const PAY_CANCEL = 58;    //отмена  платежа  продажи
+ 
     protected function init() {
         $this->pl_id = 0;
         $this->paytype = 0;
@@ -131,12 +133,18 @@ class Pay extends \ZCL\DB\Entity
             return;
         }
 
+        $doc = \App\Entity\Doc\Document::load($pl->document_id);
+        
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $pl->mf_id;
 
         $pay->amount = 0 - $pl->amount;
         $pay->document_id = $pl->document_id;
-
+        
+    
+        $pay->paytype = $pl->paytype;
+        
+        
         $pay->paydate = time();
         $pay->notes = $comment;
 
@@ -158,6 +166,7 @@ class Pay extends \ZCL\DB\Entity
 
             $list[self::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[self::PAY_FIN] = \App\Helper::l('pt_fin');
+            $list[self::PAY_CANCEL_CUST] = \App\Helper::l('pt_cancelcust');
 
         }
 
@@ -173,6 +182,7 @@ class Pay extends \ZCL\DB\Entity
             $list[self::PAY_OTHER_OUTCOME] = \App\Helper::l('pt_outother');
             $list[self::PAY_INV] = \App\Helper::l('pt_inv');
             $list[self::PAY_BANK] = \App\Helper::l('pt_bank');
+            $list[self::PAY_CANCEL] = \App\Helper::l('pt_cancel');
 
         }
 
