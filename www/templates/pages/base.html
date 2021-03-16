@@ -731,6 +731,9 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper mb-4">
+    
+   
+    
         <!-- Main content -->
         <section class="content">
             <div class="row justify-content-center mt-2 mb-1">
@@ -757,6 +760,9 @@
 
 
                     <childpage/>
+                    
+       
+                    
                 </div>
             </div>
         </section>
@@ -766,10 +772,23 @@
 
 </div>
 <!-- ./wrapper -->
+    
 
+ 
 
 <script>
-
+ 
+  {{#toasts}}
+   $(document).Toasts('create', {
+         icon: 'fa fa-exclamation-triangle text-warning',
+         {{{title}}}
+       
+       })
+      
+  {{/toasts}}
+  
+    
+     
     toastr.options = {
         "closeButton": true,
         "debug": false,

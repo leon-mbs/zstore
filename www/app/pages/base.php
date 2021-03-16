@@ -114,6 +114,10 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
+        
+ 
+       $this->generateTosats();
+        
     }
 
     public function LogoutClick($sender) {
@@ -215,5 +219,11 @@ class Base extends \Zippy\Html\WebPage
     public function goDocView() {
         $this->goAnkor('dankor');
     }
-
+ 
+    private function generateTosats() {
+          
+        $this->_tvars["toasts"] = array();
+       // $this->_tvars["toasts"][]   = array('title'=>"title:\"Задайте  склад  по  умолчанию  в  профиле\"")  ;
+            
+    }
 }
