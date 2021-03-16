@@ -111,4 +111,7 @@ body {
 table {
   font-family: "Arial"
 }  
- 
+.toast-header {
+  
+  background-color: #fff;
+}

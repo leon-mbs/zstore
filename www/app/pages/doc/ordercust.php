@@ -128,10 +128,10 @@ class OrderCust extends \App\Pages\Base
         $row->add(new Label('desc', $item->desc));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
-        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new SubmitLink('edit'))->onClick($this, 'editOnClick');
         $row->edit->setVisible($item->old != true);
 
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new SubmitLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
     public function editOnClick($sender) {

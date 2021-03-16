@@ -266,7 +266,7 @@ class OrderList extends \App\Pages\Base
             
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(false);
           
          }

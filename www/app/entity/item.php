@@ -453,7 +453,9 @@ class Item extends \ZCL\DB\Entity
                 $price += ($iset->qty * $pr);
             }
         } 
-        
+        if($price==0) {  //ищем  последнюю  партию
+            $pr = $this->getLastPartion(0);
+        }
         
         return  $price;     
     }

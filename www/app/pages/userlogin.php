@@ -86,6 +86,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $user = Helper::login($login, $password);
 
             if ($user instanceof User) {
+                  \App\Session::getSession()->clean() ;
                 $user->lastlogin = time();
                 $user->save();
                 System::setUser($user);
@@ -96,7 +97,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
                     setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
                 }
-                //$logger->info('Logined ' . $user->userlogin . ', ' . $_SERVER["REMOTE_ADDR"]);
+                
                 if ($_config['modules']['shop'] == 1) {
                     App::Redirect('\App\Pages\Main');
                 } else {

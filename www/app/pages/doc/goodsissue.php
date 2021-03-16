@@ -18,6 +18,7 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -86,6 +87,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new CheckBox('fromprod'));
 
         $cp = \App\Session::getSession()->clipboard;
         $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);
@@ -133,6 +135,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->fromprod->setChecked($this->_doc->headerdata['fromprod']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
             $this->docform->payamount->setText($this->_doc->payamount);
@@ -306,7 +309,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->_tvars['manlist'][] = array('mitem' => $man);
         }
 
-
+        $this->checkProd();
     }
 
     public function detailOnRow($row) {
@@ -347,7 +350,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
-    }
+        $this->checkProd();
+   }
 
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
@@ -544,6 +548,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->calcPay();
+        $this->checkProd();
     }
 
     public function cancelrowOnClick($sender) {
@@ -611,6 +616,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
+        $this->_doc->headerdata['fromprod'] = $this->docform->fromprod->isChecked() ?1:0;
         $this->_doc->headerdata['order_id'] = $this->_orderid;
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -1005,6 +1011,20 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->calcTotal();
         $this->calcPay();
+    }
+
+    public function checkProd(){
+         $this->docform->fromprod->setVisible(false);
+         foreach ($this->_itemlist as $item) {
+            if($item->item_type == Item::TYPE_PROD) {
+               $this->docform->fromprod->setVisible(true);   
+                   
+               return;
+            }
+
+         }
+        
+         
     }
 
 }

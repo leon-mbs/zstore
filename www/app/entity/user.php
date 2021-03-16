@@ -20,6 +20,7 @@ class User extends \ZCL\DB\Entity
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
+        $this->deffirm = 0;
         $this->hidesidebar = 0;
         $this->pagesize = 25;
         $this->createdon = time();
