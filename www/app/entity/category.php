@@ -33,6 +33,8 @@ class Category extends \ZCL\DB\Entity
         $this->price3 = (string)($xml->price3[0]);
         $this->price4 = (string)($xml->price4[0]);
         $this->price5 = (string)($xml->price5[0]);
+        $this->image_id = (int)$xml->image_id[0];
+        $this->parent_id = (int)$xml->parent_id[0];
 
 
         parent::afterLoad();
@@ -48,6 +50,8 @@ class Category extends \ZCL\DB\Entity
         $this->detail .= "<price3>{$this->price3}</price3>";
         $this->detail .= "<price4>{$this->price4}</price4>";
         $this->detail .= "<price5>{$this->price5}</price5>";
+        $this->detail .= "<image_id>{$this->image_id}</image_id>";
+        $this->detail .= "<parent_id>{$this->parent_id}</parent_id>";
 
 
         $this->detail .= "</detail>";

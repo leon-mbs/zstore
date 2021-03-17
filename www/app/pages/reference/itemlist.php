@@ -175,6 +175,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        $row->imagelistitem->setAttribute('data-gallery', $item_id);
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
@@ -382,7 +383,22 @@ class ItemList extends \App\Pages\Base
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
-
+            
+            if($imagedata[0] != $imagedata[1] ) {
+              $thumb = new \App\Thumb($file['tmp_name']);
+              if($imagedata[0] > $imagedata[1] ) {
+                  $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+              }
+             if($imagedata[0] < $imagedata[1] ) {
+                  $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+              }
+              $image->content = $thumb->getImageAsString();
+ 
+                
+            }
+            
+            
+            
             $image->save();
             $this->_item->image_id = $image->image_id;
             $this->_item->Save();
