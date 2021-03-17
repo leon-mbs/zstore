@@ -13,15 +13,11 @@ class Category extends \ZCL\DB\Entity
 
     protected function init() {
         $this->cat_id = 0;
+        $this->parent_id = 0;
+        $this->image_id = 0;
     }
 
-    protected function beforeDelete() {
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "  select count(*)  from  items where   cat_id = {$this->cat_id}";
-        $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Категория используется в  товарах" : "";
-    }
+ 
 
     protected function afterLoad() {
 
@@ -58,5 +54,45 @@ class Category extends \ZCL\DB\Entity
 
         return true;
     }
+     
+    
+    public  function hasChild(){
+        $conn = \ZDB\DB::getConnect();
+       
+        $sql = "  select count(*)  from  item_cat where detail like '%<parent_id>{$this->cat_id}</parent_id>%' ";
+        $cnt = $conn->GetOne($sql);
+        return  $cnt > 0   ;
+        
+    }
 
+    public static  function findFullData(){
+        $clist = Category::find('','cat_name');
+         
+        foreach($clist as $c){
+           
+            $c->parents = $c->getParents($clist);
+            
+            $names=array();
+            foreach($c->parents as $p)  {
+                $names[]=  $clist[$p]->cat_name;
+            }
+            $names[]  =  $c->cat_name;
+            $c->full_name =  implode('/',$names)   ;
+        }
+      
+        return $clist;
+        
+    }
+    
+    private    function getParents(  &$clist){
+         $p = array();
+        
+         if(  $clist[$this->parent_id]  instanceof  Category) {
+            $p[]= $this->parent_id;
+            $pp = $clist[$this->parent_id]->getParents($clist); 
+            if(count($pp)>0) $p = array_merge($p,$pp) ;
+         }
+         return $p;
+    }
+       
 }
