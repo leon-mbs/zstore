@@ -1,21 +1,7 @@
-ALTER TABLE `item_cat` ADD `parent_id` INT NOT NULL DEFAULT '0'  ;   
-CREATE   VIEW `item_cat_view` AS 
-  select 
-    `c`.`cat_id` AS `cat_id`,
-    `c`.`cat_name` AS `cat_name`,
-    `c`.`detail` AS `detail`,
-    `c`.`parent_id` AS `parent_id`,
-    `p`.`cat_name` AS `parent_name`,
-    coalesce((
-  select 
-    count(0) 
-  from 
-    `items` `i` 
-  where 
-    (`i`.`cat_id` = `item_cat`.`cat_id`)),0) AS `qty` 
-  from 
-    (`item_cat` `c` left join `item_cat` `p` on((`c`.`parent_id` = `p`.`cat_id`)));
-    
+ALTER TABLE `item_cat` ADD `parent_id` INT   NULL DEFAULT '0'  ;   
+
+
+ 
      
 CREATE TABLE `empacc` (
   `ea_id` int(11) NOT NULL AUTO_INCREMENT,

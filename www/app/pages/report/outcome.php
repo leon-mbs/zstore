@@ -32,7 +32,7 @@ class Outcome extends \App\Pages\Base
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN')  {$br}  )", 'username'), 0));
-        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
+        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(), 0))->setVisible(false);
         $hlist = \App\Entity\Customer::getHoldList();
         //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
 

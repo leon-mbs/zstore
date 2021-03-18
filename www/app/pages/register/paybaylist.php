@@ -100,7 +100,7 @@ class PayBayList extends \App\Pages\Base
         select customer_id,  (case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) as sam 
             from `documents_view`  
             where {$br}     (payamount >0  or  payed >0) {$this->_docs}  and state not in ({$this->_state})   and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))
-            ) t join customers c  on t.customer_id = c.customer_id    {$hold}
+            ) t join customers c  on t.customer_id = c.customer_id  and c.status=0   {$hold}
              group by c.customer_name,c.phone, c.customer_id 
              having sam <> 0 
              order by c.customer_name ";

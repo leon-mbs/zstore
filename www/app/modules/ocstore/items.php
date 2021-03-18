@@ -38,7 +38,7 @@ class Items extends \App\Pages\Base
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('searchcat', \App\Entity\Category::findArray("cat_name", "", "cat_name"), 0));
+        $this->filter->add(new DropDownChoice('searchcat', \App\Entity\Category::getList(), 0));
 
         $this->add(new Form('exportform'))->onSubmit($this, 'exportOnSubmit');
 

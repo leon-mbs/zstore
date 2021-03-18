@@ -112,7 +112,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->add(new TextInput('editnewitemsnumber'));
         $this->editnewitem->add(new Date('editnewitemsdate'));
         $this->editnewitem->add(new TextInput('editnewmanufacturer'));
-        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::findArray("cat_name", "", "cat_name"), 0));
+        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 

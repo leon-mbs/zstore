@@ -28,7 +28,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
+        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
         $this->filter->add(new DropDownChoice('searchstore', Store::getList(), 0));
 
 

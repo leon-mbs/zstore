@@ -98,7 +98,7 @@ class PaySelList extends \App\Pages\Base
         select customer_id,   (case when   meta_name='IncomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) as sam   
               from `documents_view`  
             where {$br}   customer_id > 0  {$this->_docs}      and state > 3  and (payamount >0  or  payed >0)   and payamount <> payed  
-            ) t join customers c  on t.customer_id = c.customer_id    {$hold}
+            ) t join customers c  on t.customer_id = c.customer_id and c.status=0     {$hold}
              group by c.customer_name,c.phone, c.customer_id 
              having sam <> 0 
              order by c.customer_name ";

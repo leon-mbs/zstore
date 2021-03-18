@@ -39,7 +39,7 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchkey'));
         $catlist = array();
         $catlist[-1] = H::l("withoutcat");
-        foreach (Category::findArray("cat_name", "", "cat_name") as $k => $v) {
+        foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
@@ -99,7 +99,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
-        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
+        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select parent_id from item_cat  )", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));

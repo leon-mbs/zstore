@@ -30,8 +30,7 @@ class Category extends \ZCL\DB\Entity
         $this->price4 = (string)($xml->price4[0]);
         $this->price5 = (string)($xml->price5[0]);
         $this->image_id = (int)$xml->image_id[0];
-        $this->parent_id = (int)$xml->parent_id[0];
-
+     
 
         parent::afterLoad();
     }
@@ -47,8 +46,7 @@ class Category extends \ZCL\DB\Entity
         $this->detail .= "<price4>{$this->price4}</price4>";
         $this->detail .= "<price5>{$this->price5}</price5>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
-        $this->detail .= "<parent_id>{$this->parent_id}</parent_id>";
-
+      
 
         $this->detail .= "</detail>";
 
@@ -59,7 +57,7 @@ class Category extends \ZCL\DB\Entity
     public  function hasChild(){
         $conn = \ZDB\DB::getConnect();
        
-        $sql = "  select count(*)  from  item_cat where detail like '%<parent_id>{$this->cat_id}</parent_id>%' ";
+        $sql = "  select count(*)  from  item_cat where  parent_id = {$this->cat_id} ";
         $cnt = $conn->GetOne($sql);
         return  $cnt > 0   ;
         
@@ -76,6 +74,7 @@ class Category extends \ZCL\DB\Entity
             foreach($c->parents as $p)  {
                 $names[]=  $clist[$p]->cat_name;
             }
+            $names = array_reverse($names) ;
             $names[]  =  $c->cat_name;
             $c->full_name =  implode('/',$names)   ;
         }
@@ -94,5 +93,11 @@ class Category extends \ZCL\DB\Entity
          }
          return $p;
     }
-       
+    
+    
+    public static function getList(){
+        return Category::findArray("cat_name", "cat_id in (select cat_id from items  )", "cat_name")  ;
+    }  
+    
+    
 }

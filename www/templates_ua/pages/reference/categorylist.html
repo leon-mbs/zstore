@@ -7,7 +7,12 @@
 
 <body>
 <div class="row">
-    <div class="col-12 col-md-8 col-xl-6">
+    {{#usecattree}}
+    <div class="col-12 col-md-10 col-xl-8">
+    {{/usecattree}}
+    {{^usecattree}}        
+    <div class="col-12 col-md-6 col-xl-4">
+    {{/usecattree}}    
         <div zippy="categorytable">
             <h3>Категорії товарів
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
