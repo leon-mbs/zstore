@@ -43,14 +43,21 @@ class Item extends \ZCL\DB\Entity
         $this->val = (string)($xml->val[0]);
         $this->zarp = (string)($xml->zarp[0]);
 
-        $this->pricelist = (int)$xml->pricelist[0];
+        $this->noprice = (int)$xml->noprice[0];
+        $this->noshop = (int)$xml->noshop[0];
+        $this->autooutcome = (int)$xml->autooutcome[0];
+        $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
 
         $this->weight = (string)$xml->weight[0];
+        $this->maxsize = (string)$xml->maxsize[0];
+        $this->volume = (string)$xml->volume[0];
+        $this->customsize = (string)$xml->customsize[0];
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
         $this->warranty = (string)$xml->warranty[0];
+        $this->fulldesc = (string)$xml->fulldesc[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -88,7 +95,10 @@ class Item extends \ZCL\DB\Entity
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
-        $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
+        $this->detail .= "<noprice>{$this->noprice}</noprice>";
+        $this->detail .= "<noshop>{$this->noshop}</noshop>";
+        $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";
+        $this->detail .= "<autoincome>{$this->autoincome}</autoincome>";
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
 
         $this->detail .= "<cell>{$this->cell}</cell>";
@@ -96,6 +106,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
         $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
+        $this->detail .= "<fulldesc><![CDATA[{$this->fulldesc}]]></fulldesc>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
@@ -108,14 +119,15 @@ class Item extends \ZCL\DB\Entity
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<weight>{$this->weight}</weight>";
+        $this->detail .= "<maxsize>{$this->maxsize}</maxsize>";
+        $this->detail .= "<volume>{$this->volume}</volume>";
+        $this->detail .= "<customsize>{$this->customsize}</customsize>";
 
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
 
-
         $this->detail .= "<brprice><![CDATA[{$brprice}]]></brprice>";
-
 
         $this->detail .= "</detail>";
 

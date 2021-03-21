@@ -41,7 +41,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        $this->docform->add(new DropDownChoice('storefrom', Store::getList(), H::getDefStore()));
+        
         $this->docform->add(new TextInput('notes'));
 
 
@@ -73,7 +73,7 @@ class ProdReceipt extends \App\Pages\Base
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->storefrom->setValue($this->_doc->headerdata['storefrom']);
+            
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
@@ -86,7 +86,7 @@ class ProdReceipt extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                        $this->docform->storefrom->setValue($basedoc->headerdata['storefrom']);
+                        
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -267,7 +267,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['storefrom'] = $this->docform->storefrom->getValue();
+        
 
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);

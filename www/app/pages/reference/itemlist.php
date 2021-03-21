@@ -95,6 +95,9 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editminqty'));
         $this->itemdetail->add(new TextInput('editzarp'));
         $this->itemdetail->add(new TextInput('editweight'));
+        $this->itemdetail->add(new TextInput('editmaxsize'));
+        $this->itemdetail->add(new TextInput('editvolume'));
+        $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
 
         $this->itemdetail->add(new TextInput('editcell'));
@@ -104,7 +107,10 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('edituseserial'));
-        $this->itemdetail->add(new CheckBox('editpricelist', true));
+        $this->itemdetail->add(new CheckBox('editnoprice'));
+        $this->itemdetail->add(new CheckBox('editnoshop'));
+        $this->itemdetail->add(new CheckBox('editautooutcome'));
+        $this->itemdetail->add(new CheckBox('editautoincome'));
         $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
@@ -163,7 +169,6 @@ class ItemList extends \App\Pages\Base
 
 
         $row->add(new Label('cell', $item->cell));
-        $row->add(new Label('inprice'))->setVisible($item->pricelist);
         $row->add(new Label('inseria'))->setVisible($item->useserial);
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -226,7 +231,9 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
-        $this->itemdetail->editweight->setText($this->_item->weight);
+        $this->itemdetail->editmaxsize->setText($this->_item->maxsize);
+        $this->itemdetail->editvolume->setText($this->_item->volume);
+        $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
 
@@ -235,7 +242,9 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
-        $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
+        $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
+        $this->itemdetail->editautooutcome->setChecked($this->_item->autooutcome);
+        $this->itemdetail->editautoincome->setChecked($this->_item->autoincome);
         if ($this->_item->image_id > 0) {
             $this->itemdetail->editdelimage->setChecked(false);
             $this->itemdetail->editdelimage->setVisible(true);
@@ -260,7 +269,10 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editmsr->setText('шт');
         $this->itemdetail->editimage->setVisible(false);
         $this->itemdetail->editdelimage->setVisible(false);
-        $this->itemdetail->editpricelist->setChecked(true);
+        $this->itemdetail->editnoprice->setChecked(false);
+        $this->itemdetail->editnoshop->setChecked(false);
+        $this->itemdetail->editautooutcome->setChecked(false);
+        $this->itemdetail->editautoincome->setChecked(false);
         $this->_item = new Item();
 
         if (System::getOption("common", "autoarticle") == 1) {
@@ -302,6 +314,9 @@ class ItemList extends \App\Pages\Base
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->weight = $this->itemdetail->editweight->getText();
+        $this->_item->maxsize = $this->itemdetail->editmaxsize->getText();
+        $this->_item->volume = $this->itemdetail->editvolume->getText();
+        $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
 
@@ -312,7 +327,11 @@ class ItemList extends \App\Pages\Base
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
 
-        $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
+        $this->_item->noprice = $this->itemdetail->editnoprice->isChecked() ? 1 : 0;
+        $this->_item->noshop = $this->itemdetail->editnoshop->isChecked() ? 1 : 0;
+        $this->_item->autooutcome = $this->itemdetail->editautooutcome->isChecked() ? 1 : 0;
+        $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
+
 
         //проверка  уникальности артикула
         if (strlen($this->_item->item_code) > 0) {

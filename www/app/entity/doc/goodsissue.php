@@ -86,7 +86,7 @@ class GoodsIssue extends Document
     }
 
     public function Execute() {
-
+        $parts = array();
         $k = 1;   //учитываем  скидку
         if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
             $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
@@ -96,7 +96,28 @@ class GoodsIssue extends Document
          
          
           //оприходуем  с  производства
-            if( $this->headerdata['fromprod'] ==1 && $item->item_type==Item::TYPE_PROD) {
+            if( $item->autoincome ==1 && $item->item_type==Item::TYPE_PROD) {
+                
+                 if($item->autooutcome ==1)  {    //комплекты
+                        $set =  \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
+                        foreach($set  as $part) {
+                           
+                            $itemp = \App\Entity\Item::load( $part->item_id);
+                            $itemp->quantity = $item->quantity*$part->qty;
+                            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
+
+                            foreach ($listst as $st) {
+                                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                                $sc->setStock($st->stock_id);
+
+                                $sc->save();
+                            }                    
+                            
+                            
+                        }                
+                 }
+                  
+                
                 $price = $item->getProdprice() ;
              
                 if($price ==0){
@@ -110,9 +131,10 @@ class GoodsIssue extends Document
                  
 
                 $sc->save();
+            
          
             }         
-          
+           
          
             //продажа
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
@@ -124,9 +146,7 @@ class GoodsIssue extends Document
                 $sc->save();
                 $amount += $item->price * $k * $st->quantity;
             }
-            
-
-            
+              
             
         }
 

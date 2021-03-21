@@ -78,6 +78,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
         $this->categorydetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->categorydetail->add(new CheckBox('editdelimage'));
+        $this->categorydetail->add(new CheckBox('editnoshop'));
 
         $this->categorydetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->categorydetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -155,6 +156,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->setVisible(true);
         $this->categorydetail->editcat_name->setText($this->_category->cat_name);
         $this->categorydetail->editparent->setValue($this->_category->parent_id);
+        $this->categorydetail->editnoshop->setChecked($this->_category->noshop);
 
         $this->categorydetail->editprice1->setText($this->_category->price1);
         $this->categorydetail->editprice2->setText($this->_category->price2);
@@ -194,6 +196,7 @@ class CategoryList extends \App\Pages\Base
 
         $this->_category->parent_id = $this->categorydetail->editparent->getValue();
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
+        $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ?  1:0;
         if ($this->_category->cat_name == '') {
             $this->setError("entername");
             return;

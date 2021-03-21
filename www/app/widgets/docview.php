@@ -144,7 +144,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->dw_paylist->Reload();
 
         //проводки
-        $sql = " select e.entry_id, s.stock_id, s.itemname,s.item_code,e.quantity,e.amount  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $this->_doc->document_id . " order  by  s.itemname";
+        $sql = " select e.entry_id, s.stock_id, s.itemname,s.item_code,e.quantity,e.amount  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $this->_doc->document_id . " order  by e.entry_id";
         $this->_itemlist = \App\Entity\Entry::findBySql($sql);
         $this->dw_itemlist->Reload();
 

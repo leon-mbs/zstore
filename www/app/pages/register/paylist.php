@@ -166,7 +166,7 @@ class PayList extends \App\Pages\Base
         $i = 1;
         foreach ($list as $doc) {
             $i++;
-            $data['A' . $i] = H::fd(strtotime($doc->paydate));
+            $data['A' . $i] = H::fd($doc->paydate);
             $data['B' . $i] = $doc->mf_name;
             $data['C' . $i] = ($doc->amount > 0 ? H::fa($doc->amount) : "");
             $data['D' . $i] = ($doc->amount < 0 ? H::fa(0 - $doc->amount) : "");

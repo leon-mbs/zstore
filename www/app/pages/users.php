@@ -72,7 +72,7 @@ class Users extends \App\Pages\Base
         $this->editpan->setVisible(true);
         // Очищаем  форму
         $this->editpan->editform->clean();
-
+$this->editpan->editform->brow->Reload();
 
         $this->user = new User();
     }

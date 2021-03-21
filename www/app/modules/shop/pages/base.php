@@ -38,7 +38,8 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
-
+        $this->_tvars["shopname"] = $this->op['shopname'];
+      
     }
 
     //вывод ошибки,  используется   в дочерних страницах

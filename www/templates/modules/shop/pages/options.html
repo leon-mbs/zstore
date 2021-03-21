@@ -5,8 +5,7 @@
 <div class="row">
     <div class="col-12 col-md-6 col-lg-4  ">
         <h4>Администрирование</h4>
-        <a zippy="updateprices" class="btn btn-outline-info"> Обновить цены</a>
-        &nbsp;&nbsp;<a zippy="updatesitemap" class="btn btn-outline-info"> Обновить sitemap.xml</a>
+       <a zippy="updatesitemap" class="btn btn-outline-info"> Обновить sitemap.xml</a>
     </div>
 </div>
 
@@ -14,8 +13,23 @@
     <div class="col-12  col-sm-10 col-md-8 col-lg-6  col-xl-6  ">
         <h4>Настройка</h4>
         <form zippy="shop" enctype="multipart/form-data">
+           <div class="form-group  row">
+                <label class="col-sm-5 col-form-label" for="shopname">Название магазина</label>
+                <div class="col-sm-7">
+                    <input required="required" class="form-control " zippy="shopname"/>
+                </div>
+            </div>
             <div class="form-group  row">
-                <label class="col-sm-5 col-form-label" for="shopdefstore">Состав для онлайна</label>
+                <label class="col-sm-5 col-form-label" for="logo">Логотип</label>
+                <div class="col-sm-7">
+                    <input type="file" class="form-control " zippy="logo"/>
+                </div>
+            </div>
+           
+            
+            
+            <div class="form-group  row">
+                <label class="col-sm-5 col-form-label" for="shopdefstore">Склад для онлайна</label>
                 <div class="col-sm-7">
                     <select class="form-control" zippy="shopdefstore">
                         <option value='0'>Не избран</option>
@@ -54,14 +68,13 @@
                 </div>
             </div>
 
-            <div class="form-group  row">
-                <label class="col-sm-5 col-form-label" for="logo">Логотип</label>
-                <div class="col-sm-7">
-                    <input type="file" class="form-control " zippy="logo"/>
-                </div>
-            </div>
-
+    
             <div class="form-check">
+                <input zippy="usefilter" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usefilter">Показывать  фильтр отбора </label>
+
+            </div>
+           <div class="form-check">
                 <input zippy="uselogin" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="uselogin">Вход в каталог через страницу логина </label>
 
@@ -77,6 +90,7 @@
     </div>
     <div class="col-12">
         <h4>Тексты страниц</h4>
+       
     </div>
     <div class="col-12 col-lg-10 col-xl-8">
         <form zippy="texts">
@@ -130,7 +144,7 @@
                 }
             }
         });
-        $('#aboutus').summernote({
+        $('#contact').summernote({
             height: 400,
             lang: 'ru-RU',
 

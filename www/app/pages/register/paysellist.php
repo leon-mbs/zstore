@@ -27,7 +27,7 @@ class PaySelList extends \App\Pages\Base
     public  $_doclist   = array();
     public  $_pays      = array();
     public  $_totamount = 0;
-    private $_docs      = " and ( meta_name in('GoodsReceipt','InvoiceCust','ReturnIssue')  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+    private $_docs      = " and ( meta_name in('GoodsReceipt','InvoiceCust' )  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
     private $_state     = "1,2,3,17,8";
 
 
@@ -144,10 +144,18 @@ class PaySelList extends \App\Pages\Base
         if (strlen($c) > 0) {
             $br = " {$c} and ";
         }
+        $this->_doclist = array();
 
-
-        $this->_doclist = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and (payamount > 0  or payed >0) and payamount <> payed  and state > 3   {$this->_docs} ", "document_date");
-
+        $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and (payamount > 0  or payed >0) and payamount <> payed  and state > 3   {$this->_docs} ", " document_date desc, document_id desc");
+        $sum=0;
+        
+        foreach($list as $d){
+            $this->_doclist[]=$d;
+            $sum += ($d->payamount - $d->payed); 
+            if($this->_cust->sam==$sum)  break;
+        }
+        $this->_doclist = array_reverse($this->_doclist)  ;
+        
         $this->plist->doclist->Reload();
     }
 
@@ -169,7 +177,8 @@ class PaySelList extends \App\Pages\Base
 
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
+        $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick'); 
+        $row->pay->setVisible($doc->payamount>0);  
     }
 
     //просмотр
@@ -210,8 +219,9 @@ class PaySelList extends \App\Pages\Base
         $this->plist->doclist->Reload(false);
 
         $this->goAnkor('dankor');
-
-        $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed));
+        $amount = $this->_doc->payamount - $this->_doc->payed ;
+        if($amount >$this->_cust->sam) $amount = $this->_cust->sam;  
+        $this->paypan->payform->pamount->setText(H::fa($amount));
         $this->paypan->payform->pcomment->setText("");;
         $this->paypan->pname->setText($this->_doc->document_number);;
 
@@ -289,8 +299,9 @@ class PaySelList extends \App\Pages\Base
         $this->setSuccess('payment_added');
 
 
-        $this->updateDocs();
+        //$this->updateDocs();
         $this->paypan->setVisible(false);
+        $this->onBack(null);
     }
 
     public function oncsv($sender) {

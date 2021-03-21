@@ -55,11 +55,32 @@ class ProdReceipt extends Document
     public function Execute() {
         $types = array();
         $common = \App\System::getOptions("common");
-        $parts = array();
+       
         
       
         foreach ($this->unpackDetails('detaildata') as $item) {
          
+            if($item->autooutcome ==1)  {  //списание  комплектующих
+                $set =  \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
+                foreach($set  as $part) {
+                   
+                    $itemp = \App\Entity\Item::load( $part->item_id);
+                    $itemp->quantity = $item->quantity*$part->qty;
+                    $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
+
+                    foreach ($listst as $st) {
+                        $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                        $sc->setStock($st->stock_id);
+
+                        $sc->save();
+                    }                    
+                    
+                    
+                }
+            }            
+            
+            
+            
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
 
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
@@ -69,31 +90,12 @@ class ProdReceipt extends Document
 
             $sc->save();
 
+
+            
+            
+        }
+       
     
-            $set =  \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
-            foreach($set  as $part) {
-               if(  isset($parts[$part->item_id])==false) $parts[$part->item_id] =0;
-               $parts[$part->item_id] += $part->qty;
-            }
-            
-            
-        }
-        //  списываем  в  производство
-        if($this->headerdata['storefrom'] >0) {
-            foreach($parts  as $id=>$qty) {
-                $item = \App\Entity\Item::load($id);
-                $item->quantity = $qty;
-                $listst = \App\Entity\Stock::pickup($this->headerdata['storefrom'], $item);
-
-                foreach ($listst as $st) {
-                    $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                    $sc->setStock($st->stock_id);
-
-                    $sc->save();
-                }
-             
-            }
-        }
         return true;
     }
 
