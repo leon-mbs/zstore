@@ -27,7 +27,7 @@ class Options extends \App\Pages\Base
 
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        $this->shop->add(new DropDownChoice('shopdefstore', \App\Entity\Store::getList()));
+        
         $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new TextInput('email'));
@@ -46,7 +46,7 @@ class Options extends \App\Pages\Base
             $shop = array();
         }
 
-        $this->shop->shopdefstore->setValue($shop['defstore']);
+        
         $this->shop->shopdefcust->setValue($shop['defcust']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->currencyname->setText($shop['currencyname']);
@@ -76,7 +76,7 @@ class Options extends \App\Pages\Base
         //todo контрагент магазина, кому  нотификацию
 
         $shop['defcust'] = $this->shop->shopdefcust->getValue();
-        $shop['defstore'] = $this->shop->shopdefstore->getValue();
+        
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();

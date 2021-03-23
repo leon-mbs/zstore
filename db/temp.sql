@@ -1,8 +1,5 @@
-ALTER TABLE `item_cat` ADD `parent_id` INT   NULL DEFAULT '0'  ;   
 
-
- 
-     
+/*     
 CREATE TABLE `empacc` (
   `ea_id` int(11) NOT NULL AUTO_INCREMENT,
   `emp_id` int(11) NOT NULL,
@@ -30,4 +27,4 @@ CREATE TABLE `prodproc` (
 
     
      
-      
+      */

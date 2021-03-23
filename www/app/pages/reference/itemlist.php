@@ -102,7 +102,8 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
-        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select parent_id from item_cat  )", "cat_name"), 0));
+        
+        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));

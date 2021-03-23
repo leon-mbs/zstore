@@ -8,8 +8,10 @@ use App\Modules\Shop\Entity\ProductAttribute;
 use App\Modules\Shop\Entity\ProductGroup;
 use App\Modules\Shop\Helper;
 use App\System;
-use ZCL\BT\Tree;
+use App\Entity\Category;
 use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
@@ -22,9 +24,10 @@ use Zippy\Html\Panel;
 class GroupList extends \App\Pages\Base
 {
 
-    private $group = null, $rootgroup;
-    public                 $attrlist = array();
-    private                $mm;
+    private $group = null  ;
+    public   $_grouplist = array()  ;
+    public    $attrlist = array();
+    private     $mm;
 
     public function __construct() {
         parent::__construct();
@@ -35,28 +38,18 @@ class GroupList extends \App\Pages\Base
             return;
         }
 
-
-        $tree = $this->add(new Tree("tree"));
-        $tree->onSelectNode($this, "onTree");
-
-        $this->ReloadTree();
-
-        $form = $this->add(new Form('newgroupform'));
-        $form->add(new TextInput('newgroupname'));
-        $form->add(new SubmitLink('newgroup'))->onClick($this, 'OnNewGroup');
-
-        $form = $this->add(new Form('groupform'));
-
-
-        $form->add(new TextInput('groupname'));
-        $form->add(new SubmitLink('renamegroup'))->onClick($this, 'OnRenameGroup');
-        $form->add(new SubmitLink('delgroup'))->onClick($this, 'OnDelGroup');
-        $form->add(new SubmitLink('savegroup'))->onClick($this, 'OnSavePhoto');
-        $form->add(new \Zippy\Html\Form\File('photo'));
-        $form->add(new \Zippy\Html\Image('group_image', ''));
-
+        $clist = Category::find(" detail not  like '%<noshop>1</noshop>%' " ) ;
+        
+        $this->_grouplist =  Category::findFullData($clist) ;
+        
+        usort($this->_grouplist,function($a,$b){ return $a->full_name > $b->full_name; }) ;
+        
+        $this->add(new DataView('grouplist', new ArrayDataSource($this,'_grouplist'), $this, 'OnGroupRow'));
+        $this->grouplist->setSelectedClass('table-success');
+        $this->grouplist->Reload();
+ 
         $attrpanel = $this->add(new Panel('attrpanel'));
-        $attrpanel->add(new \Zippy\Html\DataList\DataView('attritem', new \Zippy\Html\DataList\ArrayDataSource(new Bind($this, 'attrlist')), $this, 'OnAddRow'));
+        $attrpanel->add(new \Zippy\Html\DataList\DataView('attritem', new \Zippy\Html\DataList\ArrayDataSource(new Bind($this, 'attrlist')), $this, 'OnAttrRow'));
 
         //$this->UpdateAttrList();
 
@@ -79,162 +72,39 @@ class GroupList extends \App\Pages\Base
         $form->meashurepanel->add(new TextInput('meashure'));
         $form->meashurepanel->setVisible(false);
     }
-
-    //загрузить дерево
-    public function ReloadTree() {
-
-        $this->tree->removeNodes();
-
-        $this->rootgroup = new ProductGroup();
-        $this->rootgroup->group_id = PHP_INT_MAX;
-        $this->rootgroup->groupname = "//";
-
-        $root = new \ZCL\BT\TreeNode("//", PHP_INT_MAX);
-        $this->tree->addNode($root);
-
-        $itemlist = ProductGroup::find("", "mpath,groupname");
-        $nodelist = array();
-
-        foreach ($itemlist as $item) {
-            $node = new \ZCL\BT\TreeNode($item->groupname, $item->group_id);
-            $parentnode = @$nodelist[$item->parent_id];
-            if ($item->parent_id == 0) {
-                $parentnode = $root;
-            }
-
-            $this->tree->addNode($node, $parentnode);
-
-            $nodelist[$item->group_id] = $node;
-        }
+ 
+    public  function    OnGroupRow($row){
+        $group = $row->getDataItem() ;
+        $row->add(new  ClickLink('groupname',$this,'onGroup'))->setValue($group->full_name) ;
     }
-
-    //клик по  узлу
-    public function onTree($sender, $id) {
-        $nodeid = $this->tree->selectedNodeId();
-        if ($nodeid == -1) {
-            $this->group = null;
-            return;
-        }
-        if ($nodeid == PHP_INT_MAX) {
-            $this->group = $this->rootgroup;
-            return;
-        }
-        $this->group = ProductGroup::load($nodeid);
-        $this->groupform->groupname->setText($this->group->groupname);
-
-        $this->groupform->group_image->setUrl('/assets/images/noimage.jpg');
-        if ($this->group->image_id > 0) {
-            $this->groupform->group_image->setUrl('/loadshopimage.php?id=' . $this->group->image_id);
-        }
+    
+    public function onGroup($sender ) {
+        $this->group = $sender->getOwner()->getDataItem();
+        $this->grouplist->setSelectedRow($sender->getOwner());
+      
+        $this->grouplist->Reload(false);        
         $this->UpdateAttrList();
-        //у верхнего  уровня  нет картинок
-        $this->groupform->group_image->setVisible($this->group->parent_id > 0);
-        $this->groupform->photo->setVisible($this->group->parent_id > 0);
-        $this->groupform->savegroup->setVisible($this->group->parent_id > 0);
+      
     }
 
-    public function OnNewGroup($sender) {
-        $this->group = new ProductGroup();
-        $this->group->groupname = $this->newgroupform->newgroupname->getText();
-        $this->group->parent_id = $this->tree->selectedNodeId();
-        if ($this->group->parent_id == $this->rootgroup->group_id) {
-            $this->group->parent_id = 0;
-        } else {
-            $pcnt = Product::findCnt("group_id=" . $this->group->parent_id);
-            if ($pcnt > 0) {
-                $this->setError('notallowedtotovgroup');
-
-                return;
-            }
-        }
-        $this->group->save();
-
-        $this->newgroupform->newgroupname->setText('');
-        $this->ReloadTree();
-        $this->tree->selectedNodeId($this->group->group_id);
-        $this->onTree($this->tree, 0);
-    }
-
-    public function OnRenameGroup($sender) {
-        $newname = $this->groupform->groupname->getText();
-
-        if ($this->group->groupname == $newname) {
-            return;
-        }
-
-        $this->group->groupname = $newname;
-        $this->group->save();
-        $this->ReloadTree();
-    }
-
-    public function OnDelGroup($sender) {
-
-        $del = ProductGroup::delete($this->group->group_id);
-        if (strlen($del) > 0 && is_string($del)) {
-            $this->setError($del);
-            return;
-        }
-        $this->group = null;
-        $this->ReloadTree();
-    }
-
-    public function OnSavePhoto($sender) {
-
-
-        $filedata = $this->getComponent('photo')->getFile();
-        if (strlen($filedata["tmp_name"]) > 0) {
-            $imagedata = getimagesize($filedata["tmp_name"]);
-
-            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('');
-                return;
-            }
-
-            if ($imagedata[0] * $imagedata[1] > 1000000) {
-
-                $this->setError('toobigimage');
-                return;
-            }
-            $r = ((double)$imagedata[0]) / $imagedata[1];
-            if ($r > 1.1 || $r < 0.9) {
-                $this->setError('');
-                $this->setError('squareimage');
-                return;
-            }
-
-
-            $image = new \App\Modules\Shop\Entity\Image();
-            $image->content = file_get_contents($filedata['tmp_name']);
-
-            $thumb = new \App\Thumb($filedata['tmp_name']);
-            $thumb->resize(256, 256);
-            $image->thumb = $thumb->getImageAsString();
-
-            $image->mime = $imagedata['mime'];
-            $image->save();
-            $this->group->image_id = $image->image_id;
-            $this->group->save();
-            $this->groupform->group_image->setUrl('/loadshopimage.php?id=' . $this->group->image_id);
-        }
-    }
-
+ 
     //обновить атрибуты
     protected function UpdateAttrList() {
         $conn = \ZCL\DB\DB::getConnect();
-        $this->mm = $conn->GetRow("select coalesce(max(ordern),0) as mm,coalesce(min(ordern),0) as mi from shop_attributes_order where  pg_id=" . $this->group->group_id);
+        $this->mm = $conn->GetRow("select coalesce(max(ordern),0) as mm,coalesce(min(ordern),0) as mi from shop_attributes_order where  pg_id=" . $this->group->cat_id);
 
-        $this->attrlist = Helper::getProductAttributeListByGroup($this->group->group_id);
+        $this->attrlist = Helper::getProductAttributeListByGroup($this->group );
         $this->attrpanel->attritem->Reload();
     }
 
-    public function OnAddRow(\Zippy\Html\DataList\DataRow $datarow) {
+    public function OnAttrRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         $datarow->add(new Label("itemname", $item->attributename));
         $attrlist = Helper::getAttributeTypes();
         $datarow->add(new Label("itemtype", $attrlist[$item->attributetype]));
         $datarow->add(new Label("itemvalues", $item->valueslist));
-        $datarow->add(new ClickLink("itemdel", $this, 'OnDeleteAtribute'))->setVisible($this->group->group_id == $item->group_id);
-        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->group_id == $item->group_id);
+        $datarow->add(new ClickLink("itemdel", $this, 'OnDeleteAtribute'))->setVisible($this->group->cat_id == $item->cat_id);
+        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->cat_id == $item->cat_id);
         $datarow->add(new ClickLink("orderup", $this, 'OnUp'))->setVisible($item->ordern > $this->mm["mi"]);
         $datarow->add(new ClickLink("orderdown", $this, 'OnDown'))->setVisible($item->ordern < $this->mm["mm"]);
 
@@ -320,7 +190,7 @@ class GroupList extends \App\Pages\Base
 
         if ($attrid == "0") {
             $attr = new ProductAttribute();
-            $attr->group_id = $this->group->group_id;
+            $attr->cat_id = $this->group->cat_id;
             $attr->attributetype = $form->attrtype->getValue();
         } else {
             $attr = ProductAttribute::load($attrid);
@@ -347,7 +217,7 @@ class GroupList extends \App\Pages\Base
         if ($attrid == "0") {
             $conn = \ZCL\DB\DB::getConnect();
             $no = $conn->GetOne("select coalesce(max(ordern),0)+1 from shop_attributes_order");
-            $conn->Execute("insert into shop_attributes_order (pg_id,attr_id,ordern)values({$attr->group_id},{$attr->attribute_id},{$no} )");
+            $conn->Execute("insert into shop_attributes_order (pg_id,attr_id,ordern)values({$attr->cat_id},{$attr->attribute_id},{$no} )");
         }
 
         $this->UpdateAttrList();
@@ -359,10 +229,10 @@ class GroupList extends \App\Pages\Base
         $a1 = $sender->getOwner()->getDataItem();
 
         //предыдущий
-        $a2 = ProductAttribute::getFirst("group_id={$this->group->group_id} and ordern < {$a1->ordern}", "ordern desc");
+        $a2 = ProductAttribute::getFirst("cat_id={$this->group->cat_id} and ordern < {$a1->ordern}", "ordern desc");
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("update shop_attributes_order set ordern={$a2->ordern} where pg_id={$this->group->group_id} and attr_id={$a1->attribute_id}");
-        $conn->Execute("update shop_attributes_order set ordern={$a1->ordern} where pg_id={$this->group->group_id} and attr_id={$a2->attribute_id}");
+        $conn->Execute("update shop_attributes_order set ordern={$a2->ordern} where pg_id={$this->group->cat_id} and attr_id={$a1->attribute_id}");
+        $conn->Execute("update shop_attributes_order set ordern={$a1->ordern} where pg_id={$this->group->cat_id} and attr_id={$a2->attribute_id}");
 
         $this->UpdateAttrList();
     }
@@ -371,10 +241,10 @@ class GroupList extends \App\Pages\Base
         $a1 = $sender->getOwner()->getDataItem();
 
         //следующий
-        $a2 = ProductAttribute::getFirst("group_id={$this->group->group_id} and ordern > {$a1->ordern}", "ordern asc");
+        $a2 = ProductAttribute::getFirst("cat_id={$this->group->cat_id} and ordern > {$a1->ordern}", "ordern asc");
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("update shop_attributes_order set ordern={$a2->ordern} where pg_id={$this->group->group_id} and attr_id={$a1->attribute_id}");
-        $conn->Execute("update shop_attributes_order set ordern={$a1->ordern} where pg_id={$this->group->group_id} and attr_id={$a2->attribute_id}");
+        $conn->Execute("update shop_attributes_order set ordern={$a2->ordern} where pg_id={$this->group->cat_id} and attr_id={$a1->attribute_id}");
+        $conn->Execute("update shop_attributes_order set ordern={$a1->ordern} where pg_id={$this->group->cat_id} and attr_id={$a2->attribute_id}");
 
         $this->UpdateAttrList();
     }
@@ -389,13 +259,12 @@ class GroupList extends \App\Pages\Base
     public function beforeRender() {
         parent::beforeRender();
 
-        $this->groupform->setVisible(false);
+     
         $this->attrpanel->setVisible(false);
-        if ($this->group instanceof ProductGroup) {
-            if ($this->group->groupname != "//") {
-                $this->groupform->setVisible(true);
-                $this->attrpanel->setVisible(true);
-            }
+        if ($this->group instanceof \App\Entity\Category ) {
+          
+           $this->attrpanel->setVisible(true);
+          
         }
     }
 

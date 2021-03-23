@@ -11,10 +11,13 @@ namespace App\Entity;
 class Category extends \ZCL\DB\Entity
 {
 
+    public $parents=array();
+    
     protected function init() {
         $this->cat_id = 0;
         $this->parent_id = 0;
         $this->image_id = 0;
+        $this->parents = array();
     }
 
  
@@ -65,27 +68,35 @@ class Category extends \ZCL\DB\Entity
         
     }
 
-    public static  function findFullData(){
-        $clist = Category::find('','cat_name');
+    public static  function findFullData($clist=null){
+        if($clist==null) {
+           $clist = Category::find('','cat_name');    
+        }
+        $plist = Category::find('','cat_name'); 
          
         foreach($clist as $c){
            
-            $c->parents = $c->getParents($clist);
+            $c->parents = $c->getParents($plist);
             
             $names=array();
             foreach($c->parents as $p)  {
-                $names[]=  $clist[$p]->cat_name;
+                $names[]=  $plist[$p]->cat_name;
             }
             $names = array_reverse($names) ;
             $names[]  =  $c->cat_name;
-            $c->full_name =  implode('/',$names)   ;
+            $c->full_name =  implode(' / ',$names)   ;
         }
       
         return $clist;
         
     }
     
-    private    function getParents(  &$clist){
+    public    function getParents(  &$clist=null){
+        if($clist==null) {
+           $clist = Category::find('','cat_name');    
+        }
+        
+        
          $p = array();
         
          if(  $clist[$this->parent_id]  instanceof  Category) {
@@ -96,10 +107,23 @@ class Category extends \ZCL\DB\Entity
          return $p;
     }
     
-    
-    public static function getList(){
-        return Category::findArray("cat_name", "cat_id in (select cat_id from items  )", "cat_name")  ;
+    //список  с  тмц
+    public static function getList($fullname=false){
+        if($fullname==false) {
+           return Category::findArray("cat_name", "cat_id in (select cat_id from items where disabled <>1 )", "cat_name")  ;    
+        }
+        
+        $list = Category::find("cat_id in (select cat_id from items where disabled <>1 )", "cat_name");
+        $list = self::findFullData($list)  ;
+        
+        $ret = array();
+        foreach($list as $c){
+           $ret[$c->cat_id]=$c->full_name;    
+        }
+        return  $ret;
     }  
+    
+   
     
     
 }

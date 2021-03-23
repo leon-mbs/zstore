@@ -79,9 +79,9 @@
 
     <tr>
         <td></td>
-        <td valign="top"> Комментарий</td>
+        <td valign="top"> Примечание</td>
         <td colspan="5">
-            <p>{{notes}}</p>
+            <p>{{{notes}}}</p>
         </td>
     </tr>
 </table>

@@ -8,57 +8,20 @@
 </style>
 <div class="row">
     <div class="col-12">
-        <h3>Категория товаров</h3>
+        <h3>Атрибуты  категорий</h3>
     </div>
-    <div class="col-12 col-md-4  ">
-        <div zippy="tree"></div>
+    <div class="col-12 col-md-6  ">
+         <table class="table table-sm">
+           <tr zippy="grouplist">
+              <td ><a zippy="groupname"></a></td>
+           </tr> 
+         
+         </table>
     </div>
 
-    <div class="col-12  col-md-8  ">
+    <div class="col-12  col-md-6  ">
 
-        <form zippy="newgroupform">
-
-            <div class="form-group row">
-                <div class="col-8 col-md-6">
-                    <input class="form-control" type="text" zippy="newgroupname" required="required">
-                </div>
-                <div class="col-4 col-md-3">
-                    <a zippy="newgroup" class="btn   btn-outline-success">Добавить дочернюю</a>
-                </div>
-            </div>
-        </form>
-
-        <form zippy="groupform" method="post" enctype="multipart/form-data">
-
-            <div class="form-group row">
-                <div class="col-8 col-md-6">
-                    <input class="form-control" type="text" zippy="groupname" required="required">
-                </div>
-                <div class="col-4  col-md-3">
-                    <a zippy="renamegroup" class="btn   btn-outline-success">Переименовать</a>
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-8 ">
-                    <img zippy="group_image" width="100px;">
-                </div>
-
-            </div>
-            <div class="form-group row">
-                <div class="col-8 col-md-6">
-                    <input type="file" zippy="photo"/>
-                </div>
-                <div class="col-4  col-md-3">
-                    <a zippy="savegroup" class="btn btn-outline-success">Загрузить фото</a> <br>
-
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-8 col-md-6">
-                    <a zippy="delgroup" class="btn btn-sm  btn-danger">Удалить категорию</a>
-                </div>
-            </div>
-        </form>
+  
 
         <div zippy="attrpanel" class="row">
             <div class="col-12   col-lg-10 ">

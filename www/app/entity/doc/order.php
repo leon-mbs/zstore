@@ -53,7 +53,7 @@ class Order extends \App\Entity\Doc\Document
                         "email"           => $this->headerdata["email"],
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
-                        "notes"           => $this->notes,
+                        "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($this->payed),

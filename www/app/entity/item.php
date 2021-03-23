@@ -57,7 +57,7 @@ class Item extends \ZCL\DB\Entity
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
         $this->warranty = (string)$xml->warranty[0];
-        $this->fulldesc = (string)$xml->fulldesc[0];
+        $this->extdata = (string)$xml->extdata[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -106,7 +106,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
         $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
-        $this->detail .= "<fulldesc><![CDATA[{$this->fulldesc}]]></fulldesc>";
+        $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
@@ -155,7 +155,7 @@ class Item extends \ZCL\DB\Entity
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад
     //$partion - партия
-    public function getPrice($_price_, $store = 0, $partion = 0) {
+    public function getPrice($_price_='price1', $store = 0, $partion = 0) {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
