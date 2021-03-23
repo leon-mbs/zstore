@@ -17,6 +17,7 @@ class ProductAttribute extends \ZCL\DB\Entity
     protected function init() {
         $this->attribute_id = 0;
         $this->showinlist = 0;
+        $this->showincompare = 0;
         $this->value = '';
     }
 

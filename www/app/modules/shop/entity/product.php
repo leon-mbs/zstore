@@ -54,13 +54,13 @@ class Product extends \App\Entity\Item
     protected function afterSave($update) {
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete from shop_attributevalues where  item_id=" . $this->item_id);
-        foreach ($this->attributevalues as $key => $value) {
+        foreach ($this->product->attributevalues as $key => $value) {
             //if ($value != null) {
             $conn->Execute("insert  into shop_attributevalues (attribute_id,item_id,attributevalue) values ({$key},{$this->item_id}," . $conn->qstr($value) . ")");
             // }
         }
         
-        parent::afterSave() ;
+        parent::afterSave($update) ;
     }
 
  
@@ -85,7 +85,7 @@ class Product extends \App\Entity\Item
 
         $ret = array();
         $attrvalues = array();
-        //выбираем значения атриутов продукта
+        //выбираем значения атрибутов продукта
         $rows = $conn->Execute("select attribute_id,attributevalue from shop_attributevalues where  item_id=" . $this->item_id);
         foreach ($rows as $row) {
             $attrvalues[$row['attribute_id']] = $row['attributevalue'];
@@ -128,8 +128,17 @@ class Product extends \App\Entity\Item
          return $this->description;
     }
     public function getImages() {
-         if(is_array($this->product->images))  return  $this->product->images;
-         return array();
+          $im = array();
+          if($this->image_id >0) {
+            $im[]= $this->image_id ;
+          }
+         if(is_array($this->product->images))  {
+             foreach($this->product->images as $img) {
+                 if($img != $this->image_id)   $im[]= $img;  
+             }
+             
+         }        
+         return $im;
     }
 
 }

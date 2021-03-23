@@ -206,7 +206,7 @@ class Helper
         $grlist[] = $cat_id;
         $grlist[] = 0;
                   
-        $sql = "select attribute_id,showinlist, cat_id,attributename,attributetype,valueslist,ordern from  shop_attributes_view   where cat_id  in(". implode(',',$grlist) .")  order  by ordern";
+        $sql = "select attribute_id,showinlist,showincompare, cat_id,attributename,attributetype,valueslist,ordern from  shop_attributes_view   where cat_id  in(". implode(',',$grlist) .")  order  by ordern";
 
         $attrtypes = self::getAttributeTypes();
         $rs = $conn->Execute($sql);
@@ -235,7 +235,7 @@ class Helper
         if (strlen($grlist) == 0) {
             return $list;
         }
-        $sql = "select attribute_id,showinlist, cat_id,attributename,attributetype,valueslist from  shop_attributes   
+        $sql = "select attribute_id,showinlist,showincompare, cat_id,attributename,attributetype,valueslist from  shop_attributes   
                     where showinlist = 1 and cat_id  in($grlist) and attributetype in(1,2,3,4)  and attribute_id in(select distinct attribute_id from  shop_attributevalues)  order  by cat_id";
 
         $attrtypes = self::getAttributeTypes();
@@ -249,7 +249,13 @@ class Helper
 
     // список  типов  атрибутов товара
     public static function getAttributeTypes() {
-        return array(1 => 'Есть/Нет', 2 => 'Число', 3 => 'Список', 4 => 'Набор', 5 => 'Строка');
+        
+        return array(1 => \App\Helper::l("shopattrynname") , 
+                    2 => \App\Helper::l("shopattrnumname")  , 
+                    3 => \App\Helper::l("shopattrlistname") ,
+                    4 => \App\Helper::l("shopattrsetname") ,
+                    5 => \App\Helper::l("shopattrstrname") 
+                    );
     }
 
     //список значений  для  атрибута типа  число

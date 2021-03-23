@@ -63,6 +63,7 @@ class GroupList extends \App\Pages\Base
         $form->add(new Label('attrtypename'));
         $form->add(new Label('tt'))->setAttribute("title", "Атрибут 'Есть/Нет' указывает наличие или  отсутствие какойго либо параметра. Наприме FM-тюнер");
         $form->add(new CheckBox('showinlist'));
+        $form->add(new CheckBox('showincompare'));
 
         $form->add(new Panel('attrvaluespanel'));
         $form->attrvaluespanel->add(new TextArea('attrvalues'));
@@ -84,7 +85,7 @@ class GroupList extends \App\Pages\Base
       
         $this->grouplist->Reload(false);        
         $this->UpdateAttrList();
-      
+        $this->attrpanel->attreditform->setVisible(false);
     }
 
  
@@ -93,7 +94,7 @@ class GroupList extends \App\Pages\Base
         $conn = \ZCL\DB\DB::getConnect();
         $this->mm = $conn->GetRow("select coalesce(max(ordern),0) as mm,coalesce(min(ordern),0) as mi from shop_attributes_order where  pg_id=" . $this->group->cat_id);
 
-        $this->attrlist = Helper::getProductAttributeListByGroup($this->group );
+        $this->attrlist = Helper::getProductAttributeListByGroup($this->group->cat_id );
         $this->attrpanel->attritem->Reload();
     }
 
@@ -138,16 +139,16 @@ class GroupList extends \App\Pages\Base
             $this->attrpanel->attreditform->attrvaluespanel->setVisible(true);
         }
         if ($type == 1) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Ксть/Нет' указывает на  наличие или отстствие характеристики. Например FM-тюнер");
+            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattryn") );
         }
         if ($type == 2) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Число' - числовой параметр (напрмер емкость акумулятора). Список для для фильтра отбора формируется    на осноании диапазона значений атрибутв заданых для товароыв.");
+            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrnum") );
         }
         if ($type == 3) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Список' предназначен для перечня из которого можно выбрать только одно значение. Например цвет. Задается списком через запятую");
+            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrlist") );
         }
         if ($type == 4) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Набор' предназначен для перечня из которого можно выбрать несколько значений.. Например диапазоны приема сигнала. Задается списком через запятую. ");
+            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrset") );
         }
         if ($type == 5) {
             $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовый параметр (например тип процессора). Значени не  используется в фильтре. ");
@@ -181,7 +182,7 @@ class GroupList extends \App\Pages\Base
         if ($item->attributetype == 3 || $item->attributetype == 4) {
             $form->attrvaluespanel->setVisible(true);
         }
-        $form->showinlist->setChecked($item->showinlist > 0);
+        $form->showincompare->setChecked($item->showincompare > 0);
     }
 
     public function OnSaveAttribute($sender) {
@@ -208,9 +209,10 @@ class GroupList extends \App\Pages\Base
         }
         if ($attr->attributetype == 3 || $attr->attributetype == 4) {
             $attr->valueslist = $form->attrvaluespanel->attrvalues->getText();
-            $attr->valueslist = preg_replace('/\s+/', " ", $attr->valueslist);
+            $attr->valueslist = preg_replace('/\s+/', "", $attr->valueslist);
         }
         $attr->showinlist = $form->showinlist->isChecked() ? 1 : 0;
+        $attr->showincompare = $form->showincompare->isChecked() ? 1 : 0;
 
         $attr->Save();
 

@@ -180,18 +180,19 @@ class ProductList extends \App\Pages\Base
     public function onSubmitForm($sender) {
     
         $this->_item->product->name = $sender->ename->getText();
-        $this->_item->item_id = $sender->eitem->getKey();
+   
         $this->_item->product->desc = $sender->edescdet->getText();
     
-        $this->_item->attributevalues = array();
+        $this->_item->product->attributevalues = array();
 
 
         $rows = $sender->attrlist->getChildComponents();
         foreach ($rows as $r) {
             $a = $r->getDataItem();
-            $this->_item->attributevalues[$a->attribute_id] = "" . $a->attributevalue;
+            
+            $this->_item->product->attributevalues[$a->attribute_id] = "" . $a->attributevalue;
             if ($a->nodata == 1) {
-                $this->_item->attributevalues[$a->attribute_id] = '';
+                $this->_item->product->attributevalues[$a->attribute_id] = '';
             }
         }
 
@@ -244,22 +245,29 @@ class ProductList extends \App\Pages\Base
                 $this->setError('toobigimage');
                 return;
             }
-            $r = ((double)$imagedata[0]) / $imagedata[1];
-            if ($r > 1.1 || $r < 0.9) {
-                $this->setError('squareimage');
-                return;
-            }
-
-            $image = new \App\Modules\Shop\Entity\Image();
+          
+  
+            $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
 
-            $thumb = new \App\Thumb($file['tmp_name']);
+            if($imagedata[0] != $imagedata[1] ) {
+              $thumb = new \App\Thumb($file['tmp_name']);
+              if($imagedata[0] > $imagedata[1] ) {
+                  $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+              }
+              if($imagedata[0] < $imagedata[1] ) {
+                  $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+              }
+              $image->content = $thumb->getImageAsString();
+ 
+            }
+  
             $thumb->resize(256, 256);
             $image->thumb = $thumb->getImageAsString();
 
             $image->save();
-            $this->_item->images[] = $image->image_id;
+            $this->_item->product->images[] = $image->image_id;
             $this->_item->save();
             $sender->clean();
 
@@ -284,7 +292,7 @@ class ProductList extends \App\Pages\Base
 
     public function idelOnClick($sender) {
         $image = $sender->getOwner()->getDataItem();
-        $this->_item->images = array_diff($this->_item->images, array($image->image_id));
+        $this->_item->product->images = array_diff($this->_item->product->images, array($image->image_id));
         $this->_item->save();
         $this->updateImages();
     }

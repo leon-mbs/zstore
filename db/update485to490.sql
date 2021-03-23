@@ -1,7 +1,7 @@
 ALTER TABLE `item_cat` ADD `parent_id` INT   NULL DEFAULT '0'  ;   
 
 ALTER TABLE `shop_attributes` CHANGE `group_id` `cat_id` INT(11) NOT NULL;
-ALTER TABLE `shop_attributevalues` CHANGE `product_id` `item_id` INT(11) NOT
+ALTER TABLE `shop_attributevalues` CHANGE `product_id` `item_id` INT(11) NOT  NULL;
 ALTER TABLE `shop_prod_comments` CHANGE `product_id` `item_id` INT(11) NOT NULL;
 
 ALTER VIEW `shop_attributes_view` AS 
@@ -57,6 +57,24 @@ ALTER   VIEW `shop_products_view` AS
   from 
     `items_view` `i`;    
     
+ALTER TABLE `shop_attributes` CHANGE `valueslist` `valueslist` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;    
+ALTER TABLE `shop_attributes` ADD `showincompare` TINYINT(1) NOT NULL DEFAULT '0'  ;    
+
+ALTER VIEW shop_attributes_view AS 
+  select 
+    shop_attributes.attribute_id AS attribute_id,
+    shop_attributes.attributename AS attributename,
+    shop_attributes.cat_id AS cat_id,
+    shop_attributes.attributetype AS attributetype,
+    shop_attributes.valueslist AS valueslist,
+    shop_attributes.showinlist AS showinlist,
+    shop_attributes.showincompare AS showincompare,
+    shop_attributes_order.ordern AS ordern 
+  from 
+    (shop_attributes join shop_attributes_order on(((shop_attributes.attribute_id = shop_attributes_order.attr_id) and (shop_attributes.cat_id = shop_attributes_order.pg_id)))) 
+  order by 
+    shop_attributes_order.ordern;
+
     
 /* 
 DROP TABLE `shop_products` ;
