@@ -35,11 +35,13 @@ class Options extends \App\Pages\Base
         $this->shop->add(new TextInput('currencyname'));
         $this->shop->add(new File('logo'));
         $this->shop->add(new CheckBox('uselogin'));
+        $this->shop->add(new CheckBox('usefilter'));
 
         $this->add(new Form('texts'))->onSubmit($this, 'saveTextsOnClick');
         $this->texts->add(new TextArea('aboutus'));
         $this->texts->add(new TextArea('contact'));
         $this->texts->add(new TextArea('delivery'));
+        $this->texts->add(new TextArea('news'));
 
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
@@ -67,6 +69,9 @@ class Options extends \App\Pages\Base
         }
         if (strlen($shop['delivery']) > 10) {
             $this->texts->delivery->setText(base64_decode($shop['delivery']));
+        }
+        if (strlen($shop['news']) > 10) {
+            $this->texts->news->setText(base64_decode($shop['news']));
         }
     }
 
@@ -131,6 +136,7 @@ class Options extends \App\Pages\Base
         $shop['aboutus'] = base64_encode($this->texts->aboutus->getText());
         $shop['contact'] = base64_encode($this->texts->contact->getText());
         $shop['delivery'] = base64_encode($this->texts->delivery->getText());
+        $shop['news'] = base64_encode($this->texts->news->getText());
 
         System::setOptions("shop", $shop);
         $this->setSuccess('refreshed');

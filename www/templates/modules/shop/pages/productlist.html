@@ -25,21 +25,17 @@
                 <div class="navbar nav">
                     <form zippy="searchform" class="form-inline  ">
 
-                        <input zippy="skeyword" placeholder="Поиск" type="text" class="form-control mr-sm-2">
+                        <input style="width:150px;" zippy="skeyword" placeholder="Поиск по  коду" type="text" class="form-control mr-sm-2">
 
 
-                        <div class="form-check   ">
-
-                            <input class="form-check-input" type="checkbox" zippy="sstatus">
-                            <label class="form-check-label mr-sm-2" for="sstatus"> неактивный </label>
-                        </div>
+                        <label> бренд</label>
                         <select zippy="smanuf" class="form-control mr-sm-2 select2  ">
-                            <option value="0">Производитель, бренд</option>
+                            <option placeholder="Производитель" type value="0">Не  выбран</option>
 
                         </select>
 
                         <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
-                        &nbsp;<a title="Очищення форми" zippy="sclear"><i class="fa fa-eraser"></i></a>
+                        &nbsp;<a title="Очистить  форму  поиска" zippy="sclear"><i class="fa fa-eraser"></i></a>
 
                     </form>
                 </div>
@@ -49,10 +45,9 @@
                         <label for="sorting">Сортировать </label>
                         <select zippy="sorting" class="form-control   mr-sm-2">
                             <option value="0">По названию</option>
-                            <option value="1">По возрастанию цены</option>
-                            <option value="2">При уменьшении цены</option>
-                            <option value="3">При уменьшении наличии</option>
-                            <option value="4">При увеличении наличии</option>
+            
+                            <option value="1">При уменьшении количества</option>
+                            <option value="2">При увеличении количества</option>
 
 
                         </select>
@@ -137,13 +132,14 @@
             </div>
 
             <div zippy="editimagepanel" class="col-12     col-xl-10 ">
-                <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> В список продуктов</a>
-                <h4>Список изображений</h4>
+                <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> В список товаров</a>
+                <h4>Список дополнительных изображений</h4>
 
                 <form class="form-inline" zippy="addimageform" enctype="multipart/form-data">
                     <input zippy="photo" type="file" class="form-control mr-2">
-                    <small>Изображение  должно  быть  примерно  квадратным  иначе  будет обрезано</small>
+                    
                     <input type="submit" class="btn btn-success   " value="Добавить">
+                    <small>Изображение  должно  быть  примерно  квадратным  иначе  будет обрезано</small>
                 </form>
 
                 <div class="w-100">
@@ -151,7 +147,7 @@
                     <div zippy="imagelist" style="float:left;">
                         <img zippy="imgitem" style="height: 128px;"/>
                         <br><a zippy="idel">Удалить</a>
-                        <br><a zippy="icover">Сделать основным</a>
+                       
 
 
                     </div>

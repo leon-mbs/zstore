@@ -71,8 +71,8 @@ class ProductList extends \App\Pages\Base
         $this->add(new Panel('listpanel'));
         $this->listpanel->add(new Form('searchform'))->onSubmit($this, 'searchformOnSubmit');
         $this->listpanel->searchform->add(new TextInput('skeyword'));
-        $this->listpanel->searchform->add(new CheckBox('sstatus'));
-        $this->listpanel->searchform->add(new DropDownChoice('smanuf', array()));
+        
+        $this->listpanel->searchform->add(new DropDownChoice('smanuf', Item::getManufacturers(true)));
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
         $this->listpanel->add(new Form('sortform'));
         $this->listpanel->sortform->add(new DropDownChoice('sorting'))->onChange($this, 'sortingOnChange');
@@ -145,7 +145,7 @@ class ProductList extends \App\Pages\Base
     public function plistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new ClickLink("lname", $this, "lnameOnClick"))->setValue($item->itemname);
+        $row->add(new ClickLink("lname", $this, "lnameOnClick"))->setValue($item->getName());
         $row->add(new ClickLink("imedit", $this, "imeditOnClick"));
     
         $row->add(new Label("lcode", $item->item_code));
@@ -179,20 +179,20 @@ class ProductList extends \App\Pages\Base
 
     public function onSubmitForm($sender) {
     
-        $this->_item->product->name = $sender->ename->getText();
+        $this->_item->productdata->name = $sender->ename->getText();
    
-        $this->_item->product->desc = $sender->edescdet->getText();
+        $this->_item->productdata->desc = $sender->edescdet->getText();
     
-        $this->_item->product->attributevalues = array();
+        $this->_item->productdata->attributevalues = array();
 
 
         $rows = $sender->attrlist->getChildComponents();
         foreach ($rows as $r) {
             $a = $r->getDataItem();
             
-            $this->_item->product->attributevalues[$a->attribute_id] = "" . $a->attributevalue;
+            $this->_item->productdata->attributevalues[$a->attribute_id] = "" . $a->attributevalue;
             if ($a->nodata == 1) {
-                $this->_item->product->attributevalues[$a->attribute_id] = '';
+                $this->_item->productdata->attributevalues[$a->attribute_id] = '';
             }
         }
 
@@ -267,7 +267,7 @@ class ProductList extends \App\Pages\Base
             $image->thumb = $thumb->getImageAsString();
 
             $image->save();
-            $this->_item->product->images[] = $image->image_id;
+            $this->_item->productdata->images[] = $image->image_id;
             $this->_item->save();
             $sender->clean();
 
@@ -278,22 +278,15 @@ class ProductList extends \App\Pages\Base
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
         $row->add(new \Zippy\html\Image("imgitem"))->setUrl('/loadshopimage.php?id=' . $image->image_id . "&t=t");
-        $row->add(new ClickLink("icover", $this, "icoverOnClick"))->setVisible($image->image_id != $this->_item->image_id);
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }
-
-    public function icoverOnClick($sender) {
-        $image = $sender->getOwner()->getDataItem();
-        $this->_item->image_id = $image->image_id;
-        $this->_item->save();
-        $this->listpanel->plist->Reload();
-        $this->updateImages();
-    }
-
+ 
     public function idelOnClick($sender) {
         $image = $sender->getOwner()->getDataItem();
-        $this->_item->product->images = array_diff($this->_item->product->images, array($image->image_id));
+        $this->_item->productdata->images = array_diff($this->_item->productdata->images, array($image->image_id));
+  
         $this->_item->save();
+        \App\Entity\Image::delete($image->image_id) ;
         $this->updateImages();
     }
 
@@ -321,28 +314,25 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "1=1 ";
+        $where = "disabled<>1  ";
      
         if ($this->page->group instanceof Category) {
            
 
             $where .= " and  cat_id =  " . $this->page->group->cat_id;
         }
-           /*
+      
         $st = $this->page->listpanel->searchform->skeyword->getText();
         $sm = $this->page->listpanel->searchform->smanuf->getValue();
-        if ($sm > 0) {
-            $where .= " and manufacturer_id  =  " . $sm;
+      
+        if (strlen($sm) > 1 && $sm != -1) {
+            $where .= " and manufacturer =  " . $conn->qstr($sm);
         }
         if (strlen($st) > 0) {
-            $where .= " and (productname like   " . $conn->qstr("%{$st}%") . " or item_code = " . $conn->qstr($st) . ") ";
+            $where .= " and   item_code = " . $conn->qstr($st)  ;
         }
-        if ($this->page->listpanel->searchform->sstatus->isChecked()) {
-            $where .= " and deleted = 1  ";
-        } else {
-            $where .= " and deleted = 0  ";
-        }
-        */
+          
+     
 
         return $where;
     }
@@ -354,7 +344,7 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
        $order = "itemname ";
-       /*  $o = $this->page->listpanel->sortform->sorting->getValue();
+        $o = $this->page->listpanel->sortform->sorting->getValue();
         if ($o == 1) {
             $order = "price asc";
         }
@@ -367,7 +357,7 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
         if ($o == 4) {
             $order = "qty desc";
         }
-        */
+       
         return Product::find($this->getWhere(), $order, $count, $start);
     }
 

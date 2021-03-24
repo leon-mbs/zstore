@@ -416,8 +416,12 @@ class Item extends \ZCL\DB\Entity
         return "ID" . sprintf("%04d", ++$id);
     }
 
-
-    public static function getManufacturers() {
+    /**
+    * список производителей
+    * 
+    * @param mixed $nametoindex    добавить имя в  индекс 9для  комбобоксов)
+    */
+    public static function getManufacturers($nametoindex=false) {
 
         $conn = \ZDB\DB::getConnect();
 
@@ -426,7 +430,12 @@ class Item extends \ZCL\DB\Entity
         $list = array();
         foreach ($res as $v) {
             if (strlen($v['manufacturer']) > 0) {
-                $list[] = $v['manufacturer'];
+                if($nametoindex) {
+                   $list[$v['manufacturer']] = $v['manufacturer'];    
+                }  else {
+                   $list[] = $v['manufacturer'];
+                }
+                
             }
         }
         return $list;

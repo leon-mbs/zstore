@@ -39,6 +39,13 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
         $this->_tvars["shopname"] = $this->op['shopname'];
+        $this->_tvars["aboutus"] =strlen($this->op['aboutus'])>0;
+        $this->_tvars["contact"] =strlen($this->op['contact'])>0;
+        $this->_tvars["delivery"] =strlen($this->op['delivery'])>0;
+        $this->_tvars["news"] =strlen($this->op['news'])>0;
+        
+        
+        
       
     }
 

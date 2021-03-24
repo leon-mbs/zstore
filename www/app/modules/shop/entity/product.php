@@ -13,21 +13,23 @@ class Product extends \App\Entity\Item
 {
 
  
-    public $product   ;
+    public $productdata   ;
     
     protected function init() {
-        $this->product = new ProductData() ;
+        $this->productdata = new ProductData() ;
         
       
 
-        $this->product->novelty = 0; //новинка
-        $this->product->sold = 0;   //кол продаж
-        $this->product->topsold = 0; //топ продаж
+        $this->productdata->name = ''; 
+        $this->productdata->desc = ''; 
+        $this->productdata->novelty = 0; //новинка
+        $this->productdata->sold = 0;   //кол продаж
+        $this->productdata->topsold = 0; //топ продаж
 
-        $this->product->rating = 0;  //рейтинг
-        $this->product->comments = 0; //кол отзывов
-        $this->product->attributevalues = array();
-        $this->product->images = array();
+        $this->productdata->rating = 0;  //рейтинг
+        $this->productdata->comments = 0; //кол отзывов
+        $this->productdata->attributevalues = array();
+        $this->productdata->images = array();
         
         
     }
@@ -35,9 +37,9 @@ class Product extends \App\Entity\Item
     protected function afterLoad() {
         parent::afterLoad();
         
-        $this->product = @base64_decode(@unserialize($this->extdata)) ;
-        if($this->product == null){
-            $this->product = new ProductData() ;
+        $this->productdata = @unserialize(@base64_decode($this->extdata)) ;
+        if($this->productdata == null){
+            $this->productdata = new ProductData() ;
         }
    
         
@@ -45,7 +47,7 @@ class Product extends \App\Entity\Item
 
     protected function beforeSave() {
          
-        $this->extdata = base64_encode(serialize($this->product)) ;
+        $this->extdata = base64_encode(serialize($this->productdata)) ;
         
         parent::beforeSave();
     }
@@ -54,7 +56,7 @@ class Product extends \App\Entity\Item
     protected function afterSave($update) {
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete from shop_attributevalues where  item_id=" . $this->item_id);
-        foreach ($this->product->attributevalues as $key => $value) {
+        foreach ($this->productdata->attributevalues as $key => $value) {
             //if ($value != null) {
             $conn->Execute("insert  into shop_attributevalues (attribute_id,item_id,attributevalue) values ({$key},{$this->item_id}," . $conn->qstr($value) . ")");
             // }
@@ -107,7 +109,7 @@ class Product extends \App\Entity\Item
      *
      */
     public function getSEF() {
-        return strlen($this->product->sef) > 0 ? $this->product->sef : $this->item_id;
+        return strlen($this->productdata->sef) > 0 ? $this->productdata->sef : $this->item_id;
     }
 
     /**
@@ -120,20 +122,20 @@ class Product extends \App\Entity\Item
 
 
     public function getName() {
-         if(strlen($this->product->name)>0)  return  $this->product->name;
+         if(strlen($this->productdata->name)>0)  return  $this->productdata->name;
          return $this->itemname;
     }
     public function getDescription() {
-         if(strlen($this->product->desc)>0)  return  $this->product->desc;
+         if(strlen($this->productdata->desc)>0)  return  $this->productdata->desc;
          return $this->description;
     }
-    public function getImages() {
+    public function getImages($includecover=false) {
           $im = array();
-          if($this->image_id >0) {
+          if($this->image_id >0 && $includecover) {
             $im[]= $this->image_id ;
           }
-         if(is_array($this->product->images))  {
-             foreach($this->product->images as $img) {
+         if(is_array($this->productdata->images))  {
+             foreach($this->productdata->images as $img) {
                  if($img != $this->image_id)   $im[]= $img;  
              }
              
@@ -144,11 +146,11 @@ class Product extends \App\Entity\Item
 }
 
 /**
-* Вспомагательный класс для  упаковки  данных
+* Вспомагательный класс для  упаковки  данных относящихся к  каталогу
 */
 class  ProductData  extends \App\DataItem
 {
-     public $attributevalues;
-    public $images = array();
+     public $attributevalues= array();
+     public $images = array();
     
 }

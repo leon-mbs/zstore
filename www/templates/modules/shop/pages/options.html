@@ -83,7 +83,7 @@
     </div>
     <div class="col-12">
         <h4>Тексты страниц</h4>
-       
+        <small>Изображениея должны  быть  как   можно меньше  размера.</small>
     </div>
     <div class="col-12 col-lg-10 col-xl-8">
         <form zippy="texts">
@@ -100,6 +100,11 @@
             <div class="form-group   ">
                 <label for="contact">Контакты</label>
                 <textarea zippy="contact" class="form-control ">
+                        </textarea>
+            </div>
+           <div class="form-group   ">
+                <label for="news">Новости</label>
+                <textarea zippy="news" class="form-control ">
                         </textarea>
             </div>
             <div class="form-group   ">
@@ -148,6 +153,22 @@
             }
         });
         $('#delivery').summernote({
+            height: 400,
+            lang: 'ru-RU',
+
+            callbacks: {
+                onEnter: function (e) {
+                    e.preventDefault();
+                },
+                onPaste: function (e) {
+
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                }
+            }
+        });
+        $('#news').summernote({
             height: 400,
             lang: 'ru-RU',
 
