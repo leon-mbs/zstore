@@ -4,7 +4,7 @@ namespace App\Modules\Shop;
 
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Entity\ProductAttribute;
-use App\Modules\Shop\Entity\ProductGroup;
+use App\Entity\Category  ;
 use ZCL\DB\DB;
 
 //класс  вспомагательных функций
@@ -15,13 +15,14 @@ class Helper
 
         $bs = "<li class=\"breadcrumb-item\"><a href='/'>Каталог</a></li>";
         if ($id > 0) {
-            $g = ProductGroup::load($id);
+            $g =  Category ::load($id);
             $gl = $g->getParents();
-
-            foreach ($gl as $gi) {
-                $bs .= "<li class=\"breadcrumb-item\" ><a href='/scat/{$gi->cat_id}'>{$gi->groupname}</a></li>";
+            $all =  Category::find('');
+            foreach ($gl as $cat_id) {
+                $c = $all[$cat_id];  
+                $bs .= "<li class=\"breadcrumb-item\" ><a href='/scat/{$cat_id}'>{$c->cat_name}</a></li>";
             }
-            $bs .= "<li class=\"breadcrumb-item active\">{$g->groupname}</li>";
+            $bs .= "<li class=\"breadcrumb-item active\">{$g->cat_name}</li>";
         }
         return $bs;
     }

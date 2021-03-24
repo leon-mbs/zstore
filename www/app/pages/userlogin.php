@@ -97,6 +97,9 @@ class UserLogin extends \Zippy\Html\WebPage
 
                     setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
                 }
+                if($_COOKIE['branch_id']  >0){
+                    System::getSession()->defbranch  =  $_COOKIE['branch_id']; 
+                }
                 
                 if ($_config['modules']['shop'] == 1) {
                     App::Redirect('\App\Pages\Main');

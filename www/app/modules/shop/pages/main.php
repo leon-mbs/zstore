@@ -13,49 +13,40 @@ use Zippy\Html\Panel;
 class Main extends Base
 {
 
-    private $group_id = 0;
+    private $cat_id = 0;
 
     public function __construct($id = 0) {
         parent::__construct();
 
-        $this->group_id = $id;
+        $this->cat_id = $id;
 
-        $toplist = ProductGroup::find("parent_id=0");
-
-        $this->_tvars["leftmenu"] = array();
-        foreach ($toplist as $g) {
-            if ($g->gcnt > 0) {
-                $this->_tvars["leftmenu"][] = array("link" => "/scat/{$g->group_id}", "name" => $g->groupname);
-            } else {
-                $this->_tvars["leftmenu"][] = array("link" => "/pcat/{$g->group_id}", "name" => $g->groupname);
-            }
-        }
+           
 
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($id), true));
 
         $this->add(new Panel("subcatlistp"));
 
-        $this->subcatlistp->setVisible($id > 0);
-        $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\ProductGroup", "parent_id=" . $id), $this, 'OnCatRow'));
-        if ($id > 0) {
-            $this->subcatlistp->subcatlist->Reload();
-        }
+     
+        $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Entity\\Category", "parent_id=" . $id), $this, 'OnCatRow'));
+    
+        $this->subcatlistp->subcatlist->Reload();
+   
 
         $this->add(new Panel("newlistp"));
-        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "", "product_id desc", 12), $this, 'OnNewRow'))->Reload();
+        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "detail  not  like '<noshop>1</noshop>' ", "item_id desc", 12), $this, 'OnNewRow'))->Reload();
     }
 
     public function OnCatRow($datarow) {
         $g = $datarow->getDataItem();
-        $link = $g->gcnt > 0 ? "/scat/" . $g->group_id : "/pcat/" . $g->group_id;
+        $link = $g->hasChild() > 0 ? "/scat/" . $g->cat_id : "/pcat/" . $g->cat_id;
         $datarow->add(new BookmarkableLink("scatimg", $link))->setValue("/loadshopimage.php?id=" . $g->image_id);
-        $datarow->add(new BookmarkableLink("scatname", $link))->setValue($g->groupname);
+        $datarow->add(new BookmarkableLink("scatname", $link))->setValue($g->cat_name);
     }
 
     public function OnNewRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("nimage", "/sp/" . $item->product_id))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
-        $row->add(new BookmarkableLink("nname", "/sp/" . $item->product_id))->setValue($item->productname);
+        $row->add(new BookmarkableLink("nimage", "/sp/" . $item->item_id))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("nname", "/sp/" . $item->item_id))->setValue($item->getName());
     }
 
 }

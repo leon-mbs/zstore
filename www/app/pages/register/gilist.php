@@ -393,7 +393,12 @@ class GIList extends \App\Pages\Base
 
         $this->nppan->npform->nppm->setOptionList($stlist);
         $this->nppan->npform->nppm->setValue('Cash');
-        $this->nppan->npform->nppmback->setOptionList($stlist);
+        $bmlist = array();
+        $bmlist['0'] ='Без доставки';
+        $bmlist['Cash'] ='Наличные';
+        $bmlist['NonCash'] ='Безнал';
+        $bmlist['Control'] ='Контроль доставки';
+        $this->nppan->npform->nppmback->setOptionList($bmlist);
         $this->nppan->npform->nppmback->setValue('Cash');
         //кто оплачивает
         $stlist = array();
@@ -542,13 +547,30 @@ class GIList extends \App\Pages\Base
         }
         
         $moneyback = $this->nppan->npform->npback->getText();
+        
         if ($moneyback > 0) {   //если  введена  обратная сумма
-            $params['BackwardDeliveryData'] =  array(array(
-                'PayerType'        => 'Recipient',
-                'CargoType'        => 'Money',
-                'PaymentMethod'    => $this->nppan->npform->nppmback->getValue(),
-                'RedeliveryString' => $moneyback)
-        );
+            $back =  $this->nppan->npform->nppmback->getValue()  ;
+                        
+            if($back =='Control') {
+              $params['AfterpaymentOnGoodsCost'] = $moneyback;    
+            }  else 
+            if($back =='Cash') {
+              $params['BackwardDeliveryData'] =  array(array(
+                    'PayerType'        => 'Recipient',
+                    'CargoType'        => 'Money',
+                    'RedeliveryString' => $moneyback
+                    )                
+                  ) ;   
+            }  else
+            if($back =='NonCash') {
+                 $params['BackwardDeliveryData'] =  array(array(
+                    'PayerType'        => 'Recipient',
+                    'CargoType'        => 'Money',
+                    'PaymentMethod'        => 'NonCash',
+                    'RedeliveryString' => $moneyback
+                    )                
+                  ) ;
+            }
         }
 
 

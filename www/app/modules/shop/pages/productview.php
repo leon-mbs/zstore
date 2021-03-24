@@ -31,25 +31,25 @@ class ProductView extends Base
         if ($product == null) {
             App::Redirect404();
         }
-        $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($product->group_id), true));
+        $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($product->cat_id), true));
 
-        $this->_title = $product->productname;
-        $this->_description = $product->description;
+        $this->_title = $product->getName();
+        $this->_description = $product->getDesc();
         //  $this->_keywords = $product->description;
         $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}&t=t");
         $this->product_image->setAttribute('href', "/loadshopimage.php?id={$product->image_id}");
 
-        $this->add(new Label('productname', $product->productname));
+        $this->add(new Label('productname', $product->getName()));
         $this->add(new Label('onstore'));
-        $this->add(new \Zippy\Html\Label('manufacturername', $product->manufacturername))->SetVisible($product->manufacturer_id > 0);
+        $this->add(new \Zippy\Html\Label('manufacturername', $product->manufacturer))->SetVisible(strlen($product->manufacturer) > 0);
 
         $this->add(new Label("topsold"))->setVisible($product->topsold == 1);
         $this->add(new Label("novelty"))->setVisible($product->novelty == 1);
 
         $this->add(new Label('price', $product->price));
 
-        $this->add(new Label('description', $product->description));
-        $this->add(new Label('fulldescription', $product->fulldescription));
+        $this->add(new Label('description', $product->getDesc()));
+        $this->add(new Label('fulldescription', $product->getDesc()));
         $this->add(new Label('arrowup'))->setVisible($product->chprice == 'up');
         $this->add(new Label('arrowdown'))->setVisible($product->chprice == 'down');
         $this->add(new TextInput('rated'))->setText($product->rating);
@@ -88,7 +88,7 @@ class ProductView extends Base
 
         $imglist = array();
 
-        foreach ($product->images as $id) {
+        foreach ($product->getImages(true) as $id) {
             $imglist[] = \App\Entity\Image::load($id);
         }
         $this->add(new DataView('imagelist', new ArrayDataSource($imglist), $this, 'imglistOnRow'))->Reload();

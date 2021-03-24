@@ -37,6 +37,14 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
+        if(System::getSession()->defbranch >0 ) {
+            $this->branch_id = System::getSession()->defbranch ;
+            System::setBranch($this->branch_id); 
+            
+        }
+        
+        
+        
         
         $blist = array();
         if($this->_tvars["usebranch"]==true) {
@@ -136,6 +144,10 @@ class Base extends \Zippy\Html\WebPage
     public function onnbFirm($sender) {
         $branch_id = $sender->getValue();
         System::setBranch($branch_id);
+      
+      
+        
+        setcookie("branch_id",$branch_id  , time() + 60 * 60 * 24 * 30);
 
         $page = get_class($this);
         App::Redirect($page);
