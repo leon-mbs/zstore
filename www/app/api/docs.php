@@ -227,5 +227,65 @@ class docs extends \App\API\Base\JsonRPC
 
     }
 
+    
+     
+                        
+ // /api/docs
+ // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1} 
+   
+   //Списание ТМЦ в  производсво
+    public function createprodissue($args) {
+
+    
+
+        if ($args['store_id'] > 0) {
+            $store = \App\Entity\Store::load($args['store_id']);
+            if ($store == null) {
+                throw  new  \Exception('Не  указан  склад');
+            }  
+        }
+        $doc = Document::create('ProdIssue');
+        $doc->document_number = $doc->nextNumber();
+        $doc->document_date = time();
+        $doc->headerdata['store'] = $args['store_id'];
+        $doc->state = Document::STATE_NEW;
+      
+        $doc->notes = @base64_decode($args['description']);
+        $details = array();
+        $total = 0;
+        if (is_array($args['items']) && count($args['items']) > 0) {
+            foreach ($args['items'] as $it) {
+                if (strlen($it['item_code']) == 0) {
+                    throw  new \Exception(H::l("apientercode"));
+                }
+                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
+
+                if ($item instanceof Item) {
+
+                    $item->quantity = $it['quantity'];
+                   
+                    $details[$item->item_id] = $item;
+                } else {
+                    throw  new  \Exception(H::l("apiitemnotfound", $it['code']));
+                }
+            }
+        } else {
+            throw  new  \Exception(H::l("apinoitems"));
+        }
+        if (count($details) == 0) {
+            throw  new  \Exception(H::l("apinoitems"));
+        }
+        $doc->packDetails('detaildata', $details);
+     
+         $doc->amount = 0;
+        
+
+        $doc->save();
+        
+        $doc->updateStatus(Document::STATE_EXECUTED);
+            
+
+        return $doc->document_number;
+    }
 
 }

@@ -105,9 +105,9 @@ class GIList extends \App\Pages\Base
         $npform->add(new Label('npttncust'));
         $npform->add(new Label('npttaddress'));
         $npform->add(new Label('npttnnotes'));
+  $npform->add(new Label('printform'));
 
-        $npform->add(new DataView('npitemlist', new ArrayDataSource(array()), $this, 'nplistOnRow'));
-
+       
         if($doc>0) {
             $this->_doc = Document::load($doc);  
             $this->npshowOnSubmit( $this->statuspan->statusform->bnp);;
@@ -433,9 +433,7 @@ class GIList extends \App\Pages\Base
             }
             $p = $p + ($it->quantity * $it->price);
         }
-        $this->nppan->npform->npitemlist->getDataSource()->setArray($list);
-        $this->nppan->npform->npitemlist->Reload();
-
+     
         $this->nppan->npform->npw->setText($w);
         $this->nppan->npform->npback->setText(intval($p));
         $this->nppan->npform->npcost->setText(intval($p));
@@ -470,17 +468,12 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->npttncust->setText($cust);
         $this->nppan->npform->npttaddress->setText($this->_doc->headerdata["ship_address"]);
         $this->nppan->npform->npttnnotes->setText($this->_doc->notes);
+        
+      $this->nppan->npform->printform->setText($this->_doc->cast()->generateReport(),true);
+          
     }
 
-    public function nplistOnRow($row) {
-        $item = $row->getDataItem();
-        $row->add(new  Label("npitemname", $item->itemname));
-        $row->add(new  Label("npitemcode", $item->item_code));
-        $row->add(new  Label("npitemw", $item->weight));
-        $row->add(new  Label("npitemqty", H::fqty($item->quantity)));
-        $row->add(new  Label("npitemprice", H::fa($item->price)));
-
-    }
+ 
 
     public function onSelArea($sender) {
 
