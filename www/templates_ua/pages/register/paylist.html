@@ -76,7 +76,8 @@
                 <td zippy="notes"></td>
 
                 <td class="text-nowrap">
-                    <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                  <a zippy="print" title="Друкувати  квитанцiю  про  оплату"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
+                  <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
                       &nbsp;&nbsp; <a href="javascript:void(0);" zippy="del" title="Скасування оплати"><i class="fa fa-trash"></i></a>
 
 
@@ -119,6 +120,26 @@
                         <input zippy="save" type="submit" value="Виконати" class="btn btn-primary  ">
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table>
+                    <tr>
+                        <td align="center" id="paysprint"></td>
+                    <tr>
+                    <tr>
+                        <td align="center"><a href="javascript:void(0)"
+                                              onclick="$('#paysprint').printThis();$('#pform').modal('hide')"
+                                              class="btn btn-success btn-sm">Друк</a></td>
+                    <tr>
+                </table>
             </div>
         </div>
     </div>

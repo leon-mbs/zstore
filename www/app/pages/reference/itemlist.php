@@ -542,10 +542,7 @@ class ItemList extends \App\Pages\Base
             if (strlen($barcode) == 0) {
                 $barcode = $item->item_code;
             }
-            if (($barcode > 0) == false) {
-                $this->updateAjax(array(), "  alert('Не цифровой  код')");
-                return;
-            }
+         
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
             $header['img'] = $img;

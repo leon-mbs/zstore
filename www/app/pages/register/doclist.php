@@ -448,7 +448,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             $sn = $conn->qstr('%' . $sn . '%');
           
             
-            $where = "   document_number like  {$sn}  or content like  {$sn}  ";
+            $where = "   document_number like  {$sn}  or content like  {$sn}  or notes like  {$sn}  ";
         }
 
 

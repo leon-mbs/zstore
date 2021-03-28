@@ -105,7 +105,7 @@ class GoodsReceipt extends Document
             $item->amount = $item->price * $item->quantity;
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
 
-            $sc = new Entry($this->document_id, $item->amount, $item->quantity);
+            $sc = new Entry($this->document_id, $item->price * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
             $sc->setExtCode($item->price); //Для АВС 
             // $sc->setCustomer($this->customer_id);

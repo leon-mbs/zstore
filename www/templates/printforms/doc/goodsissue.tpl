@@ -101,5 +101,25 @@
     <tr>
         <td colspan="7">&nbsp;</td>
     </tr>
+ <tr>
+        <td colspan="4" > 
+            Продавец ___________
+        </td>
+  <td colspan="3"> 
+           Покупатель ___________
+        </td>
+
+    </tr>
+  <tr>
+         <td> </td>
+        <td colspan="6">
+        <br><br>
+  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; МП
+        <br><br>
+        </td>
+        
+
+    </tr>
+    
 </table>
 

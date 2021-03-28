@@ -1,3 +1,5 @@
+ALTER TABLE `entrylist` CHANGE `extcode` `extcode` DECIMAL(11,2) NULL DEFAULT 0; 
+
 ALTER TABLE `item_cat` ADD `parent_id` INT   NULL DEFAULT '0'  ;   
 
 ALTER TABLE `shop_attributes` CHANGE `group_id` `cat_id` INT(11) NOT NULL;

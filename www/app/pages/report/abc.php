@@ -222,7 +222,7 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT services.service_name as name, SUM( ABS( entrylist_view.amount*entrylist_view.quantity ) ) AS value
+                    SELECT services.service_name as name, SUM( ABS( entrylist_view.amount  ) ) AS value
                     FROM  `entrylist_view` 
                        join services on entrylist_view.service_id = services.service_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 

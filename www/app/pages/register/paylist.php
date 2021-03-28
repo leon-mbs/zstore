@@ -95,6 +95,9 @@ class PayList extends \App\Pages\Base
         $user = \App\System::getUser();
           $row->add(new BookmarkableLink('del'))->setVisible($user->rolename == 'admins');
          $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
+         
+       $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
+         
     }
 
     //просмотр
@@ -180,6 +183,28 @@ class PayList extends \App\Pages\Base
         H::exportExcel($data, $header, 'paylist.xlsx');
     }
 
+     public function printOnClick($sender) {
+        $pay = $sender->getOwner()->getDataItem();
+        $doc = \App\Entity\Doc\Document::load($pay->document_id);
+
+        $header = array();
+        $header['document_number']= $doc->document_number;
+        $header['firm_name'] = $doc->firm_name;
+        $header['customer_name']= $doc->customer_name;
+        $list = Pay::find("document_id=" . $pay->document_id, "pl_id");
+        $all = 0;
+        $header['plist']  = array();
+        foreach($list as $p){
+           $header['plist'][] = array('ppay'=> H::fa(abs($p->amount)),'pdate'=> H::fd($p->paydate)); 
+           $all += abs($p->amount);
+        }
+        $header['pall'] = H::fa($all);
+        
+        $report = new \App\Report('pays_bill.tpl');
+ 
+        $html = $report->generate($header);
+        $this->updateAjax(array(), "  $('#paysprint').html('{$html}') ; $('#pform').modal()");
+    }
 
 }
 

@@ -85,8 +85,7 @@ class ProdReceipt extends Document
 
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stock->stock_id);
-           // $sc->setExtCode($item->price); //Для АВС 
-           
+             
 
             $sc->save();
 
