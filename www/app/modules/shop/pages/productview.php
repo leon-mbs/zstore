@@ -33,13 +33,13 @@ class ProductView extends Base
         }
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($product->cat_id), true));
 
-        $this->_title = $product->getName();
+        $this->_title = $product->itemname;
         $this->_description = $product->getDesc();
         //  $this->_keywords = $product->description;
         $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}&t=t");
         $this->product_image->setAttribute('href', "/loadshopimage.php?id={$product->image_id}");
 
-        $this->add(new Label('productname', $product->getName()));
+        $this->add(new Label('productname', $product->itemname));
         $this->add(new Label('onstore'));
         $this->add(new \Zippy\Html\Label('manufacturername', $product->manufacturer))->SetVisible(strlen($product->manufacturer) > 0);
 

@@ -85,7 +85,7 @@ class ProductList extends \App\Pages\Base
 
 
         $editform = $this->editpanel->add(new Form('editform'));
-        $editform->add(new TextInput('ename'));
+        $editform->add(new TextInput('esef'));
  
         $editform->add(new TextArea('edescdet'));
    
@@ -145,7 +145,7 @@ class ProductList extends \App\Pages\Base
     public function plistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new ClickLink("lname", $this, "lnameOnClick"))->setValue($item->getName());
+        $row->add(new ClickLink("lname", $this, "lnameOnClick"))->setValue($item->itemname);
         $row->add(new ClickLink("imedit", $this, "imeditOnClick"));
     
         $row->add(new Label("lcode", $item->item_code));
@@ -164,7 +164,7 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->setVisible(false);
         $this->_item = $sender->getOwner()->getDataItem();
       
-        $this->editpanel->editform->ename->setText($this->_item->getName());
+        $this->editpanel->editform->esef->setText($this->_item->esef);
 
         
       
@@ -179,7 +179,7 @@ class ProductList extends \App\Pages\Base
 
     public function onSubmitForm($sender) {
     
-        $this->_item->productdata->name = $sender->ename->getText();
+        $this->_item->esef = $sender->esef->getText();
    
         $this->_item->productdata->desc = $sender->edescdet->getText();
     

@@ -46,7 +46,7 @@ class Main extends Base
     public function OnNewRow($row) {
         $item = $row->getDataItem();
         $row->add(new BookmarkableLink("nimage", "/sp/" . $item->item_id))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
-        $row->add(new BookmarkableLink("nname", "/sp/" . $item->item_id))->setValue($item->getName());
+        $row->add(new BookmarkableLink("nname", "/sp/" . $item->item_id))->setValue($item->itemname);
     }
 
 }

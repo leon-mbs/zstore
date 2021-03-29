@@ -116,14 +116,20 @@ class Options extends \App\Pages\Base
     
 
     public function updateSiteMapOnClick($sender) {
+       
+                
         $sm = _ROOT . 'sitemap.xml';
         @unlink($sm);
         $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
 
         $prods = Product::find(" deleted = 0 ");
         foreach ($prods as $p) {
-
-            $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->product_id}</loc></url>";
+            if(strlen($p->sef)>0) {
+              $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";  
+            }   else {
+              $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";    
+            }
+            
         }
         $xml .= "</urlset>";
         file_put_contents($sm, $xml);

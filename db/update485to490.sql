@@ -1,6 +1,25 @@
 ALTER TABLE `entrylist` CHANGE `extcode` `extcode` DECIMAL(11,2) NULL DEFAULT 0; 
 
+
+ALTER VIEW entrylist_view AS 
+  select 
+    entrylist.entry_id AS entry_id,
+    entrylist.document_id AS document_id,
+    entrylist.amount AS amount,
+    entrylist.quantity AS quantity,
+    documents.customer_id AS customer_id,
+    entrylist.extcode AS extcode,
+    entrylist.stock_id AS stock_id,
+    entrylist.service_id AS service_id,
+    store_stock.item_id AS item_id,
+    store_stock.partion AS partion,
+    documents.document_date AS document_date 
+  from 
+    ((entrylist left join store_stock on((entrylist.stock_id = store_stock.stock_id))) join documents on((entrylist.document_id = documents.document_id)));
+
 ALTER TABLE `item_cat` ADD `parent_id` INT   NULL DEFAULT '0'  ;   
+
+
 
 ALTER TABLE `shop_attributes` CHANGE `group_id` `cat_id` INT(11) NOT NULL;
 ALTER TABLE `shop_attributevalues` CHANGE `product_id` `item_id` INT(11) NOT  NULL;
@@ -78,45 +97,3 @@ ALTER VIEW shop_attributes_view AS
     shop_attributes_order.ordern;
 
     
-/* 
-DROP TABLE `shop_products` ;
- 
-CREATE TABLE `shop_products` (
-  `product_id` int(11) NOT NULL AUTO_INCREMENT,
-  `productname` varchar(255) NOT NULL,
-  `sef` varchar(64) DEFAULT NULL,
-  `item_id` int(11) NOT NULL,
-  `rating` smallint(6) DEFAULT '0',
-  `comments` int(11) DEFAULT '0',
-  `detailprod` longtext,
-  PRIMARY KEY (`product_id`),
-  KEY `item_id` (`item_id`),
-  CONSTRAINT `shop_products_fk1` FOREIGN KEY (`item_id`) REFERENCES `items` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
- 
-ALTER VIEW `shop_products_view` AS 
-  select 
-    `p`.`product_id` AS `product_id`,
- 
-    `p`.`productname` AS `productname`,
-   
-  
- 
-  
-    `p`.`sef` AS `sef`,
-    `p`.`item_id` AS `item_id`,
- 
-   
-    `p`.`rating` AS `rating`,
-    `i`.`item_code` AS `item_code`,
-    `i`.`itemname` AS `itemname`,  
-    `i`.`description` AS `description`,
-  
-    `p`.`comments` AS `comments`,
-    `i`.`cat_name` AS `cat_name`,
-    `i`.`manufacturer` AS `manufacturer` 
-    
-  from 
-    (`shop_products` `p` join `items_view` `i` on((`p`.`item_id` = `i`.`item_id`))); 
- 
-     */

@@ -135,9 +135,18 @@ class Application extends \Zippy\WebApplication
                     }
                 }
             }
+            return;
         }
         if (strlen($pages[$uri]) > 0) {
             self::$app->LoadPage($pages[$uri]);
+            return;
+        }
+        
+        
+        $prod = \App\Modules\Shop\Entity\Product::loadSEF($uri) ;
+        if($prod instanceof \App\Entity\Item) {
+             self::$app->LoadPage(pages['sp'],$prod->item_id);
+             return; 
         }
     }
 

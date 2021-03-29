@@ -17,15 +17,11 @@ class Product extends \App\Entity\Item
     
     protected function init() {
         $this->productdata = new ProductData() ;
-        
+ 
       
-
-        $this->productdata->name = ''; 
         $this->productdata->desc = ''; 
-        $this->productdata->novelty = 0; //новинка
         $this->productdata->sold = 0;   //кол продаж
-        $this->productdata->topsold = 0; //топ продаж
-
+  
         $this->productdata->rating = 0;  //рейтинг
         $this->productdata->comments = 0; //кол отзывов
         $this->productdata->attributevalues = array();
@@ -109,7 +105,7 @@ class Product extends \App\Entity\Item
      *
      */
     public function getSEF() {
-        return strlen($this->productdata->sef) > 0 ? $this->productdata->sef : $this->item_id;
+        return strlen($this->sef) > 0 ? $this->sef : $this->item_id;
     }
 
     /**
@@ -117,14 +113,12 @@ class Product extends \App\Entity\Item
      *
      */
     public static function loadSEF($sef) {
-        return self::getFirst("item_id={$sef} or sef='{$sef}'");
+        $sef = trim($sef,'/') ;
+        return self::getFirst("   detail like '%<sef>{$sef}</sef>%' ");
     }
 
 
-    public function getName() {
-         if(strlen($this->productdata->name)>0)  return  $this->productdata->name;
-         return $this->itemname;
-    }
+   
     public function getDescription() {
          if(strlen($this->productdata->desc)>0)  return  $this->productdata->desc;
          return $this->description;

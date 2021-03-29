@@ -435,14 +435,14 @@ class GIList extends \App\Pages\Base
         }
      
         $this->nppan->npform->npw->setText($w);
-        $this->nppan->npform->npback->setText(intval($p));
-        $this->nppan->npform->npcost->setText(intval($p));
+        $this->nppan->npform->npback->setText(round($p));
+        $this->nppan->npform->npcost->setText(round($p));
 
         $order = Document::load($this->_doc->parent_id);
         if ($order instanceof Document) {
             if ($order->payamount > 0) {
-                $this->nppan->npform->npback->setText(intval($order->payamount));
-                $this->nppan->npform->npcost->setText(intval($order->payamount));
+                $this->nppan->npform->npback->setText(round($order->payamount));
+                $this->nppan->npform->npcost->setText(round($order->payamount));
 
             }
 
