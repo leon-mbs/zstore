@@ -8,22 +8,25 @@
                 <tr>
                     <th style="width:64px">&nbsp;</th>
                     <th>Наименование</th>
-                    <th style="text-align: right;">Цена</th>
                     <th>Кол.</th>
+                    <th style="text-align: right;">Цена</th>
+                    
                     <th></th>
                 </tr>
                 <tr zippy="pitem">
                     <td><img zippy="photo" style="width: 64px;"/></td>
                     <td><a zippy="pname"></a></td>
-                    <td style="text-align: right;" zippy="price"></td>
+                    
                     <td><input class="_number" style="width:50px" type="number" zippy="quantity"/></td>
+                    <td style="text-align: right;" zippy="price"></td>
                     <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="text-align: right;"><b>Всего:</b></td>
-                    <td style="text-align: right;"><b><span zippy="summa"></span></b></td>
                     <td></td>
+                    <td style="text-align: right;"><b>Всего на сумму:</b></td>
+                    <td style="text-align: right;"><b><span zippy="summa"></span></b></td>
+                    
                     <td></td>
                 </tr>
             </table>
@@ -37,6 +40,12 @@
                 <label for="phone" class="col-4">Телефон</label>
                 <div class="col-8">
                     <input zippy="phone" class="form-control">
+                </div>
+            </div>
+           <div class="form-group row">
+                <label for="name" class="col-4">Имя  и/или  фамилия</label>
+                <div class="col-8">
+                    <input required="required" zippy="name" class="form-control">
                 </div>
             </div>
             <div class="form-group row">
@@ -57,13 +66,15 @@
             <div class="form-group row">
                 <label data-label="address" for="address" class="col-4">Адрес</label>
                 <div class="col-8">
-                    <input zippy="address" class="form-control">
+                     
+                   <textarea zippy="address" class="form-control"></textarea>
+           
                 </div>
             </div>
             <div class="form-group row">
-                <label for="contact" class="col-4">Комментарий</label>
+                <label for="notes" class="col-4">Комментарий</label>
                 <div class="col-8">
-                    <textarea zippy="contact" class="form-control"></textarea>
+                    <textarea zippy="notes" class="form-control"></textarea>
                 </div>
             </div>
             <div class="form-group">

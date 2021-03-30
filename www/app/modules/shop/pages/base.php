@@ -12,6 +12,7 @@ class Base extends \Zippy\Html\WebPage
     public function __construct($params = null) {
 
         \Zippy\Html\WebPage::__construct();
+        global $_config;
 
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
@@ -44,7 +45,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["delivery"] =strlen($this->op['delivery'])>0;
         $this->_tvars["news"] =strlen($this->op['news'])>0;
           
-      
+         $this->_tvars["np"] = $_config['modules']['np'] == 1;
+    
     }
 
     //вывод ошибки,  используется   в дочерних страницах

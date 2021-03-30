@@ -30,11 +30,12 @@ class Order extends Base
         $form->add(new Label('summa', new \Zippy\Binding\PropertyBinding($this, 'sum')));
         $this->OnUpdate($this);
         $form = $this->add(new Form('orderform'));
-        $form->add(new DropDownChoice('delivery', array(1 => 'Самовывоз', 2 => 'Курьер', 3 => 'Почта')))->onChange($this, 'OnDelivery');
+        $form->add(new DropDownChoice('delivery',  Document::getDeliveryTypes($this->_tvars['np'] == 1) ))->onChange($this, 'OnDelivery');
         $form->add(new TextInput('email'));
         $form->add(new TextInput('phone'));
-        $form->add(new TextInput('address'))->setVisible(false);
-        $form->add(new TextArea('contact'));
+        $form->add(new TextInput('name'));
+        $form->add(new TextArea('address'))->setVisible(false);
+        $form->add(new TextArea('notes'));
         $form->onSubmit($this, 'OnSave');
     }
 
@@ -61,7 +62,7 @@ class Order extends Base
                 break;
             }
 
-            $this->sum = $this->sum + $product->price * $product->quantity;
+            $this->sum = $this->sum + $product->getPriceFinal() * $product->quantity;
 
         }
         Basket::getBasket()->list = $this->basketlist;
@@ -69,12 +70,12 @@ class Order extends Base
     }
 
     public function OnDelete($sender) {
-        $product_id = $sender->owner->getDataItem()->product_id;
-        Basket::getBasket()->deleteProduct($product_id);
+        $item_id = $sender->owner->getDataItem()->item_id;
+        Basket::getBasket()->deleteProduct($item_id);
         $this->basketlist = Basket::getBasket()->list;
 
         if (Basket::getBasket()->isEmpty()) {
-            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", 0);
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Main", 0);
         } else {
             $this->OnUpdate($this);
         }
@@ -85,9 +86,11 @@ class Order extends Base
         if (count($this->basketlist) == 0) {
             return;
         }
-
+        $shop = System::getOptions("shop");
+ 
         $email = trim($this->orderform->email->getText());
         $phone = trim($this->orderform->phone->getText());
+        $name = trim($this->orderform->name->getText());
         $delivery = $this->orderform->delivery->getValue();
         $address = $this->orderform->address->getValue();
 
@@ -101,12 +104,21 @@ class Order extends Base
             $this->setError("enteraddress");
             return;
         }
+        if (($delivery == 2 || $delivery == 3) && strlen($phone) == 0) {
+
+            $this->setError("enterteldeliv");
+            return;
+        }
         if (strlen($phone) == 0 && strlen($email) == 0) {
 
             $this->setError("entertelemail");
             return;
         }
-
+        if (strlen($phone) > 0 && strlen($phone) != \App\Helper::PhoneL()) {
+            $this->setError("tel10", \App\Helper::PhoneL());
+            return;
+        }
+            
 
         try {
             $op = System::getOptions("shop");
@@ -121,16 +133,16 @@ class Order extends Base
             $order = Document::create('Order', $f);
             $order->document_number = $order->nextNumber();
             if (strlen($order->document_number) == 0) {
-                $order->document_number = 'З0001';
+                $order->document_number = 'З-0001';
             }
             $amount = 0;
             $itlist = array();
             foreach ($this->basketlist as $product) {
                 $item = \App\Entity\Item::load($product->item_id);
-                $item->price = $product->price;
+                $item->price = $product->getPriceFinal();       
                 $item->quantity = $product->quantity;
-                $item->product_id = $product->product_id;
-                $amount += ($product->price * $product->quantity);
+                $item->item_id = $product->item_id;
+                $amount += ($product->getPriceFinal() * $product->quantity);
                 $itlist[$item->item_id] = $item;
             }
 
@@ -145,21 +157,46 @@ class Order extends Base
             $order->packDetails('detaildata', $itlist);
 
 
-            $cust = \App\Entity\Customer::load($op["defcust"]);
+             $cust = \App\Entity\Customer::getByEmail($email);
             if ($cust instanceof \App\Entity\Customer) {
                 $order->customer_id = $cust->customer_id;
             }
-            $order->headerdata['store'] = $store_id;
+            $cust = \App\Entity\Customer::getByPhone($phone);
+            if ($cust instanceof \App\Entity\Customer) {
+                $order->customer_id = $cust->customer_id;
+            }
+            
+            if($order->customer_id==0) {
+                $cust = \App\Entity\Customer::load($op["defcust"]);
+                if ($cust instanceof \App\Entity\Customer) {
+                    $order->customer_id = $cust->customer_id;
+                }
+                
+                if($shop['createnewcust'] == 1  )  {
+                    
+                    $c = new \App\Entity\Customer() ;
+                    $c->customer_name = $name;    
+                    $c->email = $email;    
+                    $c->phone = $phone;    
+                    $c->save();
+                    $order->customer_id = $c->customer_id;
+                    
+                }
+            
+      
+      
+            }
+           
             $order->headerdata['pricetype'] = $op["defpricetype"];
 
-            $order->notes = trim($this->orderform->contact->getText());
+            $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
             $order->save();
             $order->updateStatus(Document::STATE_NEW);
-
-            //todo  покупатель по умолчанию
+            $this->setSuccess("shopneworder",$order->document_number);
+          
             //todo  отослаnь нотификацию
-            //todo  отослаnь письмо
+        
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
         }
@@ -179,8 +216,8 @@ class Order extends Base
     public function OnAddRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         $datarow->setDataItem($item);
-        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->product_id))->setValue($item->productname);
-        $datarow->add(new Label('price', $item->price));
+        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->item_id))->setValue($item->productname);
+        $datarow->add(new Label('price', $item->getPriceFinal()));
         $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity')));
         $datarow->add(new \Zippy\Html\Link\ClickLink('delete', $this, 'OnDelete'));
         $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));

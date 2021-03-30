@@ -245,7 +245,10 @@ class CategoryList extends \App\Pages\Base
               if($imagedata[0] < $imagedata[1] ) {
                   $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
               }
+              $thumb->resize(256, 256);
               $image->content = $thumb->getImageAsString();
+              
+        
  
             }
               

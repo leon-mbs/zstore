@@ -40,10 +40,11 @@ class ProductView extends Base
         $this->_title = $product->itemname;
        // $this->_description = $product->getDescription();
       
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}&t=t");
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}");
         $this->product_image->setAttribute('href', "/loadshopimage.php?id={$product->image_id}");
 
         $this->add(new Label('productname', $product->itemname));
+        $this->add(new Label('productcode', $product->item_code));
         $this->add(new Label('onstore'));
         $this->add(new \Zippy\Html\Label('manufacturername', $product->manufacturer))->SetVisible(strlen($product->manufacturer) > 0);
          
@@ -129,8 +130,8 @@ class ProductView extends Base
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
         $this->setSuccess("addedtocart");
-        //$this->resetURL();
-        App::RedirectURI('/pcat/' . $product->group_id);
+        $this->resetURL();
+      //  App::RedirectURI('/pcat/' . $product->cat_id);
     }
 
     //добавить к форме сравнения

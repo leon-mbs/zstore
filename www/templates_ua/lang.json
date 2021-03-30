@@ -168,6 +168,7 @@
   "enterdelivery": "Виберіть  тип доставки",
   "enteraddress": "Введіть адрес",
   "entertelemail": "Введіть телефон або  email",
+  "enterteldeliv": "Для даного  типу доставки необхiдно ввести телефон",
   "selbranch": "Виберіть  філію",
   "selmf": "Виберіть  касу",
   "thesamebranch": "Склад, каса  та термінал мають  бути однієї філії ",
@@ -404,7 +405,8 @@
    "shopattrlistname" :"Перелiк",
    "shopattrsetname" :"Набiр",
    "shopattrstrname" :"Строка",
-   "shopfeedbaks" :"Вiдгукiв(%s)"
-   
+   "shopfeedbaks" :"Вiдгукiв(%s)",
+   "shopneworder" :"Створено замовлення %s"
+     
   
   }

@@ -412,7 +412,12 @@ class ItemList extends \App\Pages\Base
              if($imagedata[0] < $imagedata[1] ) {
                   $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
               }
+           
+
+              
               $image->content = $thumb->getImageAsString();
+              $thumb->resize(256, 256);
+              $image->thumb = $thumb->getImageAsString();
  
                 
             }

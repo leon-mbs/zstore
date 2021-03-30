@@ -168,6 +168,7 @@
   "enterdelivery": "Выберите  тип доставки",
   "enteraddress": "Введите адрес",
   "entertelemail": "Введите телефон или  email",
+  "enterteldeliv": "Для данного  типа доставки нужно  ввести телефон",
   "selbranch": "Выберите  филиал",
   "selmf": "Выберите  кассу",
   "thesamebranch": "Склад, касса  и терминал  должны быть  с  одного  филиала",
@@ -415,6 +416,7 @@
    "shopattrlistname" :"Список",
    "shopattrsetname" :"Набор",
    "shopattrstrname" :"Строка",
-   "shopfeedbaks" :"Отзывов(%s)"
+   "shopfeedbaks" :"Отзывов(%s)",
+   "shopneworder" :"Создан заказ %s"
    
  }
