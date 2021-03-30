@@ -11,8 +11,8 @@
 <br>
 <div class="row">
 
-    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-        <div class="card ">
+    <div class="col-12 col-sm-8 col-lg-6 col-xl-4">
+        <div class="card m-2">
             <a data-type="image" zippy="product_image" data-toggle="lightbox" data-gallery="product" class="card-link">
                 <img class="card-img-top"/></a>
 
@@ -20,8 +20,8 @@
         {{#islistimage}}
         <div>
             <div zippy="imagelist">
-                <a zippy="product_thumb" data-type="image" data-toggle="lightbox" data-gallery="thumb"> <img
-                        style="float:left; height:64px"></a>
+                <a zippy="product_thumb" data-type="image" data-toggle="lightbox" data-gallery="thumb"> 
+                <img  class="m-2"   style="float:left; height:64px"></a>
             </div>
         </div>
         {{/islistimage}}
@@ -29,52 +29,59 @@
     </div>
 
 
-    <div class="col-12 col-sm-6 col-lg-4  col-xl-3">
+    <div class="col-12 col-sm-8 col-lg-6  col-xl-4">
         <div class="row">
             <div class="col-12">
-                <span zippy="novelty" class="badge badge-success">Новинка</span>
-                <span zippy="topsold" class="badge badge-warning">Топ продаж</span>
-
-                <h4 zippy="productname"></h4>
+                 
+                <h5 zippy="productname"></h5>
+                <h6>Код:  <span zippy="productcode"></span></h6>
                 <h6><span zippy="manufacturername"></span></h6>
-                <p zippy="description"></p>
+                 <br> <br>
 
-            </div>
-            <div class="col-12">
+             
 
-                <h4> &nbsp;<b zippy="price"></b><i zippy="arrowdown"
-                                                   class="fa fa-arrow-down text-success price-arrow"></i><i
-                        zippy="arrowup" class="fa fa-arrow-up text-danger price-arrow"></i> {{currencyname}}</h4>
-                <br><b zippy="onstore"></b>
+                <h4> &nbsp;<b zippy="price"  ></b></h4>
+                <h4> &nbsp;<b class="text-danger" zippy="actionprice"></b></h4>
+                <b zippy="onstore"></b>
                 <br><a class="btn btn-success " zippy="buy"></a>
-
-            </div>
-            <div class="col-12">
+                <br>
+            
                 <a zippy="addtocompare">Добавить к сравнению</a><a zippy="compare">Сравнить</a>
-                <br> <input readonly="readonly" type="hidden" class="rating" zippy="rated" value="0"
-                            data-filled="fas fa-star" data-empty="far fa-star "/>&nbsp;<span zippy="comments"></span>
+               
+               {{#usefeedback}}
+                <br> <input readonly="readonly" type="hidden" class="rating" zippy="rated" value="0"                            data-filled="fas fa-star" data-empty="far fa-star "/>
+                     &nbsp;<span zippy="comments"></span>
+               {{/usefeedback}}              
             </div>
 
         </div>
 
 
     </div>
-
-    <div class="col-12 col-sm-6 col-lg-4  col-xl-3">
-        <div zippy="fulldescription"></div>
+     <div class="w-100"></div>
+    <div class="col-12 col-sm-8 col-lg-6  col-xl-4">
+      
+                <a data-toggle="collapse" href="#description" aria-expanded="false" aria-controls="collapseExample">
+                    <h5>Описание <i style="font-size:smaller" class="fa fa-angle-down"></i></h5>
+                </a>
+                <div zippy="description"   class="collapse  ">
+                </div>
     </div>
-    <div class="col-12"></div>
-    <div class="col-12 col-sm-6 col-lg-6 col-xl-4">
-        <h4>Характеристики</h4>
+   <div class="w-100"></div>
+    <div class="col-12 col-sm-8 col-lg-6  col-xl-4">
+        <h5>Характеристики</h5>
         <table class="table table-sm   table-stripped  ">
             <tr zippy="attributelist">
                 <td><span zippy="attrname"></span></td>
-                <td><span zippy="attrvalue"></span></td>
+                <td class="text-right"><span zippy="attrvalue"></span></td>
             </tr>
         </table>
     </div>
-    <div class="col-12 col-sm-6 col-lg-4 ">
-        <h4>Отзывы</h4>
+        <div class="w-100"></div>
+  
+  {{#usefeedback}}
+    <div class="col-12 col-sm-8 col-lg-6  col-xl-4">
+        <h5>Отзывы</h5>
         <table class="table">
             <tr zippy="commentlist">
                 <td>
@@ -121,7 +128,7 @@
         </form>
 
     </div>
-
+  {{/usefeedback}}
 
 </div>
 

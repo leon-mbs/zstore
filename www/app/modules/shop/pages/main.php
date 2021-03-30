@@ -33,7 +33,14 @@ class Main extends Base
    
 
         $this->add(new Panel("newlistp"));
-        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "detail  not  like '<noshop>1</noshop>' ", "item_id desc", 12), $this, 'OnNewRow'))->Reload();
+        $cat='';
+        if($id > 0) {
+            $c = \App\Entity\Category::load($id);
+            $ch = $c->getChildren() ;
+            $cat =" cat_id in (". implode(',',$ch) .") and "  ;    
+        } 
+        
+        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '<noshop>1</noshop>' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
     }
 
     public function OnCatRow($datarow) {
@@ -45,8 +52,8 @@ class Main extends Base
 
     public function OnNewRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("nimage", "/sp/" . $item->item_id))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
-        $row->add(new BookmarkableLink("nname", "/sp/" . $item->item_id))->setValue($item->itemname);
+        $row->add(new BookmarkableLink("nimage",   $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("nname",   $item->getSEF()))->setValue($item->itemname);
     }
 
 }

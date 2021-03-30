@@ -59,7 +59,7 @@ a.container-fluid-img   {
  }
  
  .fa-star {
-	 color: #ffd600; 
+	 color: orange; 
  }
 
 .card-body {
@@ -95,14 +95,7 @@ a:not([href]):hover {
  color: #17a2b8;
 }  
  
-b {
- font-size:16px; color:#17a2b8; font-weight:bold
-} 
-
-span {
- color:#17a2b8; 
- font-weight:bold
-} 
+ 
  
  .rating-symbol-foreground {
     color: red;

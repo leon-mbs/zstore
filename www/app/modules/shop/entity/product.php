@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Entity;
  * Класс-сущность товар  онлайн каталога
  *
  * @table=items
- * @view=shop_products_view
+ * @view=items_view
  * @keyfield=item_id
  */
 class Product extends \App\Entity\Item
@@ -20,6 +20,7 @@ class Product extends \App\Entity\Item
  
       
         $this->productdata->desc = ''; 
+        $this->productdata->actionprice = ''; 
         $this->productdata->sold = 0;   //кол продаж
   
         $this->productdata->rating = 0;  //рейтинг
@@ -100,12 +101,25 @@ class Product extends \App\Entity\Item
         return $ret;
     }
 
-    /**
+    //для сортировки 
+    public function getPriceFinal() {
+        if($this->productdata->actionprice >0)  return  $this->productdata->actionprice;
+        return  $this->price;
+    }
+    public function getRating() {
+        $r =  0;
+        if($this->comments >0) {
+            return  round($this->ratings/$this->comments) ;
+        }
+        return $r;
+    }
+
+   /**
      * Возвращает  ЧПУ  строку.  Если  не  задана,   возвращвет id
      *
      */
     public function getSEF() {
-        return strlen($this->sef) > 0 ? $this->sef : $this->item_id;
+        return strlen($this->sef) > 0 ? $this->sef : '/sp/'. $this->item_id;
     }
 
     /**

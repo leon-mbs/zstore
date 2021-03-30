@@ -414,6 +414,7 @@
    "shopattrnumname" :"Число",
    "shopattrlistname" :"Список",
    "shopattrsetname" :"Набор",
-   "shopattrstrname" :"Строка"
+   "shopattrstrname" :"Строка",
+   "shopfeedbaks" :"Отзывов(%s)"
    
  }

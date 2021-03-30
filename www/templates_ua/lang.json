@@ -403,9 +403,8 @@
    "shopattrnumname" :"Число",
    "shopattrlistname" :"Перелiк",
    "shopattrsetname" :"Набiр",
-   "shopattrstrname" :"Строка"
-
-   
+   "shopattrstrname" :"Строка",
+   "shopfeedbaks" :"Вiдгукiв(%s)"
    
   
   }

@@ -21,39 +21,42 @@ class ProductView extends Base
 {
 
     public $msg, $attrlist, $clist;
-    protected               $product_id, $gotocomment;
+    protected               $item_id, $gotocomment;
 
-    public function __construct($product_id = 0) {
+    public function __construct($item_id = 0) {
         parent::__construct();
 
-        $this->product_id = $product_id;
-        $product = Product::load($product_id);
+        $this->item_id = $item_id;
+        $product = Product::load($item_id);
         if ($product == null) {
             App::Redirect404();
         }
+        
+        $options= \App\System::getOptions('shop') ;
+        $this->_tvars['usefeedback']= $options['usefeedback'] ==1;
+          
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($product->cat_id), true));
 
         $this->_title = $product->itemname;
-        $this->_description = $product->getDesc();
-        //  $this->_keywords = $product->description;
+       // $this->_description = $product->getDescription();
+      
         $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}&t=t");
         $this->product_image->setAttribute('href', "/loadshopimage.php?id={$product->image_id}");
 
         $this->add(new Label('productname', $product->itemname));
         $this->add(new Label('onstore'));
         $this->add(new \Zippy\Html\Label('manufacturername', $product->manufacturer))->SetVisible(strlen($product->manufacturer) > 0);
-
-        $this->add(new Label("topsold"))->setVisible($product->topsold == 1);
-        $this->add(new Label("novelty"))->setVisible($product->novelty == 1);
-
-        $this->add(new Label('price', $product->price));
-
-        $this->add(new Label('description', $product->getDesc()));
-        $this->add(new Label('fulldescription', $product->getDesc()));
-        $this->add(new Label('arrowup'))->setVisible($product->chprice == 'up');
-        $this->add(new Label('arrowdown'))->setVisible($product->chprice == 'down');
-        $this->add(new TextInput('rated'))->setText($product->rating);
-        $this->add(new Label('comments', "Отзывов({$product->comments})"));
+         
+        $this->add(new Label('price', $product->getPrice($options['defpricetype']) .' '. $options['currencyname'] ));
+        $this->add(new Label('actionprice',$product->productdata->actionprice .' '. $options['currencyname'] ))->setVisible(false);
+        if($product->productdata->actionprice > 0) {
+            $this->price->setAttribute('style','text-decoration:line-through');                 
+            $this->actionprice->setVisible(true);                 
+        }
+        
+        $this->add(new Label('description', $product->getDescription(),true));
+        $this->add(new TextInput('rated'))->setText($product->getRating());
+        $this->add(new Label('comments', \App\Helper::l("shopfeedbaks",$product->comments)  ));
 
         $list = Helper::getAttributeValuesByProduct($product);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -66,18 +69,18 @@ class ProductView extends Base
         $form->add(new TextInput('nick'));
         $form->add(new TextInput('rating'));
         $form->add(new TextArea('comment'));
-        $this->clist = ProductComment::findByProduct($product->product_id);
+        $this->clist = ProductComment::findByProduct($product->item_id);
         $this->add(new \Zippy\Html\DataList\DataView('commentlist', new \Zippy\Html\DataList\ArrayDataSource(new PropertyBinding($this, 'clist')), $this, 'OnAddCommentRow'));
-        $this->commentlist->setPageSize(5);
+        $this->commentlist->setPageSize(10);
         $this->add(new \Zippy\Html\DataList\Pager("pag", $this->commentlist));
         $this->commentlist->Reload();
 
-        if ($product->deleted == 1) {
+        if ($product->disabled == 1 || $product->noshop==1) {
             $this->onstore = \App\Helper::l('cancelsell');
             $this->buy->setVisible(false);
         } else {
-            $op = \App\System::getOptions("shop");
-            if ($product->getQuantity($op['defstore']) > 0) {
+            
+            if ($product->getQuantity($options['defstore']) > 0) {
                 $this->onstore->setText(\App\Helper::l('isonstore'));
                 $this->buy->setValue(\App\Helper::l('tobay'));
             } else {
@@ -98,7 +101,7 @@ class ProductView extends Base
         if (!is_array($recently)) {
             $recently = array();
         }
-        $recently[$product->product_id] = $product->product_id;
+        $recently[$product->item_id] = $product->item_id;
         \App\Session::getSession()->recently = $recently;
     }
 
@@ -122,7 +125,7 @@ class ProductView extends Base
 
     //добавление в корзину
     public function OnBuy($sender) {
-        $product = Product::load($this->product_id);
+        $product = Product::load($this->item_id);
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
         $this->setSuccess("addedtocart");
@@ -132,7 +135,7 @@ class ProductView extends Base
 
     //добавить к форме сравнения
     public function OnAddCompare($sender) {
-        $product = Product::load($this->product_id);
+        $product = Product::load($this->item_id);
         $comparelist = \App\Modules\Shop\CompareList::getCompareList();
         if (false == $comparelist->addProduct($product)) {
 
@@ -147,7 +150,7 @@ class ProductView extends Base
 
 
         $comment = new \App\Modules\Shop\Entity\ProductComment();
-        $comment->product_id = $this->product_id;
+        $comment->item_id = $this->item_id;
         $comment->author = $this->formcomment->nick->getText();
         $comment->comment = $this->formcomment->comment->getText();
         $comment->rating = $this->formcomment->rating->getText();
@@ -156,7 +159,7 @@ class ProductView extends Base
         $this->formcomment->nick->setText('');
         $this->formcomment->comment->setText('');
         $this->formcomment->rating->setText('0');
-        $this->clist = ProductComment::findByProduct($this->product_id);
+        $this->clist = ProductComment::findByProduct($this->item_id);
         $this->commentlist->Reload();
 
 
@@ -171,7 +174,7 @@ class ProductView extends Base
             App::addJavaScript("openComments();", true);
             $this->gotocomment = false;
         }
-        if (\App\Modules\Shop\CompareList::getCompareList()->hasProsuct($this->product_id)) {
+        if (\App\Modules\Shop\CompareList::getCompareList()->hasProsuct($this->item_id)) {
             $this->compare->setVisible(true);
             $this->addtocompare->setVisible(false);
         } else {
@@ -200,7 +203,7 @@ class ProductView extends Base
         $comment->Save();
         // App::$app->getResponse()->addJavaScript("window.location='#{$comment->comment_id}'", true);
         //\Application::getApplication()->Redirect('\\ZippyCMS\\Modules\\Articles\\Pages\\ArticleList');
-        $this->clist = ProductComment::findByProduct($this->product_id);
+        $this->clist = ProductComment::findByProduct($this->item_id);
         $this->commentlist->Reload();
         $this->updateComments();
     }
@@ -208,11 +211,11 @@ class ProductView extends Base
     private function updateComments() {
         $conn = \ZDB\DB::getConnect();
 
-        $product = Product::load($this->product_id);
+        $product = Product::load($this->item_id);
 
-        $product->rating = $conn->GetOne("select sum(rating)/count(*) from `shop_prod_comments`where  product_id ={$this->product_id} and moderated <> 1 and  rating >0");
+        $product->rating = $conn->GetOne("select sum(rating)/count(*) from `shop_prod_comments`where  item_id ={$this->item_id} and moderated <> 1 and  rating >0");
         $product->rating = round($product->rating);
-        $product->comments = $conn->GetOne("select count(*) from `shop_prod_comments`where  product_id ={$this->product_id} and moderated <> 1");
+        $product->comments = $conn->GetOne("select count(*) from `shop_prod_comments`where  item_id ={$this->item_id} and moderated <> 1");
         $product->save();
         $this->rated->setText($product->rating);
         $this->comments->setText("Отзывов({$product->comments})");

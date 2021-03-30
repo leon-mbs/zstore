@@ -106,7 +106,31 @@ class Category extends \ZCL\DB\Entity
          }
          return $p;
     }
-    
+    public    function getChildren(  &$clist=null){
+        if($clist==null) {
+           $clist = Category::find('','cat_name');    
+        }
+        
+       $p = array();
+           
+           
+           
+           foreach($clist as  $ch) {
+              if($ch->parent_id==$this->cat_id) {
+                 $p[]=$ch->cat_id;    
+                 $pp = $clist[$ch->cat_id]->getChildren($clist);
+                 foreach($pp as $_p){
+                   $p[] = $_p;  
+                 } 
+                 
+              }
+                 
+           }
+           
+           
+       return $p;
+        
+    }   
     //список  с  тмц
     public static function getList($fullname=false){
         if($fullname==false) {

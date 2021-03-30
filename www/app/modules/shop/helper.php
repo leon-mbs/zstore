@@ -17,6 +17,7 @@ class Helper
         if ($id > 0) {
             $g =  Category ::load($id);
             $gl = $g->getParents();
+            $gl = array_reverse($gl) ;
             $all =  Category::find('');
             foreach ($gl as $cat_id) {
                 $c = $all[$cat_id];  
@@ -28,18 +29,15 @@ class Helper
     }
 
     //список  производителей в  данной группе  товаров 
-    public static function _getManufacturerNamesByGroup($cat_id, $child = false) {
+    public static function getManufacturers($cat_id ) {
         $list = array();
         $conn = DB::getConnect();
-        $in = " select manufacturer_id  from  shop_products p where p.cat_id={$cat_id}";
-        if ($child === true) {
-            $in = " select manufacturer_id  from  shop_products p where p.deleted <> 1 and p.cat_id in( select g.cat_id  from  shop_productgroups g where  treeorder like '%" . sprintf('%08s', $cat_id) . "%' )";
-        }
-
-        $sql = "select manufacturer_id,manufacturername from  shop_manufacturers where manufacturer_id in({$in}) order by manufacturername ";
+        $sql = " select manufacturer  from  items  where cat_id={$cat_id} and disabled <> 1 order  by manufacturer ";
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            $list[$row["manufacturer_id"]] = $row["manufacturername"];
+           if(strlen($row["manufacturer"])>0) {
+               $list[] = $row["manufacturer"];  
+           } 
         }
 
         return $list;
@@ -71,7 +69,7 @@ class Helper
 
 
         if (count($filter->attributes) > 0) {
-            $wherep = " and  product_id in(select product_id  from  shop_attributevalues   where   ";
+            $wherep = " and  item_id in(select item_id  from  shop_attributevalues   where   ";
             foreach ($filter->attributes as $attr) {
                 if ($attr->attributetype == 1 and $attr->searchvalue == 1) {
                     $where = $where . $wherep . " attribute_id = " . $attr->attribute_id . " and attributevalue = '1')";
@@ -134,7 +132,7 @@ class Helper
         $conn = DB::getConnect();
         $where = self::_getWhere($filter);
 
-        $sql = "select count(product_id) as  cnt from  shop_products p " . $where;
+        $sql = "select count(item_id) as  cnt from  items p " . $where;
         return $conn->GetOne($sql);
     }
 
@@ -159,7 +157,7 @@ class Helper
         $grs = str_split($gr, 8);
         $grlist = implode(',', $grs);
 
-        $sql = "select a.attribute_id, attributename,attributetype,valueslist,(select attributevalue from  shop_attributevalues v where a.attribute_id = v.attribute_id and   product_id={$product->product_id})  as  attributevalue from  shop_attributes a   where  cat_id  in($grlist) ";
+        $sql = "select a.attribute_id, attributename,attributetype,valueslist,(select attributevalue from  shop_attributevalues v where a.attribute_id = v.attribute_id and   item_id={$product->item_id})  as  attributevalue from  shop_attributes a   where  cat_id  in($grlist) ";
 
         $list = array();
 
@@ -180,7 +178,7 @@ class Helper
     public static function getAttributeValuesByProduct($product) {
         $list = array();
         $conn = DB::getConnect();
-        $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.product_id=  " . $product->product_id;
+        $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.item_id=  " . $product->item_id;
 
 
         $rs = $conn->Execute($sql);
@@ -230,12 +228,10 @@ class Helper
         }
         $conn = DB::getConnect();
 
-        $gr = $conn->GetOne("select mpath  from  shop_productgroups  where cat_id={$cat_id}  ");
-        $grs = str_split($gr, 8);   // получаем  все родительские  группы
-        $grlist = implode(',', $grs);
-        if (strlen($grlist) == 0) {
-            return $list;
-        }
+        $cat = \App\Entity\Category::load($cat_id);
+        $plist = $cat->getParents();
+        $plist[]=$cat_id;
+        $grlist = implode(',',$plist) ;
         $sql = "select attribute_id,showinlist,showincompare, cat_id,attributename,attributetype,valueslist from  shop_attributes   
                     where showinlist = 1 and cat_id  in($grlist) and attributetype in(1,2,3,4)  and attribute_id in(select distinct attribute_id from  shop_attributevalues)  order  by cat_id";
 
@@ -262,14 +258,14 @@ class Helper
     //список значений  для  атрибута типа  число
     public static function getAttrValues($cat_id, $attribute_id) {
         $conn = DB::getConnect();
-        $sql = "select distinct  attributevalue  from  shop_attributevalues where  attribute_id = {$attribute_id} and product_id in(select product_id from shop_products where deleted <> 1 and  cat_id={$cat_id}) order by attributevalue";
+        $sql = "select distinct  attributevalue  from  shop_attributevalues where  attribute_id = {$attribute_id} and item_id in(select item_id from items where disabled <> 1 and  cat_id={$cat_id}) order by attributevalue";
         return $conn->GetCol($sql);
     }
 
     //возвращает наименьшую и наибольшую цену
     public static function getPriceRange($cat_id) {
         $conn = DB::getConnect();
-        $sql = "select coalesce(min(price),0) as minp,coalesce(max(price),0) as maxp  from  shop_products where  deleted <> 1 and   cat_id={$cat_id}   ";
+        $sql = "select coalesce(min(price),0) as minp,coalesce(max(price),0) as maxp  from  items where  disabled <> 1 and   cat_id={$cat_id}   ";
         return $conn->GetRow($sql);
     }
 

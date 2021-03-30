@@ -145,7 +145,7 @@ class Application extends \Zippy\WebApplication
         
         $prod = \App\Modules\Shop\Entity\Product::loadSEF($uri) ;
         if($prod instanceof \App\Entity\Item) {
-             self::$app->LoadPage(pages['sp'],$prod->item_id);
+             self::$app->LoadPage($pages['sp'],$prod->item_id);
              return; 
         }
     }
