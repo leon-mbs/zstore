@@ -406,7 +406,8 @@
    "shopattrsetname" :"Набiр",
    "shopattrstrname" :"Строка",
    "shopfeedbaks" :"Вiдгукiв(%s)",
-   "shopneworder" :"Створено замовлення %s"
+   "shopneworder" :"Створено замовлення %s" ,
+   "shopyoursorder" :"Ваше замовлення %s"
      
   
   }

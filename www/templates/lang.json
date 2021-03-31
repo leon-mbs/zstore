@@ -417,6 +417,7 @@
    "shopattrsetname" :"Набор",
    "shopattrstrname" :"Строка",
    "shopfeedbaks" :"Отзывов(%s)",
-   "shopneworder" :"Создан заказ %s"
+   "shopneworder" :"Создан заказ %s" ,
+   "shopyoursorder" :"Ваш заказ %s"
    
  }

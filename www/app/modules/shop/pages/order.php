@@ -151,7 +151,7 @@ class Order extends Base
                 'delivery_name' => $this->orderform->delivery->getValueName(),
                 'email'         => $email,
                 'phone'         => $phone,
-                'address'       => $address,
+                'ship_address'  => $address,
                 'total'         => $amount
             );
             $order->packDetails('detaildata', $itlist);
@@ -195,21 +195,23 @@ class Order extends Base
             $order->updateStatus(Document::STATE_NEW);
             $this->setSuccess("shopneworder",$order->document_number);
           
-            //todo  отослаnь нотификацию
+            if(strlen($phone)>0) {
+                \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("shopyoursorder",$order->document_number) ) ;
+            }
         
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
         }
 
 
-        $this->orderform->contact->setText('');
+        $this->orderform->notes->setText('');
         $this->basketlist = array();
         Basket::getBasket()->list = array();
 
         $this->orderform->setVisible(false);
         $this->listform->setVisible(false);
 
-        $this->setSuccess("order_sent");
+     
         App::RedirectURI("/shop");
     }
 

@@ -75,12 +75,12 @@
            <div class="form-check">
                 <input zippy="createnewcust" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="createnewcust">Создавать нового контрагента при заказе </label>
-                <small>Создавать  нового  контрагента по  номеру  телефона  или  email</small>
+                <br><small>Создавать  нового  контрагента по  номеру  телефона  или  email</small>
             </div>
            <div class="form-check">
                 <input zippy="uselogin" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="uselogin">Вход в каталог через страницу логина </label>
-                <small>Каталог недоступен для незалогиненого  пользователя</small>
+                <br><small>Каталог недоступен для незалогиненого  пользователя</small>
             </div>
 
             <div class="form-group  row">
@@ -136,7 +136,10 @@
 
             callbacks: {
                 onEnter: function (e) {
-                    e.preventDefault();
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
                 },
                 onPaste: function (e) {
 
@@ -151,8 +154,11 @@
             lang: 'ru-RU',
 
             callbacks: {
-                onEnter: function (e) {
-                    e.preventDefault();
+                 onEnter: function (e) {
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
                 },
                 onPaste: function (e) {
 
@@ -167,8 +173,11 @@
             lang: 'ru-RU',
 
             callbacks: {
-                onEnter: function (e) {
-                    e.preventDefault();
+               onEnter: function (e) {
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
                 },
                 onPaste: function (e) {
 
@@ -184,7 +193,10 @@
 
             callbacks: {
                 onEnter: function (e) {
-                    e.preventDefault();
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
                 },
                 onPaste: function (e) {
 

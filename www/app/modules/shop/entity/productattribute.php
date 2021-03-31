@@ -19,6 +19,7 @@ class ProductAttribute extends \ZCL\DB\Entity
         $this->showinlist = 0;
         $this->showincompare = 0;
         $this->value = '';
+        $this->nodata = 0;
     }
 
     protected function afterDelete() {

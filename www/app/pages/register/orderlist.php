@@ -42,7 +42,7 @@ class OrderList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Неоплаченые', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые',  3 => 'Все'), 0));
 
         $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
@@ -99,8 +99,28 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', H::fa($doc->amount)));
-
-        $row->add(new Label('state', Document::getStateName($doc->state)));
+        $stname =  Document::getStateName($doc->state);
+                                     
+        $row->add(new Label('state', $stname));
+         if ($doc->state == Document::STATE_NEW) {
+            $row->state->setText('<span class="badge badge-info">'.$stname.'</span>', true);
+        }
+          if ($doc->state == Document::STATE_READYTOSHIP
+          || $doc->state == Document::STATE_INSHIPMENT 
+          || $doc->state == Document::STATE_DELIVERED 
+          ) {
+            $row->state->setText('<span class="badge badge-success">'.$stname.'</span>', true);
+        }
+        if ($doc->state == Document::STATE_INPROCESS) {
+            $row->state->setText('<span class="badge badge-primary">'.$stname.'</span>', true);
+        }
+        
+        if ($doc->state == Document::STATE_CLOSED || $doc->state == Document::STATE_EXECUTED) {
+            $row->state->setText('<span class="badge badge-secondary">'.$stname.'</span>', true);
+        }
+       if ($doc->state == Document::STATE_FAIL ) {
+            $row->state->setText('<span class="badge badge-danger">'.$stname.'</span>', true);
+        }
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -501,7 +521,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state <> 9 ";
+            $where .= " and  state not in (9,17) ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";

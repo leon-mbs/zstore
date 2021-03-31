@@ -1,45 +1,25 @@
 <html>
 <body>
 <div class="row ">
-    <div class="col-12">
+    <div class="col-12 col-md-10 col-xl-11">
         <ol class="breadcrumb" zippy="breadcrumb">
 
         </ol>
     </div>
+    <div class="col-12 col-md-2 col-xl-1  ">
+       {{#usefilter}}
+       <ol class="breadcrumb" >
+          <a class="btn btn-success" href="javascript:void(0);" data-toggle="modal"
+                           data-target="#modalfilter"><i class="fa fa-filter"></i> Фильтр</a>
+        </ol>
+       {{/usefilter}}  
+    </div>
 </div>
  <div class="row ">
 
-    {{#usefilter}}
-    <div class="col-12 col-sm-4   col-lg-3 col-xl-2 ">
-        <form zippy="sfilter" class="sfilter">
-       
-            <a href="#manflist" data-toggle="collapse" class="filtertiem "><b> Бренд </b> <i style="font-size:smaller" class="fa fa-angle-down"></i> </a>
-            <div id="manflist" class="collapse ">
-                <div zippy="mlist"></div>
-            </div>
-            <div class="mt-2">
-            <div zippy="attrlist">
-                <div zippy="attrdata"></div>
-            </div>
-            </div>
-
-            <div class="form-group mt-2"  >
-                <input class="btn btn-info btn-sm  " type="submit" value="Применить">&nbsp;<a
-                    class="btn btn-light  btn-sm " zippy="sclear">Сбросить</a>
-            </div>
-        </form>
-
-    </div>
-    {{/usefilter}}
-     {{#usefilter}}
-   
-    <div class="col-12 col-sm-8 col-lg-9  col-xl-10">
-     {{/usefilter}} 
-    {{^usefilter}}
-   
-    <div class="col-12 ">
-     {{/usefilter}} 
     
+    <div class="col-12  ">
+     
         <div class="row">
             <div class="col-12 col-sm-8 col-md-9  col-lg-10">
                 <form zippy="sortform" class="form-inline  ">
@@ -63,7 +43,7 @@
         <div class="row">
 
 
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3   " zippy="catlist">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3     " zippy="catlist">
                 <div class="card ">
                           
                     <a zippy="simage" data-toggle="lightbox" data-gallery="simage"><img class="card-img-top m-1"/></a>
@@ -94,7 +74,7 @@
         <div zippy="recentlyp">
             <h4>Недавно просмотренные</h4>
             <div class="row">
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3  " zippy="rlist">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3   " zippy="rlist">
                     <div class="card h-100">
                         <a zippy="rimage"><img class="card-img-top"></a>
                         <a class="  card-link" zippy="rname"></a>
@@ -105,6 +85,39 @@
         </div>
     </div>
 </div>
+  <div id="modalfilter" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog  modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Фильтр отбора</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+   <form zippy="sfilter"  >
+       
+            <a href="#manflist" data-toggle="collapse" class="filtertiem "><b> Бренд </b> <i style="font-size:smaller" class="fa fa-angle-down"></i> </a>
+            <div id="manflist" class="collapse ">
+                <div zippy="mlist"></div>
+            </div>
+            <div class="mt-2">
+            <div zippy="attrlist">
+                <div zippy="attrdata"></div>
+            </div>
+            </div>
 
+            <div class="form-group mt-2"  >
+                <input class="btn btn-info btn-sm  " type="submit" value="Применить">&nbsp;<a
+                    class="btn btn-light  btn-sm " zippy="sclear">Сбросить</a>
+            </div>
+        </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+ 
 </body>
 </html>

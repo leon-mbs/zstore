@@ -257,7 +257,10 @@
 
             callbacks: {
                 onEnter: function (e) {
-                    e.preventDefault();
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
                 },
                 onPaste: function (e) {
 

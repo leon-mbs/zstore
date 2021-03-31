@@ -104,20 +104,20 @@ class TaskList extends \App\Pages\Base
 
         $row->add(new Label('taskdocument_date', H::fdt($task->headerdata['start'])));
         $row->add(new Label('taskhours', $task->headerdata['taskhours']));
-
-        $row->add(new Label('taskstatus', Document::getStateName($task->state)));
+        $stname =  Document::getStateName($task->state);
+        $row->add(new Label('taskstatus', $stname));
 
         if ($task->state == Document::STATE_EXECUTED) {
-            $row->taskstatus->setText('<span class="badge badge-success">Выполнен</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-success">'.$stname.'</span>', true);
         }
         if ($task->state == Document::STATE_INPROCESS) {
-            $row->taskstatus->setText('<span class="badge badge-info">Выполняется</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-info">'.$stname.'</span>', true);
         }
         if ($task->state == Document::STATE_SHIFTED) {
-            $row->taskstatus->setText('<span class="badge badge-warning">Отложена</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-warning">'.$stname.'</span>', true);
         }
         if ($task->state == Document::STATE_CLOSED) {
-            $row->taskstatus->setText('<span class="badge badge-default">Закончено</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-secondary">'.$stname.'</span>', true);
         }
 
         $emps = array();
