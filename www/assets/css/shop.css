@@ -129,4 +129,15 @@ a:not([href]):hover {
   padding:04px;
 }
 
- 
+.compareimage {
+   height:256px  ; 
+}
+.comparetable {
+   
+}
+.comparetable td {
+    padding:8px;
+} 
+.comparetable th {
+    padding:8px;
+} 

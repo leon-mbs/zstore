@@ -58,7 +58,7 @@ class EmployeeList extends \App\Pages\Base
       }
      */
 
-    public function employeelistOnRow($row) {
+    public function employeelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('emp_name', $item->emp_name));

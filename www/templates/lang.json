@@ -416,6 +416,9 @@
    "shopattrlistname" :"Список",
    "shopattrsetname" :"Набор",
    "shopattrstrname" :"Строка",
+   "shopattrnodata" :"Нет данных",
+   "shopattryes" :"Есть",
+   "shopattrno" :"Нет",
    "shopfeedbaks" :"Отзывов(%s)",
    "shopneworder" :"Создан заказ %s" ,
    "shopyoursorder" :"Ваш заказ %s"

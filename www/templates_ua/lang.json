@@ -405,7 +405,10 @@
    "shopattrlistname" :"Перелiк",
    "shopattrsetname" :"Набiр",
    "shopattrstrname" :"Строка",
-   "shopfeedbaks" :"Вiдгукiв(%s)",
+    "shopattrnodata" :"Нема даних",
+   "shopattryes" :"Є",
+   "shopattrno" :"Нема",
+  "shopfeedbaks" :"Вiдгукiв(%s)",
    "shopneworder" :"Створено замовлення %s" ,
    "shopyoursorder" :"Ваше замовлення %s"
      

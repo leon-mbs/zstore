@@ -23,6 +23,13 @@ class docs extends \App\API\Base\JsonRPC
         return $list;
     }
 
+   //список  производственных участвков
+    public function parealist() {
+        $list = \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name');
+
+        return $list;
+    }
+
 
     //записать ордер
     public function createorder($args) {
@@ -231,7 +238,7 @@ class docs extends \App\API\Base\JsonRPC
      
                         
  // /api/docs
- // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1} 
+ // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","parea":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1} 
    
    //Списание ТМЦ в  производсво
     public function createprodissue($args) {
@@ -248,6 +255,7 @@ class docs extends \App\API\Base\JsonRPC
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->headerdata['store'] = $args['store_id'];
+        $doc->headerdata['parea'] = $args['parea'];
         $doc->state = Document::STATE_NEW;
       
         $doc->notes = @base64_decode($args['description']);

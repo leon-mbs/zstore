@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Pages;
 use App\Application as App;
 use App\Helper;
 use App\System;
+use \App\Modules\Shop\Entity\Product;
 
 class Base extends \Zippy\Html\WebPage
 {
@@ -32,6 +33,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["currencyname"] = $shop["currencyname"];
         $this->_tvars["notcnt"] = false;
 
+        $this->add(new \Zippy\Html\Form\Form('searchform'));
+        $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this,'onSearch');
+        $this->searchform->searchitem->onChange($this,'onSelect');
         $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Order"))->setVisible(false);
         $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Compare"))->setVisible(false);
 
@@ -49,6 +53,26 @@ class Base extends \Zippy\Html\WebPage
     
     }
 
+    
+    public function onSearch(\Zippy\Html\Form\AutocompleteTextInput $sender){
+         $r = array();
+
+
+        $text =  Product::qstr('%' . $sender->getText() . '%');
+        $code =  Product::qstr($sender->getText() );
+        $list = Product::findArray('itemname', " disabled <>1 and  detail not  like '%<noshop>1</noshop>%' and  cat_id in(select cat_id from  item_cat where detail not  like '%<noshop>1</noshop>%' ) and    (    itemname like {$text} or item_code like {$code} or bar_code like {$code}  ) ");
+        foreach ($list as $k => $v) {
+            $r[$k] = $v;
+        }
+        return $r;         
+         
+    }
+    public function onSelect(\Zippy\Html\Form\AutocompleteTextInput $sender){
+       $key =   $sender->getKey();
+       if($key>0) {
+           App::Redirect("\\App\\Modules\\Shop\\Pages\\ProductView",$key) ;
+       }
+    }   
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);

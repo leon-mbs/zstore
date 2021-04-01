@@ -50,7 +50,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
 
-    public function mflistOnRow($row) {
+    public function mflistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('mf_name', $item->mf_name));

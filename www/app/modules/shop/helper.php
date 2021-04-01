@@ -42,7 +42,103 @@ class Helper
 
         return $list;
     }
+     
+    /**
+     * список  значений атрибутов  товара
+     *
+     * @param mixed $product
+     */
+    public static function getAttributeValuesByProduct($product,$all=true) {
+        $list = array();
+        $conn = DB::getConnect();
+        $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.item_id=  " . $product->item_id;
 
+
+        $rs = $conn->Execute($sql);
+        foreach ($rs as $row) {
+            $prod = new ProductAttribute($row);
+            if($all == false  && $prod->hasData()==false) continue;
+            
+            $list[$row['attribute_id']] = $prod;
+        }
+        return $list;
+    }
+
+    /**
+     * Возвращает  список  атрибутов  для  группы
+     *
+     * @param mixed $cat_id группа
+     */
+    public static function getProductAttributeListByGroup($cat_id) {
+        $list = array();
+ 
+        $conn = DB::getConnect();
+       
+
+        $group = \App\Entity\Category::load($cat_id);
+        $grlist = $group->getParents(); 
+        
+        $grlist[] = $cat_id;
+        $grlist[] = 0;
+                  
+        $sql = "select attribute_id,  cat_id,attributename,attributetype,valueslist,ordern from  shop_attributes_view   where cat_id  in(". implode(',',$grlist) .")  order  by ordern";
+
+        $attrtypes = self::getAttributeTypes();
+        $rs = $conn->Execute($sql);
+        foreach ($rs as $row) {
+            $row['attributetypename'] = $attrtypes[$row['attributetype']];
+            $list[$row["attribute_id"]] = new ProductAttribute($row);
+        }
+        return $list;
+    }
+
+    /**
+     * Возвращает  список атрибутов группы для  отбора
+     *
+     * @param mixed $cat_id группа
+     */
+    public static function getProductSearchAttributeListByGroup($cat_id) {
+        $list = array();
+        if ($cat_id == 0) {
+            return $list;
+        }
+        $conn = DB::getConnect();
+
+        $cat = \App\Entity\Category::load($cat_id);
+        $plist = $cat->getParents();
+        $plist[]=$cat_id;
+        $grlist = implode(',',$plist) ;
+        $sql = "select attribute_id,  cat_id,attributename,attributetype,valueslist from  shop_attributes   
+                    where   cat_id  in($grlist) and attributetype in(1,2,3,4)  and attribute_id in(select distinct attribute_id from  shop_attributevalues)  order  by cat_id";
+
+        $attrtypes = self::getAttributeTypes();
+        $rs = $conn->Execute($sql);
+        foreach ($rs as $row) {
+            $row['attributetypename'] = $attrtypes[$row['attributetype']];
+            $list[$row["attribute_id"]] = new ProductAttribute($row);
+        }
+        return $list;
+    }
+
+    // список  типов  атрибутов товара
+    public static function getAttributeTypes() {
+        
+        return array(1 => \App\Helper::l("shopattrynname") , 
+                  //  2 => \App\Helper::l("shopattrnumname")  , 
+                    3 => \App\Helper::l("shopattrlistname") ,
+                    4 => \App\Helper::l("shopattrsetname") ,
+                    5 => \App\Helper::l("shopattrstrname") 
+                    );
+    }
+
+    //список значений  для  атрибута типа  число
+    public static function getAttrValues($cat_id, $attribute_id) {
+        $conn = DB::getConnect();
+        $sql = "select distinct  attributevalue  from  shop_attributevalues where  attribute_id = {$attribute_id} and item_id in(select item_id from items where disabled <> 1 and  cat_id={$cat_id}) order by attributevalue";
+        return $conn->GetCol($sql);
+    }
+
+    /*
     //формирование  условий отбора   по  выбранным  критериям
     private static function _getWhere($filter) {
         $where = ' where deleted <> 1  ';
@@ -94,7 +190,7 @@ class Helper
         return $where;
     }
 
-    /*
+ 
     //список отфильтрованных товаров на  странице (используется  для  пагинатора)
     public static function getProductList($start, $count) {
 
@@ -119,7 +215,7 @@ class Helper
         }
         return $list;
     }
-    */
+   
     //количество  отфильтрованных товаров (используется  для  пагинатора)
     public static function getProductCount($filter) {
 
@@ -136,137 +232,7 @@ class Helper
         return $conn->GetOne($sql);
     }
 
-    /*
-      public static function getProduct($product_id)
-      {
-      $conn = DB::getConnect();
-      $sql = "select cat_id,product_id,productname,p.manufacturer_id,price,image_id,description,fulldescription,m.manufacturername from  shop_products p left join shop_manufacturers m  on p.manufacturer_id = m.manufacturer_id where product_id=" . $product_id;
-      $rs = $conn->Execute($sql);
-      $product = new Product($rs->FetchRow());
-      //$sql = "select av.attribute_id ,attributevalue,attributetype,valueslist  from  shop_attributevalues av join shop_attributes at on av.attribute_id = at.attribute_id where product_id=  ". $product_id;
-      //  $product->attributes = self::getAttributesByProduct($product_id) ;
-
-      return $product;
-      }
      */
 
-    //список  атрибутов  товара
-    public static function _getAttributesByProduct($product) {
-        $conn = DB::getConnect();
-        $gr = $conn->GetOne('select treeorder  from  shop_productgroups g where g.cat_id=' . $product->cat_id);
-        $grs = str_split($gr, 8);
-        $grlist = implode(',', $grs);
-
-        $sql = "select a.attribute_id, attributename,attributetype,valueslist,(select attributevalue from  shop_attributevalues v where a.attribute_id = v.attribute_id and   item_id={$product->item_id})  as  attributevalue from  shop_attributes a   where  cat_id  in($grlist) ";
-
-        $list = array();
-
-
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $list[$row['attribute_id']] = new ProductAttribute($row);
-        }
-
-        return $list;
-    }
-
-    /**
-     * список  значений атрибутов  товара
-     *
-     * @param mixed $product
-     */
-    public static function getAttributeValuesByProduct($product) {
-        $list = array();
-        $conn = DB::getConnect();
-        $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.item_id=  " . $product->item_id;
-
-
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $list[$row['attribute_id']] = new ProductAttribute($row);
-        }
-        return $list;
-    }
-
-    /**
-     * Возвращает  список  атрибутов  для  группы
-     *
-     * @param mixed $cat_id группа
-     */
-    public static function getProductAttributeListByGroup($cat_id) {
-        $list = array();
- 
-        $conn = DB::getConnect();
-       
-
-        $group = \App\Entity\Category::load($cat_id);
-        $grlist = $group->getParents(); 
-        
-        $grlist[] = $cat_id;
-        $grlist[] = 0;
-                  
-        $sql = "select attribute_id,showinlist,showincompare, cat_id,attributename,attributetype,valueslist,ordern from  shop_attributes_view   where cat_id  in(". implode(',',$grlist) .")  order  by ordern";
-
-        $attrtypes = self::getAttributeTypes();
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $row['attributetypename'] = $attrtypes[$row['attributetype']];
-            $list[$row["attribute_id"]] = new ProductAttribute($row);
-        }
-        return $list;
-    }
-
-    /**
-     * Возвращает  список атрибутов группы для  отбора
-     *
-     * @param mixed $cat_id группа
-     */
-    public static function getProductSearchAttributeListByGroup($cat_id) {
-        $list = array();
-        if ($cat_id == 0) {
-            return $list;
-        }
-        $conn = DB::getConnect();
-
-        $cat = \App\Entity\Category::load($cat_id);
-        $plist = $cat->getParents();
-        $plist[]=$cat_id;
-        $grlist = implode(',',$plist) ;
-        $sql = "select attribute_id,showinlist,showincompare, cat_id,attributename,attributetype,valueslist from  shop_attributes   
-                    where showinlist = 1 and cat_id  in($grlist) and attributetype in(1,2,3,4)  and attribute_id in(select distinct attribute_id from  shop_attributevalues)  order  by cat_id";
-
-        $attrtypes = self::getAttributeTypes();
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $row['attributetypename'] = $attrtypes[$row['attributetype']];
-            $list[$row["attribute_id"]] = new ProductAttribute($row);
-        }
-        return $list;
-    }
-
-    // список  типов  атрибутов товара
-    public static function getAttributeTypes() {
-        
-        return array(1 => \App\Helper::l("shopattrynname") , 
-                    2 => \App\Helper::l("shopattrnumname")  , 
-                    3 => \App\Helper::l("shopattrlistname") ,
-                    4 => \App\Helper::l("shopattrsetname") ,
-                    5 => \App\Helper::l("shopattrstrname") 
-                    );
-    }
-
-    //список значений  для  атрибута типа  число
-    public static function getAttrValues($cat_id, $attribute_id) {
-        $conn = DB::getConnect();
-        $sql = "select distinct  attributevalue  from  shop_attributevalues where  attribute_id = {$attribute_id} and item_id in(select item_id from items where disabled <> 1 and  cat_id={$cat_id}) order by attributevalue";
-        return $conn->GetCol($sql);
-    }
-
-    //возвращает наименьшую и наибольшую цену
-    public static function getPriceRange($cat_id) {
-        $conn = DB::getConnect();
-        $sql = "select coalesce(min(price),0) as minp,coalesce(max(price),0) as maxp  from  items where  disabled <> 1 and   cat_id={$cat_id}   ";
-        return $conn->GetRow($sql);
-    }
-
+      
 }

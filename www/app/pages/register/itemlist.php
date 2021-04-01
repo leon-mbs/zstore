@@ -54,7 +54,7 @@ class ItemList extends \App\Pages\Base
         $this->OnFilter(null);
     }
 
-    public function itemlistOnRow($row) {
+    public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $store = $this->filter->searchstore->getValue();
 

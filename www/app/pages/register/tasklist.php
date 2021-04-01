@@ -96,7 +96,7 @@ class TaskList extends \App\Pages\Base
     }
 
 
-    public function tasklistOnRow($row) {
+    public function tasklistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $task = $row->getDataItem();
 
         $row->add(new Label('tasknumber', $task->document_number));

@@ -138,7 +138,7 @@ class ItemList extends \App\Pages\Base
 
     }
 
-    public function itemlistOnRow($row) {
+    public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
@@ -456,7 +456,7 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->setlist->Reload();
     }
 
-    public function itemsetlistOnRow($row) {
+    public function itemsetlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('sname', $item->itemname));
         $row->add(new Label('scode', $item->item_code));

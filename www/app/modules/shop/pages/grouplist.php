@@ -62,8 +62,7 @@ class GroupList extends \App\Pages\Base
         $form->add(new \Zippy\Html\Form\DropDownChoice('attrtype', Helper::getAttributeTypes()))->onChange($this, 'OnAttrType');
         $form->add(new Label('attrtypename'));
         $form->add(new Label('tt'))->setAttribute("title", "Атрибут 'Есть/Нет' указывает наличие или  отсутствие какойго либо параметра. Наприме FM-тюнер");
-        $form->add(new CheckBox('showinlist'));
-        $form->add(new CheckBox('showincompare'));
+ 
 
         $form->add(new Panel('attrvaluespanel'));
         $form->attrvaluespanel->add(new TextArea('attrvalues'));
@@ -182,7 +181,7 @@ class GroupList extends \App\Pages\Base
         if ($item->attributetype == 3 || $item->attributetype == 4) {
             $form->attrvaluespanel->setVisible(true);
         }
-        $form->showincompare->setChecked($item->showincompare > 0);
+        
     }
 
     public function OnSaveAttribute($sender) {
@@ -211,9 +210,7 @@ class GroupList extends \App\Pages\Base
             $attr->valueslist = $form->attrvaluespanel->attrvalues->getText();
             $attr->valueslist = preg_replace('/\s+/', "", $attr->valueslist);
         }
-        $attr->showinlist = $form->showinlist->isChecked() ? 1 : 0;
-        $attr->showincompare = $form->showincompare->isChecked() ? 1 : 0;
-
+       
         $attr->Save();
 
         if ($attrid == "0") {

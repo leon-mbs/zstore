@@ -20,6 +20,7 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SortLink;
+use \Zippy\Html\DataList\DataRow ;
 
 /**
  * Страница контрагентов
@@ -413,7 +414,7 @@ class CustomerList extends \App\Pages\Base
     }
 
     //вывод строки  прикрепленного файла
-    public function filelistOnRow($row) {
+    public function filelistOnRow(DataRow $row) {
         $item = $row->getDataItem();
 
         $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'loadfile.php?id=' . $item->file_id));
@@ -461,7 +462,7 @@ class CustomerList extends \App\Pages\Base
     }
 
     //вывод строки  коментария
-    public function msgListOnRow($row) {
+    public function msgListOnRow(DataRow $row) {
         $item = $row->getDataItem();
 
         $row->add(new Label("msgdata", nl2br($item->message)));
@@ -521,7 +522,7 @@ class CustomerList extends \App\Pages\Base
     }
 
     //вывод строки  коментария
-    public function eventListOnRow($row) {
+    public function eventListOnRow(DataRow $row) {
         $event = $row->getDataItem();
 
 
@@ -543,7 +544,7 @@ class CustomerList extends \App\Pages\Base
     }
 
 
-    public function contrListOnRow($row) {
+    public function contrListOnRow(DataRow $row) {
         $contr = $row->getDataItem();
 
 
@@ -619,7 +620,7 @@ class CustomerList extends \App\Pages\Base
     }
     
     
-    public function leadsourceListOnRow($row){
+    public function leadsourceListOnRow(DataRow $row){
          $item = $row->getDataItem();
          $row->add(new TextInput('leadsourcename',new  Bind($item,'name')))  ;
          $row->add(new  ClickLink('delsource',$this,'onDelLeadSource')); 
@@ -675,7 +676,7 @@ class CustomerList extends \App\Pages\Base
     }
     
     
-    public function leadstatusListOnRow($row){
+    public function leadstatusListOnRow(DataRow $row){
          $item = $row->getDataItem();
          $row->add(new TextInput('leadstatusname',new  Bind($item,'name')))  ;
          $row->add(new  ClickLink('delstatus',$this,'onDelLeadStatus')); 

@@ -384,25 +384,36 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
 
     public function getContent($attributes) {
         $ret = "<td>{$this->productattribute->attributename}</td><td>";
-
+        $nodata = \App\Helper::l("shopattrnodata") ;
         //'Есть/Нет'
         if ($this->productattribute->attributetype == 1) {
+            $yes = \App\Helper::l("shopattryes") ;
+            $no = \App\Helper::l("shopattrno") ;
 
-            if ($this->productattribute->value == 1) {
-                $checked = ' checked="on"';
-            }
-            $ret .= "  <input type=\"checkbox\"  name=\"{$this->id}\" {$checked}   /> ";
+           
+            $s1=($this->productattribute->value == -1  || strlen($this->productattribute->value)==0) ? 'selected="on"' :'';
+            $s2=$this->productattribute->value ==  '0' ? 'selected="on"' :'';
+            $s3=$this->productattribute->value ==  1 ? 'selected="on"' :'';
+            
+              
+            $ret .= " <select  name=\"{$this->id}\" class=\"form-control\" >
+                         <option value=\"-1\" {$s1} >{$nodata}</option> 
+                         <option value=\"0\" {$s2} >{$no}</option> 
+                         <option value=\"1\" {$s3} >{$yes}</option>";
+               
+            $ret .= $sel . '</select> ';
+           
         }
         //'Число'
         if ($this->productattribute->attributetype == 2) {
 
-            $ret .= " <input style='width:100px;' name=\"{$this->id}\" type=\"text\" value=\"{$this->productattribute->value}\"  class=\"form-control\"  /> ";
+            $ret .= "  pattern='[0-9\.]+'  <input style='width:100px;' name=\"{$this->id}\" type=\"text\" value=\"{$this->productattribute->value}\"  class=\"form-control\"  /> ";
             $ret .= "";
         }
         //'Список'
         if ($this->productattribute->attributetype == 3) {
             $sel = '';
-            $ret .= " <select style='width:250px;' name=\"{$this->id}\" class=\"form-control\" ><option value=\"-1\">Не выбран</option>";
+            $ret .= " <select   name=\"{$this->id}\" class=\"form-control\" ><option value=\"-1\">{$nodata}</option>";
             $list = explode(',', $this->productattribute->valueslist);
             foreach ($list as $key => $value) {
                 $value = trim($value);
@@ -438,28 +449,24 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
         //'Строка'
         if ($this->productattribute->attributetype == 5) {
 
-            $ret .= "<textarea style='width:200px;height:60px;' name=\"{$this->id}\" type=\"text\"      class=\"form-control\" >{$this->productattribute->value}</textarea> ";
+            $ret .= "<input   name=\"{$this->id}\" type=\"text\"      class=\"form-control\" value=\"{$this->productattribute->value}\"  ";
         }
-        if ($this->productattribute->nodata == 1) {
-            $checked = ' checked="on"';
-        }
-        $ret .= "</td><td> <input {$checked}    type=\"checkbox\" name=\"dis{$this->id}\">  Н/Д  
-                                    
-                     </td> ";
-
+     
+        $ret .= "</td>";
         return $ret;
     }
 
     //Вынимаем данные формы  после  сабмита
     public function getRequestData() {
 
-        if ($this->productattribute->attributetype == 1) {
-            $this->productattribute->attributevalue = isset($_POST[$this->id]) ? 1 : 0;
-        };
         if ($this->productattribute->attributetype == 2 || $this->productattribute->attributetype == 5) {
             $this->productattribute->attributevalue = $_POST[$this->id];
         }
-        if ($this->productattribute->attributetype == 3) {
+        if ($this->productattribute->attributetype == 1  ) {
+       
+            $this->productattribute->attributevalue =  $_POST[$this->id] ;
+        }
+        if (  $this->productattribute->attributetype == 3) {
             $list = explode(',', $this->productattribute->valueslist);
 
             $this->productattribute->attributevalue = $list[$_POST[$this->id]];
@@ -477,11 +484,8 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
             }
             $this->productattribute->attributevalue = implode(',', $values);
         };
-        $this->productattribute->nodata = 0;
-        if (isset($_POST['dis' . $this->id])) {
-            $this->productattribute->nodata = 1;
-            $this->productattribute->attributevalue = '';
-        }
+       
+         
     }
 
     public function clean() {

@@ -21,7 +21,7 @@ class ProductView extends Base
 {
 
     public $msg, $attrlist, $clist;
-    protected               $item_id, $gotocomment;
+    protected               $item_id ;
 
     public function __construct($item_id = 0) {
         parent::__construct();
@@ -36,6 +36,7 @@ class ProductView extends Base
         $this->_tvars['usefeedback']= $options['usefeedback'] ==1;
           
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($product->cat_id), true));
+        $this->add(new ClickLink('backtolist', $this, 'OnBack'));
 
         $this->_title = $product->itemname;
        // $this->_description = $product->getDescription();
@@ -59,7 +60,7 @@ class ProductView extends Base
         $this->add(new TextInput('rated'))->setText($product->getRating());
         $this->add(new Label('comments', \App\Helper::l("shopfeedbaks",$product->comments)  ));
 
-        $list = Helper::getAttributeValuesByProduct($product);
+        $list = Helper::getAttributeValuesByProduct($product,false);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
         $this->add(new ClickLink('buy', $this, 'OnBuy'));
         $this->add(new ClickLink('addtocompare', $this, 'OnAddCompare'));
@@ -104,22 +105,35 @@ class ProductView extends Base
         }
         $recently[$product->item_id] = $product->item_id;
         \App\Session::getSession()->recently = $recently;
+        
     }
 
+    public function OnBack($sender){
+       $product = Product::load($this->item_id); 
+       
+       App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $product->cat_id);
+
+    }
+    
     public function OnAddAttributeRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         $datarow->add(new Label("attrname", $item->attributename));
         $meashure = "";
+        $nodata = \App\Helper::l("shopattrnodata") ;
+        $yes = \App\Helper::l("shopattryes") ;
+        $no = \App\Helper::l("shopattrno") ;
         $value = $item->attributevalue;
         if ($item->attributetype == 2) {
             $meashure = $item->valueslist;
         }
+    
         if ($item->attributetype == 1) {
-            $value = $item->attributevalue == 1 ? "Есть" : "Нет";
+             if($item->attributevalue == '0') $value = $no;
+             if($item->attributevalue == '1') $value = $yes;
         }
         $value = $value . $meashure;
-        if ($item->attributevalue == '') {
-            $value = "Н/Д";
+        if ($item->hasData()==false) {
+            $value = $nodata;
         }
         $datarow->add(new Label("attrvalue", $value));
     }
@@ -164,17 +178,14 @@ class ProductView extends Base
         $this->commentlist->Reload();
 
 
-        $this->gotocomment = true;
+       
         $this->updateComments();
     }
 
     protected function beforeRender() {
         parent::beforeRender();
 
-        if ($this->gotocomment == true) {
-            App::addJavaScript("openComments();", true);
-            $this->gotocomment = false;
-        }
+   
         if (\App\Modules\Shop\CompareList::getCompareList()->hasProsuct($this->item_id)) {
             $this->compare->setVisible(true);
             $this->addtocompare->setVisible(false);

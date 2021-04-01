@@ -75,7 +75,7 @@ class PayList extends \App\Pages\Base
         return Customer::getList($sender->getText());
     }
 
-    public function doclistOnRow($row) {
+    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));

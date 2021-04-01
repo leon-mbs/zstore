@@ -77,7 +77,7 @@ class OrderCustList extends \App\Pages\Base
         $this->doclist->Reload();
     }
 
-    public function doclistOnRow($row) {
+    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));

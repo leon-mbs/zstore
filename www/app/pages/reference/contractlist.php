@@ -84,7 +84,7 @@ class ContractList extends \App\Pages\Base
 
     }
 
-    public function contractlistOnRow($row) {
+    public function contractlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('contract_number', $item->contract_number));
@@ -236,7 +236,7 @@ class ContractList extends \App\Pages\Base
       
     }
 
-    public function doclistOnRow($row) {
+    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
         $row->add(new Label("dnum", $doc->document_number));
         $row->add(new Label("dtype", $doc->meta_desc));

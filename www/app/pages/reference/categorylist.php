@@ -109,7 +109,7 @@ class CategoryList extends \App\Pages\Base
          $this->categorydetail->editparent->setOptionList($plist);
     }
 
-    public function categorylistOnRow($row) {
+    public function categorylistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('cat_name', $item->cat_name));

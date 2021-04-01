@@ -6,11 +6,13 @@
 
         </ol>
     </div>
-    <div class="col-12 col-md-2 col-xl-1  ">
+    <div class="col-12 col-md-2 col-xl-1  ">   
        {{#usefilter}}
        <ol class="breadcrumb" >
-          <a class="btn btn-success" href="javascript:void(0);" data-toggle="modal"
+       <li>
+          <a zippy="filterbtn" class="btn btn-success"  href href="javascript:void(0);" data-toggle="modal"
                            data-target="#modalfilter"><i class="fa fa-filter"></i> Фильтр</a>
+        </li>
         </ol>
        {{/usefilter}}  
     </div>
@@ -50,7 +52,7 @@
                     <b><a class="card-title  card-link" zippy="scatname"></a></b>
                       <table >
                       
-                      {{#usefeedback}}
+               {{#usefeedback}}
                       <tr><td>
                  <input  style="display:inline" readonly="readonly" type="hidden" class="rating" zippy="srated" value="0"                            data-filled="fas fa-star" data-empty="far fa-star "/>
                     </td><td >

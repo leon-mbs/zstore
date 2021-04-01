@@ -20,9 +20,10 @@ class Catalog extends Base
 {
 
     public $cat_id = 0;
+    public $_isfilter = false; //отфильтрованы  ли  данные
     public $_list = array();
 
-    public function __construct($id) {
+    public function __construct($id=0) {
         parent::__construct();
 
         $this->cat_id = $id;
@@ -30,6 +31,7 @@ class Catalog extends Base
         $this->_tvars['usefilter']= $options['usefilter'] ==1;
          $this->_tvars['usefeedback']= $options['usefeedback'] ==1;
   
+        $this->add(new BookmarkableLink("filterbtn"));
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($id), true));
 
         $filter = Filter::getFilter("ProductCatalog");
@@ -56,8 +58,8 @@ class Catalog extends Base
 
 
         $this->add(new DataView('catlist', new ArrayDataSource($this,'_list'), $this, 'plistOnRow'));
-        $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->catlist));
-        $this->catlist->setPageSize(15);
+      //  $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->catlist));
+      //  $this->catlist->setPageSize(15);
         $this->UpdateList();    
 
         //недавно  просмотренные
@@ -77,6 +79,9 @@ class Catalog extends Base
         if (count($ra) > 0) {
             $this->recentlyp->rlist->Reload();
         }
+        
+        $this->_tvars['fcolor']  = "class=\"btn btn-success\""; 
+        
     }
 
     private  function UpdateList(){
@@ -108,8 +113,10 @@ class Catalog extends Base
             
             $where .= " and manufacturer in (" . implode(",", $_mlist) . ") ";
         }
-        $ar = $this->sfilter->attrlist->getDataRows();
-        foreach ($ar as $r) {
+        if($this->_isfilter == true) {
+       
+          $ar = $this->sfilter->attrlist->getDataRows();
+          foreach ($ar as $r) {
             $attr = $r->getComponent("attrdata");
             if (count($attr->value) > 0) {
 
@@ -131,7 +138,7 @@ class Catalog extends Base
                 $where .= " )";
             }
         }
- 
+        } //filtered
         
        foreach(Product::find($where,'itemname',-1,-1,$fields) as $prod) {
            $prod->price = $prod->getPrice($options['defpricetype'])   ;        
@@ -237,11 +244,6 @@ class Catalog extends Base
         $row->add(new BookmarkableLink("rname",   $item->getSEF()))->setValue($item->itemname);
     }
 
-    public function onSClear($sender) {
-        $this->sfilter->clean();
-     
-        $this->UpdateList();
-    }
 
     public function OnBuy($sender) {
 
@@ -255,7 +257,16 @@ class Catalog extends Base
     }
 
     public function searchformOnSubmit($sender) {
+      $this->_isfilter = true;
+         $this->filterbtn->setAttribute('class','btn btn-danger');
+     
+        $this->UpdateList();
+    }
+    public function onSClear($sender) {
+        $this->sfilter->clean();
+        $this->_isfilter = false;
 
+        $this->filterbtn->setAttribute('class','btn btn-success');
         $this->UpdateList();
     }
 

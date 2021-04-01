@@ -12,6 +12,7 @@ class Compare extends Base
 
     public function __construct() {
         parent::__construct();
+        $this->add(new \Zippy\Html\Link\ClickLink('backtolist', $this, 'OnBack'));
 
         $this->add(new CompareGrid('comparegrid'));
     }
@@ -19,6 +20,13 @@ class Compare extends Base
     protected function beforeRender() {
         parent::beforeRender();
         $comparelist = Comparelist::getCompareList()->list;
+    }
+    public function OnBack($sender){
+ 
+           $filter = \App\Filter::getFilter("ProductCatalog");
+           
+           App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->cat_id);
+
     }
 
 }
@@ -28,18 +36,23 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
 {
 
     public function getContent($attributes) {
-        $result = "<table class=\"table table-stripped table-responsive  \" >";
+        $result = "<table     class=\"  comparetable   \" >";
         $comparelist = Comparelist::getCompareList();
         $attrlist = array();
         $attrnames = array();
         $attrvalues = array();
+         $options= \App\System::getOptions('shop') ;
+    
+        $nodata = \App\Helper::l("shopattrnodata") ;
+        $yes = \App\Helper::l("shopattryes") ;
+        $no = \App\Helper::l("shopattrno") ;
 
-        $result .= "<tr><th> </th>";
+        $result .= "<tr><th>sss </th>";
         $url = $this->owner->getURLNode() . "::" . $this->id;
         ///цикл  по товарам
         foreach ($comparelist->list as $product) {
 
-            $result .= ("<th ><img style=\"height:128px\" src=\"/loadshopimage.php?id={$product->image_id}&t=t\"><br><a href=\"/sp/{$product->product_id}\">" . $product->productname . "</a> <a href=\"{$url}:{$product->product_id}\"><i class=\"fa fa-trash text-danger\" ></a></th>");
+            $result .= (" <th ><img class=\"compareimage\" src=\"/loadshopimage.php?id={$product->image_id}&t=t\"><br><a href=\"/sp/{$product->item_id}\">" . $product->itemname . "</a> <br>   <b>". $product->getPriceFinal() .' '. $options['currencyname']  ."</b>     &nbsp;  &nbsp;  &nbsp;  &nbsp;     <a href=\"{$url}:{$product->item_id}\"><i class=\"fa fa-trash text-danger\" ></i></a></th>");
             $attributes = Helper::getAttributeValuesByProduct($product);
             //цикл по  атрибутам для  получения значений
 
@@ -52,15 +65,16 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
                 if ($attr->attributetype == 2) {
                     $attrnames[$attr->attribute_id] = $attr->attributename . ',' . $attr->valueslist;
                 }
-
-                if ($attr->attributetype == 1) {
-                    $value = $attr->attributevalue == 1 ? "Ecть" : "Нет";
+        
+                if ($attr->attributetype == 1 ) {
+                    if($attr->attributevalue == 0) $value= $no;
+                    if($attr->attributevalue == 1) $value= $yes;
                 }
-                if ($attr->attributevalue == '') {
-                    $value = "Н/Д";
+                if ($attr->hasData()==false) {
+                    $value = $nodata;
                 }
 
-                $attrvalues[$attr->attribute_id][$product->product_id] = $value;
+                $attrvalues[$attr->attribute_id][$product->item_id] = $value;
             }
         }
         $result .= "</tr>";
@@ -71,7 +85,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
 
             $result .= ("<tr ><td style=\"font-weight:bolder;\">" . $attrnames[$attribute_id] . "</td>");
             foreach ($comparelist->list as $product) {
-                $result .= ("<td>" . $attrvalues[$attribute_id][$product->product_id] . "</td>");
+                $result .= ("<td>" . $attrvalues[$attribute_id][$product->item_id] . "</td>");
             }
             $result .= "</tr>";
             $i++;
@@ -89,7 +103,8 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         $comparelist->deleteProduct($params[0]);
         if ($comparelist->isEmpty()) {
             $filter = \App\Filter::getFilter("ProductCatalog");
-            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->group_id);
+           
+            App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->cat_id);
         }
     }
 
