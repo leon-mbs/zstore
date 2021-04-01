@@ -9,7 +9,7 @@ use App\Modules\Shop\Entity\Product;
 use \App\Entity\Category;
 
 use App\System;
-use ZCL\BT\Tree;
+ 
 use Zippy\Binding\PropertyBinding as PB;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
@@ -72,10 +72,10 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->add(new Form('searchform'))->onSubmit($this, 'searchformOnSubmit');
         $this->listpanel->searchform->add(new TextInput('skeyword'));
         
-        $this->listpanel->searchform->add(new DropDownChoice('smanuf', Item::getManufacturers(true)));
+        $this->listpanel->searchform->add(new DropDownChoice('smanuf', \App\Modules\Shop\Helper::getManufacturers()));
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
-        $this->listpanel->add(new Form('sortform'));
-        $this->listpanel->sortform->add(new DropDownChoice('sorting'))->onChange($this, 'sortingOnChange');
+        
+        
         $this->listpanel->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
         $this->listpanel->add(new DataView('plist', new ProductDataSource($this), $this, 'plistOnRow'));
         $this->listpanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->listpanel->plist));
@@ -131,9 +131,6 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->plist->Reload();
     }
 
-    public function sortingOnChange($sender) {
-        $this->listpanel->plist->Reload();
-    }
 
     public function onSClear($sender) {
         $this->listpanel->searchform->clean();
@@ -150,9 +147,9 @@ class ProductList extends \App\Pages\Base
         $row->add(new ClickLink("imedit", $this, "imeditOnClick"));
     
         $row->add(new Label("lcode", $item->item_code));
-        $row->add(new Label("lprice", \App\Helper::fa($item->getPrice())));
+        $row->add(new Label("lprice", \App\Helper::fa($item->getPriceFinal())));
         
-        $row->add(new Label("lcnt", \App\Helper::fqty($item->qty)));
+        $row->add(new Label("lcnt", \App\Helper::fqty($item->getQuantity())));
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadshopimage.php?id=' . $item->image_id . '&t=t');
     }
 
@@ -346,20 +343,8 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
-       $order = "itemname ";
-        $o = $this->page->listpanel->sortform->sorting->getValue();
-        if ($o == 1) {
-            $order = "price asc";
-        }
-        if ($o == 2) {
-            $order = "price desc";
-        }
-        if ($o == 3) {
-            $order = "qty asc";
-        }
-        if ($o == 4) {
-            $order = "qty desc";
-        }
+        $order = "itemname ";
+ 
        
         return Product::find($this->getWhere(), $order, $count, $start);
     }

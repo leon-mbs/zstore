@@ -27,7 +27,7 @@ class Main extends Base
         $this->add(new Panel("subcatlistp"));
 
      
-        $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Entity\\Category", " detail  not  like '<noshop>1</noshop>' and  parent_id=" . $id), $this, 'OnCatRow'));
+        $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Entity\\Category", " detail  not  like '%<noshop>1</noshop>%' and  parent_id=" . $id), $this, 'OnCatRow'));
     
         $this->subcatlistp->subcatlist->Reload();
    
@@ -40,7 +40,7 @@ class Main extends Base
             $cat =" cat_id in (". implode(',',$ch) .") and "  ;    
         } 
         
-        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '<noshop>1</noshop>' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
+        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
     }
 
     public function OnCatRow($datarow) {

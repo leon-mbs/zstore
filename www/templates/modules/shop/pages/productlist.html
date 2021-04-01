@@ -8,7 +8,9 @@
 </style>
 <div class="row">
     <div class="col-12">
-        <h3>Атрибуты товаров  </h3>
+        <h3>Значения  атрибутов товаров  </h3>
+        <small>Показываются  только  категории у  которых есть товары</small>
+        
     </div>
 
     <div class="col-12 col-md-6">
@@ -39,31 +41,17 @@
 
                     </form>
                 </div>
-                <div class="navbar nav">
-                    <form zippy="sortform" class="form-inline  ">
-
-                        <label for="sorting">Сортировать </label>
-                        <select zippy="sorting" class="form-control   mr-sm-2">
-                            <option value="0">По названию</option>
-            
-                            <option value="1">При уменьшении количества</option>
-                            <option value="2">При увеличении количества</option>
-
-
-                        </select>
-
-                    </form>
-                </div>
+   
                 <a zippy="addnew" class="btn btn-info">Добавить новый</a>
 
                 <table class="table table-sm">
                     <tr>
                         <th style="width:75px;"></th>
                         <th>Наименование</th>
-                        <th style="text-align: right;">Код</th>
+                        <th  >Код</th>
 
-                        <th style="text-align: right;">Цена</th>
-                        <th style="text-align: right;">Кол.</th>
+                        <th class="text-right">Цена</th>
+                        <th class="text-right">Кол.</th>
                  
                        
 
@@ -79,9 +67,9 @@
                         <td zippy="lcode"></td>
 
 
-                        <td style="text-align: right;"><span zippy="lprice"></span></td>
-                        <td style="text-align: right;"><span zippy="lcnt"></span></td>
-                        <td><a zippy="imedit" title="Редактировать фото"><i class="fa fa-images"></i></a></td>
+                        <td class="text-right"><span zippy="lprice"></span></td>
+                        <td class="text-right"><span zippy="lcnt"></span></td>
+                        <td>&nbsp;<a zippy="imedit" title="Редактировать фото"><i class="fa fa-images"></i></a></td>
           
                     </tr>
                 </table>

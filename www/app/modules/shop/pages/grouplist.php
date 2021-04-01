@@ -38,7 +38,7 @@ class GroupList extends \App\Pages\Base
             return;
         }
 
-        $clist = Category::find(" detail not  like '%<noshop>1</noshop>%' " ) ;
+        $clist = Category::find(" cat_id in(select cat_id from items where disabled <>1) and detail not  like '%<noshop>1</noshop>%' " ) ;
         
         $this->_grouplist =  Category::findFullData($clist) ;
         

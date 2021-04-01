@@ -29,10 +29,14 @@ class Helper
     }
 
     //список  производителей в  данной группе  товаров 
-    public static function getManufacturers($cat_id ) {
+    public static function getManufacturers($cat_id=0 ) {
+        $cat = '';
+        if($cat_id>0) {
+          $cat =  " cat_id={$cat_id} and " ;
+        }
         $list = array();
         $conn = DB::getConnect();
-        $sql = " select manufacturer  from  items  where cat_id={$cat_id} and disabled <> 1 order  by manufacturer ";
+        $sql = " select manufacturer  from  items  where {$cat} disabled <> 1 order  by manufacturer ";
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
            if(strlen($row["manufacturer"])>0) {

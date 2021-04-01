@@ -176,9 +176,7 @@ class ProductView extends Base
         $this->formcomment->rating->setText('0');
         $this->clist = ProductComment::findByProduct($this->item_id);
         $this->commentlist->Reload();
-
-
-       
+        
         $this->updateComments();
     }
 
@@ -204,7 +202,7 @@ class ProductView extends Base
         $datarow->add(new Label("comment", $item->comment));
         $datarow->add(new Label("created", \App\Helper::fdt($item->created)));
         $datarow->add(new TextInput("rate"))->setText($item->rating);
-        $datarow->add(new ClickLink('deletecomment', $this, 'OnDeleteComment'))->SetVisible(System::getUser()->userlogin == 'admin' && $item->moderated != 1);
+        $datarow->add(new ClickLink('deletecomment', $this, 'OnDeleteComment'))->setVisible(System::getUser()->userlogin == 'admin' && $item->moderated != 1);
     }
 
     //удалить коментарий
@@ -212,7 +210,7 @@ class ProductView extends Base
         $comment = $sender->owner->getDataItem();
         $comment->moderated = 1;
         $comment->rating = 0;
-        $comment->Save();
+        $comment->save();
         // App::$app->getResponse()->addJavaScript("window.location='#{$comment->comment_id}'", true);
         //\Application::getApplication()->Redirect('\\ZippyCMS\\Modules\\Articles\\Pages\\ArticleList');
         $this->clist = ProductComment::findByProduct($this->item_id);

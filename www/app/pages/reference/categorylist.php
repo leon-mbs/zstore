@@ -75,7 +75,7 @@ class CategoryList extends \App\Pages\Base
         } else {
             $this->categorydetail->editprice5->setVisible(false);
         }
-        $this->categorydetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
+        $this->categorydetail->add(new \Zippy\Html\Image('editimage', '/loadimage.php?id=0'));
         $this->categorydetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->categorydetail->add(new CheckBox('editdelimage'));
         $this->categorydetail->add(new CheckBox('editnoshop'));
@@ -168,7 +168,7 @@ class CategoryList extends \App\Pages\Base
             $this->categorydetail->editdelimage->setChecked(false);
             $this->categorydetail->editdelimage->setVisible(true);
             $this->categorydetail->editimage->setVisible(true);
-            $this->categorydetail->editimage->setUrl('/LoadImage.php?id=' . $this->_category->image_id);
+            $this->categorydetail->editimage->setUrl('/loadimage.php?id=' . $this->_category->image_id);
         } else {
             $this->categorydetail->editdelimage->setVisible(false);
             $this->categorydetail->editimage->setVisible(false);

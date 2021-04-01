@@ -12,7 +12,7 @@ class ProductAttribute extends \ZCL\DB\Entity
 {
 
     public $searchvalue;
-    public $nodata = 0;
+   
 
     protected function init() {
         $this->attribute_id = 0;

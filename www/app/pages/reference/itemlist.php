@@ -112,7 +112,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editnoshop'));
         $this->itemdetail->add(new CheckBox('editautooutcome'));
         $this->itemdetail->add(new CheckBox('editautoincome'));
-        $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
+        $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/loadimage.php?id=0'));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
@@ -250,7 +250,7 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editdelimage->setChecked(false);
             $this->itemdetail->editdelimage->setVisible(true);
             $this->itemdetail->editimage->setVisible(true);
-            $this->itemdetail->editimage->setUrl('/LoadImage.php?id=' . $this->_item->image_id);
+            $this->itemdetail->editimage->setUrl('/loadimage.php?id=' . $this->_item->image_id);
         } else {
             $this->itemdetail->editdelimage->setVisible(false);
             $this->itemdetail->editimage->setVisible(false);
