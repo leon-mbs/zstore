@@ -71,6 +71,11 @@ class ProductView extends Base
         $form->add(new TextInput('nick'));
         $form->add(new TextInput('rating'));
         $form->add(new TextArea('comment'));
+        $form->add(new TextInput('capchacode'));
+        $form->add(new  \ZCL\Captcha\Captcha('capcha'));
+     
+        
+        
         $this->clist = ProductComment::findByProduct($product->item_id);
         $this->add(new \Zippy\Html\DataList\DataView('commentlist', new \Zippy\Html\DataList\ArrayDataSource(new PropertyBinding($this, 'clist')), $this, 'OnAddCommentRow'));
         $this->commentlist->setPageSize(10);
@@ -163,6 +168,14 @@ class ProductView extends Base
     //добавать комментарий 
     public function OnComment($sender) {
 
+            $entercode = $this->formcomment->capchacode->getText();
+            $capchacode = $this->formcomment->capcha->getCode();
+            if (strlen($entercode) == 0 || $entercode != $capchacode) {
+                $this->setError("invalidcapcha");
+                
+
+                return;
+            }
 
         $comment = new \App\Modules\Shop\Entity\ProductComment();
         $comment->item_id = $this->item_id;
@@ -170,7 +183,9 @@ class ProductView extends Base
         $comment->comment = $this->formcomment->comment->getText();
         $comment->rating = $this->formcomment->rating->getText();
         $comment->created = time();
-        $comment->Save();
+        
+         
+        $comment->save();
         $this->formcomment->nick->setText('');
         $this->formcomment->comment->setText('');
         $this->formcomment->rating->setText('0');
