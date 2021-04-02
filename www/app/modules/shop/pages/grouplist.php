@@ -24,10 +24,10 @@ use Zippy\Html\Panel;
 class GroupList extends \App\Pages\Base
 {
 
-    private $group = null  ;
-    public   $_grouplist = array()  ;
-    public    $attrlist = array();
-    private     $mm;
+    private $group      = null;
+    public  $_grouplist = array();
+    public  $attrlist   = array();
+    private $mm;
 
     public function __construct() {
         parent::__construct();
@@ -38,16 +38,18 @@ class GroupList extends \App\Pages\Base
             return;
         }
 
-        $clist = Category::find(" cat_id in(select cat_id from items where disabled <>1) and detail not  like '%<noshop>1</noshop>%' " ) ;
-        
-        $this->_grouplist =  Category::findFullData($clist) ;
-        
-        usort($this->_grouplist,function($a,$b){ return $a->full_name > $b->full_name; }) ;
-        
-        $this->add(new DataView('grouplist', new ArrayDataSource($this,'_grouplist'), $this, 'OnGroupRow'));
+        $clist = Category::find(" cat_id in(select cat_id from items where disabled <>1) and detail not  like '%<noshop>1</noshop>%' ");
+
+        $this->_grouplist = Category::findFullData($clist);
+
+        usort($this->_grouplist, function($a, $b) {
+            return $a->full_name > $b->full_name;
+        });
+
+        $this->add(new DataView('grouplist', new ArrayDataSource($this, '_grouplist'), $this, 'OnGroupRow'));
         $this->grouplist->setSelectedClass('table-success');
         $this->grouplist->Reload();
- 
+
         $attrpanel = $this->add(new Panel('attrpanel'));
         $attrpanel->add(new \Zippy\Html\DataList\DataView('attritem', new \Zippy\Html\DataList\ArrayDataSource(new Bind($this, 'attrlist')), $this, 'OnAttrRow'));
 
@@ -62,7 +64,7 @@ class GroupList extends \App\Pages\Base
         $form->add(new \Zippy\Html\Form\DropDownChoice('attrtype', Helper::getAttributeTypes()))->onChange($this, 'OnAttrType');
         $form->add(new Label('attrtypename'));
         $form->add(new Label('tt'))->setAttribute("title", "Атрибут 'Есть/Нет' указывает наличие или  отсутствие какойго либо параметра. Наприме FM-тюнер");
- 
+
 
         $form->add(new Panel('attrvaluespanel'));
         $form->attrvaluespanel->add(new TextArea('attrvalues'));
@@ -72,28 +74,28 @@ class GroupList extends \App\Pages\Base
         $form->meashurepanel->add(new TextInput('meashure'));
         $form->meashurepanel->setVisible(false);
     }
- 
-    public  function    OnGroupRow($row){
-        $group = $row->getDataItem() ;
-        $row->add(new  ClickLink('groupname',$this,'onGroup'))->setValue($group->full_name) ;
+
+    public function OnGroupRow($row) {
+        $group = $row->getDataItem();
+        $row->add(new  ClickLink('groupname', $this, 'onGroup'))->setValue($group->full_name);
     }
-    
-    public function onGroup($sender ) {
+
+    public function onGroup($sender) {
         $this->group = $sender->getOwner()->getDataItem();
         $this->grouplist->setSelectedRow($sender->getOwner());
-      
-        $this->grouplist->Reload(false);        
+
+        $this->grouplist->Reload(false);
         $this->UpdateAttrList();
         $this->attrpanel->attreditform->setVisible(false);
     }
 
- 
+
     //обновить атрибуты
     protected function UpdateAttrList() {
         $conn = \ZCL\DB\DB::getConnect();
         $this->mm = $conn->GetRow("select coalesce(max(ordern),0) as mm,coalesce(min(ordern),0) as mi from shop_attributes_order where  pg_id=" . $this->group->cat_id);
 
-        $this->attrlist = Helper::getProductAttributeListByGroup($this->group->cat_id );
+        $this->attrlist = Helper::getProductAttributeListByGroup($this->group->cat_id);
         $this->attrpanel->attritem->Reload();
     }
 
@@ -138,16 +140,16 @@ class GroupList extends \App\Pages\Base
             $this->attrpanel->attreditform->attrvaluespanel->setVisible(true);
         }
         if ($type == 1) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattryn") );
+            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattryn"));
         }
         if ($type == 2) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrnum") );
+            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrnum"));
         }
         if ($type == 3) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrlist") );
+            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrlist"));
         }
         if ($type == 4) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrset") );
+            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrset"));
         }
         if ($type == 5) {
             $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовый параметр (например тип процессора). Значени не  используется в фильтре. ");
@@ -181,7 +183,7 @@ class GroupList extends \App\Pages\Base
         if ($item->attributetype == 3 || $item->attributetype == 4) {
             $form->attrvaluespanel->setVisible(true);
         }
-        
+
     }
 
     public function OnSaveAttribute($sender) {
@@ -210,7 +212,7 @@ class GroupList extends \App\Pages\Base
             $attr->valueslist = $form->attrvaluespanel->attrvalues->getText();
             $attr->valueslist = preg_replace('/\s+/', "", $attr->valueslist);
         }
-       
+
         $attr->Save();
 
         if ($attrid == "0") {
@@ -258,12 +260,12 @@ class GroupList extends \App\Pages\Base
     public function beforeRender() {
         parent::beforeRender();
 
-     
+
         $this->attrpanel->setVisible(false);
-        if ($this->group instanceof \App\Entity\Category ) {
-          
-           $this->attrpanel->setVisible(true);
-          
+        if ($this->group instanceof \App\Entity\Category) {
+
+            $this->attrpanel->setVisible(true);
+
         }
     }
 

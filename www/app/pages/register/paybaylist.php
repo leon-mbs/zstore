@@ -152,14 +152,16 @@ class PayBayList extends \App\Pages\Base
         $this->_doclist = array();
 
         $list = \App\Entity\Doc\Document::find(" {$br} customer_id= {$this->_cust->customer_id} and (payamount >0  or  payed >0) and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))  and state not in ({$this->_state})   {$this->_docs} ", "document_date desc, document_id desc");
-        $sum=0;
-        
-        foreach($list as $d){
-            $this->_doclist[]=$d;
-            $sum += ($d->payamount - $d->payed); 
-            if($this->_cust->sam==$sum)  break;
+        $sum = 0;
+
+        foreach ($list as $d) {
+            $this->_doclist[] = $d;
+            $sum += ($d->payamount - $d->payed);
+            if ($this->_cust->sam == $sum) {
+                break;
+            }
         }
-        $this->_doclist = array_reverse($this->_doclist)  ;
+        $this->_doclist = array_reverse($this->_doclist);
 
         $this->plist->doclist->Reload();
     }
@@ -182,7 +184,7 @@ class PayBayList extends \App\Pages\Base
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
-        $row->pay->setVisible($doc->payamount>0);          
+        $row->pay->setVisible($doc->payamount > 0);
     }
 
     //просмотр
@@ -223,8 +225,10 @@ class PayBayList extends \App\Pages\Base
         $this->plist->doclist->Reload(false);
 
         $this->goAnkor('dankor');
-        $amount = $this->_doc->payamount - $this->_doc->payed ;
-        if($amount >$this->_cust->sam) $amount = $this->_cust->sam;  
+        $amount = $this->_doc->payamount - $this->_doc->payed;
+        if ($amount > $this->_cust->sam) {
+            $amount = $this->_cust->sam;
+        }
 
         $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed));
         $this->paypan->payform->pcomment->setText("");;

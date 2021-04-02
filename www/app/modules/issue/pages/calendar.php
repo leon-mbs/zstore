@@ -35,7 +35,7 @@ class Calendar extends \App\Pages\Base
         $this->add(new ClickLink('tabc', $this, 'onTab'));
         $this->add(new ClickLink('tabs', $this, 'onTab'));
         $this->listpan->add(new Panel('tasktab'))->setVisible(false);
-   
+
         $this->listpan->tasktab->add(new ClickLink('addtime', $this, 'OnAdd'));
 
         $this->listpan->tasktab->add(new DataView('timelist', new EntityDataSource("\\App\\Modules\\Issue\\Entity\\TimeLine", 'user_id=' . $user->user_id, 'id desc'), $this, 'OnTimeRow'));
@@ -44,7 +44,7 @@ class Calendar extends \App\Pages\Base
         $this->listpan->tasktab->timelist->Reload();
 
         $this->listpan->add(new Panel('caltab'));
-        
+
         $this->listpan->caltab->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
         $this->updateCal();
 
@@ -57,9 +57,10 @@ class Calendar extends \App\Pages\Base
         $this->editform->add(new TextInput('enotes'));
         $this->editform->add(new DropDownChoice('eproject', Project::findArray('project_name', '', 'project_id desc')))->onChange($this, 'OnProject');
         $this->editform->add(new DropDownChoice('eissue'));
-        
-        $this->onTab($this->tabc);        
+
+        $this->onTab($this->tabc);
     }
+
     public function onTab($sender) {
 
         $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
@@ -69,7 +70,7 @@ class Calendar extends \App\Pages\Base
         $this->listpan->tasktab->setVisible($sender->id == 'tabs');
         $this->listpan->tasktab->timelist->Reload();
         $this->updateCal();
-   
+
     }
 
     public function OnTimeRow($row) {
@@ -202,43 +203,43 @@ class Calendar extends \App\Pages\Base
         if ($action['action'] == 'move') {
             $tl = TimeLine::load($action['id']);
             $tl->createdon = $tl->createdon + $action['delta'];
-            if($action['years'] <> 0) {
-                   $tl->createdon  = strtotime($action['years'] .' years',$tl->createdon)  ;
-            
+            if ($action['years'] <> 0) {
+                $tl->createdon = strtotime($action['years'] . ' years', $tl->createdon);
+
             }
-            if($action['months'] <> 0) {
-                 $tl->createdon  = strtotime($action['months'] .' months',$tl->createdon)  ;
-              
+            if ($action['months'] <> 0) {
+                $tl->createdon = strtotime($action['months'] . ' months', $tl->createdon);
+
             }
-            if($action['days'] <> 0) {
-                $tl->createdon = strtotime($action['days'] .' days',$tl->createdon)  ;
+            if ($action['days'] <> 0) {
+                $tl->createdon = strtotime($action['days'] . ' days', $tl->createdon);
             }
-            if($action['ms'] <> 0) {
-               $tl->createdon = $tl->createdon + $action['ms'];
-            }
-            $tl->save();
-          
-        }
-        if ($action['action'] == 'resize') {
-            $tl = TimeLine::load($action['id']);
-           
-            if($action['startdelta'] !=0) {
-                
-              $tl->createdon = $tl->createdon + ($action['startdelta'] / 3600);
-              $tl->duration = $tl->duration - ($action['startdelta'] / 3600);
-             
-            } 
-           
-            if($action['enddelta'] != 0) {
-   
-            $tl->duration = $tl->duration + ($action['enddelta'] / 3600);
+            if ($action['ms'] <> 0) {
+                $tl->createdon = $tl->createdon + $action['ms'];
             }
             $tl->save();
 
-            
         }
-    //        $this->updateCal();
-    //        $this->listpan->timelist->Reload();
+        if ($action['action'] == 'resize') {
+            $tl = TimeLine::load($action['id']);
+
+            if ($action['startdelta'] != 0) {
+
+                $tl->createdon = $tl->createdon + ($action['startdelta'] / 3600);
+                $tl->duration = $tl->duration - ($action['startdelta'] / 3600);
+
+            }
+
+            if ($action['enddelta'] != 0) {
+
+                $tl->duration = $tl->duration + ($action['enddelta'] / 3600);
+            }
+            $tl->save();
+
+
+        }
+        //        $this->updateCal();
+        //        $this->listpan->timelist->Reload();
     }
 
 }

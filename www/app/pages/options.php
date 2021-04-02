@@ -165,7 +165,7 @@ class Options extends \App\Pages\Base
         $this->api->atype->setValue($api['atype']);
 
         $this->onApiType($this->api->atype);
-       
+
         //SMS
         $this->add(new Form('sms'));
 
@@ -182,16 +182,16 @@ class Options extends \App\Pages\Base
         $this->sms->add(new TextInput('flysmslogin'));
         $this->sms->add(new TextInput('flysmspass'));
         $this->sms->add(new TextInput('flysmsan'));
-        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", /*'2' => "TurboSMS", */'3'=>'SMS-Fly'),  0))->onChange($this, 'onSMSType');
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", /*'2' => "TurboSMS", */ '3' => 'SMS-Fly'), 0))->onChange($this, 'onSMSType');
         $sms = System::getOptions("sms");
- 
+
         $this->sms->smssemytoken->setText($sms['smssemytoken']);
         $this->sms->smssemydevid->setValue($sms['smssemydevid']);
         $this->sms->flysmslogin->setText($sms['flysmslogin']);
         $this->sms->flysmspass->setValue($sms['flysmspass']);
         $this->sms->flysmsan->setValue($sms['flysmsan']);
         $this->sms->turbosmstoken->setValue($sms['turbosmstoken']);
-      
+
         $this->sms->smstype->setValue($sms['smstype']);
 
         $this->onSMSType($this->sms->smstype);
@@ -288,7 +288,7 @@ class Options extends \App\Pages\Base
 
     }
 
- 
+
     public function saveApiOnClick($sender) {
         $api = array();
         $api['exp'] = $this->api->aexp->getText();
@@ -300,8 +300,8 @@ class Options extends \App\Pages\Base
 
 
     }
-  
-   public function onSMSType($sender) {
+
+    public function onSMSType($sender) {
         $type = $this->sms->smstype->getValue();
         $this->sms->smssemytoken->setVisible($type == 1);
         $this->sms->smssemydevid->setVisible($type == 1);
@@ -309,14 +309,14 @@ class Options extends \App\Pages\Base
         $this->sms->flysmslogin->setVisible($type == 3);
         $this->sms->flysmspass->setVisible($type == 3);
         $this->sms->flysmsan->setVisible($type == 3);
-        
-        
+
+
         $this->sms->semysmssite->setVisible($type == 1);
         $this->sms->turbosmssite->setVisible($type == 2);
         $this->sms->smsflysite->setVisible($type == 3);
 
         //  $this->goAnkor('atype');
- 
+
     }
 
     public function saveSMSOnClick($sender) {
@@ -331,19 +331,19 @@ class Options extends \App\Pages\Base
 
         System::setOptions("sms", $sms);
         $this->setSuccess('saved');
-        
+
     }
-    
+
     public function testSMSOnClick($sender) {
- 
-      $res =  \App\Entity\Subscribe::sendSMS($this->sms->smstestphone->getText(),$this->sms->smstesttext->getText()) ;
-      if(strlen($res)==0) {
-          $this->setSuccess('success');
-      }  else {
-          $this->setError($res) ;
-      }
-      
-      
+
+        $res = \App\Entity\Subscribe::sendSMS($this->sms->smstestphone->getText(), $this->sms->smstesttext->getText());
+        if (strlen($res) == 0) {
+            $this->setSuccess('success');
+        } else {
+            $this->setError($res);
+        }
+
+
     }
 
 }

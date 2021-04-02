@@ -70,9 +70,8 @@ class Entry extends \ZCL\DB\Entity
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
- 
      */
-    public static function getQuantity($date = 0, $stock = 0, $customer = 0, $emp = 0 ) {
+    public static function getQuantity($date = 0, $stock = 0, $customer = 0, $emp = 0) {
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
@@ -83,7 +82,6 @@ class Entry extends \ZCL\DB\Entity
             $where = $where . " and employee_id= " . $emp;
         }
 
-    
 
         if ($stock > 0) {
             $where = $where . " and stock_id= " . $stock;
@@ -104,10 +102,8 @@ class Entry extends \ZCL\DB\Entity
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
- 
-    
      */
-    public static function getAmount($date = 0, $stock = 0, $customer = 0, $emp = 0 ) {
+    public static function getAmount($date = 0, $stock = 0, $customer = 0, $emp = 0) {
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
@@ -118,7 +114,6 @@ class Entry extends \ZCL\DB\Entity
             $where = $where . " and employee_id= " . $emp;
         }
 
-        
 
         if ($stock > 0) {
             $where = $where . " and stock_id= " . $stock;

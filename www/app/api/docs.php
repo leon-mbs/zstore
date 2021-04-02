@@ -23,7 +23,7 @@ class docs extends \App\API\Base\JsonRPC
         return $list;
     }
 
-   //список  производственных участвков
+    //список  производственных участвков
     public function parealist() {
         $list = \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name');
 
@@ -234,22 +234,21 @@ class docs extends \App\API\Base\JsonRPC
 
     }
 
-    
-     
-                        
- // /api/docs
- // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","parea":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1} 
-   
-   //Списание ТМЦ в  производсво
+
+
+
+    // /api/docs
+    // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","parea":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1}
+
+    //Списание ТМЦ в  производсво
     public function createprodissue($args) {
 
-    
 
         if ($args['store_id'] > 0) {
             $store = \App\Entity\Store::load($args['store_id']);
             if ($store == null) {
                 throw  new  \Exception('Не  указан  склад');
-            }  
+            }
         }
         $doc = Document::create('ProdIssue');
         $doc->document_number = $doc->nextNumber();
@@ -257,7 +256,7 @@ class docs extends \App\API\Base\JsonRPC
         $doc->headerdata['store'] = $args['store_id'];
         $doc->headerdata['parea'] = $args['parea'];
         $doc->state = Document::STATE_NEW;
-      
+
         $doc->notes = @base64_decode($args['description']);
         $details = array();
         $total = 0;
@@ -271,7 +270,7 @@ class docs extends \App\API\Base\JsonRPC
                 if ($item instanceof Item) {
 
                     $item->quantity = $it['quantity'];
-                   
+
                     $details[$item->item_id] = $item;
                 } else {
                     throw  new  \Exception(H::l("apiitemnotfound", $it['code']));
@@ -284,14 +283,14 @@ class docs extends \App\API\Base\JsonRPC
             throw  new  \Exception(H::l("apinoitems"));
         }
         $doc->packDetails('detaildata', $details);
-     
-         $doc->amount = 0;
-        
+
+        $doc->amount = 0;
+
 
         $doc->save();
-        
+
         $doc->updateStatus(Document::STATE_EXECUTED);
-            
+
 
         return $doc->document_number;
     }

@@ -30,7 +30,7 @@ class Order extends Base
         $form->add(new Label('summa', new \Zippy\Binding\PropertyBinding($this, 'sum')));
         $this->OnUpdate($this);
         $form = $this->add(new Form('orderform'));
-        $form->add(new DropDownChoice('delivery',  Document::getDeliveryTypes($this->_tvars['np'] == 1) ))->onChange($this, 'OnDelivery');
+        $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
         $form->add(new TextInput('email'));
         $form->add(new TextInput('phone'));
         $form->add(new TextInput('name'));
@@ -87,7 +87,7 @@ class Order extends Base
             return;
         }
         $shop = System::getOptions("shop");
- 
+
         $email = trim($this->orderform->email->getText());
         $phone = trim($this->orderform->phone->getText());
         $name = trim($this->orderform->name->getText());
@@ -118,7 +118,7 @@ class Order extends Base
             $this->setError("tel10", \App\Helper::PhoneL());
             return;
         }
-            
+
 
         try {
             $op = System::getOptions("shop");
@@ -139,7 +139,7 @@ class Order extends Base
             $itlist = array();
             foreach ($this->basketlist as $product) {
                 $item = \App\Entity\Item::load($product->item_id);
-                $item->price = $product->getPriceFinal();       
+                $item->price = $product->getPriceFinal();
                 $item->quantity = $product->quantity;
                 $item->item_id = $product->item_id;
                 $amount += ($product->getPriceFinal() * $product->quantity);
@@ -157,7 +157,7 @@ class Order extends Base
             $order->packDetails('detaildata', $itlist);
 
 
-             $cust = \App\Entity\Customer::getByEmail($email);
+            $cust = \App\Entity\Customer::getByEmail($email);
             if ($cust instanceof \App\Entity\Customer) {
                 $order->customer_id = $cust->customer_id;
             }
@@ -165,40 +165,39 @@ class Order extends Base
             if ($cust instanceof \App\Entity\Customer) {
                 $order->customer_id = $cust->customer_id;
             }
-            
-            if($order->customer_id==0) {
+
+            if ($order->customer_id == 0) {
                 $cust = \App\Entity\Customer::load($op["defcust"]);
                 if ($cust instanceof \App\Entity\Customer) {
                     $order->customer_id = $cust->customer_id;
                 }
-                
-                if($shop['createnewcust'] == 1  )  {
-                    
-                    $c = new \App\Entity\Customer() ;
-                    $c->customer_name = $name;    
-                    $c->email = $email;    
-                    $c->phone = $phone;    
+
+                if ($shop['createnewcust'] == 1) {
+
+                    $c = new \App\Entity\Customer();
+                    $c->customer_name = $name;
+                    $c->email = $email;
+                    $c->phone = $phone;
                     $c->save();
                     $order->customer_id = $c->customer_id;
-                    
+
                 }
-            
-      
-      
+
+
             }
-           
+
             $order->headerdata['pricetype'] = $op["defpricetype"];
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
             $order->save();
             $order->updateStatus(Document::STATE_NEW);
-            $this->setSuccess("shopneworder",$order->document_number);
-          
-            if(strlen($phone)>0) {
-                \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("shopyoursorder",$order->document_number) ) ;
+            $this->setSuccess("shopneworder", $order->document_number);
+
+            if (strlen($phone) > 0) {
+                \App\Entity\Subscribe::sendSMS($phone, \App\Helper::l("shopyoursorder", $order->document_number));
             }
-        
+
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
         }
@@ -211,7 +210,7 @@ class Order extends Base
         $this->orderform->setVisible(false);
         $this->listform->setVisible(false);
 
-     
+
         App::RedirectURI("/shop");
     }
 

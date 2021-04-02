@@ -135,9 +135,9 @@ class Warranty extends \App\Pages\Base
         $item = $sender->owner->getDataItem();
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
- 
+
         $this->editdetail->editprice->setText($item->price);
- 
+
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editwarranty->setText($item->warranty);
         $this->editdetail->editsn->setText($item->sn);
@@ -167,7 +167,7 @@ class Warranty extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
         $item->sn = $this->editdetail->editsn->getText();
         $item->warranty = $this->editdetail->editwarranty->getText();
- 
+
         $this->_tovarlist[$item->item_id] = $item;
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -210,7 +210,7 @@ class Warranty extends \App\Pages\Base
 
         $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
- 
+
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -230,7 +230,7 @@ class Warranty extends \App\Pages\Base
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-  
+
             $conn->CommitTrans();
             App::RedirectBack();
         } catch(\Throwable $ee) {

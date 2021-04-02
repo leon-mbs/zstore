@@ -41,7 +41,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        
+
         $this->docform->add(new TextInput('notes'));
 
 
@@ -73,7 +73,7 @@ class ProdReceipt extends \App\Pages\Base
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            
+
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
@@ -86,7 +86,7 @@ class ProdReceipt extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-                        
+
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -105,13 +105,13 @@ class ProdReceipt extends \App\Pages\Base
 
                     $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                     $this->docform->parea->setValue($basedoc->headerdata['parea']);
-                    
-                    foreach($basedoc->unpackDetails('prodlist') as $item){
-                       $item->price = $item->getProdprice();
-                       $this->_itemlist[$item->item_id]=  $item;
+
+                    foreach ($basedoc->unpackDetails('prodlist') as $item) {
+                        $item->price = $item->getProdprice();
+                        $this->_itemlist[$item->item_id] = $item;
                     }
-                    
-                    
+
+
                 }
 
             }
@@ -267,7 +267,6 @@ class ProdReceipt extends \App\Pages\Base
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        
 
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -368,7 +367,7 @@ class ProdReceipt extends \App\Pages\Base
         $id = $sender->getValue();
         $item = \App\Entity\Item::load($id);
 
-        
+
         $price = $item->getProdprice();
         $this->editdetail->editprice->setText($price > 0 ? H::fa($price) : '');
 

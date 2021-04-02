@@ -102,7 +102,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
-        
+
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
@@ -403,27 +403,25 @@ class ItemList extends \App\Pages\Base
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
-            
-            if($imagedata[0] != $imagedata[1] ) {
-              $thumb = new \App\Thumb($file['tmp_name']);
-              if($imagedata[0] > $imagedata[1] ) {
-                  $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
-              }
-             if($imagedata[0] < $imagedata[1] ) {
-                  $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
-              }
-           
 
-              
-              $image->content = $thumb->getImageAsString();
-              $thumb->resize(256, 256);
-              $image->thumb = $thumb->getImageAsString();
- 
-                
+            if ($imagedata[0] != $imagedata[1]) {
+                $thumb = new \App\Thumb($file['tmp_name']);
+                if ($imagedata[0] > $imagedata[1]) {
+                    $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+                }
+                if ($imagedata[0] < $imagedata[1]) {
+                    $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+                }
+
+
+                $image->content = $thumb->getImageAsString();
+                $thumb->resize(256, 256);
+                $image->thumb = $thumb->getImageAsString();
+
+
             }
-            
-            
-            
+
+
             $image->save();
             $this->_item->image_id = $image->image_id;
             $this->_item->Save();
@@ -547,7 +545,7 @@ class ItemList extends \App\Pages\Base
             if (strlen($barcode) == 0) {
                 $barcode = $item->item_code;
             }
-         
+
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
             $header['img'] = $img;

@@ -45,7 +45,7 @@ class Outcome extends \App\Pages\Base
         $types[4] = H::l('repbyservices');
         $types[7] = H::l('repbybyersservices');
         $types[5] = H::l('repbycat');
-        
+
         if (count($hlist) > 0) {
             $types[8] = H::l('repbyhold');
         }
@@ -138,7 +138,6 @@ class Outcome extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
-   
 
         $detail = array();
 
@@ -283,8 +282,8 @@ class Outcome extends \App\Pages\Base
 
         }
 
-        
-      if ($type == 9  ) {    //по компаниям
+
+        if ($type == 9) {    //по компаниям
             $sql = "
             select  d.`firm_name` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
@@ -300,7 +299,7 @@ class Outcome extends \App\Pages\Base
                order  by d.`firm_name`
         ";
         }
-    if ($type == 10  ) {    //по складах
+        if ($type == 10) {    //по складах
             $sql = "
             select  sr.`storename` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
@@ -319,7 +318,7 @@ class Outcome extends \App\Pages\Base
                order  by sr.`storename`
         ";
         }
-        
+
 
         $totsum = 0;
         $totnavar = 0;
@@ -362,22 +361,22 @@ class Outcome extends \App\Pages\Base
         $header['isdisc'] = $disc > 0;
         $header['totall'] = H::fa($totsum - $disc);
 
-            $header['_type1'] = false;
-            $header['_type2'] = false;
-            $header['_type3'] = false;
-            $header['_type4'] = false;
-            $header['_type5'] = false;
-            $header['_type6'] = false;
-            $header['_type7'] = false;
+        $header['_type1'] = false;
+        $header['_type2'] = false;
+        $header['_type3'] = false;
+        $header['_type4'] = false;
+        $header['_type5'] = false;
+        $header['_type6'] = false;
+        $header['_type7'] = false;
 
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {
             $header['_type1'] = true;
-         
+
         }
         if ($type == 2 || $type == 8) {
-      
+
             $header['_type2'] = true;
-          
+
         }
         if ($type == 3) {
             $header['_type3'] = true;
@@ -388,10 +387,10 @@ class Outcome extends \App\Pages\Base
         if ($type == 5 && strlen($cat) == 0) {
             $header['_type5'] = true;
         }
-     if ($type == 9  ) {
+        if ($type == 9) {
             $header['_type6'] = true;
         }
-     if ($type == 10  ) {
+        if ($type == 10) {
             $header['_type7'] = true;
         }
 

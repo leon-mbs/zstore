@@ -61,7 +61,7 @@ class ReturnIssue extends Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $lp = $item->getLastPartion($this->headerdata['store'], $item->snumber);
+            $lp = $item->getLastPartion($this->headerdata['store'], $item->snumber, false);
 
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $lp, $item->snumber, $item->sdate, true);
 

@@ -55,17 +55,16 @@ class ProdReceipt extends Document
     public function Execute() {
         $types = array();
         $common = \App\System::getOptions("common");
-       
-        
-      
+
+
         foreach ($this->unpackDetails('detaildata') as $item) {
-         
-            if($item->autooutcome ==1)  {  //списание  комплектующих
-                $set =  \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
-                foreach($set  as $part) {
-                   
-                    $itemp = \App\Entity\Item::load( $part->item_id);
-                    $itemp->quantity = $item->quantity*$part->qty;
+
+            if ($item->autooutcome == 1) {  //списание  комплектующих
+                $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
+                foreach ($set as $part) {
+
+                    $itemp = \App\Entity\Item::load($part->item_id);
+                    $itemp->quantity = $item->quantity * $part->qty;
                     $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                     foreach ($listst as $st) {
@@ -73,28 +72,25 @@ class ProdReceipt extends Document
                         $sc->setStock($st->stock_id);
 
                         $sc->save();
-                    }                    
-                    
-                    
+                    }
+
+
                 }
-            }            
-            
-            
-            
+            }
+
+
             $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
 
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stock->stock_id);
-             
+
 
             $sc->save();
 
 
-            
-            
         }
-       
-    
+
+
         return true;
     }
 

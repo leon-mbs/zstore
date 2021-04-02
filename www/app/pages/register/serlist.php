@@ -73,7 +73,7 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->setVisible(false);
 
-        $this->doclist->Reload( );
+        $this->doclist->Reload();
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {

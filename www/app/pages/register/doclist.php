@@ -446,8 +446,8 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($sn) > 1) {
             // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-          
-            
+
+
             $where = "   document_number like  {$sn}  or content like  {$sn}  or notes like  {$sn}  ";
         }
 

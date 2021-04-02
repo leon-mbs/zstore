@@ -19,18 +19,18 @@ use Zippy\Html\Panel;
 class Catalog extends Base
 {
 
-    public $cat_id = 0;
+    public $cat_id    = 0;
     public $_isfilter = false; //отфильтрованы  ли  данные
-    public $_list = array();
+    public $_list     = array();
 
-    public function __construct($id=0) {
+    public function __construct($id = 0) {
         parent::__construct();
 
         $this->cat_id = $id;
-        $options= \App\System::getOptions('shop') ;
-        $this->_tvars['usefilter']= $options['usefilter'] ==1;
-         $this->_tvars['usefeedback']= $options['usefeedback'] ==1;
-  
+        $options = \App\System::getOptions('shop');
+        $this->_tvars['usefilter'] = $options['usefilter'] == 1;
+        $this->_tvars['usefeedback'] = $options['usefeedback'] == 1;
+
         $this->add(new BookmarkableLink("filterbtn"));
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($id), true));
 
@@ -41,12 +41,11 @@ class Catalog extends Base
         $this->sfilter->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
         $this->sfilter->add(new ManufacturerList('mlist'));
 
-        foreach ( Helper::getManufacturers($this->cat_id) as $m ) {
+        foreach (Helper::getManufacturers($this->cat_id) as $m) {
             $this->sfilter->mlist->AddCheckBox($m, false, $m);
         }
         $this->sfilter->add(new DataView('attrlist', new ArrayDataSource(Helper::getProductSearchAttributeListByGroup($this->cat_id)), $this, 'attrlistOnRow'))->Reload();
 
-            
 
         if ($id > 0 && $filter->cat_id != $id) {
             $filter->clean(); //переключена  группа
@@ -54,13 +53,13 @@ class Catalog extends Base
         }
 
         $this->add(new Form('sortform'));
-        $this->sortform->add(new DropDownChoice('sortorder',5))->onChange($this, 'onSort');
+        $this->sortform->add(new DropDownChoice('sortorder', 5))->onChange($this, 'onSort');
 
 
-        $this->add(new DataView('catlist', new ArrayDataSource($this,'_list'), $this, 'plistOnRow'));
-      //  $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->catlist));
-      //  $this->catlist->setPageSize(15);
-        $this->UpdateList();    
+        $this->add(new DataView('catlist', new ArrayDataSource($this, '_list'), $this, 'plistOnRow'));
+        //  $this->add(new \Zippy\Html\DataList\Paginator('pag', $this->catlist));
+        //  $this->catlist->setPageSize(15);
+        $this->UpdateList();
 
         //недавно  просмотренные
         $ra = array();
@@ -79,146 +78,146 @@ class Catalog extends Base
         if (count($ra) > 0) {
             $this->recentlyp->rlist->Reload();
         }
-        
-        $this->_tvars['fcolor']  = "class=\"btn btn-success\""; 
-        
+
+        $this->_tvars['fcolor'] = "class=\"btn btn-success\"";
+
     }
 
-    private  function UpdateList(){
-       $options= \App\System::getOptions('shop') ;
-       $conn = \ZDB\DB::getConnect();
-      
-       $this->_list=array();
-       
-       
-       $fields = "items_view.*" ;
-       $fields .= ",coalesce((  select     count(0)   from  shop_prod_comments `c`   where     `c`.`item_id` = items_view.item_id ),0) AS `comments`" ;       
-       $fields .= ",coalesce((  select     sum(`r`.`rating`)   from  shop_prod_comments `r`   where    `r`.`item_id` = items_view.item_id),0) AS `ratings`" ;       
-       $store = "";
-       if($options['defstore']>0) $store = " s.store_id={$options['defstore']}  and ";
-       $fields .= ",coalesce((  select     sum(`s`.`qty`)   from  store_stock `s`  where  {$store}  `s`.`item_id` = items_view.item_id) ,0) AS `qty`" ;       
-       $fields .= ",coalesce((  select     sum(0-`e`.`quantity`)   from  entrylist_view `e`     where   `e`.`quantity` < 0 and  `e`.`item_id` = items_view.item_id),0) AS `sold`" ;       
-        
-       
-       
-       $where  = "cat_id = {$this->cat_id} and disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' " ;
-       
+    private function UpdateList() {
+        $options = \App\System::getOptions('shop');
+        $conn = \ZDB\DB::getConnect();
+
+        $this->_list = array();
+
+
+        $fields = "items_view.*";
+        $fields .= ",coalesce((  select     count(0)   from  shop_prod_comments `c`   where     `c`.`item_id` = items_view.item_id ),0) AS `comments`";
+        $fields .= ",coalesce((  select     sum(`r`.`rating`)   from  shop_prod_comments `r`   where    `r`.`item_id` = items_view.item_id),0) AS `ratings`";
+        $store = "";
+        if ($options['defstore'] > 0) {
+            $store = " s.store_id={$options['defstore']}  and ";
+        }
+        $fields .= ",coalesce((  select     sum(`s`.`qty`)   from  store_stock `s`  where  {$store}  `s`.`item_id` = items_view.item_id) ,0) AS `qty`";
+        $fields .= ",coalesce((  select     sum(0-`e`.`quantity`)   from  entrylist_view `e`     where   `e`.`quantity` < 0 and  `e`.`item_id` = items_view.item_id),0) AS `sold`";
+
+
+        $where = "cat_id = {$this->cat_id} and disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ";
+
         $mlist = $this->sfilter->mlist->getCheckedList();
         if (count($mlist) > 0) {
-            $_mlist = array() ;
-            foreach($mlist as $m ) {
-               $_mlist[] = $conn->qstr($m);    
+            $_mlist = array();
+            foreach ($mlist as $m) {
+                $_mlist[] = $conn->qstr($m);
             }
-            
-            
+
+
             $where .= " and manufacturer in (" . implode(",", $_mlist) . ") ";
         }
-        if($this->_isfilter == true) {
-       
-          $ar = $this->sfilter->attrlist->getDataRows();
-          foreach ($ar as $r) {
-            $attr = $r->getComponent("attrdata");
-            if (count($attr->value) > 0) {
+        if ($this->_isfilter == true) {
 
-                $ar = $attr->value;
-                if (count($ar) > 0) {
+            $ar = $this->sfilter->attrlist->getDataRows();
+            foreach ($ar as $r) {
+                $attr = $r->getComponent("attrdata");
+                if (count($attr->value) > 0) {
 
-                    $where .= " and  item_id in(select item_id  from  shop_attributevalues   where   attribute_id = " . $attr->productattribute->attribute_id;
+                    $ar = $attr->value;
+                    if (count($ar) > 0) {
+
+                        $where .= " and  item_id in(select item_id  from  shop_attributevalues   where   attribute_id = " . $attr->productattribute->attribute_id;
 
 
-                    $where .= " and (1=2 ";
-                    foreach ($ar as $arv) {
-                        $where .= " or attributevalue like " . $conn->qstr("%{$arv}%");
+                        $where .= " and (1=2 ";
+                        foreach ($ar as $arv) {
+                            $where .= " or attributevalue like " . $conn->qstr("%{$arv}%");
+                        }
+
+                        $where .= ")";
                     }
 
-                    $where .= ")";
+
+                    $where .= " )";
                 }
-
-
-                $where .= " )";
             }
-        }
         } //filtered
-        
-       foreach(Product::find($where,'itemname',-1,-1,$fields) as $prod) {
-           $prod->price = $prod->getPrice($options['defpricetype'])   ;        
-           
-           $this->_list[]=$prod;
-       }
-       
-       $sort = $this->sortform->sortorder->getValue();
-           
-       if ($sort == 0) {
-          //  $order = "price asc";
-          usort( $this->_list,function($a,$b){
-             return  $a->getPriceFinal() > $b->getPriceFinal();
-          })  ;
+
+        foreach (Product::find($where, 'itemname', -1, -1, $fields) as $prod) {
+            $prod->price = $prod->getPrice($options['defpricetype']);
+
+            $this->_list[] = $prod;
+        }
+
+        $sort = $this->sortform->sortorder->getValue();
+
+        if ($sort == 0) {
+            //  $order = "price asc";
+            usort($this->_list, function($a, $b) {
+                return $a->getPriceFinal() > $b->getPriceFinal();
+            });
         }
         if ($sort == 1) {
-           // $order = "price desc";
-          usort( $this->_list,function($a,$b){
-             return  $a->getPriceFinal() < $b->getPriceFinal();
-          })  ;
+            // $order = "price desc";
+            usort($this->_list, function($a, $b) {
+                return $a->getPriceFinal() < $b->getPriceFinal();
+            });
         }
         if ($sort == 2) {
-          //  $order = "rating desc";
-          usort( $this->_list,function($a,$b){
-             return  $a->getRating() < $b->getRating();
-          })  ;
+            //  $order = "rating desc";
+            usort($this->_list, function($a, $b) {
+                return $a->getRating() < $b->getRating();
+            });
         }
         if ($sort == 3) {
-          //  $order = "comments desc";
-          usort( $this->_list,function($a,$b){
-             return  $a->comments < $b->comments;
-          })  ;
+            //  $order = "comments desc";
+            usort($this->_list, function($a, $b) {
+                return $a->comments < $b->comments;
+            });
         }
-       
+
         if ($sort == 4) {
-           // $order = "sold desc";
-          usort( $this->_list,function($a,$b){
-             return  $a->sold < $b->sold;
-          })  ;
+            // $order = "sold desc";
+            usort($this->_list, function($a, $b) {
+                return $a->sold < $b->sold;
+            });
         }
         if ($sort == -1) {
-           // $order = "productname";
-          usort( $this->_list,function($a,$b){
-             return  $a->itemname > $b->itemname;
-          })  ;
+            // $order = "productname";
+            usort($this->_list, function($a, $b) {
+                return $a->itemname > $b->itemname;
+            });
         }
-      
-       $this->catlist->Reload(); 
-    
+
+        $this->catlist->Reload();
+
     }
-    
-    
+
+
     //строка товара
     public function plistOnRow($row) {
         $item = $row->getDataItem();
-        $options= \App\System::getOptions('shop') ;
-   
+        $options = \App\System::getOptions('shop');
 
-        $row->add(new BookmarkableLink("simage",  $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
-        $row->add(new BookmarkableLink("scatname",  $item->getSEF()))->setValue($item->itemname);
-          
-        $row->add(new Label("sprice", $item->price.' '. $options['currencyname']));
-        $row->add(new Label("sactionprice", $item->productdata->actionprice.' '. $options['currencyname']))->setVisible(false);
-        if($item->productdata->actionprice > 0) {
-            $row->sprice->setAttribute('style','text-decoration:line-through');                 
-            $row->sactionprice->setVisible(true);                 
+
+        $row->add(new BookmarkableLink("simage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("scatname", $item->getSEF()))->setValue($item->itemname);
+
+        $row->add(new Label("sprice", $item->price . ' ' . $options['currencyname']));
+        $row->add(new Label("sactionprice", $item->productdata->actionprice . ' ' . $options['currencyname']))->setVisible(false);
+        if ($item->productdata->actionprice > 0) {
+            $row->sprice->setAttribute('style', 'text-decoration:line-through');
+            $row->sactionprice->setVisible(true);
         }
-        
+
         $row->add(new TextInput('srated'))->setText($item->getRating());
-        $row->add(new Label('scomments'))->setText(\App\Helper::l("shopfeedbaks",$item->comments) );
+        $row->add(new Label('scomments'))->setText(\App\Helper::l("shopfeedbaks", $item->comments));
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
-           if ($item->getQuantity($options['defstore']) > 0) {
+        if ($item->getQuantity($options['defstore']) > 0) {
 
-                $row->sbuy->setValue(\App\Helper::l('tobay'));
-            } else {
-                $row->sbuy->setValue(\App\Helper::l('toorder'));
-            }
+            $row->sbuy->setValue(\App\Helper::l('tobay'));
+        } else {
+            $row->sbuy->setValue(\App\Helper::l('toorder'));
+        }
 
-        
-        
+
         $op = \App\System::getOptions("shop");
 
         if ($item->getQuantity($op['defstore']) > 0) {
@@ -240,8 +239,8 @@ class Catalog extends Base
 
     public function rOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("rimage",   $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
-        $row->add(new BookmarkableLink("rname",   $item->getSEF()))->setValue($item->itemname);
+        $row->add(new BookmarkableLink("rimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("rname", $item->getSEF()))->setValue($item->itemname);
     }
 
 
@@ -257,16 +256,17 @@ class Catalog extends Base
     }
 
     public function searchformOnSubmit($sender) {
-      $this->_isfilter = true;
-         $this->filterbtn->setAttribute('class','btn btn-danger');
-     
+        $this->_isfilter = true;
+        $this->filterbtn->setAttribute('class', 'btn btn-danger');
+
         $this->UpdateList();
     }
+
     public function onSClear($sender) {
         $this->sfilter->clean();
         $this->_isfilter = false;
 
-        $this->filterbtn->setAttribute('class','btn btn-success');
+        $this->filterbtn->setAttribute('class', 'btn btn-success');
         $this->UpdateList();
     }
 
@@ -285,7 +285,6 @@ class Catalog extends Base
 
 }
 
- 
 
 //компонент атрибута  товара для фильтра
 //выводит  элементы  формы  ввода   в  зависимости  от  типа  атрибута
@@ -306,8 +305,8 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
             $name = $name . ", " . $this->productattribute->valueslist;
         }
 
-     //   $ret = "<a href=\"#a{$this->productattribute->attribute_id}\" data-toggle=\"collapse\"  class=\"filtertiem\" >{$name} <i style=\"font-size:smaller\" class=\"fa fa-angle-down\"></i></a>";
-     //   $ret .= "<div id=\"a{$this->productattribute->attribute_id}\" class=\"collapse\" >";
+        //   $ret = "<a href=\"#a{$this->productattribute->attribute_id}\" data-toggle=\"collapse\"  class=\"filtertiem\" >{$name} <i style=\"font-size:smaller\" class=\"fa fa-angle-down\"></i></a>";
+        //   $ret .= "<div id=\"a{$this->productattribute->attribute_id}\" class=\"collapse\" >";
         $ret = "<b>{$name}</b>";
         //'Есть/Нет'
         if ($this->productattribute->attributetype == 1) {
@@ -401,8 +400,8 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
           $ret .= "</div>";
           } */
 
-       // return $ret . "</div>";
-        return $ret  ;
+        // return $ret . "</div>";
+        return $ret;
     }
 
     //Вынимаем данные формы  после  сабмита

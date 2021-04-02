@@ -22,7 +22,7 @@ class Order extends \App\Entity\Doc\Document
             if (isset($detail[$item->item_id])) {
                 $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
-                
+
                 /*
                 $ocstoreopt = @unserialize($item->octoreoptions);  //опции с  опенкарта
                 if (is_array($ocstoreopt)) {
@@ -39,7 +39,7 @@ class Order extends \App\Entity\Doc\Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "price"      => H::fa($item->price),
                                   "msr"        => $item->msr,
-                                  "desc"        => $item->desc,
+                                  "desc"       => $item->desc,
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
@@ -131,8 +131,8 @@ class Order extends \App\Entity\Doc\Document
     }
 
 
-    protected function onState(  $state) {
-        
+    protected function onState($state) {
+
         if ($state == self::STATE_INPROCESS) {
             //списываем бонусы
             if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {

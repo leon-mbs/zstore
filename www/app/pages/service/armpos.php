@@ -31,7 +31,7 @@ class ARMPos extends \App\Pages\Base
     public  $_serlist  = array();
     private $pos;
     private $_doc      = null;
-    private $_rowid     = 0;
+    private $_rowid    = 0;
 
 
     private $_pt       = 0;
@@ -334,17 +334,18 @@ class ARMPos extends \App\Pages\Base
         $this->editdetail->qtystock->setText("");
         $this->form2->setVisible(false);
         $this->_rowid = $tovar->rowid;
-  
+
     }
-    
+
     public function deleteOnClick($sender) {
-  
+
         $tovar = $sender->owner->getDataItem();
-    
+
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->rowid => $this->_itemlist[$tovar->rowid]));
         $this->form2->detail->Reload();
         $this->calcTotal();
     }
+
     public function sereditOnClick($sender) {
         $ser = $sender->owner->getDataItem();
         $this->editserdetail->setVisible(true);
@@ -355,7 +356,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->form2->setVisible(false);
         $this->_rowid = $ser->rowid;
-  
+
     }
 
     public function serdeleteOnClick($sender) {
@@ -364,7 +365,7 @@ class ARMPos extends \App\Pages\Base
         }
 
         $ser = $sender->owner->getDataItem();
-  
+
         $this->_serlist = array_diff_key($this->_serlist, array($ser->rowid => $this->_serlist[$ser->rowid]));
         $this->form2->detailser->Reload();
         $this->calcTotal();
@@ -376,7 +377,7 @@ class ARMPos extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
         $this->editdetail->qtystock->setText("");
         $this->form2->setVisible(false);
-         $this->_rowid = 0;
+        $this->_rowid = 0;
     }
 
     public function addserOnClick($sender) {
@@ -386,7 +387,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->form2->setVisible(false);
         $this->_rowid = 0;
-     }
+    }
 
     public function saverowOnClick($sender) {
         $store = $this->form1->store->getValue();
@@ -431,7 +432,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->_rowid = 0;
 
-      
+
         $this->editdetail->setVisible(false);
         $this->form2->setVisible(true);
 
@@ -460,7 +461,7 @@ class ARMPos extends \App\Pages\Base
 
         $ser->quantity = $this->editserdetail->editserquantity->getText();
 
-        $ser->price =H::fa( $this->editserdetail->editserprice->getText());
+        $ser->price = H::fa($this->editserdetail->editserprice->getText());
 
         if ($this->_rowid > 0) {
             $ser->rowid = $this->_rowid;
@@ -471,8 +472,8 @@ class ARMPos extends \App\Pages\Base
         $this->_serlist[$ser->rowid] = $ser;
 
         $this->_rowid = 0;
-        
-       
+
+
         $this->editserdetail->setVisible(false);
         $this->form2->setVisible(true);
         $this->form2->detailser->Reload();

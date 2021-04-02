@@ -126,7 +126,7 @@ class POSCheck extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
-            $this->docform->total->setText( H::fa( $this->_doc->amount));
+            $this->docform->total->setText(H::fa($this->_doc->amount));
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
@@ -281,7 +281,7 @@ class POSCheck extends \App\Pages\Base
         }
 
         $tovar = $sender->owner->getDataItem();
-   
+
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->rowid => $this->_itemlist[$tovar->rowid]));
         $this->docform->detail->Reload();
@@ -295,7 +295,7 @@ class POSCheck extends \App\Pages\Base
         }
 
         $ser = $sender->owner->getDataItem();
-      
+
         $this->_serlist = array_diff_key($this->_serlist, array($ser->rowid => $this->_serlist[$ser->rowid]));
         $this->docform->detailser->Reload();
         $this->calcTotal();
@@ -317,8 +317,8 @@ class POSCheck extends \App\Pages\Base
         $this->editserdetail->editserprice->setText("0");
 
         $this->docform->setVisible(false);
-         $this->_rowid = 0;
-   }
+        $this->_rowid = 0;
+    }
 
     public function editOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
@@ -344,17 +344,17 @@ class POSCheck extends \App\Pages\Base
         $this->_rowid = $item->rowid;
     }
 
-   public function sereditOnClick($sender) {
+    public function sereditOnClick($sender) {
         $ser = $sender->getOwner()->getDataItem();
         $this->editserdetail->setVisible(true);
         $this->docform->setVisible(false);
- 
+
         $this->editserdetail->editser->setKey($ser->service_id);
         $this->editserdetail->editser->setText($ser->service_name);
-        
+
         $this->editserdetail->editserprice->setText($ser->price);
         $this->editserdetail->editserquantity->setText($ser->quantity);
-     
+
         if ($ser->rowid > 0) {
             ;
         }               //для совместимости
@@ -527,7 +527,7 @@ class POSCheck extends \App\Pages\Base
 
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
-        if ($this->_tvars["ppo"]==true  && $pos->usefisc == 1 && $sender->id == 'execdoc') {
+        if ($this->_tvars["ppo"] == true && $pos->usefisc == 1 && $sender->id == 'execdoc') {
 
 
             $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);

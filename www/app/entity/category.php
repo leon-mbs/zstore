@@ -11,8 +11,8 @@ namespace App\Entity;
 class Category extends \ZCL\DB\Entity
 {
 
-    public $parents=array();
-    
+    public $parents = array();
+
     protected function init() {
         $this->cat_id = 0;
         $this->parent_id = 0;
@@ -20,7 +20,6 @@ class Category extends \ZCL\DB\Entity
         $this->parents = array();
     }
 
- 
 
     protected function afterLoad() {
 
@@ -34,7 +33,7 @@ class Category extends \ZCL\DB\Entity
         $this->price5 = (string)($xml->price5[0]);
         $this->image_id = (int)$xml->image_id[0];
         $this->noshop = (int)$xml->noshop[0];
-     
+
 
         parent::afterLoad();
     }
@@ -51,103 +50,104 @@ class Category extends \ZCL\DB\Entity
         $this->detail .= "<price5>{$this->price5}</price5>";
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
-      
+
 
         $this->detail .= "</detail>";
 
         return true;
     }
-     
-    
-    public  function hasChild(){
+
+
+    public function hasChild() {
         $conn = \ZDB\DB::getConnect();
-       
+
         $sql = "  select count(*)  from  item_cat where  parent_id = {$this->cat_id} ";
         $cnt = $conn->GetOne($sql);
-        return  $cnt > 0   ;
-        
+        return $cnt > 0;
+
     }
 
-    public static  function findFullData($clist=null){
-        if($clist==null) {
-           $clist = Category::find('','cat_name');    
+    public static function findFullData($clist = null) {
+        if ($clist == null) {
+            $clist = Category::find('', 'cat_name');
         }
-        $plist = Category::find('','cat_name'); 
-         
-        foreach($clist as $c){
-           
+        $plist = Category::find('', 'cat_name');
+
+        foreach ($clist as $c) {
+
             $c->parents = $c->getParents($plist);
-            
-            $names=array();
-            foreach($c->parents as $p)  {
-                $names[]=  $plist[$p]->cat_name;
+
+            $names = array();
+            foreach ($c->parents as $p) {
+                $names[] = $plist[$p]->cat_name;
             }
-            $names = array_reverse($names) ;
-            $names[]  =  $c->cat_name;
-            $c->full_name =  implode(' / ',$names)   ;
+            $names = array_reverse($names);
+            $names[] = $c->cat_name;
+            $c->full_name = implode(' / ', $names);
         }
-      
+
         return $clist;
-        
+
     }
-    
-    public    function getParents(  &$clist=null){
-        if($clist==null) {
-           $clist = Category::find('','cat_name');    
+
+    public function getParents(&$clist = null) {
+        if ($clist == null) {
+            $clist = Category::find('', 'cat_name');
         }
-        
-        
-         $p = array();
-        
-         if(  $clist[$this->parent_id]  instanceof  Category) {
-            $p[]= $this->parent_id;
-            $pp = $clist[$this->parent_id]->getParents($clist); 
-            if(count($pp)>0) $p = array_merge($p,$pp) ;
-         }
-         return $p;
+
+
+        $p = array();
+
+        if ($clist[$this->parent_id] instanceof Category) {
+            $p[] = $this->parent_id;
+            $pp = $clist[$this->parent_id]->getParents($clist);
+            if (count($pp) > 0) {
+                $p = array_merge($p, $pp);
+            }
+        }
+        return $p;
     }
-    public    function getChildren(  &$clist=null){
-        if($clist==null) {
-           $clist = Category::find('','cat_name');    
+
+    public function getChildren(&$clist = null) {
+        if ($clist == null) {
+            $clist = Category::find('', 'cat_name');
         }
-        
-       $p = array();
-           
-           
-           
-           foreach($clist as  $ch) {
-              if($ch->parent_id==$this->cat_id) {
-                 $p[]=$ch->cat_id;    
-                 $pp = $clist[$ch->cat_id]->getChildren($clist);
-                 foreach($pp as $_p){
-                   $p[] = $_p;  
-                 } 
-                 
-              }
-                 
-           }
-           
-           
-       return $p;
-        
-    }   
+
+        $p = array();
+
+
+        foreach ($clist as $ch) {
+            if ($ch->parent_id == $this->cat_id) {
+                $p[] = $ch->cat_id;
+                $pp = $clist[$ch->cat_id]->getChildren($clist);
+                foreach ($pp as $_p) {
+                    $p[] = $_p;
+                }
+
+            }
+
+        }
+
+
+        return $p;
+
+    }
+
     //список  с  тмц
-    public static function getList($fullname=false){
-        if($fullname==false) {
-           return Category::findArray("cat_name", "cat_id in (select cat_id from items where disabled <>1 )", "cat_name")  ;    
+    public static function getList($fullname = false) {
+        if ($fullname == false) {
+            return Category::findArray("cat_name", "cat_id in (select cat_id from items where disabled <>1 )", "cat_name");
         }
-        
+
         $list = Category::find("cat_id in (select cat_id from items where disabled <>1 )", "cat_name");
-        $list = self::findFullData($list)  ;
-        
+        $list = self::findFullData($list);
+
         $ret = array();
-        foreach($list as $c){
-           $ret[$c->cat_id]=$c->full_name;    
+        foreach ($list as $c) {
+            $ret[$c->cat_id] = $c->full_name;
         }
-        return  $ret;
-    }  
-    
-   
-    
-    
+        return $ret;
+    }
+
+
 }

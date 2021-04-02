@@ -97,7 +97,7 @@ class Orders extends \App\Pages\Base
                 }
                 $tovar->quantity = $product->quantity;
                 $tovar->price = round($product->price);
-            
+
                 $itlist[] = $tovar;
             }
             $neworder->packDetails('detaildata', $itlist);

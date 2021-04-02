@@ -107,7 +107,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->clean();
         $this->employeedetail->editlogin->setOptionList(Employee::getFreeLogins());
         $this->employeedetail->editlogin->setValue('0');
-         
+
         $b = \App\System::getBranch();
         $this->employeedetail->editbranch->setValue($b > 0 ? $b : 0);
 

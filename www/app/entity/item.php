@@ -157,7 +157,7 @@ class Item extends \ZCL\DB\Entity
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад
     //$partion - партия
-    public function getPrice($_price_='price1', $store = 0, $partion = 0) {
+    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0) {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
@@ -268,20 +268,25 @@ class Item extends \ZCL\DB\Entity
         return \App\Helper::fa($price);
     }
 
-    public function getLastPartion($store = 0, $snumber = "") {
+    //последняя  партия true по  приходной  false по расходной
+    public function getLastPartion($store = 0, $snumber = "", $gi = true) {
         $conn = \ZDB\DB::getConnect();
-        $sql = "  select coalesce(partion,0)  from  store_stock where partion >0 and    item_id = {$this->item_id}   ";
+        $q = $gi == true ? "e.quantity >0" : "e.quantity <0";
+
+        $sql = "  select coalesce(partion,0)  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
+
         if ($store > 0) {
-            $sql = $sql . " and store_id=" . $store;
+            $sql = $sql . " and st.store_id=" . $store;
         }
         if (strlen($snumber) > 0) {
-            $sql .= "  and  snumber =  " . $conn->qstr($snumber);
+            $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
 
-        $sql = $sql . " order  by  stock_id desc limit 0,1";
+        $sql = $sql . " order  by  e.document_id desc limit 0,1";
 
         return $conn->GetOne($sql);
     }
+
 
     public static function getPriceTypeList() {
 
@@ -419,11 +424,11 @@ class Item extends \ZCL\DB\Entity
     }
 
     /**
-    * список производителей
-    * 
-    * @param mixed $nametoindex    добавить имя в  индекс 9для  комбобоксов)
-    */
-    public static function getManufacturers($nametoindex=false) {
+     * список производителей
+     *
+     * @param mixed $nametoindex добавить имя в  индекс 9для  комбобоксов)
+     */
+    public static function getManufacturers($nametoindex = false) {
 
         $conn = \ZDB\DB::getConnect();
 
@@ -432,12 +437,12 @@ class Item extends \ZCL\DB\Entity
         $list = array();
         foreach ($res as $v) {
             if (strlen($v['manufacturer']) > 0) {
-                if($nametoindex) {
-                   $list[$v['manufacturer']] = $v['manufacturer'];    
-                }  else {
-                   $list[] = $v['manufacturer'];
+                if ($nametoindex) {
+                    $list[$v['manufacturer']] = $v['manufacturer'];
+                } else {
+                    $list[] = $v['manufacturer'];
                 }
-                
+
             }
         }
         return $list;
@@ -459,10 +464,10 @@ class Item extends \ZCL\DB\Entity
     }
 
     /**
-    * себестоимость  для  готовой продукции
-    * 
-    */
-    public function  getProdprice(){
+     * себестоимость  для  готовой продукции
+     *
+     */
+    public function getProdprice() {
         $price = 0;
         if ($this->zarp > 0) {
             $price += $this->zarp;
@@ -475,11 +480,11 @@ class Item extends \ZCL\DB\Entity
                 $pr = $it->getLastPartion(0);
                 $price += ($iset->qty * $pr);
             }
-        } 
-        if($price==0) {  //ищем  последнюю  партию
+        }
+        if ($price == 0) {  //ищем  последнюю  партию
             $pr = $this->getLastPartion(0);
         }
-        
-        return  $price;     
+
+        return $price;
     }
 }

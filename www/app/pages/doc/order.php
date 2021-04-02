@@ -181,8 +181,8 @@ class Order extends \App\Pages\Base
         }
 
         $this->_tovarlist = array_diff_key($this->_tovarlist, array($item->rowid => $this->_tovarlist[$item->rowid]));
-    
-         $this->docform->detail->Reload();
+
+        $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
     }
@@ -247,8 +247,8 @@ class Order extends \App\Pages\Base
         $this->_tovarlist[$item->rowid] = $item;
 
         $this->_rowid = 0;
-        
- 
+
+
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();

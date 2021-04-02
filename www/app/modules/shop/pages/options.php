@@ -27,7 +27,7 @@ class Options extends \App\Pages\Base
 
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        
+
         $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new TextInput('email'));
@@ -50,7 +50,7 @@ class Options extends \App\Pages\Base
             $shop = array();
         }
 
-        
+
         $this->shop->shopdefcust->setValue($shop['defcust']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->currencyname->setText($shop['currencyname']);
@@ -62,7 +62,7 @@ class Options extends \App\Pages\Base
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
 
-        
+
         $this->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
 
         if (strlen($shop['aboutus']) > 10) {
@@ -85,7 +85,7 @@ class Options extends \App\Pages\Base
         //todo контрагент магазина, кому  нотификацию
 
         $shop['defcust'] = $this->shop->shopdefcust->getValue();
-        
+
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
@@ -119,23 +119,23 @@ class Options extends \App\Pages\Base
         System::setOptions("shop", $shop);
         $this->setSuccess('saved');
     }
-    
+
 
     public function updateSiteMapOnClick($sender) {
-       
-                
+
+
         $sm = _ROOT . 'sitemap.xml';
         @unlink($sm);
         $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
 
         $prods = Product::find(" deleted = 0 ");
         foreach ($prods as $p) {
-            if(strlen($p->sef)>0) {
-              $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";  
-            }   else {
-              $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";    
+            if (strlen($p->sef) > 0) {
+                $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";
+            } else {
+                $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";
             }
-            
+
         }
         $xml .= "</urlset>";
         file_put_contents($sm, $xml);

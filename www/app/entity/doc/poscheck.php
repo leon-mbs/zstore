@@ -141,48 +141,48 @@ class POSCheck extends Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            
-  //оприходуем  с  производства
-            if( $item->autoincome ==1 && $item->item_type==Item::TYPE_PROD) {
-                
-                 if($item->autooutcome ==1)  {    //комплекты
-                        $set =  \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
-                        foreach($set  as $part) {
-                           
-                            $itemp = \App\Entity\Item::load( $part->item_id);
-                            $itemp->quantity = $item->quantity*$part->qty;
-                            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
-                            foreach ($listst as $st) {
-                                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                                $sc->setStock($st->stock_id);
+            //оприходуем  с  производства
+            if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
 
-                                $sc->save();
-                            }                    
-                            
-                            
-                        }                
-                 }
-                  
-                
-                $price = $item->getProdprice() ;
-             
-                if($price ==0){
-                    throw new \Exception(H::l('noselfprice',$item->itemname)) ;
-                   
+                if ($item->autooutcome == 1) {    //комплекты
+                    $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
+                    foreach ($set as $part) {
+
+                        $itemp = \App\Entity\Item::load($part->item_id);
+                        $itemp->quantity = $item->quantity * $part->qty;
+                        $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
+
+                        foreach ($listst as $st) {
+                            $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                            $sc->setStock($st->stock_id);
+
+                            $sc->save();
+                        }
+
+
+                    }
+                }
+
+
+                $price = $item->getProdprice();
+
+                if ($price == 0) {
+                    throw new \Exception(H::l('noselfprice', $item->itemname));
+
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
-                 
+
 
                 $sc->save();
-            
-         
-            }         
-              
-            
+
+
+            }
+
+
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {

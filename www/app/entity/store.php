@@ -34,10 +34,12 @@ class Store extends \ZCL\DB\Entity
     }
 
     public static function getConstraint() {
-        $br= \App\ACL::getBranchConstraint();
-        if(strlen($br)>0  )   $br = " (". $br . " or coalesce(branch_id,0)=0)  ";  //склады не  привязаные к  филиалу
+        $br = \App\ACL::getBranchConstraint();
+        if (strlen($br) > 0) {
+            $br = " (" . $br . " or coalesce(branch_id,0)=0)  ";
+        }  //склады не  привязаные к  филиалу
         return $br;
-        
+
     }
 
 }

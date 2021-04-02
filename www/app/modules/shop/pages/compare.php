@@ -21,11 +21,12 @@ class Compare extends Base
         parent::beforeRender();
         $comparelist = Comparelist::getCompareList()->list;
     }
-    public function OnBack($sender){
- 
-           $filter = \App\Filter::getFilter("ProductCatalog");
-           
-           App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->cat_id);
+
+    public function OnBack($sender) {
+
+        $filter = \App\Filter::getFilter("ProductCatalog");
+
+        App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->cat_id);
 
     }
 
@@ -41,18 +42,18 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         $attrlist = array();
         $attrnames = array();
         $attrvalues = array();
-         $options= \App\System::getOptions('shop') ;
-    
-        $nodata = \App\Helper::l("shopattrnodata") ;
-        $yes = \App\Helper::l("shopattryes") ;
-        $no = \App\Helper::l("shopattrno") ;
+        $options = \App\System::getOptions('shop');
+
+        $nodata = \App\Helper::l("shopattrnodata");
+        $yes = \App\Helper::l("shopattryes");
+        $no = \App\Helper::l("shopattrno");
 
         $result .= "<tr><th>sss </th>";
         $url = $this->owner->getURLNode() . "::" . $this->id;
         ///цикл  по товарам
         foreach ($comparelist->list as $product) {
 
-            $result .= (" <th ><img class=\"compareimage\" src=\"/loadshopimage.php?id={$product->image_id}&t=t\"><br><a href=\"/sp/{$product->item_id}\">" . $product->itemname . "</a> <br>   <b>". $product->getPriceFinal() .' '. $options['currencyname']  ."</b>     &nbsp;  &nbsp;  &nbsp;  &nbsp;     <a href=\"{$url}:{$product->item_id}\"><i class=\"fa fa-trash text-danger\" ></i></a></th>");
+            $result .= (" <th ><img class=\"compareimage\" src=\"/loadshopimage.php?id={$product->image_id}&t=t\"><br><a href=\"/sp/{$product->item_id}\">" . $product->itemname . "</a> <br>   <b>" . $product->getPriceFinal() . ' ' . $options['currencyname'] . "</b>     &nbsp;  &nbsp;  &nbsp;  &nbsp;     <a href=\"{$url}:{$product->item_id}\"><i class=\"fa fa-trash text-danger\" ></i></a></th>");
             $attributes = Helper::getAttributeValuesByProduct($product);
             //цикл по  атрибутам для  получения значений
 
@@ -65,12 +66,16 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
                 if ($attr->attributetype == 2) {
                     $attrnames[$attr->attribute_id] = $attr->attributename . ',' . $attr->valueslist;
                 }
-        
-                if ($attr->attributetype == 1 ) {
-                    if($attr->attributevalue == 0) $value= $no;
-                    if($attr->attributevalue == 1) $value= $yes;
+
+                if ($attr->attributetype == 1) {
+                    if ($attr->attributevalue == 0) {
+                        $value = $no;
+                    }
+                    if ($attr->attributevalue == 1) {
+                        $value = $yes;
+                    }
                 }
-                if ($attr->hasData()==false) {
+                if ($attr->hasData() == false) {
                     $value = $nodata;
                 }
 
@@ -103,7 +108,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         $comparelist->deleteProduct($params[0]);
         if ($comparelist->isEmpty()) {
             $filter = \App\Filter::getFilter("ProductCatalog");
-           
+
             App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->cat_id);
         }
     }
