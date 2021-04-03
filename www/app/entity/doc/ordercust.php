@@ -5,7 +5,7 @@ namespace App\Entity\Doc;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ приходная  накладая
+ * Класс-сущность  документ  заявка  поставщику
  *
  */
 class OrderCust extends Document

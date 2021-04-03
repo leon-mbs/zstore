@@ -36,11 +36,13 @@ class DocView extends \Zippy\Html\PageFragment
         parent::__construct($id);
 
         $this->add(new BookmarkableLink('print', ""));
+        $this->add(new RedirectLink('printmob', ""));
         $this->add(new RedirectLink('html', ""))->setVisible(false);
         $this->add(new RedirectLink('word', ""));
         $this->add(new RedirectLink('excel', ""));
         $this->add(new RedirectLink('pdf', ""));
         $this->add(new BookmarkableLink('pos', ""));
+        $this->add(new RedirectLink('posmob', ""));
         $this->add(new ClickLink('email', $this, "onMail"));
 
         $this->add(new Label('preview'));
@@ -110,10 +112,15 @@ class DocView extends \Zippy\Html\PageFragment
         $this->email->setVisible(in_array(Document::EX_MAIL, $exportlist));
 
         $reportpage = "App/Pages/ShowDoc";
-
-
-        // $this->print->pagename = $reportpage;
-        //  $this->print->params = array('print', $doc->document_id);
+  
+         $this->printmob->pagename = $reportpage;
+         $this->printmob->params = array('print', $doc->document_id);
+         
+         $this->posmob->pagename = $reportpage;
+         $this->posmob->params = array('pos', $doc->document_id);
+         
+        
+        
         $this->html->pagename = $reportpage;
         $this->html->params = array('html', $doc->document_id);
         $this->word->pagename = $reportpage;
@@ -122,8 +129,6 @@ class DocView extends \Zippy\Html\PageFragment
         $this->excel->params = array('xls', $doc->document_id);
         $this->pdf->pagename = $reportpage;
         $this->pdf->params = array('pdf', $doc->document_id);
-        //    $this->pos->pagename = $reportpage;
-        //    $this->pos->params = array('pos', $doc->document_id);
 
 
         $this->updateMessages();

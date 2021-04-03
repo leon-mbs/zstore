@@ -37,6 +37,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
+        $this->_tvars["usemobileprinter"] = $options['usemobileprinter'] == 1;
         if (System::getSession()->defbranch > 0) {
             $this->branch_id = System::getSession()->defbranch;
             System::setBranch($this->branch_id);

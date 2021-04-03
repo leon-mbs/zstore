@@ -1,7 +1,8 @@
 <html>
 <body>
 <div class="   p-3 mb-3 bg-white  ">
-
+ 
+       
 
     <div class="mb-1" style="font-size: 1.3rem">
         <a zippy="doctabp"><span class="{{{doctabpbadge}}}"><i class="fa fa-print"></i> Печатная форма</span> </a>
@@ -21,10 +22,17 @@
     </div>
     <div>
         {{#doctabp}}
-        <div>
+        <div>        
             &nbsp; &nbsp; &nbsp;
+            {{^usemobileprinter}}
             <a zippy="print" onclick=" printform()" title="Печать"><img class="icon20"
                                                                         src="/assets/images/print_32.png"></a>
+            {{/usemobileprinter}}
+            {{#usemobileprinter}}
+            <a zippy="printmob" target="_blank" onclick=" printform()" title="Печать"><img class="icon20"
+                                                                        src="/assets/images/print_32.png"></a>
+            {{/usemobileprinter}}
+            
             <a zippy="html" target="_blank" title="Экспорт в HTML"><img class="icon20"
                                                                         src="/assets/images/html.png"></a>
             <a zippy="word" target="_blank" title="Экспорт в Word"><img class="icon20"
@@ -35,8 +43,17 @@
                                                                       src="/assets/images/pdf_32.png"></a>
             <a zippy="email" title="Отправка  по  почте"><img class="icon20"
                                                               src="/assets/images/email_32.png"></a>
+            {{^usemobileprinter}}
+
             <a zippy="pos" onclick=" printpos()" title="Печать на  чековом принтере"><img class="icon20"
                                                                                           src="/assets/images/pos-terminal-50.png"></a>
+            {{/usemobileprinter}}
+            {{#usemobileprinter}}
+
+            <a zippy="posmob" target="_blank" title="Печать на  чековом принтере"><img class="icon20"
+                                                                                          src="/assets/images/pos-terminal-50.png"></a>
+            {{/usemobileprinter}}
+                                                                                          
 
             <br>
             <br>

@@ -37,7 +37,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
 {
 
     public function getContent($attributes) {
-        $result = "<table     class=\"  comparetable   \" >";
+        $result = "<table     class=\"comparetable\" >";
         $comparelist = Comparelist::getCompareList();
         $attrlist = array();
         $attrnames = array();
@@ -48,7 +48,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         $yes = \App\Helper::l("shopattryes");
         $no = \App\Helper::l("shopattrno");
 
-        $result .= "<tr><th>sss </th>";
+        $result .= "<tr><th></th>";
         $url = $this->owner->getURLNode() . "::" . $this->id;
         ///цикл  по товарам
         foreach ($comparelist->list as $product) {
