@@ -228,8 +228,10 @@ class Helper
 
     public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
         global $_config;
-        if(strlen($emailfrom)==0) $emailfrom = $_config['smtp']['user'] ;
-        
+        if (strlen($emailfrom) == 0) {
+            $emailfrom = $_config['smtp']['user'];
+        }
+
         $mail = new \PHPMailer\PHPMailer\PHPMailer();
         $mail->setFrom($emailfrom);
         $mail->addAddress($emailto);
@@ -373,7 +375,8 @@ class Helper
         global $logger;
         $logger->debug($msg);
     }
-   /**
+
+    /**
      * логгирование    ошибок
      *
      * @param mixed $msg
@@ -460,7 +463,7 @@ class Helper
         if (strlen($qty) == 0) {
             return '';
         }
-        $qty = str_replace(',','.',$qty) ;
+        $qty = str_replace(',', '.', $qty);
 
         $common = System::getOptions("common");
         if ($common['qtydigits'] > 0) {
@@ -480,7 +483,7 @@ class Helper
         if (strlen($am) == 0) {
             return '';
         }
-        $am = str_replace(',','.',$am) ;
+        $am = str_replace(',', '.', $am);
         $common = System::getOptions("common");
         if ($common['amdigits'] == 1) {
             return number_format($am, 2, '.', '');
@@ -707,7 +710,7 @@ class Helper
             return 'RUB';
         }
     }
- 
+
     public static function exportExcel($data, $header, $filename) {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
@@ -797,6 +800,6 @@ class Helper
         $writer->save('php://output');
         die;
     }
-      
-    
+
+
 }

@@ -2,21 +2,21 @@
 
 namespace App;
 
-class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Requestable,\Zippy\Interfaces\AjaxRender
+class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Requestable, \Zippy\Interfaces\AjaxRender
 {
 
     private $event = null;
     private $data  = array();
     private $view  = 'dayGridMonth';
-  
 
-   public function __construct($id  ) {
+
+    public function __construct($id) {
         parent::__construct($id);
-        $this->view =  'dayGridMonth' ;
-      
-   }    
-    
-    
+        $this->view = 'dayGridMonth';
+
+    }
+
+
     public final function RenderImpl() {
         global $_config;
         $id = $this->getAttribute('id');
@@ -25,11 +25,11 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
         if ($_config['common']['lang'] == 'ua') {
             $lang = 'ua';
         }
-      
+
         if (count($this->data) > 0) {
             $ev = ",events: [";
             foreach ($this->data as $dt) {
-               
+
                 $ev .= "  {  id     : '{$dt->id}',
                              title  : '{$dt->title}',    
                              start  :  {$dt->start} , 
@@ -132,10 +132,10 @@ EOT;
             $action['enddelta'] = $action['enddelta'] / 1000;
         }
         if ($action['action'] == 'move') {
-            $action['years'] = $action['years']  ;
-            $action['month'] = $action['month']  ;
-            $action['days'] = $action['days']  ;
-            $action['ms'] = $action['ms']/1000  ;
+            $action['years'] = $action['years'];
+            $action['month'] = $action['month'];
+            $action['days'] = $action['days'];
+            $action['ms'] = $action['ms'] / 1000;
         }
 
         if ($this->event != null) {
@@ -151,7 +151,8 @@ EOT;
     public function setData($data) {
         $this->data = $data;
     }
-     public function AjaxAnswer() {
+
+    public function AjaxAnswer() {
 
         return '';
     }
@@ -165,9 +166,9 @@ class CEvent
     public function __construct($id, $title, $start, $end, $color) {
         $this->id = $id;
         $this->title = $title;
-        $this->start = "new Date(".date("Y", $start).", ".( date("m", $start)  -1).", ".date("d", $start).",".date("H", $start).",".date("i", $start).")"  ;
-        $this->end = "new Date(".date("Y", $end).", ".( date("m", $end)  -1).", ".date("d", $end).",".date("H", $end).",".date("i", $end).")"  ;
-     //   $this->end = date("Y-m-dTH:i", $end);
+        $this->start = "new Date(" . date("Y", $start) . ", " . (date("m", $start) - 1) . ", " . date("d", $start) . "," . date("H", $start) . "," . date("i", $start) . ")";
+        $this->end = "new Date(" . date("Y", $end) . ", " . (date("m", $end) - 1) . ", " . date("d", $end) . "," . date("H", $end) . "," . date("i", $end) . ")";
+        //   $this->end = date("Y-m-dTH:i", $end);
         $this->color = $color;
     }
 

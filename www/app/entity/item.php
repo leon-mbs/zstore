@@ -43,14 +43,22 @@ class Item extends \ZCL\DB\Entity
         $this->val = (string)($xml->val[0]);
         $this->zarp = (string)($xml->zarp[0]);
 
-        $this->pricelist = (int)$xml->pricelist[0];
+        $this->noprice = (int)$xml->noprice[0];
+        $this->noshop = (int)$xml->noshop[0];
+        $this->autooutcome = (int)$xml->autooutcome[0];
+        $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
 
         $this->weight = (string)$xml->weight[0];
+        $this->maxsize = (string)$xml->maxsize[0];
+        $this->volume = (string)$xml->volume[0];
+        $this->customsize = (string)$xml->customsize[0];
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
         $this->warranty = (string)$xml->warranty[0];
+        $this->extdata = (string)$xml->extdata[0];
+        $this->sef = (string)$xml->sef[0];
 
         $this->cell = (string)$xml->cell[0];
         //  $this->octoreoptions = (string) $xml->octoreoptions[0];
@@ -88,7 +96,10 @@ class Item extends \ZCL\DB\Entity
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
-        $this->detail .= "<pricelist>{$this->pricelist}</pricelist>";
+        $this->detail .= "<noprice>{$this->noprice}</noprice>";
+        $this->detail .= "<noshop>{$this->noshop}</noshop>";
+        $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";
+        $this->detail .= "<autoincome>{$this->autoincome}</autoincome>";
         $this->detail .= "<useserial>{$this->useserial}</useserial>";
 
         $this->detail .= "<cell>{$this->cell}</cell>";
@@ -96,6 +107,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
         $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
+        $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
         $this->detail .= "<price2>{$this->price2}</price2>";
@@ -108,14 +120,16 @@ class Item extends \ZCL\DB\Entity
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<weight>{$this->weight}</weight>";
+        $this->detail .= "<maxsize>{$this->maxsize}</maxsize>";
+        $this->detail .= "<volume>{$this->volume}</volume>";
+        $this->detail .= "<customsize>{$this->customsize}</customsize>";
+        $this->detail .= "<sef>{$this->sef}</sef>";
 
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
 
-
         $this->detail .= "<brprice><![CDATA[{$brprice}]]></brprice>";
-
 
         $this->detail .= "</detail>";
 
@@ -143,7 +157,7 @@ class Item extends \ZCL\DB\Entity
     //$_price - цифра (заданая цена) или  наименование  цены из настроек 
     //$store - склад
     //$partion - партия
-    public function getPrice($_price_, $store = 0, $partion = 0) {
+    public function getPrice($_price_ = 'price1', $store = 0, $partion = 0) {
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
@@ -254,20 +268,25 @@ class Item extends \ZCL\DB\Entity
         return \App\Helper::fa($price);
     }
 
-    public function getLastPartion($store = 0, $snumber = "") {
+    //последняя  партия true по  приходной  false по расходной
+    public function getLastPartion($store = 0, $snumber = "", $gi = true) {
         $conn = \ZDB\DB::getConnect();
-        $sql = "  select coalesce(partion,0)  from  store_stock where partion >0 and    item_id = {$this->item_id}   ";
+        $q = $gi == true ? "e.quantity >0" : "e.quantity <0";
+
+        $sql = "  select coalesce(partion,0)  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
+
         if ($store > 0) {
-            $sql = $sql . " and store_id=" . $store;
+            $sql = $sql . " and st.store_id=" . $store;
         }
         if (strlen($snumber) > 0) {
-            $sql .= "  and  snumber =  " . $conn->qstr($snumber);
+            $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
 
-        $sql = $sql . " order  by  stock_id desc limit 0,1";
+        $sql = $sql . " order  by  e.document_id desc limit 0,1";
 
         return $conn->GetOne($sql);
     }
+
 
     public static function getPriceTypeList() {
 
@@ -404,8 +423,12 @@ class Item extends \ZCL\DB\Entity
         return "ID" . sprintf("%04d", ++$id);
     }
 
-
-    public static function getManufacturers() {
+    /**
+     * список производителей
+     *
+     * @param mixed $nametoindex добавить имя в  индекс 9для  комбобоксов)
+     */
+    public static function getManufacturers($nametoindex = false) {
 
         $conn = \ZDB\DB::getConnect();
 
@@ -414,7 +437,12 @@ class Item extends \ZCL\DB\Entity
         $list = array();
         foreach ($res as $v) {
             if (strlen($v['manufacturer']) > 0) {
-                $list[] = $v['manufacturer'];
+                if ($nametoindex) {
+                    $list[$v['manufacturer']] = $v['manufacturer'];
+                } else {
+                    $list[] = $v['manufacturer'];
+                }
+
             }
         }
         return $list;
@@ -436,10 +464,10 @@ class Item extends \ZCL\DB\Entity
     }
 
     /**
-    * себестоимость  для  готовой продукции
-    * 
-    */
-    public function  getProdprice(){
+     * себестоимость  для  готовой продукции
+     *
+     */
+    public function getProdprice() {
         $price = 0;
         if ($this->zarp > 0) {
             $price += $this->zarp;
@@ -452,11 +480,11 @@ class Item extends \ZCL\DB\Entity
                 $pr = $it->getLastPartion(0);
                 $price += ($iset->qty * $pr);
             }
-        } 
-        if($price==0) {  //ищем  последнюю  партию
+        }
+        if ($price == 0) {  //ищем  последнюю  партию
             $pr = $this->getLastPartion(0);
         }
-        
-        return  $price;     
+
+        return $price;
     }
 }

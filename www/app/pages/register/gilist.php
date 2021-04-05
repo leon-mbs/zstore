@@ -34,7 +34,7 @@ class GIList extends \App\Pages\Base
      * @param mixed $docid Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
-    public function __construct($doc=0) {
+    public function __construct($doc = 0) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('GIList')) {
             return;
@@ -54,7 +54,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->listpan->add(new ClickLink('csv', $this, 'oncsv'));
-        
+
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -105,12 +105,12 @@ class GIList extends \App\Pages\Base
         $npform->add(new Label('npttncust'));
         $npform->add(new Label('npttaddress'));
         $npform->add(new Label('npttnnotes'));
+        $npform->add(new Label('printform'));
 
-        $npform->add(new DataView('npitemlist', new ArrayDataSource(array()), $this, 'nplistOnRow'));
 
-        if($doc>0) {
-            $this->_doc = Document::load($doc);  
-            $this->npshowOnSubmit( $this->statuspan->statusform->bnp);;
+        if ($doc > 0) {
+            $this->_doc = Document::load($doc);
+            $this->npshowOnSubmit($this->statuspan->statusform->bnp);;
         }
     }
 
@@ -122,7 +122,7 @@ class GIList extends \App\Pages\Base
     }
 
 
-    public function doclistOnRow($row) {
+    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));
@@ -166,7 +166,7 @@ class GIList extends \App\Pages\Base
 
             $this->_doc->save();
 
-     
+
             $this->setSuccess('sent');
         }
 
@@ -191,14 +191,14 @@ class GIList extends \App\Pages\Base
 
             // $this->_doc->updateStatus(Document::STATE_CLOSED);
         }
- 
+
         if ($sender->id == "bdecl") {
             $dec = $this->statuspan->statusform->ship_number->getText();
             if (strlen($dec) > 0) {
                 $this->_doc->headerdata['ship_number'] = $dec;
             }
-            $this->_doc->save(); 
-            $this->setSuccess("saved"); 
+            $this->_doc->save();
+            $this->setSuccess("saved");
             $this->statuspan->setVisible(false);
         }
         if ($sender->id == "bttn") {
@@ -236,7 +236,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->closeorder->setVisible(false);
         if ($this->_doc->headerdata['order_id'] > 0) {
             $order = Document::load($this->_doc->headerdata['order_id']);
-            if ($order->payamount == $order->payed || $order->headerdata['payment']==0) {
+            if ($order->payamount == $order->payed || $order->headerdata['payment'] == 0) {
                 $this->statuspan->statusform->closeorder->setVisible(true);
             }
         }
@@ -393,7 +393,12 @@ class GIList extends \App\Pages\Base
 
         $this->nppan->npform->nppm->setOptionList($stlist);
         $this->nppan->npform->nppm->setValue('Cash');
-        $this->nppan->npform->nppmback->setOptionList($stlist);
+        $bmlist = array();
+        $bmlist['0'] = 'Без доставки';
+        $bmlist['Cash'] = 'Наличные';
+        $bmlist['NonCash'] = 'Безнал';
+        $bmlist['Control'] = 'Контроль доставки';
+        $this->nppan->npform->nppmback->setOptionList($bmlist);
         $this->nppan->npform->nppmback->setValue('Cash');
         //кто оплачивает
         $stlist = array();
@@ -418,28 +423,26 @@ class GIList extends \App\Pages\Base
             $this->nppan->npform->selpoint->setValue($modules['nppointref']);
         }
         $this->nppan->npform->seltel->setText($modules['nptel']);
-        $this->nppan->npform->npdesc->setText($this->_doc->notes) ;
+        $this->nppan->npform->npdesc->setText($this->_doc->notes);
         $list = $this->_doc->unpackDetails('detaildata');
         $w = 0;
         $p = 0;
         foreach ($list as $it) {
             if ($it->weight > 0) {
-                $w += ($it->weight*$it->quantity);
+                $w += ($it->weight * $it->quantity);
             }
             $p = $p + ($it->quantity * $it->price);
         }
-        $this->nppan->npform->npitemlist->getDataSource()->setArray($list);
-        $this->nppan->npform->npitemlist->Reload();
 
         $this->nppan->npform->npw->setText($w);
-        $this->nppan->npform->npback->setText(intval($p));
-        $this->nppan->npform->npcost->setText(intval($p));
+        $this->nppan->npform->npback->setText(round($p));
+        $this->nppan->npform->npcost->setText(round($p));
 
         $order = Document::load($this->_doc->parent_id);
         if ($order instanceof Document) {
             if ($order->payamount > 0) {
-                $this->nppan->npform->npback->setText(intval($order->payamount));
-                $this->nppan->npform->npcost->setText(intval($order->payamount));
+                $this->nppan->npform->npback->setText(round($order->payamount));
+                $this->nppan->npform->npcost->setText(round($order->payamount));
 
             }
 
@@ -465,17 +468,11 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->npttncust->setText($cust);
         $this->nppan->npform->npttaddress->setText($this->_doc->headerdata["ship_address"]);
         $this->nppan->npform->npttnnotes->setText($this->_doc->notes);
-    }
 
-    public function nplistOnRow($row) {
-        $item = $row->getDataItem();
-        $row->add(new  Label("npitemname", $item->itemname));
-        $row->add(new  Label("npitemcode", $item->item_code));
-        $row->add(new  Label("npitemw", $item->weight));
-        $row->add(new  Label("npitemqty", H::fqty($item->quantity)));
-        $row->add(new  Label("npitemprice", H::fa($item->price)));
+        $this->nppan->npform->printform->setText($this->_doc->cast()->generateReport(), true);
 
     }
+
 
     public function onSelArea($sender) {
 
@@ -537,18 +534,37 @@ class GIList extends \App\Pages\Base
         $params['CargoType'] = 'Cargo';
 
         $params['Weight'] = $this->nppan->npform->npw->getText();
-        if($params['SeatsAmount']  >1) {
-           $params['Weight']  = number_format($params['Weight'] / $params['SeatsAmount'] , 1, '.', '');
+        if ($params['SeatsAmount'] > 1) {
+            $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
         }
-        
+
         $moneyback = $this->nppan->npform->npback->getText();
+
         if ($moneyback > 0) {   //если  введена  обратная сумма
-            $params['BackwardDeliveryData'] =  array(array(
-                'PayerType'        => 'Recipient',
-                'CargoType'        => 'Money',
-                'PaymentMethod'    => $this->nppan->npform->nppmback->getValue(),
-                'RedeliveryString' => $moneyback)
-        );
+            $back = $this->nppan->npform->nppmback->getValue();
+
+            if ($back == 'Control') {
+                $params['AfterpaymentOnGoodsCost'] = $moneyback;
+            } else {
+                if ($back == 'Cash') {
+                    $params['BackwardDeliveryData'] = array(array(
+                        'PayerType'        => 'Recipient',
+                        'CargoType'        => 'Money',
+                        'RedeliveryString' => $moneyback
+                    )
+                    );
+                } else {
+                    if ($back == 'NonCash') {
+                        $params['BackwardDeliveryData'] = array(array(
+                            'PayerType'        => 'Recipient',
+                            'CargoType'        => 'Money',
+                            'PaymentMethod'    => 'NonCash',
+                            'RedeliveryString' => $moneyback
+                        )
+                        );
+                    }
+                }
+            }
         }
 
 
@@ -615,8 +631,8 @@ class GIList extends \App\Pages\Base
             $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
             $recipient['CityRecipient'] = $this->nppan->npform->baycity->getValue();
             $recipient['RecipientsPhone'] = $this->nppan->npform->baytel->getValue();
-       //     $recipient['Region'] = $this->nppan->npform->bayarea->getValue();
-        //    $recipient['Warehouse'] = $this->nppan->npform->baypoint->getValue();
+            //     $recipient['Region'] = $this->nppan->npform->bayarea->getValue();
+            //    $recipient['Warehouse'] = $this->nppan->npform->baypoint->getValue();
             $recipient['RecipientType'] = $result['data'][0]['CounterpartyType'];
             $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getValue();
 
@@ -649,7 +665,7 @@ class GIList extends \App\Pages\Base
 
     }
 
-   
+
 }
 
 /**

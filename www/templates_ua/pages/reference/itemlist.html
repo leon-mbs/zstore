@@ -9,7 +9,7 @@
 <div class="row">
 
     <div class="col-12 col-md-12 col-xl-10" zippy="itemtable">
-        <h3>Довідник товарів
+        <h3>Довідник номенклатури
             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                data-toggle="popover"
                data-html="true" data-placement="bottom" data-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
@@ -65,7 +65,7 @@
             <tr zippy="itemlist">
                 {{#useimages}}
                 <td>
-                    <a zippy="imagelistitem" data-type="image" data-toggle="lightbox" data-gallery="thumb"> <img
+                    <a zippy="imagelistitem" data-type="image" data-toggle="lightbox"  > <img
                             style="float:left; width:64px"></a>
 
                 </td>
@@ -102,10 +102,12 @@
     </div>
 
 
-    <div class="col-12 col-md-8 col-xl-6">
+   <div class="col-12  ">
         <form zippy="itemdetail" enctype="multipart/form-data">
-            <h4>Редагування товару </h4>
-            <div class="form-group row">
+            <h4>Редагування   </h4>
+       <div class="row">
+       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+           <div class="form-group row">
                 <label class="col-5 col-form-label" for="editname">Найменування</label>
                 <div class="col-7">
                     <input class="form-control" zippy="editname"/>
@@ -158,13 +160,7 @@
                     <input class="form-control" zippy="editbarcode"/>
                 </div>
             </div>
-            <div class="form-group row">
-                <label class="col-5 col-form-label" for="editmsr">Од. виміру</label>
-                <div class="col-7">
-                    <input class="form-control" zippy="editmsr"/>
-                </div>
-            </div>
-            <div class="form-group row">
+             <div class="form-group row">
                 <label class="col-5 col-form-label" for="editcode">Тип ТМЦ</label>
                 <div class="col-7">
                     <select class="form-control" zippy="edittype">
@@ -189,13 +185,7 @@
                     <input class="form-control" zippy="editcell"/>
                 </div>
             </div>
-            <div class="form-group row">
-                <label class="col-5 col-form-label" for="editweight">Вага, кг.</label>
-                <div class="col-7">
-                    <input class="form-control" zippy="editweight" pattern="[0-9\.]+"/>
-                </div>
-            </div>
-            <div class="form-group row">
+             <div class="form-group row">
                 <label class="col-5 col-form-label" for="editmanufacturer">Бренд, виробник (краiна-виробник) </label>
                 <div class="col-7">
                     <input list="manlist" class="form-control" zippy="editmanufacturer"/>
@@ -232,15 +222,75 @@
 
 
             {{/usesnumber}}
-            <div class="form-check">
-                <input zippy="editpricelist" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="editpricelist">Показувати в прайсі</label>
-            </div>
+                <div class="form-check">
+                    <input zippy="editnoprice" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editnoprice">Не показувати в прайсi</label>
+                </div>
+               <div class="form-check">
+                    <input zippy="editnoshop" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editnoshop">Не показувати в онлайн-каталозi</label>
+                </div>
+               <div class="form-check">
+                    <input zippy="editautooutcome" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editautooutcome">Автоматическое  списание комплекта</label> 
+                          <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="Списання складових частин у виробництво при оприбуткуванні готової продукції.
+                            Підходить для короткого циклу виробництва наприклад в громадському харчуванні"></i>
+                                     
+                </div>
+               <div class="form-check">
+                    <input zippy="editautoincome" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editautoincome">Автоматическое оприходование при  продаже</label>
+                          <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="Оприбуткування готової продукції на склад перед продажем (списанням зі складу).
+                            Підходить для позаказного виробництва без необхідності оприбуткувати окремим документом"></i>
+                    
+                    
+                </div>
+                
             <div class="form-check">
                 <input zippy="editdisabled" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="editdisabled">Більше не використовується</label>
             </div>
-            {{#useimages}}
+
+           
+            </div>
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="form-group row">
+                <label class="col-5 col-form-label" for="editmsr">Од. виміру</label>
+                <div class="col-7">
+                    <input class="form-control" zippy="editmsr"/>
+                </div>
+            </div>
+  
+             <div class="form-group row">
+                <label class="col-5 col-form-label" for="editweight">Вага, кг.</label>
+                <div class="col-7">
+                    <input class="form-control" zippy="editweight" pattern="[0-9\.]+"/>
+                </div>
+             </div>
+               <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editmaxsize">Максимальний габарит, см.</label>
+                    <div class="col-7">
+                        <input class="form-control" zippy="editmaxsize" pattern="[0-9\.]+"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editvolume">Об'ем, л.</label>
+                    <div class="col-7">
+                        <input class="form-control" zippy="editvolume" pattern="[0-9\.]+"/>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editcustomsize">Параметр для покупця (об'ем, вага).</label>
+                    <div class="col-7">
+                        <input class="form-control" zippy="editcustomsize"   />
+                        <small>Наприклад  для  меню  в  кафе (300 гр, 250 мл...)</small>
+                    </div>
+                </div>   
+     
+                    {{#useimages}}
             <div class="form-group row">
                 <label class="col-5 col-form-label">Зображення</label>
 
@@ -252,6 +302,7 @@
                         <label class="form-check-label" data-label="editdelimage" for="editdelimage">Видалити
                             зображення</label>
                     </div>
+                     <small>Зображення повинно бути квадратним інакше буде обрізано</small>
 
                 </div>
             </div>
@@ -262,13 +313,18 @@
                 <div class="col-7">
                     <textarea class="form-control" zippy="editdescription"></textarea>
                 </div>
+            </div>       
             </div>
 
+            <div class="col-12  ">
+ 
             <div class="form-group">
                 <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
                 <input zippy="cancel" type="button" value="Скасувати" class="btn btn-light  "> 
             </div>
-        </form>
+                </div>
+            </div>
+                </form>
 
     </div>
 </div>

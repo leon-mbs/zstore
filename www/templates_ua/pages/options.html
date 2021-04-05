@@ -9,7 +9,8 @@
         <div class="card">
             <div class="card-body">
                 <h4>Загальнi налаштування</h4>
-
+                 <small>Після зміни налаштувань слід перелогінитись</small>
+ 
                 <form zippy="common">
                     <div class="form-group">
                         <label for="shopname">Назва сайту </label>
@@ -164,6 +165,18 @@
                         <label class="form-check-label" for="numberttn">Кiлька вiдправок на одне замовлення</label>
                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                            title=" Можливiсть  створити кiлька  накладних на  одне  замовлення. Але  якщо ввiмкнено - не  виконуется перевiрка наявностi ТТН та  автоматичноi  змiни  статуса замовленя по  ТТН "></i>
+                    </div>
+                                 <div class="form-check">
+                        <input zippy="usecattree" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="usecattree">Иерархiя категорiй ТМЦ </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title=" Можливість вибудовувати деревоподібну ієрархію категорій. має сенс якщо передбачається використання в онлайн-каталозі   "></i>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="usemobileprinter">Відкривати друк документа в новій вкладці  </label>
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           title="Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділиться    "></i>
                     </div>
 
                     <div class="form-group  "><br>

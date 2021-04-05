@@ -5,11 +5,11 @@ namespace App\Modules\Shop\Pages;
 use App\Application as App;
 use App\Entity\Item;
 use App\Modules\Shop\Entity\Product;
-use App\Modules\Shop\Entity\ProductGroup;
-use App\Modules\Shop\Entity\Manufacturer;
+ 
+use \App\Entity\Category;
 
 use App\System;
-use ZCL\BT\Tree;
+ 
 use Zippy\Binding\PropertyBinding as PB;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
@@ -26,10 +26,12 @@ use Zippy\Html\Panel;
 class ProductList extends \App\Pages\Base
 {
 
-    private $rootgroup, $product;
+    private   $_item;
     private             $store = "";
     private             $op;
-    public              $group = null, $attrlist = array(), $imglist = array();
+    public                $attrlist = array(), $imglist = array();
+    public $group = null  ;
+    public   $_grouplist = array()  ;    
 
     public function __construct() {
         parent::__construct();
@@ -46,46 +48,52 @@ class ProductList extends \App\Pages\Base
         }
 
 
-        $tree = $this->add(new Tree("tree"));
-        $tree->onSelectNode($this, "onTree");
+        $clist =  Category::find(" cat_id in(select cat_id from items where disabled <>1)  and  detail not  like '%<noshop>1</noshop>%' " ) ;
+        
+        $this->_grouplist =  Category::findFullData($clist) ;
+       
+        usort($this->_grouplist,function($a,$b){ return $a->full_name > $b->full_name; }) ;
+        
+        $fc = new Category();
+        $fc->cat_id=0;
+        $fc->cat_name=  \App\Helper::l("allcategory");
+        $fc->full_name= \App\Helper::l("allcategory");
+        
+        $first=array($fc) ;
+        
+        
+        $this->_grouplist = array_merge($first,$this->_grouplist);
+        $this->add(new DataView('grouplist', new ArrayDataSource($this,'_grouplist'), $this, 'OnGroupRow'));
+        $this->grouplist->setSelectedClass('table-success');
+        $this->grouplist->Reload();
 
-        $this->ReloadTree();
 
         $this->add(new Panel('listpanel'));
         $this->listpanel->add(new Form('searchform'))->onSubmit($this, 'searchformOnSubmit');
         $this->listpanel->searchform->add(new TextInput('skeyword'));
-        $this->listpanel->searchform->add(new CheckBox('sstatus'));
-        $this->listpanel->searchform->add(new DropDownChoice('smanuf', Manufacturer::findArray('manufacturername', '', 'manufacturername')));
+        
+        $this->listpanel->searchform->add(new DropDownChoice('smanuf', \App\Modules\Shop\Helper::getManufacturers()));
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
-        $this->listpanel->add(new Form('sortform'));
-        $this->listpanel->sortform->add(new DropDownChoice('sorting'))->onChange($this, 'sortingOnChange');
+        
+        
         $this->listpanel->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
         $this->listpanel->add(new DataView('plist', new ProductDataSource($this), $this, 'plistOnRow'));
         $this->listpanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->listpanel->plist));
         $this->listpanel->plist->setPageSize(15);
-
+        $this->listpanel->setVisible(false); 
         $this->add(new Panel('editpanel'))->setVisible(false);
 
 
         $editform = $this->editpanel->add(new Form('editform'));
-        $editform->add(new AutocompleteTextInput('eitem'))->onText($this, 'OnAutoItem');
-        $editform->eitem->onChange($this, 'onChangeItem');
-        $editform->add(new TextInput('ename'));
-        $editform->add(new TextInput('ecode'));
-        $editform->add(new TextInput('eprice', 0));
-
-
-        $editform->add(new TextArea('edescshort'));
+        $editform->add(new TextInput('esef'));
+        $editform->add(new TextInput('actionprice'));
+ 
         $editform->add(new TextArea('edescdet'));
-
-        $editform->add(new DropDownChoice('emanuf', Manufacturer::findArray('manufacturername', '', 'manufacturername')));
-        $editform->add(new DropDownChoice('egroup', ProductGroup::findArray('groupname', 'group_id not in (select parent_id from shop_productgroups)', 'groupname')));
-
-
+   
         $editform->add(new DataView('attrlist', new ArrayDataSource(new PB($this, 'attrlist')), $this, 'attrlistOnRow'));
-        $editform->add(new CheckBox('edisabled'));
+        
         $editform->add(new ClickLink('bcancel'))->onClick($this, 'bcancelOnClick');
-        $editform->add(new ClickLink('bdelete'))->onClick($this, 'bdeleteOnClick');
+        
 
         $editform->onSubmit($this, 'onSubmitForm');
 
@@ -100,135 +108,48 @@ class ProductList extends \App\Pages\Base
         $this->editimagepanel->add(new DataView('imagelist', new ArrayDataSource(new PB($this, 'imglist')), $this, 'imglistOnRow'));
     }
 
-    //загрузить дерево
-    public function ReloadTree() {
+ 
 
-        $this->tree->removeNodes();
-
-        $this->rootgroup = new ProductGroup();
-        $this->rootgroup->group_id = PHP_INT_MAX;
-        $this->rootgroup->groupname = "//";
-
-        $root = new \ZCL\BT\TreeNode("//", PHP_INT_MAX);
-        $this->tree->addNode($root);
-
-        $itemlist = ProductGroup::find("", "mpath,groupname");
-        $nodelist = array();
-
-        foreach ($itemlist as $item) {
-            $node = new \ZCL\BT\TreeNode($item->groupname, $item->group_id);
-            $parentnode = @$nodelist[$item->parent_id];
-            if ($item->parent_id == 0) {
-                $parentnode = $root;
-            }
-
-            $this->tree->addNode($node, $parentnode);
-
-            $nodelist[$item->group_id] = $node;
-        }
+    public  function    OnGroupRow($row){
+        $group = $row->getDataItem() ;
+        $row->add(new  ClickLink('groupname',$this,'onGroup'))->setValue($group->full_name) ;
     }
-
-    //клик по  узлу
-    public function onTree($sender, $id) {
-        $this->listpanel->addnew->setVisible(false);
-        $this->editpanel->setVisible(false);
-
-        $nodeid = $this->tree->selectedNodeId();
-        if ($nodeid == -1) {
-            $this->group = null;
-            return;
-        }
-        if ($nodeid == -2) {
-            $this->group = $this->rootgroup;
-            return;
-        }
-        $this->group = ProductGroup::load($nodeid);
-        if ($this->group instanceof ProductGroup) {
-            $ch = $this->group->getChildren();
-            //добавляем  только для  конечных групп
-            $this->listpanel->addnew->setVisible(count($ch) == 0); // Добавляем  товар если  нет  дочерних груп у текущей]   
-        }
+    
+    public function onGroup($sender ) {
+        $this->group = $sender->getOwner()->getDataItem();
+        $this->grouplist->setSelectedRow($sender->getOwner());
+      
+        $this->grouplist->Reload(false);        
+        $this->editpanel->setVisible(false);     
+        $this->listpanel->setVisible(true);     
         $this->listpanel->plist->Reload();
-        $this->attrlist = array();
-
-        $this->listpanel->setVisible(true);
-    }
-
+    }   
+    
+    
     public function searchformOnSubmit($sender) {
 
         $this->listpanel->plist->Reload();
     }
 
-    public function sortingOnChange($sender) {
-        $this->listpanel->plist->Reload();
-    }
 
     public function onSClear($sender) {
         $this->listpanel->searchform->clean();
         $this->listpanel->plist->Reload();
     }
 
-//новый
-    public function addnewOnClick($sender) {
-
-        $this->product = new Product();
-        $this->product->createdon = time();
-        $this->product->group_id = $this->group->group_id;
-        $this->editpanel->setVisible(true);
-        $this->editpanel->editform->eitem->setKey(0);
-        $this->editpanel->editform->eitem->setText('');
-        $this->editpanel->editform->eitem->setAttribute('readonly', null);
-        $this->listpanel->setVisible(false);
-        $this->attrlist = $this->product->getAttrList();
-        $this->editpanel->editform->attrlist->Reload();
-        $this->editpanel->editform->clean();
-        $this->editpanel->editform->bdelete->setVisible(false);
-        $this->editpanel->editform->egroup->setValue($this->group->group_id);
-    }
-
-    //выбран товар 
-    public function onChangeItem($sender) {
-
-        $item = Item::load($sender->getKey());
-        $this->product->productname = $item->itemname;
-        $this->product->item_code = $item->item_code;
-
-        $this->editpanel->editform->ename->setText($this->product->productname);
-        $this->editpanel->editform->ecode->setText($this->product->item_code);
-        $this->editpanel->editform->eprice->setText($item->getPrice($this->op['defpricetype'], $this->op['defstore']));
-
-        //подтягиваем бренд если  совпадает имя
-        if (strlen($item->manufacturer) > 0) {
-            $m = Manufacturer::getFirst('manufacturername =' . Manufacturer::qstr($item->manufacturer));
-            if ($m instanceof Manufacturer) {
-                $this->editpanel->editform->emanuf->setValue($m->manufacturer_id);
-            }
-        }
-
-
-    }
-
-    public function OnAutoItem($sender) {
-
-        $text = Item::qstr('%' . trim($sender->getText()) . '%');
-        $code = Item::qstr(trim($sender->getText()));
-        $list = Item::findArray("itemname", "  disabled <> 1  and (itemname like {$text} or item_code =  {$code} or bar_code =  {$code} ) ");
-
-        return $list;
-    }
+ 
 
 //строка товара
     public function plistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new ClickLink("lname", $this, "lnameOnClick"))->setValue($item->productname);
+        $row->add(new ClickLink("lname", $this, "lnameOnClick"))->setValue($item->itemname);
         $row->add(new ClickLink("imedit", $this, "imeditOnClick"));
-        // $row->add(new Label("lmanuf", $item->manufacturername));
-        $row->add(new Label("ldescshort", $item->description));
+    
         $row->add(new Label("lcode", $item->item_code));
-        $row->add(new Label("lprice", $item->price));
-        //$qty=\App\Entity\Item::getQuantity($item->item_id) ;
-        $row->add(new Label("lcnt", $item->getQuantity($this->op['defstore'])));
+        $row->add(new Label("lprice", \App\Helper::fa($item->getPriceFinal())));
+        
+        $row->add(new Label("lcnt", \App\Helper::fqty($item->getQuantity())));
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadshopimage.php?id=' . $item->image_id . '&t=t');
     }
 
@@ -239,63 +160,43 @@ class ProductList extends \App\Pages\Base
 
         $this->editpanel->setVisible(true);
         $this->listpanel->setVisible(false);
-        $this->product = $sender->getOwner()->getDataItem();
-        $this->editpanel->editform->eitem->setAttribute('readonly', 'readonly');
+        $this->_item = $sender->getOwner()->getDataItem();
+      
+        $this->editpanel->editform->esef->setText($this->_item->sef);
+        $this->editpanel->editform->actionprice->setText($this->_item->productdata->actionprice);
 
-        $this->editpanel->editform->ename->setText($this->product->productname);
+        
+      
+        $this->editpanel->editform->edescdet->setText($this->_item->getDescription());
 
-        $item = Item::load($this->product->item_id);
-        $this->editpanel->editform->eitem->setText($item->itemname);
-        $this->editpanel->editform->eitem->setKey($this->product->item_id);
-
-        $this->editpanel->editform->ecode->setText($this->product->item_code);
-        $this->editpanel->editform->edescshort->setText($this->product->description);
-        $this->editpanel->editform->edescdet->setText($this->product->fulldescription);
-
-        $this->editpanel->editform->eprice->setText($this->product->price);
-        $this->editpanel->editform->emanuf->setValue($this->product->manufacturer_id);
-
-        $this->editpanel->editform->bdelete->setVisible(true);
-
-        $this->editpanel->editform->edisabled->setChecked($this->product->deleted > 0);
-
-        $this->attrlist = $this->product->getAttrList();
+      
+        
+        $this->attrlist = $this->_item->getAttrList();
         $this->editpanel->editform->attrlist->Reload();
-        $this->editpanel->editform->egroup->setValue($this->group->group_id);
+ 
     }
 
     public function onSubmitForm($sender) {
-        $this->product->manufacturer_id = $sender->emanuf->getValue();
-
-        $this->product->productname = $sender->ename->getText();
-        $this->product->item_id = $sender->eitem->getKey();
-        $this->product->item_code = $sender->ecode->getText();
-        $this->product->group_id = $sender->egroup->getValue();
-        $this->product->description = $sender->edescshort->getText();
-        $this->product->fulldescription = $sender->edescdet->getText();
-        $this->product->price = $sender->eprice->getText();
-        $this->product->chprice = "up";
-
-        $this->product->deleted = $sender->edisabled->isChecked();
-        if (strlen($this->product->productname) == 0) {
-            $this->setError('entername');
-            return;
-        }
-
-
-        $this->product->attributevalues = array();
+    
+        $this->_item->sef = $sender->esef->getText();
+   
+        $this->_item->productdata->desc = $sender->edescdet->getText();
+        $this->_item->productdata->actionprice = $sender->actionprice->getText();
+    
+        $this->_item->productdata->attributevalues = array();
 
 
         $rows = $sender->attrlist->getChildComponents();
         foreach ($rows as $r) {
             $a = $r->getDataItem();
-            $this->product->attributevalues[$a->attribute_id] = "" . $a->attributevalue;
+            
+            $this->_item->productdata->attributevalues[$a->attribute_id] = "" . $a->attributevalue;
             if ($a->nodata == 1) {
-                $this->product->attributevalues[$a->attribute_id] = '';
+                $this->_item->productdata->attributevalues[$a->attribute_id] = '';
             }
         }
 
-        $this->product->save();
+        $this->_item->save();
         $this->listpanel->plist->Reload();
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
@@ -314,20 +215,10 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->setVisible(true);
     }
 
-    public function bdeleteOnClick($sender) {
-
-        $del = Product::delete($this->product->product_id);
-        if (strlen($del) > 0) {
-            $this->setError($del);
-            return;
-        }
-        $this->listpanel->plist->Reload();
-        $this->editpanel->setVisible(false);
-        $this->listpanel->setVisible(true);
-    }
+ 
 
     public function imeditOnClick($sender) {
-        $this->product = $sender->getOwner()->getDataItem();
+        $this->_item = $sender->getOwner()->getDataItem();
         $this->listpanel->setVisible(false);
         $this->editimagepanel->setVisible(true);
         $this->updateImages();
@@ -354,23 +245,30 @@ class ProductList extends \App\Pages\Base
                 $this->setError('toobigimage');
                 return;
             }
-            $r = ((double)$imagedata[0]) / $imagedata[1];
-            if ($r > 1.1 || $r < 0.9) {
-                $this->setError('squareimage');
-                return;
-            }
-
-            $image = new \App\Modules\Shop\Entity\Image();
+          
+  
+            $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
 
-            $thumb = new \App\Thumb($file['tmp_name']);
+            if($imagedata[0] != $imagedata[1] ) {
+              $thumb = new \App\Thumb($file['tmp_name']);
+              if($imagedata[0] > $imagedata[1] ) {
+                  $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+              }
+              if($imagedata[0] < $imagedata[1] ) {
+                  $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+              }
+              $image->content = $thumb->getImageAsString();
+ 
+            }
+  
             $thumb->resize(256, 256);
             $image->thumb = $thumb->getImageAsString();
 
             $image->save();
-            $this->product->images[] = $image->image_id;
-            $this->product->save();
+            $this->_item->productdata->images[] = $image->image_id;
+            $this->_item->save();
             $sender->clean();
 
             $this->updateImages();
@@ -380,29 +278,22 @@ class ProductList extends \App\Pages\Base
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
         $row->add(new \Zippy\html\Image("imgitem"))->setUrl('/loadshopimage.php?id=' . $image->image_id . "&t=t");
-        $row->add(new ClickLink("icover", $this, "icoverOnClick"))->setVisible($image->image_id != $this->product->image_id);
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }
-
-    public function icoverOnClick($sender) {
-        $image = $sender->getOwner()->getDataItem();
-        $this->product->image_id = $image->image_id;
-        $this->product->save();
-        $this->listpanel->plist->Reload();
-        $this->updateImages();
-    }
-
+ 
     public function idelOnClick($sender) {
         $image = $sender->getOwner()->getDataItem();
-        $this->product->images = array_diff($this->product->images, array($image->image_id));
-        $this->product->save();
+        $this->_item->productdata->images = array_diff($this->_item->productdata->images, array($image->image_id));
+  
+        $this->_item->save();
+        \App\Entity\Image::delete($image->image_id) ;
         $this->updateImages();
     }
 
     public function updateImages() {
         $this->imglist = array();
 
-        foreach ($this->product->images as $id) {
+        foreach ($this->_item->getImages() as $id) {
             $this->imglist[] = \App\Entity\Image::load($id);
         }
         $this->editimagepanel->imagelist->Reload();
@@ -423,27 +314,25 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "1=1 ";
-        if ($this->page->group instanceof ProductGroup) {
-            $gr = sprintf('%08s', $this->page->group->group_id);
+        $where = "disabled<>1  ";
+     
+        if ($this->page->group instanceof Category) {
+           
 
-            $where .= " and  group_id in (select group_id from shop_productgroups where mpath like '%{$gr}%' ) ";
+            $where .= " and  cat_id =  " . $this->page->group->cat_id;
         }
-
+      
         $st = $this->page->listpanel->searchform->skeyword->getText();
         $sm = $this->page->listpanel->searchform->smanuf->getValue();
-        if ($sm > 0) {
-            $where .= " and manufacturer_id  =  " . $sm;
+      
+        if (strlen($sm) > 1 && $sm != -1) {
+            $where .= " and manufacturer =  " . $conn->qstr($sm);
         }
         if (strlen($st) > 0) {
-            $where .= " and (productname like   " . $conn->qstr("%{$st}%") . " or item_code = " . $conn->qstr($st) . ") ";
+            $where .= " and   item_code = " . $conn->qstr($st)  ;
         }
-        if ($this->page->listpanel->searchform->sstatus->isChecked()) {
-            $where .= " and deleted = 1  ";
-        } else {
-            $where .= " and deleted = 0  ";
-        }
-
+          
+     
 
         return $where;
     }
@@ -454,21 +343,9 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
-        $order = "productname ";
-        $o = $this->page->listpanel->sortform->sorting->getValue();
-        if ($o == 1) {
-            $order = "price asc";
-        }
-        if ($o == 2) {
-            $order = "price desc";
-        }
-        if ($o == 3) {
-            $order = "qty asc";
-        }
-        if ($o == 4) {
-            $order = "qty desc";
-        }
-
+        $order = "itemname ";
+ 
+       
         return Product::find($this->getWhere(), $order, $count, $start);
     }
 
@@ -492,25 +369,36 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
 
     public function getContent($attributes) {
         $ret = "<td>{$this->productattribute->attributename}</td><td>";
-
+        $nodata = \App\Helper::l("shopattrnodata") ;
         //'Есть/Нет'
         if ($this->productattribute->attributetype == 1) {
+            $yes = \App\Helper::l("shopattryes") ;
+            $no = \App\Helper::l("shopattrno") ;
 
-            if ($this->productattribute->value == 1) {
-                $checked = ' checked="on"';
-            }
-            $ret .= "  <input type=\"checkbox\"  name=\"{$this->id}\" {$checked}   /> ";
+           
+            $s1=($this->productattribute->value == -1  || strlen($this->productattribute->value)==0) ? 'selected="on"' :'';
+            $s2=$this->productattribute->value ==  '0' ? 'selected="on"' :'';
+            $s3=$this->productattribute->value ==  1 ? 'selected="on"' :'';
+            
+              
+            $ret .= " <select  name=\"{$this->id}\" class=\"form-control\" >
+                         <option value=\"-1\" {$s1} >{$nodata}</option> 
+                         <option value=\"0\" {$s2} >{$no}</option> 
+                         <option value=\"1\" {$s3} >{$yes}</option>";
+               
+            $ret .= $sel . '</select> ';
+           
         }
         //'Число'
         if ($this->productattribute->attributetype == 2) {
 
-            $ret .= " <input style='width:100px;' name=\"{$this->id}\" type=\"text\" value=\"{$this->productattribute->value}\"  class=\"form-control\"  /> ";
+            $ret .= "  pattern='[0-9\.]+'  <input style='width:100px;' name=\"{$this->id}\" type=\"text\" value=\"{$this->productattribute->value}\"  class=\"form-control\"  /> ";
             $ret .= "";
         }
         //'Список'
         if ($this->productattribute->attributetype == 3) {
             $sel = '';
-            $ret .= " <select style='width:250px;' name=\"{$this->id}\" class=\"form-control\" ><option value=\"-1\">Не выбран</option>";
+            $ret .= " <select   name=\"{$this->id}\" class=\"form-control\" ><option value=\"-1\">{$nodata}</option>";
             $list = explode(',', $this->productattribute->valueslist);
             foreach ($list as $key => $value) {
                 $value = trim($value);
@@ -546,28 +434,24 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
         //'Строка'
         if ($this->productattribute->attributetype == 5) {
 
-            $ret .= "<textarea style='width:200px;height:60px;' name=\"{$this->id}\" type=\"text\"      class=\"form-control\" >{$this->productattribute->value}</textarea> ";
+            $ret .= "<input   name=\"{$this->id}\" type=\"text\"      class=\"form-control\" value=\"{$this->productattribute->value}\"  ";
         }
-        if ($this->productattribute->nodata == 1) {
-            $checked = ' checked="on"';
-        }
-        $ret .= "</td><td> <input {$checked}    type=\"checkbox\" name=\"dis{$this->id}\">  Н/Д  
-                                    
-                     </td> ";
-
+     
+        $ret .= "</td>";
         return $ret;
     }
 
     //Вынимаем данные формы  после  сабмита
     public function getRequestData() {
 
-        if ($this->productattribute->attributetype == 1) {
-            $this->productattribute->attributevalue = isset($_POST[$this->id]) ? 1 : 0;
-        };
         if ($this->productattribute->attributetype == 2 || $this->productattribute->attributetype == 5) {
             $this->productattribute->attributevalue = $_POST[$this->id];
         }
-        if ($this->productattribute->attributetype == 3) {
+        if ($this->productattribute->attributetype == 1  ) {
+       
+            $this->productattribute->attributevalue =  $_POST[$this->id] ;
+        }
+        if (  $this->productattribute->attributetype == 3) {
             $list = explode(',', $this->productattribute->valueslist);
 
             $this->productattribute->attributevalue = $list[$_POST[$this->id]];
@@ -585,11 +469,8 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
             }
             $this->productattribute->attributevalue = implode(',', $values);
         };
-        $this->productattribute->nodata = 0;
-        if (isset($_POST['dis' . $this->id])) {
-            $this->productattribute->nodata = 1;
-            $this->productattribute->attributevalue = '';
-        }
+       
+         
     }
 
     public function clean() {

@@ -5,7 +5,7 @@ namespace App\Entity\Doc;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ приходная  накладая
+ * Класс-сущность  документ  заявка  поставщику
  *
  */
 class OrderCust extends Document
@@ -25,8 +25,8 @@ class OrderCust extends Document
                               "quantity" => H::fqty($item->quantity),
                               "price"    => H::fa($item->price),
                               "msr"      => $item->msr,
-                                  "desc"        => $item->desc,
-                             "amount"   => H::fa($item->quantity * $item->price)
+                              "desc"     => $item->desc,
+                              "amount"   => H::fa($item->quantity * $item->price)
             );
         }
 

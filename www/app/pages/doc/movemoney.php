@@ -33,7 +33,7 @@ class MoveMoney extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-     
+
         $this->docform->add(new DropDownChoice('paymentfrom', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new DropDownChoice('paymentto', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
@@ -47,7 +47,7 @@ class MoveMoney extends \App\Pages\Base
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
-           
+
             $this->docform->paymentfrom->setValue($this->_doc->headerdata['paymentfrom']);
             $this->docform->paymentto->setValue($this->_doc->headerdata['paymentto']);
             $this->docform->notes->setText($this->_doc->notes);
@@ -61,7 +61,7 @@ class MoveMoney extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
-      
+
     }
 
     public function savedocOnClick($sender) {
@@ -74,7 +74,7 @@ class MoveMoney extends \App\Pages\Base
         $this->_doc->headerdata['paymenttoname'] = $this->docform->paymentto->getValueName();
         $this->_doc->headerdata['paymentfrom'] = $this->docform->paymentfrom->getValue();
         $this->_doc->headerdata['paymentfromname'] = $this->docform->paymentfrom->getValueName();
-  
+
         $this->_doc->amount = H::fa($this->docform->amount->getText());
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -137,12 +137,12 @@ class MoveMoney extends \App\Pages\Base
         if (($this->_doc->amount > 0) == false) {
             $this->setError("noentersum");
         }
-      
-        if($this->_doc->headerdata['paymentto'] == 0 ||  $this->_doc->headerdata['paymentfrom']==0) {
-           $this->setError("noselpayment"); 
+
+        if ($this->_doc->headerdata['paymentto'] == 0 || $this->_doc->headerdata['paymentfrom'] == 0) {
+            $this->setError("noselpayment");
         }
-        if($this->_doc->headerdata['paymentto'] == $this->_doc->headerdata['paymentfrom']) {
-           $this->setError("paymentseq"); 
+        if ($this->_doc->headerdata['paymentto'] == $this->_doc->headerdata['paymentfrom']) {
+            $this->setError("paymentseq");
         }
 
         return !$this->isError();
@@ -152,8 +152,5 @@ class MoveMoney extends \App\Pages\Base
         App::RedirectBack();
     }
 
- 
-
-  
 
 }

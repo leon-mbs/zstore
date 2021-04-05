@@ -8,7 +8,7 @@
     {{#winfo}}
     
     <div class="row">
-          <div class="col-12 col-sm-6 col-md-3 col-xl-2 ">
+          <div class="col-12 col-sm-6 col-lg-3 col-xl-2 ">
             <div class="info-box">
               <span class="info-box-icon bg-info elevation-1"><i class="fa fa-file-invoice "></i></span>
 
@@ -24,22 +24,56 @@
             <!-- /.info-box -->
           </div>
        
-         <div class="col-12 col-sm-6 col-md-3  ">
+         <div class="col-12 col-sm-6 col-lg-3  ">
             <div class="info-box">
               <span class="info-box-icon bg-success elevation-1"><i class="fa  fa-pallet"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Товаров на  складе</span>
+                <span class="info-box-text">ТМЦ на складе</span>
                 <span class="info-box-number">
                   На сумму  {{biitemscnt}}
   
                    
                 </span>
               </div>
-              <!-- /.info-box-content -->
+           
             </div>
-            <!-- /.info-box -->
+             <!-- /.info-box -->
           </div>
+         <div class="col-12 col-sm-6 col-lg-2 ">
+            <div class="info-box">
+              <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-out-alt"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">К оплате</span>
+                <span class="info-box-number">
+                  На сумму  {{bicredit}}
+  
+                   
+                </span>
+              </div>
+           
+            </div>
+             <!-- /.info-box -->
+          </div>
+         <div class="col-12 col-sm-6 col-lg-2">
+            <div class="info-box">
+              <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-in-alt "></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Ожидается  оплата</span>
+                <span class="info-box-number">
+                  На сумму  {{bidebet}}
+  
+                   
+                </span>
+              </div>
+           
+            </div>
+             <!-- /.info-box -->
+          </div>
+          
+          
     </div>
     {{/winfo}}
     

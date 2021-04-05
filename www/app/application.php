@@ -115,6 +115,7 @@ class Application extends \Zippy\WebApplication
             "aboutus"  => "\\App\\Modules\\Shop\\Pages\\AboutUs",
             "delivery" => "\\App\\Modules\\Shop\\Pages\\Delivery",
             "contact"  => "\\App\\Modules\\Shop\\Pages\\Contact",
+            "news"     => "\\App\\Modules\\Shop\\Pages\\News",
             "scat"     => "\\App\\Modules\\Shop\\Pages\\Main",
             "pcat"     => "\\App\\Modules\\Shop\\Pages\\Catalog",
             "project"  => "\\App\\Modules\\Issue\\Pages\\ProjectList",
@@ -134,9 +135,18 @@ class Application extends \Zippy\WebApplication
                     }
                 }
             }
+            return;
         }
         if (strlen($pages[$uri]) > 0) {
             self::$app->LoadPage($pages[$uri]);
+            return;
+        }
+
+
+        $prod = \App\Modules\Shop\Entity\Product::loadSEF($uri);
+        if ($prod instanceof \App\Entity\Item) {
+            self::$app->LoadPage($pages['sp'], $prod->item_id);
+            return;
         }
     }
 

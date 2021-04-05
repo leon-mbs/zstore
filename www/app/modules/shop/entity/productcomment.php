@@ -15,8 +15,8 @@ class ProductComment extends \ZCL\DB\Entity
         $this->comment_id = 0;
     }
 
-    public static function findByProduct($product_id) {
-        return ProductComment::find(' product_id=' . $product_id, 'comment_id desc');
+    public static function findByProduct($item_id) {
+        return ProductComment::find(' item_id=' . $item_id, 'comment_id desc');
     }
 
     protected function afterLoad() {

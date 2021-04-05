@@ -19,9 +19,8 @@ class Customer extends \ZCL\DB\Entity
 
     const TYPE_BAYER  = 1; //покупатель
     const TYPE_SELLER = 2; //поставщик
- 
-    
-    
+
+
     protected function init() {
         $this->customer_id = 0;
         $this->customer_name = '';
@@ -43,9 +42,9 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<isholding>{$this->isholding}</isholding>";
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
-     
+
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
-        
+
         $this->detail .= "<holding_name><![CDATA[{$this->holding_name}]]></holding_name>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
@@ -66,15 +65,15 @@ class Customer extends \ZCL\DB\Entity
         $this->isholding = (int)($xml->isholding[0]);
         $this->user_id = (int)($xml->user_id[0]);
         $this->fromlead = (int)($xml->fromlead[0]);
-       
+
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);
         $this->address = (string)($xml->address[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
-  
-       $this->createdon = strtotime($this->createdon);
-  
+
+        $this->createdon = strtotime($this->createdon);
+
         parent::afterLoad();
     }
 
@@ -150,36 +149,44 @@ class Customer extends \ZCL\DB\Entity
         return Customer::findArray("customer_name", $where, "customer_name");
     }
 
-    public  static  function getLeadSources(){
-        $options = \App\System::getOptions('common' ) ;
-        
-        if(is_array($options['leadsources'])==false)$options['leadsources'] = array();
+    public static function getLeadSources() {
+        $options = \App\System::getOptions('common');
+
+        if (is_array($options['leadsources']) == false) {
+            $options['leadsources'] = array();
+        }
 
         $list = array();
-        foreach($options['leadsources'] as $item){
-          if(strlen($item->name)==0) continue;
-          $list[$item->name] = $item->name;  
+        foreach ($options['leadsources'] as $item) {
+            if (strlen($item->name) == 0) {
+                continue;
+            }
+            $list[$item->name] = $item->name;
         }
-        
-       
-        return  $list;
+
+
+        return $list;
     }
-   
-    public  static  function getLeadStatuses(){
-        $options = \App\System::getOptions('common' ) ;
-        
-        if(is_array($options['leadstatuses'])==false)$options['leadstatuses'] = array();
+
+    public static function getLeadStatuses() {
+        $options = \App\System::getOptions('common');
+
+        if (is_array($options['leadstatuses']) == false) {
+            $options['leadstatuses'] = array();
+        }
 
         $list = array();
-        foreach($options['leadstatuses'] as $item){
-            if(strlen($item->name)==0) continue;
-            $list[$item->name] = $item->name;  
+        foreach ($options['leadstatuses'] as $item) {
+            if (strlen($item->name) == 0) {
+                continue;
+            }
+            $list[$item->name] = $item->name;
         }
-        
-       
-        return  $list;
-        
+
+
+        return $list;
+
     }
-    
-    
+
+
 }

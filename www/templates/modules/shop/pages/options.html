@@ -5,8 +5,7 @@
 <div class="row">
     <div class="col-12 col-md-6 col-lg-4  ">
         <h4>Администрирование</h4>
-        <a zippy="updateprices" class="btn btn-outline-info"> Обновить цены</a>
-        &nbsp;&nbsp;<a zippy="updatesitemap" class="btn btn-outline-info"> Обновить sitemap.xml</a>
+       <a zippy="updatesitemap" class="btn btn-outline-info"> Обновить sitemap.xml</a>
     </div>
 </div>
 
@@ -14,14 +13,22 @@
     <div class="col-12  col-sm-10 col-md-8 col-lg-6  col-xl-6  ">
         <h4>Настройка</h4>
         <form zippy="shop" enctype="multipart/form-data">
-            <div class="form-group  row">
-                <label class="col-sm-5 col-form-label" for="shopdefstore">Состав для онлайна</label>
+           <div class="form-group  row">
+                <label class="col-sm-5 col-form-label" for="shopname">Название магазина</label>
                 <div class="col-sm-7">
-                    <select class="form-control" zippy="shopdefstore">
-                        <option value='0'>Не избран</option>
-                    </select>
+                    <input required="required" class="form-control " zippy="shopname"/>
                 </div>
             </div>
+            <div class="form-group  row">
+                <label class="col-sm-5 col-form-label" for="logo">Логотип</label>
+                <div class="col-sm-7">
+                    <input type="file" class="form-control " zippy="logo"/>
+                </div>
+            </div>
+           
+            
+            
+    
             <div class="form-group  row">
                 <label class="col-sm-5 col-form-label" for="shopdefpricetype">Тип цены </label>
                 <div class="col-sm-7">
@@ -54,22 +61,31 @@
                 </div>
             </div>
 
-            <div class="form-group  row">
-                <label class="col-sm-5 col-form-label" for="logo">Логотип</label>
-                <div class="col-sm-7">
-                    <input type="file" class="form-control " zippy="logo"/>
-                </div>
-            </div>
-
+    
             <div class="form-check">
+                <input zippy="usefilter" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usefilter">Показывать  фильтр отбора </label>
+
+            </div>
+           <div class="form-check">
+                <input zippy="usefeedback" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usefeedback">Показывать отзывы </label>
+
+            </div>
+           <div class="form-check">
+                <input zippy="createnewcust" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="createnewcust">Создавать нового контрагента при заказе </label>
+                <br><small>Создавать  нового  контрагента по  номеру  телефона  или  email</small>
+            </div>
+           <div class="form-check">
                 <input zippy="uselogin" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="uselogin">Вход в каталог через страницу логина </label>
-
+                <br><small>Каталог недоступен для незалогиненого  пользователя</small>
             </div>
 
             <div class="form-group  row">
                 <div class="col-sm-4">
-                    <button class="btn btn-outline-primary" type="submit">Сохранить</button>
+                    <button class="btn btn-primary" type="submit">Сохранить</button>
                 </div>
             </div>
 
@@ -77,6 +93,7 @@
     </div>
     <div class="col-12">
         <h4>Тексты страниц</h4>
+        <small>Изображениея должны  быть  как   можно меньше  размера.</small>
     </div>
     <div class="col-12 col-lg-10 col-xl-8">
         <form zippy="texts">
@@ -95,22 +112,21 @@
                 <textarea zippy="contact" class="form-control ">
                         </textarea>
             </div>
+           <div class="form-group   ">
+                <label for="news">Новости</label>
+                <textarea zippy="news" class="form-control ">
+                        </textarea>
+            </div>
             <div class="form-group   ">
 
-                <button class="btn btn-outline-primary" type="submit">Сохранить</button>
+                <button class="btn btn-primary" type="submit">Сохранить</button>
 
             </div>
         </form>
     </div>
 
 
-    <script>    var conf = {
-        language: "ru",
-        customConfig: '/assets/js/ckeditor/config.js',
-        filebrowserBrowseUrl: '',
-        filebrowserUploadUrl: '/upload.php'
-    }
-
+    <script>    
     $(function () {
         // Summernote
 
@@ -120,7 +136,10 @@
 
             callbacks: {
                 onEnter: function (e) {
-                    e.preventDefault();
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
                 },
                 onPaste: function (e) {
 
@@ -130,13 +149,16 @@
                 }
             }
         });
-        $('#aboutus').summernote({
+        $('#contact').summernote({
             height: 400,
             lang: 'ru-RU',
 
             callbacks: {
-                onEnter: function (e) {
-                    e.preventDefault();
+                 onEnter: function (e) {
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
                 },
                 onPaste: function (e) {
 
@@ -151,8 +173,30 @@
             lang: 'ru-RU',
 
             callbacks: {
-                onEnter: function (e) {
+               onEnter: function (e) {
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
+                },
+                onPaste: function (e) {
+
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
                     e.preventDefault();
+                    document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                }
+            }
+        });
+        $('#news').summernote({
+            height: 400,
+            lang: 'ru-RU',
+
+            callbacks: {
+                onEnter: function (e) {
+                       if (e.keyCode === key.code.ENTER) {
+                        e.shiftKey = true;
+                        context.triggerEvent('enter', e);
+                    }
                 },
                 onPaste: function (e) {
 

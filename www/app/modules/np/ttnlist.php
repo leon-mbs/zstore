@@ -18,12 +18,12 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
 
 class TTNList extends \App\Pages\Base
-{  
-   public  $_doclist = array() ;
-   private  $_apikey = '' ;
-   
-   
-   public function __construct() {
+{
+    public  $_doclist = array();
+    private $_apikey  = '';
+
+
+    public function __construct() {
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'np') === false && System::getUser()->rolename != 'admins') {
@@ -34,33 +34,32 @@ class TTNList extends \App\Pages\Base
         }
 
         $modules = System::getOptions("modules");
-        $this->_apikey =  $modules['npapikey'] ;
-        $this->add(new  ClickLink('refresh',$this,'onRefresh')) ;
-    
-        $this->add(new DataView('doclist', new ArrayDataSource($this,'_doclist'), $this, 'doclistOnRow'));
-        
+        $this->_apikey = $modules['npapikey'];
+        $this->add(new  ClickLink('refresh', $this, 'onRefresh'));
+
+        $this->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
+
         $this->onRefresh($this->refresh);
-        
-   }    
-    
+
+    }
+
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('document_number', $doc->document_number));
         $row->add(new Label('ship_number', $doc->headerdata['ship_number']));
         $row->add(new Label('customer_name', $doc->customer_name));
-        $row->add(new Label('amount', H::fa($doc->amount) ));
-        $row->add(new Label('state', $doc->headerdata['sn_state'] ));
-        
-   
-        $link= "https://my.novaposhta.ua/orders/printMarking100x100/orders[]/".$doc->headerdata['ship_number']."/type/pdf/apiKey/".$this->_apikey;
+        $row->add(new Label('amount', H::fa($doc->amount)));
+        $row->add(new Label('state', $doc->headerdata['sn_state']));
+
+
+        $link = "https://my.novaposhta.ua/orders/printMarking100x100/orders[]/" . $doc->headerdata['ship_number'] . "/type/pdf/apiKey/" . $this->_apikey;
         $row->add(new BookmarkableLink('print'))->setLink($link);
-  
-    }  
-    
-    
-    
- //обновление  статусов
+
+    }
+
+
+    //обновление  статусов
     public function onRefresh($sender) {
         $this->_doclist = array();
         $api = new  \App\Modules\NP\Helper();
@@ -68,27 +67,30 @@ class TTNList extends \App\Pages\Base
         $docs = Document::find("content like '%<ship_number>%' and  meta_name = 'TTN' and state in(11,20) ");
         $tracks = array();
         foreach ($docs as $ttn) {
-           if(strlen($ttn->headerdata['ship_number'])>0) $tracks[]=$ttn->headerdata['ship_number'];
+            if (strlen($ttn->headerdata['ship_number']) > 0) {
+                $tracks[] = $ttn->headerdata['ship_number'];
+            }
         }
-        
+
         $statuses = $api->check($tracks);
-        
+
         foreach ($docs as $ttn) {
-            
-            $decl = $ttn->headerdata['ship_number']; 
-            if(strlen($decl)==0) continue;
+
+            $decl = $ttn->headerdata['ship_number'];
+            if (strlen($decl) == 0) {
+                continue;
+            }
             $cnt = 0;
-           
-           
+
+
             $st = $statuses[$decl]['Status'];
             $code = $statuses[$decl]['StatusCode'];
-            $ttn->headerdata['sn_state']= $st;
+            $ttn->headerdata['sn_state'] = $st;
             // 9,10,11,106 - получено
             //4,5,6,7,8,41,101 - в  пути
             //102,103,104,108,105,2,3  проблемы
-      
-         
-            
+
+
             if (in_array($code, array(9, 10, 11, 106))) {
                 $ttn->updateStatus(Document::STATE_DELIVERED);
                 $cnt++;
@@ -105,15 +107,14 @@ class TTNList extends \App\Pages\Base
             } else {
                 $this->setSuccess("npupdated", $cnt);
             }
-            
-            $this->_doclist[$ttn->document_id]=$ttn;
+
+            $this->_doclist[$ttn->document_id] = $ttn;
         }
-   
+
         $this->doclist->Reload();
     }
-    
- 
-    
+
+
 }
 
  

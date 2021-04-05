@@ -74,7 +74,7 @@ class TaskList extends \App\Pages\Base
 
         $this->tasktab->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->caltab->add(new \App\Calendar('calendar' ))->setEvent($this, 'OnCal');
+        $this->caltab->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
         $this->updateTasks();
         $this->updateCal();
@@ -92,11 +92,11 @@ class TaskList extends \App\Pages\Base
         $this->tasktab->setVisible($sender->id == 'tabs');
         $this->updateTasks();
         $this->updateCal();
-   
+
     }
 
 
-    public function tasklistOnRow($row) {
+    public function tasklistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $task = $row->getDataItem();
 
         $row->add(new Label('tasknumber', $task->document_number));
@@ -104,20 +104,20 @@ class TaskList extends \App\Pages\Base
 
         $row->add(new Label('taskdocument_date', H::fdt($task->headerdata['start'])));
         $row->add(new Label('taskhours', $task->headerdata['taskhours']));
-
-        $row->add(new Label('taskstatus', Document::getStateName($task->state)));
+        $stname = Document::getStateName($task->state);
+        $row->add(new Label('taskstatus', $stname));
 
         if ($task->state == Document::STATE_EXECUTED) {
-            $row->taskstatus->setText('<span class="badge badge-success">Выполнен</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-success">' . $stname . '</span>', true);
         }
         if ($task->state == Document::STATE_INPROCESS) {
-            $row->taskstatus->setText('<span class="badge badge-info">Выполняется</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-info">' . $stname . '</span>', true);
         }
         if ($task->state == Document::STATE_SHIFTED) {
-            $row->taskstatus->setText('<span class="badge badge-warning">Отложена</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-warning">' . $stname . '</span>', true);
         }
         if ($task->state == Document::STATE_CLOSED) {
-            $row->taskstatus->setText('<span class="badge badge-default">Закончено</span>', true);
+            $row->taskstatus->setText('<span class="badge badge-secondary">' . $stname . '</span>', true);
         }
 
         $emps = array();
@@ -288,10 +288,10 @@ class TaskList extends \App\Pages\Base
             }
             if (strlen($item->headerdata['taskhours']) == 0) {
                 $item->headerdata['taskhours'] = 0;
-            }                                           
-            $d =  ($item->headerdata['taskhours']  );
-            $end_date =  $item->headerdata['start'] + round(3600   * $d) ;
-        
+            }
+            $d = ($item->headerdata['taskhours']);
+            $end_date = $item->headerdata['start'] + round(3600 * $d);
+
             $tasks[] = new \App\CEvent($item->document_id, $item->document_number, $item->headerdata['start'], $end_date, $col);
         }
 
@@ -311,7 +311,7 @@ class TaskList extends \App\Pages\Base
         if ($action['action'] == 'click') {
 
             $task = Document::load($action['id']);
-    
+
             $class = "\\App\\Pages\\Doc\\Task";
 
 
@@ -326,50 +326,49 @@ class TaskList extends \App\Pages\Base
             return;
         }
         if ($task->state == Document::STATE_CLOSED) {
-           return;
-        }        
+            return;
+        }
         if ($action['action'] == 'move') {
             $task = Task::load($action['id']);
-           
-            if($action['years'] <> 0) {
-                   $task->headerdata['start']  = strtotime($action['years'] .' years',$task->headerdata['start'])  ;
-            
+
+            if ($action['years'] <> 0) {
+                $task->headerdata['start'] = strtotime($action['years'] . ' years', $task->headerdata['start']);
+
             }
-            if($action['months'] <> 0) {
-                 $task->headerdata['start']  = strtotime($action['months'] .' months',$task->headerdata['start'])  ;
-              
+            if ($action['months'] <> 0) {
+                $task->headerdata['start'] = strtotime($action['months'] . ' months', $task->headerdata['start']);
+
             }
-            if($action['days'] <> 0) {
-                $task->headerdata['start']  = strtotime($action['days'] .' days',$task->headerdata['start'])  ;
+            if ($action['days'] <> 0) {
+                $task->headerdata['start'] = strtotime($action['days'] . ' days', $task->headerdata['start']);
             }
-            if($action['ms'] <> 0) {
-               $task->headerdata['start'] = $task->headerdata['start'] + $action['ms'];
+            if ($action['ms'] <> 0) {
+                $task->headerdata['start'] = $task->headerdata['start'] + $action['ms'];
             }
-            
+
             $task->document_date = $task->headerdata['start'];
-           
-      
-          
+
+
         }
         if ($action['action'] == 'resize') {
             $task = Document::load($action['id']);
-            if($action['startdelta'] !=0) {
-              $task->document_date = $task->document_date + ($action['startdelta']  );    
-              $task->headerdata['start']  =  $task->headerdata['start']   +  ($action['enddelta']/3600  ) ;
-              $task->headerdata['taskhours']  = $task->headerdata['taskhours'] +  (0-$action['enddelta']/3600  );    
-        
+            if ($action['startdelta'] != 0) {
+                $task->document_date = $task->document_date + ($action['startdelta']);
+                $task->headerdata['start'] = $task->headerdata['start'] + ($action['enddelta'] / 3600);
+                $task->headerdata['taskhours'] = $task->headerdata['taskhours'] + (0 - $action['enddelta'] / 3600);
+
             }
-            if($action['enddelta'] != 0) {
-              $task->headerdata['taskhours']  = $task->headerdata['taskhours'] +  $action['enddelta']/3600   ;    
-             
+            if ($action['enddelta'] != 0) {
+                $task->headerdata['taskhours'] = $task->headerdata['taskhours'] + $action['enddelta'] / 3600;
+
             }
-           
-           
+
+
         }
-             $task->save();
-            
-          //  $this->updateCal();
-          //  $this->updateTasks();
+        $task->save();
+
+        //  $this->updateCal();
+        //  $this->updateTasks();
     }
 
     public function OnFilter($sender) {

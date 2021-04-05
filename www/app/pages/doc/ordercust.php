@@ -60,7 +60,7 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editcustcode'));
         $this->editdetail->add(new TextInput('editprice'));
-         $this->editdetail->add(new TextInput('editdesc'));
+        $this->editdetail->add(new TextInput('editdesc'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
@@ -70,7 +70,7 @@ class OrderCust extends \App\Pages\Base
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
-        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::findArray("cat_name", "", "cat_name"), 0));
+        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
 
@@ -95,17 +95,17 @@ class OrderCust extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
-                      
+
                         $order = $basedoc->cast();
-                        
+
                         $this->docform->total->setText($order->amount);
- 
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
-                         
+
 
                     }
-               }
+                }
             }
         }
         $this->calcTotal();
@@ -172,7 +172,7 @@ class OrderCust extends \App\Pages\Base
         }
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
-      $this->docform->detail->Reload();
+        $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {
@@ -206,7 +206,7 @@ class OrderCust extends \App\Pages\Base
         $item->desc = $this->editdetail->editdesc->getText();
 
 
-         if ($this->_rowid > 0) {
+        if ($this->_rowid > 0) {
             $item->rowid = $this->_rowid;
         } else {
             $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;

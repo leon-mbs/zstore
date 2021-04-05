@@ -39,7 +39,7 @@ class Inventory extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('category', Category::findArray("cat_name", "", "cat_name"), 0))->onChange($this, 'OnChangeCat');
+        $this->docform->add(new DropDownChoice('category', Category::getList(), 0))->onChange($this, 'OnChangeCat');
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('autoincome'));
         $this->docform->add(new CheckBox('autooutcome'));

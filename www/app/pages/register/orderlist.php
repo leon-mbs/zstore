@@ -42,7 +42,7 @@ class OrderList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Неоплаченые', 3 => 'Все'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 3 => 'Все'), 0));
 
         $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
         $doclist->setSelectedClass('table-success');
@@ -57,7 +57,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('brd'))->onClick($this, 'statusOnSubmit');
-        
+
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
@@ -90,7 +90,7 @@ class OrderList extends \App\Pages\Base
         $this->doclist->Reload();
     }
 
-    public function doclistOnRow($row) {
+    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));
@@ -99,13 +99,33 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', H::fa($doc->amount)));
+        $stname = Document::getStateName($doc->state);
 
-        $row->add(new Label('state', Document::getStateName($doc->state)));
+        $row->add(new Label('state', $stname));
+        if ($doc->state == Document::STATE_NEW) {
+            $row->state->setText('<span class="badge badge-info">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_READYTOSHIP
+            || $doc->state == Document::STATE_INSHIPMENT
+            || $doc->state == Document::STATE_DELIVERED
+        ) {
+            $row->state->setText('<span class="badge badge-success">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_INPROCESS) {
+            $row->state->setText('<span class="badge badge-primary">' . $stname . '</span>', true);
+        }
+
+        if ($doc->state == Document::STATE_CLOSED || $doc->state == Document::STATE_EXECUTED) {
+            $row->state->setText('<span class="badge badge-secondary">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_FAIL) {
+            $row->state->setText('<span class="badge badge-danger">' . $stname . '</span>', true);
+        }
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('pay', $this, 'payOnClick'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
-
+        $row->pay->setVisible(false);//убрана оплата в  расчеты с контрагентами
         if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
         } else {
@@ -133,7 +153,7 @@ class OrderList extends \App\Pages\Base
         if ($sender->id == "binp") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
         }
-       if ($sender->id == "brd") {
+        if ($sender->id == "brd") {
             $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
         }
         if ($sender->id == "bref") {
@@ -165,7 +185,7 @@ class OrderList extends \App\Pages\Base
             return;
         }
 
-       if ($sender->id == "bgi") {
+        if ($sender->id == "bgi") {
             if ($invoice) {
                 $this->setWarn('goodsissue_exists');
             }
@@ -173,7 +193,7 @@ class OrderList extends \App\Pages\Base
             return;
         }
         if ($sender->id == "bco") {
-        
+
             App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
             return;
         }
@@ -196,7 +216,7 @@ class OrderList extends \App\Pages\Base
         $common = System::getOptions("common");
 
         $this->statuspan->statusform->bclose->setVisible(true);
- 
+
         $state = $this->_doc->state;
 
         //доставлен
@@ -207,7 +227,6 @@ class OrderList extends \App\Pages\Base
         $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED));
 
         $this->statuspan->statusform->brd->setVisible(false);
-        
 
 
         //новый
@@ -222,7 +241,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(false);
-            
+
 
         } else {
 
@@ -242,43 +261,43 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
-            
+
         }
 
-         if ($state == Document::STATE_INPROCESS) {
+        if ($state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->brd->setVisible(true);
-            
-  
+
+
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(true);
-            
-         }
-         if ($state == Document::STATE_INSHIPMENT) {
-            
+
+        }
+        if ($state == Document::STATE_INSHIPMENT) {
+
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
-          
-         }
+
+        }
         if ($state == Document::STATE_READYTOSHIP) {
-            
+
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(false);
-          
-         }
-       if ($state == Document::STATE_DELIVERED) {
-         
+
+        }
+        if ($state == Document::STATE_DELIVERED) {
+
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
-          
-         }
+
+        }
         //закрыт
         if ($state == Document::STATE_CLOSED) {
 
@@ -291,11 +310,11 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
-            
-       }
+
+        }
 
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
-            $this->statuspan->statusform->bclose->setVisible(false);
+            // $this->statuspan->statusform->bclose->setVisible(false);
         }
 
 
@@ -318,12 +337,13 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bgi->setVisible(false);
 
         }
-        
+
 
         $list = $this->_doc->getChildren('Invoice');
-        if(count($list) > 0)  $this->statuspan->statusform->binv->setVisible(false);
+        if (count($list) > 0) {
+            $this->statuspan->statusform->binv->setVisible(false);
+        }
 
-        
 
     }
 
@@ -501,7 +521,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state <> 9 ";
+            $where .= " and  state not in (9,17) ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";

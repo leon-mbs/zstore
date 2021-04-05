@@ -145,7 +145,7 @@ class DocList extends \App\Pages\Base
 
     }
 
-    public function doclistOnRow($row) {
+    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
         $doc = $doc->cast();
         $row->add(new Label('name', $doc->meta_desc));
@@ -446,7 +446,9 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($sn) > 1) {
             // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = "    document_number like  {$sn} ";
+
+
+            $where = "   document_number like  {$sn}  or content like  {$sn}  or notes like  {$sn}  ";
         }
 
 

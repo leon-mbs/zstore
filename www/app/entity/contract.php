@@ -112,37 +112,37 @@ class Contract extends \ZCL\DB\Entity
     public function getDolg() {
 
         $amount = 0;
-   
+
 
         $where = "  customer_id={$this->customer_id} and   content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
-        
-        if($this->ctype==1){
-            $_docs  = " and ( meta_name in('GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
-  
-            $sql .=  "
+
+        if ($this->ctype == 1) {
+            $_docs = " and ( meta_name in('GoodsIssue','Invoice','RetCustIssue','PosCheck','ServiceAct','Order')  or  (meta_name='IncomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='OutcomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+
+            $sql .= "
         select   sum((case when   meta_name='OutcomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) ) as sam 
             from `documents_view`  
             where   {$where} and   (payamount >0  or  payed >0) {$_docs}  and state not in (1,2,3,17,8)   and  ( (meta_name <>'POSCheck' and payamount <> payed) or(meta_name = 'POSCheck' and payamount > payed  ))
             
-            ";        
-        } else 
-        if($this->ctype==2) {
-            $_docs   = " and ( meta_name in('GoodsReceipt','InvoiceCust','ReturnIssue')  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
- 
-            $sql .=  "
+            ";
+        } else {
+            if ($this->ctype == 2) {
+                $_docs = " and ( meta_name in('GoodsReceipt','InvoiceCust','ReturnIssue')  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
+
+                $sql .= "
         select   sum((case when   meta_name='IncomeMoney' then  (payed - payamount )   else  (payamount - payed)  end) ) as sam 
             from `documents_view`  
             where   {$where} and   (payamount >0  or  payed >0) {$_docs}  and state not in (1,2,3,17,8)   and payamount <> payed 
             
-            ";        
-         
+            ";
+
+            } else {
+                return 0;
+            }
         }
-        else {
-            return  0;
-        }
-        $conn = \ZDB\DB::getConnect() ;
+        $conn = \ZDB\DB::getConnect();
         $amount = $conn->GetOne($sql);
-         
+
 
         return $amount;
     }

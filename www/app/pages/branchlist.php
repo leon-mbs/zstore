@@ -26,7 +26,7 @@ class BranchList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-           System::setErrorMsg(H::l('onlyadminpage'));
+            System::setErrorMsg(H::l('onlyadminpage'));
             \App\Application::RedirectError();
             return false;
 

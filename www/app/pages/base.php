@@ -26,19 +26,27 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-        
-       $options = System::getOptions('common');
-        
-        
-         //опции
+
+        $options = System::getOptions('common');
+
+
+        //опции
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
         $this->_tvars["usescanner"] = $options['usescanner'] == 1;
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
-        
+        $this->_tvars["usecattree"] = $options['usecattree'] == 1;
+        $this->_tvars["usemobileprinter"] = $options['usemobileprinter'] == 1;
+        if (System::getSession()->defbranch > 0) {
+            $this->branch_id = System::getSession()->defbranch;
+            System::setBranch($this->branch_id);
+
+        }
+
+
         $blist = array();
-        if($this->_tvars["usebranch"]==true) {
+        if ($this->_tvars["usebranch"] == true) {
             $this->branch_id = System::getBranch();
             $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
             if (count($blist) == 1) {
@@ -65,8 +73,6 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
 
- 
- 
 
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
@@ -114,10 +120,10 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
-        
- 
-       $this->generateTosats();
-        
+
+
+        $this->generateTosats();
+
     }
 
     public function LogoutClick($sender) {
@@ -135,6 +141,9 @@ class Base extends \Zippy\Html\WebPage
     public function onnbFirm($sender) {
         $branch_id = $sender->getValue();
         System::setBranch($branch_id);
+
+
+        setcookie("branch_id", $branch_id, time() + 60 * 60 * 24 * 30);
 
         $page = get_class($this);
         App::Redirect($page);
@@ -219,23 +228,25 @@ class Base extends \Zippy\Html\WebPage
     public function goDocView() {
         $this->goAnkor('dankor');
     }
- 
+
     private function generateTosats() {
-        
+
         $this->_tvars["toasts"] = array();
-        if(\App\Session::getSession()->toasts == true) return;//уже показан        
-        
-        $user = System::getUser() ;
-        if($user->defstore ==0)  {
-           $this->_tvars["toasts"][]   = array('title'=>"title:\"".Helper::l("nodefstore")."\"")  ;    
+        if (\App\Session::getSession()->toasts == true) {
+            return;
+        }//уже показан
+
+        $user = System::getUser();
+        if ($user->defstore == 0) {
+            $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefstore") . "\"");
         }
-        if($user->deffirm ==0)  {
-           $this->_tvars["toasts"][]   = array('title'=>"title:\"".Helper::l("nodeffirm")."\"")  ;    
+        if ($user->deffirm == 0) {
+            $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodeffirm") . "\"");
         }
-        if($user->defmf ==0)  {
-           $this->_tvars["toasts"][]   = array('title'=>"title:\"".Helper::l("nodefmf")."\"")  ;    
+        if ($user->defmf == 0) {
+            $this->_tvars["toasts"][] = array('title' => "title:\"" . Helper::l("nodefmf") . "\"");
         }
-        
-         \App\Session::getSession()->toasts = true;    
+
+        \App\Session::getSession()->toasts = true;
     }
 }

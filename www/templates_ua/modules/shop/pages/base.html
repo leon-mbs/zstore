@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="/assets/css/bootstrap-rating.css">
     <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
     <link rel="stylesheet" href="/assets/css/shop.css">
-
+    <link rel="stylesheet" href="/assets/js/summernote/summernote-bs4.css">
 
     <script src="/vendor/leon-mbs/zippy/assets/js/jquery/jquery.js" type="text/javascript"></script>
     <script src="/vendor/leon-mbs/zippy/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
@@ -32,47 +32,62 @@
     <script src="/assets/js/bootstrap-rating.js" type="text/javascript"></script>
     <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
     <script src="/assets/js/app.js" type="text/javascript"></script>
+   <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
+    <script src="/assets/js/summernote/lang/summernote-ru-RU.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="wrapper d-flex flex-column">
+    <div class="content">
+            <div class="mb-3 header">
+                <div class="container">
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-4 d-flex align-items-center">
+                            <a class="container-fluid-img" zippy="logo" href="/"> <img></a> 
+                            <a  class="container-fluid-img logo-text ml-2 text-dark" href="/" style="font-family: 'Georgia';"> {{shopname}} </a>
+                        </div>
+                        <div class="col-12 col-sm-8 d-flex align-items-center justify-content-end">
+                            <div class="navbar">
+                                <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0">
+                                    <div class="mr-2">
+                                      <input zippy="searchitem" style="width:350px" class="form-control" type="search" placeholder="Начните вводить...">
+                                      <span class="btn btn-success searchform-search">
+                                        <i class="fas fa-search"></i>
+                                      </span>
+                                    </div>
+                                    <a class="btn btn-outline-info   mr-sm-2" zippy="shopcart"><i class="fa fa-shopping-cart"></i>
+                                        Кошик <span class="badge badge-danger  navbar-badge">{{notcnt}}</span> </a>
+                                    <a class="btn btn-outline-info  " zippy="showcompare"><i class="fas fa-balance-scale "></i>
+                                        Порiвняти </a>
+                                </form>
 
-    <div class="container-fluid">
-        <div class="row  ">
-            <div class="col-12 col-sm-4 ">
-                <a class="container-fluid-img" zippy="logo" href="/"> <img style="height:60px; margin-left: 5%;"></a> <a
-                    class="container-fluid-img" href="/"> Zippy Магазин </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-12 col-sm-8    ">
-                <div class="navbar justify-content-end">
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Пошук..." aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0  mr-sm-2" type="submit">Шукати</button>
-                        <a class="btn btn-outline-info   mr-sm-2" zippy="shopcart"><i class="fa fa-shopping-cart"></i>
-                            Кошик <span class="badge badge-danger  navbar-badge">{{notcnt}}</span> </a>
-                        <a class="btn btn-outline-info  " zippy="showcompare"><i class="fas fa-balance-scale "></i>
-                            Порівняти </a>
-                    </form>
+        <div class="container">
+            <childpage/>
+        </div>
+    </div>
 
+    <br>
+    <div class="footer mt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mt-2">
+                  {{#aboutus}}  <a href="/aboutus">Про нас</a>  {{/aboutus}} 
+                  {{#news}}  <a href="/news">Новини</a>   {{/news}} 
+                  {{#delivery}}  <a href="/delivery">Оплата иа доставка</a>   {{/delivery}} 
+                  {{#contact}}  <a href="/contact">Контакти</a>  {{/contact}} 
+
+                </div> 
+                <div  class="col-12 text-center mt-2 mb-2">
+                    <span style="color:#fff"> <a href="http://zippy.com.ua/zstore" target="_blank">ZStore</a> @ 2019</span>
                 </div>
             </div>
         </div>
-        </head>
-<body>
-
-<childpage/>
-
-<br>
-<div class="row mt-4 footer">
-
-
-    <div class="col-12 text-center mt-2">
-        <a href="/aboutus">Про нас</a> | <a href="/delivery">Оплата і доставка</a> | <a href="/contact">Контакти</a>
-
     </div>
-    <div class="col-12 text-center mt-2 mb-2">
-        <span>Створено на <a href="http://zippy.com.ua/zstore" target="_blank">ZStore</a> @ 2019</span>
-    </div>
-
-
 </div>
-
 
 <script>
 

@@ -22,7 +22,7 @@ class Order extends \App\Entity\Doc\Document
             if (isset($detail[$item->item_id])) {
                 $detail[$item->item_id]['quantity'] += $item->quantity;
             } else {
-                
+
                 /*
                 $ocstoreopt = @unserialize($item->octoreoptions);  //опции с  опенкарта
                 if (is_array($ocstoreopt)) {
@@ -39,7 +39,7 @@ class Order extends \App\Entity\Doc\Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "price"      => H::fa($item->price),
                                   "msr"        => $item->msr,
-                                  "desc"        => $item->desc,
+                                  "desc"       => $item->desc,
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
@@ -53,7 +53,7 @@ class Order extends \App\Entity\Doc\Document
                         "email"           => $this->headerdata["email"],
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
-                        "notes"           => $this->notes,
+                        "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($this->payed),
@@ -91,7 +91,7 @@ class Order extends \App\Entity\Doc\Document
     }
 
     public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_POS);
+        return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
 
 
@@ -131,8 +131,8 @@ class Order extends \App\Entity\Doc\Document
     }
 
 
-    protected function onState(  $state) {
-        
+    protected function onState($state) {
+
         if ($state == self::STATE_INPROCESS) {
             //списываем бонусы
             if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {

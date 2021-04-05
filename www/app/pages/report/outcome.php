@@ -32,7 +32,7 @@ class Outcome extends \App\Pages\Base
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN')  {$br}  )", 'username'), 0));
-        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::findArray('cat_name', "", 'cat_name'), 0))->setVisible(false);
+        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(), 0))->setVisible(false);
         $hlist = \App\Entity\Customer::getHoldList();
         //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
 
@@ -45,9 +45,12 @@ class Outcome extends \App\Pages\Base
         $types[4] = H::l('repbyservices');
         $types[7] = H::l('repbybyersservices');
         $types[5] = H::l('repbycat');
+
         if (count($hlist) > 0) {
             $types[8] = H::l('repbyhold');
         }
+        $types[9] = H::l('repbybyfirm');
+        $types[10] = H::l('repbybystore');
 
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
@@ -135,7 +138,6 @@ class Outcome extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
-   
 
         $detail = array();
 
@@ -163,7 +165,7 @@ class Outcome extends \App\Pages\Base
         $sql = '';
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {    //по товарам
             $sql = "
-          select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+          select i.`itemname`,i.`item_code`,sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items_view` i on e.`item_id` = i.`item_id`
@@ -180,7 +182,7 @@ class Outcome extends \App\Pages\Base
         if ($type == 2) {  //по покупателям
             $empty = H::l("emptycust");
             $sql = "
-          select coalesce(c.`customer_name`,'{$empty}') as itemname,c.`customer_id`,  sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+          select coalesce(c.`customer_name`,'{$empty}') as itemname,c.`customer_id`,  sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
           from `entrylist_view`  e
 
         left  join `customers`  c on c.`customer_id` = e.`customer_id`
@@ -195,7 +197,7 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 3) {   //по датам
             $sql = "
-          select e.`document_date` as dt  ,  sum(0-e.`amount`) as summa    ,0 as navar
+          select e.`document_date` as dt  ,  sum(0-e.quantity*e.partion) as summa    ,0 as navar
               from `entrylist_view`  e
 
               join `items` i on e.`item_id` = i.`item_id`
@@ -226,7 +228,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 5 && strlen($cat) == 0) {    //по категориях
             $sql = "
-            select  i.`cat_name` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+            select  i.`cat_name` as itemname,sum(0-e.`quantity`) as qty, sum(0- e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
               from `entrylist_view`  e
 
               join `items_view` i on e.`item_id` = i.`item_id`
@@ -281,6 +283,43 @@ class Outcome extends \App\Pages\Base
         }
 
 
+        if ($type == 9) {    //по компаниям
+            $sql = "
+            select  d.`firm_name` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.`amount`) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+              from `entrylist_view`  e
+
+             
+             join `documents_view` d on d.`document_id` = e.`document_id`
+               where d.`firm_id` >0  and e.`quantity` <>0
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+                {$br} {$u}
+              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                group by    d.`firm_name`
+               order  by d.`firm_name`
+        ";
+        }
+        if ($type == 10) {    //по складах
+            $sql = "
+            select  sr.`storename` as itemname,sum(0-e.`quantity`) as qty, sum(0-e.quantity*e.partion) as summa, sum(e.extcode*(0-e.`quantity`)) as navar
+              from `entrylist_view`  e
+
+                
+                join `store_stock` st on e.`stock_id` = st.`stock_id`
+                join `stores` sr on sr.`store_id` = st.`store_id`
+                
+             join `documents_view` d on d.`document_id` = e.`document_id`
+               where d.`firm_id` >0  and e.`quantity` <>0
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+                {$br} {$u}
+              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                group by  sr.`storename`
+               order  by sr.`storename`
+        ";
+        }
+
+
         $totsum = 0;
         $totnavar = 0;
 
@@ -322,41 +361,37 @@ class Outcome extends \App\Pages\Base
         $header['isdisc'] = $disc > 0;
         $header['totall'] = H::fa($totsum - $disc);
 
+        $header['_type1'] = false;
+        $header['_type2'] = false;
+        $header['_type3'] = false;
+        $header['_type4'] = false;
+        $header['_type5'] = false;
+        $header['_type6'] = false;
+        $header['_type7'] = false;
 
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {
             $header['_type1'] = true;
-            $header['_type2'] = false;
-            $header['_type3'] = false;
-            $header['_type4'] = false;
-            $header['_type5'] = false;
+
         }
         if ($type == 2 || $type == 8) {
-            $header['_type1'] = false;
+
             $header['_type2'] = true;
-            $header['_type3'] = false;
-            $header['_type4'] = false;
-            $header['_type5'] = false;
+
         }
         if ($type == 3) {
-            $header['_type1'] = false;
-            $header['_type2'] = false;
             $header['_type3'] = true;
-            $header['_type4'] = false;
-            $header['_type5'] = false;
         }
         if ($type == 4 || $type == 7) {
-            $header['_type1'] = false;
-            $header['_type2'] = false;
-            $header['_type3'] = false;
             $header['_type4'] = true;
-            $header['_type5'] = false;
         }
         if ($type == 5 && strlen($cat) == 0) {
-            $header['_type1'] = false;
-            $header['_type2'] = false;
-            $header['_type3'] = false;
-            $header['_type4'] = false;
             $header['_type5'] = true;
+        }
+        if ($type == 9) {
+            $header['_type6'] = true;
+        }
+        if ($type == 10) {
+            $header['_type7'] = true;
         }
 
 

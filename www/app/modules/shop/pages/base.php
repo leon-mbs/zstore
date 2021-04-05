@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Pages;
 use App\Application as App;
 use App\Helper;
 use App\System;
+use \App\Modules\Shop\Entity\Product;
 
 class Base extends \Zippy\Html\WebPage
 {
@@ -12,6 +13,7 @@ class Base extends \Zippy\Html\WebPage
     public function __construct($params = null) {
 
         \Zippy\Html\WebPage::__construct();
+        global $_config;
 
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
@@ -31,6 +33,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["currencyname"] = $shop["currencyname"];
         $this->_tvars["notcnt"] = false;
 
+        $this->add(new \Zippy\Html\Form\Form('searchform'));
+        $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this,'onSearch');
+        $this->searchform->searchitem->onChange($this,'onSelect');
         $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Order"))->setVisible(false);
         $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Compare"))->setVisible(false);
 
@@ -38,9 +43,36 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
         $this->logo->setValue($this->op['logo']);
-
+        $this->_tvars["shopname"] = $this->op['shopname'];
+        $this->_tvars["aboutus"] =strlen($this->op['aboutus'])>0;
+        $this->_tvars["contact"] =strlen($this->op['contact'])>0;
+        $this->_tvars["delivery"] =strlen($this->op['delivery'])>0;
+        $this->_tvars["news"] =strlen($this->op['news'])>0;
+          
+         $this->_tvars["np"] = $_config['modules']['np'] == 1;
+    
     }
 
+    
+    public function onSearch(\Zippy\Html\Form\AutocompleteTextInput $sender){
+         $r = array();
+
+
+        $text =  Product::qstr('%' . $sender->getText() . '%');
+        $code =  Product::qstr($sender->getText() );
+        $list = Product::findArray('itemname', " disabled <>1 and  detail not  like '%<noshop>1</noshop>%' and  cat_id in(select cat_id from  item_cat where detail not  like '%<noshop>1</noshop>%' ) and    (    itemname like {$text} or item_code like {$code} or bar_code like {$code}  ) ");
+        foreach ($list as $k => $v) {
+            $r[$k] = $v;
+        }
+        return $r;         
+         
+    }
+    public function onSelect(\Zippy\Html\Form\AutocompleteTextInput $sender){
+       $key =   $sender->getKey();
+       if($key>0) {
+           App::Redirect("\\App\\Modules\\Shop\\Pages\\ProductView",$key) ;
+       }
+    }   
     //вывод ошибки,  используется   в дочерних страницах
     public function setError($msg, $p1 = "", $p2 = "") {
         $msg = Helper::l($msg, $p1, $p2);

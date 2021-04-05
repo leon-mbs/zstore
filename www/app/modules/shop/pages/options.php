@@ -27,31 +27,42 @@ class Options extends \App\Pages\Base
 
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        $this->shop->add(new DropDownChoice('shopdefstore', \App\Entity\Store::getList()));
+        
         $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new TextInput('email'));
+        $this->shop->add(new TextInput('shopname'));
         $this->shop->add(new TextInput('currencyname'));
         $this->shop->add(new File('logo'));
         $this->shop->add(new CheckBox('uselogin'));
+        $this->shop->add(new CheckBox('usefilter'));
+        $this->shop->add(new CheckBox('usefeedback'));
+        $this->shop->add(new CheckBox('createnewcust'));
 
         $this->add(new Form('texts'))->onSubmit($this, 'saveTextsOnClick');
         $this->texts->add(new TextArea('aboutus'));
         $this->texts->add(new TextArea('contact'));
         $this->texts->add(new TextArea('delivery'));
+        $this->texts->add(new TextArea('news'));
 
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
             $shop = array();
         }
 
-        $this->shop->shopdefstore->setValue($shop['defstore']);
+        
         $this->shop->shopdefcust->setValue($shop['defcust']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
+        $this->shop->usefilter->setChecked($shop['usefilter']);
+        $this->shop->createnewcust->setChecked($shop['createnewcust']);
+        $this->shop->usefeedback->setChecked($shop['usefeedback']);
+        $this->shop->shopname->setText($shop['shopname']);
+        $this->shop->email->setText($shop['email']);
+        $this->shop->currencyname->setText($shop['currencyname']);
 
-        $this->add(new ClickLink('updateprices'))->onClick($this, 'updatePriceOnClick');
+        
         $this->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
 
         if (strlen($shop['aboutus']) > 10) {
@@ -63,6 +74,9 @@ class Options extends \App\Pages\Base
         if (strlen($shop['delivery']) > 10) {
             $this->texts->delivery->setText(base64_decode($shop['delivery']));
         }
+        if (strlen($shop['news']) > 10) {
+            $this->texts->news->setText(base64_decode($shop['news']));
+        }
     }
 
     public function saveShopOnClick($sender) {
@@ -71,11 +85,15 @@ class Options extends \App\Pages\Base
         //todo контрагент магазина, кому  нотификацию
 
         $shop['defcust'] = $this->shop->shopdefcust->getValue();
-        $shop['defstore'] = $this->shop->shopdefstore->getValue();
+        
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();
+        $shop['shopname'] = $this->shop->shopname->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();
         $shop['uselogin'] = $this->shop->uselogin->isChecked() ? 1 : 0;
+        $shop['usefilter'] = $this->shop->usefilter->isChecked() ? 1 : 0;
+        $shop['createnewcust'] = $this->shop->createnewcust->isChecked() ? 1 : 0;
+        $shop['usefeedback'] = $this->shop->usefeedback->isChecked() ? 1 : 0;
 
 
         $file = $sender->logo->getFile();
@@ -101,36 +119,23 @@ class Options extends \App\Pages\Base
         System::setOptions("shop", $shop);
         $this->setSuccess('saved');
     }
-
-    public function updatePriceOnClick($sender) {
-        $shop = System::getOptions("shop");
-
-        $prods = Product::find(" deleted = 0 ");
-        foreach ($prods as $p) {
-            $item = Item::load($p->item_id);
-            $price = $item->getPrice($shop['defpricetype']);
-            $p->chprice = "";
-            if ($price > $p->price) {
-                $p->chprice = "up";
-            }
-            if ($price < $p->price) {
-                $p->chprice = "down";
-            }
-            $p->price = $price;
-            $p->save();
-        }
-        $this->setSuccess('refreshed');
-    }
+    
 
     public function updateSiteMapOnClick($sender) {
+       
+                
         $sm = _ROOT . 'sitemap.xml';
         @unlink($sm);
         $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
 
         $prods = Product::find(" deleted = 0 ");
         foreach ($prods as $p) {
-
-            $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->product_id}</loc></url>";
+            if(strlen($p->sef)>0) {
+              $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";  
+            }   else {
+              $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";    
+            }
+            
         }
         $xml .= "</urlset>";
         file_put_contents($sm, $xml);
@@ -143,6 +148,7 @@ class Options extends \App\Pages\Base
         $shop['aboutus'] = base64_encode($this->texts->aboutus->getText());
         $shop['contact'] = base64_encode($this->texts->contact->getText());
         $shop['delivery'] = base64_encode($this->texts->delivery->getText());
+        $shop['news'] = base64_encode($this->texts->news->getText());
 
         System::setOptions("shop", $shop);
         $this->setSuccess('refreshed');

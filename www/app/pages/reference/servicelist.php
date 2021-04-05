@@ -46,7 +46,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
 
-    public function servicelistOnRow($row) {
+    public function servicelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('service_name', $item->service_name));

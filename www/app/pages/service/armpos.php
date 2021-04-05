@@ -31,6 +31,7 @@ class ARMPos extends \App\Pages\Base
     public  $_serlist  = array();
     private $pos;
     private $_doc      = null;
+    private $_rowid    = 0;
 
 
     private $_pt       = 0;
@@ -242,6 +243,7 @@ class ARMPos extends \App\Pages\Base
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
 
     public function serOnRow($row) {
@@ -254,7 +256,7 @@ class ARMPos extends \App\Pages\Base
 
         $row->add(new Label('seramount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('serdelete'))->onClick($this, 'serdeleteOnClick');
-        //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new ClickLink('seredit'))->onClick($this, 'sereditOnClick');
     }
 
     public function addcodeOnClick($sender) {
@@ -321,15 +323,40 @@ class ARMPos extends \App\Pages\Base
         $this->calcTotal();
     }
 
+    public function editOnClick($sender) {
+        $tovar = $sender->owner->getDataItem();
+        $this->editdetail->setVisible(true);
+        $this->editdetail->edittovar->setKey($tovar->item_id);
+        $this->editdetail->edittovar->setText($tovar->itemname);
+        $this->editdetail->editquantity->setText($tovar->quantity);
+        $this->editdetail->editprice->setText($tovar->price);
+        $this->editdetail->editserial->setText($tovar->snumber);
+        $this->editdetail->qtystock->setText("");
+        $this->form2->setVisible(false);
+        $this->_rowid = $tovar->rowid;
+
+    }
+
     public function deleteOnClick($sender) {
 
-
         $tovar = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$tovar->tovar_id]);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->rowid => $this->_itemlist[$tovar->rowid]));
         $this->form2->detail->Reload();
         $this->calcTotal();
+    }
+
+    public function sereditOnClick($sender) {
+        $ser = $sender->owner->getDataItem();
+        $this->editserdetail->setVisible(true);
+        $this->editserdetail->editser->setKey($ser->service_id);
+        $this->editserdetail->editser->setText($ser->service_name);
+        $this->editserdetail->editserquantity->setText($ser->quantity);
+        $this->editserdetail->editserprice->setText($ser->price);
+
+        $this->form2->setVisible(false);
+        $this->_rowid = $ser->rowid;
+
     }
 
     public function serdeleteOnClick($sender) {
@@ -338,9 +365,8 @@ class ARMPos extends \App\Pages\Base
         }
 
         $ser = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$tovar->tovar_id]);
 
-        $this->_serlist = array_diff_key($this->_serlist, array($ser->service_id => $this->_serlist[$ser->service_id]));
+        $this->_serlist = array_diff_key($this->_serlist, array($ser->rowid => $this->_serlist[$ser->rowid]));
         $this->form2->detailser->Reload();
         $this->calcTotal();
     }
@@ -351,6 +377,7 @@ class ARMPos extends \App\Pages\Base
         $this->editdetail->editprice->setText("0");
         $this->editdetail->qtystock->setText("");
         $this->form2->setVisible(false);
+        $this->_rowid = 0;
     }
 
     public function addserOnClick($sender) {
@@ -359,6 +386,7 @@ class ARMPos extends \App\Pages\Base
         $this->editserdetail->editserprice->setText("0");
 
         $this->form2->setVisible(false);
+        $this->_rowid = 0;
     }
 
     public function saverowOnClick($sender) {
@@ -394,8 +422,17 @@ class ARMPos extends \App\Pages\Base
             }
         }
 
+        if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
+        }
+        $this->_itemlist[$item->rowid] = $item;
 
-        $this->_itemlist[$item->item_id] = $item;
+        $this->_rowid = 0;
+
+
         $this->editdetail->setVisible(false);
         $this->form2->setVisible(true);
 
@@ -424,9 +461,19 @@ class ARMPos extends \App\Pages\Base
 
         $ser->quantity = $this->editserdetail->editserquantity->getText();
 
-        $ser->price =H::fa( $this->editserdetail->editserprice->getText());
+        $ser->price = H::fa($this->editserdetail->editserprice->getText());
 
-        $this->_serlist[$ser->service_id] = $ser;
+        if ($this->_rowid > 0) {
+            $ser->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_serlist) > 0 ? max(array_keys($this->_serlist)) : 0;
+            $ser->rowid = $next + 1;
+        }
+        $this->_serlist[$ser->rowid] = $ser;
+
+        $this->_rowid = 0;
+
+
         $this->editserdetail->setVisible(false);
         $this->form2->setVisible(true);
         $this->form2->detailser->Reload();

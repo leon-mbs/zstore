@@ -12,12 +12,13 @@ class ProductAttribute extends \ZCL\DB\Entity
 {
 
     public $searchvalue;
-    public $nodata = 0;
+   
 
     protected function init() {
         $this->attribute_id = 0;
-        $this->showinlist = 0;
+    
         $this->value = '';
+        
     }
 
     protected function afterDelete() {
@@ -26,4 +27,18 @@ class ProductAttribute extends \ZCL\DB\Entity
         $conn->Execute("delete from shop_attributes_order where  attr_id=" . $this->attribute_id);
     }
 
+    public function hasData(){
+        if ($this->attributevalue == '') {
+            return false;
+        }
+        if ($this->attributetype == 3 ) {
+                    if($this->attributevalue == -1) return false;
+        }
+        if ($item->attributetype == 1) {
+                   if($attr->attributevalue == -1) return false;
+ 
+        }
+        return  true;
+    }
+    
 }

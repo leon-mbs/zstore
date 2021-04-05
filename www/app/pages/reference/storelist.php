@@ -40,7 +40,7 @@ class StoreList extends \App\Pages\Base
         $this->storetable->storelist->Reload();
     }
 
-    public function storelistOnRow($row) {
+    public function storelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('storename', $item->storename));

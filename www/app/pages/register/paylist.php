@@ -16,6 +16,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\BookmarkableLink;
 
 /**
  * журнал платежей
@@ -74,7 +75,7 @@ class PayList extends \App\Pages\Base
         return Customer::getList($sender->getText());
     }
 
-    public function doclistOnRow($row) {
+    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));
@@ -92,8 +93,11 @@ class PayList extends \App\Pages\Base
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $user = \App\System::getUser();
-        //   $row->add(new ClickLink('del'))->setVisible($user->rolename == 'admins');
-        //  $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
+        $row->add(new BookmarkableLink('del'))->setVisible($user->rolename == 'admins');
+        $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
+
+        $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
+
     }
 
     //просмотр
@@ -116,9 +120,11 @@ class PayList extends \App\Pages\Base
         $id = $sender->pl_id->getText();
 
         $pl = Pay::load($id);
+
+
         $doc = Document::load($pl->document_id);
-        // Pay::cancelPayment($id, $sender->notes->getText());
-        Pay::delete($id);
+        Pay::cancelPayment($id, $sender->notes->getText());
+
         $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(abs(sum(amount)),0) from paylist where document_id=" . $pl->document_id;
@@ -163,7 +169,7 @@ class PayList extends \App\Pages\Base
         $i = 1;
         foreach ($list as $doc) {
             $i++;
-            $data['A' . $i] = H::fd(strtotime($doc->paydate));
+            $data['A' . $i] = H::fd($doc->paydate);
             $data['B' . $i] = $doc->mf_name;
             $data['C' . $i] = ($doc->amount > 0 ? H::fa($doc->amount) : "");
             $data['D' . $i] = ($doc->amount < 0 ? H::fa(0 - $doc->amount) : "");
@@ -177,6 +183,28 @@ class PayList extends \App\Pages\Base
         H::exportExcel($data, $header, 'paylist.xlsx');
     }
 
+    public function printOnClick($sender) {
+        $pay = $sender->getOwner()->getDataItem();
+        $doc = \App\Entity\Doc\Document::load($pay->document_id);
+
+        $header = array();
+        $header['document_number'] = $doc->document_number;
+        $header['firm_name'] = $doc->firm_name;
+        $header['customer_name'] = $doc->customer_name;
+        $list = Pay::find("document_id=" . $pay->document_id, "pl_id");
+        $all = 0;
+        $header['plist'] = array();
+        foreach ($list as $p) {
+            $header['plist'][] = array('ppay' => H::fa(abs($p->amount)), 'pdate' => H::fd($p->paydate));
+            $all += abs($p->amount);
+        }
+        $header['pall'] = H::fa($all);
+
+        $report = new \App\Report('pays_bill.tpl');
+
+        $html = $report->generate($header);
+        $this->updateAjax(array(), "  $('#paysprint').html('{$html}') ; $('#pform').modal()");
+    }
 
 }
 
@@ -197,7 +225,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = " 1=1 ";
+        $where = " d.customer_id in(select  customer_id from  customers  where  status=0)";
 
         $author = $this->page->filter->fuser->getValue();
         $type = $this->page->filter->ftype->getValue();

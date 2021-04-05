@@ -4,8 +4,8 @@ namespace App\Modules\Shop;
 
 use App\System;
 
-//клаасс  списка сравоения
-class CompareList implements \Zippy\Interfaces\DataSource
+//класс  списка сравнения
+class CompareList  // implements \Zippy\Interfaces\DataSource
 {
 
     public $list = array();
@@ -23,27 +23,27 @@ class CompareList implements \Zippy\Interfaces\DataSource
     public function addProduct($product) {
         if (count($this->list) > 0) {
             $v = array_values($this->list);
-            if ($v[0]->group_id != $product->group_id) {
+            if ($v[0]->cat_id != $product->cat_id) {
                 return false;
             }
         }
-        $this->list[$product->product_id] = $product;
+        $this->list[$product->item_id] = $product;
         return true;
     }
 
-    public function deleteProduct($product_id) {
+    public function deleteProduct($item_id) {
         $this->list_ = array_values($this->list);
         $this->list = array();
         foreach ($this->list_ as $p) {
-            if ($p->product_id == $product_id) {
+            if ($p->item_id == $item_id) {
                 continue;
             }
-            $this->list[$p->product_id] = $p;
+            $this->list[$p->item_id] = $p;
         }
     }
 
-    public function hasProsuct($product_id) {
-        return isset($this->list[$product_id]);
+    public function hasProsuct($item_id) {
+        return isset($this->list[$item_id]);
     }
 
     public function isEmpty() {
@@ -51,7 +51,7 @@ class CompareList implements \Zippy\Interfaces\DataSource
     }
 
     // реализация  DataSource
-
+   /*
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         return array_values($this->list);
     }
@@ -59,5 +59,5 @@ class CompareList implements \Zippy\Interfaces\DataSource
     public function getItemCount() {
         return count($this->list);
     }
-
+    */
 }

@@ -28,7 +28,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchcat', Category::findArray("cat_name", "", "cat_name"), 0));
+        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
         $this->filter->add(new DropDownChoice('searchstore', Store::getList(), 0));
 
 
@@ -54,7 +54,7 @@ class ItemList extends \App\Pages\Base
         $this->OnFilter(null);
     }
 
-    public function itemlistOnRow($row) {
+    public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $store = $this->filter->searchstore->getValue();
 

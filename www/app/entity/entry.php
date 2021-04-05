@@ -70,11 +70,8 @@ class Entry extends \ZCL\DB\Entity
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
-     * @param mixed $mf денежный счет
-     * @param mixed $asset необоротный актив
-     * @param mixed $code универсальное поле
      */
-    public static function getQuantity($date = 0, $stock = 0, $customer = 0, $emp = 0, $code = 0) {
+    public static function getQuantity($date = 0, $stock = 0, $customer = 0, $emp = 0) {
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
@@ -85,9 +82,6 @@ class Entry extends \ZCL\DB\Entity
             $where = $where . " and employee_id= " . $emp;
         }
 
-        if ($code > 0) {
-            $where = $where . " and extcode= " . $code;
-        }
 
         if ($stock > 0) {
             $where = $where . " and stock_id= " . $stock;
@@ -108,11 +102,8 @@ class Entry extends \ZCL\DB\Entity
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
-     * @param mixed $mf денежный счет
-     * @param mixed $asset необоротный актив
-     * @param mixed $code универсальное поле
      */
-    public static function getAmount($date = 0, $stock = 0, $customer = 0, $emp = 0, $code = 0) {
+    public static function getAmount($date = 0, $stock = 0, $customer = 0, $emp = 0) {
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
@@ -123,9 +114,6 @@ class Entry extends \ZCL\DB\Entity
             $where = $where . " and employee_id= " . $emp;
         }
 
-        if ($code > 0) {
-            $where = $where . " and extcode= " . $code;
-        }
 
         if ($stock > 0) {
             $where = $where . " and stock_id= " . $stock;

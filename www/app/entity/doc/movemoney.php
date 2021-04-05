@@ -15,21 +15,21 @@ class MoveMoney extends Document
     public function Execute() {
 
         Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['paymentfrom'], 0, $this->notes);
-        Pay::addPayment($this->document_id, $this->document_date,   $this->amount, $this->headerdata['paymentto'], 0, $this->notes);
-        
+        Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['paymentto'], 0, $this->notes);
+
 
         return true;
     }
 
     public function generateReport() {
 
-     
+
         $header = array(
             'amount'          => H::fa($this->amount),
             'date'            => H::fd($this->document_date),
             "notes"           => $this->notes,
             "from"            => $this->headerdata["paymentfromname"],
-            "to"            =>  $this->headerdata["paymenttoname"],
+            "to"              => $this->headerdata["paymenttoname"],
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/movemoney.tpl');

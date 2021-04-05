@@ -1,6 +1,8 @@
- /*
 
- 
+/*     
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  5, 'АРМ кассира (общепит)', 'ARMFood', '', 0);
+
+
 CREATE TABLE `empacc` (
   `ea_id` int(11) NOT NULL AUTO_INCREMENT,
   `emp_id` int(11) NOT NULL,
@@ -27,5 +29,5 @@ CREATE TABLE `prodproc` (
 
 
     
+     
       */
-      

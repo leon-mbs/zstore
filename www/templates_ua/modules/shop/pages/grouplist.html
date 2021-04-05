@@ -3,72 +3,36 @@
 <body>
 <style>
     .list-group-item {
-        padding: 04px;;
+        padding: 04px;
     }
 </style>
 <div class="row">
     <div class="col-12">
-        <h3>Категорії товарів</h3>
+        <h3>Атрибуты для товаров</h3>
+         <small>Показываются  только  категории у  которых есть товары</small>
     </div>
-    <div class="col-12 col-md-4  ">
-        <div zippy="tree"></div>
+    <div class="col-12 col-md-6  ">
+         <table class="table table-sm">
+           <tr zippy="grouplist">
+              <td ><a zippy="groupname"></a></td>
+           </tr> 
+         
+         </table>
     </div>
 
-    <div class="col-12  col-md-8  ">
+    <div class="col-12  col-md-6  ">
 
-        <form zippy="newgroupform">
-
-            <div class="form-group row">
-                <div class="col-8 col-md-6">
-                    <input class="form-control" type="text" zippy="newgroupname" required="required">
-                </div>
-                <div class="col-4 col-md-3">
-                    <a zippy="newgroup" class="btn   btn-outline-success">Додати дочірню</a>
-                </div>
-            </div>
-        </form>
-
-        <form zippy="groupform" method="post" enctype="multipart/form-data">
-
-            <div class="form-group row">
-                <div class="col-8 col-md-6">
-                    <input class="form-control" type="text" zippy="groupname" required="required">
-                </div>
-                <div class="col-4  col-md-3">
-                    <a zippy="renamegroup" class="btn   btn-outline-success">Перейменувати</a>
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-8 ">
-                    <img zippy="group_image" width="100px;">
-                </div>
-
-            </div>
-            <div class="form-group row">
-                <div class="col-8 col-md-6">
-                    <input type="file" zippy="photo"/>
-                </div>
-                <div class="col-4  col-md-3">
-                    <a zippy="savegroup" class="btn btn-outline-success">Завантажити фото</a> <br>
-
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-8 col-md-6">
-                    <a zippy="delgroup" class="btn btn-sm  btn-danger">Видалити категорію</a>
-                </div>
-            </div>
-        </form>
+  
 
         <div zippy="attrpanel" class="row">
-            <div class="col-12   col-lg-10 ">
-                <h4>Список атрибутів</h4>
-                <a zippy="addattr" class="btn btn-sm  btn-primary">Новий атрибут</a><br>
+            <div class="col-12    col-xl-10 ">
+                <h4>Список атрибутов</h4>
+                <a zippy="addattr" class="btn btn-sm  btn-primary">Новый атрибут</a><br>
                 <table class="   table    table-sm ">
                     <tr>
-                        <th>Найменування</th>
+                        <th>Наименование</th>
                         <th>Тип</th>
-                        <th>Значення</th>
+                        <th>Значение</th>
                         <th style="width:16px;">&nbsp;</th>
                         <th style="width:16px;">&nbsp;</th>
                         <th style="width:75px;">&nbsp;</th>
@@ -85,7 +49,7 @@
                 </table>
             </div>
 
-            <form zippy="attreditform" class="col-12 col-md-6 col-xl-4 ">
+            <form zippy="attreditform" class="col-12 col-md-6 ">
                 <hr>
                 <div class="form-group">
                     <label for="attrtype">Тип: &nbsp;<i zippy="tt" class="fa fa-info-circle" data-toggle="tooltip"
@@ -94,24 +58,21 @@
                     <span zippy="attrtypename" class="form-control"></span>
                 </div>
                 <div class="form-group">
-                    <label for="attrname">Найменування:</label>
+                    <label for="attrname">Наименование:</label>
                     <input type="text" zippy="attrname" class="form-control" required="required"/>
                 </div>
                 <div class="form-group" zippy="attrvaluespanel">
-                    <label for="attrvalues">Значення:</label>
+                    <label for="attrvalues">Значение:</label>
                     <textarea rows="5" cols="30" class="form-control" zippy="attrvalues"></textarea>
+                    <small>Несколько значений вводятся  через запятую</small>
                 </div>
                 <div class="form-group" zippy="meashurepanel">
-                    <label for="meashure">Од. вим:</label>
+                    <label for="meashure">Ед. изм:</label>
                     <input type="text" zippy="meashure" class="form-control" style="width:50px;"/>
                 </div>
 
 
-                <div class="form-check   ">
-
-                    <input class="form-check-input" type="checkbox" zippy="showinlist">
-                    <label class="form-check-label mr-sm-2" for="showinlist">Показати в фільтрі відбору</label>
-                </div>
+       
                 <div class="form-group">
 
                     <input type="submit" class="btn btn-sm  btn-success" value="Сохранить"/>

@@ -70,7 +70,7 @@ class EqList extends \App\Pages\Base
         $this->usetable->add(new DataView('uselist', new ArrayDataSource($this, '_uselist'), $this, 'uselistOnRow'));
     }
 
-    public function eqlistOnRow($row) {
+    public function eqlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('eq_name', $item->eq_name));
         $row->add(new Label('code', $item->code));
@@ -119,7 +119,7 @@ class EqList extends \App\Pages\Base
         $this->usetable->uselist->Reload();
     }
 
-    public function uselistOnRow($row) {
+    public function uselistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('usetask', $item->usetask));
         $row->add(new Label('useplace', $item->useplace));

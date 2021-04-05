@@ -126,21 +126,21 @@ class POSCheck extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
-            $this->docform->total->setText($this->_doc->amount);
+            $this->docform->total->setText(H::fa($this->_doc->amount));
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->payment->setValue(H::fa($this->_doc->headerdata['payment']));
 
             $this->docform->exchange->setText($this->_doc->exchange);
-            $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
-            $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->paydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
-            $this->docform->payed->setText($this->_doc->payed);
-            $this->docform->editpayed->setText($this->_doc->payed);
-            $this->docform->exchange->setText($this->_doc->headerdata['exchange']);
+            $this->docform->payed->setText(H::fa($this->_doc->payed));
+            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            $this->docform->exchange->setText(H::fa($this->_doc->headerdata['exchange']));
 
             $this->OnPayment($this->docform->payment);
 
@@ -259,7 +259,7 @@ class POSCheck extends \App\Pages\Base
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
 
     public function serOnRow($row) {
@@ -272,7 +272,7 @@ class POSCheck extends \App\Pages\Base
 
         $row->add(new Label('seramount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('serdelete'))->onClick($this, 'serdeleteOnClick');
-        //  $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new ClickLink('seredit'))->onClick($this, 'sereditOnClick');
     }
 
     public function deleteOnClick($sender) {
@@ -281,9 +281,9 @@ class POSCheck extends \App\Pages\Base
         }
 
         $tovar = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$tovar->tovar_id]);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
+
+        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->rowid => $this->_itemlist[$tovar->rowid]));
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -295,9 +295,8 @@ class POSCheck extends \App\Pages\Base
         }
 
         $ser = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$tovar->tovar_id]);
 
-        $this->_serlist = array_diff_key($this->_serlist, array($ser->service_id => $this->_serlist[$ser->service_id]));
+        $this->_serlist = array_diff_key($this->_serlist, array($ser->rowid => $this->_serlist[$ser->rowid]));
         $this->docform->detailser->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -318,6 +317,7 @@ class POSCheck extends \App\Pages\Base
         $this->editserdetail->editserprice->setText("0");
 
         $this->docform->setVisible(false);
+        $this->_rowid = 0;
     }
 
     public function editOnClick($sender) {
@@ -334,8 +334,35 @@ class POSCheck extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editserial->setText($item->serial);
+        if ($item->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $item->rowid = $item->item_id;
+        }
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid = $item->rowid;
+    }
+
+    public function sereditOnClick($sender) {
+        $ser = $sender->getOwner()->getDataItem();
+        $this->editserdetail->setVisible(true);
+        $this->docform->setVisible(false);
+
+        $this->editserdetail->editser->setKey($ser->service_id);
+        $this->editserdetail->editser->setText($ser->service_name);
+
+        $this->editserdetail->editserprice->setText($ser->price);
+        $this->editserdetail->editserquantity->setText($ser->quantity);
+
+        if ($ser->rowid > 0) {
+            ;
+        }               //для совместимости
+        else {
+            $ser->rowid = $ser->service_id;
+        }
+
+        $this->_rowid = $ser->rowid;
     }
 
     public function saverowOnClick($sender) {
@@ -371,8 +398,16 @@ class POSCheck extends \App\Pages\Base
             }
         }
 
-        unset($this->_itemlist[$this->_rowid]);
-        $this->_itemlist[$item->item_id] = $item;
+        if ($this->_rowid > 0) {
+            $item->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+            $item->rowid = $next + 1;
+        }
+        $this->_itemlist[$item->rowid] = $item;
+
+        $this->_rowid = 0;
+
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -403,7 +438,16 @@ class POSCheck extends \App\Pages\Base
 
         $ser->price = $this->editserdetail->editserprice->getText();
 
-        $this->_serlist[$ser->service_id] = $ser;
+        if ($this->_rowid > 0) {
+            $ser->rowid = $this->_rowid;
+        } else {
+            $next = count($this->_serlist) > 0 ? max(array_keys($this->_serlist)) : 0;
+            $ser->rowid = $next + 1;
+        }
+        $this->_serlist[$ser->rowid] = $ser;
+
+        $this->_rowid = 0;
+
         $this->editserdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detailser->Reload();
@@ -483,7 +527,7 @@ class POSCheck extends \App\Pages\Base
 
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
-        if ($pos->usefisc == 1 && $sender->id == 'execdoc') {
+        if ($this->_tvars["ppo"] == true && $pos->usefisc == 1 && $sender->id == 'execdoc') {
 
 
             $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);

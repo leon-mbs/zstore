@@ -39,7 +39,7 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchkey'));
         $catlist = array();
         $catlist[-1] = H::l("withoutcat");
-        foreach (Category::findArray("cat_name", "", "cat_name") as $k => $v) {
+        foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
@@ -95,17 +95,24 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editminqty'));
         $this->itemdetail->add(new TextInput('editzarp'));
         $this->itemdetail->add(new TextInput('editweight'));
+        $this->itemdetail->add(new TextInput('editmaxsize'));
+        $this->itemdetail->add(new TextInput('editvolume'));
+        $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
 
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('editmsr'));
-        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "", "cat_name"), 0));
+
+        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('edituseserial'));
-        $this->itemdetail->add(new CheckBox('editpricelist', true));
-        $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/LoadImage.php?id=0'));
+        $this->itemdetail->add(new CheckBox('editnoprice'));
+        $this->itemdetail->add(new CheckBox('editnoshop'));
+        $this->itemdetail->add(new CheckBox('editautooutcome'));
+        $this->itemdetail->add(new CheckBox('editautoincome'));
+        $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/loadimage.php?id=0'));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
@@ -131,7 +138,7 @@ class ItemList extends \App\Pages\Base
 
     }
 
-    public function itemlistOnRow($row) {
+    public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
@@ -163,7 +170,6 @@ class ItemList extends \App\Pages\Base
 
 
         $row->add(new Label('cell', $item->cell));
-        $row->add(new Label('inprice'))->setVisible($item->pricelist);
         $row->add(new Label('inseria'))->setVisible($item->useserial);
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -175,6 +181,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
@@ -225,7 +232,9 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
-        $this->itemdetail->editweight->setText($this->_item->weight);
+        $this->itemdetail->editmaxsize->setText($this->_item->maxsize);
+        $this->itemdetail->editvolume->setText($this->_item->volume);
+        $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
 
@@ -234,12 +243,14 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
-        $this->itemdetail->editpricelist->setChecked($this->_item->pricelist);
+        $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
+        $this->itemdetail->editautooutcome->setChecked($this->_item->autooutcome);
+        $this->itemdetail->editautoincome->setChecked($this->_item->autoincome);
         if ($this->_item->image_id > 0) {
             $this->itemdetail->editdelimage->setChecked(false);
             $this->itemdetail->editdelimage->setVisible(true);
             $this->itemdetail->editimage->setVisible(true);
-            $this->itemdetail->editimage->setUrl('/LoadImage.php?id=' . $this->_item->image_id);
+            $this->itemdetail->editimage->setUrl('/loadimage.php?id=' . $this->_item->image_id);
         } else {
             $this->itemdetail->editdelimage->setVisible(false);
             $this->itemdetail->editimage->setVisible(false);
@@ -259,7 +270,10 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editmsr->setText('шт');
         $this->itemdetail->editimage->setVisible(false);
         $this->itemdetail->editdelimage->setVisible(false);
-        $this->itemdetail->editpricelist->setChecked(true);
+        $this->itemdetail->editnoprice->setChecked(false);
+        $this->itemdetail->editnoshop->setChecked(false);
+        $this->itemdetail->editautooutcome->setChecked(false);
+        $this->itemdetail->editautoincome->setChecked(false);
         $this->_item = new Item();
 
         if (System::getOption("common", "autoarticle") == 1) {
@@ -301,6 +315,9 @@ class ItemList extends \App\Pages\Base
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->weight = $this->itemdetail->editweight->getText();
+        $this->_item->maxsize = $this->itemdetail->editmaxsize->getText();
+        $this->_item->volume = $this->itemdetail->editvolume->getText();
+        $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
 
@@ -311,7 +328,11 @@ class ItemList extends \App\Pages\Base
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
 
-        $this->_item->pricelist = $this->itemdetail->editpricelist->isChecked() ? 1 : 0;
+        $this->_item->noprice = $this->itemdetail->editnoprice->isChecked() ? 1 : 0;
+        $this->_item->noshop = $this->itemdetail->editnoshop->isChecked() ? 1 : 0;
+        $this->_item->autooutcome = $this->itemdetail->editautooutcome->isChecked() ? 1 : 0;
+        $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
+
 
         //проверка  уникальности артикула
         if (strlen($this->_item->item_code) > 0) {
@@ -383,6 +404,24 @@ class ItemList extends \App\Pages\Base
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
 
+            if ($imagedata[0] != $imagedata[1]) {
+                $thumb = new \App\Thumb($file['tmp_name']);
+                if ($imagedata[0] > $imagedata[1]) {
+                    $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+                }
+                if ($imagedata[0] < $imagedata[1]) {
+                    $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+                }
+
+
+                $image->content = $thumb->getImageAsString();
+                $thumb->resize(256, 256);
+                $image->thumb = $thumb->getImageAsString();
+
+
+            }
+
+
             $image->save();
             $this->_item->image_id = $image->image_id;
             $this->_item->Save();
@@ -415,7 +454,7 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->setlist->Reload();
     }
 
-    public function itemsetlistOnRow($row) {
+    public function itemsetlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('sname', $item->itemname));
         $row->add(new Label('scode', $item->item_code));
@@ -506,10 +545,7 @@ class ItemList extends \App\Pages\Base
             if (strlen($barcode) == 0) {
                 $barcode = $item->item_code;
             }
-            if (($barcode > 0) == false) {
-                $this->updateAjax(array(), "  alert('Не цифровой  код')");
-                return;
-            }
+
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
             $header['img'] = $img;

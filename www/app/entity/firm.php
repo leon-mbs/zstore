@@ -47,7 +47,7 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<phone>{$this->phone}</phone>";
         $this->details .= "<pposerver>{$this->pposerver}</pposerver>";
         $this->details .= "<pposerverport>{$this->pposerverport}</pposerverport>";
-        $this->details .= "<edittin>{$this->tin}</edittin>";
+        $this->details .= "<tin>{$this->tin}</tin>";
         $this->details .= "</details>";
 
         return true;

@@ -51,7 +51,7 @@ class Roles extends \App\Pages\Base
 
         //виджеты
 
-        
+
         $this->editpan->editform->add(new CheckBox('editwminqty'));
         $this->editpan->editform->add(new CheckBox('editwsdate'));
         $this->editpan->editform->add(new CheckBox('editwrdoc'));
@@ -148,8 +148,6 @@ class Roles extends \App\Pages\Base
 
         $this->editpan->editform->metaaccess->metarow->Reload();
 
-
-        
 
         if (strpos($this->role->widgets, 'wminqty') !== false) {
             $this->editpan->editform->editwminqty->setChecked(true);
@@ -274,7 +272,6 @@ class Roles extends \App\Pages\Base
         $widgets = "";
 
 
-       
         if ($this->editpan->editform->editwminqty->isChecked()) {
             $widgets = $widgets . ',wminqty';
         }

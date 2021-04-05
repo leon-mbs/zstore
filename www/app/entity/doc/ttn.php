@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Entity\Entry;
+use App\Entity\Item;
 use App\Helper as H;
 
 /**
@@ -167,6 +168,50 @@ class TTN extends Document
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
+
+
+            //оприходуем  с  производства
+            if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
+
+                if ($item->autooutcome == 1) { //комплекты
+                    $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
+                    foreach ($set as $part) {
+
+                        $itemp = \App\Entity\Item::load($part->item_id);
+                        $itemp->quantity = $item->quantity * $part->qty;
+                        $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
+
+                        foreach ($listst as $st) {
+                            $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                            $sc->setStock($st->stock_id);
+
+                            $sc->save();
+                        }
+
+
+                    }
+                }
+
+
+                $price = $item->getProdprice();
+
+                if ($price == 0) {
+                    throw new \Exception(H::l('noselfprice', $item->itemname));
+
+                }
+                $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
+
+                $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
+                $sc->setStock($stock->stock_id);
+
+
+                $sc->save();
+
+
+            }
+
+
+            //продажа
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
@@ -180,8 +225,8 @@ class TTN extends Document
         return true;
     }
 
-    public function onState(  $state) {
-        
+    public function onState($state) {
+
         if ($state == Document::STATE_INSHIPMENT) {
             //расходы на  доставку
             if ($this->headerdata['ship_amount'] > 0) {
@@ -199,10 +244,10 @@ class TTN extends Document
             $list = $order->getChildren('TTN');
 
             if (count($list) == 1 && $common['numberttn'] <> 1) {   //только  эта  ТТН
-                if ($state == Document::STATE_DELIVERED && ($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP || $order->state == Document::STATE_INPROCESS))  {
+                if ($state == Document::STATE_DELIVERED && ($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP || $order->state == Document::STATE_INPROCESS)) {
                     $order->updateStatus(Document::STATE_DELIVERED);
                 }
-                if ($state == Document::STATE_INSHIPMENT && ($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) )  {
+                if ($state == Document::STATE_INSHIPMENT && ($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP)) {
                     $order->updateStatus(Document::STATE_INSHIPMENT);
                 }
                 if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
