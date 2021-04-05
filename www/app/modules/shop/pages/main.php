@@ -20,25 +20,26 @@ class Main extends Base
 
         $this->cat_id = $id;
 
+           
 
         $this->add(new Label("breadcrumb", Helper::getBreadScrumbs($id), true));
 
         $this->add(new Panel("subcatlistp"));
 
-
+     
         $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Entity\\Category", " detail  not  like '%<noshop>1</noshop>%' and  parent_id=" . $id), $this, 'OnCatRow'));
-
+    
         $this->subcatlistp->subcatlist->Reload();
-
+   
 
         $this->add(new Panel("newlistp"));
-        $cat = '';
-        if ($id > 0) {
+        $cat='';
+        if($id > 0) {
             $c = \App\Entity\Category::load($id);
-            $ch = $c->getChildren();
-            $cat = " cat_id in (" . implode(',', $ch) . ") and ";
-        }
-
+            $ch = $c->getChildren() ;
+            $cat =" cat_id in (". implode(',',$ch) .") and "  ;    
+        } 
+        
         $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
     }
 
@@ -51,8 +52,8 @@ class Main extends Base
 
     public function OnNewRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("nimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
-        $row->add(new BookmarkableLink("nname", $item->getSEF()))->setValue($item->itemname);
+        $row->add(new BookmarkableLink("nimage",   $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("nname",   $item->getSEF()))->setValue($item->itemname);
     }
 
 }

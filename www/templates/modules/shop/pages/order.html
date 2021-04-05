@@ -2,7 +2,7 @@
 <body>
 <div class="row">
     <div class="col-12 col-md-8 col-lg-6">
-        <h3>Формирование заказа</h3>
+        <h3 class="mt-2 mb-3">Формирование заказа</h3>
         <form zippy="listform" method="post">
             <table class="table table-bordered" style="border-bottom: none;">
                 <tr>
@@ -17,7 +17,7 @@
                     <td><img zippy="photo" style="width: 64px;"/></td>
                     <td><a zippy="pname"></a></td>
                     
-                    <td><input class="_number" style="width:50px" type="number" zippy="quantity"/></td>
+                    <td><input class="_number" style="width: 60px;border: 1px solid #ced4da;border-radius: 0.25rem;padding: 2px 5px;" type="number" zippy="quantity"/></td>
                     <td style="text-align: right;" zippy="price"></td>
                     <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
                 </tr>
@@ -36,53 +36,52 @@
     <div class="w-100"></div>
     <div class="col-12 col-md-8 col-lg-6">
         <form zippy="orderform" method="post">
-           <div class="form-group row">
-                <label for="name" class="col-4">Имя  и/или  фамилия</label>
-                <div class="col-8">
-                    <input required="required" zippy="name" class="form-control">
-                </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Имя и/или фамилия</span>
+              </div>
+              <input required="required" zippy="name" class="form-control">
             </div>
-            <div class="form-group row">
-                <label for="phone" class="col-4">Телефон</label>
-                <div class="col-8">
-                    <input zippy="phone" class="form-control">
-                </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Телефон</span>
+              </div>
+              <input zippy="phone" class="form-control">
             </div>
-            <div class="form-group row">
-                <label for="email" class="col-4">Email</label>
-                <div class="col-8">
-                    <input zippy="email" class="form-control">
-                </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Email</span>
+              </div>
+              <input zippy="email" class="form-control">
             </div>
 
-            <div class="form-group row">
-                <label for="delivery" class="col-4">Доставка</label>
-                <div class="col-8">
-                    <select class="form-control" zippy="delivery">
-                        <option value="0">Выбрать</option>
-                    </select>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="delivery">Доставка</label>
                 </div>
+                <select class="form-control" zippy="delivery">
+                    <option value="0">Выбрать</option>
+                </select>
             </div>
-            <div class="form-group row">
-                <label data-label="address" for="address" class="col-4">Адрес</label>
-                <div class="col-8">
-                     
-                   <textarea zippy="address" class="form-control"></textarea>
-           
-                </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label data-label="address" for="address" class="input-group-text">Адрес</label>
+              </div>
+              <textarea zippy="address" class="form-control"></textarea>
             </div>
-            <div class="form-group row">
-                <label for="notes" class="col-4">Комментарий</label>
-                <div class="col-8">
-                    <textarea zippy="notes" class="form-control"></textarea>
-                </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Комментарий</span>
+              </div>
+              <textarea zippy="notes" class="form-control"></textarea>
             </div>
+
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Отправить">
             </div>
         </form>
-
-
     </div>
 </div>
 

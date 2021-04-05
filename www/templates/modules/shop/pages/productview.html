@@ -15,8 +15,11 @@
 <div class="row">
 
     <div class="col-12 col-sm-8 col-lg-6 col-xl-4">
-        <div class="card m-2">
+        <div class="card mb-2">
             <a data-type="image" zippy="product_image" data-toggle="lightbox" data-gallery="product" class="card-link">
+                <div class="ribbon-wrap">
+                    <div class="ribbon bg-warning" zippy="action">Акция</div>
+                </div>
                 <img class="card-img-top"/></a>
 
         </div>
@@ -36,25 +39,24 @@
         <div class="row">
             <div class="col-12">
                  
-                <h5 zippy="productname"></h5>
+                <h5 zippy="productname" class="text-dark"></h5>
                 <h6>Код:  <span zippy="productcode"></span></h6>
                 <h6><span zippy="manufacturername"></span></h6>
-                 <br> <br>
 
-             
-
-                <h4> &nbsp;<b zippy="price"  ></b></h4>
-                <h4> &nbsp;<b class="text-danger" zippy="actionprice"></b></h4>
+                <h4 class="mt-4"><b zippy="price"></b></h4>
+                <h4 class="mt-2 mb-4"><b class="text-danger" zippy="actionprice"></b></h4>
                 <b zippy="onstore"></b>
-                <br><a class="btn btn-success " zippy="buy"></a>
+                <br><a class="btn btn-success btn-lg mt-1" zippy="buy"></a>
                 <br>
-            
-                <i class="fas fa-balance-scale "></i> <a zippy="addtocompare">Добавить к сравнению</a><a zippy="compare">Сравнить</a>
-               
-               {{#usefeedback}}
-                <br> <input readonly="readonly" type="hidden" class="rating" zippy="rated" value="0"                            data-filled="fas fa-star" data-empty="far fa-star "/>
-                     &nbsp;<span zippy="comments"></span>
-               {{/usefeedback}}              
+                <div class="mt-3">
+                    <i class="fas fa-balance-scale "></i> <a zippy="addtocompare" class="text-dark">Добавить к сравнению</a><a zippy="compare" class="text-dark">Сравнить</a>
+                </div>
+                <div class="mt-1">
+                   {{#usefeedback}}
+                    <input readonly="readonly" type="hidden" class="rating" zippy="rated" value="0"                            data-filled="fas fa-star" data-empty="far fa-star "/>
+                         &nbsp;<span zippy="comments"></span>
+                   {{/usefeedback}}
+                </div>
             </div>
 
         </div>
@@ -93,7 +95,7 @@
                                                                     zippy="rate" value="0" data-filled="fas fa-star"
                                                                     data-empty="far  fa-star "/>
                     <br><b><span zippy="nick"></span>:</b>
-                    <p zippy="comment"></p>
+                    <p zippy="comment" class="mb-0"></p>
 
                 </td>
                 <td>
@@ -108,27 +110,31 @@
 
         <form method="post" zippy="formcomment">
             <a name="commentbegin"></a>
-            <div class="form-group">
-                <label>Имя</label>
-                <input class="form-control" type="text" zippy="nick" required="required"/>
-            </div>
-            <div class="form-group">
-                <label>Оценка</label>
-                <input type="hidden" class="rating" zippy="rating" value="0" data-filled="fas fa-star"
-                       data-empty="far fa-star "/>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Имя</span>
+              </div>
+              <input class="form-control" type="text" zippy="nick" required="required"/>
             </div>
 
-            <div class="form-group">
-                <label>Отзыв</label>
-                <textarea class="form-control" type zippy="comment" cols="40" rows="5" required="required"></textarea>
+            <div class="form-group mb-2">
+                <label>Оценка</label>
+                <input type="hidden" class="rating" zippy="rating" value="0" data-filled="fas fa-star" data-empty="far fa-star "/>
             </div>
-                  <div class="input-group mb-3">
-                    <input zippy="capchacode" required="required" class="form-control mr-4"
-                           placeholder="Введите код">
-                    <div class="input-group-append">
-                        <img zippy="capcha" style="cursor:pointer" title="Обновить..."/>
-                    </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Отзыв</span>
+              </div>
+              <textarea class="form-control" type zippy="comment" cols="40" rows="5" required="required"></textarea>
+            </div>
+
+            <div class="input-group mb-3">
+                <input zippy="capchacode" required="required" class="form-control mr-4" placeholder="Введите код">
+                <div class="input-group-append">
+                    <img zippy="capcha" style="cursor:pointer" title="Обновить..."/>
                 </div>
+            </div>
 
             <div class="form-group">
                 <input type="submit" value="Добавить" class="btn btn-primary "/>

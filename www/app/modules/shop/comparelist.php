@@ -51,13 +51,13 @@ class CompareList  // implements \Zippy\Interfaces\DataSource
     }
 
     // реализация  DataSource
-    /*
-     public function getItems($start, $count, $sortfield = null, $asc = null) {
-         return array_values($this->list);
-     }
+   /*
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+        return array_values($this->list);
+    }
 
-     public function getItemCount() {
-         return count($this->list);
-     }
-     */
+    public function getItemCount() {
+        return count($this->list);
+    }
+    */
 }

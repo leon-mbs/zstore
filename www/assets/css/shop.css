@@ -17,21 +17,48 @@
   
 }
 
+.logo-text:hover {
+  text-decoration: none !important;
+}
+
 a.container-fluid-img   {
-   font-size:32px; 
+   font-size: 24px; 
   
+}
+.wrapper {
+  min-height: 100vh;
+}
+.content {
+  flex: 1 0 auto;
+}
+
+.ribbon-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ribbon {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 2px 15px;
+  color: #000;
 }
   
  .header {
-    background-color: #eee;    
+   border-bottom: 1px solid #ced4da;
+   background-color: #eee;    
  }
  .footer {
   text-align: center;
   background-color: #333;
   color: #fff;
   
+  flex: 0 0 auto;
   bottom: 0;
-  width: 100%;
  
 }
 
@@ -41,11 +68,24 @@ a.container-fluid-img   {
 }
 
  
- 
+.card-custom-title {
+  flex: 1 1 auto;
+}
+.card-custom-body {
+  flex-direction: column;
+  height: 100%;
+}
+.card-custom-card {
+  height: 100%;
+}
+.searchform-search {
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
  
 
 .newlist {
-	margin-bottom: 10px;
+
 }
 
 
@@ -55,11 +95,11 @@ a.container-fluid-img   {
  }
  
  .fa-star {
-	 color: orange; 
+   color: orange; 
  }
 
 .card-body {
-	padding: 0; 
+  padding: 0; 
 }
 
 a:not([href]) {
@@ -109,7 +149,7 @@ a:not([href]):hover {
 
 .price-arrow{
      font-size:14px;
-	 
+   
 }
 
 .list-group-item-action {

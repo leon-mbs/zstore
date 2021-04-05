@@ -4,7 +4,7 @@ namespace App\Modules\Shop;
 
 use App\Modules\Shop\Entity\Product;
 use App\Modules\Shop\Entity\ProductAttribute;
-use App\Entity\Category;
+use App\Entity\Category  ;
 use ZCL\DB\DB;
 
 //класс  вспомагательных функций
@@ -15,12 +15,12 @@ class Helper
 
         $bs = "<li class=\"breadcrumb-item\"><a href='/'>Каталог</a></li>";
         if ($id > 0) {
-            $g = Category::load($id);
+            $g =  Category ::load($id);
             $gl = $g->getParents();
-            $gl = array_reverse($gl);
-            $all = Category::find('');
+            $gl = array_reverse($gl) ;
+            $all =  Category::find('');
             foreach ($gl as $cat_id) {
-                $c = $all[$cat_id];
+                $c = $all[$cat_id];  
                 $bs .= "<li class=\"breadcrumb-item\" ><a href='/scat/{$cat_id}'>{$c->cat_name}</a></li>";
             }
             $bs .= "<li class=\"breadcrumb-item active\">{$g->cat_name}</li>";
@@ -29,30 +29,30 @@ class Helper
     }
 
     //список  производителей в  данной группе  товаров 
-    public static function getManufacturers($cat_id = 0) {
+    public static function getManufacturers($cat_id=0 ) {
         $cat = '';
-        if ($cat_id > 0) {
-            $cat = " cat_id={$cat_id} and ";
+        if($cat_id>0) {
+          $cat =  " cat_id={$cat_id} and " ;
         }
         $list = array();
         $conn = DB::getConnect();
         $sql = " select manufacturer  from  items  where {$cat} disabled <> 1 order  by manufacturer ";
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
-            if (strlen($row["manufacturer"]) > 0) {
-                $list[] = $row["manufacturer"];
-            }
+           if(strlen($row["manufacturer"])>0) {
+               $list[] = $row["manufacturer"];  
+           } 
         }
 
         return $list;
     }
-
+     
     /**
      * список  значений атрибутов  товара
      *
      * @param mixed $product
      */
-    public static function getAttributeValuesByProduct($product, $all = true) {
+    public static function getAttributeValuesByProduct($product,$all=true) {
         $list = array();
         $conn = DB::getConnect();
         $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.item_id=  " . $product->item_id;
@@ -61,10 +61,8 @@ class Helper
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
             $prod = new ProductAttribute($row);
-            if ($all == false && $prod->hasData() == false) {
-                continue;
-            }
-
+            if($all == false  && $prod->hasData()==false) continue;
+            
             $list[$row['attribute_id']] = $prod;
         }
         return $list;
@@ -77,17 +75,17 @@ class Helper
      */
     public static function getProductAttributeListByGroup($cat_id) {
         $list = array();
-
+ 
         $conn = DB::getConnect();
-
+       
 
         $group = \App\Entity\Category::load($cat_id);
-        $grlist = $group->getParents();
-
+        $grlist = $group->getParents(); 
+        
         $grlist[] = $cat_id;
         $grlist[] = 0;
-
-        $sql = "select attribute_id,  cat_id,attributename,attributetype,valueslist,ordern from  shop_attributes_view   where cat_id  in(" . implode(',', $grlist) . ")  order  by ordern";
+                  
+        $sql = "select attribute_id,  cat_id,attributename,attributetype,valueslist,ordern from  shop_attributes_view   where cat_id  in(". implode(',',$grlist) .")  order  by ordern";
 
         $attrtypes = self::getAttributeTypes();
         $rs = $conn->Execute($sql);
@@ -112,8 +110,8 @@ class Helper
 
         $cat = \App\Entity\Category::load($cat_id);
         $plist = $cat->getParents();
-        $plist[] = $cat_id;
-        $grlist = implode(',', $plist);
+        $plist[]=$cat_id;
+        $grlist = implode(',',$plist) ;
         $sql = "select attribute_id,  cat_id,attributename,attributetype,valueslist from  shop_attributes   
                     where   cat_id  in($grlist) and attributetype in(1,2,3,4)  and attribute_id in(select distinct attribute_id from  shop_attributevalues)  order  by cat_id";
 
@@ -128,13 +126,13 @@ class Helper
 
     // список  типов  атрибутов товара
     public static function getAttributeTypes() {
-
-        return array(1 => \App\Helper::l("shopattrynname"),
-            //  2 => \App\Helper::l("shopattrnumname")  ,
-                     3 => \App\Helper::l("shopattrlistname"),
-                     4 => \App\Helper::l("shopattrsetname"),
-                     5 => \App\Helper::l("shopattrstrname")
-        );
+        
+        return array(1 => \App\Helper::l("shopattrynname") , 
+                  //  2 => \App\Helper::l("shopattrnumname")  , 
+                    3 => \App\Helper::l("shopattrlistname") ,
+                    4 => \App\Helper::l("shopattrsetname") ,
+                    5 => \App\Helper::l("shopattrstrname") 
+                    );
     }
 
     //список значений  для  атрибута типа  число
@@ -240,5 +238,5 @@ class Helper
 
      */
 
-
+      
 }

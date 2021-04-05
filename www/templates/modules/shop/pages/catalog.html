@@ -6,16 +6,17 @@
 
         </ol>
     </div>
-    <div class="col-12 col-md-2 col-xl-1  ">   
-       {{#usefilter}}
-       <ol class="breadcrumb" >
-       <li>
-          <a zippy="filterbtn" class="btn btn-success"  href href="javascript:void(0);" data-toggle="modal"
-                           data-target="#modalfilter"><i class="fa fa-filter"></i> Фильтр</a>
-        </li>
-        </ol>
-       {{/usefilter}}  
-    </div>
+ 
+  <div class="col-12 col-md-2 col-xl-1">   
+     {{#usefilter}}
+     <ol class="breadcrumb" >
+     <li>
+        <a zippy="filterbtn" class="btn btn-success"  href href="javascript:void(0);" data-toggle="modal"
+                         data-target="#modalfilter"><i class="fa fa-filter"></i> Фильтр</a>
+      </li>
+      </ol>
+     {{/usefilter}}  
+  </div>
 </div>
  <div class="row ">
 
@@ -24,20 +25,20 @@
      
         <div class="row">
             <div class="col-12 col-sm-8 col-md-9  col-lg-10">
-                <form zippy="sortform" class="form-inline  ">
-
-
-                    <label>Сортировать&nbsp;</label>
-                    <select class="form-control" zippy="sortorder">
-                        <option value="-1">По наименованию</option>
-                        <option value="0">По возрастанию цены</option>
-                        <option value="1">По убыванию цены</option>
-                        <option value="2">По рейтингу</option>
-                        <option value="3">По количеству отзывов</option>
-                        <option value="4">По продажам</option>
-                        
+                <form zippy="sortform" class="form-inline">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="sortorder">Сортировать</label>
+                    </div>
+                    <select class="custom-select form-control" zippy="sortorder">
+                      <option value="-1">По наименованию</option>
+                      <option value="0">По возрастанию цены</option>
+                      <option value="1">По убыванию цены</option>
+                      <option value="2">По рейтингу</option>
+                      <option value="3">По количеству отзывов</option>
+                      <option value="4">По продажам</option>
                     </select>
-
+                  </div>
                 </form>
                 <br>
             </div>
@@ -45,45 +46,52 @@
         <div class="row">
 
 
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3     " zippy="catlist">
-                <div class="card ">
-                          
-                    <a zippy="simage" data-toggle="lightbox" data-gallery="simage"><img class="card-img-top m-1"/></a>
-                    <b><a class="card-title  card-link" zippy="scatname"></a></b>
-                      <table >
-                      
-               {{#usefeedback}}
-                      <tr><td>
-                 <input  style="display:inline" readonly="readonly" type="hidden" class="rating" zippy="srated" value="0"                            data-filled="fas fa-star" data-empty="far fa-star "/>
-                    </td><td >
-                     <span zippy="scomments"></span>   
-                     </td></tr>
-               {{/usefeedback}}   
-                        
-                     <tr><td colspan="2" class="text-right" style="font-size:bigger;">       
-                             <b zippy="sprice"></b>&nbsp; <b class="text-danger" zippy="sactionprice"></b> 
-                      </td></tr>    
-                      </table >
-                    <a zippy="sbuy" class="btn btn-success btn-sm">Купить</a>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" zippy="catlist">
+              <div class="card card-custom-card">
+                
+                <div class="ribbon-wrap" zippy="saction">
+                    <div class="ribbon bg-warning">Акция</div>
                 </div>
-                <br>
+
+                <a zippy="simage" data-toggle="lightbox" data-gallery="simage">
+                  <img class="card-img-top"/>
+                </a>
+                <div class="card-body p-2 d-flex card-custom-body">
+                  <b class="card-custom-title"><a class="card-title card-link text-dark" zippy="scatname"></a></b>
+                  <div>
+                    {{#usefeedback}}
+                      <div class="d-flex align-items-center mt-1">
+                        <div class="mr-2">
+                          <input style="display:inline" readonly="readonly" type="hidden" class="rating" zippy="srated" value="0" data-filled="fas fa-star" data-empty="far fa-star "/>
+                        </div>
+                        <span zippy="scomments"></span>
+                      </div> 
+                    {{/usefeedback}}   
+
+                    <div colspan="2" class="mt-1" style="font-size:bigger;">       
+                      <b zippy="sprice"></b>&nbsp; <b class="text-danger" zippy="sactionprice"></b> 
+                    </div> 
+                    <a zippy="sbuy" class="btn btn-success btn-sm mt-2">Купить</a>
+                  </div>
+                </div >
+              </div>
             </div>
             <div zippy="pag" class="col-12">
 
             </div>
         </div>
-        <br>
         <div zippy="recentlyp">
-            <h4>Недавно просмотренные</h4>
+            <h4 class="mb-3 mt-2">Недавно просмотренные</h4>
             <div class="row">
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3   " zippy="rlist">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" zippy="rlist">
                     <div class="card h-100">
                         <a zippy="rimage"><img class="card-img-top"></a>
-                        <a class="  card-link" zippy="rname"></a>
+                        <div class="card-body p-2">
+                          <a class="card-title card-link text-dark" zippy="rname"></a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <br>
         </div>
     </div>
 </div>
@@ -110,9 +118,8 @@
             </div>
             </div>
 
-            <div class="form-group mt-2"  >
-                <input class="btn btn-info btn-sm  " type="submit" value="Применить">&nbsp;<a
-                    class="btn btn-light  btn-sm " zippy="sclear">Сбросить</a>
+            <div class="mt-2"  >
+                <input class="btn btn-info btn-sm  " type="submit" value="Применить">&nbsp;<a class="btn btn-light  btn-sm " zippy="sclear">Сбросить</a>
             </div>
         </form>
                 </div>

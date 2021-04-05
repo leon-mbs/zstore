@@ -21,12 +21,12 @@ class Basket implements \Zippy\Interfaces\DataSource
     }
 
     public function addProduct($product) {
-        if (isset($this->list[$product->item_id])) {
-            $this->list[$product->item_id]->quantity++;
-        } else {
-            $this->list[$product->item_id] = $product;
+        if(isset($this->list[$product->item_id] )) {
+           $this->list[$product->item_id]->quantity++;     
+        }  else {
+           $this->list[$product->item_id] = $product;    
         }
-
+        
     }
 
     public function deleteProduct($product_id) {
