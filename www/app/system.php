@@ -72,7 +72,7 @@ class System
             self::$_options[$group] = @unserialize($rs);
         }
 
-        return self::$_options[$group];
+        return @self::$_options[$group];
     }
 
     /**

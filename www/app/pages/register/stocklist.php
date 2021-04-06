@@ -69,7 +69,7 @@ class StockList extends \App\Pages\Base
 
         $row->add(new Label('partion', H::fa($doc->partion)));
         $row->add(new Label('qty', H::fqty($doc->quantity)));
-        $row->add(new Label('price', H::fa($doc->quantity == 0 ? '' : round(abs($doc->amount / $doc->quantity)))));
+        $row->add(new Label('price', H::fa($doc->quantity == 0 ? '' : round($doc->extcode + $doc->partion )))) ;
 
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('snumber', $doc->snumber));
@@ -145,7 +145,7 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select e.entry_id, e.quantity,  e.amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber from documents   d ";
+        $sql = "select e.extcode,e.entry_id, e.quantity,  e.amount  , d.document_id, d.document_number,d.document_date,s.partion,s.snumber from documents   d ";
         $sql .= " join `entrylist` e on d.`document_id` = e.`document_id` ";
         $sql .= " join `store_stock` s on s.`stock_id` = e.`stock_id` ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
