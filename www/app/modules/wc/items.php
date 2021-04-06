@@ -261,72 +261,77 @@ class Items extends \App\Pages\Base
         $common = System::getOptions("common");
 
         $client = \App\Modules\WC\Helper::getClient();
+        $i = 0;   
+ 
+        $page=1;
+        while(true) {
 
-
-        try {
-            $data = $client->get('products', array('status' => 'publish'));
-        } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
-            return;
-        }
-
-        //  $this->setInfo($json);
-        $i = 0;
-        foreach ($data as $product) {
-
-            if (strlen($product->sku) == 0) {
-                continue;
+           
+            try {
+                $data = $client->get('products', array('status' => 'publish','page'=>$page,'per_page'=>100));
+            } catch(\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
             }
-            $cnt = Item::findCnt("item_code=" . Item::qstr($product->sku));
-            if ($cnt > 0) {
-                continue;
-            } //уже  есть с  таким  артикулом
+            $page++;
+            
+            $c = count($data) ;
+            if($c==0) break;
+            foreach ($data as $product) {
 
-            $product->name = str_replace('&quot;', '"', $product->name);
-            $item = new Item();
-            $item->item_code = $product->sku;
-            $item->itemname = $product->name;
-            //   $item->description = $product->short_description;
-
-            if ($modules['wcpricetype'] == 'price1') {
-                $item->price1 = $product->price;
-            }
-            if ($modules['wcpricetype'] == 'price2') {
-                $item->price2 = $product->price;
-            }
-            if ($modules['wcpricetype'] == 'price3') {
-                $item->price3 = $product->price;
-            }
-            if ($modules['wcpricetype'] == 'price4') {
-                $item->price4 = $product->price;
-            }
-            if ($modules['wcpricetype'] == 'price5') {
-                $item->price5 = $product->price;
-            }
-
-
-            if ($common['useimages'] == 1) {
-                foreach ($product->images as $im) {
-
-                    $im = @file_get_contents($im->src);
-                    if (strlen($im) > 0) {
-                        $imagedata = getimagesizefromstring($im);
-                        $image = new \App\Entity\Image();
-                        $image->content = $im;
-                        $image->mime = $imagedata['mime'];
-
-                        $image->save();
-                        $item->image_id = $image->image_id;
-                        break;
-                    }
-
+                if (strlen($product->sku) == 0) {
+                    continue;
                 }
+                $cnt = Item::findCnt("item_code=" . Item::qstr($product->sku));
+                if ($cnt > 0) {
+                    continue;
+                } //уже  есть с  таким  артикулом
+
+                $product->name = str_replace('&quot;', '"', $product->name);
+                $item = new Item();
+                $item->item_code = $product->sku;
+                $item->itemname = $product->name;
+                //   $item->description = $product->short_description;
+
+                if ($modules['wcpricetype'] == 'price1') {
+                    $item->price1 = $product->price;
+                }
+                if ($modules['wcpricetype'] == 'price2') {
+                    $item->price2 = $product->price;
+                }
+                if ($modules['wcpricetype'] == 'price3') {
+                    $item->price3 = $product->price;
+                }
+                if ($modules['wcpricetype'] == 'price4') {
+                    $item->price4 = $product->price;
+                }
+                if ($modules['wcpricetype'] == 'price5') {
+                    $item->price5 = $product->price;
+                }
+
+
+                if ($common['useimages'] == 1) {
+                    foreach ($product->images as $im) {
+
+                        $im = @file_get_contents($im->src);
+                        if (strlen($im) > 0) {
+                            $imagedata = getimagesizefromstring($im);
+                            $image = new \App\Entity\Image();
+                            $image->content = $im;
+                            $image->mime = $imagedata['mime'];
+
+                            $image->save();
+                            $item->image_id = $image->image_id;
+                            break;
+                        }
+
+                    }
+                }
+
+                $item->save();
+                $i++;
             }
-
-            $item->save();
-            $i++;
         }
-
 
         $this->setSuccess("loaded_items", $i);
 

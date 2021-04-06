@@ -54,74 +54,96 @@ class Orders extends \App\Pages\Base
         $client = \App\Modules\WC\Helper::getClient();
 
         $this->_neworders = array();
-        $fields = array(
-            'status' => 'pending'
-        );
+        $page=1;
+        while(true) {
+     
+     
+            $fields = array(
+                'status' => 'pending' ,'per_page'=>100,'page'=>$page
+            );
 
 
-        try {
-            $data = $client->get('orders', $fields);
-        } catch(\Exception $ee) {
-            $this->setError($ee->getMessage());
-            return;
-        }
-
-        foreach ($data as $wcorder) {
-
-            $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
-            if ($isorder > 0) { //уже импортирован
-                continue;
+            try {
+                $data = $client->get('orders', $fields);
+            } catch(\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
             }
+           $fields = array(
+                'status' => 'on-hold' ,'per_page'=>100,'page'=>$page
+            );
 
-            $neworder = Document::create('Order');
-            $neworder->document_number = $neworder->nextNumber();
-            if (strlen($neworder->document_number) == 0) {
-                $neworder->document_number = 'WC00001';
+
+            try {
+                $data2 = $client->get('orders', $fields);
+            } catch(\Exception $ee) {
+                $this->setError($ee->getMessage());
+                return;
             }
-            $neworder->customer_id = $modules['wccustomer_id'];
+               if(is_array($data) && is_array($data2)) {
+                   $data = array_merge($data,$data2) ;
+               }
+            $page++;
+                
+            $c = count($data) ;
+            if($c==0) break;
 
-            //товары
-            $itlist = array();
-            foreach ($wcorder->line_items as $product) {
-                //ищем по артикулу 
-                if (strlen($product->sku) == 0) {
+            foreach ($data as $wcorder) {
+
+                $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
+                if ($isorder > 0) { //уже импортирован
                     continue;
                 }
-                $code = Item::qstr($product->sku);
 
-                $tovar = Item::getFirst('item_code=' . $code);
-                if ($tovar == null) {
-
-                    $this->setWarn("nofoundarticle_inorder", $product->name, $wcorder->order_id);
-                    continue;
+                $neworder = Document::create('Order');
+                $neworder->document_number = $neworder->nextNumber();
+                if (strlen($neworder->document_number) == 0) {
+                    $neworder->document_number = 'WC00001';
                 }
-                $tovar->quantity = $product->quantity;
-                $tovar->price = round($product->price);
+                $neworder->customer_id = $modules['wccustomer_id'];
 
-                $itlist[] = $tovar;
+                //товары
+                $itlist = array();
+                foreach ($wcorder->line_items as $product) {
+                    //ищем по артикулу 
+                    if (strlen($product->sku) == 0) {
+                        continue;
+                    }
+                    $code = Item::qstr($product->sku);
+
+                    $tovar = Item::getFirst('item_code=' . $code);
+                    if ($tovar == null) {
+
+                        $this->setWarn("nofoundarticle_inorder", $product->name, $wcorder->order_id);
+                        continue;
+                    }
+                    $tovar->quantity = $product->quantity;
+                    $tovar->price = round($product->price);
+
+                    $itlist[] = $tovar;
+                }
+                $neworder->packDetails('detaildata', $itlist);
+
+                $neworder->headerdata['wcorder'] = $wcorder->id;
+                $neworder->headerdata['wcorderback'] = 0;
+                $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
+                $neworder->amount = round($wcorder->total);
+                $neworder->document_date = time();
+                $neworder->notes = "WC номер:{$wcorder->id};";
+                $neworder->notes .= " Клиент:" . $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name . ";";
+                if (strlen($wcorder->billing->email) > 0) {
+                    $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
+                }
+                if (strlen($wcorder->billing->phone) > 0) {
+                    $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
+                }
+                $neworder->notes .= " Адрес:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
+                $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
+
+
+                $this->_neworders[] = $neworder;
             }
-            $neworder->packDetails('detaildata', $itlist);
-
-            $neworder->headerdata['wcorder'] = $wcorder->id;
-            $neworder->headerdata['wcorderback'] = 0;
-            $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
-            $neworder->amount = round($wcorder->total);
-            $neworder->document_date = time();
-            $neworder->notes = "WC номер:{$wcorder->id};";
-            $neworder->notes .= " Клиент:" . $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name . ";";
-            if (strlen($wcorder->billing->email) > 0) {
-                $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
-            }
-            if (strlen($wcorder->billing->phone) > 0) {
-                $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
-            }
-            $neworder->notes .= " Адрес:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
-            $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
-
-
-            $this->_neworders[] = $neworder;
         }
-
         $this->neworderslist->Reload();
 
     }
