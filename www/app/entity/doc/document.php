@@ -258,7 +258,7 @@ class Document extends \ZCL\DB\Entity
             if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);
                 if ($customer->discount > 0) {
-                    return; //процент
+                  //  return; //процент
                 } else {
                     $customer->bonus = $customer->bonus + $this->headerdata['paydisc'];
                     $customer->save();

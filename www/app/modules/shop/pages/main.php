@@ -27,7 +27,7 @@ class Main extends Base
         $this->add(new Panel("subcatlistp"));
 
      
-        $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Entity\\Category", " detail  not  like '%<noshop>1</noshop>%' and  parent_id=" . $id), $this, 'OnCatRow'));
+        $this->subcatlistp->add(new DataView("subcatlist", new EntityDataSource("\\App\\Entity\\Category", " detail  not  like '%<noshop>1</noshop>%' and  coalesce(parent_id,0)=" . $id), $this, 'OnCatRow'));
     
         $this->subcatlistp->subcatlist->Reload();
    
