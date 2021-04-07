@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4728cfc064cda9e3354789136f85c370",
+    "content-hash": "5c5c93cc4e38b33c3f0d38232c81189c",
     "packages": [
         {
             "name": "adodb/adodb-php",
-            "version": "v5.20.18",
+            "version": "v5.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ADOdb/ADOdb.git",
-                "reference": "0363eca78eed8bd02d1456072c729da302655241"
+                "reference": "199391f639a0b3346a80d66c00c87230fa3e6a07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ADOdb/ADOdb/zipball/0363eca78eed8bd02d1456072c729da302655241",
-                "reference": "0363eca78eed8bd02d1456072c729da302655241",
+                "url": "https://api.github.com/repos/ADOdb/ADOdb/zipball/199391f639a0b3346a80d66c00c87230fa3e6a07",
+                "reference": "199391f639a0b3346a80d66c00c87230fa3e6a07",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": "^5.5.9 || ^7.0 || ^8.0"
             },
             "type": "library",
             "autoload": {
@@ -50,7 +50,7 @@
                 }
             ],
             "description": "ADOdb is a PHP database abstraction layer library",
-            "homepage": "http://adodb.org/",
+            "homepage": "https://adodb.org/",
             "keywords": [
                 "abstraction",
                 "database",
@@ -62,7 +62,7 @@
                 "issues": "https://github.com/ADOdb/ADOdb/issues",
                 "source": "https://github.com/ADOdb/ADOdb"
             },
-            "time": "2020-06-28T17:52:20+00:00"
+            "time": "2021-02-27T11:38:53+00:00"
         },
         {
             "name": "automattic/woocommerce",
@@ -592,20 +592,20 @@
         },
         {
             "name": "leon-mbs/zdb",
-            "version": "1.2.12",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zdb.git",
-                "reference": "5f6a9864d48b349d2b8a0f0992f8d255f8270b57"
+                "reference": "813b841d5421280df3abcb712e8c60558630b560"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/5f6a9864d48b349d2b8a0f0992f8d255f8270b57",
-                "reference": "5f6a9864d48b349d2b8a0f0992f8d255f8270b57",
+                "url": "https://api.github.com/repos/leon-mbs/zdb/zipball/813b841d5421280df3abcb712e8c60558630b560",
+                "reference": "813b841d5421280df3abcb712e8c60558630b560",
                 "shasum": ""
             },
             "require": {
-                "adodb/adodb-php": "5.20.18",
+                "adodb/adodb-php": "v5.21.0",
                 "php": ">=7.1.0"
             },
             "type": "library",
@@ -632,27 +632,27 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zdb/issues",
-                "source": "https://github.com/leon-mbs/zdb/tree/1.2.12"
+                "source": "https://github.com/leon-mbs/zdb/tree/1.3.0"
             },
-            "time": "2021-03-06T21:42:19+00:00"
+            "time": "2021-04-06T19:59:15+00:00"
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.2.6",
+            "version": "2.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "6641c66ad38eeca0928855ab66e7b280a510d5a6"
+                "reference": "00981ec9cddcc1ab4b04aa3a99fccc67198d73e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/6641c66ad38eeca0928855ab66e7b280a510d5a6",
-                "reference": "6641c66ad38eeca0928855ab66e7b280a510d5a6",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/00981ec9cddcc1ab4b04aa3a99fccc67198d73e6",
+                "reference": "00981ec9cddcc1ab4b04aa3a99fccc67198d73e6",
                 "shasum": ""
             },
             "require": {
                 "leon-mbs/phpquery": ">=1.0.0",
-                "leon-mbs/zdb": "1.2.12",
+                "leon-mbs/zdb": "1.3.0",
                 "mustache/mustache": "v2.13.0",
                 "php": ">=7.2.0"
             },
@@ -679,9 +679,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.2.6"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.2.7"
             },
-            "time": "2021-03-06T21:45:27+00:00"
+            "time": "2021-04-06T20:00:30+00:00"
         },
         {
             "name": "lis-dev/nova-poshta-api-2",
@@ -1966,12 +1966,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0a55b3eacf6b4a0fdc6ec9d01e00285ca9942b2b"
+                "reference": "f3d64e623a75abaababa97e02a31e3771dea481a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0a55b3eacf6b4a0fdc6ec9d01e00285ca9942b2b",
-                "reference": "0a55b3eacf6b4a0fdc6ec9d01e00285ca9942b2b",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f3d64e623a75abaababa97e02a31e3771dea481a",
+                "reference": "f3d64e623a75abaababa97e02a31e3771dea481a",
                 "shasum": ""
             },
             "conflict": {
@@ -2015,7 +2015,7 @@
                 "doctrine/doctrine-module": "<=0.7.1",
                 "doctrine/mongodb-odm": ">=1,<1.0.2",
                 "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
-                "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
+                "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1|>=2.8.3,<2.8.4",
                 "dolibarr/dolibarr": "<11.0.4",
                 "dompdf/dompdf": ">=0.6,<0.6.2",
                 "drupal/core": ">=7,<7.74|>=8,<8.8.11|>=8.9,<8.9.9|>=9,<9.0.8",
@@ -2082,7 +2082,7 @@
                 "magento/magento1ee": ">=1,<1.14.4.3",
                 "magento/product-community-edition": ">=2,<2.2.10|>=2.3,<2.3.2-p.2",
                 "marcwillmann/turn": "<0.3.3",
-                "mautic/core": "<2.16.5|>=3,<3.2.4|= 2.13.1",
+                "mautic/core": "<3.3.2|= 2.13.1",
                 "mediawiki/core": ">=1.27,<1.27.6|>=1.29,<1.29.3|>=1.30,<1.30.2|>=1.31,<1.31.9|>=1.32,<1.32.6|>=1.32.99,<1.33.3|>=1.33.99,<1.34.3|>=1.34.99,<1.35",
                 "mittwald/typo3_forum": "<1.2.1",
                 "monolog/monolog": ">=1.8,<1.12",
@@ -2126,6 +2126,7 @@
                 "prestashop/contactform": ">1.0.1,<4.3",
                 "prestashop/gamification": "<2.3.2",
                 "prestashop/productcomments": ">=4,<4.2.1",
+                "prestashop/ps_emailsubscription": "<2.6.1",
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "privatebin/privatebin": "<1.2.2|>=1.3,<1.3.2",
                 "propel/propel": ">=2-alpha.1,<=2-alpha.7",
@@ -2295,7 +2296,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-29T21:01:39+00:00"
+            "time": "2021-04-06T18:11:53+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

@@ -43,6 +43,9 @@ class Main extends Base
         }
         $br = '';
         $cstr = '';
+        $brpay = '';
+        $cust = '';
+        
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
             $br = " and d.branch_id in ({$brids}) ";

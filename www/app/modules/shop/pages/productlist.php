@@ -42,7 +42,7 @@ class ProductList extends \App\Pages\Base
         }
 
         $this->op = System::getOptions("shop");
-        if (strlen($this->op['defcust']) == 0 || strlen($this->op['defstore']) == 0 || strlen($this->op['defpricetype']) == 0) {
+        if (strlen($this->op['defcust']) == 0 ||   strlen($this->op['defpricetype']) == 0) {
 
             $this->setWarn('notsetoptionsmag');
         }

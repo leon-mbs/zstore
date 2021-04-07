@@ -185,6 +185,25 @@ class Subscribe extends \ZCL\DB\Entity
         $header['amount'] = \App\Helper::fa($doc->amount);
         $header['forpay'] = \App\Helper::fa($doc->payamount);
         $header['customer_name'] = $doc->customer_name;
+        $header['nal'] = '';
+        $header['mf'] = '';
+        $header['pos'] = '';
+        if($doc->headerdata['payment']>0 && $doc->headerdata['payment']<10000) {
+             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);    
+             $header['mf'] = $mf->mf_name;
+             if($mf->beznal==1) {
+                 $header['nal'] = \App\Helper::l("cbeznal");
+             }  else {
+                 $header['nal'] = \App\Helper::l("cnal");
+             } 
+        }
+       if($doc->headerdata['nal']== \App\Entity\MoneyFund::CREDIT)    $header['mf'] = \App\Helper::l("credit");
+       if($doc->headerdata['nal']== \App\Entity\MoneyFund::PREPAID)    $header['mf'] = \App\Helper::l("prepaid");
+      
+       if($doc->headerdata['pos']) {
+           $pos =  \App\Entity\Pos::load($doc->headerdata['pos']);
+           $header['pos']  =  $pos->pos_name;
+       }
 
         $table = array();
         foreach ($doc->unpackDetails('detaildata') as $item) {
