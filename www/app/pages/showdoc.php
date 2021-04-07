@@ -25,8 +25,10 @@ class ShowDoc extends \Zippy\Html\WebPage
         $doc = $doc->cast();
         $filename = $doc->document_number;
 
-
-        $html = $doc->generateReport();
+ 
+        $html = $doc->generateReport();    
+      
+          
 
         if (strlen($html) > 0) {
 
@@ -37,6 +39,11 @@ class ShowDoc extends \Zippy\Html\WebPage
             }
             if ($type == "print") {
                 header("Content-Type: text/html;charset=UTF-8");
+                echo $html;
+            }
+           if ($type == "pos") {
+                header("Content-Type: text/html;charset=UTF-8"); 
+                $html = $doc->generatePosReport();
                 echo $html;
             }
             if ($type == "doc") {

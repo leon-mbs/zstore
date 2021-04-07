@@ -118,9 +118,7 @@ class DocView extends \Zippy\Html\PageFragment
          
          $this->posmob->pagename = $reportpage;
          $this->posmob->params = array('pos', $doc->document_id);
-         
-        
-        
+          
         $this->html->pagename = $reportpage;
         $this->html->params = array('html', $doc->document_id);
         $this->word->pagename = $reportpage;
