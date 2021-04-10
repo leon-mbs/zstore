@@ -29,6 +29,10 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('apikey', $modules['npapikey']));
 
         $form->onSubmit($this, 'saveapiOnClick');
+       
+        $form = $this->add(new Form("formcache"));
+     
+        $form->onSubmit($this, 'savecacheOnClick');
 
         $form = $this->add(new Form("oform"));
         $form->add(new DropDownChoice('area'))->onChange($this, 'onArea');
@@ -90,7 +94,7 @@ class Options extends \App\Pages\Base
 
         $api = new  Helper();
 
-        $areas = $api->getAreaList();
+        $areas = $api->getAreaListCache();
 
         $this->oform->area->setOptionList($areas);
 
@@ -110,7 +114,7 @@ class Options extends \App\Pages\Base
     public function onArea($sender) {
 
         $api = new  Helper();
-        $list = $api->getCityList($sender->getValueName());
+        $list = $api->getCityListCache($sender->getValue());
 
 
         $this->oform->city->setOptionList($list);
@@ -120,11 +124,61 @@ class Options extends \App\Pages\Base
     public function onCity($sender) {
 
         $api = new  Helper();
-        $list = $api->getPointList($sender->getValue());
+        $list = $api->getPointListCache($sender->getValue());
 
 
         $this->oform->point->setOptionList($list);
 
+    }
+    public function savecacheOnClick($sender) {
+
+        @unlink(_ROOT."upload/arealist.dat") ;
+        @unlink(_ROOT."upload/citylist.dat") ;
+        @unlink(_ROOT."upload/pointlist.dat") ;
+        $api = new  Helper();
+
+        $areas = array();  
+        $tmplist= $api->getAreas() ;
+       
+        foreach ($tmplist['data'] as $a) {
+            $areas[$a['Ref']] = $a['Description'];
+        }
+        
+        $d = serialize($areas) ;
+ 
+        file_put_contents(_ROOT."upload/arealist.dat",$d) ;
+  
+   
+        $cities = array();  
+   
+       
+        $tmplist= $api->getCities(0) ;
+ 
+        foreach ($tmplist['data'] as $a) {
+            $cities[] = array('Ref'=>$a['Ref'],'Area'=>$a['Area'],'Description'=>$a['Description'])  ;
+        }
+         
+        $d = serialize($cities) ;
+          
+        file_put_contents(_ROOT."upload/citylist.dat",$d) ;
+     
+     
+     
+        $wlist = array();  
+        $tmplist= $api->getWarehouses('') ;
+
+        foreach ($tmplist['data'] as $a) {
+            $wlist[] = array('Ref'=>$a['Ref'],'City'=>$a['CityRef'],'Description'=>$a['Description'])  ;
+        }
+         
+        
+        $d = serialize($wlist) ;
+          
+        file_put_contents(_ROOT."upload/pointlist.dat",$d) ;
+       
+        $this->updateData();
+          
+        $this->setSuccess('saved') ;
     }
 
 }

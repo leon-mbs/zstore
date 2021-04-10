@@ -18,7 +18,18 @@
                 <input type="submit" value="Сохранить" class="btn   btn-primary  "/>
 
             </div>
-        </form>
+        </form> <br>
+        <h5>Обновление справочников  НП</h5>
+        <small>Города  и отделения  кешируются  для  более  быстрого  показа  списков  выбора</small>
+        
+        <form zippy="formcache"> 
+          
+          <input type="submit" onclick=" $('#loader').show() " value="Обновить" class="btn   btn-primary  "/>
+          <img id="loader" style="display:none"   src="/assets/images/ajax-loader.gif"  />
+
+        
+        
+        </form>   <br>
         <h5>Данные отправителя по умолчанию.</h5>
 
         <form zippy="oform">

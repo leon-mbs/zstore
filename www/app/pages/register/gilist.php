@@ -377,7 +377,7 @@ class GIList extends \App\Pages\Base
 
         $api = new  \App\Modules\NP\Helper();
 
-        $areas = $api->getAreaList();
+        $areas = $api->getAreaListCache();
         //   $st = $api->getServiceTypes() ;
         //   $ct = $api->getTypesOfCounterparties() ;
         $pf = $api->getPaymentForms();
@@ -477,7 +477,7 @@ class GIList extends \App\Pages\Base
     public function onSelArea($sender) {
 
         $api = new  \App\Modules\NP\Helper();
-        $list = $api->getCityList($sender->getValueName());
+        $list = $api->getCityListCache($sender->getValue());
 
 
         $this->nppan->npform->selcity->setOptionList($list);
@@ -487,7 +487,7 @@ class GIList extends \App\Pages\Base
     public function onSelCity($sender) {
 
         $api = new  \App\Modules\NP\Helper();
-        $list = $api->getPointList($sender->getValue());
+        $list = $api->getPointListCache($sender->getValue());
 
 
         $this->nppan->npform->selpoint->setOptionList($list);
@@ -497,7 +497,7 @@ class GIList extends \App\Pages\Base
     public function onBayArea($sender) {
 
         $api = new  \App\Modules\NP\Helper();
-        $list = $api->getCityList($sender->getValueName());
+        $list = $api->getCityListCache($sender->getValue());
 
 
         $this->nppan->npform->baycity->setOptionList($list);
@@ -507,7 +507,7 @@ class GIList extends \App\Pages\Base
     public function onBayCity($sender) {
 
         $api = new  \App\Modules\NP\Helper();
-        $list = $api->getPointList($sender->getValue());
+        $list = $api->getPointListCache($sender->getValue());
 
 
         $this->nppan->npform->baypoint->setOptionList($list);

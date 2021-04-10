@@ -100,4 +100,47 @@ NEW - 41    Відправлення у місті ХХXХ. (Статус для
         */
     }
 
+    
+    
+    
+    public function getAreaListCache() {
+        $areas= @file_get_contents(_ROOT."upload/arealist.dat") ;
+        $areas = @unserialize($areas)  ;
+        if(is_array($areas))  return $areas;
+
+        return array();
+    }   
+    
+    public function getCityListCache($arearef) {
+        $cities = @file_get_contents(_ROOT."upload/citylist.dat") ;
+        $cities = @unserialize($cities)  ;
+        if(is_array($cities)==false)  return array();
+        $ret = array() ;
+        foreach($cities as $c) {
+           if($c['Area']==$arearef)   {
+               $ret[$c['Ref']] = $c['Description']  ;  
+           }
+           
+        }
+        return $ret;
+    }   
+    
+    
+   public function getPointListCache($cityref) {
+        $points = @file_get_contents(_ROOT."upload/pointlist.dat") ;
+        $points = @unserialize($points)  ;
+        if(is_array($points)==false)  return array();
+        $ret = array() ;
+        foreach($points as $p) {
+           if($p['City']==$cityref)   {
+               $ret[$p['Ref']] = $p['Description']  ;  
+           }
+           
+        }
+        return $ret;
+    }   
+    
+    
+    
+    
 }
