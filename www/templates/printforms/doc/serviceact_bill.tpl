@@ -35,7 +35,14 @@
     <tr>
         <td colspan="2"> {{device}}</td>
     </tr>
+    <tr>
+        <td colspan="2"> С/Н {{serial}}</td>
+    </tr>
     {{/isdevice}}
+    
+   {{#iswork}}
+    
+    
     <tr>
         <td colspan="2">Работы:</td>
     </tr>
@@ -50,7 +57,12 @@
         <td align="right">Всего:</td>
         <td align="right">{{total}}</td>
     </tr>
+  
+    
+    {{/iswork}}
+  
     {{#ispay}}
+    
     <tr>
         <td colspan="2">Оплаты:</td>
     </tr>
@@ -67,10 +79,18 @@
 
     </tr>
     <tr>
-        <td>Исполнитель</td>
+        <td colspan="2"> <br></td>
+
+    </tr>
+    <tr  >
+        <td >Исполнитель</td>
         <td>________</td>
     </tr>
     <tr>
+        <td colspan="2"> <br></td>
+
+    </tr>
+    <tr style="margin-top:4px;">
         <td>Клиент</td>
         <td>________</td>
     </tr>

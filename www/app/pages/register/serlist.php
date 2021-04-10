@@ -222,7 +222,7 @@ class SerList extends \App\Pages\Base
         }
 
 
-        App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", $doc->document_id);
+        App::Redirect("\\App\\Pages\\Doc\\ServiceAct", $doc->document_id);
     }
 
 

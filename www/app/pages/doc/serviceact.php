@@ -109,8 +109,7 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
-            $this->OnPayment($this->docform->payment);
-
+ 
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -138,6 +137,7 @@ class ServiceAct extends \App\Pages\Base
 
             }
         }
+        $this->OnPayment($this->docform->payment);
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
         $this->calcTotal();
@@ -326,10 +326,12 @@ class ServiceAct extends \App\Pages\Base
                 if ($sender->id == 'execdoc') {
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
+                    $this->_doc->Pay();
                 }
 
                 if ($sender->id == 'inprocdoc') {
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                    $this->_doc->Pay();
                 }
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -345,7 +347,6 @@ class ServiceAct extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
     }
@@ -445,10 +446,10 @@ class ServiceAct extends \App\Pages\Base
             }
         }
         if (count($this->_servicelist) == 0) {
-            $this->setError("noenterpos");
+          //  $this->setError("noenterpos");
         }
         if ($this->docform->payment->getValue() == 0) {
-            $this->setError("noselpaytype");
+             $this->setError("noselpaytype");
         }
 
         return !$this->isError();

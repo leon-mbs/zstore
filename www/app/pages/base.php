@@ -152,7 +152,7 @@ class Base extends \Zippy\Html\WebPage
     //вывод ошибки,  используется   в дочерних страницах
 
     public function setError($msg, $p1 = "", $p2 = "") {
-        $msg = Helper::l($msg, $p1, $p2);
+        $msg = Helper::l($msg, $p1, $p2);    
         System::setErrorMsg($msg);
     }
 

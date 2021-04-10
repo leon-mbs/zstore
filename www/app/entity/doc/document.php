@@ -229,10 +229,24 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
-     * Выполнение документа - обновление склада
+     * Выполнение документа - обычно обновление склада
      *
      */
     public function Execute() {
+
+    }
+   /**
+     * Запись  проводок по  складу
+     * На  случаей  если  проводки надо  выполнить  на статусе  отличном  от Executed
+     */
+    public function Store() {
+
+    }
+   /**
+     * Запись  платежей
+     * На  случаей  если  платежи надо  выполнить  на статусе  отличном  от Executed
+     */
+    public function Pay() {
 
     }
 
@@ -348,10 +362,10 @@ class Document extends \ZCL\DB\Entity
             $this->Cancel();
         }
         if ($state == self::STATE_EXECUTED) {
-            if (false === $this->Execute()) {
-                $this->Cancel();
+          //  if (false === $this->Execute()) {
+          //      $this->Cancel();
                 return false;
-            }
+          //  }
         }
         $oldstate = $this->state;
         $this->state = $state;

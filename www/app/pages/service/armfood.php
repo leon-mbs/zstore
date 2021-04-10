@@ -26,6 +26,8 @@ use Zippy\Html\Link\SubmitLink;
  */
 class ARMFood extends \App\Pages\Base
 { 
+      private $pos;
+    
       public function __construct() {
         parent::__construct();
 
@@ -33,7 +35,24 @@ class ARMFood extends \App\Pages\Base
         if (false == \App\ACL::checkShowSer('ARMFood')) {
             return;
         }
-        
+        //обшие настройки
+        $this->add(new Form('setupform'));
+      
+
+        $this->setupform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), 0));
+        $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
+        $this->setupform->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), H::getDefPriceType()));
+
+        $this->setupform->add(new SubmitButton('setup'))->onClick($this, 'setupOnClick');
+       
         
       }
+      
+      
+      public function setupOnClick($sender){
+        $this->_pos = \App\Entity\Pos::load($this->setupform->pos->getValue());
+        $this->_store = \App\Entity\Pos::load($this->setupform->store->getValue());
+    
+      }
+      
 }

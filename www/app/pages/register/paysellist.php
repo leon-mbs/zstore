@@ -237,7 +237,7 @@ class PaySelList extends \App\Pages\Base
         $pay = $row->getDataItem();
         $row->add(new Label('plamount', H::fa($pay->amount)));
         $row->add(new Label('pluser', $pay->username));
-        $row->add(new Label('pldate', H::fd($pay->paydate)));
+        $row->add(new Label('pldate', H::fdt($pay->paydate)));
         $row->add(new Label('plmft', $pay->mf_name));
         $row->add(new Label('plcomment', $pay->notes));
     }
