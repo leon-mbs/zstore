@@ -82,20 +82,21 @@ class MoneyFund extends \ZCL\DB\Entity
      *
      * @param mixed $beznal добавить пункт  В  кредит
      * @param mixed $prepaid добавить пункт  Была предоплата
+     * @param mixed $nal 0 - все, 1- нол,2- безнал
      */
-    public static function getList($credit = false, $prepaid = false) {
+    public static function getList($credit = false, $prepaid = false,$nal=0) {
         $ml = array();
         if ($credit) {
             $ml[self::CREDIT] = \App\Helper::l("credit");
         }
-        //     if ($beznal)
-        //      $ml[self::BEZNAL] = 'Безналичный расчет';
         if ($prepaid) {
             $ml[self::PREPAID] = \App\Helper::l("prepaid");
         }
 
-        foreach (MoneyFund::findArray("mf_name", "") as $k => $v) {
-            $ml[$k] = $v;
+        foreach (MoneyFund::find("") as $k => $v) {
+            if($nal==1 && $v->beznal  ==1) continue ;  
+            if($nal==2 && $v->beznal  !=1) continue ;  
+            $ml[$k] = $v->mf_name;
         }
 
         return $ml;

@@ -26,7 +26,7 @@ use Zippy\Html\Link\SubmitLink;
  */
 class ARMFood extends \App\Pages\Base
 { 
-      private $pos;
+      private $_pos ;
     
       public function __construct() {
         parent::__construct();
@@ -36,23 +36,30 @@ class ARMFood extends \App\Pages\Base
             return;
         }
         //обшие настройки
-        $this->add(new Form('setupform'));
+        $this->add(new Form('setupform'))->onSubmit($this, 'setupOnClick');
       
 
         $this->setupform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), 0));
         $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
         $this->setupform->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), H::getDefPriceType()));
-
-        $this->setupform->add(new SubmitButton('setup'))->onClick($this, 'setupOnClick');
-       
+        $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(false,false,1) , H::getDefMF()));
+        $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(false,false,2) , H::getDefMF()));
+      
         
       }
-      
-      
+        
       public function setupOnClick($sender){
+        $store =  $this->setupform->store->getValue() ;
+        $nal =  $this->setupform->nal->getValue() ;
+        $beznal =  $this->setupform->beznal->getValue() ;
+        $pricetype =  $this->setupform->pricetype->getValue() ;
         $this->_pos = \App\Entity\Pos::load($this->setupform->pos->getValue());
-        $this->_store = \App\Entity\Pos::load($this->setupform->store->getValue());
     
+        if($store==0  || $nal==0  || $beznal==0 || strlen($pricetype)==0 || $this->_pos==null) {
+            $this->setError(H::l("notalldata")) ;
+            return;
+        }
+     
       }
       
 }

@@ -421,6 +421,7 @@
    "shopattrno" :"Нет",
    "shopfeedbaks" :"Отзывов(%s)",
    "shopneworder" :"Создан заказ %s" ,
-   "shopyoursorder" :"Ваш заказ %s"
+   "shopyoursorder" :"Ваш заказ %s",
+   "notalldata" :"Не  введены все  данные"
    
  }

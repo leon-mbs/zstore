@@ -89,7 +89,7 @@ class ServiceAct extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'АКТ-000000';
+        return 'Акт-000000';
     }
 
     public function generatePosReport() {

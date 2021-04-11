@@ -410,7 +410,8 @@
    "shopattrno" :"Нема",
   "shopfeedbaks" :"Вiдгукiв(%s)",
    "shopneworder" :"Створено замовлення %s" ,
-   "shopyoursorder" :"Ваше замовлення %s"
+   "shopyoursorder" :"Ваше замовлення %s" ,
+   "notalldata" :"Не  введенi всi  данi"
      
   
   }
