@@ -45,7 +45,7 @@ class EqList extends \App\Pages\Base
 
         $this->itemtable->eqlist->setPageSize(Helper::getPG());
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->eqlist));
-        $this->itemtable->eqlist->setSelectedClass('table-success');
+       
         $this->itemtable->eqlist->Reload();
 
         $this->add(new Form('itemdetail'))->setVisible(false);
@@ -91,6 +91,7 @@ class EqList extends \App\Pages\Base
         Equipment::delete($item->eq_id);
 
         $this->itemtable->eqlist->Reload();
+        $this->resetURL()  ;
     }
 
     public function useOnClick($sender) {

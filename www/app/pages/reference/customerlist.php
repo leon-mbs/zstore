@@ -59,7 +59,7 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
         $this->customertable->customerlist->setPageSize(Helper::getPG());
         $this->customertable->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->customerlist));
-        $this->customertable->customerlist->setSelectedClass('table-success');
+    
         $this->customertable->customerlist->Reload();
         $this->customertable->add(new SortLink("sortdoc", "docs", $this, "onSort"));
         $this->customertable->add(new SortLink("sortname", "customer_name", $this, "onSort"));
@@ -193,7 +193,10 @@ class CustomerList extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
         $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
-
+        if($item->customer_id== $this->_customer->customer_id) {
+            $row->setAttribute('class', 'table-success');
+        }
+  
     }
 
     public function onSort($sender) {

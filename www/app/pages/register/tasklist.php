@@ -48,8 +48,7 @@ class TaskList extends \App\Pages\Base
         $this->add(new Panel('caltab'));
 
         $this->tasktab->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
-        $this->tasktab->tasklist->setSelectedClass('table-success');
-
+   
         $this->tasktab->tasklist->setPageSize(H::getPG(H::getPG()));
         $this->tasktab->add(new \Zippy\Html\DataList\Paginator('pag', $this->tasktab->tasklist));
 
@@ -138,6 +137,10 @@ class TaskList extends \App\Pages\Base
         if ($task->state == Document::STATE_CLOSED || $task->state == Document::STATE_EXECUTED) {
             $row->taskedit->setVisible(false);
         }
+        if($task->document_id== $this->_task->document_id) {
+            $row->setAttribute('class', 'table-success');
+        }
+        
     }
 
     //панель кнопок
@@ -175,7 +178,7 @@ class TaskList extends \App\Pages\Base
 
 
         $this->tasktab->statuspan->docview->setDoc($this->_task);
-        $this->tasktab->tasklist->setSelectedRow($sender->getOwner());
+        
         $this->tasktab->tasklist->Reload(false);
         $this->goAnkor('dankor');
     }
