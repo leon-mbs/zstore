@@ -121,7 +121,7 @@
     {{/iseq}}
     <tr>
         <td colspan="5">
-            {{notes}}
+            {{{notes}}}
         </td>
 
     </tr>

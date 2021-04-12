@@ -13,7 +13,7 @@
     </tr>
     <tr>
         <td colspan="8" valign="middle">
-            {{notes}} <br>
+            {{{notes}}}<br>
         </td>
     </tr>
 

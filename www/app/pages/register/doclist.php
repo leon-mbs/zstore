@@ -79,8 +79,7 @@ class DocList extends \App\Pages\Base
 
 
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
-        $doclist->setSelectedClass('table-success');
-
+      
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->doclist->setCurrentPage($filter->page);
@@ -89,12 +88,12 @@ class DocList extends \App\Pages\Base
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         if ($docid > 0) {
             $this->docview->setVisible(true);
-            $dc = Document::load($docid);
-            $this->docview->setDoc($dc);
+            $this->_doc = Document::load($docid);
+            $this->docview->setDoc($this->_doc);
             //$this->doclist->setSelectedRow($docid);
-            $filter->searchnumber = $dc->document_number;
-            $this->filter->searchnumber->setText($dc->document_number);
-            $doclist->Reload();
+           // $filter->searchnumber = $dc->document_number;
+           // $this->filter->searchnumber->setText($dc->document_number);
+             $doclist->Reload(false);
         }
         $this->add(new Form('statusform'))->SetVisible(false);
         $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
@@ -208,6 +207,12 @@ class DocList extends \App\Pages\Base
             $row->delete->setVisible(false);
             $row->cancel->setVisible(true);
         }
+        
+        if($doc->document_id== $this->_doc->document_id) {
+            $row->setAttribute('class', 'table-success');
+        }
+        
+        
     }
 
     public function onSort($sender) {
@@ -241,7 +246,7 @@ class DocList extends \App\Pages\Base
 
     public function showOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
-        $this->doclist->setSelectedRow($sender->getOwner());
+       
         $this->show($doc);
     }
 

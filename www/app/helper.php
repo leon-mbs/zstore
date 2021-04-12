@@ -225,22 +225,46 @@ class Helper
 
         return $template;
     }
-
-    public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
+  
+   public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
         global $_config;
         if (strlen($emailfrom) == 0) {
             $emailfrom = $_config['smtp']['user'];
         }
+        
+         try {
+        
+           $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
-        $mail = new \PHPMailer\PHPMailer\PHPMailer();
-        $mail->setFrom($emailfrom);
-        $mail->addAddress($emailto);
-        $mail->Subject = $subject;
-        $mail->msgHTML($template);
-        $mail->CharSet = "UTF-8";
-        $mail->IsHTML(true);
-        // $mail->AddAttachment($_SERVER['DOCUMENT_ROOT'].'/facturen/test.pdf', $name = 'test',  $encoding = 'base64', $type = 'application/pdf');
-        $mail->send();
+            if ($_config['smtp']['usesmtp'] == true) {
+                $mail->isSMTP();
+                $mail->Host = $_config['smtp']['host'];
+                $mail->Port = $_config['smtp']['port'];
+                $mail->Username = $_config['smtp']['user'];
+                $mail->Password = $_config['smtp']['pass'];
+                $mail->SMTPAuth = true;
+                if ($_config['smtp']['tls'] == true) {
+                    $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                }
+
+            }
+        
+        
+        
+            $mail->setFrom($emailfrom);
+            $mail->addAddress($emailto);
+            $mail->Subject = $subject;
+            $mail->msgHTML($template);
+            $mail->CharSet = "UTF-8";
+            $mail->IsHTML(true);
+            if ($mail->send() === false) {
+                System::setErrorMsg($mail->ErrorInfo);
+            } else {
+              //  System::setSuccessMsg(Helper::l('email_sent'));
+            }
+        } catch(\Exception $e) {
+            System::setErrorMsg($e->getMessage());
+        }
 
         /*
           $from_name = '=?utf-8?B?' . base64_encode("Онлайн каталог") . '?=';

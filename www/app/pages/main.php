@@ -282,7 +282,6 @@ class Main extends Base
 
         $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
 
-
     }
 
     public function sdlistOnRow($row) {
@@ -406,11 +405,13 @@ class Main extends Base
 
     }
 
-    /*
+    
     public function test($args,$post) {
         
-      return "test"; 
-    }  */
+      // $this->testa->setText("Hello");
+     
+    }   
+      
 
 
 }

@@ -461,9 +461,9 @@ class GIList extends \App\Pages\Base
 
         $this->nppan->npform->baytel->setText($tel);
         $name = explode(' ', $c->customer_name);
-        $this->nppan->npform->bayfirstname->setText($name[0]);
-        $this->nppan->npform->baymiddlename->setText($name[1]);
-        $this->nppan->npform->baylastname->setText($name[2]);
+        $this->nppan->npform->baylastname->setText($name[0]);
+        $this->nppan->npform->bayfirstname->setText($name[1]);
+        $this->nppan->npform->baymiddlename->setText($name[2]);
 
         $this->nppan->npform->npttncust->setText($cust);
         $this->nppan->npform->npttaddress->setText($this->_doc->headerdata["ship_address"]);

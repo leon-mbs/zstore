@@ -45,7 +45,7 @@ class GroupList extends \App\Pages\Base
         usort($this->_grouplist,function($a,$b){ return $a->full_name > $b->full_name; }) ;
         
         $this->add(new DataView('grouplist', new ArrayDataSource($this,'_grouplist'), $this, 'OnGroupRow'));
-        $this->grouplist->setSelectedClass('table-success');
+        
         $this->grouplist->Reload();
  
         $attrpanel = $this->add(new Panel('attrpanel'));
@@ -76,12 +76,15 @@ class GroupList extends \App\Pages\Base
     public  function    OnGroupRow($row){
         $group = $row->getDataItem() ;
         $row->add(new  ClickLink('groupname',$this,'onGroup'))->setValue($group->full_name) ;
+        if($group->cat_id== $this->group->cat_id) {
+            $row->setAttribute('class', 'table-success');
+        }
+        
     }
     
     public function onGroup($sender ) {
         $this->group = $sender->getOwner()->getDataItem();
-        $this->grouplist->setSelectedRow($sender->getOwner());
-      
+        
         $this->grouplist->Reload(false);        
         $this->UpdateAttrList();
         $this->attrpanel->attreditform->setVisible(false);

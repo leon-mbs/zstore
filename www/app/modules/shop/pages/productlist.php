@@ -64,7 +64,7 @@ class ProductList extends \App\Pages\Base
         
         $this->_grouplist = array_merge($first,$this->_grouplist);
         $this->add(new DataView('grouplist', new ArrayDataSource($this,'_grouplist'), $this, 'OnGroupRow'));
-        $this->grouplist->setSelectedClass('table-success');
+       
         $this->grouplist->Reload();
 
 
@@ -113,12 +113,14 @@ class ProductList extends \App\Pages\Base
     public  function    OnGroupRow($row){
         $group = $row->getDataItem() ;
         $row->add(new  ClickLink('groupname',$this,'onGroup'))->setValue($group->full_name) ;
+        if($group->cat_id== $this->group->cat_id) {
+            $row->setAttribute('class', 'table-success');
+        }
     }
     
     public function onGroup($sender ) {
         $this->group = $sender->getOwner()->getDataItem();
-        $this->grouplist->setSelectedRow($sender->getOwner());
-      
+        
         $this->grouplist->Reload(false);        
         $this->editpanel->setVisible(false);     
         $this->listpanel->setVisible(true);     

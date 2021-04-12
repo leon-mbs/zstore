@@ -57,7 +57,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "bankacc"         => @$mf->bankacc,
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "email"           => $this->headerdata["email"],
-                        "notes"           => $this->notes,
+                        "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),

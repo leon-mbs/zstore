@@ -54,7 +54,7 @@
     </tr>
     <tr>
         <td colspan="6">
-            {{notes}}
+             {{{notes}}}
         </td>
 
     </tr>

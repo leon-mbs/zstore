@@ -46,7 +46,7 @@ class ProdIssue extends Document
                         "pareaname"       => $this->headerdata["pareaname"],
                         "document_number" => $this->document_number,
 
-                        "notes" => $this->notes
+                        "notes" => nl2br($this->notes)
         );
 
         $report = new \App\Report('doc/prodissue.tpl');

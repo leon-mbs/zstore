@@ -30,7 +30,7 @@ class IncomeMoney extends Document
         $header = array(
             'amount'          => H::fa($this->amount),
             'date'            => H::fd($this->document_date),
-            "notes"           => $this->notes,
+            "notes"           => nl2br($this->notes),
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
             "contract"        => $this->headerdata["contract_id"] > 0 ? $this->headerdata["contract_number"] : false,
             "emp"             => strlen($this->headerdata["emp_name"]) > 0 ? $this->headerdata["emp_name"] : false,

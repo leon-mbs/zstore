@@ -27,7 +27,7 @@ class MoveMoney extends Document
         $header = array(
             'amount'          => H::fa($this->amount),
             'date'            => H::fd($this->document_date),
-            "notes"           => $this->notes,
+            "notes"           => nl2br($this->notes),
             "from"            => $this->headerdata["paymentfromname"],
             "to"              => $this->headerdata["paymenttoname"],
             "document_number" => $this->document_number

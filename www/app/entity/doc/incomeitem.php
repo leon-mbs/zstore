@@ -62,7 +62,7 @@ class IncomeItem extends Document
             "total"           => H::fa($this->amount),
             "to"              => $this->headerdata["storename"],
             "emp"             => false,
-            "notes"           => $this->notes,
+            "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
         if ($this->headerdata["emp"] > 0 && $this->headerdata['examount']) {
