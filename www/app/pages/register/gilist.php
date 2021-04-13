@@ -49,8 +49,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
         $doclist = $this->listpan->add(new DataView('doclist', new GoodsIssueDataSource($this), $this, 'doclistOnRow'));
-        $doclist->setSelectedClass('table-success');
-
+     
         $this->listpan->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->listpan->add(new ClickLink('csv', $this, 'oncsv'));
@@ -143,6 +142,10 @@ class GIList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
+        if($doc->document_id== $this->_doc->document_id) {
+            $row->setAttribute('class', 'table-success');
+        }
+        
     }
 
     public function statusOnSubmit($sender) {
@@ -323,7 +326,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->setVisible(true);
         $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']);
         $this->statuspan->docview->setDoc($this->_doc);
-        $this->listpan->doclist->setSelectedRow($sender->getOwner());
+       
         $this->listpan->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');

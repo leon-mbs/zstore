@@ -13,10 +13,12 @@ INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`) VALUES(2, 'Каса', '�
 INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  'Наша  фiрма', '', 0);
 
 
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:24:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:10:"dateformat";s:5:"d.m.Y";s:11:"partiontype";s:1:"1";s:4:"curr";s:2:"ru";s:6:"phonel";s:2:"10";s:6:"price1";s:17:"Роздрiбна";s:6:"price2";s:12:"Оптова";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"defprice";s:0:"";s:8:"shopname";s:18:"Наша фiрма";s:8:"ts_break";s:2:"60";s:8:"ts_start";s:5:"09:00";s:6:"ts_end";s:5:"18:00";s:11:"autoarticle";i:1;s:10:"usesnumber";i:0;s:10:"usescanner";i:0;s:9:"useimages";i:0;s:9:"usebranch";i:0;s:10:"allowminus";i:1;s:6:"useval";i:0;s:6:"capcha";i:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('api', 'a:3:{s:3:"exp";N;s:3:"key";N;s:5:"atype";s:1:"3";}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:28:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:10:"dateformat";s:5:"d.m.Y";s:11:"partiontype";s:1:"1";s:4:"curr";s:2:"gr";s:6:"phonel";s:2:"10";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"defprice";s:2:"10";s:8:"shopname";s:20:"Наша  фирма";s:8:"ts_break";s:2:"60";s:8:"ts_start";s:5:"09:00";s:6:"ts_end";s:5:"18:00";s:11:"autoarticle";i:1;s:10:"usesnumber";i:0;s:10:"usescanner";i:0;s:9:"useimages";i:0;s:16:"usemobileprinter";i:0;s:10:"usecattree";i:0;s:9:"usebranch";i:0;s:10:"noallowfiz";i:0;s:10:"allowminus";i:1;s:6:"useval";i:0;s:6:"capcha";i:0;s:9:"numberttn";i:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:8:{s:6:"pwidth";s:4:"100%";s:9:"pricetype";s:6:"price1";s:11:"barcodetype";s:5:"EAN13";s:9:"pfontsize";s:2:"16";s:5:"pname";i:1;s:5:"pcode";i:0;s:8:"pbarcode";i:1;s:6:"pprice";i:0;}');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('modules', 'a:11:{s:6:"ocsite";s:20:"http://local.ostore3";s:9:"ocapiname";s:5:"admin";s:5:"ockey";s:256:"Bf81dB8fY2waVxlhych4fFprGfxF2tULlSlHiwEXZqf45E6HDBoA6XjocGcziRsfCQsRovzzDAvMBImmrlzXqEJcMByQpkfeLYfZBDoYstDVuA0Qvx86YkeXVwQ6I2v8xEXS2ZL6ioH1l8qinySGZdRrO5mgFCFWKhgKxIfkNOYpvzIZdR2MdqkHKSzHGSfoDVmbts8slGNFqYzvkXQSP0VaHcw0fYmBZLo0HEvLb2EiBZ5A8EcGDZWWtndg2wlY";s:13:"occustomer_id";s:1:"8";s:11:"ocpricetype";s:6:"price1";s:6:"wcsite";s:15:"http://local.wp";s:6:"wckeyc";s:43:"ck_a36c9d5d8ef70a34001b6a44bc245a7665ca77e7";s:6:"wckeys";s:43:"cs_12b03012d9db469b45b1fc82e329a3bc995f3e36";s:5:"wcapi";s:2:"v3";s:13:"wccustomer_id";s:1:"8";s:11:"wcpricetype";s:6:"price1";}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'a:8:{s:7:"defcust";s:1:"2";s:12:"defpricetype";s:6:"price1";s:5:"email";s:0:"";s:8:"shopname";s:17:"Наш магаз";s:12:"currencyname";s:6:"грн";s:8:"uselogin";i:0;s:9:"usefilter";i:1;s:11:"usefeedback";i:1;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('sms', 'a:7:{s:13:"turbosmstoken";s:0:"";s:12:"smssemytoken";s:0:"";s:12:"smssemydevid";s:0:"";s:11:"flysmslogin";s:0:"";s:10:"flysmspass";s:0:"";s:8:"flysmsan";s:0:"";s:7:"smstype";s:1:"0";}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('val', 'a:5:{s:6:"valuan";s:0:"";s:6:"valusd";s:2:"28";s:7:"valeuro";s:0:"";s:6:"valrub";s:0:"";s:8:"valprice";i:0;}');
   
   
   
@@ -83,3 +85,7 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(86, 3, 'Розрахунки с  поставщиками', 'PaySelList', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(87, 3, 'Розрахунки с  покупателями', 'PayBayList', 'Каса та платежі', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(88, 1, 'Перемiщення грошей', 'MoveMoney', 'Каса та платежі', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(89, 1, 'Замовленя кафе', 'OrderFood', 'Кафе', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(90, 3, 'Журнал замовлень кафе', 'OrderFoodList', 'Кафе', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(91, 5, 'АРМ касира (кафе)', 'ARMFood', 'Кафе', 0);
+

@@ -46,7 +46,7 @@ class GRList extends \App\Pages\Base
 
 
         $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
-        $doclist->setSelectedClass('table-success');
+    
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
@@ -94,6 +94,10 @@ class GRList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
+        if($doc->document_id== $this->_doc->document_id) {
+            $row->setAttribute('class', 'table-success');
+        }
+        
     }
 
     public function statusOnSubmit($sender) {
@@ -157,7 +161,7 @@ class GRList extends \App\Pages\Base
 
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
-        $this->doclist->setSelectedRow($sender->getOwner());
+      
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');

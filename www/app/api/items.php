@@ -24,8 +24,8 @@ class items extends \App\API\Base\JsonRPC
 
 
         $list = array();
-        foreach (\App\Entity\Store::find('', 'store_name') as $store) {
-            $list[] = array('id' => $store->store_id, 'name' => $store->store_name);
+        foreach (\App\Entity\Store::find('', 'storename') as $store) {
+            $list[] = array('id' => $store->store_id, 'name' => $store->storename);
 
         }
         return $list;

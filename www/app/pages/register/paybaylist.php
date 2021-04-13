@@ -53,8 +53,7 @@ class PayBayList extends \App\Pages\Base
         $this->plist->add(new ClickLink("back", $this, "onBack"));
 
         $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
-        $doclist->setSelectedClass('table-success');
-
+      
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
         $this->add(new Panel("paypan"))->setVisible(false);
@@ -185,7 +184,10 @@ class PayBayList extends \App\Pages\Base
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
         $row->pay->setVisible($doc->payamount > 0);
-    }
+         if($doc->document_id== $this->_doc->document_id) {
+            $row->setAttribute('class', 'table-success');
+        }
+   }
 
     //просмотр
     public function showOnClick($sender) {
@@ -194,7 +196,7 @@ class PayBayList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
-        $this->plist->doclist->setSelectedRow($sender->getOwner());
+        
         $this->plist->doclist->Reload(false);
         $this->docview->setVisible(true);
         $this->paypan->setVisible(false);

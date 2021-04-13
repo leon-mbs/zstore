@@ -20,9 +20,9 @@ use Zippy\Html\Panel;
 use App\Entity\Pay;
 
 /**
- * журнал  заказов
+ * журнал  заказов (общепит)
  */
-class OrderList extends \App\Pages\Base
+class OrderFoodList extends \App\Pages\Base
 {
 
     private $_doc = null;
@@ -34,7 +34,7 @@ class OrderList extends \App\Pages\Base
      */
     public function __construct() {
         parent::__construct();
-        if (false == \App\ACL::checkShowReg('OrderList')) {
+        if (false == \App\ACL::checkShowReg('OrderFoodList')) {
             return;
         }
 
@@ -44,7 +44,7 @@ class OrderList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 3 => 'Все'), 0));
 
-        $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new OrderFoodDataSource($this), $this, 'doclistOnRow'));
   
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
@@ -504,7 +504,7 @@ class OrderList extends \App\Pages\Base
 /**
  *  Источник  данных  для   списка  документов
  */
-class OrderDataSource implements \Zippy\Interfaces\DataSource
+class OrderFoodDataSource implements \Zippy\Interfaces\DataSource
 {
 
     private $page;
@@ -519,7 +519,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
 
-        $where = "     meta_name  = 'Order'  ";
+        $where = "     meta_name  = 'OrderFood'  ";
 
         $status = $this->page->filter->status->getValue();
         if ($status == 0) {
@@ -534,12 +534,12 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
-            $where .= " and  meta_name  = 'Order'  and  content like {$st} ";
+            $where .= " and  meta_name  = 'OrderFood'  and  content like {$st} ";
         }
         $sn = trim($this->page->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-            $where = "  meta_name  = 'Order' and  document_number like  {$sn} ";
+            $where = "  meta_name  = 'OrderFood' and  document_number like  {$sn} ";
         }
 
         return $where;

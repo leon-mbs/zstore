@@ -171,7 +171,7 @@ class Outcome extends \App\Pages\Base
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <> 0   {$cat}   {$cust}  
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderCust')
                {$br}  {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -188,7 +188,7 @@ class Outcome extends \App\Pages\Base
         left  join `customers`  c on c.`customer_id` = e.`customer_id`
          join `documents_view`  d on d.`document_id` = e.`document_id`
            where   e.`quantity` <>0       
-             and d.`meta_name` in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+             and d.`meta_name` in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN','OrderCust')         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               {$br} {$u}   AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.`customer_name`,c.`customer_id`
@@ -203,7 +203,7 @@ class Outcome extends \App\Pages\Base
               join `items` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <>0
-              and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN')           
+              and d.`meta_name` in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust')           
                {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.`document_date`
@@ -234,7 +234,7 @@ class Outcome extends \App\Pages\Base
               join `items_view` i on e.`item_id` = i.`item_id`
              join `documents_view` d on d.`document_id` = e.`document_id`
                where e.`item_id` >0  and e.`quantity` <>0
-               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN')
+               and d.`meta_name` in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderCust')
                 {$br} {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -265,7 +265,7 @@ class Outcome extends \App\Pages\Base
                
                  join `documents_view`  d on d.`document_id` = e.`document_id`
                    where     e.`quantity` <>0 
-                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN')    
+                     and d.`meta_name` in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderCust')    
                       {$br} {$u}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
                       AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})

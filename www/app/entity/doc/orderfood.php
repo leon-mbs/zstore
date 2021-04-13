@@ -5,10 +5,10 @@ namespace App\Entity\Doc;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ  заказ
+ * Класс-сущность  документ заказ (общепит)
  *
  */
-class Order extends \App\Entity\Doc\Document
+class OrderFood extends \App\Entity\Doc\Document
 {
 
     public function generateReport() {
@@ -64,7 +64,7 @@ class Order extends \App\Entity\Doc\Document
         );
 
 
-        $report = new \App\Report('doc/order.tpl');
+        $report = new \App\Report('doc/orderfood.tpl');
 
         $html = $report->generate($header);
 
@@ -73,25 +73,18 @@ class Order extends \App\Entity\Doc\Document
 
 
     protected function getNumberTemplate() {
-        return 'З-000000';
+        return 'ЗО-000000';
     }
 
     public function getRelationBased() {
         $list = array();
-        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        $list['ProdReceipt'] = self::getDesc('ProdReceipt');
-        $list['Invoice'] = self::getDesc('Invoice');
-        $list['POSCheck'] = self::getDesc('POSCheck');
-        $list['Task'] = self::getDesc('Task');
-        $list['TTN'] = self::getDesc('TTN');
-        $list['OrderCust'] = self::getDesc('OrderCust');
-
+         
 
         return $list;
     }
 
     public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
+        return array(self::EX_EXCEL,   self::EX_POS);
     }
 
 
@@ -123,7 +116,7 @@ class Order extends \App\Entity\Doc\Document
         );
 
 
-        $report = new \App\Report('doc/order_bill.tpl');
+        $report = new \App\Report('doc/orderfood_bill.tpl');
 
         $html = $report->generate($header);
 
@@ -133,26 +126,6 @@ class Order extends \App\Entity\Doc\Document
 
     protected function onState($state) {
 
-        if ($state == self::STATE_INPROCESS) {
-            //списываем бонусы
-            if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
-                $customer = \App\Entity\Customer::load($this->customer_id);
-                if ($customer->discount > 0) {
-                    return; //процент
-                } else {
-                    $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
-                    $customer->save();
-                }
-            }
-
-
-            if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
-                if ($payed > 0) {
-                    $this->payed = $payed;
-                }
-            }
-        }
-
+        
     }
 }
