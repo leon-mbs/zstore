@@ -121,7 +121,7 @@ class Subscribe extends \ZCL\DB\Entity
             $notify = 0;
             if ($sub->reciever_type == self::RSV_CUSTOMER) {
                 $c = \App\Entity\Customer::load($doc->customer_id);
-                if ($c != null) {
+                if ($c != null && $c->nosubs != 1) {
                     $phone = $c->phone;
                     // $viber = $c->viber;
                     $email = $c->email;

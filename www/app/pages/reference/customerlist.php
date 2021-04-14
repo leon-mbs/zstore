@@ -82,6 +82,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => Helper::l("bayer"), 2 => Helper::l("seller")), 0));
 
+        $this->customerdetail->add(new CheckBox('editnosubs'));
         $this->customerdetail->add(new CheckBox('editdisabled'));
 
         $this->customerdetail->add(new TextInput('discount'));
@@ -239,6 +240,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editleadsource->setValue($this->_customer->leadsource);
         $this->customerdetail->editleadstatus->setValue($this->_customer->leadstatus);
         $this->customerdetail->editholding->setValue($this->_customer->holding);
+        $this->customerdetail->editnosubs->setChecked($this->_customer->nosubs == 1);
         $this->customerdetail->editdisabled->setChecked($this->_customer->status == 1);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
         $this->customerdetail->editisholding->setChecked($this->_customer->isholding);
@@ -309,9 +311,11 @@ class CustomerList extends \App\Pages\Base
 
 
         } else {
+            
             $this->_customer->status = $this->customerdetail->editdisabled->isChecked() ? 1 : 0;
         }
-
+        $this->_customer->nosubs = $this->customerdetail->editnosubs->isChecked() ? 1 : 0;
+        
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
         if ($this->_customer->isholding == 1 && $this->_customer->holding > 0) {

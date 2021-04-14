@@ -47,6 +47,7 @@ class docs extends \App\API\Base\JsonRPC
         if ($doc != null) {
             throw  new  \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
         }
+        $doc = Document::create('Order');
 
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
@@ -56,8 +57,7 @@ class docs extends \App\API\Base\JsonRPC
                 $doc->customer_id = $args['customer_id'];
             }
         }
-        $doc = Document::create('Order');
-
+ 
         if ($options['usebranch'] == 1) {
             if ($args['branch_id'] > 0) {
                 $doc->branch_id = $args['branch_id'];
