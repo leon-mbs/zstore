@@ -125,6 +125,7 @@ class Orders extends \App\Pages\Base
                 $neworder->packDetails('detaildata', $itlist);
 
                 $neworder->headerdata['wcorder'] = $wcorder->id;
+                $neworder->headerdata['outnumber'] = $wcorder->id;
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
                 $neworder->amount = round($wcorder->total);

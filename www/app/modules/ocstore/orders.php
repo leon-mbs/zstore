@@ -164,6 +164,7 @@ class Orders extends \App\Pages\Base
             }
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = round($shoporder->total);
+            $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
 

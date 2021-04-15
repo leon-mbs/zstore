@@ -47,8 +47,10 @@ class docs extends \App\API\Base\JsonRPC
         if ($doc != null) {
             throw  new  \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
         }
-        $doc = Document::create('Order');
 
+        
+        $doc = Document::create('Order');
+        
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
             if ($c == null) {
@@ -57,7 +59,7 @@ class docs extends \App\API\Base\JsonRPC
                 $doc->customer_id = $args['customer_id'];
             }
         }
- 
+
         if ($options['usebranch'] == 1) {
             if ($args['branch_id'] > 0) {
                 $doc->branch_id = $args['branch_id'];
@@ -67,9 +69,14 @@ class docs extends \App\API\Base\JsonRPC
         }
 
         $doc->document_number = $doc->nextNumber();
-        $doc->document_date = time();
+        if (strlen($neworder->document_number) == 0) {
+            $neworder->document_number = 'API00001';
+        }
+         $doc->document_date = time();
         $doc->state = Document::STATE_NEW;
+        $doc->headerdata["outnumber"] = $args['number'];
         $doc->headerdata["apinumber"] = $args['number'];
+        $doc->document_number = $args['number'];
         $doc->headerdata["phone"] = $args['phone'];
         $doc->headerdata["email"] = $args['email'];
         $doc->headerdata["ship_address"] = $args['ship_address'];
@@ -88,6 +95,7 @@ class docs extends \App\API\Base\JsonRPC
 
                     $item->quantity = $it['quantity'];
                     $item->price = $it['price'];
+                    $item->desc = $it['desc'];
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;

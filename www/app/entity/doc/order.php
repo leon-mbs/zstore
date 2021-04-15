@@ -5,7 +5,7 @@ namespace App\Entity\Doc;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ  заказ
+ * Класс-сущность  документ расходная  накладая
  *
  */
 class Order extends \App\Entity\Doc\Document
@@ -54,7 +54,9 @@ class Order extends \App\Entity\Doc\Document
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "notes"           => nl2br($this->notes),
-                        "document_number" => $this->document_number,
+                        "outnumber" => $this->headerdata["outnumber"],
+                        "isoutnumber" => strlen($this->headerdata["outnumber"])>0,
+                        "document_number" => $this->document_number,    
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
