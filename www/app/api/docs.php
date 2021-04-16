@@ -72,11 +72,11 @@ class docs extends \App\API\Base\JsonRPC
         if (strlen($neworder->document_number) == 0) {
             $neworder->document_number = 'API00001';
         }
-         $doc->document_date = time();
+        $doc->document_date = time();
         $doc->state = Document::STATE_NEW;
         $doc->headerdata["outnumber"] = $args['number'];
         $doc->headerdata["apinumber"] = $args['number'];
-        $doc->document_number = $args['number'];
+       // $doc->document_number = $args['number'];
         $doc->headerdata["phone"] = $args['phone'];
         $doc->headerdata["email"] = $args['email'];
         $doc->headerdata["ship_address"] = $args['ship_address'];

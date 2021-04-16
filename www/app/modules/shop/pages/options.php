@@ -7,6 +7,7 @@ use App\Entity\Item;
 use App\Modules\Shop\Entity\Product;
 use App\System;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\File;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
@@ -28,7 +29,9 @@ class Options extends \App\Pages\Base
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
         
-        $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
+        $this->shop->add(new DropDownChoice('shopordertype', array(),0));
+        $this->shop->add(new AutocompleteTextInput('shopdefcust'))->onText($this, 'OnAutoCustomer');
+          
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new TextInput('email'));
         $this->shop->add(new TextInput('shopname'));
@@ -51,7 +54,9 @@ class Options extends \App\Pages\Base
         }
 
         
-        $this->shop->shopdefcust->setValue($shop['defcust']);
+        $this->shop->shopdefcust->setKey($shop['defcust']);
+        $this->shop->shopdefcust->setText($shop['defcustname']);
+        $this->shop->shopordertype->setValue($shop['ordertype']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
@@ -82,10 +87,11 @@ class Options extends \App\Pages\Base
     public function saveShopOnClick($sender) {
         $shop = array();
 
-        //todo контрагент магазина, кому  нотификацию
-
-        $shop['defcust'] = $this->shop->shopdefcust->getValue();
+  
+        $shop['defcust'] = $this->shop->shopdefcust->getKey();
+        $shop['defcustname'] = $this->shop->shopdefcust->getText();
         
+        $shop['ordertype'] = $this->shop->shopordertype->getValue();
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
@@ -152,6 +158,9 @@ class Options extends \App\Pages\Base
 
         System::setOptions("shop", $shop);
         $this->setSuccess('refreshed');
+    }
+    public function OnAutoCustomer($sender) {
+        return \App\Entity\Customer::getList($sender->getText(), 1);
     }
 
 }

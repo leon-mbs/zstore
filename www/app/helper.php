@@ -689,9 +689,7 @@ class Helper
         if ($curr == 'ru') {
             $totalstr = \App\Util::money2str_ru($amount);
         }
-        if (false) {
-            $totalstr = \App\Util::money2str_ru($amount);
-        }
+         
 
         if ($_config['common']['lang'] == 'ua') {
             $totalstr = \App\Util::money2str_ua($amount);
