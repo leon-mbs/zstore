@@ -7,47 +7,151 @@
 <br>
  <form zippy="setupform">
     <div class="row">
-        <div class="col-12 col-md-4 col-xl-3">
-            <div class="form-group  ">
-                <label for="nal">Наличная касса</label>
-                <select class="form-control" zippy="nal">
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="form-group row ">
+                <label class="col-6" for="nal">Наличная касса</label>
+                   <div class="col-6">
+            <select class="form-control" zippy="nal">
                     <option value="0">Не выбрана</option>
                 </select>
             </div>
-           <div class="form-group  ">
-                <label for="beznal">Безналичный счет</label>
-                <select class="form-control" zippy="beznal">
+            </div>
+           <div class="form-group row  ">
+                <label class="col-6" for="beznal">Безналичный счет</label>
+                  <div class="col-6">
+             <select class="form-control" zippy="beznal">
                     <option value="0">Не выбран</option>
                 </select>
             </div>
-           <div class="form-group  ">
-                <label for="pos">POS терминал</label>
-                <select class="form-control" zippy="pos">
+            </div>
+           <div class="form-group  row ">
+                <label class="col-6" for="pos">POS терминал</label>
+                  <div class="col-6">
+             <select class="form-control" zippy="pos">
                     <option value="0">Не выбрано</option>
                 </select>
             </div>
+            </div>
 
 
-            <div class="form-group  ">
-                <label for="store">Склад</label>
-                <select class="form-control" zippy="store">
+            <div class="form-group row  ">
+                <label class="col-6" for="store">Склад</label>
+                  <div class="col-6">
+             <select class="form-control" zippy="store">
                     <option value="0">Не выбран</option>
                 </select>
             </div>
+            </div>
 
-            <div class="form-group  ">
-                <label for="pricetype">Тип цены</label>
-                <select class="form-control" zippy="pricetype">
+
+            <div class="form-group  row ">
+                <label class="col-6" for="pricetype">Тип цены</label>
+                  <div class="col-6">
+             <select class="form-control" zippy="pricetype">
 
                 </select>
             </div>
-            <div class="form-group  ">
-                <input type="submit" value="Ввод товаров >"   class="btn btn-info">
+            </div>
+             <div class="form-group row  ">
+                <label class="col-6" for="foodtype">Основной способ потребления</label>
+               <div class="col-6">
+                <select class="form-control" zippy="foodtype">
+                     <option value="0">На месте</option>
+                     <option value="1">С собой</option>
+                </select>
+                <small>В  зависимости  от наличия  столиков</small>
+            </div>
+            </div>
+            <div class="form-group   ">
+                <input type="submit" value="Ввод товаров >"   class="btn btn-success">
             </div>
         </div>
 
     </div>
 
  </form>
+ 
+    <div class="row" zippy="listpanel">
+     
+      <div class="col-8">
+      
+      </div>
+      
+      <div class="col-8">
+     
+         <div    >
+<form zippy="navform" class="form-inline  ">                   
+             <input  zippy="baddnew"  type="submit" value="Добавить  "   class="btn btn-info mr-4"> 
+           {{#usescanner}}
+            Штрих-код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
+                                       onkeydown="onBarCode()"> &nbsp;<a zippy="addcode" class="btn btn-info btn-sm mr-4">OK</a>
+                                       
+           {{/usescanner}}
+           Клиент  <input   class="form-control"  > <a zippy="newcust" class="btn btn-info  ">+</a>
+          </form> 
+          
+          </div>
+          
+ 
+ 
+              
+ <form zippy="listsform">          
+         <table class="table">
+           <tr>
+           <th>Наименование</th>
+           <th>Код</th>
+           <th class="text=right">Кол.</th>
+           <th class="text=right">Цена</th>
+         
+           <th >С собой</th>
+           <th > </th>
+           </tr>
+          <tr zippy="itemrows"> 
+          
+          
+            <td></td>
+            <td></td>
+            <td>
+            <a class="btn btn-info btn-sm mr-1">-</a>
+            <span></span>
+            <a class="btn btn-info  btn-sm ml-1">+</a>
+            </td>
+            <td></td>
+            <td><input type="checkbox"></td>
+            <td><i class="fa fa-trash"></i></td>
+            </tr>
+         </table>
+         <div class="form-group  ">
+                <input zippy="bbackoptions" type="submit" value="< К настройкам"   class="btn btn-info mr-4"> 
+                <input zippy="btopay" type="submit" value="К оплате >"   class="btn btn-success">
+         </div>
+   </form>  
+ 
+   </div>
+   </div>
+   
+ <form zippy="payform">
+         <div class="form-group  ">
+                <input zippy="bbackitems" type="submit" value="< К списку"   class="btn btn-info mr-4"> 
+                <input zippy="btoprint" type="submit" value="Печать >"   class="btn btn-success">
+         </div>
+
+  </form>
+{{#usescanner}}
+<script>
+    $(document).ready(function () {
+
+        $('#barcode').focus();
+    });
+
+    function onBarCode(ele) {
+
+        if (event.key === 'Enter' || event.keyCode == 13) {
+            // alert($('#barcode').val());
+            $('#addcode').click()
+        }
+    }
+</script>  
+  
 </body>
 </html>

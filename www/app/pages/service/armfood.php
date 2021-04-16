@@ -18,6 +18,7 @@ use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
+use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 
@@ -44,6 +45,19 @@ class ARMFood extends \App\Pages\Base
         $this->setupform->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), H::getDefPriceType()));
         $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(false,false,1) , H::getDefMF()));
         $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(false,false,2) , H::getDefMF()));
+        $this->setupform->add(new DropDownChoice('foodtype', array(), 1));
+
+
+        $this->add(new Panel('listpanel'))->setVisible(false);
+        $this->listpanel->add(new Form('listsform'));
+        $this->listpanel->listsform->add(new SubmitButton('bbackoptions'))->onClick($this, 'backoptionsOnClick');
+        $this->listpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
+        $this->listpanel->listsform->add(new SubmitButton('baddnew'))->onClick($this, 'addnewClick');
+      
+        
+        $this->add(new Form('payform'))->setVisible(false);
+        $this->payform->add(new SubmitButton('bbackitems'))->onClick($this, 'backoptionsOnClick');
+        $this->payform->add(new SubmitButton('btoprint'))->onClick($this, 'topayOnClick');
       
         
       }
@@ -60,6 +74,20 @@ class ARMFood extends \App\Pages\Base
             return;
         }
      
+         $this->setupform->setVisible(false);
+         $this->listpanel->setVisible(true);
+     
+     
       }
-      
+
+      public function backoptionsOnClick($sender){
+          $this->setupform->setVisible(true);
+          $this->listpanel->setVisible(false);
+      }
+     
+      public function topayOnClick($sender){
+          $this->listpanel->setVisible(false);
+          $this->payform->setVisible(true);
+      }
+
 }

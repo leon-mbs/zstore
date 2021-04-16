@@ -43,12 +43,23 @@
 
                         <option value='0'>Обычный заказ</option>
                         <option value='1'>Заказ общепит</option>
-                        <option value='2'>Расходную накладную</option>
+                        <option value='2'>Кассовый чек</option>
+                        <option value='3'>Расходную накладную</option>
                     </select>
                     
                 </div>
             </div>
-    
+           {{#usebranch}}
+            <div class="form-group  row">
+                <label class="col-sm-5 col-form-label" for="shopdefbranch">Филиал </label>
+                <div class="col-sm-7">
+                    <select class="form-control" zippy="shopdefbranch">
+                      <option value="0">Не выбран</option>
+                    </select>
+                    <small>Филиал,  с  которым  создаются документы</small>
+                </div>
+            </div>
+            {{/usebranch}}
             <div class="form-group  row">
                 <label class="col-sm-5 col-form-label" for="shopdefcust">Покупатель по умолчанию</label>
                 <div class="col-sm-7">

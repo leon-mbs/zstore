@@ -33,6 +33,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new AutocompleteTextInput('shopdefcust'))->onText($this, 'OnAutoCustomer');
           
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
+        $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
         $this->shop->add(new TextInput('email'));
         $this->shop->add(new TextInput('shopname'));
         $this->shop->add(new TextInput('currencyname'));
@@ -54,6 +55,7 @@ class Options extends \App\Pages\Base
         }
 
         
+        $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopdefcust->setKey($shop['defcust']);
         $this->shop->shopdefcust->setText($shop['defcustname']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
@@ -91,6 +93,7 @@ class Options extends \App\Pages\Base
         $shop['defcust'] = $this->shop->shopdefcust->getKey();
         $shop['defcustname'] = $this->shop->shopdefcust->getText();
         
+        $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();

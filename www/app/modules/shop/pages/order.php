@@ -121,20 +121,29 @@ class Order extends Base
             
 
         try {
-            $op = System::getOptions("shop");
+            
 
-            $store_id = (int)$op["defstore"];
+            $store_id = (int)$shop["defstore"];
             $f = 0;
 
             $store = \App\Entity\Store::load($store_id);
             if ($store != null) {
                 $f = $store->branch_id;
             }
-            $order = Document::create('Order', $f);
-            $order->document_number = $order->nextNumber();
-            if (strlen($order->document_number) == 0) {
-                $order->document_number = 'З-0001';
+            
+            
+            if($shop['ordertype']==1) {
+                $order = Document::create('OrderFood', $f);
+            } else if($shop['ordertype']==2) {
+                $order = Document::create('POSCheck', $f);
+            } else if($shop['ordertype']==3) {
+                $order = Document::create('GoodsIssue', $f);
+            } else  {
+               $order = Document::create('Order', $f);    
             }
+            
+            $order->document_number = $order->nextNumber();
+           
             $amount = 0;
             $itlist = array();
             foreach ($this->basketlist as $product) {
@@ -187,10 +196,11 @@ class Order extends Base
       
             }
            
-            $order->headerdata['pricetype'] = $op["defpricetype"];
+            $order->headerdata['pricetype'] = $shop["defpricetype"];
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
+            $order->branch_id = $op["defbranch"] ;
             $order->save();
             $order->updateStatus(Document::STATE_NEW);
             $this->setSuccess("shopneworder",$order->document_number);

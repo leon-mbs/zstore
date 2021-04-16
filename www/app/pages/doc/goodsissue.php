@@ -654,8 +654,17 @@ class GoodsIssue extends \App\Pages\Base
                     }
                 }
 
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
+                      if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
 
+                      } else {
+                          $order = Document::load($this->_doc->parent_id);
+                          if ($order->state == Document::STATE_INPROCESS) {
+                              $order->updateStatus(Document::STATE_CLOSED);
+                          }
+                      }
+                  }  
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
