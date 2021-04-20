@@ -143,6 +143,7 @@ class GoodsIssue extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
+                $sc->setOutPrice($item->price * $k  );  
                 $sc->save();
                 $amount += $item->price * $k * $st->quantity;
             }

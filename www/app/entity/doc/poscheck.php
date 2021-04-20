@@ -182,13 +182,18 @@ class POSCheck extends Document
 
             }
 
+          $k = 1;   //учитываем  скидку
+         if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
+             $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
+        }
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->setExtCode($item->price - $st->partion); //Для АВС 
+                $sc->setExtCode($item->price* $k - $st->partion); //Для АВС 
+                $sc->setOutPrice($item->price * $k   );  
                 $sc->save();
             }
         }
@@ -213,9 +218,10 @@ class POSCheck extends Document
         }
         foreach ($this->unpackDetails('services') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0);
+            $sc = new Entry($this->document_id, 0 - ($ser->price* $k * $ser->quantity), 0);
             $sc->setService($ser->service_id);
-            $sc->setExtCode(0 - ($ser->price)); //Для АВС
+            $sc->setExtCode(0 - ($ser->price* $k)); //Для АВС
+            $sc->setOutPrice(0-$item->price * $k  );  
 
             $sc->save();
         }

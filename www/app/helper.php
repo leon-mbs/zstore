@@ -689,6 +689,12 @@ class Helper
         if ($curr == 'ru') {
             $totalstr = \App\Util::money2str_ru($amount);
         }
+        if ($curr == 'eu') {
+            $totalstr = \App\Util::money2str_eu($amount);
+        }
+        if ($curr == 'us') {
+            $totalstr = \App\Util::money2str_us($amount);
+        }
          
 
         if ($_config['common']['lang'] == 'ua') {

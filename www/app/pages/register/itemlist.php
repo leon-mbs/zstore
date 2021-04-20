@@ -125,17 +125,18 @@ class ItemList extends \App\Pages\Base
             $sql = $sql . " and  store_id={$store}  ";
         }
 
-        if ($cat > 0) {
-            $sql = $sql . " and cat_id=" . $cat;
-        }
 
         $text = trim($this->filter->searchkey->getText());
         if (strlen($text) > 0) {
 
             $text = Stock::qstr('%' . $text . '%');
             $sql = $sql . "  and (itemname like {$text} or item_code like {$text}    )  ";
+            $cat=0;
+        }        
+        if ($cat > 0) {
+            $sql = $sql . " and cat_id=" . $cat;
         }
-        return $conn->GetOne($sql);
+       return $conn->GetOne($sql);
     }
 
     public function detailistOnRow($row) {

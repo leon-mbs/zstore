@@ -31,7 +31,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->setError('');
 
 
-        $curver = 'v4.9.0';
+        $curver = 'v5.0.0';
         $this->_tvars['curversion'] = $curver;
 
         //проверка  новой версии        

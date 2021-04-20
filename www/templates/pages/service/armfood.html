@@ -78,8 +78,7 @@
       </div>
       
       <div class="col-8">
-     
-         <div    >
+        
 <form zippy="navform" class="form-inline  ">                   
              <input  zippy="baddnew"  type="submit" value="Добавить  "   class="btn btn-info mr-4"> 
            {{#usescanner}}
@@ -89,7 +88,8 @@
            {{/usescanner}}
            Клиент  <input   class="form-control"  > <a zippy="newcust" class="btn btn-info  ">+</a>
           </form> 
-          
+      
+         <div    >    
           </div>
           
  
@@ -109,8 +109,8 @@
           <tr zippy="itemrows"> 
           
           
-            <td></td>
-            <td></td>
+            <td zippy="itemname"></td>
+            <td zippy="item_code"></td>
             <td>
             <a class="btn btn-info btn-sm mr-1">-</a>
             <span></span>
@@ -122,7 +122,7 @@
             </tr>
          </table>
          <div class="form-group  ">
-                <input zippy="bbackoptions" type="submit" value="< К настройкам"   class="btn btn-info mr-4"> 
+                <input zippy="bbackoptions" type="submit" value="< Назад"   class="btn btn-info mr-4"> 
                 <input zippy="btopay" type="submit" value="К оплате >"   class="btn btn-success">
          </div>
    </form>  
@@ -130,10 +130,11 @@
    </div>
    </div>
    
- <form zippy="payform">
+   <form zippy="payform">
          <div class="form-group  ">
-                <input zippy="bbackitems" type="submit" value="< К списку"   class="btn btn-info mr-4"> 
-                <input zippy="btoprint" type="submit" value="Печать >"   class="btn btn-success">
+              <input zippy="bbackitems" type="submit" value="< Назад"   class="btn btn-info mr-4"> 
+              &nbsp;&nbsp; <input zippy="btoprint" type="submit" value="Печать  "   class="btn btn-success">
+              &nbsp;&nbsp; <input zippy="bnewcheck" type="submit" value="Новый чек"   class="btn btn-promary">
          </div>
 
   </form>
@@ -152,6 +153,6 @@
         }
     }
 </script>  
-  
+ {{/usescanner}} 
 </body>
 </html>

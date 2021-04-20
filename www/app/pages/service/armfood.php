@@ -28,6 +28,8 @@ use Zippy\Html\Link\SubmitLink;
 class ARMFood extends \App\Pages\Base
 { 
       private $_pos ;
+      private $_doc ;
+      private $_itemlist=array() ;
     
       public function __construct() {
         parent::__construct();
@@ -52,12 +54,12 @@ class ARMFood extends \App\Pages\Base
         $this->listpanel->add(new Form('listsform'));
         $this->listpanel->listsform->add(new SubmitButton('bbackoptions'))->onClick($this, 'backoptionsOnClick');
         $this->listpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
-        $this->listpanel->listsform->add(new SubmitButton('baddnew'))->onClick($this, 'addnewClick');
       
         
         $this->add(new Form('payform'))->setVisible(false);
         $this->payform->add(new SubmitButton('bbackitems'))->onClick($this, 'backoptionsOnClick');
         $this->payform->add(new SubmitButton('btoprint'))->onClick($this, 'topayOnClick');
+        $this->listpanel->listsform->add(new SubmitButton('bnewcheck'))->onClick($this, 'addnewClick');
       
         
       }

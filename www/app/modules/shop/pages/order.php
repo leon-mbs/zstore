@@ -228,7 +228,7 @@ class Order extends Base
     public function OnAddRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         $datarow->setDataItem($item);
-        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->item_id))->setValue($item->productname);
+        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->item_id))->setValue($item->item_name);
         $datarow->add(new Label('price', $item->getPriceFinal()));
         $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity')));
         $datarow->add(new \Zippy\Html\Link\ClickLink('delete', $this, 'OnDelete'));

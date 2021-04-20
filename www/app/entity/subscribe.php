@@ -188,6 +188,7 @@ class Subscribe extends \ZCL\DB\Entity
         $header['nal'] = '';
         $header['mf'] = '';
         $header['pos'] = '';
+        $header['nal'] = '';
         if($doc->headerdata['payment']>0 && $doc->headerdata['payment']<10000) {
              $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);    
              $header['mf'] = $mf->mf_name;

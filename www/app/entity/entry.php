@@ -60,6 +60,11 @@ class Entry extends \ZCL\DB\Entity
         $this->extcode = $code;
 
     }
+    public function setOutPrice($price) {
+
+        $this->outprice = $price;
+
+    }
 
     /**
      * Получение  количества   по  комбинации измерений

@@ -104,7 +104,11 @@ class Product extends \App\Entity\Item
     //для сортировки 
     public function getPriceFinal() {
         if($this->productdata->actionprice >0)  return  $this->productdata->actionprice;
-        return  $this->price;
+        else {
+            $options= \App\System::getOptions('shop') ;
+            return $this->getPrice($options['defpricetype']) ;
+        }
+         
     }
     public function getRating() {
         $r =  0;

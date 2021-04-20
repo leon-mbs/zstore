@@ -218,7 +218,8 @@ class TTN extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price - $st->partion); //Для АВС 
-                $sc->save();
+               $sc->setOutPrice( $item->price   );  
+             $sc->save();
             }
         }
 
