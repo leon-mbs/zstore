@@ -50,7 +50,11 @@ class ARMFood extends \App\Pages\Base
         $this->setupform->add(new DropDownChoice('foodtype', array(), 1));
 
 
-        $this->add(new Panel('listpanel'))->setVisible(false);
+        $this->add(new Panel('docpanel'))->setVisible(false);
+        $this->listpanel->add(new Form('navform'));
+        $this->listpanel->listsform->add(new SubmitButton('bbackoptions'))->onClick($this, 'backoptionsOnClick');
+        $this->listpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
+       
         $this->listpanel->add(new Form('listsform'));
         $this->listpanel->listsform->add(new SubmitButton('bbackoptions'))->onClick($this, 'backoptionsOnClick');
         $this->listpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');

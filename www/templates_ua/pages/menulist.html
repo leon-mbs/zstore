@@ -1,16 +1,14 @@
 <html>
 <body>
-<h2>Налаштування </h2>
+<h2>Налаштування меню</h2>
+<small>Для поновлення стану меню потрібно перейти на будь-яку іншу сторінку</small>
 <div class="row">
-    <div class="col-12     ">
-
-
-        <div class="card">
-            <div class="card-body">
-                <h4>Налаштування меню</h4>
+   
+            <div class="col-12 col-lg-10 col-xl-8  ">
+           
                 <div zippy="listpan">
 
-                    <div class="col-12 col-lg-10 col-xl-8  ">
+        
                         <form zippy="filter" class="form-inline" role="form">
                             <div class="form-check   ">
 
@@ -49,19 +47,23 @@
                                 <th>Тип</th>
                                 <th>Група</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             <tr zippy="metarow">
                                 <td><span zippy="description"></span></td>
                                 <td><span zippy="meta_name"></span></td>
                                 <td><span zippy="type"></span></td>
                                 <td><span zippy="menugroup"></span></td>
+                                 <td><a zippy="ton"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="toff"><i class="fa fa-toggle-off"></i></a>&nbsp;&nbsp;</td>
                                 <td style="white-space:   nowrap"><a zippy="rowedit"><i class="fa fa-edit"></a>
-                                    &nbsp;&nbsp;<a zippy="rowdelete"> <i class="fa fa-trash"></a></td>
+                                    &nbsp;&nbsp;<a class="text-danger"   zippy="rowdelete"> <i class="fa fa-trash"></a></td>
                             </tr>
                         </table>
                     </div>
 
                 </div>
+               <div class="w-100"></div>
+                 
                 <div class="col-12  col-md-4 col-xl-3">
                     <div zippy="editpan">
                         <h5> Редагування пункту меню</h5>
@@ -106,16 +108,15 @@
                 </div>
 
 
-            </div>
-        </div>
-    </div>
+        
+   
 
 </div>
 
 
 <script>
     function check_rowdelete() {
-        return confirm("Видалити запис?")
+        return confirm("Видалити пункт?")
     }
 </script>
 

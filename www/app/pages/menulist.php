@@ -134,6 +134,9 @@ class  MenuList extends \App\Pages\Base
         $row->add(new Label('type', $title));
         $row->add(new ClickLink('rowedit'))->onClick($this, 'roweditOnClick');
         $row->add(new ClickLink('rowdelete'))->onClick($this, 'rowdeleteOnClick');
+        $row->add(new ClickLink('ton',$this, 'tonOnClick'))->setVisible($item->disabled != 1);
+        $row->add(new ClickLink('toff',$this, 'toffOnClick'))->setVisible($item->disabled == 1);
+        
     }
 
     public function roweditOnClick($sender) {
@@ -154,7 +157,25 @@ class  MenuList extends \App\Pages\Base
 
     }
 
-    public function rowdeleteOnClick($sender) {
+    public function tonOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $item->disabled = 1;
+        $item->save();
+
+        $this->listpan->metarow->Reload();
+
+    }
+    public function toffOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $item->disabled = 0;
+        $item->save();
+
+        $this->listpan->metarow->Reload();
+
+    }
+    
+    
+   public function rowdeleteOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
         \App\Entity\MetaData::delete($item->meta_id);
 

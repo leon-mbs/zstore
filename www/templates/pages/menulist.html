@@ -1,15 +1,14 @@
 <html>
 <body>
-
+  <h2>Настройка меню</h2>
+<small>Для  обновления состояния  меню  нужно перейти на  любую другую страницу</small>
 <div class="row">
-    <div class="col-12  col-xl-10">
+   
+              <div class="col-12 col-lg-10 col-xl-8  ">
+         
+                
+                   <div zippy="listpan">
 
-        <div class="card">
-            <div class="card-body">
-                <h4>Настройка меню</h4>
-                <div zippy="listpan">
-
-                    <div class="col-12 col-lg-10 col-xl-8  ">
                         <form zippy="filter" class="form-inline" role="form">
                             <div class="form-check   ">
 
@@ -48,19 +47,22 @@
                                 <th>Тип</th>
                                 <th>Группа</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             <tr zippy="metarow">
                                 <td><span zippy="description"></span></td>
                                 <td><span zippy="meta_name"></span></td>
                                 <td><span zippy="type"></span></td>
                                 <td><span zippy="menugroup"></span></td>
+                                <td><a zippy="ton"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="toff"><i class="fa fa-toggle-off"></i></a>&nbsp;&nbsp;</td>
                                 <td style="white-space:   nowrap"><a zippy="rowedit"><i class="fa fa-edit"></a>
-                                    &nbsp;&nbsp;<a zippy="rowdelete"> <i class="fa fa-trash"></a></td>
+                                    &nbsp;&nbsp;<a class="text-danger" zippy="rowdelete"> <i class="fa fa-trash"></a></td>
                             </tr>
                         </table>
                     </div>
 
                 </div>
+                <div class="w-100"></div>
                 <div class="col-12  col-md-4 col-xl-3">
 
                     <div zippy="editpan">
@@ -106,17 +108,14 @@
                 </div>
 
 
-            </div>
-        </div>
 
-
-    </div>
+   
 </div>
 
 <script>
     function check_rowdelete() {
-        return confirm("Удалить  запись?")
-    }
+        return confirm("Удалить  пункт?")
+    }                              
 </script>
 
 </body>

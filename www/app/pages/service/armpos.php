@@ -331,7 +331,14 @@ class ARMPos extends \App\Pages\Base
         $this->editdetail->editquantity->setText($tovar->quantity);
         $this->editdetail->editprice->setText($tovar->price);
         $this->editdetail->editserial->setText($tovar->snumber);
-        $this->editdetail->qtystock->setText("");
+        
+        
+        $store = $this->form1->store->getValue();
+        $qty = $tovar->getQuantity($store);
+
+        $this->editdetail->qtystock->setText(H::fqty($qty));
+         
+        
         $this->form2->setVisible(false);
         $this->_rowid = $tovar->rowid;
 
@@ -401,8 +408,10 @@ class ARMPos extends \App\Pages\Base
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
-        $qstock = $this->editdetail->qtystock->getText();
+        
+        $qstock = $item->getQuantity($store);
 
+     
         $item->price = H::fa($this->editdetail->editprice->getText());
 
         if ($item->quantity > $qstock) {

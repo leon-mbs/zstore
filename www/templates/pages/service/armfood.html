@@ -71,30 +71,32 @@
 
  </form>
  
-    <div class="row" zippy="listpanel">
+    <div class="row"  >
+      <div class="col-12 col-md-8">
+    <div   zippy="docpanel">
+    
+    <div   zippy="catpan">
+      <div   zippy="catlist">
      
-      <div class="col-8">
-      
-      </div>
-      
-      <div class="col-8">
+      </div >        
+    </div >        
+    <div   zippy="prodpan">
+      <div   zippy="prodlist">
+     
+      </div >        
+    </div >        
+     
         
 <form zippy="navform" class="form-inline  ">                   
              <input  zippy="baddnew"  type="submit" value="Добавить  "   class="btn btn-info mr-4"> 
            {{#usescanner}}
             Штрих-код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
-                                       onkeydown="onBarCode()"> &nbsp;<a zippy="addcode" class="btn btn-info btn-sm mr-4">OK</a>
+                                       onkeydown="onBarCode()"> &nbsp;<a zippy="addcode" class="btn btn-info btn-sm mr-4">+</a>
                                        
            {{/usescanner}}
            Клиент  <input   class="form-control"  > <a zippy="newcust" class="btn btn-info  ">+</a>
           </form> 
-      
-         <div    >    
-          </div>
-          
- 
- 
-              
+               
  <form zippy="listsform">          
          <table class="table">
            <tr>
@@ -127,17 +129,37 @@
          </div>
    </form>  
  
-   </div>
-   </div>
+   
    
    <form zippy="payform">
          <div class="form-group  ">
               <input zippy="bbackitems" type="submit" value="< Назад"   class="btn btn-info mr-4"> 
-              &nbsp;&nbsp; <input zippy="btoprint" type="submit" value="Печать  "   class="btn btn-success">
-              &nbsp;&nbsp; <input zippy="bnewcheck" type="submit" value="Новый чек"   class="btn btn-promary">
+              &nbsp;&nbsp; <input zippy="btoprint" type="submit" value="Печать чека > "   class="btn btn-success">
          </div>
 
-  </form>
+  </form>     
+  
+  
+  
+         </div    >    
+    
+     <div zippy="checkpan">
+
+     
+     <a zippy="backpay">< Назад></a>&nbsp;&nbsp;&nbsp;
+     <a zippy="print">Печать</a>&nbsp;&nbsp;&nbsp;
+     <a zippy="newcheck">Новый звказ</a>
+     </div>
+    
+      </div>
+     <div class="col-12 col-md-4">
+        
+      </div>
+    </div>
+          
+ 
+ 
+
 {{#usescanner}}
 <script>
     $(document).ready(function () {
