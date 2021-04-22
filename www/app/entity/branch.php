@@ -39,7 +39,6 @@ class Branch extends \ZCL\DB\Entity
         $this->company_id = (int)($xml->company_id[0]);
         $this->comment = (string)($xml->comment[0]);
 
-
         parent::afterLoad();
     }
 

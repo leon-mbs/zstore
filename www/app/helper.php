@@ -79,7 +79,6 @@ class Helper
                 }
                 $groups[$meta_object['menugroup']][$meta_id] = $meta_object;
             }
-
         }
         switch($meta_type) {
             case 1 :
@@ -176,7 +175,6 @@ class Helper
             if (in_array($p->meta_id, $smartmenu)) {
                 $textmenu .= " <a class=\"btn btn-sm btn-outline-primary mr-2\" href=\"/index.php?p=App/Modules{$p->meta_name}\">  <i class=\"nav-icon fa fa-puzzle-piece\"></i> {$p->description}</a> ";
             }
-
         }
         return $textmenu;
     }
@@ -205,7 +203,6 @@ class Helper
 
 
         return $mdata;
-
     }
 
     public static function loadEmail($template, $keys = array()) {
@@ -225,16 +222,16 @@ class Helper
 
         return $template;
     }
-  
-   public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
+
+    public static function sendLetter($template, $emailfrom, $emailto, $subject = "") {
         global $_config;
         if (strlen($emailfrom) == 0) {
             $emailfrom = $_config['smtp']['user'];
         }
-        
-         try {
-        
-           $mail = new \PHPMailer\PHPMailer\PHPMailer();
+
+        try {
+
+            $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
             if ($_config['smtp']['usesmtp'] == true) {
                 $mail->isSMTP();
@@ -246,11 +243,9 @@ class Helper
                 if ($_config['smtp']['tls'] == true) {
                     $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
                 }
-
             }
-        
-        
-        
+
+
             $mail->setFrom($emailfrom);
             $mail->addAddress($emailto);
             $mail->Subject = $subject;
@@ -260,7 +255,7 @@ class Helper
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
-              //  System::setSuccessMsg(Helper::l('email_sent'));
+                //  System::setSuccessMsg(Helper::l('email_sent'));
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
@@ -325,7 +320,6 @@ class Helper
             $item->filename = $row['filename'];
             $item->description = $row['description'];
             $item->mime = $row['mime'];
-
 
             $list[] = $item;
         }
@@ -626,7 +620,6 @@ class Helper
             return $phonel;
         }
         return 10;
-
     }
 
     /**
@@ -663,18 +656,14 @@ class Helper
                 die;
             }
             System::setCache('labels', $labels);
-
         }
         if (isset($labels[$label])) {
             $text = $labels[$label];
             $text = sprintf($text, $p1, $p2, $p3);
             return $text;
-
         } else {
             return $label;
         }
-
-
     }
 
     /**
@@ -695,7 +684,7 @@ class Helper
         if ($curr == 'us') {
             $totalstr = \App\Util::money2str_us($amount);
         }
-         
+
 
         if ($_config['common']['lang'] == 'ua') {
             $totalstr = \App\Util::money2str_ua($amount);
@@ -756,7 +745,6 @@ class Helper
                     'wrapText'   => false,
                 ]
             ]);
-
         }
 
         foreach ($data as $k => $v) {
@@ -771,7 +759,6 @@ class Helper
                 } else {
                     if ($v['format'] == 'number') {
                         $c->setValueExplicit($v['value'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
-
                     } else {
                         $c->setValueExplicit($v['value'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
                     }
@@ -782,43 +769,40 @@ class Helper
                 if ($v['align'] == 'right') {
                     $style->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);;
                 }
-
             } else {
                 //  $sheet->setCellValue($k, $v );
                 $c = $sheet->getCell($k);
                 $c->setValue($v);
                 $c->setValueExplicit($v, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-
             }
-
         }
 
         /*
-         $sheet->getStyle('A1')->applyFromArray([
-             'font' => [
-               'name' => 'Arial',
-               'bold' => true,
-               'italic' => false,
-               'underline' => Font::UNDERLINE_DOUBLE,
-               'strikethrough' => false,
-               'color' => [
-                   'rgb' => '808080'
-                 ]
-             ],
-             'borders' => [
-                 'allBorders' => [
-                     'borderStyle' => Border::BORDER_THIN,
-                     'color' => [
-                         'rgb' => '808080'
-                     ]
-                 ],
-             ],
-             'alignment' => [
-                 'horizontal' => Alignment::HORIZONTAL_CENTER,
-                 'vertical' => Alignment::VERTICAL_CENTER,
-                 'wrapText' => true,
-             ]
-         ]);
+          $sheet->getStyle('A1')->applyFromArray([
+          'font' => [
+          'name' => 'Arial',
+          'bold' => true,
+          'italic' => false,
+          'underline' => Font::UNDERLINE_DOUBLE,
+          'strikethrough' => false,
+          'color' => [
+          'rgb' => '808080'
+          ]
+          ],
+          'borders' => [
+          'allBorders' => [
+          'borderStyle' => Border::BORDER_THIN,
+          'color' => [
+          'rgb' => '808080'
+          ]
+          ],
+          ],
+          'alignment' => [
+          'horizontal' => Alignment::HORIZONTAL_CENTER,
+          'vertical' => Alignment::VERTICAL_CENTER,
+          'wrapText' => true,
+          ]
+          ]);
 
          */
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
@@ -828,6 +812,5 @@ class Helper
         $writer->save('php://output');
         die;
     }
-
 
 }

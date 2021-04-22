@@ -45,7 +45,7 @@ class Main extends Base
         $cstr = '';
         $brpay = '';
         $cust = '';
-        
+
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
             $br = " and d.branch_id in ({$brids}) ";
@@ -56,7 +56,6 @@ class Main extends Base
         }
 
         $conn = $conn = \ZDB\DB::getConnect();
-
 
         //просроченые товары
         if ($this->_tvars['wsdate'] == true) {
@@ -71,10 +70,10 @@ class Main extends Base
                 $this->_tvars['wsdate'] = false;
             }
 
-            $this->add(new  ClickLink('sdcsv', $this, 'onSDcsv'));
+            $this->add(new ClickLink('sdcsv', $this, 'onSDcsv'));
             $sdlist = $this->add(new DataView('sdlist', new ArrayDataSource($data), $this, 'sdlistOnRow'));
             $sdlist->setPageSize(10);
-            $this->add(new  Paginator("sdpag", $sdlist));
+            $this->add(new Paginator("sdpag", $sdlist));
             $sdlist->Reload();
         }
         //минимальное количество  
@@ -94,13 +93,11 @@ class Main extends Base
             if (count($data) == 0) {
                 $this->_tvars['wminqty'] = false;
             }
-            $this->add(new  ClickLink('mqcsv', $this, 'onMQcsv'));
+            $this->add(new ClickLink('mqcsv', $this, 'onMQcsv'));
             $mqlist = $this->add(new DataView('mqlist', new ArrayDataSource($data), $this, 'mqlistOnRow'));
             $mqlist->setPageSize(10);
-            $this->add(new  Paginator("mqpag", $mqlist));
+            $this->add(new Paginator("mqpag", $mqlist));
             $mqlist->Reload();
-
-
         }
 
         //недавние  документы
@@ -108,7 +105,6 @@ class Main extends Base
             $data = array();
 
             $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where  1=1 {$br}  and  l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time())) . " limit  0,100";
-
 
             $rc = $conn->Execute($sql);
 
@@ -118,16 +114,13 @@ class Main extends Base
             if (count($data) == 0) {
                 $this->_tvars['wrdoc'] = false;
             }
-            $this->add(new  ClickLink('rdcsv', $this, 'onRDcsv'));
+            $this->add(new ClickLink('rdcsv', $this, 'onRDcsv'));
 
             $doclist = $this->add(new DataView('rdoclist', new ArrayDataSource($data), $this, 'rdoclistOnRow'));
             $doclist->setPageSize(10);
-            $this->add(new  Paginator("wrpag", $doclist));
-
+            $this->add(new Paginator("wrpag", $doclist));
 
             $doclist->Reload();
-
-
         }
 
 
@@ -172,7 +165,6 @@ class Main extends Base
         $in = array();
         $out = array();
 
-
         $mlist = Util::genPastMonths(3);
 
         foreach ($mlist as $m) {
@@ -207,7 +199,6 @@ class Main extends Base
         $tstov = array();
         $tsser = array();
 
-
         $mlist = Util::genPastMonths(6);
 
         foreach ($mlist as $m) {
@@ -231,7 +222,6 @@ class Main extends Base
 
             $tstov[] = abs(round($conn->GetOne($sql)));
 
-
             $sql = "
            select  coalesce( sum(0-e.`amount`) ) as summa     
               from `entrylist_view`  e
@@ -245,19 +235,16 @@ class Main extends Base
                     
                   ";
             $tsser[] = abs(round($conn->GetOne($sql)));
-
         }
         $this->_tvars['tsmon'] = json_encode($mon, JSON_UNESCAPED_UNICODE);
         $this->_tvars['tstov'] = json_encode($tstov);
         $this->_tvars['tsser'] = json_encode($tsser);
-
 
         //инфоблоки
         $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order')  
          {$br}   and d.state in (7)      ";
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
-
 
         $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where  qty >0     
         {$cstr}        ";
@@ -281,7 +268,6 @@ class Main extends Base
             ";
 
         $this->_tvars['bicredit'] = H::fa($conn->GetOne($sql));
-
     }
 
     public function sdlistOnRow($row) {
@@ -316,7 +302,6 @@ class Main extends Base
         $row->add(new Label('wrd_amount', H::fa($item->amount)));
         $row->add(new \Zippy\Html\Link\RedirectLink("wrd_number", "\\App\\Pages\\Register\\DocList", $item->document_id))->setValue($item->document_number);
     }
-
 
     public function onRDcsv($sender) {
         $data = array();
@@ -364,10 +349,8 @@ class Main extends Base
             $data['C' . $i] = $st->snumber;
             $data['D' . $i] = H::fd($st->sdate);
             $data['E' . $i] = array('value' => H::fqty($st->qty), 'format' => 'number');
-
         }
         H::exportExcel($data, $header, 'termitem.xlsx');
-
     }
 
     public function onMQcsv($sender) {
@@ -399,19 +382,13 @@ class Main extends Base
             $data['D' . $i] = H::fd($row['sdate']);
             $data['E' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
             $data['F' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
-
         }
         H::exportExcel($data, $header, 'minqty.xlsx');
-
     }
 
-    
-    public function test($args,$post) {
-        
-      // $this->testa->setText("Hello");
-     
-    }   
-      
+    public function test($args, $post) {
 
+        // $this->testa->setText("Hello");
+    }
 
 }

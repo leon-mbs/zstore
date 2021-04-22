@@ -49,7 +49,6 @@ class ItemActivity extends \App\Pages\Base
     public function OnAutoItem($sender) {
         $r = array();
 
-
         $text = Item::qstr('%' . $sender->getText() . '%');
         $list = Item::findArray('itemname', " (itemname like {$text} or item_code like {$text} or bar_code like {$text}  ) ");
         foreach ($list as $k => $v) {
@@ -61,7 +60,6 @@ class ItemActivity extends \App\Pages\Base
     public function OnSubmit($sender) {
         $itemid = $this->filter->item->getKey();
 
-
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
@@ -69,7 +67,6 @@ class ItemActivity extends \App\Pages\Base
         // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $reportpage = "App/Pages/ShowReport";
         $reportname = "movereport";
-
 
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
@@ -168,7 +165,6 @@ class ItemActivity extends \App\Pages\Base
                        DATE(sc.document_date) ) t
               ORDER BY t.dt  
         ";
-
 
         $rs = $conn->Execute($sql);
         $ba = 0;

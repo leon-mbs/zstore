@@ -1,15 +1,16 @@
 <?php
 
 namespace App\API;
+
 /**
  * возвращает  описание   API  по  адресу  /api/help
  */
 class help
 {
+
     function __construct() {
 
         global $_config;
-
 
         $path = '';
         $name = ltrim($name, '\\');
@@ -27,9 +28,9 @@ class help
         }
         $path = _ROOT . strtolower($templatepath) . "apihelp.html";
 
-
         $template = @file_get_contents($path);
         echo $template;
         die;
     }
-} 
+
+}

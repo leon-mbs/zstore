@@ -58,7 +58,6 @@ class TopicNode extends \ZCL\DB\Entity
         }
         $sql .= ")  ";
 
-
         // $logger->info($sql);
 
         $list = TopicNode::findBySql($sql);

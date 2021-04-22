@@ -14,7 +14,6 @@ class Helper
         $conn = DB::getConnect();
         $filename = $file['name'];
 
-
         $filename = $conn->qstr($filename);
         $sql = "insert  into files (item_id,filename,description,item_type) values ({$itemid},{$filename},'',4) ";
         $conn->Execute($sql);
@@ -42,7 +41,6 @@ class Helper
             $item = new \App\DataItem();
             $item->file_id = $row['file_id'];
             $item->filename = $row['filename'];
-
 
             $list[] = $item;
         }

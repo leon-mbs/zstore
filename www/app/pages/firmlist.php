@@ -5,7 +5,6 @@ namespace App\Pages;
 use App\Entity\Firm;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
-
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
@@ -89,7 +88,6 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->editpposerv->setText($this->_firm->pposerver);
         $this->firmdetail->editpposervport->setText($this->_firm->pposerverport);
 
-
         $this->firmdetail->editdisabled->setChecked($this->_firm->disabled);
     }
 
@@ -134,7 +132,4 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->setVisible(false);
     }
 
-
 }
-
- 

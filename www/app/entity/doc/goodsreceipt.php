@@ -108,11 +108,9 @@ class GoodsReceipt extends Document
             $sc = new Entry($this->document_id, $item->price * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
             $sc->setExtCode($item->price); //Для АВС 
-            $sc->setOutPrice($item->price   );  
- 
+            $sc->setOutPrice($item->price);
 
             $sc->save();
-
 
             //запоминаем  курс
             if (strlen($this->headerdata['val']) > 1 && $this->headerdata['rate'] != 0 && $this->headerdata['rate'] != 1) {
@@ -121,8 +119,6 @@ class GoodsReceipt extends Document
                 $it->rate = $this->headerdata['rate'];
                 $it->save();
             }
-
-
         }
 
 

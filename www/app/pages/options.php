@@ -90,9 +90,7 @@ class Options extends \App\Pages\Base
 
         $this->common->autoarticle->setChecked($common['autoarticle']);
 
-
         $this->common->usesnumber->setChecked($common['usesnumber']);
-
 
         $this->common->usemobileprinter->setChecked($common['usemobileprinter']);
         $this->common->usecattree->setChecked($common['usecattree']);
@@ -184,7 +182,7 @@ class Options extends \App\Pages\Base
         $this->sms->add(new TextInput('flysmslogin'));
         $this->sms->add(new TextInput('flysmspass'));
         $this->sms->add(new TextInput('flysmsan'));
-        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", /*'2' => "TurboSMS", */ '3' => 'SMS-Fly'), 0))->onChange($this, 'onSMSType');
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", /* '2' => "TurboSMS", */ '3' => 'SMS-Fly'), 0))->onChange($this, 'onSMSType');
         $sms = System::getOptions("sms");
 
         $this->sms->smssemytoken->setText($sms['smssemytoken']);
@@ -197,9 +195,7 @@ class Options extends \App\Pages\Base
         $this->sms->smstype->setValue($sms['smstype']);
 
         $this->onSMSType($this->sms->smstype);
-
     }
-
 
     public function saveCommonOnClick($sender) {
         $common = array();
@@ -224,7 +220,6 @@ class Options extends \App\Pages\Base
 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
 
-
         $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
@@ -238,17 +233,13 @@ class Options extends \App\Pages\Base
         $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
         $common['numberttn'] = $this->common->numberttn->isChecked() ? 1 : 0;
 
-
         System::setOptions("common", $common);
 
         $this->_tvars["useval"] = $common['useval'] == 1;
 
         $this->setSuccess('saved');
         System::setCache('labels', null);
-
-
     }
-
 
     public function saveValOnClick($sender) {
         $val = array();
@@ -260,8 +251,6 @@ class Options extends \App\Pages\Base
 
         System::setOptions("val", $val);
         $this->setSuccess('saved');
-
-
     }
 
     public function savePrinterOnClick($sender) {
@@ -277,8 +266,6 @@ class Options extends \App\Pages\Base
 
         System::setOptions("printer", $printer);
         $this->setSuccess('saved');
-
-
     }
 
     public function onApiType($sender) {
@@ -287,10 +274,7 @@ class Options extends \App\Pages\Base
         $this->api->akey->setVisible($type == 1);
 
         //  $this->goAnkor('atype');
-
-
     }
-
 
     public function saveApiOnClick($sender) {
         $api = array();
@@ -300,8 +284,6 @@ class Options extends \App\Pages\Base
 
         System::setOptions("api", $api);
         $this->setSuccess('saved');
-
-
     }
 
     public function onSMSType($sender) {
@@ -313,13 +295,11 @@ class Options extends \App\Pages\Base
         $this->sms->flysmspass->setVisible($type == 3);
         $this->sms->flysmsan->setVisible($type == 3);
 
-
         $this->sms->semysmssite->setVisible($type == 1);
         $this->sms->turbosmssite->setVisible($type == 2);
         $this->sms->smsflysite->setVisible($type == 3);
 
         //  $this->goAnkor('atype');
-
     }
 
     public function saveSMSOnClick($sender) {
@@ -334,7 +314,6 @@ class Options extends \App\Pages\Base
 
         System::setOptions("sms", $sms);
         $this->setSuccess('saved');
-
     }
 
     public function testSMSOnClick($sender) {
@@ -345,8 +324,6 @@ class Options extends \App\Pages\Base
         } else {
             $this->setError($res);
         }
-
-
     }
 
 }

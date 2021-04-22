@@ -50,7 +50,6 @@ class ShowReport extends \Zippy\Html\WebPage
             header("Content-Disposition: attachment;Filename={$filename}.pdf");
             header("Content-Transfer-Encoding: binary");
 
-
             $dompdf = new \Dompdf\Dompdf(array('defaultFont' => 'DejaVu Sans'));
 
             //  $dompdf->set_option('defaultFont', 'DejaVu Sans');
@@ -66,7 +65,6 @@ class ShowReport extends \Zippy\Html\WebPage
         }
 
         echo $html;
-
 
         die;
     }

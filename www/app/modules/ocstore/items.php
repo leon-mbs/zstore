@@ -34,7 +34,6 @@ class Items extends \App\Pages\Base
         if (is_array($cats) == false) {
             $cats = array();
             $this->setWarn('do_connect');
-
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -114,14 +113,12 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
         $cat = $this->exportform->ecat->getValue();
 
-
         $elist = array();
         foreach ($this->_items as $item) {
             if ($item->ch == false) {
                 continue;
             }
-            $elist[] = array('name' => $item->itemname,
-
+            $elist[] = array('name'     => $item->itemname,
                              'sku'      => $item->item_code,
                              'quantity' => \App\Helper::fqty($item->qty),
                              'price'    => $item->getPrice($modules['ocpricetype'])
@@ -133,7 +130,6 @@ class Items extends \App\Pages\Base
             return;
         }
         $data = json_encode($elist);
-
 
         $fields = array(
             'data' => $data,
@@ -147,7 +143,6 @@ class Items extends \App\Pages\Base
         }
         $data = json_decode($json, true);
 
-
         if ($data['error'] != "") {
             $this->setError($data['error']);
             return;
@@ -160,7 +155,6 @@ class Items extends \App\Pages\Base
 
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
-
 
         $elist = array();
         $items = Item::find("disabled <> 1  ");
@@ -195,7 +189,6 @@ class Items extends \App\Pages\Base
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
 
-
         $elist = array();
         $items = Item::find("disabled <> 1  ");
         foreach ($items as $item) {
@@ -222,7 +215,6 @@ class Items extends \App\Pages\Base
             return;
         }
         $this->setSuccess('refreshed');
-
     }
 
     public function onGetItems($sender) {

@@ -52,7 +52,6 @@ class Stat extends \App\Pages\Base
 
         $this->filter->add(new DropDownChoice('searchemp', $users, $user_id));
 
-
         $this->add(new DataView('list', new ArrayDataSource($this, '_list'), $this, 'listOnRow'));
         $this->add(new Label('total'))->setVisible(false);;
     }
@@ -85,7 +84,6 @@ class Stat extends \App\Pages\Base
         $res = $conn->Execute($sql);
         foreach ($res as $v) {
             $item = new \App\DataItem();
-
 
             $item->project_name = $v['project_name'];
             $item->username = $v['username'];

@@ -35,15 +35,12 @@ class Document extends \ZCL\DB\Entity
     const EX_PDF   = 3;    //  PDF
     const EX_POS   = 4;    //  POS терминал
     const EX_MAIL  = 5;    //  Отправка  email
-
     // const EX_XML_GNAU = 4;
-
     //доставка
     const DEL_SELF    = 1;    //  самовывоз
     const DEL_BOY     = 2;    //  курьер
     const DEL_SERVICE = 3;    //  служба доставки
     const DEL_NP      = 4;         //  новая почта
-
 
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
@@ -57,10 +54,8 @@ class Document extends \ZCL\DB\Entity
      *
      * @var mixed
      */
-    public $detaildata = array();
-
-    private static $_metalist = array();
-
+    public         $detaildata = array();
+    private static $_metalist  = array();
 
     /**
      * документы должны создаватся методом create
@@ -90,7 +85,6 @@ class Document extends \ZCL\DB\Entity
 
         $this->document_date = time();
         $this->user_id = 0;
-
 
         $this->headerdata = array();
         $this->detaildata = array();
@@ -124,7 +118,6 @@ class Document extends \ZCL\DB\Entity
         $this->packData();
     }
 
-
     /**
      * Упаковка  данных  в  XML
      *
@@ -153,7 +146,6 @@ class Document extends \ZCL\DB\Entity
             $this->content .= "<{$key}>{$value}</{$key}>";
         }
         $this->content .= "</header>";
-
 
         $this->content .= "</doc>";
     }
@@ -235,14 +227,16 @@ class Document extends \ZCL\DB\Entity
     public function Execute() {
 
     }
-   /**
+
+    /**
      * Запись  проводок по  складу
      * На  случаей  если  проводки надо  выполнить  на статусе  отличном  от Executed
      */
     public function Store() {
 
     }
-   /**
+
+    /**
      * Запись  платежей
      * На  случаей  если  платежи надо  выполнить  на статусе  отличном  от Executed
      */
@@ -267,17 +261,15 @@ class Document extends \ZCL\DB\Entity
             //отменяем оплаты   
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
 
-
             // возвращаем бонусы
             if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
                 $customer = \App\Entity\Customer::load($this->customer_id);
                 if ($customer->discount > 0) {
-                  //  return; //процент
+                    //  return; //процент
                 } else {
                     $customer->bonus = $customer->bonus + $this->headerdata['paydisc'];
                     $customer->save();
                 }
-
             }
 
 
@@ -310,7 +302,6 @@ class Document extends \ZCL\DB\Entity
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
         $doc->user_id = \App\System::getUser()->user_id;
-
 
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
@@ -362,8 +353,7 @@ class Document extends \ZCL\DB\Entity
             $this->Cancel();
         }
         if ($state == self::STATE_EXECUTED) {
-           $this->Execute();
-        
+            $this->Execute();
         }
         $oldstate = $this->state;
         $this->state = $state;
@@ -380,7 +370,6 @@ class Document extends \ZCL\DB\Entity
         return true;
     }
 
-
     /**
      * обработчик  изменения  статусов
      * переопределяется в  дочерних документах
@@ -388,7 +377,6 @@ class Document extends \ZCL\DB\Entity
      * @param mixed $state новый  статус
      */
     protected function onState($state) {
-
 
     }
 
@@ -458,9 +446,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_INPROCESS] = Helper::l('st_inprocess');
         $list[Document::STATE_READYTOSHIP] = Helper::l('st_rdshipment');
 
-
         return $list;
-
     }
 
     /**
@@ -481,7 +467,6 @@ class Document extends \ZCL\DB\Entity
         }
         return true;
     }
-
 
     public function nextNumber($branch_id = 0) {
 
@@ -512,17 +497,14 @@ class Document extends \ZCL\DB\Entity
         for ($i = 0; $i < 10; $$i++) {
             $next = $letter . sprintf("%05d", ++$number);
 
-
             $ch = $conn->GetOne("select count(*) from documents     where   meta_id='{$this->meta_id}'   {$branch} and document_number=" . $conn->qstr($next));
             if ($ch == 0) {
                 return $next;
             }
-
         }
 
 
         return '';
-
     }
 
     /**
@@ -584,7 +566,6 @@ class Document extends \ZCL\DB\Entity
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
-
 
         //   if(System::getUser()->userlogin =='admin') return;
         if ($hasExecuted || $hasPayment) {
@@ -710,7 +691,6 @@ class Document extends \ZCL\DB\Entity
         return Document::find($where);
     }
 
-
     /**
      *  Возвращает  списки  документов которые  могут быть  созданы  на  основании
      *
@@ -774,7 +754,6 @@ class Document extends \ZCL\DB\Entity
         return $list;
     }
 
-
     /**
      * Отправка  документа  по  почте
      *
@@ -789,10 +768,8 @@ class Document extends \ZCL\DB\Entity
 
         $customer = \App\Entity\Customer::load($doc->customer_id);
 
-
         $filename = strtolower($doc->meta_name) . ".pdf";
         $html = $doc->generateReport();
-
 
         try {
             $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
@@ -816,7 +793,6 @@ class Document extends \ZCL\DB\Entity
                 if ($_config['smtp']['tls'] == true) {
                     $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
                 }
-
             }
             $mail->setFrom($_config['smtp']['user'], '');
             $mail->addAddress($customer->email);
@@ -836,7 +812,6 @@ class Document extends \ZCL\DB\Entity
 
 
         // @unlink($f);
-
     }
 
     /**
@@ -854,4 +829,5 @@ class Document extends \ZCL\DB\Entity
     protected function getEmailSubject() {
         return "";
     }
+
 }

@@ -74,6 +74,6 @@
 
         <td colspan="2"> {{ship_number}}</td>
     </tr>
-    </tr>
-    {{/ship_number}}
+</tr>
+{{/ship_number}}
 </table>

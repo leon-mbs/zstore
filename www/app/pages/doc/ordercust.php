@@ -34,9 +34,7 @@ class OrderCust extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
-
         $common = System::getOptions("common");
-
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -51,7 +49,6 @@ class OrderCust extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('apprdoc'))->onClick($this, 'savedocOnClick');
-
 
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -73,7 +70,6 @@ class OrderCust extends \App\Pages\Base
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
-
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -83,9 +79,7 @@ class OrderCust extends \App\Pages\Base
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
-
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
         } else {
             $this->_doc = Document::create('OrderCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -102,8 +96,6 @@ class OrderCust extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
-
-
                     }
                 }
             }
@@ -117,7 +109,6 @@ class OrderCust extends \App\Pages\Base
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
-
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
@@ -144,7 +135,6 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editdesc->setText($item->desc);
 
-
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
@@ -156,7 +146,6 @@ class OrderCust extends \App\Pages\Base
         }
 
         $this->_rowid = $item->rowid;
-
     }
 
     public function deleteOnClick($sender) {
@@ -196,7 +185,6 @@ class OrderCust extends \App\Pages\Base
 
         $item = Item::load($id);
 
-
         $item->custcode = $this->editdetail->editcustcode->getText();
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -204,7 +192,6 @@ class OrderCust extends \App\Pages\Base
             $this->setWarn("no_price");
         }
         $item->desc = $this->editdetail->editdesc->getText();
-
 
         if ($this->_rowid > 0) {
             $item->rowid = $this->_rowid;
@@ -252,7 +239,6 @@ class OrderCust extends \App\Pages\Base
 
         $this->calcTotal();
 
-
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
@@ -268,7 +254,6 @@ class OrderCust extends \App\Pages\Base
                 $this->_basedocid = 0;
             }
             $this->_doc->save();
-
 
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
@@ -290,7 +275,6 @@ class OrderCust extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-
 
             if ($isEdited) {
                 App::RedirectBack();
@@ -405,7 +389,6 @@ class OrderCust extends \App\Pages\Base
         $this->editdetail->setVisible(true);
     }
 
-
     public function onPaste($sender) {
 
         $cp = \App\Session::getSession()->clipboard;
@@ -423,9 +406,7 @@ class OrderCust extends \App\Pages\Base
 
         $this->docform->detail->Reload();
 
-
         $this->calcTotal();
-
     }
 
 }

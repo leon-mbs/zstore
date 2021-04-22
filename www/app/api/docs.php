@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\API;
 
 use \App\Entity\Doc\Document;
@@ -9,6 +8,7 @@ use \App\Helper as H;
 
 class docs extends \App\API\Base\JsonRPC
 {
+
     //список  статусов
     public function statuslist() {
         $list = \App\Entity\Doc\Document::getStateList();
@@ -30,14 +30,12 @@ class docs extends \App\API\Base\JsonRPC
         return $list;
     }
 
-
     //записать ордер
     public function createorder($args) {
         $options = \App\System::getOptions('common');
 
         if (strlen($args['number']) == 0) {
-            throw  new  \Exception(H::l("apinumber"));  //не задан  номер
-
+            throw new \Exception(H::l("apinumber"));  //не задан  номер
         }
 
 
@@ -45,16 +43,16 @@ class docs extends \App\API\Base\JsonRPC
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
         if ($doc != null) {
-            throw  new  \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
+            throw new \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
         }
 
-        
+
         $doc = Document::create('Order');
-        
+
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
             if ($c == null) {
-                throw  new  \Exception(H::l("apicustnotfound"));
+                throw new \Exception(H::l("apicustnotfound"));
             } else {
                 $doc->customer_id = $args['customer_id'];
             }
@@ -64,7 +62,7 @@ class docs extends \App\API\Base\JsonRPC
             if ($args['branch_id'] > 0) {
                 $doc->branch_id = $args['branch_id'];
             } else {
-                throw  new  \Exception(H::l("apinobranch"));
+                throw new \Exception(H::l("apinobranch"));
             }
         }
 
@@ -76,7 +74,7 @@ class docs extends \App\API\Base\JsonRPC
         $doc->state = Document::STATE_NEW;
         $doc->headerdata["outnumber"] = $args['number'];
         $doc->headerdata["apinumber"] = $args['number'];
-       // $doc->document_number = $args['number'];
+        // $doc->document_number = $args['number'];
         $doc->headerdata["phone"] = $args['phone'];
         $doc->headerdata["email"] = $args['email'];
         $doc->headerdata["ship_address"] = $args['ship_address'];
@@ -87,7 +85,7 @@ class docs extends \App\API\Base\JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw  new \Exception(H::l("apientercode"));
+                    throw new \Exception(H::l("apientercode"));
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -100,14 +98,14 @@ class docs extends \App\API\Base\JsonRPC
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
-                    throw  new  \Exception(H::l("apiitemnotfound", $it['code']));
+                    throw new \Exception(H::l("apiitemnotfound", $it['code']));
                 }
             }
         } else {
-            throw  new  \Exception(H::l("apinoitems"));
+            throw new \Exception(H::l("apinoitems"));
         }
         if (count($details) == 0) {
-            throw  new  \Exception(H::l("apinoitems"));
+            throw new \Exception(H::l("apinoitems"));
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -127,20 +125,19 @@ class docs extends \App\API\Base\JsonRPC
     public function createttn($args) {
 
         if (strlen($args['number']) == 0) {
-            throw  new  \Exception(H::l("apinumber"));  //не задан  номер
-
+            throw new \Exception(H::l("apinumber"));  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
         if ($doc != null) {
-            throw  new  \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
+            throw new \Exception(H::l("apinumberexists", $args['number']));   //номер уже  существует
         }
 
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
             if ($c == null) {
-                throw  new  \Exception(H::l("apicustnotfound"));
+                throw new \Exception(H::l("apicustnotfound"));
             } else {
                 $doc->customer_id = $args['customer_id'];
             }
@@ -160,7 +157,7 @@ class docs extends \App\API\Base\JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw  new \Exception(H::l("apientercode"));
+                    throw new \Exception(H::l("apientercode"));
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -172,14 +169,14 @@ class docs extends \App\API\Base\JsonRPC
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
-                    throw  new  \Exception(H::l("apiitemnotfound", $it['code']));
+                    throw new \Exception(H::l("apiitemnotfound", $it['code']));
                 }
             }
         } else {
-            throw  new  \Exception(H::l("apinoitems"));
+            throw new \Exception(H::l("apinoitems"));
         }
         if (count($details) == 0) {
-            throw  new  \Exception(H::l("apinoitems"));
+            throw new \Exception(H::l("apinoitems"));
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -226,10 +223,9 @@ class docs extends \App\API\Base\JsonRPC
             $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
 
             $doc = Document::getFirst(" content like {$num1}  or content like {$num2} ");
-
         }
         if ($doc == null) {
-            throw new  \Exception(H::l("apinodoc"));
+            throw new \Exception(H::l("apinodoc"));
         }
 
         $user = \App\System::getUser();
@@ -239,15 +235,10 @@ class docs extends \App\API\Base\JsonRPC
         $n->dateshow = time();
         $n->message = H::l("apiasccancel", $user->username, $doc->document_number, $args['reason']);
         $n->save();
-
     }
-
-
-
 
     // /api/docs
     // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","parea":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1}
-
     //Списание ТМЦ в  производсво
     public function createprodissue($args) {
 
@@ -255,7 +246,7 @@ class docs extends \App\API\Base\JsonRPC
         if ($args['store_id'] > 0) {
             $store = \App\Entity\Store::load($args['store_id']);
             if ($store == null) {
-                throw  new  \Exception('Не  указан  склад');
+                throw new \Exception('Не  указан  склад');
             }
         }
         $doc = Document::create('ProdIssue');
@@ -271,7 +262,7 @@ class docs extends \App\API\Base\JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw  new \Exception(H::l("apientercode"));
+                    throw new \Exception(H::l("apientercode"));
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -281,24 +272,22 @@ class docs extends \App\API\Base\JsonRPC
 
                     $details[$item->item_id] = $item;
                 } else {
-                    throw  new  \Exception(H::l("apiitemnotfound", $it['code']));
+                    throw new \Exception(H::l("apiitemnotfound", $it['code']));
                 }
             }
         } else {
-            throw  new  \Exception(H::l("apinoitems"));
+            throw new \Exception(H::l("apinoitems"));
         }
         if (count($details) == 0) {
-            throw  new  \Exception(H::l("apinoitems"));
+            throw new \Exception(H::l("apinoitems"));
         }
         $doc->packDetails('detaildata', $details);
 
         $doc->amount = 0;
 
-
         $doc->save();
 
         $doc->updateStatus(Document::STATE_EXECUTED);
-
 
         return $doc->document_number;
     }

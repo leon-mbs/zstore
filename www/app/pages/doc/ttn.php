@@ -37,14 +37,12 @@ class TTN extends \App\Pages\Base
     private $_rowid     = 0;
     private $_orderid   = 0;
 
-
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
         $common = System::getOptions("common");
 
         $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 8 : 6;
-
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -54,10 +52,8 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new Date('delivery_date'));
         $this->docform->add(new CheckBox('nostore'));
 
-
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
@@ -67,7 +63,6 @@ class TTN extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()));
-
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
@@ -85,7 +80,6 @@ class TTN extends \App\Pages\Base
 
         $this->docform->add(new Label('notesfromorder'));
 
-
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -97,7 +91,6 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->docform->add(new Label('weight'))->setVisible(false);
 
-
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -105,7 +98,6 @@ class TTN extends \App\Pages\Base
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
-
 
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new Label('qtystock'));
@@ -142,7 +134,6 @@ class TTN extends \App\Pages\Base
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
             $this->docform->nostore->setChecked($this->_doc->headerdata['nostore']);
 
-
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
 
@@ -160,8 +151,6 @@ class TTN extends \App\Pages\Base
             $this->OnChangeCustomer($this->docform->customer);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
-
         } else {
             $this->_doc = Document::create('TTN');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -190,7 +179,6 @@ class TTN extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-
                         //проверяем  что уже есть отправка
                         $list = $order->getChildren('TTN');
 
@@ -212,7 +200,6 @@ class TTN extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
 
-
                         $itemlist = $basedoc->unpackDetails('detaildata');
                         $k = 1;      //учитываем  скидку
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
@@ -225,8 +212,6 @@ class TTN extends \App\Pages\Base
                             $this->_itemlist[$i] = $it;
                         }
                         $this->calcTotal();
-
-
                     }
                     if ($basedoc->meta_name == 'Invoice') {
 
@@ -257,8 +242,6 @@ class TTN extends \App\Pages\Base
                         }
 
                         $this->calcTotal();
-
-
                     }
 
 
@@ -275,7 +258,6 @@ class TTN extends \App\Pages\Base
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
-
                         $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->OnChangeCustomer($this->docform->customer);
@@ -291,10 +273,7 @@ class TTN extends \App\Pages\Base
                             $this->_itemlist[$i++] = $item;
                         }
                         $this->calcTotal();
-
                     }
-
-
                 }
             }
         }
@@ -350,7 +329,6 @@ class TTN extends \App\Pages\Base
 
         $this->docform->detail->Reload();
         $this->calcTotal();
-
     }
 
     public function addcodeOnClick($sender) {
@@ -380,7 +358,6 @@ class TTN extends \App\Pages\Base
 
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
-
 
         if ($item == null) {
 
@@ -421,13 +398,11 @@ class TTN extends \App\Pages\Base
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 
-
                     $this->editdetail->edittovar->setKey($item->item_id);
                     $this->editdetail->edittovar->setText($item->itemname);
                     $this->editdetail->editserial->setText('');
                     $this->editdetail->editquantity->setText('1');
                     $this->editdetail->editprice->setText($item->price);
-
 
                     return;
                 } else {
@@ -441,7 +416,6 @@ class TTN extends \App\Pages\Base
         }
         $this->docform->detail->Reload();
         $this->calcTotal();
-
 
         $this->_rowid = 0;
     }
@@ -460,7 +434,6 @@ class TTN extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
 
-
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
@@ -478,7 +451,6 @@ class TTN extends \App\Pages\Base
         }
 
         $this->_rowid = $item->rowid;
-
     }
 
     public function saverowOnClick($sender) {
@@ -519,10 +491,7 @@ class TTN extends \App\Pages\Base
                 if ($st instanceof Stock) {
                     $item->sdate = $st->sdate;
                 }
-
             }
-
-
         }
 
         if ($this->_rowid > 0) {
@@ -534,7 +503,6 @@ class TTN extends \App\Pages\Base
         $this->_itemlist[$item->rowid] = $item;
 
         $this->_rowid = 0;
-
 
         $this->editdetail->setVisible(false);
         $this->wselitem->setVisible(false);
@@ -550,7 +518,6 @@ class TTN extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
-
     }
 
     public function cancelrowOnClick($sender) {
@@ -653,8 +620,6 @@ class TTN extends \App\Pages\Base
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
-
-      
             } else {
                 if ($sender->id == 'senddoc' || $sender->id == 'sendnp') {
 
@@ -669,12 +634,9 @@ class TTN extends \App\Pages\Base
                     }
                     if ($sender->id == 'sendnp') {
                         $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
-
                     }
                     //   $this->_doc->headerdata['sent_date'] = time();
                     // $this->_doc->save();
-
-
                 } else {
                     $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
                 }
@@ -688,7 +650,6 @@ class TTN extends \App\Pages\Base
                 return;
             }
             App::Redirect("\\App\\Pages\\Register\\GIList");
-
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -701,7 +662,6 @@ class TTN extends \App\Pages\Base
             return;
         }
     }
-
 
     /**
      * Расчет  итого
@@ -723,10 +683,7 @@ class TTN extends \App\Pages\Base
         $this->docform->total->setText(H::fa($total));
         $this->docform->weight->setText(H::l("allweight", $weight));
         $this->docform->weight->setVisible($weight > 0);
-
-
     }
-
 
     /**
      * Валидация   формы
@@ -756,7 +713,6 @@ class TTN extends \App\Pages\Base
         }
         $c = $this->docform->customer->getKey();
 
-
         if ($c == 0) {
             $this->setError("noselcust");
         }
@@ -768,7 +724,6 @@ class TTN extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
@@ -816,10 +771,7 @@ class TTN extends \App\Pages\Base
             }
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
-
         }
-
-
     }
 
     //добавление нового контрагента
@@ -867,8 +819,6 @@ class TTN extends \App\Pages\Base
 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
-
-
     }
 
     public function cancelcustOnClick($sender) {
@@ -889,7 +839,6 @@ class TTN extends \App\Pages\Base
             $this->docform->sent_date->setVisible(true);
             $this->docform->delivery_date->setVisible(true);
             $this->docform->emp->setVisible(true);
-
         } else {
             $this->docform->senddoc->setVisible(false);
 
@@ -916,10 +865,4 @@ class TTN extends \App\Pages\Base
         $this->OnChangeItem($this->editdetail->edittovar);
     }
 
-
 }
-
-
-
-
-

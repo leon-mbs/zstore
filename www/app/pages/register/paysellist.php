@@ -30,7 +30,6 @@ class PaySelList extends \App\Pages\Base
     private $_docs      = " and ( meta_name in('GoodsReceipt','InvoiceCust' )  or  (meta_name='OutcomeMoney'  and content like '%<detail>1</detail>%'  )  or  (meta_name='IncomeMoney'  and content like '%<detail>2</detail>%'  ))  ";
     private $_state     = "1,2,3,17,8";
 
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PaySelList')) {
@@ -45,13 +44,12 @@ class PaySelList extends \App\Pages\Base
 
         $this->clist->add(new DataView('custlist', new ArrayDataSource($this, '_custlist'), $this, 'custlistOnRow'));
 
-
         $this->add(new Panel("plist"))->setVisible(false);
         $this->plist->add(new Label("cname"));
         $this->plist->add(new ClickLink("back", $this, "onBack"));
 
         $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
-   
+
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
         $this->add(new Panel("paypan"))->setVisible(false);
@@ -63,16 +61,13 @@ class PaySelList extends \App\Pages\Base
         $this->paypan->payform->add(new TextInput('pcomment'));
         $this->paypan->payform->add(new Date('pdate', time()));
 
-
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
 
         $this->clist->add(new ClickLink('csv', $this, 'oncsv'));
         $this->plist->add(new ClickLink('csv2', $this, 'oncsv'));
 
-
         $this->updateCust();
     }
-
 
     public function filterOnSubmit($sender) {
 
@@ -108,7 +103,6 @@ class PaySelList extends \App\Pages\Base
 
         $this->clist->custlist->Reload();
         $this->clist->totamount->setText(H::fa($this->_totamount));
-
     }
 
     public function custlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -120,8 +114,6 @@ class PaySelList extends \App\Pages\Base
         $row->add(new ClickLink('showdocs'))->onClick($this, 'showdocsOnClick');
 
         $this->_totamount += $cust->sam;
-
-
     }
 
     //список документов
@@ -160,14 +152,12 @@ class PaySelList extends \App\Pages\Base
         $this->plist->doclist->Reload();
     }
 
-
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('date', H::fd($doc->document_date)));
-
 
         $row->add(new Label('payamount', H::fa(($doc->payamount > 0) ? $doc->payamount : "")));
         $row->add(new Label('payed', H::fa(($doc->payed > 0) ? $doc->payed : "")));
@@ -180,10 +170,10 @@ class PaySelList extends \App\Pages\Base
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
         $row->pay->setVisible($doc->payamount > 0);
-         if($doc->document_id== $this->_doc->document_id) {
+        if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-   }
+    }
 
     //просмотр
     public function showOnClick($sender) {
@@ -192,7 +182,7 @@ class PaySelList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
-  
+
         $this->plist->doclist->Reload(false);
         $this->docview->setVisible(true);
         $this->paypan->setVisible(false);
@@ -212,12 +202,9 @@ class PaySelList extends \App\Pages\Base
     public function payOnClick($sender) {
         $this->docview->setVisible(false);
 
-
         $this->_doc = $sender->owner->getDataItem();
 
-
         $this->paypan->setVisible(true);
-
 
         $this->plist->doclist->setSelectedRow($sender->getOwner());
         $this->plist->doclist->Reload(false);
@@ -257,10 +244,8 @@ class PaySelList extends \App\Pages\Base
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 
             $this->setWarn('sumoverpay');
-
         }
         $type = Pay::PAY_BASE_INCOME;
-
 
         if (in_array($this->_doc->meta_name, array('GoodsReceipt', 'InvoiceCust', 'ReturnIssue'))) {
             $amount = 0 - $amount;
@@ -277,7 +262,6 @@ class PaySelList extends \App\Pages\Base
                 $pos->fiscdocnumber = $ret['docnumber'];
                 $pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-
             }
             if ($ret['success'] == false) {
                 $this->setError($ret['data']);
@@ -291,19 +275,14 @@ class PaySelList extends \App\Pages\Base
                 } else {
                     $this->setError("ppo_noretnumber");
                     return;
-
                 }
-
             }
-
         }
 
 
         Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $type, $form->pcomment->getText());
 
-
         $this->setSuccess('payment_added');
-
 
         //$this->updateDocs();
         $this->paypan->setVisible(false);
@@ -326,11 +305,7 @@ class PaySelList extends \App\Pages\Base
                 $data['A' . $i] = $c->customer_name;
                 $data['B' . $i] = $c->phone;
                 $data['C' . $i] = H::fa($c->sam);
-
-
             }
-
-
         }
         if ($sender->id == 'csv2') {
             $list = $this->plist->doclist->getDataSource()->getItems(-1, -1, 'document_id');
@@ -341,14 +316,10 @@ class PaySelList extends \App\Pages\Base
                 $data['B' . $i] = $d->document_number;
                 $data['C' . $i] = H::fa($d->amount);
                 $data['D' . $i] = $d->notes;
-
-
             }
-
         }
 
         H::exportExcel($data, $header, 'sellist.xlsx');
-
     }
 
 }

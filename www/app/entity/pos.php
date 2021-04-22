@@ -29,7 +29,6 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<fiscallocnumber>{$this->fiscallocnumber}</fiscallocnumber>";
         $this->details .= "<fiscdocnumber>{$this->fiscdocnumber}</fiscdocnumber>";
 
-
         $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
         $this->details .= "<firm_id>{$this->firm_id}</firm_id>";
         $this->details .= "</details>";

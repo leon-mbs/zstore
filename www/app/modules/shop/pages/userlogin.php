@@ -66,8 +66,6 @@ class UserLogin extends \Zippy\Html\WebPage
                 }
 
                 App::RedirectHome();
-
-
             } else {
 
                 $this->setError('invalidlogin');
@@ -90,6 +88,5 @@ class UserLogin extends \Zippy\Html\WebPage
 
         $this->_tvars['alerterror'] = $msg;
     }
-
 
 }

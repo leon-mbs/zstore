@@ -35,12 +35,10 @@ class TimeStat extends \App\Pages\Base
         $this->filter->add(new Date('to', $to));
         $this->filter->add(new DropDownChoice('ttype', TimeItem::getTypeTime(), TimeItem::TIME_WORK));
 
-
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new RedirectLink('excel', "tsreport"));
         $this->detail->add(new RedirectLink('pdf', "tsreport"));
         $this->detail->add(new Label('preview'));
-
     }
 
     public function OnSubmit($sender) {
@@ -53,14 +51,12 @@ class TimeStat extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "timestat";
 
-
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
-
 
         $this->detail->preview->setText($html, true);
     }
@@ -88,14 +84,12 @@ class TimeStat extends \App\Pages\Base
 
 
         $header = array(
-            "_detail" => array_values($detail),
-            'from'    => \App\Helper::fd($from),
-            'to'      => \App\Helper::fd($to),
-            'total'   => number_format($total, 2, '.', ''),
-
+            "_detail"  => array_values($detail),
+            'from'     => \App\Helper::fd($from),
+            'to'       => \App\Helper::fd($to),
+            'total'    => number_format($total, 2, '.', ''),
             "typename" => $this->filter->ttype->getValueName()
         );
-
 
         $report = new \App\Report('report/timestat.tpl');
 
@@ -103,6 +97,5 @@ class TimeStat extends \App\Pages\Base
 
         return $html;
     }
-
 
 }

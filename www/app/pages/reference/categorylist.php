@@ -25,7 +25,6 @@ class CategoryList extends \App\Pages\Base
     private $_category;
     public  $_catlist = array();
 
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('CategoryList')) {
@@ -150,7 +149,6 @@ class CategoryList extends \App\Pages\Base
 
         Category::delete($cat_id);
 
-
         $this->Reload();
     }
 
@@ -179,8 +177,6 @@ class CategoryList extends \App\Pages\Base
             $this->categorydetail->editdelimage->setVisible(false);
             $this->categorydetail->editimage->setVisible(false);
         }
-
-
     }
 
     public function addOnClick($sender) {
@@ -253,8 +249,6 @@ class CategoryList extends \App\Pages\Base
                 }
                 $thumb->resize(256, 256);
                 $image->content = $thumb->getImageAsString();
-
-
             }
 
 

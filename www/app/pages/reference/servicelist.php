@@ -140,7 +140,6 @@ class ServiceDataSource implements \Zippy\Interfaces\DataSource
         $text = trim($form->searchkey->getText());
         $showdis = $form->showdis->isChecked();
 
-
         if ($showdis > 0) {
 
         } else {

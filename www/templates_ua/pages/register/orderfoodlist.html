@@ -1,154 +1,154 @@
 <html>
-<body>
-<div class="row">
-    <div class="col-12 col-xl-10">
+    <body>
+        <div class="row">
+            <div class="col-12 col-xl-10">
 
-        <h3>Журнал замовлень </h3>
-
-
-        <div class="navbar nav">
-            <form zippy="filter" class="form-inline ">
+                <h3>Журнал замовлень </h3>
 
 
-                <label for="searchnumber"> № </label>
-
-                <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
-
-
-                <select class="form-control mr-2" zippy="status">
-                </select>
-
-                <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline ">
 
 
-                <input type="submit" class="  btn btn-outline-success  " value="ОК">
+                        <label for="searchnumber"> № </label>
+
+                        <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
 
-            </form>
-        </div>
-        <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Нове замовлення</a>
+                        <select class="form-control mr-2" zippy="status">
+                        </select>
+
+                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
 
 
-        <br><a zippy="csv">Експорт в Excel</a>
-
-        <table class="table   table-sm   ">
-            <tr>
-
-                <th>Номер</th>
-                <th>Дата</th>
-                <th>Замовник</th>
-                <th class="text-right">Сума</th>
-                <th>Статус</th>
+                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
 
-                <th></th>
-                <th></th>
-                <th></th>
+                    </form>
+                </div>
+                <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Нове замовлення</a>
 
 
-            </tr>
-            <tr zippy="doclist">
+                <br><a zippy="csv">Експорт в Excel</a>
 
-                <td zippy="number"></td>
-                <td class="text-nowrap" zippy="date"></td>
-                <td zippy="customer" class="text-nowrap"></td>
-                <td zippy="amount" class="text-right"></td>
+                <table class="table   table-sm   ">
+                    <tr>
 
-
-                <td class="text-nowrap" zippy="state"></td>
-                <td zippy="onotes"></td>
-                <td>
-                    <a zippy="pay" title="Оплата"><i class="fa fa-credit-card"></i></a>
-                </td>
-
-                <td class="text-nowrap">
-                    <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
-                    &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
-
-                </td>
+                        <th>Номер</th>
+                        <th>Дата</th>
+                        <th>Замовник</th>
+                        <th class="text-right">Сума</th>
+                        <th>Статус</th>
 
 
-            </tr>
-
-        </table>
-
-        <div zippy="pag">
-        </div>
-        <a id="dankor"></a>
-    </div>
-
-</div>
-
-<div class="row">
-    <div class="col-12 col-xl-10">
-        <div class="navbar nav">
-            <form zippy="payform" class="form-inline ">
-                <label>До оплати</label>
-                <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
-                       class="form-control mr-2">
-                <label for="payment">рахунок</label>
-                <select class="form-control mr-2" zippy="payment">
-
-                </select>
-                {{#ppo}}
-                <label for="pos">POS</label>
-                <select class="form-control mr-2" zippy="pos">
-                    <option value="0">Не вибраний</option>
-
-                </select>
-                {{/ppo}}
-                <label>дата</label>
-                <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
-
-                <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
-
-                <button type="submit" class="  btn btn-info  mr-2 ">Оплатити</button>
-                <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрити ордер</span>
+                        <th></th>
+                        <th></th>
+                        <th></th>
 
 
-            </form>
+                    </tr>
+                    <tr zippy="doclist">
+
+                        <td zippy="number"></td>
+                        <td class="text-nowrap" zippy="date"></td>
+                        <td zippy="customer" class="text-nowrap"></td>
+                        <td zippy="amount" class="text-right"></td>
+
+
+                        <td class="text-nowrap" zippy="state"></td>
+                        <td zippy="onotes"></td>
+                        <td>
+                            <a zippy="pay" title="Оплата"><i class="fa fa-credit-card"></i></a>
+                        </td>
+
+                        <td class="text-nowrap">
+                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
+
+                        </td>
+
+
+                    </tr>
+
+                </table>
+
+                <div zippy="pag">
+                </div>
+                <a id="dankor"></a>
+            </div>
 
         </div>
-    </div>
-</div>
+
+        <div class="row">
+            <div class="col-12 col-xl-10">
+                <div class="navbar nav">
+                    <form zippy="payform" class="form-inline ">
+                        <label>До оплати</label>
+                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
+                               class="form-control mr-2">
+                        <label for="payment">рахунок</label>
+                        <select class="form-control mr-2" zippy="payment">
+
+                        </select>
+                        {{#ppo}}
+                        <label for="pos">POS</label>
+                        <select class="form-control mr-2" zippy="pos">
+                            <option value="0">Не вибраний</option>
+
+                        </select>
+                        {{/ppo}}
+                        <label>дата</label>
+                        <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
+
+                        <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
+
+                        <button type="submit" class="  btn btn-info  mr-2 ">Оплатити</button>
+                        <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрити ордер</span>
 
 
-<div class="row" zippy="statuspan">
-    <div class="col-12 col-xl-10">
+                    </form>
 
-        <div class="navbar nav">
-            <form zippy="statusform" class="form-inline ">
-
-                <button zippy="binp" class="btn btn-success  mr-2"> На обробку</button>
-                <button zippy="brd" class="btn btn-success  mr-2"> Готовий до  вiдправки</button>
-                <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">                     Виконано                </button>
-                
-                <button zippy="bttn" class="btn btn-info  mr-4"></i> Створити ТТН</button>
-                <button zippy="binv" class="btn btn-info  mr-2"> Рахунок-фактура                </button>
-                <button zippy="bgi" class="btn btn-info  mr-2">  Видаткова  накладна                </button>
-           <button zippy="bco" class="btn btn-info  mr-2">  Закупка               </button>
-                    <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>
-                <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Анульований                </button>
-
-            </form>
+                </div>
+            </div>
         </div>
 
 
-        <div zippy="docview"></div>
+        <div class="row" zippy="statuspan">
+            <div class="col-12 col-xl-10">
 
-    </div>
-</div>
+                <div class="navbar nav">
+                    <form zippy="statusform" class="form-inline ">
 
-{{#askclose}}
+                        <button zippy="binp" class="btn btn-success  mr-2"> На обробку</button>
+                        <button zippy="brd" class="btn btn-success  mr-2"> Готовий до  вiдправки</button>
+                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">                     Виконано                </button>
 
-<script>
-    function check_bclose() {
-        return confirm("Замовлення не сплачено або не виконано. Закрити?")
+                        <button zippy="bttn" class="btn btn-info  mr-4"></i> Створити ТТН</button>
+                        <button zippy="binv" class="btn btn-info  mr-2"> Рахунок-фактура                </button>
+                        <button zippy="bgi" class="btn btn-info  mr-2">  Видаткова  накладна                </button>
+                        <button zippy="bco" class="btn btn-info  mr-2">  Закупка               </button>
+                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>
+                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Анульований                </button>
 
-    }
-</script>
+                    </form>
+                </div>
 
-{{/askclose}}
 
-</body>
+                <div zippy="docview"></div>
+
+            </div>
+        </div>
+
+        {{#askclose}}
+
+        <script>
+            function check_bclose() {
+                return confirm("Замовлення не сплачено або не виконано. Закрити?")
+
+            }
+        </script>
+
+        {{/askclose}}
+
+    </body>
 </html>

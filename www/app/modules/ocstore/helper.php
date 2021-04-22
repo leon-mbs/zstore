@@ -2,7 +2,6 @@
 
 namespace App\Modules\OCStore;
 
-
 /**
  * Вспомагательный  класс
  */
@@ -26,7 +25,6 @@ class Helper
         curl_setopt($ch, CURLOPT_COOKIEFILE, _ROOT . 'upload/apicookie.txt');
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
-
 
         $params_string = '';
         if (is_array($params) && count($params)) {

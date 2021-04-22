@@ -38,16 +38,13 @@ class Roles extends \App\Pages\Base
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("rolerow", new RoleDataSource(), $this, 'OnRow'))->Reload();
 
-
         $this->add(new Panel("editpanname"))->setVisible(false);
         $this->editpanname->add(new Form('editformname'))->onSubmit($this, 'savenameOnClick');
         $this->editpanname->editformname->add(new TextInput('editname'));
         $this->editpanname->editformname->add(new Button('cancelname'))->onClick($this, 'cancelOnClick');
 
-
         $this->add(new Panel("editpan"))->setVisible(false);
         $this->editpan->add(new Form('editform'))->onSubmit($this, 'saveaclOnClick');
-
 
         //виджеты
 
@@ -68,7 +65,6 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editppo'));
         $this->editpan->editform->add(new CheckBox('editnp'));
 
-
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->editpan->editform->add(new Panel('metaaccess'));
@@ -80,10 +76,7 @@ class Roles extends \App\Pages\Base
 
         $this->editpanmenu->editformmenu->add(new Button('cancelmenu'))->onClick($this, 'cancelOnClick');
 
-
         $this->editpanmenu->editformmenu->add(new DataView('mlist', new \Zippy\Html\DataList\ArrayDataSource(array()), $this, 'menurowOnRow'));
-
-
     }
 
     public function onAdd($sender) {
@@ -94,7 +87,6 @@ class Roles extends \App\Pages\Base
         // Очищаем  форму
         $this->editpanname->editformname->clean();
 
-
         $this->role = new UserRole();
     }
 
@@ -103,7 +95,6 @@ class Roles extends \App\Pages\Base
         $this->editpanname->setVisible(true);
         $this->role = $sender->getOwner()->getDataItem();
         $this->editpanname->editformname->editname->setText($this->role->rolename);
-
     }
 
     public function OnMenu($sender) {
@@ -124,16 +115,12 @@ class Roles extends \App\Pages\Base
 
         $smlist = \App\Entity\MetaData::find("disabled<>1 {$w}", "meta_type,description");
 
-
         $mod = H::modulesMetaData($this->role);
-
 
         $smlist = array_merge($smlist, $mod);
 
-
         $this->editpanmenu->editformmenu->mlist->getDataSource()->setArray($smlist);
         $this->editpanmenu->editformmenu->mlist->Reload();
-
     }
 
     public function OnAcl($sender) {
@@ -142,12 +129,9 @@ class Roles extends \App\Pages\Base
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
 
-
         $this->role = $sender->getOwner()->getDataItem();
 
-
         $this->editpan->editform->metaaccess->metarow->Reload();
-
 
         if (strpos($this->role->widgets, 'wminqty') !== false) {
             $this->editpan->editform->editwminqty->setChecked(true);
@@ -207,7 +191,6 @@ class Roles extends \App\Pages\Base
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpanname->setVisible(false);
-
     }
 
     public function savemenuOnClick($sender) {
@@ -221,14 +204,11 @@ class Roles extends \App\Pages\Base
         }
         $this->role->smartmenu = implode(',', $smartmenu);
 
-
         $this->role->save();
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpanmenu->setVisible(false);
-
     }
-
 
     public function saveaclOnClick($sender) {
 
@@ -268,9 +248,7 @@ class Roles extends \App\Pages\Base
         $this->role->aclstate = implode(',', $sarr);
         $this->role->acldelete = implode(',', $darr);
 
-
         $widgets = "";
-
 
         if ($this->editpan->editform->editwminqty->isChecked()) {
             $widgets = $widgets . ',wminqty';
@@ -323,7 +301,6 @@ class Roles extends \App\Pages\Base
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
-
     }
 
     public function cancelOnClick($sender) {
@@ -332,7 +309,6 @@ class Roles extends \App\Pages\Base
         $this->editpanname->setVisible(false);
         $this->editpanmenu->setVisible(false);
     }
-
 
     //удаление  роли
 
@@ -365,7 +341,6 @@ class Roles extends \App\Pages\Base
             $datarow->cnt->setVisible(false);
         }
     }
-
 
     public function metarowOnRow($row) {
         $item = $row->getDataItem();
@@ -428,7 +403,6 @@ class Roles extends \App\Pages\Base
         $row->add(new CheckBox('deleteacc', new Bind($item, 'deleteacc')))->setVisible($item->meta_type == 1 || $item->meta_type == 4);
     }
 
-
     public function menurowOnRow($row) {
         $item = $row->getDataItem();
         switch($item->meta_type) {
@@ -463,7 +437,6 @@ class Roles extends \App\Pages\Base
 
         $row->add(new CheckBox('mshow', new Bind($item, 'mview')));
     }
-
 
 }
 

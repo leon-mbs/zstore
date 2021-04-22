@@ -81,7 +81,6 @@ class StoreList extends \App\Pages\Base
         $b = \App\System::getBranch();
         $this->storeform->editbranch->setValue($b > 0 ? $b : 0);
 
-
         $this->_store = new Store();
     }
 

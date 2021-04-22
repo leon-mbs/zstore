@@ -15,11 +15,8 @@ class Customer extends \ZCL\DB\Entity
     const STATUS_ACTUAL   = 0;  //актуальный
     const STATUS_DISABLED = 1; //не используется
     const STATUS_LEAD     = 2; //лид
-
-
-    const TYPE_BAYER  = 1; //покупатель
-    const TYPE_SELLER = 2; //поставщик
-
+    const TYPE_BAYER      = 1; //покупатель
+    const TYPE_SELLER     = 2; //поставщик
 
     protected function init() {
         $this->customer_id = 0;
@@ -91,11 +88,9 @@ class Customer extends \ZCL\DB\Entity
         return "";
     }
 
-
     protected function afterDelete() {
 
         $conn = \ZDB\DB::getConnect();
-
 
         $conn->Execute("delete from eventlist where   customer_id=" . $this->customer_id);
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
@@ -187,8 +182,6 @@ class Customer extends \ZCL\DB\Entity
 
 
         return $list;
-
     }
-
 
 }

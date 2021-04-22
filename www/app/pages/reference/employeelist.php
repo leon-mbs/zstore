@@ -111,7 +111,6 @@ class EmployeeList extends \App\Pages\Base
         $b = \App\System::getBranch();
         $this->employeedetail->editbranch->setValue($b > 0 ? $b : 0);
 
-
         $this->_employee = new Employee();
     }
 

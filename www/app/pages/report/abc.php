@@ -42,7 +42,6 @@ class ABC extends \App\Pages\Base
         $this->filter->add(new Date('to', $to));
         $this->filter->add(new DropDownChoice('type', $this->typelist, 1));
 
-
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
 
@@ -50,12 +49,10 @@ class ABC extends \App\Pages\Base
         $this->detail->add(new RedirectLink('pdf', "abc"));
         $this->detail->add(new Label('preview'));
 
-
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
             $this->br = " and documents_view.branch_id in ({$brids}) ";
         }
-
     }
 
     public function OnSubmit($sender) {
@@ -66,7 +63,6 @@ class ABC extends \App\Pages\Base
 
         $reportpage = "App/Pages/ShowReport";
         $reportname = "abc";
-
 
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
@@ -80,10 +76,8 @@ class ABC extends \App\Pages\Base
 
         $type = $this->filter->type->getValue();
 
-
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-
 
         $detail = array();
 
@@ -268,7 +262,6 @@ class ABC extends \App\Pages\Base
 
         return $list;
     }
-
 
     //выполняет расчет  АВС
     private function calc($detail) {

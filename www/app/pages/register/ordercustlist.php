@@ -42,20 +42,16 @@ class OrderCustList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 3 => 'Все'), 0));
 
-
         $doclist = $this->add(new DataView('doclist', new OrderCustDataSource($this), $this, 'doclistOnRow'));
- 
+
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
 
-
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
-
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
@@ -97,10 +93,10 @@ class OrderCustList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if($doc->document_id== $this->_doc->document_id) {
+        if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-   }
+    }
 
     public function statusOnSubmit($sender) {
         if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
@@ -223,7 +219,6 @@ class OrderCustList extends \App\Pages\Base
 
             $this->statuspan->statusform->setVisible(false);
         }
-
     }
 
     //просмотр
@@ -237,12 +232,11 @@ class OrderCustList extends \App\Pages\Base
         $this->statuspan->setVisible(true);
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
-      
+
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
-
     }
 
     public function editOnClick($sender) {
@@ -258,7 +252,6 @@ class OrderCustList extends \App\Pages\Base
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 
-
         $header = array();
         $data = array();
 
@@ -271,11 +264,9 @@ class OrderCustList extends \App\Pages\Base
             $data['D' . $i] = $d->amount;
             $data['E' . $i] = Document::getStateName($d->state);
             $data['F' . $i] = $d->notes;
-
         }
 
         H::exportExcel($data, $header, 'ordercustlist.xlsx');
-
     }
 
 }
@@ -296,7 +287,6 @@ class OrderCustDataSource implements \Zippy\Interfaces\DataSource
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
-
 
         $where = "   meta_name  = 'OrderCust' ";
 

@@ -54,7 +54,6 @@ class Price extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "price";
 
-
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;
@@ -80,7 +79,6 @@ class Price extends \App\Pages\Base
             $qty = " and item_id in(select  item_id from store_stock where  qty >0 ) ";
         }
         $items = Item::find("disabled <>1 {$qty} and detail like '%<pricelist>1</pricelist>%'", "cat_name,itemname");
-
 
         foreach ($items as $item) {
             $detail[] = array(

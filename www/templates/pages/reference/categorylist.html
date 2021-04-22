@@ -1,133 +1,133 @@
 <html>
-<head>
-    <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
-    <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
+    <head>
+        <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
+        <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
 
-</head>
+    </head>
 
-<body>
-<div class="row">
-    {{#usecattree}}
-    <div class="col-12 col-md-10 col-xl-8">
-    {{/usecattree}}
-    {{^usecattree}}        
-    <div class="col-12 col-md-6 col-xl-4">
-    {{/usecattree}}    
-
-        <div zippy="categorytable">
-            <h3>Категории товаров
-                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
-                   data-toggle="popover"
-                   data-placement="bottom" data-content="Категории предназначены для  групировки  товаров  в  прайте, а также  для
-                           задания  наценки  по  умолчанию для товаров  где  цена или наценка не  указаны  явно"></i>
-
-            </h3>
-            <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
-            <table class="table table-bordered   table-sm">
-                <tr>
-                {{#useimages}}
-                <th></th>
-                {{/useimages}}
-                  <th>Название</th>
-                    {{#usecattree}}
-                    <th class="text-right"> Родительская</th>
-                    {{/usecattree}}
-                    <th class="text-right"> Кол. ТМЦ </th>
-
-                    <th></th>
-                </tr>
-                <tr zippy="categorylist">
-                {{#useimages}}
-                <td>
-                    <a zippy="imagelistitem" data-type="image" data-toggle="lightbox"  > <img
-                            style="float:left; width:64px"></a>
-
-                </td>
-                {{/useimages}}
-                   <td zippy="cat_name"></td>
-                    {{#usecattree}}
-                    <td zippy="p_name"></td>
-                    {{/usecattree}}
-                    <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
-
-                    <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
-                    &nbsp;&nbsp;&nbsp;<a        zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
-                </tr>
-            </table>
-
-
-        </div>
-
-
-    </div>
-</div>
-<div class="row">
-    <div class="col-6 col-md-4">
-
-        <form zippy="categorydetail" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="editcat_name">Название</label>
-                <input required="required" class="form-control" zippy="editcat_name"/>
-            </div>
+    <body>
+        <div class="row">
             {{#usecattree}}
-            <div class="form-group">
-                <label for="editparent">Родительская</label>
-                <select   class="form-control" zippy="editparent">
-                  <option value=0>Не  указана</option>
-                </select>
-            </div>
-            {{/usecattree}}
-             
-            <div class="form-group  ">
-                <label for="editprice">Наценки в %</label>
-                <div>
-                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice1"/>
-                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice2"/>
-                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice3"/>
-                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice4"/>
-                    <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice5"/>
-                    <small class="form-text text-muted">Типы цен задаются в настройках. </small>
-                </div>
-            </div>
-             <div class="form-group">
-                <label for="editparent">Изображение</label>
-               <input type="file" class="form-control" zippy="editaddfile">
-               <small>Изображение  должно  быть квадратным  иначе  будет  обрезано</small> 
-            </div>
-            <div class="form-group">
-                <img zippy="editimage" style="height:128px"><br>
-                <div class="form-check">
-                 <input zippy="editdelimage" type="checkbox" class="form-check-input">
-                   
-                 <span data-label="editdelimage" for="editdelimage">Удалить   избражение</span>       
-              </div> 
-            </div> 
-               <div class="form-check">
-                    <input zippy="editnoshop" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editnoshop">Не показывать в онлайн-каталоге</label>
-                </div>
-            
-            
-               <div class="form-group">
-            <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-            <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
-                </div>
-        </form>
-    </div>
-</div>
-<script>
-    $(document).ready(function () {
+            <div class="col-12 col-md-10 col-xl-8">
+                {{/usecattree}}
+                {{^usecattree}}        
+                <div class="col-12 col-md-6 col-xl-4">
+                    {{/usecattree}}    
 
-        $(document).on('click', '[data-toggle="lightbox"]', function (event) {
-            event.preventDefault();
-            $(this).ekkoLightbox({'alwaysShowClose': true});
-        });
+                    <div zippy="categorytable">
+                        <h3>Категории товаров
+                            <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
+                               data-toggle="popover"
+                               data-placement="bottom" data-content="Категории предназначены для  групировки  товаров  в  прайте, а также  для
+                               задания  наценки  по  умолчанию для товаров  где  цена или наценка не  указаны  явно"></i>
+
+                        </h3>
+                        <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
+                        <table class="table table-bordered   table-sm">
+                            <tr>
+                                {{#useimages}}
+                                <th></th>
+                                {{/useimages}}
+                                <th>Название</th>
+                                {{#usecattree}}
+                                <th class="text-right"> Родительская</th>
+                                {{/usecattree}}
+                                <th class="text-right"> Кол. ТМЦ </th>
+
+                                <th></th>
+                            </tr>
+                            <tr zippy="categorylist">
+                                {{#useimages}}
+                                <td>
+                                    <a zippy="imagelistitem" data-type="image" data-toggle="lightbox"  > <img
+                                            style="float:left; width:64px"></a>
+
+                                </td>
+                                {{/useimages}}
+                                <td zippy="cat_name"></td>
+                                {{#usecattree}}
+                                <td zippy="p_name"></td>
+                                {{/usecattree}}
+                                <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
+
+                                <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
+                                    &nbsp;&nbsp;&nbsp;<a        zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
 
 
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 col-md-4">
+
+                    <form zippy="categorydetail" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="editcat_name">Название</label>
+                            <input required="required" class="form-control" zippy="editcat_name"/>
+                        </div>
+                        {{#usecattree}}
+                        <div class="form-group">
+                            <label for="editparent">Родительская</label>
+                            <select   class="form-control" zippy="editparent">
+                                <option value=0>Не  указана</option>
+                            </select>
+                        </div>
+                        {{/usecattree}}
+
+                        <div class="form-group  ">
+                            <label for="editprice">Наценки в %</label>
+                            <div>
+                                <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice1"/>
+                                <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice2"/>
+                                <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice3"/>
+                                <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice4"/>
+                                <input style="width: 100px" pattern="[0-9\.]+" class="form-control" zippy="editprice5"/>
+                                <small class="form-text text-muted">Типы цен задаются в настройках. </small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editparent">Изображение</label>
+                            <input type="file" class="form-control" zippy="editaddfile">
+                            <small>Изображение  должно  быть квадратным  иначе  будет  обрезано</small> 
+                        </div>
+                        <div class="form-group">
+                            <img zippy="editimage" style="height:128px"><br>
+                            <div class="form-check">
+                                <input zippy="editdelimage" type="checkbox" class="form-check-input">
+
+                                <span data-label="editdelimage" for="editdelimage">Удалить   избражение</span>       
+                            </div> 
+                        </div> 
+                        <div class="form-check">
+                            <input zippy="editnoshop" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="editnoshop">Не показывать в онлайн-каталоге</label>
+                        </div>
+
+
+                        <div class="form-group">
+                            <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
+                            <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <script>
+$(document).ready(function () {
+
+    $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+        event.preventDefault();
+        $(this).ekkoLightbox({'alwaysShowClose': true});
     });
 
- 
-</script>
 
-</body>
+});
+
+
+            </script>
+
+    </body>
 </html>

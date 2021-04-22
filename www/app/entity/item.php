@@ -11,12 +11,12 @@ namespace App\Entity;
  */
 class Item extends \ZCL\DB\Entity
 {
+
     const TYPE_TOVAR    = 1;   //товар
     const TYPE_MAT      = 2;   //материалы  и комплектующие
     const TYPE_MBP      = 3;   //малоценка
     const TYPE_PROD     = 4;   //готовая продукция
     const TYPE_HALFPROD = 5;   //полуфабрикаты
-
 
     private $brprice = array(); //цены по  филиалам
 
@@ -125,7 +125,6 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<customsize>{$this->customsize}</customsize>";
         $this->detail .= "<sef>{$this->sef}</sef>";
 
-
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
 
@@ -203,8 +202,6 @@ class Item extends \ZCL\DB\Entity
                     $k = $opv[$this->val] / $this->rate;
                     $price = $price * $k;
                 }
-
-
             }
         } else {
             if ($_price > 0) {
@@ -241,7 +238,6 @@ class Item extends \ZCL\DB\Entity
                     $k = $opv[$this->val] / $this->rate;
                     $price = $price * $k;
                 }
-
             }
         }
 
@@ -261,7 +257,6 @@ class Item extends \ZCL\DB\Entity
                 $k = $opv[$this->val] / $this->rate;
                 $price = $price * $k;
             }
-
         }
 
 
@@ -286,7 +281,6 @@ class Item extends \ZCL\DB\Entity
 
         return $conn->GetOne($sql);
     }
-
 
     public static function getPriceTypeList() {
 
@@ -442,13 +436,10 @@ class Item extends \ZCL\DB\Entity
                 } else {
                     $list[] = $v['manufacturer'];
                 }
-
             }
         }
         return $list;
-
     }
-
 
     public static function getTypes() {
         $list = array();
@@ -458,7 +449,6 @@ class Item extends \ZCL\DB\Entity
         $list[Item::TYPE_MBP] = \App\Helper::l('it_mbp');
         $list[Item::TYPE_PROD] = \App\Helper::l('it_prod');
         $list[Item::TYPE_HALFPROD] = \App\Helper::l('it_hprod');
-
 
         return $list;
     }
@@ -487,4 +477,5 @@ class Item extends \ZCL\DB\Entity
 
         return $price;
     }
+
 }

@@ -39,7 +39,6 @@ class PayList extends \App\Pages\Base
 
         $this->_ptlist = \App\Entity\Pay::getPayTypeList();
 
-
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', '', 'username'), 0));
@@ -48,10 +47,8 @@ class PayList extends \App\Pages\Base
 
         $doclist = $this->add(new DataView('doclist', new PayListDataSource($this), $this, 'doclistOnRow'));
 
-
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         $this->add(new Form('fnotes'))->onSubmit($this, 'delOnClick');
@@ -90,14 +87,12 @@ class PayList extends \App\Pages\Base
         $row->add(new Label('customer_name', $doc->customer_name));
         $row->add(new Label('paytype', $this->_ptlist[$doc->paytype]));
 
-
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $user = \App\System::getUser();
         $row->add(new BookmarkableLink('del'))->setVisible($user->rolename == 'admins');
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
 
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
-
     }
 
     //просмотр
@@ -121,7 +116,6 @@ class PayList extends \App\Pages\Base
 
         $pl = Pay::load($id);
 
-
         $doc = Document::load($pl->document_id);
         Pay::cancelPayment($id, $sender->notes->getText());
 
@@ -144,7 +138,6 @@ class PayList extends \App\Pages\Base
         $n->message = H::l('deletedpay', $user->username, $doc->document_number, $sender->notes->getText());
         $n->save();
 
-
         $sender->notes->setText('');
         $this->setSuccess('payment_canceled');
         $this->resetURL();
@@ -152,7 +145,6 @@ class PayList extends \App\Pages\Base
 
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1);
-
 
         $header = array();
         $data = array();
@@ -177,7 +169,6 @@ class PayList extends \App\Pages\Base
             $data['F' . $i] = $doc->username;
             $data['G' . $i] = $doc->customer_name;
             $data['H' . $i] = $doc->notes;
-
         }
 
         H::exportExcel($data, $header, 'paylist.xlsx');
@@ -231,7 +222,6 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $type = $this->page->filter->ftype->getValue();
         $cust = $this->page->filter->fcustomer->getKey();
         $mf = $this->page->filter->fmfund->getValue();
-
 
         if ($type > 0) {
             $where .= " and paytype=" . $type;

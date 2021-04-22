@@ -44,7 +44,6 @@ class ProdReceipt extends Document
                         "total"           => H::fa($this->amount)
         );
 
-
         $report = new \App\Report('doc/prodreceipt.tpl');
 
         $html = $report->generate($header);
@@ -55,7 +54,6 @@ class ProdReceipt extends Document
     public function Execute() {
         $types = array();
         $common = \App\System::getOptions("common");
-
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
@@ -73,8 +71,6 @@ class ProdReceipt extends Document
 
                         $sc->save();
                     }
-
-
                 }
             }
 
@@ -84,10 +80,7 @@ class ProdReceipt extends Document
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stock->stock_id);
 
-
             $sc->save();
-
-
         }
 
 
@@ -98,7 +91,6 @@ class ProdReceipt extends Document
         return 'ОП-000000';
     }
 
-
     public function getRelationBased() {
         $list = array();
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
@@ -107,4 +99,5 @@ class ProdReceipt extends Document
 
         return $list;
     }
+
 }

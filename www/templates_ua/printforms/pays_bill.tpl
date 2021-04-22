@@ -10,14 +10,14 @@
 
         <td colspan="2"> {{firm_name}}</td>
     </tr>
- 
- 
+
+
 
     <tr>
         <td colspan="2"> {{customer_name}}</td>
     </tr>
 
- 
+
     <tr>
         <td colspan="2">Оплати:</td>
     </tr>
@@ -28,12 +28,12 @@
     </tr>
 
     {{/plist}}
-   
+
     <tr>
         <td  align="right"> <b> Всього:</b></td>
         <td  align="right"><b> {{pall}}</b></td>
 
     </tr>
- 
+
 </table>
 <br>

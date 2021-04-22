@@ -36,11 +36,9 @@ class Orders extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
-
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
         $this->add(new ClickLink('importbtn'))->onClick($this, 'onImport');
-
 
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
@@ -54,14 +52,13 @@ class Orders extends \App\Pages\Base
         $client = \App\Modules\WC\Helper::getClient();
 
         $this->_neworders = array();
-        $page=1;
+        $page = 1;
         while(true) {
-     
-     
-            $fields = array(
-                'status' => 'pending' ,'per_page'=>100,'page'=>$page
-            );
 
+
+            $fields = array(
+                'status' => 'pending', 'per_page' => 100, 'page' => $page
+            );
 
             try {
                 $data = $client->get('orders', $fields);
@@ -69,10 +66,9 @@ class Orders extends \App\Pages\Base
                 $this->setError($ee->getMessage());
                 return;
             }
-           $fields = array(
-                'status' => 'on-hold' ,'per_page'=>100,'page'=>$page
+            $fields = array(
+                'status' => 'on-hold', 'per_page' => 100, 'page' => $page
             );
-
 
             try {
                 $data2 = $client->get('orders', $fields);
@@ -80,13 +76,15 @@ class Orders extends \App\Pages\Base
                 $this->setError($ee->getMessage());
                 return;
             }
-               if(is_array($data) && is_array($data2)) {
-                   $data = array_merge($data,$data2) ;
-               }
+            if (is_array($data) && is_array($data2)) {
+                $data = array_merge($data, $data2);
+            }
             $page++;
-                
-            $c = count($data) ;
-            if($c==0) break;
+
+            $c = count($data);
+            if ($c == 0) {
+                break;
+            }
 
             foreach ($data as $wcorder) {
 
@@ -141,17 +139,14 @@ class Orders extends \App\Pages\Base
                 $neworder->notes .= " Адрес:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
                 $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
 
-
                 $this->_neworders[] = $neworder;
             }
         }
         $this->neworderslist->Reload();
-
     }
 
     public function noOnRow($row) {
         $order = $row->getDataItem();
-
 
         $row->add(new Label('number', $order->headerdata['wcorder']));
         $row->add(new Label('customer', $order->headerdata['wcclient']));
@@ -163,12 +158,10 @@ class Orders extends \App\Pages\Base
     public function onImport($sender) {
         $modules = System::getOptions("modules");
 
-
         foreach ($this->_neworders as $shoporder) {
 
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
-
         }
 
         $this->setInfo('imported_orders', count($this->_neworders));

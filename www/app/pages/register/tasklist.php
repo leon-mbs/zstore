@@ -30,7 +30,6 @@ class TaskList extends \App\Pages\Base
     public  $_discount = 0;
     private $_taskscnt = array();
 
-
     public function __construct() {
 
 
@@ -48,7 +47,7 @@ class TaskList extends \App\Pages\Base
         $this->add(new Panel('caltab'));
 
         $this->tasktab->add(new DataView('tasklist', $this->_taskds, $this, 'tasklistOnRow'));
-   
+
         $this->tasktab->tasklist->setPageSize(H::getPG(H::getPG()));
         $this->tasktab->add(new \Zippy\Html\DataList\Paginator('pag', $this->tasktab->tasklist));
 
@@ -59,7 +58,6 @@ class TaskList extends \App\Pages\Base
 
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');
-
 
         $this->tasktab->add(new Panel("statuspan"))->setVisible(false);
 
@@ -91,9 +89,7 @@ class TaskList extends \App\Pages\Base
         $this->tasktab->setVisible($sender->id == 'tabs');
         $this->updateTasks();
         $this->updateCal();
-
     }
-
 
     public function tasklistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $task = $row->getDataItem();
@@ -137,10 +133,9 @@ class TaskList extends \App\Pages\Base
         if ($task->state == Document::STATE_CLOSED || $task->state == Document::STATE_EXECUTED) {
             $row->taskedit->setVisible(false);
         }
-        if($task->document_id== $this->_task->document_id) {
+        if ($task->document_id == $this->_task->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-        
     }
 
     //панель кнопок
@@ -176,9 +171,8 @@ class TaskList extends \App\Pages\Base
         $this->tasktab->statuspan->statusform->bgoods->setVisible($this->_task->state != Document::STATE_CLOSED);
         $this->tasktab->statuspan->statusform->bact->setVisible($this->_task->state != Document::STATE_CLOSED);
 
-
         $this->tasktab->statuspan->docview->setDoc($this->_task);
-        
+
         $this->tasktab->tasklist->Reload(false);
         $this->goAnkor('dankor');
     }
@@ -317,7 +311,6 @@ class TaskList extends \App\Pages\Base
 
             $class = "\\App\\Pages\\Doc\\Task";
 
-
             Application::Redirect($class, $task->document_id);
             return;
         }
@@ -336,11 +329,9 @@ class TaskList extends \App\Pages\Base
 
             if ($action['years'] <> 0) {
                 $task->headerdata['start'] = strtotime($action['years'] . ' years', $task->headerdata['start']);
-
             }
             if ($action['months'] <> 0) {
                 $task->headerdata['start'] = strtotime($action['months'] . ' months', $task->headerdata['start']);
-
             }
             if ($action['days'] <> 0) {
                 $task->headerdata['start'] = strtotime($action['days'] . ' days', $task->headerdata['start']);
@@ -350,8 +341,6 @@ class TaskList extends \App\Pages\Base
             }
 
             $task->document_date = $task->headerdata['start'];
-
-
         }
         if ($action['action'] == 'resize') {
             $task = Document::load($action['id']);
@@ -359,14 +348,10 @@ class TaskList extends \App\Pages\Base
                 $task->document_date = $task->document_date + ($action['startdelta']);
                 $task->headerdata['start'] = $task->headerdata['start'] + ($action['enddelta'] / 3600);
                 $task->headerdata['taskhours'] = $task->headerdata['taskhours'] + (0 - $action['enddelta'] / 3600);
-
             }
             if ($action['enddelta'] != 0) {
                 $task->headerdata['taskhours'] = $task->headerdata['taskhours'] + $action['enddelta'] / 3600;
-
             }
-
-
         }
         $task->save();
 
@@ -383,7 +368,6 @@ class TaskList extends \App\Pages\Base
     public function oncsv($sender) {
         $list = $this->tasktab->tasklist->getDataSource()->getItems(-1, -1, 'document_id');
 
-
         $header = array();
         $data = array();
 
@@ -396,15 +380,9 @@ class TaskList extends \App\Pages\Base
             $data['D' . $i] = $task->headerdata['taskhours'];
             $data['E' . $i] = Document::getStateName($task->state);
             $data['F' . $i] = $task->notes;
-
         }
 
         H::exportExcel($data, $header, 'taskslist.xlsx');
-
-
     }
 
 }
-
- 
-  

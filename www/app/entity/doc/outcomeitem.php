@@ -44,7 +44,6 @@ class OutcomeItem extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
 
-
             $detail[] = array("no"        => $i++,
                               "item_name" => $name,
                               "snumber"   => $item->snumber,

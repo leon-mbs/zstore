@@ -17,9 +17,7 @@ class Base extends \Zippy\Html\WebPage
     public function __construct($params = null) {
         global $_config;
 
-
         \Zippy\Html\WebPage::__construct();
-
 
         $user = System::getUser();
         if ($user->user_id == 0) {
@@ -28,7 +26,6 @@ class Base extends \Zippy\Html\WebPage
         }
 
         $options = System::getOptions('common');
-
 
         //опции
         $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
@@ -41,7 +38,6 @@ class Base extends \Zippy\Html\WebPage
         if (System::getSession()->defbranch > 0) {
             $this->branch_id = System::getSession()->defbranch;
             System::setBranch($this->branch_id);
-
         }
 
 
@@ -50,7 +46,7 @@ class Base extends \Zippy\Html\WebPage
             $this->branch_id = System::getBranch();
             $blist = \App\Entity\Branch::getList(System::getUser()->user_id);
             if (count($blist) == 1) {
-                $k = array_keys($blist);//если  одна
+                $k = array_keys($blist); //если  одна
                 $this->branch_id = array_pop($k);
                 System::setBranch($this->branch_id);
             }
@@ -68,11 +64,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["refmenu"] = Helper::generateMenu(4);
         $this->_tvars["sermenu"] = Helper::generateMenu(5);
 
-
         $this->_tvars["islogined"] = $user->user_id > 0;
         $this->_tvars["isadmin"] = $user->userlogin == 'admin';
         $this->_tvars["isadmins"] = $user->rolename == 'admins';
-
 
         if ($this->_tvars["usebranch"] == false) {
             $this->branch_id = 0;
@@ -121,9 +115,7 @@ class Base extends \Zippy\Html\WebPage
         //для скрытия блока разметки  в  шаблоне страниц                           
         $this->_tvars["hideblock"] = false;
 
-
         $this->generateTosats();
-
     }
 
     public function LogoutClick($sender) {
@@ -142,7 +134,6 @@ class Base extends \Zippy\Html\WebPage
         $branch_id = $sender->getValue();
         System::setBranch($branch_id);
 
-
         setcookie("branch_id", $branch_id, time() + 60 * 60 * 24 * 30);
 
         $page = get_class($this);
@@ -152,7 +143,7 @@ class Base extends \Zippy\Html\WebPage
     //вывод ошибки,  используется   в дочерних страницах
 
     public function setError($msg, $p1 = "", $p2 = "") {
-        $msg = Helper::l($msg, $p1, $p2);    
+        $msg = Helper::l($msg, $p1, $p2);
         System::setErrorMsg($msg);
     }
 
@@ -189,7 +180,6 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
 
-
         if (strlen(System::getWarnMsg()) > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'6000'})        ", true);
         }
@@ -205,8 +195,6 @@ class Base extends \Zippy\Html\WebPage
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');
-
-
     }
 
     //Перезагрузить страницу  с  клиента
@@ -214,7 +202,6 @@ class Base extends \Zippy\Html\WebPage
     protected final function resetURL() {
         \App\Application::$app->setReloadPage();
     }
-
 
     /**
      * Вставляет  JavaScript  в  конец   выходного  потока
@@ -249,4 +236,5 @@ class Base extends \Zippy\Html\WebPage
 
         \App\Session::getSession()->toasts = true;
     }
+
 }

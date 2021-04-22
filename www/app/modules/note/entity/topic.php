@@ -30,12 +30,10 @@ class Topic extends \ZCL\DB\Entity
         //распаковываем  данные из detail
         $xml = @simplexml_load_string($this->content);
 
-
         $this->detail = (string)($xml->detail[0]);
 
         parent::afterLoad();
     }
-
 
     /**
      * список топиков  для  узла

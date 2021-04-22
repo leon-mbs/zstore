@@ -1,112 +1,280 @@
 <html>
 
-<body>
-<div class="row">
+    <body>
+        <div class="row">
 
 
-    <div zippy="listpan" class="col-12 col-md-7 col-xl-5">
-        <h3>Роли пользователей</h3>
-        <a zippy="addnew" class="btn btn-outline-success  ">Добавить</a>
-        <table class="table table-bordered table-striped table-sm">
+            <div zippy="listpan" class="col-12 col-md-7 col-xl-5">
+                <h3>Роли пользователей</h3>
+                <a zippy="addnew" class="btn btn-outline-success  ">Добавить</a>
+                <table class="table table-bordered table-striped table-sm">
 
-            <thead align="center">
-            <tr>
-                <th>Роль</th>
-
-
-                <th width="40">&nbsp;</th>
-                <th width="24">&nbsp;</th>
-                <th width="24">&nbsp;</th>
-                <th width="24">&nbsp;</th>
-                <th width="24">&nbsp;</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr zippy="rolerow">
-                <td zippy="rolename"></td>
-                <td><span title="Пользователей" zippy="cnt" class="badge badge-info "></span></td>
+                    <thead align="center">
+                        <tr>
+                            <th>Роль</th>
 
 
-                <td><a zippy="acl"><i class="fa fa-user-lock"></i></a></td>
-                <td><a zippy="smenu"><i class="fa fa-ellipsis-h"></i></a></td>
-                <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
-                <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
-            </tr>
-            </tbody>
-        </table>
+                            <th width="40">&nbsp;</th>
+                            <th width="24">&nbsp;</th>
+                            <th width="24">&nbsp;</th>
+                            <th width="24">&nbsp;</th>
+                            <th width="24">&nbsp;</th>
+                        </tr>
+                    </thead>
 
-    </div>
+                    <tbody>
+                        <tr zippy="rolerow">
+                            <td zippy="rolename"></td>
+                            <td><span title="Пользователей" zippy="cnt" class="badge badge-info "></span></td>
 
 
-    <div zippy="editpanname" class="col-12 col-sm-8 col-md-4 col-xl-3  ">
-        <h4> Редактирование роли</h4>
-        <form zippy="editformname" role="form">
-            <div class="form-group">
-                <label for="editname">Имя</label>
-                <input class="form-control" zippy="editname" required="required">
+                            <td><a zippy="acl"><i class="fa fa-user-lock"></i></a></td>
+                            <td><a zippy="smenu"><i class="fa fa-ellipsis-h"></i></a></td>
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
+                            <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
 
             </div>
-            <div class="form-group">
 
-                <button type="submit" class="btn btn-primary   ">Сохранить</button>
-                &nbsp; <a zippy="cancelname" class="btn btn-light    ">Отменить</a>
+
+            <div zippy="editpanname" class="col-12 col-sm-8 col-md-4 col-xl-3  ">
+                <h4> Редактирование роли</h4>
+                <form zippy="editformname" role="form">
+                    <div class="form-group">
+                        <label for="editname">Имя</label>
+                        <input class="form-control" zippy="editname" required="required">
+
+                    </div>
+                    <div class="form-group">
+
+                        <button type="submit" class="btn btn-primary   ">Сохранить</button>
+                        &nbsp; <a zippy="cancelname" class="btn btn-light    ">Отменить</a>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
 
-    <div zippy="editpan" class="col-12    ">
-        <h4> Редактирование доступа</h4>
-        <form zippy="editform" role="form">
+            <div zippy="editpan" class="col-12    ">
+                <h4> Редактирование доступа</h4>
+                <form zippy="editform" role="form">
 
 
-            <div class="row">
+                    <div class="row">
 
-                <div class="col-12 col-md-7 col-xl-6">
+                        <div class="col-12 col-md-7 col-xl-6">
 
-                    <div class="form-group" zippy="metaaccess">
-                        &nbsp;<b><i class="fa fa-eye"></i></b> <span>Только  просмотр</span><br>
-                        &nbsp;<b><i class="fa fa-edit"></i></b> <span>Создание и редактирование без  права  проведения.  Вместо  проведения  документ  выставляется  в  статус  ожидания  утверждения. 
-                        После  утверждения автоматически проводится. </span><br>
-                        &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Смена статуса (кроме отмены и удвления). Например  если  наряд  создается  менеджером  а  исполнитель  только  меняет  статус.</span><br>
-                        &nbsp;<b><i class="fa fa-gavel"></i></b> <span>Создание,  утверждение  и проведение.</span><br>
-                        &nbsp;<b><i class="fa fa-undo"></i></b> <span>Отмена проведения</span><br>
-                        &nbsp;<b><i class="fa fa-trash"></i></b> <span>Удаление</span><br>
-                        <table class="table table-sm  table-hover mr-4">
-                            <tr>
-                                <th>Страница</th>
-                                <th>Тип</th>
-                                <th onclick=" $('.viewacc').prop('checked', $('.viewacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
-                                        class="fa fa-search"></i></th>
-                                <th onclick=" $('.editacc').prop('checked', $('.editacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
-                                        class="fa fa-edit"></i>
-                                </th>
-                                <th onclick=" $('.stateacc').prop('checked', $('.stateacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
-                                        class="fa fa-exchange-alt"></i>
-                                </th>
-                                <th onclick=" $('.exeacc').prop('checked',  $('.exeacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
-                                        class="fa fa-gavel"></i></th>
-                                <th onclick=" $('.cancelacc').prop('checked', $('.cancelacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
-                                        class="fa fa-undo"></i></th>
-                                <th onclick=" $('.deleteacc').prop('checked', $('.deleteacc').prop('checked' )==false);"
-                                    style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
-                                        class="fa fa-trash"></i></th>
-                            </tr>
-                            <tr zippy="metarow">
+                            <div class="form-group" zippy="metaaccess">
+                                &nbsp;<b><i class="fa fa-eye"></i></b> <span>Только  просмотр</span><br>
+                                &nbsp;<b><i class="fa fa-edit"></i></b> <span>Создание и редактирование без  права  проведения.  Вместо  проведения  документ  выставляется  в  статус  ожидания  утверждения. 
+                                    После  утверждения автоматически проводится. </span><br>
+                                &nbsp;<b><i class="fa fa-exchange-alt"></i></b> <span>Смена статуса (кроме отмены и удвления). Например  если  наряд  создается  менеджером  а  исполнитель  только  меняет  статус.</span><br>
+                                &nbsp;<b><i class="fa fa-gavel"></i></b> <span>Создание,  утверждение  и проведение.</span><br>
+                                &nbsp;<b><i class="fa fa-undo"></i></b> <span>Отмена проведения</span><br>
+                                &nbsp;<b><i class="fa fa-trash"></i></b> <span>Удаление</span><br>
+                                <table class="table table-sm  table-hover mr-4">
+                                    <tr>
+                                        <th>Страница</th>
+                                        <th>Тип</th>
+                                        <th onclick=" $('.viewacc').prop('checked', $('.viewacc').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-search"></i></th>
+                                        <th onclick=" $('.editacc').prop('checked', $('.editacc').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-edit"></i>
+                                        </th>
+                                        <th onclick=" $('.stateacc').prop('checked', $('.stateacc').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-exchange-alt"></i>
+                                        </th>
+                                        <th onclick=" $('.exeacc').prop('checked', $('.exeacc').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-gavel"></i></th>
+                                        <th onclick=" $('.cancelacc').prop('checked', $('.cancelacc').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-undo"></i></th>
+                                        <th onclick=" $('.deleteacc').prop('checked', $('.deleteacc').prop('checked') == false);"
+                                            style="width:30px;cursor:pointer" title="Снять/выставить флажки"><i
+                                                class="fa fa-trash"></i></th>
+                                    </tr>
+                                    <tr zippy="metarow">
 
-                                <td zippy="description"></td>
+                                        <td zippy="description"></td>
+                                        <td zippy="meta_name"></td>
+                                        <td><input zippy="viewacc" class="viewacc" type="checkbox"></td>
+                                        <td><input zippy="editacc" class="editacc" type="checkbox"></td>
+                                        <td><input zippy="stateacc" class="stateacc" type="checkbox"></td>
+                                        <td><input zippy="exeacc" class="exeacc" type="checkbox"></td>
+                                        <td><input zippy="cancelacc" class="cancelacc" type="checkbox"></td>
+                                        <td><input zippy="deleteacc" class="deleteacc" type="checkbox"></td>
+                                    </tr>
+                                </table>
+
+
+                            </div>
+                            <div class="form-group">
+
+                                <button type="submit" class="btn btn-primary   ">Сохранить</button>
+                                &nbsp; <a zippy="cancel" class="btn btn-light    ">Отменить</a>
+                            </div>
+                        </div>
+
+                        <div class="col-12  col-md-5 col-xl-4">
+
+                            <div class="form-group">
+
+                                <table class="table table-sm  ml-4">
+                                    <tr>
+                                        <td>
+                                            <b>Виджеты на главной странице</b></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" zippy="editwinfo">
+                                            <label class="form-check-label mr-sm-2" for="editwinfo"> Инфоблоки</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" zippy="editwgraph">
+                                            <label class="form-check-label mr-sm-2" for="editwgraph"> Графики</label>
+                                        </td>
+                                    </tr>
+
+
+
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" zippy="editwminqty">
+                                            <label class="form-check-label mr-sm-2" for="editwminqty"> Минимальное
+                                                количество</label>
+                                        </td>
+                                    </tr>
+                                    {{#usesnumber}}
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" zippy="editwsdate">
+                                            <label class="form-check-label mr-sm-2" for="editwsdate"> Просроченные
+                                                товары</label>
+                                        </td>
+                                    </tr>
+                                    {{/usesnumber}}
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" zippy="editwrdoc">
+                                            <label class="form-check-label mr-sm-2" for="editwrdoc"> Недавние документы </label>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td>
+                                            <b>Доступ к модулям</b>
+                                        </td>
+                                    </tr>
+
+                                    {{#ocstore}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editocstore">
+                                            <label class="form-check-label mr-sm-2" for="editocstore"> Интеграция с
+                                                опенкарт</label>
+                                        </td>
+                                    </tr>
+                                    {{/ocstore}}
+                                    {{#woocomerce}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editwoocomerce">
+                                            <label class="form-check-label mr-sm-2" for="editwoocomerce"> Интеграция с
+                                                Woocomerce</label>
+                                        </td>
+                                    </tr>
+                                    {{/woocomerce}}
+
+                                    {{#shop}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editshop">
+                                            <label class="form-check-label mr-sm-2" for="editshop"> Онлайн каталог </label>
+                                        </td>
+                                    </tr>
+                                    {{/shop}}
+                                    {{#note}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editnote">
+                                            <label class="form-check-label mr-sm-2" for="editnote"> База знаний </label>
+                                        </td>
+                                    </tr>
+                                    {{/note}}
+                                    {{#issue}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editissue">
+                                            <label class="form-check-label mr-sm-2" for="editissue"> Задачи </label>
+                                        </td>
+                                    </tr>
+                                    {{/issue}}
+
+                                    {{#tecdoc}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="edittecdoc">
+                                            <label class="form-check-label mr-sm-2" for="edittecdoc"> Автозапчасти </label>
+                                        </td>
+                                    </tr>
+                                    {{/tecdoc}}
+                                    {{#ppo}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editppo">
+                                            <label class="form-check-label mr-sm-2" for="editppo"> Электронный РРО </label>
+                                        </td>
+                                    </tr>
+                                    {{/ppo}}
+                                    {{#np}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editnp">
+                                            <label class="form-check-label mr-sm-2" for="editnp">Новая Почта</label>
+                                        </td>
+                                    </tr>
+                                    {{/np}}
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+
+            <div zippy="editpanmenu" class="col-12   col-md-8 col-xl-6 ">
+                <h4> Меню быстрого доступа</h4>
+                <small>После изменения необходимо перелогинится</small>
+                <form zippy="editformmenu" role="form">
+                    <div class="form-group  ">
+
+                        <table class="table   table-sm table-hover">
+
+                            <tr zippy="mlist">
+                                <td zippy="meta_desc"></td>
                                 <td zippy="meta_name"></td>
-                                <td><input zippy="viewacc" class="viewacc" type="checkbox"></td>
-                                <td><input zippy="editacc" class="editacc" type="checkbox"></td>
-                                <td><input zippy="stateacc" class="stateacc" type="checkbox"></td>
-                                <td><input zippy="exeacc" class="exeacc" type="checkbox"></td>
-                                <td><input zippy="cancelacc" class="cancelacc" type="checkbox"></td>
-                                <td><input zippy="deleteacc" class="deleteacc" type="checkbox"></td>
+                                <td zippy="menugroup"></td>
+                                <td><input class="acl" zippy="mshow" type="checkbox"></td>
+
                             </tr>
                         </table>
 
@@ -115,187 +283,19 @@
                     <div class="form-group">
 
                         <button type="submit" class="btn btn-primary   ">Сохранить</button>
-                        &nbsp; <a zippy="cancel" class="btn btn-light    ">Отменить</a>
+                        &nbsp; <a zippy="cancelmenu" class="btn btn-light    ">Отменить</a>
                     </div>
-                </div>
-
-                <div class="col-12  col-md-5 col-xl-4">
-
-                    <div class="form-group">
-
-                        <table class="table table-sm  ml-4">
-                            <tr>
-                                <td>
-                                    <b>Виджеты на главной странице</b></td>
-                            </tr>
-
-
-                            <tr>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" zippy="editwinfo">
-                                    <label class="form-check-label mr-sm-2" for="editwinfo"> Инфоблоки</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" zippy="editwgraph">
-                                    <label class="form-check-label mr-sm-2" for="editwgraph"> Графики</label>
-                                </td>
-                            </tr>
-
-                          
-
-                            <tr>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" zippy="editwminqty">
-                                    <label class="form-check-label mr-sm-2" for="editwminqty"> Минимальное
-                                        количество</label>
-                                </td>
-                            </tr>
-                            {{#usesnumber}}
-                            <tr>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" zippy="editwsdate">
-                                    <label class="form-check-label mr-sm-2" for="editwsdate"> Просроченные
-                                        товары</label>
-                                </td>
-                            </tr>
-                            {{/usesnumber}}
-                            <tr>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" zippy="editwrdoc">
-                                    <label class="form-check-label mr-sm-2" for="editwrdoc"> Недавние документы </label>
-                                </td>
-                            </tr>
-
-
-                            <tr>
-                                <td>
-                                    <b>Доступ к модулям</b>
-                                </td>
-                            </tr>
-
-                            {{#ocstore}}
-                            <tr>
-                                <td>
-
-                                    <input class="form-check-input" type="checkbox" zippy="editocstore">
-                                    <label class="form-check-label mr-sm-2" for="editocstore"> Интеграция с
-                                        опенкарт</label>
-                                </td>
-                            </tr>
-                            {{/ocstore}}
-                            {{#woocomerce}}
-                            <tr>
-                                <td>
-
-                                    <input class="form-check-input" type="checkbox" zippy="editwoocomerce">
-                                    <label class="form-check-label mr-sm-2" for="editwoocomerce"> Интеграция с
-                                        Woocomerce</label>
-                                </td>
-                            </tr>
-                            {{/woocomerce}}
-
-                            {{#shop}}
-                            <tr>
-                                <td>
-
-                                    <input class="form-check-input" type="checkbox" zippy="editshop">
-                                    <label class="form-check-label mr-sm-2" for="editshop"> Онлайн каталог </label>
-                                </td>
-                            </tr>
-                            {{/shop}}
-                            {{#note}}
-                            <tr>
-                                <td>
-
-                                    <input class="form-check-input" type="checkbox" zippy="editnote">
-                                    <label class="form-check-label mr-sm-2" for="editnote"> База знаний </label>
-                                </td>
-                            </tr>
-                            {{/note}}
-                            {{#issue}}
-                            <tr>
-                                <td>
-
-                                    <input class="form-check-input" type="checkbox" zippy="editissue">
-                                    <label class="form-check-label mr-sm-2" for="editissue"> Задачи </label>
-                                </td>
-                            </tr>
-                            {{/issue}}
-
-                            {{#tecdoc}}
-                            <tr>
-                                <td>
-
-                                    <input class="form-check-input" type="checkbox" zippy="edittecdoc">
-                                    <label class="form-check-label mr-sm-2" for="edittecdoc"> Автозапчасти </label>
-                                </td>
-                            </tr>
-                            {{/tecdoc}}
-                            {{#ppo}}
-                            <tr>
-                                <td>
-
-                                    <input class="form-check-input" type="checkbox" zippy="editppo">
-                                    <label class="form-check-label mr-sm-2" for="editppo"> Электронный РРО </label>
-                                </td>
-                            </tr>
-                            {{/ppo}}
-                            {{#np}}
-                            <tr>
-                                <td>
-
-                                    <input class="form-check-input" type="checkbox" zippy="editnp">
-                                    <label class="form-check-label mr-sm-2" for="editnp">Новая Почта</label>
-                                </td>
-                            </tr>
-                            {{/np}}
-
-                        </table>
-                    </div>
-                </div>
+                </form>
             </div>
 
+        </div>
+        <script>
+            function check_remove() {
 
-        </form>
-    </div>
+                return confirm("Удалить  роль?")
 
-    <div zippy="editpanmenu" class="col-12   col-md-8 col-xl-6 ">
-        <h4> Меню быстрого доступа</h4>
-        <small>После изменения необходимо перелогинится</small>
-        <form zippy="editformmenu" role="form">
-            <div class="form-group  ">
+            }
 
-                <table class="table   table-sm table-hover">
-
-                    <tr zippy="mlist">
-                        <td zippy="meta_desc"></td>
-                        <td zippy="meta_name"></td>
-                        <td zippy="menugroup"></td>
-                        <td><input class="acl" zippy="mshow" type="checkbox"></td>
-
-                    </tr>
-                </table>
-
-
-            </div>
-            <div class="form-group">
-
-                <button type="submit" class="btn btn-primary   ">Сохранить</button>
-                &nbsp; <a zippy="cancelmenu" class="btn btn-light    ">Отменить</a>
-            </div>
-        </form>
-    </div>
-
-</div>
-<script>
-    function check_remove() {
-
-        return confirm("Удалить  роль?")
-
-    }
-
-</script>
-</body>
+        </script>
+    </body>
 </html>

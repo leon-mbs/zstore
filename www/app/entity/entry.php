@@ -21,7 +21,6 @@ class Entry extends \ZCL\DB\Entity
     public function __construct($document_id = 0, $amount = 0, $quantity = 0) {
         parent::__construct();
 
-
         $this->document_id = $document_id;
         $this->amount = $amount;
 
@@ -31,7 +30,6 @@ class Entry extends \ZCL\DB\Entity
     protected function init() {
 
         $this->extcode = 0;
-
     }
 
     protected function afterLoad() {
@@ -58,12 +56,11 @@ class Entry extends \ZCL\DB\Entity
     public function setExtCode($code) {
 
         $this->extcode = $code;
-
     }
+
     public function setOutPrice($price) {
 
         $this->outprice = $price;
-
     }
 
     /**

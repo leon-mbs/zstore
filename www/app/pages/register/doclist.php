@@ -51,7 +51,6 @@ class DocList extends \App\Pages\Base
             $filter->customer_name = '';
 
             $filter->searchnumber = '';
-
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', $filter->from));
@@ -63,7 +62,6 @@ class DocList extends \App\Pages\Base
         $this->filter->searchcust->setKey($filter->customer);
         $this->filter->searchcust->setText($filter->customer_name);
         $this->filter->add(new TextInput('searchnumber', $filter->searchnumber));
-
 
         if (strlen($filter->docgroup) > 0) {
             $this->filter->docgroup->setValue($filter->docgroup);
@@ -77,9 +75,8 @@ class DocList extends \App\Pages\Base
         $this->add(new SortLink("sortamount", "amount", $this, "onSort"));
         $this->add(new SortLink("sortstatus", "state", $this, "onSort"));
 
-
         $doclist = $this->add(new DataView('doclist', new DocDataSource(), $this, 'doclistOnRow'));
-      
+
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->doclist->setCurrentPage($filter->page);
@@ -91,9 +88,9 @@ class DocList extends \App\Pages\Base
             $this->_doc = Document::load($docid);
             $this->docview->setDoc($this->_doc);
             //$this->doclist->setSelectedRow($docid);
-           // $filter->searchnumber = $dc->document_number;
-           // $this->filter->searchnumber->setText($dc->document_number);
-             $doclist->Reload(false);
+            // $filter->searchnumber = $dc->document_number;
+            // $this->filter->searchnumber->setText($dc->document_number);
+            $doclist->Reload(false);
         }
         $this->add(new Form('statusform'))->SetVisible(false);
         $this->statusform->add(new SubmitButton('bap'))->onClick($this, 'statusOnSubmit');
@@ -114,7 +111,6 @@ class DocList extends \App\Pages\Base
 
         $filter->searchnumber = '';
 
-
         $this->filter->clean();
         $this->filter->to->setDate(time());
         $this->filter->from->setDate(time() - (7 * 24 * 3600));
@@ -133,15 +129,12 @@ class DocList extends \App\Pages\Base
         $filter->customer = $this->filter->searchcust->getKey();
         $filter->customer_name = $this->filter->searchcust->getText();
 
-
         $filter->searchnumber = trim($this->filter->searchnumber->getText());
 
         $this->doclist->setCurrentPage(1);
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
 
         $this->doclist->Reload();
-
-
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -171,7 +164,6 @@ class DocList extends \App\Pages\Base
 
         $row->add(new Label('hasscan'))->setVisible($doc->headerdata['scan'] > 0);
 
-
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('cancel'))->onClick($this, 'cancelOnClick');
@@ -199,7 +191,6 @@ class DocList extends \App\Pages\Base
             $row->delete->setVisible(true);
             $row->cancel->setVisible(false);
 
-
             $row->isplanned->setVisible(false);
             $row->basedon->setVisible(false);
         } else {
@@ -207,12 +198,10 @@ class DocList extends \App\Pages\Base
             $row->delete->setVisible(false);
             $row->cancel->setVisible(true);
         }
-        
-        if($doc->document_id== $this->_doc->document_id) {
+
+        if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-        
-        
     }
 
     public function onSort($sender) {
@@ -226,9 +215,7 @@ class DocList extends \App\Pages\Base
         $this->sortamount->Reset();
         $this->sortstatus->Reset();
 
-
         $this->doclist->setSorting($sortfield, $sortdir);
-
 
         $sender->fileld = $sortfield;
         $sender->dir = $sortdir;
@@ -246,7 +233,7 @@ class DocList extends \App\Pages\Base
 
     public function showOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
-       
+
         $this->show($doc);
     }
 
@@ -349,7 +336,6 @@ class DocList extends \App\Pages\Base
         $doc->payed = 0;  //отменяем  оплату
         $doc->save();
 
-
         $this->doclist->setSelectedRow($sender->getOwner());
         $this->doclist->Reload(false);
         $this->resetURL();
@@ -415,12 +401,9 @@ class DocList extends \App\Pages\Base
             $data['D' . $i] = $d->customer_name;
             $data['E' . $i] = $d->amount;
             $data['F' . $i] = $d->notes;
-
         }
 
         H::exportExcel($data, $header, 'doclist.xlsx');
-
-
     }
 
 }
@@ -451,7 +434,6 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($sn) > 1) {
             // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
-
 
             $where = "   document_number like  {$sn}  or content like  {$sn}  or notes like  {$sn}  ";
         }

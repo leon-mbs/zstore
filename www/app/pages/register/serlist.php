@@ -42,12 +42,10 @@ class SerList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => H::l("opened"), 1 => H::l("newed"), 2 => H::l("st_inprocess"), 3 => H::l("all")), 0));
 
-
         $doclist = $this->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
- 
+
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -59,7 +57,6 @@ class SerList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
-
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -95,13 +92,13 @@ class SerList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if($doc->document_id== $this->_doc->document_id) {
+        if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-        if($doc->document_id== $this->_doc->document_id) {
+        if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-  }
+    }
 
     public function statusOnSubmit($sender) {
         if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
@@ -112,7 +109,6 @@ class SerList extends \App\Pages\Base
 
         $ttn = count($this->_doc->getChildren('GoodsIssue')) > 0;
         $task = count($this->_doc->getChildren('Task')) > 0;
-
 
         if ($sender->id == "btask") {
             if ($task) {
@@ -149,7 +145,6 @@ class SerList extends \App\Pages\Base
 
 
         $this->doclist->Reload(false);
-
 
         $this->updateStatusButtons();
     }
@@ -214,7 +209,7 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
-   
+
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
@@ -230,10 +225,8 @@ class SerList extends \App\Pages\Base
         App::Redirect("\\App\\Pages\\Doc\\ServiceAct", $doc->document_id);
     }
 
-
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
-
 
         $header = array();
         $data = array();
@@ -246,12 +239,9 @@ class SerList extends \App\Pages\Base
             $data['C' . $i] = $d->customer_name;
             $data['D' . $i] = $d->amount;
             $data['E' . $i] = $d->notes;
-
         }
 
         H::exportExcel($data, $header, 'serlist.xlsx');
-
-
     }
 
 }
@@ -272,7 +262,6 @@ class SerListDataSource implements \Zippy\Interfaces\DataSource
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
-
 
         $where = "   meta_name  in( 'ServiceAct'  ) ";
 

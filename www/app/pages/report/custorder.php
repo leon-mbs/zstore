@@ -29,7 +29,6 @@ class CustOrder extends \App\Pages\Base
         $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='OrderCust'  and state= " . Document::STATE_INPROCESS . ")";
         $this->filter->add(new DropDownChoice('cust', Customer::findArray('customer_name', $where, 'customer_name'), 0));
 
-
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
         $this->detail->add(new RedirectLink('word', "movereport"));
@@ -49,7 +48,6 @@ class CustOrder extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "emptask";
 
-
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
@@ -63,7 +61,6 @@ class CustOrder extends \App\Pages\Base
     private function generateReport() {
 
         $cust = $this->filter->cust->getValue();
-
 
         $detail = array();
 

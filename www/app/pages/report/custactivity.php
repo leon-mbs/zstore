@@ -31,14 +31,12 @@ class CustActivity extends \App\Pages\Base
 
         $this->filter->add(new AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
 
-
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
 
         $this->detail->add(new RedirectLink('excel', "custreport"));
-
 
         $this->detail->add(new RedirectLink('pdf', "custreport"));
         $this->detail->add(new Label('preview'));
@@ -59,7 +57,6 @@ class CustActivity extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "custreport";
 
-
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;
@@ -75,7 +72,6 @@ class CustActivity extends \App\Pages\Base
     private function generateReport() {
 
         $cust = $this->filter->cust->getKey();
-
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
@@ -107,7 +103,6 @@ class CustActivity extends \App\Pages\Base
               ORDER BY t.dt  
         ";
 
-
         $rs = $conn->Execute($sql);
 
         $tend = 0;
@@ -117,13 +112,10 @@ class CustActivity extends \App\Pages\Base
 
 
             $detail[] = array(
-                "date" => \App\Helper::fd(strtotime($row['dt'])),
-
-
+                "date"            => \App\Helper::fd(strtotime($row['dt'])),
                 "document_number" => $row['document_number'],
                 "obin"            => H::fa($row['obin']),
                 "obout"           => H::fa($row['obout'])
-
             );
 
             $tin += $row['obin'];
@@ -131,13 +123,10 @@ class CustActivity extends \App\Pages\Base
         }
         $tb = $tend - $tin + $tout;
 
-        $header = array('datefrom' => \App\Helper::fd($from),
-                        "_detail"  => $detail,
-
-                        'tin'  => H::fa($tin),
-                        'tout' => H::fa($tout),
-
-
+        $header = array('datefrom'  => \App\Helper::fd($from),
+                        "_detail"   => $detail,
+                        'tin'       => H::fa($tin),
+                        'tout'      => H::fa($tout),
                         'dateto'    => \App\Helper::fd($to),
                         "cust_name" => $this->filter->cust->getText()
         );
@@ -167,6 +156,5 @@ class CustActivity extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText());
     }
-
 
 }

@@ -129,13 +129,11 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->add(new Label('stitle'));
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
 
-
         if ($add == false) {
             $this->itemtable->itemlist->Reload();
         } else {
             $this->addOnClick(null);
         }
-
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -168,7 +166,6 @@ class ItemList extends \App\Pages\Base
         $row->hasnotes->setAttribute('title', htmlspecialchars_decode($item->description));
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
-
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
 
@@ -185,8 +182,6 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-
-
     }
 
     public function deleteOnClick($sender) {
@@ -196,14 +191,12 @@ class ItemList extends \App\Pages\Base
 
         $item = $sender->owner->getDataItem();
 
-
         if ($item->allowDelete()) {
             Item::delete($item->item_id);
         } else {
             $this->setWarn("delitemwarn");
             $item->disabled = 1;
             $item->save();
-
         }
 
 
@@ -333,7 +326,6 @@ class ItemList extends \App\Pages\Base
         $this->_item->autooutcome = $this->itemdetail->editautooutcome->isChecked() ? 1 : 0;
         $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
 
-
         //проверка  уникальности артикула
         if (strlen($this->_item->item_code) > 0) {
             $code = Item::qstr($this->_item->item_code);
@@ -417,8 +409,6 @@ class ItemList extends \App\Pages\Base
                 $image->content = $thumb->getImageAsString();
                 $thumb->resize(256, 256);
                 $image->thumb = $thumb->getImageAsString();
-
-
             }
 
 
@@ -449,7 +439,6 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->setVisible(false);
 
         $this->setpanel->stitle->setText($item->itemname);
-
 
         $this->setpanel->setlist->Reload();
     }
@@ -528,7 +517,6 @@ class ItemList extends \App\Pages\Base
             } else {
                 $header['name'] = $item->itemname;
             }
-
         }
         $header['isap'] = false;
         if ($printer['pprice'] == 1) {
@@ -567,7 +555,6 @@ class ItemList extends \App\Pages\Base
 
             $this->_tvars['manlist'][] = array('mitem' => $man);
         }
-
     }
 
 }
@@ -629,6 +616,5 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     public function getItem($id) {
         return Item::load($id);
     }
-
 
 }

@@ -64,7 +64,6 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
 
-
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -75,7 +74,6 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
-
 
         $this->editdetail->add(new TextInput('editqty'));
         $this->editdetail->add(new TextInput('editprice'));
@@ -97,7 +95,6 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->headerdata['notes']);
             $this->docform->gar->setText($this->_doc->headerdata['gar']);
 
-
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -109,7 +106,6 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
- 
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -132,9 +128,7 @@ class ServiceAct extends \App\Pages\Base
 
                     $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                     $this->_servicelist = $basedoc->unpackDetails('detaildata');
-
                 }
-
             }
         }
         $this->OnPayment($this->docform->payment);
@@ -152,11 +146,9 @@ class ServiceAct extends \App\Pages\Base
         $row->add(new Label('item', $service->service_name));
         $row->add(new Label('desc', $service->desc));
 
-
         $row->add(new Label('qty', H::fqty($service->quantity)));
         $row->add(new Label('price', H::fa($service->price)));
         $row->add(new Label('amount', H::fa($service->price * $service->quantity)));
-
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -174,7 +166,6 @@ class ServiceAct extends \App\Pages\Base
 
         $this->editdetail->editservice->setValue($service->service_id);
 
-
         if ($service->rowid > 0) {
             ;
         }               //для совместимости
@@ -183,8 +174,6 @@ class ServiceAct extends \App\Pages\Base
         }
 
         $this->_rowid = $service->rowid;
-
-
     }
 
     public function deleteOnClick($sender) {
@@ -194,7 +183,6 @@ class ServiceAct extends \App\Pages\Base
 
         $item = $sender->owner->getDataItem();
 
-
         if ($item->rowid > 0) {
             ;
         }               //для совместимости
@@ -203,7 +191,6 @@ class ServiceAct extends \App\Pages\Base
         }
 
         $this->_servicelist = array_diff_key($this->_servicelist, array($item->rowid => $this->_servicelist[$item->rowid]));
-
 
         $this->docform->detail->Reload();
         $this->calcTotal();
@@ -232,7 +219,6 @@ class ServiceAct extends \App\Pages\Base
         $service->quantity = $this->editdetail->editqty->getText();
         $service->desc = $this->editdetail->editdesc->getText();
 
-
         if ($this->_rowid > 0) {
             $service->rowid = $this->_rowid;
         } else {
@@ -242,7 +228,6 @@ class ServiceAct extends \App\Pages\Base
         $this->_servicelist[$service->rowid] = $service;
 
         $this->_rowid = 0;
-
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -307,7 +292,6 @@ class ServiceAct extends \App\Pages\Base
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->amount = $this->docform->total->getText();
 
-
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -365,7 +349,6 @@ class ServiceAct extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-
 
         $disc = 0;
 
@@ -446,15 +429,13 @@ class ServiceAct extends \App\Pages\Base
             }
         }
         if (count($this->_servicelist) == 0) {
-          //  $this->setError("noenterpos");
+            //  $this->setError("noenterpos");
         }
         if ($this->docform->payment->getValue() == 0) {
-             $this->setError("noselpaytype");
+            $this->setError("noselpaytype");
         }
 
         return !$this->isError();
-
-
     }
 
     public function backtolistOnClick($sender) {
@@ -470,7 +451,6 @@ class ServiceAct extends \App\Pages\Base
 
         $item = Service::load($id);
         $price = $item->price;
-
 
         $this->editdetail->editprice->setText($price);
 
@@ -490,7 +470,6 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
-
     }
 
     //добавление нового контрагента

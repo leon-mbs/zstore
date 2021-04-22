@@ -1,182 +1,182 @@
 <html>
-<body>
+    <body>
 
-<style>
-    .list-group-item {
-        padding: 04px;;
-    }
-</style>
-<div class="row">
-    <div class="col-12">
-        <h3>Значения  атрибутов товаров  </h3>
-        <small>Показываются  только  категории у  которых есть товары</small>
-        
-    </div>
-
-    <div class="col-12 col-md-6">
-         <table class="table table-sm">
-           <tr zippy="grouplist">
-              <td ><a zippy="groupname"></a></td>
-           </tr> 
-         
-         </table>
-    </div>
-    <div class="col-12 col-md-6">
+        <style>
+            .list-group-item {
+                padding: 04px;;
+            }
+        </style>
         <div class="row">
-            <div zippy="listpanel" class="col-12   col-xl-10">
-                <div class="navbar nav">
-                    <form zippy="searchform" class="form-inline  ">
+            <div class="col-12">
+                <h3>Значения  атрибутов товаров  </h3>
+                <small>Показываются  только  категории у  которых есть товары</small>
 
-                        <input style="width:150px;" zippy="skeyword" placeholder="Поиск по  коду" type="text" class="form-control mr-sm-2">
-
-
-                        <label> бренд</label>
-                        <select zippy="smanuf" class="form-control mr-sm-2 select2  ">
-                            <option placeholder="Производитель" type value="0">Не  выбран</option>
-
-                        </select>
-
-                        <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
-                        &nbsp;<a title="Очистить  форму  поиска" zippy="sclear"><i class="fa fa-eraser"></i></a>
-
-                    </form>
-                </div>
-   
-                <a zippy="addnew" class="btn btn-info">Добавить новый</a>
-
-                <table class="table table-sm">
-                    <tr>
-                        <th style="width:75px;"></th>
-                        <th>Наименование</th>
-                        <th  >Код</th>
-
-                        <th class="text-right">Цена</th>
-                        <th class="text-right">Кол.</th>
-                 
-                       
-
-                    </tr>
-                    <tr zippy="plist">
-                        <td><img style="width:75px;" zippy="lphoto">
-                        </td>
-                        <td><a zippy="lname" title="Редактировать"></a>
-
-
-                        </td>
-
-                        <td zippy="lcode"></td>
-
-
-                        <td class="text-right"><span zippy="lprice"></span></td>
-                        <td class="text-right"><span zippy="lcnt"></span></td>
-                        <td>&nbsp;<a zippy="imedit" title="Редактировать фото"><i class="fa fa-images"></i></a></td>
-          
-                    </tr>
-                </table>
-                <div zippy="pag"></div>
             </div>
-            <div zippy="editpanel" class="col-12  col-lg-10   col-xl-8">
+
+            <div class="col-12 col-md-6">
+                <table class="table table-sm">
+                    <tr zippy="grouplist">
+                        <td ><a zippy="groupname"></a></td>
+                    </tr> 
+
+                </table>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="row">
+                    <div zippy="listpanel" class="col-12   col-xl-10">
+                        <div class="navbar nav">
+                            <form zippy="searchform" class="form-inline  ">
+
+                                <input style="width:150px;" zippy="skeyword" placeholder="Поиск по  коду" type="text" class="form-control mr-sm-2">
 
 
-                <form zippy="editform">
-                    <h4>Редактирование</h4>
-                 
-                    <div class="form-group   ">
-                        <label   for="esef">ЧПУ ссылка</label>
-                       
-                            <input pattern="[0-9a-z_]+" zippy="esef" type="text" class="form-control">
-                            <small>Например telefon_nokia_304</small>
-                         
-                    </div>
-                  <div class="form-group   ">
-                        <label   for="actionprice">Специальная цена</label>
-                       
-                            <input   zippy="actionprice" type="text" class="form-control">
-                            <small>Скидка,  акция</small>
-                         
-                    </div>
- 
-                    <div class="form-group  ">
-                        <label   for="edescdet">Описание  </label>
-                       
-                            <textarea style="height:200px" zippy="edescdet" class="form-control"></textarea>
-                            <small>По умолчанию  подставляется  складское</small>
-                        
-                    </div>
-                
+                                <label> бренд</label>
+                                <select zippy="smanuf" class="form-control mr-sm-2 select2  ">
+                                    <option placeholder="Производитель" type value="0">Не  выбран</option>
 
+                                </select>
 
-                    <div class="form-group">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
+                                &nbsp;<a title="Очистить  форму  поиска" zippy="sclear"><i class="fa fa-eraser"></i></a>
+
+                            </form>
+                        </div>
+
+                        <a zippy="addnew" class="btn btn-info">Добавить новый</a>
+
                         <table class="table table-sm">
-                            <tr zippy="attrlist">
+                            <tr>
+                                <th style="width:75px;"></th>
+                                <th>Наименование</th>
+                                <th  >Код</th>
 
-                                <div zippy="attrdata"></div>
+                                <th class="text-right">Цена</th>
+                                <th class="text-right">Кол.</th>
+
 
 
                             </tr>
+                            <tr zippy="plist">
+                                <td><img style="width:75px;" zippy="lphoto">
+                                </td>
+                                <td><a zippy="lname" title="Редактировать"></a>
+
+
+                                </td>
+
+                                <td zippy="lcode"></td>
+
+
+                                <td class="text-right"><span zippy="lprice"></span></td>
+                                <td class="text-right"><span zippy="lcnt"></span></td>
+                                <td>&nbsp;<a zippy="imedit" title="Редактировать фото"><i class="fa fa-images"></i></a></td>
+
+                            </tr>
                         </table>
+                        <div zippy="pag"></div>
                     </div>
-                  
-                    <div class="form-group">
+                    <div zippy="editpanel" class="col-12  col-lg-10   col-xl-8">
 
-                        <a zippy="bcancel" class="btn btn-light   ">Отменить</a>
-                        &nbsp;<input type="submit" class="btn btn-outline-success   " value="Сохранить">
-                
+
+                        <form zippy="editform">
+                            <h4>Редактирование</h4>
+
+                            <div class="form-group   ">
+                                <label   for="esef">ЧПУ ссылка</label>
+
+                                <input pattern="[0-9a-z_]+" zippy="esef" type="text" class="form-control">
+                                <small>Например telefon_nokia_304</small>
+
+                            </div>
+                            <div class="form-group   ">
+                                <label   for="actionprice">Специальная цена</label>
+
+                                <input   zippy="actionprice" type="text" class="form-control">
+                                <small>Скидка,  акция</small>
+
+                            </div>
+
+                            <div class="form-group  ">
+                                <label   for="edescdet">Описание  </label>
+
+                                <textarea style="height:200px" zippy="edescdet" class="form-control"></textarea>
+                                <small>По умолчанию  подставляется  складское</small>
+
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <table class="table table-sm">
+                                    <tr zippy="attrlist">
+
+                                    <div zippy="attrdata"></div>
+
+
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="form-group">
+
+                                <a zippy="bcancel" class="btn btn-light   ">Отменить</a>
+                                &nbsp;<input type="submit" class="btn btn-outline-success   " value="Сохранить">
+
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
 
-            <div zippy="editimagepanel" class="col-12     col-xl-10 ">
-                <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> В список товаров</a>
-                <h4>Список дополнительных изображений</h4>
+                    <div zippy="editimagepanel" class="col-12     col-xl-10 ">
+                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> В список товаров</a>
+                        <h4>Список дополнительных изображений</h4>
 
-                <form class="form-inline" zippy="addimageform" enctype="multipart/form-data">
-                    <input zippy="photo" type="file" class="form-control mr-2">
-                    
-                    <input type="submit" class="btn btn-success   " value="Добавить">
-                    <small>Изображение  должно  быть  примерно  квадратным  иначе  будет обрезано</small>
-                </form>
+                        <form class="form-inline" zippy="addimageform" enctype="multipart/form-data">
+                            <input zippy="photo" type="file" class="form-control mr-2">
 
-                <div class="w-100">
+                            <input type="submit" class="btn btn-success   " value="Добавить">
+                            <small>Изображение  должно  быть  примерно  квадратным  иначе  будет обрезано</small>
+                        </form>
 
-                    <div zippy="imagelist" style="float:left;">
-                        <img zippy="imgitem" style="height: 128px;"/>
-                        <br><a zippy="idel">Удалить</a>
-                       
+                        <div class="w-100">
+
+                            <div zippy="imagelist" style="float:left;">
+                                <img zippy="imgitem" style="height: 128px;"/>
+                                <br><a zippy="idel">Удалить</a>
 
 
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()   ;
-        
-        $('#edescdet').summernote({
-            height: 400,
-            lang: 'ru-RU',
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip();
 
-            callbacks: {
-                onEnter: function (e) {
-                       if (e.keyCode === key.code.ENTER) {
-                        e.shiftKey = true;
-                        context.triggerEvent('enter', e);
+                $('#edescdet').summernote({
+                    height: 400,
+                    lang: 'ru-RU',
+
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
+                            }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                        }
                     }
-                },
-                onPaste: function (e) {
+                });
 
-                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                    e.preventDefault();
-                    document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-                }
-            }
-        });        
-        
-        
-    });
-</script>
-</body>
+
+            });
+        </script>
+    </body>
 </html>

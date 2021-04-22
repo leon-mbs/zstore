@@ -52,7 +52,6 @@ class Outcome extends \App\Pages\Base
         $types[9] = H::l('repbybyfirm');
         $types[10] = H::l('repbybystore');
 
-
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
 
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
@@ -78,7 +77,6 @@ class Outcome extends \App\Pages\Base
     public function OnAutoItem($sender) {
         $r = array();
 
-
         $text = Item::qstr('%' . $sender->getText() . '%');
         $list = Item::findArray('itemname', " disabled <> 1  and (itemname like {$text} or item_code like {$text} ) ");
         foreach ($list as $k => $v) {
@@ -98,7 +96,6 @@ class Outcome extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "outcome";
 
-
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
@@ -114,7 +111,6 @@ class Outcome extends \App\Pages\Base
         return \App\Entity\Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
 
-
     private function generateReport() {
         $conn = \ZDB\DB::getConnect();
         $type = $this->filter->type->getValue();
@@ -125,7 +121,6 @@ class Outcome extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-
 
         $u = "";
 
@@ -147,7 +142,6 @@ class Outcome extends \App\Pages\Base
         }
         $cust = "";
 
-
         if (($type == 6 || $type == 7) && $cust_id > 0) {
             $cust = " and d.customer_id=" . $cust_id;
             $c = \App\Entity\Customer::load($cust_id);
@@ -157,8 +151,6 @@ class Outcome extends \App\Pages\Base
                 if (count($ids) > 0) {
                     $cust = " and d.customer_id  in(" . implode(',', $ids) . "  )";
                 }
-
-
             }
         }
 
@@ -276,10 +268,7 @@ class Outcome extends \App\Pages\Base
                     $row['itemname'] = $name;
                     $rs[] = $row;
                 }
-
-
             }
-
         }
 
 
@@ -371,12 +360,10 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {
             $header['_type1'] = true;
-
         }
         if ($type == 2 || $type == 8) {
 
             $header['_type2'] = true;
-
         }
         if ($type == 3) {
             $header['_type3'] = true;

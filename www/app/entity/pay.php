@@ -13,19 +13,17 @@ class Pay extends \ZCL\DB\Entity
 {
 
     //типы платежей - затраты и доходы
-    const PAY_BASE_INCOME  = 1;     //операционные доходы  
-    const PAY_OTHER_INCOME = 2;   //прочие доходы
-    const PAY_FIN          = 3;   //доходы от  фин.  деятельности
-    const PAY_CANCEL_CUST  = 5;    //отмена  платежа  покупки
-
-
-    const PAY_BASE_OUTCOME     = 50;    //операционные расходы  
+    const PAY_BASE_INCOME      = 1;     //операционные доходы
+    const PAY_OTHER_INCOME     = 2;   //прочие доходы
+    const PAY_FIN              = 3;   //доходы от  фин.  деятельности
+    const PAY_CANCEL_CUST      = 5;    //отмена  платежа  покупки
+    const PAY_BASE_OUTCOME     = 50;    //операционные расходы
     const PAY_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
     const PAY_ADMIN_OUTCOME    = 52;    //административные  расходы
     const PAY_SALE_OUTCOME     = 53;    //расходы на сбыт
     const PAY_SALARY_OUTCOME   = 54;    //выплата зарплат
     const PAY_TAX_OUTCOME      = 55;    //уплата  налогов  и сборов
-    const PAY_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку  
+    const PAY_BILL_OUTCOME     = 56;    //расходы на  аренду и комуналку
     const PAY_OTHER_OUTCOME    = 57;   //прочие расходы
     const PAY_DIVIDEND_OUTCOME = 58;   //распределение прибыли
     const PAY_INV              = 59;   //Инвестиции
@@ -37,7 +35,6 @@ class Pay extends \ZCL\DB\Entity
         $this->paytype = 0;
         $this->paydate = time();
     }
-
 
     protected function beforeSave() {
         parent::beforeSave();
@@ -123,9 +120,7 @@ class Pay extends \ZCL\DB\Entity
         $payed = $conn->GetOne($sql);
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
         return $payed;
-
     }
-
 
     public static function cancelPayment($id, $comment) {
         $pl = Pay::load($id);
@@ -141,18 +136,14 @@ class Pay extends \ZCL\DB\Entity
         $pay->amount = 0 - $pl->amount;
         $pay->document_id = $pl->document_id;
 
-
         $pay->paytype = $pl->paytype;
-
 
         $pay->paydate = time();
         $pay->notes = $comment;
 
         $pay->user_id = \App\System::getUser()->user_id;
         $pay->save();
-
     }
-
 
     /**
      * список  расходов  и доходов
@@ -167,7 +158,6 @@ class Pay extends \ZCL\DB\Entity
             $list[self::PAY_OTHER_INCOME] = \App\Helper::l('pt_inother');
             $list[self::PAY_FIN] = \App\Helper::l('pt_fin');
             $list[self::PAY_CANCEL_CUST] = \App\Helper::l('pt_cancelcust');
-
         }
 
         if ($type != 1) {
@@ -183,7 +173,6 @@ class Pay extends \ZCL\DB\Entity
             $list[self::PAY_INV] = \App\Helper::l('pt_inv');
             $list[self::PAY_BANK] = \App\Helper::l('pt_bank');
             $list[self::PAY_CANCEL] = \App\Helper::l('pt_cancel');
-
         }
 
         return $list;

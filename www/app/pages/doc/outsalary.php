@@ -39,14 +39,11 @@ class OutSalary extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('month', \App\Util::getMonth(), round(date('m'))));
         $this->docform->add(new TextInput('notes'));
 
-
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
-
         $this->_list = Employee::find('disabled<>1', 'emp_name');
-
 
         if ($docid > 0) {    //загружаем   содержимок  документа на страницу
             $this->_doc = Document::load($docid)->cast();
@@ -59,7 +56,6 @@ class OutSalary extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->total->setText(H::fa($this->_doc->amount));
             $this->_list = $this->_doc->unpackDetails('detaildata');
-
         } else {
             $this->_doc = Document::create('OutSalary');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -76,9 +72,7 @@ class OutSalary extends \App\Pages\Base
         $emp = $row->getDataItem();
         $row->add(new Label('emp_name', $emp->emp_name));
         $row->add(new TextInput('amount', new \Zippy\Binding\PropertyBinding($emp, 'amount')));
-
     }
-
 
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -91,7 +85,6 @@ class OutSalary extends \App\Pages\Base
         $this->_doc->headerdata['monthname'] = $this->docform->month->getValueName();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['paymentname'] = $this->docform->payment->getValueName();
-
 
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());

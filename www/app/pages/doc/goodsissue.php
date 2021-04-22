@@ -44,7 +44,6 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 8 : 6;
 
-
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -57,7 +56,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpaydisc'))->onClick($this, 'onPayDisc');
         $this->docform->add(new Label('paydisc', 0));
 
-
         $this->docform->add(new TextInput('editpayamount'));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
@@ -65,10 +63,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
 
-
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
@@ -80,14 +76,11 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
 
-
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
-
 
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
-
 
         $cp = \App\Session::getSession()->clipboard;
         $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);
@@ -96,11 +89,9 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
-
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -109,7 +100,6 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
-
 
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
         $this->editdetail->add(new Label('qtystock'));
@@ -147,7 +137,6 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->OnPayment($this->docform->payment);
 
-
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->customer->setKey($this->_doc->customer_id);
 
@@ -167,10 +156,7 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
-
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
-
         } else {
             $this->_doc = Document::create('GoodsIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -190,10 +176,8 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->order->setText($basedoc->document_number);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
 
-
                         $notfound = array();
                         $order = $basedoc->cast();
-
 
                         //проверяем  что уже есть отправка
                         $list = $order->getChildren('TTN');
@@ -217,16 +201,14 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
                         if ($order->payamount > 0) {
-                            $this->docform->payment->setValue(MoneyFund::PREPAID);// предоплата
+                            $this->docform->payment->setValue(MoneyFund::PREPAID); // предоплата
                             $this->OnPayment($this->docform->payment);
-
                         }
 
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
                         $this->calcPay();
-
                     }
                     if ($basedoc->meta_name == 'Invoice') {
 
@@ -246,18 +228,14 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
                         $this->docform->paydisc->setText($basedoc->headerdata['paydisc']);
 
-
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->calcTotal();
                         $this->calcPay();
 
                         if ($invoice->payamount > 0) {
-                            $this->docform->payment->setValue(MoneyFund::PREPAID);// предоплата
+                            $this->docform->payment->setValue(MoneyFund::PREPAID); // предоплата
                             $this->OnPayment($this->docform->payment);
-
                         }
-
-
                     }
 
 
@@ -273,7 +251,6 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-
 
                         $this->docform->firm->setValue($basedoc->firm_id);
 
@@ -293,7 +270,6 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                     }
-
                 }
             }
         }
@@ -308,8 +284,6 @@ class GoodsIssue extends \App\Pages\Base
         foreach (Item::getManufacturers() as $man) {
             $this->_tvars['manlist'][] = array('mitem' => $man);
         }
-
-
     }
 
     public function detailOnRow($row) {
@@ -346,11 +320,9 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
 
-
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
-
     }
 
     public function addrowOnClick($sender) {
@@ -389,7 +361,6 @@ class GoodsIssue extends \App\Pages\Base
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
 
-
         if ($item == null) {
 
             $this->setWarn("noitemcode", $code);
@@ -424,13 +395,11 @@ class GoodsIssue extends \App\Pages\Base
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 
-
                 $this->editdetail->edittovar->setKey($item->item_id);
                 $this->editdetail->edittovar->setText($item->itemname);
                 $this->editdetail->editserial->setText('');
                 $this->editdetail->editquantity->setText('1');
                 $this->editdetail->editprice->setText($item->price);
-
 
                 return;
             } else {
@@ -441,7 +410,6 @@ class GoodsIssue extends \App\Pages\Base
 
         $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
         $item->rowid = $next + 1;
-
 
         $this->_itemlist[$item->rowid] = $item;
 
@@ -456,7 +424,6 @@ class GoodsIssue extends \App\Pages\Base
         $item = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-
 
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
@@ -475,7 +442,6 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->_rowid = $item->rowid;
-
     }
 
     public function saverowOnClick($sender) {
@@ -516,10 +482,7 @@ class GoodsIssue extends \App\Pages\Base
                 if ($st instanceof Stock) {
                     $item->sdate = $st->sdate;
                 }
-
             }
-
-
         }
 
         if ($this->_rowid > 0) {
@@ -531,7 +494,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->_itemlist[$item->rowid] = $item;
 
         $this->_rowid = 0;
-
 
         $this->editdetail->setVisible(false);
         $this->wselitem->setVisible(false);
@@ -548,7 +510,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->calcPay();
-
     }
 
     public function cancelrowOnClick($sender) {
@@ -562,8 +523,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
-
-
     }
 
     public function savedocOnClick($sender) {
@@ -654,21 +613,20 @@ class GoodsIssue extends \App\Pages\Base
                     }
                 }
 
-                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                      if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                if ($this->_doc->parent_id > 0) {   //закрываем заказ
+                    if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
 
-                      } else {
-                          $order = Document::load($this->_doc->parent_id);
-                          if ($order->state == Document::STATE_INPROCESS) {
-                              $order->updateStatus(Document::STATE_CLOSED);
-                          }
-                      }
-                  }  
+                    } else {
+                        $order = Document::load($this->_doc->parent_id);
+                        if ($order->state == Document::STATE_INPROCESS) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                        }
+                    }
+                }
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
-
             }
 
 
@@ -696,7 +654,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
-
     public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
         $payed = $this->docform->payed->getText();
@@ -723,12 +680,10 @@ class GoodsIssue extends \App\Pages\Base
 
         $total = 0;
 
-
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
 
             $total = $total + $item->amount;
-
         }
         $this->docform->total->setText(H::fa($total));
 
@@ -781,7 +736,6 @@ class GoodsIssue extends \App\Pages\Base
 
         $b = $sender->getValue();
 
-
         if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
             $this->docform->payamount->setVisible(false);
@@ -801,7 +755,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->calcPay();
     }
 
-
     /**
      * Валидация   формы
      *
@@ -819,7 +772,6 @@ class GoodsIssue extends \App\Pages\Base
             if (strlen($next) == 0) {
                 $this->setError('docnumbercancreated');
             }
-
         }
 
         if (count($this->_itemlist) == 0) {
@@ -855,7 +807,6 @@ class GoodsIssue extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
@@ -906,7 +857,6 @@ class GoodsIssue extends \App\Pages\Base
                     $this->docform->discount->setVisible(true);
                 }
             }
-
         }
         if ($this->_prevcust != $customer_id) {//сменился контрагент
             $this->_prevcust = $customer_id;
@@ -961,14 +911,12 @@ class GoodsIssue extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->discount->setVisible(false);
-
     }
 
     public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
 
     public function onOpenItemSel($sender) {
         $this->wselitem->setVisible(true);
@@ -994,9 +942,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
-
     }
-
 
     public function onPaste($sender) {
         $store_id = $this->docform->store->getValue();
@@ -1016,15 +962,8 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->detail->Reload();
 
-
         $this->calcTotal();
         $this->calcPay();
     }
 
-
 }
-
-
-
-
-

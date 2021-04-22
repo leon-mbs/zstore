@@ -71,7 +71,6 @@ class POSCheck extends Document
                         "payamount"       => H::fa($this->payamount)
         );
 
-
         $report = new \App\Report('doc/poscheck.tpl');
 
         $html = $report->generate($header);
@@ -127,7 +126,6 @@ class POSCheck extends Document
                         "payamount"       => H::fa($this->payamount)
         );
 
-
         $report = new \App\Report('doc/poscheck_bill.tpl');
 
         $html = $report->generate($header);
@@ -159,8 +157,6 @@ class POSCheck extends Document
 
                             $sc->save();
                         }
-
-
                     }
                 }
 
@@ -169,31 +165,27 @@ class POSCheck extends Document
 
                 if ($price == 0) {
                     throw new \Exception(H::l('noselfprice', $item->itemname));
-
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
 
-
                 $sc->save();
-
-
             }
 
-          $k = 1;   //учитываем  скидку
-         if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
-             $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
-        }
+            $k = 1;   //учитываем  скидку
+            if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
+                $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
+            }
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->setExtCode($item->price* $k - $st->partion); //Для АВС 
-                $sc->setOutPrice($item->price * $k   );  
+                $sc->setExtCode($item->price * $k - $st->partion); //Для АВС 
+                $sc->setOutPrice($item->price * $k);
                 $sc->save();
             }
         }
@@ -218,10 +210,10 @@ class POSCheck extends Document
         }
         foreach ($this->unpackDetails('services') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - ($ser->price* $k * $ser->quantity), 0);
+            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
             $sc->setService($ser->service_id);
-            $sc->setExtCode(0 - ($ser->price* $k)); //Для АВС
-            $sc->setOutPrice(0-$item->price * $k  );  
+            $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
+            $sc->setOutPrice(0 - $item->price * $k);
 
             $sc->save();
         }
@@ -250,6 +242,5 @@ class POSCheck extends Document
 
         return $list;
     }
-
 
 }

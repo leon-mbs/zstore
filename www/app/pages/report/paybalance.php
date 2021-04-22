@@ -32,7 +32,6 @@ class PayBalance extends \App\Pages\Base
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));
 
-
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
 
@@ -52,7 +51,6 @@ class PayBalance extends \App\Pages\Base
 
         $reportpage = "App/Pages/ShowReport";
         $reportname = "mfreport";
-
 
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
@@ -107,7 +105,6 @@ class PayBalance extends \App\Pages\Base
               GROUP BY  paytype order  by  paytype  
                          
         ";
-
 
         $rs = $conn->Execute($sql);
 
@@ -215,6 +212,5 @@ class PayBalance extends \App\Pages\Base
 
         return $html;
     }
-
 
 }

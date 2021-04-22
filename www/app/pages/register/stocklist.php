@@ -43,10 +43,8 @@ class StockList extends \App\Pages\Base
 
         $doclist = $this->add(new DataView('doclist', new StockListDataSource($this), $this, 'doclistOnRow'));
 
-
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
     }
@@ -64,17 +62,16 @@ class StockList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-
         $row->add(new Label('date', H::fd($doc->document_date)));
 
         $row->add(new Label('partion', H::fa($doc->partion)));
         $row->add(new Label('qty', H::fqty($doc->quantity)));
-        $price =  $doc->quantity >= 0 ? '' : H::fa($doc->extcode +$doc->partion) ;
-        if($doc->meta_name =='ReturnIssue') {
-            $price =   H::fa((0-$doc->extcode) +$doc->partion) ;  
-        } 
+        $price = $doc->quantity >= 0 ? '' : H::fa($doc->extcode + $doc->partion);
+        if ($doc->meta_name == 'ReturnIssue') {
+            $price = H::fa((0 - $doc->extcode) + $doc->partion);
+        }
 
-        $row->add(new Label('price', $price )) ;
+        $row->add(new Label('price', $price));
 
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('snumber', $doc->snumber));

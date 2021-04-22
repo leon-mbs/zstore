@@ -44,13 +44,10 @@ class GRList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('notexecuted'), 2 => H::l('notpayed'), 3 => H::l('all')), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
 
-
         $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
-    
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
@@ -58,7 +55,6 @@ class GRList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
-
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -94,10 +90,9 @@ class GRList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if($doc->document_id== $this->_doc->document_id) {
+        if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-        
     }
 
     public function statusOnSubmit($sender) {
@@ -118,7 +113,6 @@ class GRList extends \App\Pages\Base
         }
         if ($sender->id == "bret") {
             $d = $this->_doc->getChildren('RetCustIssue');
-
 
             if (count($d) > 0) {
 
@@ -161,7 +155,7 @@ class GRList extends \App\Pages\Base
 
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
-      
+
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
@@ -179,7 +173,6 @@ class GRList extends \App\Pages\Base
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 
-
         $header = array();
         $data = array();
 
@@ -191,12 +184,9 @@ class GRList extends \App\Pages\Base
             $data['C' . $i] = $d->customer_name;
             $data['D' . $i] = $d->amount;
             $data['E' . $i] = $d->notes;
-
         }
 
         H::exportExcel($data, $header, 'baylist.xlsx');
-
-
     }
 
 }

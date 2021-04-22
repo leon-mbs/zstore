@@ -19,7 +19,6 @@ class Project extends \ZCL\DB\Entity
     const STATUS_WAITPAIMENT = 6;
     const STATUS_CLOSED      = 12;
 
-
     protected function init() {
         $this->project_id = 0;
         $this->status = 1;

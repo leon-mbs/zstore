@@ -46,7 +46,6 @@ class EmpTask extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "emptask";
 
-
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
@@ -61,7 +60,6 @@ class EmpTask extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-
 
         $elist = Employee::find("", "emp_name");
         foreach ($elist as $emp_id => $emp) {
@@ -112,10 +110,9 @@ class EmpTask extends \App\Pages\Base
         foreach ($elist as $emp_id => $emp) {
             if ($emp->cnt > 0) {
                 $detail[] = array(
-                    "name"  => $emp->emp_name,
-                    "cnt"   => $emp->cnt,
-                    "hours" => $emp->hours,
-
+                    "name"   => $emp->emp_name,
+                    "cnt"    => $emp->cnt,
+                    "hours"  => $emp->hours,
                     "amount" => round($emp->amount)
                 );
             }

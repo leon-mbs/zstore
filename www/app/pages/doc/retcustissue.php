@@ -49,7 +49,6 @@ class RetCustIssue extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
 
-
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
@@ -63,7 +62,6 @@ class RetCustIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
-
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -91,11 +89,9 @@ class RetCustIssue extends \App\Pages\Base
             $this->docform->payed->setText(H::fa($this->_doc->payed));
             $this->docform->editpayed->setText(H::fa($this->_doc->payed));
 
-
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
         } else {
             $this->_doc = Document::create('RetCustIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -115,7 +111,6 @@ class RetCustIssue extends \App\Pages\Base
                         foreach ($itemlist as $item) {
                             $this->_itemlist[$item->item_id] = $item;
                         }
-
                     }
                 }
                 $this->calcTotal();
@@ -175,7 +170,6 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
 
-
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
@@ -183,8 +177,6 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->qtystock->setText(H::fqty($qty));
 
         $this->_rowid = $item->item_id;
-
-
     }
 
     public function saverowOnClick($sender) {
@@ -198,9 +190,7 @@ class RetCustIssue extends \App\Pages\Base
         $item = Item::load($id);
         $item->quantity = $this->editdetail->editquantity->getText();
 
-
         $item->price = $this->editdetail->editprice->getText();
-
 
         unset($this->_itemlist[$this->_rowid]);
         $this->_itemlist[$item->item_id] = $item;
@@ -238,7 +228,6 @@ class RetCustIssue extends \App\Pages\Base
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
@@ -329,7 +318,6 @@ class RetCustIssue extends \App\Pages\Base
             $this->goAnkor("tankor");
         }
     }
-
 
     /**
      * Валидация   формы

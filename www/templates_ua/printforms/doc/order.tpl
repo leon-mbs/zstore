@@ -27,13 +27,13 @@
             Замовлення № {{document_number}} від {{date}}
         </td>
     </tr>
-     {{#isoutnumber}}
+    {{#isoutnumber}}
     <tr>
         <td></td>
         <td>Зовнiшнiй номер</td>
         <td colspan="8">{{outnumber}}</td>
     </tr>
-    
+
     {{/isoutnumber}}
 
     <tr style="font-weight: bolder;">
@@ -90,7 +90,7 @@
         <td></td>
         <td valign="top"> Примiтка</td>
         <td colspan="5">
-       <p>{{{notes}}}</p>
+            <p>{{{notes}}}</p>
         </td>
     </tr>
 </table>

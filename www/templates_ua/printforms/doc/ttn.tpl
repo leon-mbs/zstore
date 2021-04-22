@@ -76,42 +76,42 @@
         <td colspan="5"> {{ship_amount}}</td>
     </tr>
     {{/ship_amount}}="5"> {{ship_amount}}</td>
-    </tr>
+</tr>
 
 
-    <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-            ТТН № {{document_number}} від {{date}} <br>
-        </td>
-    </tr>
+<tr>
+    <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
+        ТТН № {{document_number}} від {{date}} <br>
+    </td>
+</tr>
 
-    <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
+<tr style="font-weight: bolder;">
+    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>
+    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
+    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
-    </tr>
-    {{#_detail}}
-    <tr>
-        <td align="right">{{no}}</td>
-        <td>{{tovar_name}}</td>
-        <td>{{tovar_code}}</td>
-        <td>{{msr}}</td>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+</tr>
+{{#_detail}}
+<tr>
+    <td align="right">{{no}}</td>
+    <td>{{tovar_name}}</td>
+    <td>{{tovar_code}}</td>
+    <td>{{msr}}</td>
 
-        <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
-        <td align="right">{{amount}}</td>
-    </tr>
-    {{/_detail}}
-    <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="2">{{weight}}</td>
-        <td style="border-top:1px #000 solid;" colspan="4" align="right">Всього:</td>
-        <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
-    </tr>
+    <td align="right">{{quantity}}</td>
+    <td align="right">{{price}}</td>
+    <td align="right">{{amount}}</td>
+</tr>
+{{/_detail}}
+<tr style="font-weight: bolder;">
+    <td style="border-top:1px #000 solid;" colspan="2">{{weight}}</td>
+    <td style="border-top:1px #000 solid;" colspan="4" align="right">Всього:</td>
+    <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
+</tr>
 
 
 </table>

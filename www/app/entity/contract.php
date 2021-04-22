@@ -21,7 +21,6 @@ class Contract extends \ZCL\DB\Entity
 
         $this->createdon = strtotime($this->createdon);
 
-
         $xml = @simplexml_load_string($this->details);
 
         $this->shortdesc = (string)($xml->shortdesc[0]);
@@ -33,7 +32,6 @@ class Contract extends \ZCL\DB\Entity
         $this->emp_id = (int)($xml->emp_id[0]);
         $this->ctype = (int)($xml->ctype[0]);
         $this->enddate = (int)($xml->enddate[0]);
-
 
         parent::afterLoad();
     }
@@ -65,7 +63,6 @@ class Contract extends \ZCL\DB\Entity
         return true;
     }
 
-
     public static function getList($c, $f = 0) {
 
         $ar = array();
@@ -79,7 +76,6 @@ class Contract extends \ZCL\DB\Entity
             foreach ($res as $k => $v) {
                 $ar[$k] = $v->contract_number . ' ' . $v->shortdesc;
             }
-
         }
 
         return $ar;
@@ -92,7 +88,6 @@ class Contract extends \ZCL\DB\Entity
     public function getDocs() {
 
         $ar = array();
-
 
         $where = "  customer_id={$this->customer_id} and  content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
 
@@ -112,7 +107,6 @@ class Contract extends \ZCL\DB\Entity
     public function getDolg() {
 
         $amount = 0;
-
 
         $where = "  customer_id={$this->customer_id} and   content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
 
@@ -135,7 +129,6 @@ class Contract extends \ZCL\DB\Entity
             where   {$where} and   (payamount >0  or  payed >0) {$_docs}  and state not in (1,2,3,17,8)   and payamount <> payed 
             
             ";
-
             } else {
                 return 0;
             }
@@ -143,9 +136,7 @@ class Contract extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $amount = $conn->GetOne($sql);
 
-
         return $amount;
     }
-
 
 }

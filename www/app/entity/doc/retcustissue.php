@@ -51,7 +51,6 @@ class RetCustIssue extends Document
                         "payed"           => H::fa($this->payed)
         );
 
-
         $report = new \App\Report('doc/retcustissue.tpl');
 
         $html = $report->generate($header);
@@ -62,7 +61,6 @@ class RetCustIssue extends Document
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
-
         foreach ($this->unpackDetails('detaildata') as $item) {
 
 
@@ -72,11 +70,9 @@ class RetCustIssue extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price - $st->partion); //Для АВС 
-             $sc->setOutPrice( $item->price   );  
-               $sc->save();
+                $sc->setOutPrice($item->price);
+                $sc->save();
             }
-
-
         }
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);

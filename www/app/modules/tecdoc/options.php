@@ -34,10 +34,7 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $modules['td_store']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
-
-
     }
-
 
     public function saveOnClick($sender) {
 

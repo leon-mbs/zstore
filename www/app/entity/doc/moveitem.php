@@ -37,11 +37,7 @@ class MoveItem extends Document
                 $sc = new Entry($this->document_id, $st->quantity * $sti->partion, $st->quantity);
                 $sc->setStock($sti->stock_id);
                 $sc->save();
-
-
             }
-
-
         }
 
         return true;
@@ -53,7 +49,6 @@ class MoveItem extends Document
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
-
 
             $detail[] = array("no"        => $i++,
                               "item_name" => $name,
@@ -80,6 +75,5 @@ class MoveItem extends Document
     protected function getNumberTemplate() {
         return 'MТ-000000';
     }
-
 
 }

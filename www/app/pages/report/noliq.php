@@ -46,7 +46,6 @@ class NoLiq extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "emptask";
 
-
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
@@ -60,7 +59,6 @@ class NoLiq extends \App\Pages\Base
     private function generateReport() {
 
         $mqty = $this->filter->mqty->getValue();
-
 
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
@@ -83,13 +81,11 @@ class NoLiq extends \App\Pages\Base
                order by  qty  desc
                  ";
 
-
         $detail = array();
         $res = $conn->Execute($sql);
         foreach ($res as $item) {
             $item['qty'] = H::fqty($item['qty']);
             $detail[] = $item;
-
         }
 
 

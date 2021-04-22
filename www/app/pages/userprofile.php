@@ -36,7 +36,6 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('viber', $this->user->viber));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
 
-
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
@@ -70,8 +69,6 @@ class UserProfile extends \App\Pages\Base
                     $p = "\\App\\Pages\\Service\\";
                     $n = H::l("md_ser");
                     break;
-
-
             }
 
             $p = $p . $m->meta_name;
@@ -80,9 +77,7 @@ class UserProfile extends \App\Pages\Base
 
         $form->add(new DropDownChoice('mainpage', $pages, $this->user->mainpage));
 
-
         $this->add($form);
-
 
         //форма   пароля
 
@@ -111,7 +106,6 @@ class UserProfile extends \App\Pages\Base
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();
 
-
         if (!$this->isError()) {
             $this->user->save();
             $this->setSuccess('saved');
@@ -130,7 +124,6 @@ class UserProfile extends \App\Pages\Base
         } else {
             if ($confirm == '') {
                 $this->setError('confirmpass');
-
             } else {
                 if ($confirm != $pass) {
 
@@ -197,6 +190,5 @@ class UserProfile extends \App\Pages\Base
         $this->setSuccess('sent');
         $sender->clean();
     }
-
 
 }

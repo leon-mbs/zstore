@@ -29,7 +29,6 @@ class Income extends \App\Pages\Base
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates')), 1));
 
-
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
         $this->detail->add(new RedirectLink('word', "income"));
@@ -40,7 +39,6 @@ class Income extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $r = array();
-
 
         $text = Item::qstr('%' . $sender->getText() . '%');
         $list = Item::findArray('itemname', " disabled <> 1  and (itemname like {$text} or item_code like {$text} ) ");
@@ -61,7 +59,6 @@ class Income extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "income";
 
-
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
@@ -78,7 +75,6 @@ class Income extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-
 
         $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();

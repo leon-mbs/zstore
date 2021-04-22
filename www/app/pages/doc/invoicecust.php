@@ -47,13 +47,11 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
-
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true), H::getDefMF()));
-
 
         $this->docform->add(new TextInput('editpayamount', "0"));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
@@ -70,7 +68,6 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new Label('nds', 0));
         $this->docform->add(new Label('rate', 1));
         $this->docform->add(new Label('disc', 0));
-
 
         $this->docform->add(new Label('payed', 0));
         $this->docform->add(new Label('payamount', 0));
@@ -123,8 +120,6 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->total->setText($this->_doc->amount);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
-
         } else {
             $this->_doc = Document::create('InvoiceCust');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -166,7 +161,6 @@ class InvoiceCust extends \App\Pages\Base
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -234,7 +228,6 @@ class InvoiceCust extends \App\Pages\Base
             } else {
                 $tarr[$k] = $value;    // старый
             }
-
         }
 
         if ($this->_rowid == 0) {        // в конец
@@ -246,7 +239,6 @@ class InvoiceCust extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-
 
         $this->calcTotal();
         $this->calcPay();
@@ -281,7 +273,6 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
 
-
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::CREDIT) {
             $this->_doc->payed = 0;
         }
@@ -310,9 +301,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
@@ -326,14 +315,12 @@ class InvoiceCust extends \App\Pages\Base
             }
             $this->_doc->save();
 
-
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-
 
                 //обновляем  курс
                 if (strlen($this->_doc->headerdata['val']) > 1) {
@@ -342,10 +329,7 @@ class InvoiceCust extends \App\Pages\Base
                         $optval[$this->_doc->headerdata['val']] = $this->_doc->headerdata['rate'];
                         \App\System::setOptions("val", $optval);
                     }
-
                 }
-
-
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -362,7 +346,6 @@ class InvoiceCust extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-
 
             if ($isEdited) {
                 App::RedirectBack();
@@ -385,7 +368,6 @@ class InvoiceCust extends \App\Pages\Base
 
     public function onPayAmount($sender) {
         $this->docform->payamount->setText(H::fa($this->docform->editpayamount->getText()));
-
     }
 
     public function onPayed($sender) {
@@ -405,7 +387,6 @@ class InvoiceCust extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-
     }
 
     private function CalcPay() {
@@ -425,7 +406,6 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->editpayed->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($total));
     }
-
 
     public function onDisc($sender) {
         $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
@@ -457,7 +437,6 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->editrate->setText($rate);
         $this->CalcPay();
     }
-
 
     /**
      * Валидация   формы
@@ -548,7 +527,6 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
-
     }
 
 }

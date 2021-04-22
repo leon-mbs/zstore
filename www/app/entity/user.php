@@ -76,7 +76,6 @@ class User extends \ZCL\DB\Entity
         $this->modules = $acl['modules'];
         $this->smartmenu = $acl['smartmenu'];
 
-
         $this->aclbranch = $acl['aclbranch'];
         $this->onlymy = $acl['onlymy'];
 
@@ -91,7 +90,6 @@ class User extends \ZCL\DB\Entity
         $this->pagesize = (int)$options['pagesize'];
         $this->phone = (string)$options['phone'];
         $this->viber = (string)$options['viber'];
-
 
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->mainpage = $options['mainpage'];

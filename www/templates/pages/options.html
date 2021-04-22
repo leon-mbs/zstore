@@ -1,419 +1,419 @@
 <html>
-<body>
+    <body>
 
 
-<div class="row">
+        <div class="row">
 
-    <div class="col-12  col-md-5 col-xl-4  ">
+            <div class="col-12  col-md-5 col-xl-4  ">
 
-        <div class="card">
-            <div class="card-body">
-                <h4>Общие настройки</h4>
-                <small>После  изменения  настроек  следует  перелогинится</small>
-                <form zippy="common">
-                    <div class="form-group">
-                        <label for="shopname">Название сайта </label>
-                        <input class="form-control" type="text" zippy="shopname">
-                        <small> Название для логотипа и страницы логина. </small>
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Общие настройки</h4>
+                        <small>После  изменения  настроек  следует  перелогинится</small>
+                        <form zippy="common">
+                            <div class="form-group">
+                                <label for="shopname">Название сайта </label>
+                                <input class="form-control" type="text" zippy="shopname">
+                                <small> Название для логотипа и страницы логина. </small>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="partiontype">Тип партионного учета</label>
+                                <select class="form-control" zippy="partiontype"> </select>
+                                <small class="form-text text-muted">Учет отдельно по каждой закупочной цене
+                                    позволяет точно учитывать
+                                    прибыль но осложняет списание партий</small>
+
+                            </div>
+
+                            <div class="form-group  ">
+                                <label>Типы отпускных цен</label>
+                                <input class="form-control" type="text" zippy="price1" required="required">
+                                <input class="form-control" type="text" zippy="price2">
+                                <input class="form-control" type="text" zippy="price3">
+                                <input class="form-control" type="text" zippy="price4">
+                                <input class="form-control" type="text" zippy="price5">
+                                <small class="form-text text-muted">Введите наименования типов цен. Ненужные
+                                    поля оставте
+                                    пустыми</small>
+
+                            </div>
+                            <div class="form-group  ">
+                                <label for="qtydigits">Знаков после точки в количестве</label>
+
+                                <select style="width:75px;" class="form-control" zippy="qtydigits">
+                                    <option value='0'>0</option>
+                                    <option value='1'>1</option>
+                                    <option value='2'>2</option>
+                                    <option value='3'>3</option>
+                                </select>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="amdigits">Округление в стоимости</label>
+
+                                <select class="form-control" zippy="amdigits">
+                                    <option value='0'>Без копеек</option>
+                                    <option value='1'>До 1 копейки</option>
+                                    <option value='5'>До 5 копеек</option>
+                                    <option value='10'>До 10 копеек</option>
+
+                                </select>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="dateformat">Формат даты</label>
+
+                                <select class="form-control" zippy="dateformat">
+                                    <option value='d.m.Y'>dd.mm.yyyy</option>
+                                    <option value='d-m-Y'>dd-mm-yyyy</option>
+                                    <option value='d/m/Y'>dd/mm/yyyy</option>
+                                    <option value='Y.m.d'>yyyy.mm.dd</option>
+                                    <option value='Y-m-d'>yyyy-mm-dd</option>
+                                    <option value='Y/m/d'>yyyy/mm/dd</option>
+
+                                </select>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="phonel">Длина номера телефона</label>
+
+                                <select style="width:75px" class="form-control" zippy="phonel">
+
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="defprice">Наценка по умолчанию, в процентах</label>
+                                <input style="width:100px" pattern="[0-9]+" class="form-control" type="text"
+                                       zippy="defprice">
+                                <small class="form-text text-muted">Используется если не задана цена в товаре
+                                    или в категории
+                                    товара</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="curr">Название валюты учета</label>
+                                <select class="form-control" zippy="curr"> </select>
+                                <small class="form-text text-muted">Используется для сумм прописью в печатных
+                                    формах.</small>
+                            </div>
+
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" zippy="autoarticle">
+                                <label class="form-check-label" for="autoarticle">Автоматически создавать
+                                    артикулы</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Автоматическая  генерация номеров  артикулов для товаров"></i>
+                            </div>
+
+
+                            <div class="form-check">
+                                <input zippy="usesnumber" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usesnumber">Учет ТМЦ по сериям (партиям)
+                                    производителя</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Отдельный учет  по  каждой партии  производителя с  учетом  срока годности. Использует  ли конкретный товар  учет  по  партиям  указывается в  карточке  товара."></i>
+                            </div>
+
+                            <div class="form-check">
+                                <input zippy="useimages" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="useimages">Изображения в
+                                    номенклатуре </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="   Возможность  добавления изображений в справочник товаров"></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="usescanner" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usescanner">Поддержка сканера штрих
+                                    кодов </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Использование  сканера  штрих кодов для ввода  товаров в расходной накладной"></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="usebranch" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usebranch">Использование филиалов </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Филиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала. Отпускные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
+                            </div>
+
+                            <div class="form-check">
+                                <input zippy="allowminus" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="allowminus">Разрешить списывать ТМЦ в
+                                    минус </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Разрешение на  списывание  количества  при  котором  на  складе  появляется  отрицательное  значение "></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="noallowfiz" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="noallowfiz">Не разрешать накладные без
+                                    контрагента </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Покупатель должен  быть  указан  и занесен  в справочник "></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="useval" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="useval">Валюта в закупках</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Возможность  ввода  приходной накладной в валюте и пересчета  курса  при  продаже.  "></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="capcha" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="capcha">Капча на форме логина</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Дополнительная защита  от несанкционированого доступа "></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="numberttn" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="numberttn">Несколько отправок на один заказ</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Возможность  создания  нескольких накладных на  один  заказ. Но  если  включено - не производится  проверка наличия ТТН и автоматической смены  статуса  заказа по  ТТН "></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="usecattree" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usecattree">Иерархия категорий ТМЦ</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="  Возможность выстраивать древовидную иерархию категорий. имеет смысл  если  предполагается использование  в  онлайн-каталоге    "></i>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usemobileprinter">Открывать  печать документа в  новой вкладке</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Для  мобильных  устройств, чтобы печатать соответствующим приложением через  меню  Поделится     "></i>
+                            </div>
+
+
+                            <div class="form-group  "><br>
+                                <label for="ts_start">Начало рабочего дня</label>
+
+                                <input style="width:75px;" class="form-control" zippy="ts_start"
+                                       pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
+
+                            </div>
+                            <div class="form-group  ">
+                                <label for="ts_end">Конец рабочего дня</label>
+
+                                <input style="width:75px;" class="form-control" zippy="ts_end"
+                                       pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
+
+                            </div>
+                            <div class="form-group">
+                                <label for="ts_break">Перерыв, мин .</label>
+                                <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text"
+                                       zippy="ts_break">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Сохранить</button>
+                            </div>
+
+                        </form>
                     </div>
-                    <div class="form-group  ">
-                        <label for="partiontype">Тип партионного учета</label>
-                        <select class="form-control" zippy="partiontype"> </select>
-                        <small class="form-text text-muted">Учет отдельно по каждой закупочной цене
-                            позволяет точно учитывать
-                            прибыль но осложняет списание партий</small>
-
-                    </div>
-
-                    <div class="form-group  ">
-                        <label>Типы отпускных цен</label>
-                        <input class="form-control" type="text" zippy="price1" required="required">
-                        <input class="form-control" type="text" zippy="price2">
-                        <input class="form-control" type="text" zippy="price3">
-                        <input class="form-control" type="text" zippy="price4">
-                        <input class="form-control" type="text" zippy="price5">
-                        <small class="form-text text-muted">Введите наименования типов цен. Ненужные
-                            поля оставте
-                            пустыми</small>
-
-                    </div>
-                    <div class="form-group  ">
-                        <label for="qtydigits">Знаков после точки в количестве</label>
-
-                        <select style="width:75px;" class="form-control" zippy="qtydigits">
-                            <option value='0'>0</option>
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                            <option value='3'>3</option>
-                        </select>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="amdigits">Округление в стоимости</label>
-
-                        <select class="form-control" zippy="amdigits">
-                            <option value='0'>Без копеек</option>
-                            <option value='1'>До 1 копейки</option>
-                            <option value='5'>До 5 копеек</option>
-                            <option value='10'>До 10 копеек</option>
-
-                        </select>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="dateformat">Формат даты</label>
-
-                        <select class="form-control" zippy="dateformat">
-                            <option value='d.m.Y'>dd.mm.yyyy</option>
-                            <option value='d-m-Y'>dd-mm-yyyy</option>
-                            <option value='d/m/Y'>dd/mm/yyyy</option>
-                            <option value='Y.m.d'>yyyy.mm.dd</option>
-                            <option value='Y-m-d'>yyyy-mm-dd</option>
-                            <option value='Y/m/d'>yyyy/mm/dd</option>
-
-                        </select>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="phonel">Длина номера телефона</label>
-
-                        <select style="width:75px" class="form-control" zippy="phonel">
-
-
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="defprice">Наценка по умолчанию, в процентах</label>
-                        <input style="width:100px" pattern="[0-9]+" class="form-control" type="text"
-                               zippy="defprice">
-                        <small class="form-text text-muted">Используется если не задана цена в товаре
-                            или в категории
-                            товара</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="curr">Название валюты учета</label>
-                        <select class="form-control" zippy="curr"> </select>
-                        <small class="form-text text-muted">Используется для сумм прописью в печатных
-                            формах.</small>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" zippy="autoarticle">
-                        <label class="form-check-label" for="autoarticle">Автоматически создавать
-                            артикулы</label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title="Автоматическая  генерация номеров  артикулов для товаров"></i>
-                    </div>
-
-
-                    <div class="form-check">
-                        <input zippy="usesnumber" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usesnumber">Учет ТМЦ по сериям (партиям)
-                            производителя</label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title="Отдельный учет  по  каждой партии  производителя с  учетом  срока годности. Использует  ли конкретный товар  учет  по  партиям  указывается в  карточке  товара."></i>
-                    </div>
-
-                    <div class="form-check">
-                        <input zippy="useimages" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="useimages">Изображения в
-                            номенклатуре </label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title="   Возможность  добавления изображений в справочник товаров"></i>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="usescanner" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usescanner">Поддержка сканера штрих
-                            кодов </label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title="Использование  сканера  штрих кодов для ввода  товаров в расходной накладной"></i>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="usebranch" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usebranch">Использование филиалов </label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title="Филиалы (например торговые  точки) используются  для  разделения доступа  к ресурсам.  Сотпрудники филиала  имеют  доступ  к  документам, складам и кассам  только  данного  филиала. Отпускные цены товаров запоминаются  в  привязке  к  текущему  филиалу.   "></i>
-                    </div>
-
-                    <div class="form-check">
-                        <input zippy="allowminus" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="allowminus">Разрешить списывать ТМЦ в
-                            минус </label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title=" Разрешение на  списывание  количества  при  котором  на  складе  появляется  отрицательное  значение "></i>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="noallowfiz" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="noallowfiz">Не разрешать накладные без
-                            контрагента </label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title="Покупатель должен  быть  указан  и занесен  в справочник "></i>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="useval" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="useval">Валюта в закупках</label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title=" Возможность  ввода  приходной накладной в валюте и пересчета  курса  при  продаже.  "></i>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="capcha" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="capcha">Капча на форме логина</label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title=" Дополнительная защита  от несанкционированого доступа "></i>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="numberttn" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="numberttn">Несколько отправок на один заказ</label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title=" Возможность  создания  нескольких накладных на  один  заказ. Но  если  включено - не производится  проверка наличия ТТН и автоматической смены  статуса  заказа по  ТТН "></i>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="usecattree" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usecattree">Иерархия категорий ТМЦ</label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title="  Возможность выстраивать древовидную иерархию категорий. имеет смысл  если  предполагается использование  в  онлайн-каталоге    "></i>
-                    </div>
-                   <div class="form-check">
-                        <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usemobileprinter">Открывать  печать документа в  новой вкладке</label>
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                           title="Для  мобильных  устройств, чтобы печатать соответствующим приложением через  меню  Поделится     "></i>
-                    </div>
-
-
-                    <div class="form-group  "><br>
-                        <label for="ts_start">Начало рабочего дня</label>
-
-                        <input style="width:75px;" class="form-control" zippy="ts_start"
-                               pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
-
-                    </div>
-                    <div class="form-group  ">
-                        <label for="ts_end">Конец рабочего дня</label>
-
-                        <input style="width:75px;" class="form-control" zippy="ts_end"
-                               pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}">
-
-                    </div>
-                    <div class="form-group">
-                        <label for="ts_break">Перерыв, мин .</label>
-                        <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text"
-                               zippy="ts_break">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary" type="submit">Сохранить</button>
-                    </div>
-
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-12  col-md-5 col-xl-4  ">
+            <div class="col-12  col-md-5 col-xl-4  ">
 
-        {{#useval}}
-        <div class="card">
-            <div class="card-body">
-                <h4>Курсы валют </h4>
-                <form zippy="valform">
-                    <div class="form-group">
-                        <label for="valuan">Гривна</label>
-                        <input zippy="valuan" style="width:100px" pattern="[0-9\.]+"
-                               class="form-control" type="text">
-                    </div>
-                    <div class="form-group">
-                        <label for="valusd">Доллар</label>
-                        <input zippy="valusd" style="width:100px" pattern="[0-9\.]+"
-                               class="form-control" type="text">
-                    </div>
-                    <div class="form-group">
-                        <label for="valeuro">Евро</label>
-                        <input zippy="valeuro" style="width:100px" pattern="[0-9\.]+"
-                               class="form-control" type="text">
+                {{#useval}}
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Курсы валют </h4>
+                        <form zippy="valform">
+                            <div class="form-group">
+                                <label for="valuan">Гривна</label>
+                                <input zippy="valuan" style="width:100px" pattern="[0-9\.]+"
+                                       class="form-control" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label for="valusd">Доллар</label>
+                                <input zippy="valusd" style="width:100px" pattern="[0-9\.]+"
+                                       class="form-control" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label for="valeuro">Евро</label>
+                                <input zippy="valeuro" style="width:100px" pattern="[0-9\.]+"
+                                       class="form-control" type="text">
 
-                    </div>
-                    <div class="form-group">
-                        <label for="valrub">Рубль</label>
-                        <input zippy="valrub" style="width:100px" pattern="[0-9\.]+"
-                               class="form-control" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label for="valrub">Рубль</label>
+                                <input zippy="valrub" style="width:100px" pattern="[0-9\.]+"
+                                       class="form-control" type="text">
 
-                    </div>
-                    <div class="form-check">
-                        <input zippy="valprice" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="valprice">Учитывать курсовую разницу при
-                            продаже </label>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="valprice" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="valprice">Учитывать курсовую разницу при
+                                    продаже </label>
 
-                    </div>
+                            </div>
 
-                    <div class="form-group">
-                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Сохранить</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-        </div>
-        {{/useval}}
-        <div class="card">
-            <div class="card-body">
-                <h4>Настройка принтера</h4>
-                <small>Настройки узкого принтера для печати чеков и этикеток</small>
-                <form zippy="printer">
-                    <div class="form-group">
-                        <label for="pwidth">Ширина печати</label>
-                        <input style="width:60px" class="form-control" type="text" zippy="pwidth">
-                        <small class="form-text text-muted">Например '100%' или '40mm' </small>
-                    </div>
-                    <div class="form-group">
-                        <label>Параметры для этикеток и ценников</label>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="pfontsize">Размер шрифта</label>
-                        <select style="width:100px" class="form-control" zippy="pfontsize">
-                        </select>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="pricetype">Тип цены</label>
-                        <select class="form-control" zippy="pricetype">
-                        </select>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="pname" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="pname">Печатать название</label>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="pcode" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="pcode">Печатать артикул</label>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="pprice" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="pprice">Печатать цену</label>
-                    </div>
-                    <div class="form-check">
-                        <input zippy="pbarcode" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="pbarcode">Печатать штрих код</label>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="barcodetype">Тип кода</label>
-                        <select class="form-control" zippy="barcodetype">
-                        </select>
-                    </div>
+                </div>
+                {{/useval}}
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Настройка принтера</h4>
+                        <small>Настройки узкого принтера для печати чеков и этикеток</small>
+                        <form zippy="printer">
+                            <div class="form-group">
+                                <label for="pwidth">Ширина печати</label>
+                                <input style="width:60px" class="form-control" type="text" zippy="pwidth">
+                                <small class="form-text text-muted">Например '100%' или '40mm' </small>
+                            </div>
+                            <div class="form-group">
+                                <label>Параметры для этикеток и ценников</label>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="pfontsize">Размер шрифта</label>
+                                <select style="width:100px" class="form-control" zippy="pfontsize">
+                                </select>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="pricetype">Тип цены</label>
+                                <select class="form-control" zippy="pricetype">
+                                </select>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="pname" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pname">Печатать название</label>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="pcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pcode">Печатать артикул</label>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="pprice" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pprice">Печатать цену</label>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="pbarcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pbarcode">Печатать штрих код</label>
+                            </div>
+                            <div class="form-group  ">
+                                <label for="barcodetype">Тип кода</label>
+                                <select class="form-control" zippy="barcodetype">
+                                </select>
+                            </div>
 
 
-                    <div class="form-group">
-                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Сохранить</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-        </div>
+                </div>
 
 
-        <div class="card">
-            <div class="card-body">
-                <h4>Настройка API</h4>
-                <small>Настройки API для доступа к данным с других систем</small>
-                <form zippy="api">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Настройка API</h4>
+                        <small>Настройки API для доступа к данным с других систем</small>
+                        <form zippy="api">
 
-                    <div class="form-group  ">
-                        <label for="atype">Тип авторизации</label>
-                        <select class="form-control" zippy="atype">
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label data-label="akey" for="akey">Ключ</label>
-                        <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
-                        <small data-label="akey">Призвольное слово на латинице для шифрования
-                            токена<small>
-                    </div>
-                    <div class="form-group">
-                        <label data-label="aexp" for="aexp">Время жизни токена в мин.</label>
-                        <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
+                            <div class="form-group  ">
+                                <label for="atype">Тип авторизации</label>
+                                <select class="form-control" zippy="atype">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-label="akey" for="akey">Ключ</label>
+                                <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
+                                <small data-label="akey">Призвольное слово на латинице для шифрования
+                                    токена<small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-label="aexp" for="aexp">Время жизни токена в мин.</label>
+                                            <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
 
-                    </div>
-
-
-                    <div class="form-group">
-                        <button class="btn btn-primary" type="submit">Сохранить</button>
-                    </div>
-                </form>
-            </div>
-        </div>
- 
-        <div class="card">
-            <div class="card-body">
-                <h4>Настройка  сервиса SMS уведомлений</h4>
-                 <form zippy="sms">
-
-                    <div class="form-group  ">
-                        <label for="smstype">Сервис</label>
-                        <select class="form-control" zippy="smstype">
-                           <option value="0">Не  выбран</option>
-                        </select>
-                        <span zippy="semysmssite"><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
-                        <span zippy="turbosmssite"><a href="https://turbosms.net/" target="_blank">https://turbosms.net/</a></span>
-                        <span zippy="smsflysite"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
-                    </div>
-                    <div class="form-group">
-                        <label data-label="smssemytoken" for="smssemytoken">Токен</label>
-                        <input zippy="smssemytoken"   class="form-control">
-                         
-                    </div>
-                   <div class="form-group">
-                        <label data-label="turbosmstoken" for="turbosmstoken">Токен</label>
-                        <input zippy="turbosmstoken"   class="form-control">
-                         
-                    </div>
-                    <div class="form-group">
-                        <label data-label="smssemydevid" for="smssemydevid">Device ID</label>
-                        <input zippy="smssemydevid"   class="form-control"  >
-
-                    </div>
-                   <div class="form-group">
-                        <label data-label="flysmslogin" for="flysmslogin">Логин</label>
-                        <input zippy="flysmslogin"   class="form-control">
-                         
-                    </div>
-                    <div class="form-group">
-                        <label data-label="flysmspass" for="flysmspass">Пароль</label>
-                        <input zippy="flysmspass"   class="form-control"  >
-
-                    </div>
-                    <div class="form-group">
-                        <label data-label="flysmsan" for="flysmsan">ALFANAME</label>
-                        <input zippy="flysmsan"   class="form-control"  >
-
-                    </div>
+                                        </div>
 
 
-                    <div class="form-group">
-                        <button zippy="smssubmit" class="btn btn-primary" type="submit">Сохранить</button>
-                    </div>
-                   <div class="form-group">
-                        <span><i class="fa fa-exclamation-triangle"></i> Перед проверкой  сохраните  настройки</span> 
-                    </div>
-                 <div class="form-group">
-                        <label   for="smstestphone">Телефон</label>
-                        <input zippy="smstestphone"   class="form-control"  >
+                                        <div class="form-group">
+                                            <button class="btn btn-primary" type="submit">Сохранить</button>
+                                        </div>
+                                        </form>
+                                        </div>
+                                        </div>
 
-                    </div>
-                    <div class="form-group">
-                        <label   for="smstesttext">Сообщение</label>
-                        <input zippy="smstesttext"   class="form-control"  >
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4>Настройка  сервиса SMS уведомлений</h4>
+                                                <form zippy="sms">
 
-                    </div>
-     
-                    
-                   <div class="form-group">
-                        <button zippy="smstest" class="btn btn-primary" type="submit">Отправить</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                                                    <div class="form-group  ">
+                                                        <label for="smstype">Сервис</label>
+                                                        <select class="form-control" zippy="smstype">
+                                                            <option value="0">Не  выбран</option>
+                                                        </select>
+                                                        <span zippy="semysmssite"><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
+                                                        <span zippy="turbosmssite"><a href="https://turbosms.net/" target="_blank">https://turbosms.net/</a></span>
+                                                        <span zippy="smsflysite"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label data-label="smssemytoken" for="smssemytoken">Токен</label>
+                                                        <input zippy="smssemytoken"   class="form-control">
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label data-label="turbosmstoken" for="turbosmstoken">Токен</label>
+                                                        <input zippy="turbosmstoken"   class="form-control">
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label data-label="smssemydevid" for="smssemydevid">Device ID</label>
+                                                        <input zippy="smssemydevid"   class="form-control"  >
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label data-label="flysmslogin" for="flysmslogin">Логин</label>
+                                                        <input zippy="flysmslogin"   class="form-control">
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label data-label="flysmspass" for="flysmspass">Пароль</label>
+                                                        <input zippy="flysmspass"   class="form-control"  >
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label data-label="flysmsan" for="flysmsan">ALFANAME</label>
+                                                        <input zippy="flysmsan"   class="form-control"  >
+
+                                                    </div>
 
 
-    </div>
-</div>
+                                                    <div class="form-group">
+                                                        <button zippy="smssubmit" class="btn btn-primary" type="submit">Сохранить</button>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <span><i class="fa fa-exclamation-triangle"></i> Перед проверкой  сохраните  настройки</span> 
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label   for="smstestphone">Телефон</label>
+                                                        <input zippy="smstestphone"   class="form-control"  >
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label   for="smstesttext">Сообщение</label>
+                                                        <input zippy="smstesttext"   class="form-control"  >
+
+                                                    </div>
 
 
-<script>
-    function check_rowdelete() {
-        return confirm("Удалить  запись?")
-    }
-</script>
+                                                    <div class="form-group">
+                                                        <button zippy="smstest" class="btn btn-primary" type="submit">Отправить</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
 
-</body>
-</html>
+
+                                        </div>
+                                        </div>
+
+
+                                        <script>
+                                            function check_rowdelete() {
+                                                return confirm("Удалить  запись?")
+                                            }
+                                        </script>
+
+                                        </body>
+                                        </html>

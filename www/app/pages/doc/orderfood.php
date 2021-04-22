@@ -7,7 +7,6 @@ use App\Entity\Customer;
 use App\Entity\MoneyFund;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
-
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -33,7 +32,6 @@ class OrderFood extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
-
 
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
@@ -122,7 +120,6 @@ class OrderFood extends \App\Pages\Base
             $this->docform->payed->setText($this->_doc->payed);
             $this->docform->editpayed->setText($this->_doc->payed);
 
-
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->email->setText($this->_doc->headerdata['email']);
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
@@ -143,7 +140,6 @@ class OrderFood extends \App\Pages\Base
             }
         }
         $this->OnPayment($this->docform->payment);
-
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -205,7 +201,6 @@ class OrderFood extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editdesc->setText($item->desc);
 
-
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
@@ -217,7 +212,6 @@ class OrderFood extends \App\Pages\Base
         }
 
         $this->_rowid = $item->rowid;
-
     }
 
     public function saverowOnClick($sender) {
@@ -233,10 +227,8 @@ class OrderFood extends \App\Pages\Base
         $item = Item::load($id);
         $item->quantity = $this->editdetail->editquantity->getText();
 
-
         $item->price = $this->editdetail->editprice->getText();
         $item->desc = $this->editdetail->editdesc->getText();
-
 
         if ($this->_rowid > 0) {
             $item->rowid = $this->_rowid;
@@ -247,7 +239,6 @@ class OrderFood extends \App\Pages\Base
         $this->_tovarlist[$item->rowid] = $item;
 
         $this->_rowid = 0;
-
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -262,7 +253,6 @@ class OrderFood extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->wselitem->setVisible(false);
-
     }
 
     public function cancelrowOnClick($sender) {
@@ -276,7 +266,6 @@ class OrderFood extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->wselitem->setVisible(false);
-
     }
 
     public function savedocOnClick($sender) {
@@ -336,7 +325,6 @@ class OrderFood extends \App\Pages\Base
             }
             $this->_doc->save();
 
-
             if ($sender->id == 'savedoc') {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -350,10 +338,8 @@ class OrderFood extends \App\Pages\Base
             $conn->CommitTrans();
             if ($sender->id == 'execdoc') {
                 // App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
-
             }
             App::Redirect("\\App\\Pages\\Register\\OrderFoodList");
-
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -381,7 +367,6 @@ class OrderFood extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
@@ -441,7 +426,6 @@ class OrderFood extends \App\Pages\Base
         $item = Item::load($id);
         $price = $item->getPrice($this->docform->pricetype->getValue());
 
-
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
         $this->editdetail->editprice->setText($price);
 
@@ -461,7 +445,6 @@ class OrderFood extends \App\Pages\Base
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
             $this->docform->address->setText($customer->address);
-
 
             if ($customer->discount > 0) {
                 $this->docform->discount->setText("Постоянная скидка " . $customer->discount . '%');
@@ -556,12 +539,10 @@ class OrderFood extends \App\Pages\Base
         $this->calcTotal();
     }
 
-
     public function onPayAmount($sender) {
         $this->docform->payamount->setText($this->docform->editpayamount->getText());
         $this->goAnkor("tankor");
     }
-
 
     public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
@@ -595,14 +576,11 @@ class OrderFood extends \App\Pages\Base
         if ($p > 0) {
             $this->docform->editpayamount->setText(H::fa($total));
             $this->docform->payamount->setText(H::fa($total));
-
         }
         if ($p > 0 && $p < 10000) {
             $this->docform->editpayed->setText(H::fa($total));
             $this->docform->payed->setText(H::fa($total));
-
         }
-
     }
 
     public function OnPayment($sender) {
@@ -611,7 +589,6 @@ class OrderFood extends \App\Pages\Base
         $this->docform->paydisc->setVisible(true);
 
         $b = $sender->getValue();
-
 
         if ($b == 0) {
             $this->docform->payed->setVisible(false);
@@ -623,7 +600,6 @@ class OrderFood extends \App\Pages\Base
             $this->docform->editpayamount->setText(0);
             $this->docform->paydisc->setText(0);
             $this->docform->editpaydisc->setText(0);
-
         }
         if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->docform->payed->setVisible(false);
@@ -631,7 +607,6 @@ class OrderFood extends \App\Pages\Base
             $this->docform->editpayed->setText(0);
         }
         $this->calcPay();
-
     }
 
     public function onSelectItem($item_id, $itemname) {

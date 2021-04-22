@@ -37,7 +37,6 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
@@ -56,12 +55,10 @@ class IncomeItem extends \App\Pages\Base
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
 
-
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsnumber'));
         $this->editdetail->add(new Date('editsdate'));
-
 
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
@@ -78,7 +75,6 @@ class IncomeItem extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
         } else {
             $this->_doc = Document::create('IncomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -94,7 +90,6 @@ class IncomeItem extends \App\Pages\Base
                             //последняя партия
                             $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$basedoc->headerdata['store'] }", 'stock_id desc');
                             $it->price = $stock->partion;
-
 
                             $this->_itemlist[] = $it;
                         }
@@ -157,13 +152,11 @@ class IncomeItem extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText($item->quantity);
 
-
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setValue($item->itemname);
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
-
 
         $this->_rowid = $item->item_id;
     }
@@ -179,7 +172,6 @@ class IncomeItem extends \App\Pages\Base
         }
 
         $item = Item::load($id);
-
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -211,7 +203,6 @@ class IncomeItem extends \App\Pages\Base
             } else {
                 $tarr[$k] = $value;    // старый
             }
-
         }
 
         if ($this->_rowid == 0) {        // в конец
@@ -219,7 +210,6 @@ class IncomeItem extends \App\Pages\Base
         }
         $this->_itemlist = $tarr;
         $this->_rowid = 0;
-
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -263,7 +253,6 @@ class IncomeItem extends \App\Pages\Base
         $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -345,7 +334,6 @@ class IncomeItem extends \App\Pages\Base
             if (strlen($next) == 0) {
                 $this->setError('docnumbercancreated');
             }
-
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("noenteritem");
@@ -372,7 +360,6 @@ class IncomeItem extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-
 
         $code = Item::qstr($code);
 

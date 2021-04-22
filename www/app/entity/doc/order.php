@@ -24,15 +24,15 @@ class Order extends \App\Entity\Doc\Document
             } else {
 
                 /*
-                $ocstoreopt = @unserialize($item->octoreoptions);  //опции с  опенкарта
-                if (is_array($ocstoreopt)) {
-                    $t = "<table cellspacing='0' cellpadding='1' style='font-size:smaller'><tr><td style='padding: 1px;'>Опции:</td><td style='padding: 1px;'></td></tr>";
-                    foreach ($ocstoreopt as $k => $v) {
-                        $t .= "<tr><td style='padding: 1px;'>{$k}</td><td style='padding: 1px;'>{$v}</td></tr>";
-                    }
-                    $t .= "</table>";
-                    $item->itemname = $item->itemname . $t;
-                }   */
+                  $ocstoreopt = @unserialize($item->octoreoptions);  //опции с  опенкарта
+                  if (is_array($ocstoreopt)) {
+                  $t = "<table cellspacing='0' cellpadding='1' style='font-size:smaller'><tr><td style='padding: 1px;'>Опции:</td><td style='padding: 1px;'></td></tr>";
+                  foreach ($ocstoreopt as $k => $v) {
+                  $t .= "<tr><td style='padding: 1px;'>{$k}</td><td style='padding: 1px;'>{$v}</td></tr>";
+                  }
+                  $t .= "</table>";
+                  $item->itemname = $item->itemname . $t;
+                  } */
                 $detail[] = array("no"         => $i++,
                                   "tovar_name" => $item->itemname,
                                   "tovar_code" => $item->item_code,
@@ -54,9 +54,9 @@ class Order extends \App\Entity\Doc\Document
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "notes"           => nl2br($this->notes),
-                        "outnumber" => $this->headerdata["outnumber"],
-                        "isoutnumber" => strlen($this->headerdata["outnumber"])>0,
-                        "document_number" => $this->document_number,    
+                        "outnumber"       => $this->headerdata["outnumber"],
+                        "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
+                        "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
                         "payed"           => H::fa($this->payed),
                         "paydisc"         => H::fa($this->headerdata["paydisc"]),
@@ -65,14 +65,12 @@ class Order extends \App\Entity\Doc\Document
                         "payamount"       => H::fa($this->payamount)
         );
 
-
         $report = new \App\Report('doc/order.tpl');
 
         $html = $report->generate($header);
 
         return $html;
     }
-
 
     protected function getNumberTemplate() {
         return 'З-000000';
@@ -88,14 +86,12 @@ class Order extends \App\Entity\Doc\Document
         $list['TTN'] = self::getDesc('TTN');
         $list['OrderCust'] = self::getDesc('OrderCust');
 
-
         return $list;
     }
 
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
-
 
     public function generatePosReport() {
 
@@ -121,9 +117,7 @@ class Order extends \App\Entity\Doc\Document
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount)
-
         );
-
 
         $report = new \App\Report('doc/order_bill.tpl');
 
@@ -131,7 +125,6 @@ class Order extends \App\Entity\Doc\Document
 
         return $html;
     }
-
 
     protected function onState($state) {
 
@@ -155,6 +148,6 @@ class Order extends \App\Entity\Doc\Document
                 }
             }
         }
-
     }
+
 }

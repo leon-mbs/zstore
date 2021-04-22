@@ -1,96 +1,96 @@
 <html>
-<head>
-</head>
+    <head>
+    </head>
 
-<body>
-<div class="row">
-    <div class="col-12 col-md-8 col-xl-6">
-        <div zippy="firmtable">
-            <h3>Список компаний </h3>
+    <body>
+        <div class="row">
+            <div class="col-12 col-md-8 col-xl-6">
+                <div zippy="firmtable">
+                    <h3>Список компаний </h3>
 
-            <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
-            <table class="table table-bordered   table-sm">
-                <tr>
-                    <th>Название</th>
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
+                    <table class="table table-bordered   table-sm">
+                        <tr>
+                            <th>Название</th>
 
-                    <th></th>
-                </tr>
-                <tr zippy="firmlist">
-                    <td zippy="firm_name"></td>
+                            <th></th>
+                        </tr>
+                        <tr zippy="firmlist">
+                            <td zippy="firm_name"></td>
 
 
-                    <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
-                            zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
-                </tr>
-            </table>
+                            <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
+                                    zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<div class="row">
-    <form class="col-6 col-md-4" zippy="firmdetail">
-        <div class="form-group">
-            <label for="editfirm_name">Название</label>
-            <input required="required" class="form-control" zippy="editfirm_name"/>
+        <div class="row">
+            <form class="col-6 col-md-4" zippy="firmdetail">
+                <div class="form-group">
+                    <label for="editfirm_name">Название</label>
+                    <input required="required" class="form-control" zippy="editfirm_name"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="editinn">ИНН </label>
+                    <input class="form-control" type="text" zippy="editinn">
+                </div>
+                {{#ppo}}
+                <div class="form-group">
+                    <label for="edittin">ЕДРПОУ </label>
+                    <input class="form-control" type="text" zippy="edittin">
+                </div>
+                {{/ppo}}
+                <div class="form-group">
+
+                    <label for="editphone">Телефон,Viber </label>
+                    <input class="form-control" type="text" zippy="editphone">
+                </div>
+                <div class="form-group">
+                    <label for="editaddress">Адрес </label>
+                    <input class="form-control" type="text" zippy="editaddress">
+                </div>
+
+                <div class="form-group">
+                    <label for="editlogo">Логотип </label>
+                    <input class="form-control" type="text" zippy="editlogo">
+                    <small class="form-text text-muted">Путь к файлу логотипа относительно корня сайта. Например
+                        '/upload/logo.png'</small>
+                </div>
+                <div class="form-group">
+                    <label for="editstamp">Печать </label>
+                    <input class="form-control" type="text" zippy="editstamp">
+                    <small class="form-text text-muted">Путь к изображению печати относительно корня сайта. </small>
+                </div>
+                <div class="form-group">
+                    <label for="editsign">Подпись (факсимиле) </label>
+                    <input class="form-control" type="text" zippy="editsign">
+                    <small class="form-text text-muted">Путь к изображению относительно корня сайта. </small>
+                </div>
+                {{#ppo}}
+                <div class="form-group">
+                    <label for="editpposerv">Сервер подписи </label>
+                    <input class="form-control" type="text" zippy="editpposerv">
+
+                </div>
+                <div class="form-group">
+                    <label for="editpposervport">Порт сервера </label>
+                    <input class="form-control" type="text" zippy="editpposervport">
+
+                </div>
+                {{/ppo}}
+
+                <div class="form-check">
+                    <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editdisabled">Не используется</label>
+                </div>
+                <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  ">&nbsp;&nbsp;
+                <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+
+            </form>
         </div>
 
-        <div class="form-group">
-            <label for="editinn">ИНН </label>
-            <input class="form-control" type="text" zippy="editinn">
-        </div>
-        {{#ppo}}
-        <div class="form-group">
-            <label for="edittin">ЕДРПОУ </label>
-            <input class="form-control" type="text" zippy="edittin">
-        </div>
-        {{/ppo}}
-        <div class="form-group">
-
-            <label for="editphone">Телефон,Viber </label>
-            <input class="form-control" type="text" zippy="editphone">
-        </div>
-        <div class="form-group">
-            <label for="editaddress">Адрес </label>
-            <input class="form-control" type="text" zippy="editaddress">
-        </div>
-
-        <div class="form-group">
-            <label for="editlogo">Логотип </label>
-            <input class="form-control" type="text" zippy="editlogo">
-            <small class="form-text text-muted">Путь к файлу логотипа относительно корня сайта. Например
-                '/upload/logo.png'</small>
-        </div>
-        <div class="form-group">
-            <label for="editstamp">Печать </label>
-            <input class="form-control" type="text" zippy="editstamp">
-            <small class="form-text text-muted">Путь к изображению печати относительно корня сайта. </small>
-        </div>
-        <div class="form-group">
-            <label for="editsign">Подпись (факсимиле) </label>
-            <input class="form-control" type="text" zippy="editsign">
-            <small class="form-text text-muted">Путь к изображению относительно корня сайта. </small>
-        </div>
-        {{#ppo}}
-        <div class="form-group">
-            <label for="editpposerv">Сервер подписи </label>
-            <input class="form-control" type="text" zippy="editpposerv">
-
-        </div>
-        <div class="form-group">
-            <label for="editpposervport">Порт сервера </label>
-            <input class="form-control" type="text" zippy="editpposervport">
-
-        </div>
-        {{/ppo}}
-
-        <div class="form-check">
-            <input zippy="editdisabled" type="checkbox" class="form-check-input">
-            <label class="form-check-label" for="editdisabled">Не используется</label>
-        </div>
-        <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  ">&nbsp;&nbsp;
-        <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
-
-    </form>
-</div>
-
-</body>
+    </body>
 </html>

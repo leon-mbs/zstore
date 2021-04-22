@@ -68,19 +68,16 @@ class ContractList extends \App\Pages\Base
         $this->add(new Panel('docpan'))->setVisible(false);
         $this->docpan->add(new Label("cname"));
 
-
         $this->docpan->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
         $this->docpan->add(new DataView('dtable', new ArrayDataSource(array()), $this, 'doclistOnRow'));
         $this->docpan->dtable->setPageSize(H::getPG());
         $this->docpan->add(new \Zippy\Html\DataList\Paginator('dpag', $this->docpan->dtable));
-
 
         if ($id > 0) {
             $c = Contract::load($id);
             $this->filter->searchkey->setText($c->contract_number);
             $this->OnFilter($this->filter);
         }
-
     }
 
     public function contractlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -102,7 +99,6 @@ class ContractList extends \App\Pages\Base
         if ($item->file_id > 0) {
             $row->scanlink->setVisible(true);
             $row->scanlink->setLink(_BASEURL . 'loadfile.php?id=' . $item->file_id);
-
         }
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -125,7 +121,6 @@ class ContractList extends \App\Pages\Base
         $this->contracttable->contractlist->Reload();
     }
 
-
     public function editOnClick($sender) {
         $this->_contract = $sender->owner->getDataItem();
         $this->contracttable->setVisible(false);
@@ -141,7 +136,6 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editcomp->setValue($this->_contract->firm_id);
         $this->contractdetail->editemp->setValue($this->_contract->emp_id);
         $this->contractdetail->editctype->setValue($this->_contract->ctype);
-
     }
 
     public function addOnClick($sender) {
@@ -213,7 +207,6 @@ class ContractList extends \App\Pages\Base
     public function OnFilter($sender) {
         $this->contracttable->contractlist->Reload();
         $this->docpan->setVisible(false);
-
     }
 
     public function OnAutoCustomer($sender) {
@@ -226,13 +219,10 @@ class ContractList extends \App\Pages\Base
         $this->docpan->setVisible(true);
         $this->docpan->cname->setText($this->_contract->contract_number);
 
-
         $dlist = $this->_contract->getDocs();
-
 
         $this->docpan->dtable->getDataSource()->setArray($dlist);
         $this->docpan->dtable->Reload();
-
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -241,9 +231,7 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label("dtype", $doc->meta_desc));
         $row->add(new Label("ddate", H::fd($doc->document_date)));
         $row->add(new Label("dsumma", H::fa($doc->amount)));
-
     }
-
 
 }
 
@@ -263,7 +251,6 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
         $text = trim($form->searchkey->getText());
         $showdis = $form->showdis->isChecked();
         $cust = $form->searchcust->getKey();
-
 
         if ($cust > 0) {
             $where = $where . " and customer_id = " . $cust;

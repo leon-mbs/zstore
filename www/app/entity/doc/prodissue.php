@@ -34,8 +34,6 @@ class ProdIssue extends Document
                                   "tovar_code" => $item->item_code,
                                   "msr"        => $item->msr,
                                   "quantity"   => H::fqty($item->quantity)
-
-
                 );
             }
         }
@@ -45,8 +43,7 @@ class ProdIssue extends Document
                         "_detail"         => $detail,
                         "pareaname"       => $this->headerdata["pareaname"],
                         "document_number" => $this->document_number,
-
-                        "notes" => nl2br($this->notes)
+                        "notes"           => nl2br($this->notes)
         );
 
         $report = new \App\Report('doc/prodissue.tpl');
@@ -58,7 +55,6 @@ class ProdIssue extends Document
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-
 
         foreach ($this->unpackDetails('detaildata') as $item) {
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
@@ -84,4 +80,5 @@ class ProdIssue extends Document
 
         return $list;
     }
+
 }

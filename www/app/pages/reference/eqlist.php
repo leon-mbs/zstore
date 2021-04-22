@@ -38,19 +38,17 @@ class EqList extends \App\Pages\Base
 
         $this->filter->add(new CheckBox('showdis'));
 
-
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('eqlist', new EQDS($this), $this, 'eqlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
 
         $this->itemtable->eqlist->setPageSize(Helper::getPG());
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->eqlist));
-       
+
         $this->itemtable->eqlist->Reload();
 
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
-
 
         $this->itemdetail->add(new TextInput('editserial'));
         $this->itemdetail->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name"), 0));
@@ -91,7 +89,7 @@ class EqList extends \App\Pages\Base
         Equipment::delete($item->eq_id);
 
         $this->itemtable->eqlist->Reload();
-        $this->resetURL()  ;
+        $this->resetURL();
     }
 
     public function useOnClick($sender) {
@@ -102,7 +100,6 @@ class EqList extends \App\Pages\Base
         $this->_uselist = array();
 
         $list = \App\Entity\Doc\Document::find("meta_name='task' and state not in(2,3,1,9) ", "document_date desc");
-
 
         foreach ($list as $task) {
             foreach ($task->unpackDetails('eqlist') as $eq) {

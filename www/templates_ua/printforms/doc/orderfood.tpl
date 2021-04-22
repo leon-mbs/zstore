@@ -82,7 +82,7 @@
         <td></td>
         <td valign="top"> Примiтка</td>
         <td colspan="5">
-       <p>{{{notes}}}</p>
+            <p>{{{notes}}}</p>
         </td>
     </tr>
 </table>

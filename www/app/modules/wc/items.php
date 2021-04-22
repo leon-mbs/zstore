@@ -30,7 +30,6 @@ class Items extends \App\Pages\Base
         }
         $modules = System::getOptions("modules");
 
-
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
         $this->add(new Form('exportform'))->onSubmit($this, 'exportOnSubmit');
@@ -38,7 +37,6 @@ class Items extends \App\Pages\Base
         $this->exportform->add(new DataView('newitemlist', new ArrayDataSource(new Prop($this, '_items')), $this, 'itemOnRow'));
         $this->exportform->newitemlist->setPageSize(H::getPG());
         $this->exportform->add(new \Zippy\Html\DataList\Paginator('pag', $this->exportform->newitemlist));
-
 
         $this->add(new ClickLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->add(new ClickLink('updateprice'))->onClick($this, 'onUpdatePrice');
@@ -84,8 +82,6 @@ class Items extends \App\Pages\Base
         }
 
         $this->exportform->newitemlist->Reload();
-
-
     }
 
     public function itemOnRow($row) {
@@ -104,7 +100,6 @@ class Items extends \App\Pages\Base
     public function exportOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
-
 
         $elist = array();
         foreach ($this->_items as $item) {
@@ -129,9 +124,7 @@ class Items extends \App\Pages\Base
             foreach ($elist as $p) {
 
                 $data = $client->post('products', $p);
-
             }
-
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
@@ -177,27 +170,21 @@ class Items extends \App\Pages\Base
                 if ($qty > 0) {
                     $elist[$item->item_code] = $qty;
                 }
-
             }
-
         }
         $data = array('update' => array());
         foreach ($elist as $sku => $qty) {
 
             $data['update'][] = array('id' => $skulist[$sku], 'stock_quantity' => (string)$qty);
-
         }
 
         try {
             $client->post('products/batch', $data);
-
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
-
         }
         $this->setSuccess("refreshed_items", count($data['update']));
-
     }
 
     //обновление цен в  магазине    
@@ -232,27 +219,21 @@ class Items extends \App\Pages\Base
                 if ($price > 0) {
                     $elist[$item->item_code] = $price;
                 }
-
             }
-
         }
         $data = array('update' => array());
         foreach ($elist as $sku => $price) {
 
             $data['update'][] = array('id' => $skulist[$sku], 'price' => (string)$price, 'regular_price' => (string)$price);
-
         }
 
         try {
             $client->post('products/batch', $data);
-
         } catch(\Exception $ee) {
             $this->setError($ee->getMessage());
             return;
-
         }
         $this->setSuccess("refreshed_items", count($data['update']));
-
     }
 
     //импорт товара с  магазина
@@ -261,22 +242,24 @@ class Items extends \App\Pages\Base
         $common = System::getOptions("common");
 
         $client = \App\Modules\WC\Helper::getClient();
-        $i = 0;   
- 
-        $page=1;
+        $i = 0;
+
+        $page = 1;
         while(true) {
 
-           
+
             try {
-                $data = $client->get('products', array('status' => 'publish','page'=>$page,'per_page'=>100));
+                $data = $client->get('products', array('status' => 'publish', 'page' => $page, 'per_page' => 100));
             } catch(\Exception $ee) {
                 $this->setError($ee->getMessage());
                 return;
             }
             $page++;
-            
-            $c = count($data) ;
-            if($c==0) break;
+
+            $c = count($data);
+            if ($c == 0) {
+                break;
+            }
             foreach ($data as $product) {
 
                 if (strlen($product->sku) == 0) {
@@ -324,7 +307,6 @@ class Items extends \App\Pages\Base
                             $item->image_id = $image->image_id;
                             break;
                         }
-
                     }
                 }
 
@@ -334,7 +316,6 @@ class Items extends \App\Pages\Base
         }
 
         $this->setSuccess("loaded_items", $i);
-
     }
 
 }

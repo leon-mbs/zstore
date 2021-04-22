@@ -60,7 +60,6 @@ class PPOList extends \App\Pages\Base
         $this->docpan->add(new Label('docshow'))->setVisible(false);;
         $this->docpan->add(new DataView('doclist', new ArrayDataSource(new Prop($this, '_doclist')), $this, 'docOnRow'));
         $this->docpan->doclist->setSelectedClass('table-success');
-
     }
 
     public function filterOnSubmit($sender) {
@@ -108,9 +107,7 @@ class PPOList extends \App\Pages\Base
         $row->add(new Label('rn', $item->tr->Name));
 
         $row->add(new ClickLink('objdet', $this, 'onObj'));
-
     }
-
 
     public function onObj($sender) {
         $this->ppo = $sender->getOwner()->getDataItem();
@@ -135,13 +132,12 @@ class PPOList extends \App\Pages\Base
         }
         $res = json_decode($res['data']);
         foreach ($res->Shifts as $sh) {
-            $it = new   DataItem(array('openname'  => $sh->OpenName,
-                                       'closename' => $sh->CloseName,
-                                       'opened'    => $sh->Opened,
-                                       'closed'    => $sh->Closed,
-                                       'ShiftId'   => $sh->ShiftId
+            $it = new DataItem(array('openname'  => $sh->OpenName,
+                                     'closename' => $sh->CloseName,
+                                     'opened'    => $sh->Opened,
+                                     'closed'    => $sh->Closed,
+                                     'ShiftId'   => $sh->ShiftId
             ));
-
 
             $this->_shlist[] = $it;
         }
@@ -168,7 +164,6 @@ class PPOList extends \App\Pages\Base
         $row->add(new ClickLink('shdet', $this, 'onSh'));
     }
 
-
     public function onSh($sender) {
         $sh = $sender->getOwner()->getDataItem();
         $this->_doclist = array();
@@ -182,14 +177,11 @@ class PPOList extends \App\Pages\Base
         }
         $res = json_decode($res['data']);
         foreach ($res->Documents as $doc) {
-            $it = new   DataItem(array('NumFiscal' => $doc->NumFiscal,
-                                       'NumLocal'  => $doc->NumLocal,
-
-
-                                       'DocClass'     => $doc->DocClass,
-                                       'CheckDocType' => $doc->CheckDocType
+            $it = new DataItem(array('NumFiscal'    => $doc->NumFiscal,
+                                     'NumLocal'     => $doc->NumLocal,
+                                     'DocClass'     => $doc->DocClass,
+                                     'CheckDocType' => $doc->CheckDocType
             ));
-
 
             $this->_doclist[] = $it;
         }
@@ -205,9 +197,7 @@ class PPOList extends \App\Pages\Base
         $this->docpan->setVisible(false);
         $this->docpan->docshow->setVisible(false);
         $this->updateShifts();
-
     }
-
 
     public function docOnRow($row) {
 
@@ -242,4 +232,5 @@ class PPOList extends \App\Pages\Base
         $this->docpan->docshow->setVisible(true);
         $this->goAnkor('docshow');
     }
+
 }

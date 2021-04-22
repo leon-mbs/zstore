@@ -41,7 +41,6 @@ class Report
         $m = new \Mustache_Engine();
         $html = $m->render($template, $header);
 
-
         $html = str_replace("\n", "", $html);
         $html = str_replace("\r", "", $html);
         return $html;

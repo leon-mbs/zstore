@@ -6,12 +6,12 @@ use App\Helper as H;
 use Symfony\Polyfill\Mbstring\Mbstring;
 use Symfony\Polyfill\Uuid\Uuid;
 
-
 /**
  * Класс   со  вспомагательными   функциями
  */
 class Util
 {
+
     /**
      * генерация  GUID
      *
@@ -21,10 +21,7 @@ class Util
         $uuid = Uuid::uuid_create(Uuid::UUID_TYPE_RANDOM);
 
         return $uuid;
-
-
     }
-
 
     /**
      * возвращает первые  буквы
@@ -99,7 +96,6 @@ class Util
         return money2str_ru($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
     }
 
-
 //гривна на  русском    
     public static function money2str_rugr($number) {
 
@@ -162,7 +158,6 @@ class Util
             $from = $dt->startOfMonth()->timestamp;
             $list[] = array('number' => $dt->month, 'name' => $mlist[$dt->month], 'start' => $from, 'end' => $to);
             $dt->subMonth();
-
         }
         $list = array_reverse($list);
 
@@ -179,7 +174,6 @@ class Util
 define('M2S_KOPS_DIGITS', 0x01);    // digital copecks
 define('M2S_KOPS_MANDATORY', 0x02);    // mandatory copecks
 define('M2S_KOPS_SHORT', 0x04);    // shorten copecks
-
 
 function money2str_rugr($money, $options = 0) {
 
@@ -408,6 +402,7 @@ function money2str_us($money, $options = 0) {
 
     return trim($ret);
 }
+
 function money2str_eu($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
@@ -484,7 +479,6 @@ function money2str_eu($money, $options = 0) {
     return trim($ret);
 }
 
-
 function money2str_ua($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
@@ -560,7 +554,6 @@ function money2str_ua($money, $options = 0) {
 
     return trim($ret);
 }
-
 
 // service function to select the group of digits
 function dec_digits_group($number, $power, $digits = 1) {

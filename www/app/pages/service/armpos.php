@@ -32,14 +32,11 @@ class ARMPos extends \App\Pages\Base
     private $pos;
     private $_doc      = null;
     private $_rowid    = 0;
-
-
     private $_pt       = 0;
     private $_store_id = 0;
 
     public function __construct() {
         parent::__construct();
-
 
         if (false == \App\ACL::checkShowSer('ARMPos')) {
             return;
@@ -72,7 +69,6 @@ class ARMPos extends \App\Pages\Base
         $this->form2->add(new ClickLink('openshift', $this, 'OnOpenShift'));
         $this->form2->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
-
         //оплата
         $this->add(new Form('form3'))->setVisible(false);
         $this->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
@@ -82,7 +78,6 @@ class ARMPos extends \App\Pages\Base
         $this->form3->add(new Date('document_date'))->setDate(time());
         $this->form3->add(new TextArea('notes'));
         $this->form3->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
-
 
         $this->form3->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->form3->customer->onChange($this, 'OnChangeCustomer');
@@ -100,7 +95,6 @@ class ARMPos extends \App\Pages\Base
         $this->form4->add(new Label('showcheck'));
         $this->form4->add(new Button('newdoc'))->onClick($this, 'newdoc');
         $this->form4->add(new Button('print'));
-
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -122,13 +116,11 @@ class ARMPos extends \App\Pages\Base
         $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
         $this->editserdetail->add(new TextInput('editserprice'));
 
-
         $this->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
         $this->editserdetail->editser->onChange($this, 'OnChangeSer', true);
 
         $this->editserdetail->add(new Button('cancelser'))->onClick($this, 'cancelrowOnClick');
         $this->editserdetail->add(new SubmitButton('submitser'))->onClick($this, 'saveserOnClick');
-
 
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
@@ -138,20 +130,19 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
         /*
-              //Закрытие  смены
-              $this->add(new Form('zform'))->setVisible(false);
-              $this->zform->add(new TextInput('zformqnt'));
-              $this->zform->add(new TextInput('zformnal'));
-              $this->zform->add(new TextInput('zformbnal'));
-              $this->zform->add(new TextInput('zformcredit'));
-              $this->zform->add(new TextInput('zformprepaid'));
-              $this->zform->add(new TextInput('zformtotal'));
-              $this->zform->add(new Button('cancelzform'))->onClick($this, 'cancelzformOnClick');
-              $this->zform->add(new SubmitButton('savezform'))->onClick($this, 'savezformOnClick');
+          //Закрытие  смены
+          $this->add(new Form('zform'))->setVisible(false);
+          $this->zform->add(new TextInput('zformqnt'));
+          $this->zform->add(new TextInput('zformnal'));
+          $this->zform->add(new TextInput('zformbnal'));
+          $this->zform->add(new TextInput('zformcredit'));
+          $this->zform->add(new TextInput('zformprepaid'));
+          $this->zform->add(new TextInput('zformtotal'));
+          $this->zform->add(new Button('cancelzform'))->onClick($this, 'cancelzformOnClick');
+          $this->zform->add(new SubmitButton('savezform'))->onClick($this, 'savezformOnClick');
 
-          */
+         */
     }
-
 
     public function cancel2docOnClick($sender) {
 
@@ -201,7 +192,6 @@ class ARMPos extends \App\Pages\Base
         $this->form2->detail->Reload();
         $this->form2->detailser->Reload();
         $this->calcTotal();
-
 
         $this->form3->document_date->setDate(time());
         $this->form3->document_number->setText($this->_doc->nextNumber());
@@ -271,7 +261,6 @@ class ARMPos extends \App\Pages\Base
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store}) and  (item_code = {$code_} or bar_code = {$code_})");
 
-
         if ($item == null) {
             $this->setError("noitemcode", $code);
             return;
@@ -305,7 +294,6 @@ class ARMPos extends \App\Pages\Base
                     $this->editdetail->setVisible(true);
                     $this->form2->setVisible(false);
 
-
                     $this->editdetail->edittovar->setKey($item->item_id);
                     $this->editdetail->edittovar->setText($item->itemname);
                     $this->editdetail->editserial->setText('');
@@ -331,17 +319,14 @@ class ARMPos extends \App\Pages\Base
         $this->editdetail->editquantity->setText($tovar->quantity);
         $this->editdetail->editprice->setText($tovar->price);
         $this->editdetail->editserial->setText($tovar->snumber);
-        
-        
+
         $store = $this->form1->store->getValue();
         $qty = $tovar->getQuantity($store);
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
-         
-        
+
         $this->form2->setVisible(false);
         $this->_rowid = $tovar->rowid;
-
     }
 
     public function deleteOnClick($sender) {
@@ -363,7 +348,6 @@ class ARMPos extends \App\Pages\Base
 
         $this->form2->setVisible(false);
         $this->_rowid = $ser->rowid;
-
     }
 
     public function serdeleteOnClick($sender) {
@@ -408,10 +392,9 @@ class ARMPos extends \App\Pages\Base
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
-        
+
         $qstock = $item->getQuantity($store);
 
-     
         $item->price = H::fa($this->editdetail->editprice->getText());
 
         if ($item->quantity > $qstock) {
@@ -440,7 +423,6 @@ class ARMPos extends \App\Pages\Base
         $this->_itemlist[$item->rowid] = $item;
 
         $this->_rowid = 0;
-
 
         $this->editdetail->setVisible(false);
         $this->form2->setVisible(true);
@@ -481,7 +463,6 @@ class ARMPos extends \App\Pages\Base
         $this->_serlist[$ser->rowid] = $ser;
 
         $this->_rowid = 0;
-
 
         $this->editserdetail->setVisible(false);
         $this->form2->setVisible(true);
@@ -544,7 +525,6 @@ class ARMPos extends \App\Pages\Base
         $item = Item::load($id);
         $store = $this->form1->store->getValue();
 
-
         $price = $item->getPrice($this->form1->pricetype->getValue(), $store);
         $qty = $item->getQuantity($store);
 
@@ -593,7 +573,6 @@ class ARMPos extends \App\Pages\Base
         $this->form3->discount->setVisible(false);
         $total = $this->form3->total2->getText();
         $disc = 0;
-
 
         $customer_id = $this->form3->customer->getKey();
         if ($customer_id > 0) {
@@ -729,7 +708,6 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];
 
-
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->packDetails('services', $this->_serlist);
 
@@ -760,7 +738,6 @@ class ARMPos extends \App\Pages\Base
                     $this->pos->fiscdocnumber = $ret['docnumber'];
                     $this->pos->save();
                     $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-
                 }
                 if ($ret['success'] == false) {
                     $this->setError($ret['data']);
@@ -774,11 +751,8 @@ class ARMPos extends \App\Pages\Base
                     } else {
                         $this->setError("ppo_noretnumber");
                         return;
-
                     }
-
                 }
-
             }
 
 
@@ -800,7 +774,6 @@ class ARMPos extends \App\Pages\Base
         $this->form3->payment->setValue(H::getDefMF());
         $this->form3->setVisible(false);
         $this->form4->setVisible(true);
-
 
         $check = $this->_doc->generatePosReport();
         $this->form4->showcheck->setText($check, true);
@@ -827,7 +800,6 @@ class ARMPos extends \App\Pages\Base
         }
     }
 
-
     public function OnOpenShift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
         if ($ret['success'] == false && $ret['docnumber'] > 0) {
@@ -835,8 +807,6 @@ class ARMPos extends \App\Pages\Base
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
-
-
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -847,14 +817,11 @@ class ARMPos extends \App\Pages\Base
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
                 $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
-
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
-
         }
 
 
@@ -862,14 +829,12 @@ class ARMPos extends \App\Pages\Base
         return true;
     }
 
-
     public function OnCloseShift($sender) {
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();
         }
     }
-
 
     public function zform() {
 
@@ -885,8 +850,6 @@ class ARMPos extends \App\Pages\Base
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
-
-
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -899,15 +862,12 @@ class ARMPos extends \App\Pages\Base
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
-
             }
-
         }
 
 
         return true;
     }
-
 
     public function closeshift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
@@ -916,8 +876,6 @@ class ARMPos extends \App\Pages\Base
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
-
-
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -930,7 +888,6 @@ class ARMPos extends \App\Pages\Base
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
-
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
         }

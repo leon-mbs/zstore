@@ -16,7 +16,6 @@ class Task extends Document
     protected function init() {
         parent::init();
         // $this->tasktype = 0;//0 - услуги,1- производство
-
     }
 
     public function generateReport() {
@@ -37,8 +36,7 @@ class Task extends Document
                               "desc"         => $ser->desc,
                               "quantity"     => H::fqty($ser->quantity),
                               "cost"         => H::fa($ser->cost * $ser->quantity),
-
-                              "hours" => $ser->hours * $ser->qty
+                              "hours"        => $ser->hours * $ser->qty
             );
         }
 
@@ -67,7 +65,6 @@ class Task extends Document
                                   "itemname" => $item->itemname,
                                   "desc"     => $item->desc,
                                   "quantity" => H::fqty($item->quantity));
-
         }
 
 
@@ -93,7 +90,6 @@ class Task extends Document
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-
 
         foreach ($this->unpackDetails('detaildata') as $ser) {
 

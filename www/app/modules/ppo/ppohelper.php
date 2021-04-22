@@ -2,15 +2,15 @@
 
 namespace App\Modules\PPO;
 
-use  \App\Helper as H;
+use \App\Helper as H;
 
 /**
  * Вспомагательный  класс для  фискализации
  */
 class PPOHelper
 {
-    const  DPI = "http://80.91.165.208:8609/fs/";
 
+    const DPI = "http://80.91.165.208:8609/fs/";
 
     /**
      * цифровая подпись  данных
@@ -22,7 +22,6 @@ class PPOHelper
     public static function sign($data, $server, $port) {
 
         $server = rtrim($server, '/');
-
 
         $request = curl_init();
 
@@ -42,15 +41,12 @@ class PPOHelper
         if (curl_errno($request) > 0) {
 
             return array('success' => false, 'data' => 'Curl error: ' . curl_error($request));
-
         }
 
         curl_close($request);
         $ret = json_decode($ret, true);
 
-
         return array('success' => true, 'data' => base64_decode($ret['data']));
-
     }
 
     /**
@@ -77,20 +73,15 @@ class PPOHelper
             CURLOPT_POSTFIELDS     => base64_encode($data)
         ]);
 
-
         if (curl_errno($request) > 0) {
             return array('success' => false, 'data' => 'Curl error: ' . curl_error($request));
-
-
         }
         $ret = (curl_exec($request));
 
         curl_close($request);
         $data = json_decode($ret, true);
         return array('success' => true, 'data' => base64_decode($data['data']));
-
     }
-
 
     /**
      * Отправка  данных  в  налоговую
@@ -138,13 +129,10 @@ class PPOHelper
                 if ($arr[count($arr) - 1] > 0) {
                     return array('success' => false, 'docnumber' => $arr[count($arr) - 1], 'data' => $return);
                 }
-
-
             }
             if (strpos($return, 'помилки') > 0) {
 
                 return array('success' => false, 'data' => $return);
-
             }
 
             //декодируем  подписаный ответ
@@ -163,29 +151,22 @@ class PPOHelper
                         $taxnum = (string)($xml->ORDERTAXNUM[0]);
                         $taxnumloc = (string)($xml->ORDERNUM[0]);
 
-                        if ($errorcode == '0' && $taxnum > 0)   //следующий номер  документа
-                        {
+                        if ($errorcode == '0' && $taxnum > 0) {   //следующий номер  документа
                             return array('success' => true, 'docnumber' => $taxnum, 'doclocnumber' => $taxnumloc, 'data' => $return);
-
                         }
                         return array('success' => false, 'data' => $errorcode);
-
                     }
 
                     return array('success' => true, 'data' => $decrypted['data']);
                 } else {
                     return array('success' => false, 'data' => $decrypted['data']);
                 }
-
             } else {
                 return array('success' => true, 'data' => $return);;
             }
-
-
         } else {
             return array('success' => false, 'data' => $signed['data']);
         }
-
     }
 
     /**
@@ -199,7 +180,6 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($posid);
 
         $firm = \App\Helper::getFirmData($pos->firm_id);
-
 
         $header = array();
         $header['doctype'] = $open == true ? 100 : 101;
@@ -216,20 +196,14 @@ class PPOHelper
         $header['username'] = \App\System::getUser()->username;
         $header['guid'] = \App\Util::guid();
 
-
         $report = new \App\Report('shift.xml');
 
         $xml = $report->generate($header);
 
-
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
 
-
         return self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
-
-
     }
-
 
     /**
      * отправка  z-отчета
@@ -242,7 +216,6 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($posid);
 
         $firm = \App\Helper::getFirmData($pos->firm_id);
-
 
         $header = array();
         $header['doctype'] = $open == true ? 100 : 101;
@@ -264,7 +237,6 @@ class PPOHelper
         $amountr = 0;
         $cnt = $stat['cnt'];
         $cntr = $rstat['cnt'];
-
 
         //реализация
 
@@ -352,7 +324,6 @@ class PPOHelper
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
 
         return self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
-
     }
 
     /**
@@ -384,14 +355,12 @@ class PPOHelper
         $header['username'] = $doc->username;
         $header['guid'] = \App\Util::guid();
 
-
         $header['disc'] = $doc->headerdata["paydisc"] > 0 ? number_format($doc->headerdata["paydisc"], 2, '.', '') : false;
         $header['details'] = array();
         $n = 1;
         $disc = 1;
         if ($doc->headerdata["paydisc"] > 0) {
             $disc = 1 - ($doc->headerdata["paydisc"] / $doc->amount);
-
         }
         $header['amount'] = 0;
         foreach ($doc->unpackDetails('detaildata') as $item) {
@@ -449,7 +418,6 @@ class PPOHelper
                 if ($doc->payed < $doc->payamount) {
                     $pay['paysum'] = number_format($doc->payamount, 2, '.', '');
                     $pay['payed'] = number_format($doc->payed, 2, '.', '');
-
                 }
                 $header['pays'][] = $pay;
                 $n++;
@@ -472,7 +440,6 @@ class PPOHelper
                 if ($doc->payed < $doc->payamount) {
                     $pay['paysum'] = number_format($doc->payed, 2, '.', '');
                     $pay['payed'] = number_format($doc->payed, 2, '.', '');
-
                 }
 
                 $header['pays'][] = $pay;
@@ -502,13 +469,11 @@ class PPOHelper
         $header['amount'] = number_format($header['amount'], 2, '.', '');
         if ($doc->headerdata["paydisc"] > 0) {
             // $header['disc']  = number_format($doc->headerdata["paydisc"], 2, '.', '') ;
-
         }
         $report = new \App\Report('check.xml');
 
         $xml = $report->generate($header);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-
 
         $ret = self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
         if ($ret['success'] == true) {
@@ -517,8 +482,6 @@ class PPOHelper
         }
 
         return $ret;
-
-
     }
 
     /**
@@ -532,7 +495,6 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($pos_id);
         $firm = \App\Helper::getFirmData($pos->firm_id);
         $mf = \App\Entity\MoneyFund::load($payment);
-
 
         $header = array();
 
@@ -554,7 +516,6 @@ class PPOHelper
         $amount2 = 0;
         $amount3 = 0;
 
-
         if ($mf != null && $mf->beznal == 1) {
             $header['formname'] = H::l('ppo_bnal');
             $header['formcode'] = 1;
@@ -568,7 +529,6 @@ class PPOHelper
         $header['pay'] = $payed > 0;
         $header['paysum'] = number_format($payed, 2, '.', '');
         $header['payed'] = number_format($payed, 2, '.', '');
-
 
         $header['parentcheck'] = $doc->document_number;
         $header['amount'] = number_format($payed, 2, '.', '');
@@ -587,8 +547,6 @@ class PPOHelper
         }
 
         return $ret;
-
-
     }
 
     /**
@@ -602,7 +560,6 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
         $firm = \App\Helper::getFirmData($pos->firm_id);
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
-
 
         $header = array();
         $header['doctype'] = $doctype;
@@ -624,7 +581,6 @@ class PPOHelper
         $amount1 = 0;
         $amount2 = 0;
         $amount3 = 0;
-
 
         if ($mf != null && $mf->beznal == 1) {
             $header['formname'] = H::l('ppo_bnal');
@@ -664,7 +620,6 @@ class PPOHelper
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
 
-
         $ret = self::send($xml, 'doc', $firm['pposerver'], $firm['pposerverport'], true);
         if ($ret['success'] == true) {
 
@@ -673,7 +628,6 @@ class PPOHelper
         }
 
         return $ret;
-
     }
 
     //функции работы  со статистикой  для  z-отчета 
@@ -686,14 +640,12 @@ class PPOHelper
         $sql = "insert into ppo_zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon) values ({$pos_id},{$checktype}, {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . ")";
 
         $conn->Execute($sql);
-
     }
 
     public static function clearStat($pos_id) {
         $conn = \ZDB\DB::getConnect();
 
         $conn->Execute("delete from ppo_zformstat where  pos_id=" . $pos_id);
-
     }
 
     public static function getStat($pos_id, $ret = false) {
@@ -708,8 +660,6 @@ class PPOHelper
 
 
         return $conn->GetRow($sql);
-
     }
 
 }
- 

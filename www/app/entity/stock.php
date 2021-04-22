@@ -122,7 +122,6 @@ class Stock extends \ZCL\DB\Entity
             } else {
                 return $stock->qty;
             }
-
         }
     }
 
@@ -152,8 +151,6 @@ class Stock extends \ZCL\DB\Entity
             }
         }
         if ($qty > 0) {  // если не  достаточно
-
-
             if ($last != null) {
                 $last->quantity += $qty; //остаток  пишем  к  последней партии
             } else {
@@ -176,8 +173,6 @@ class Stock extends \ZCL\DB\Entity
                     $last->partion = $lastpartion;
                     $last->snumber = $item->snumber;
                     $last->sdate = $item->sdate;
-
-
                 } else {
                     // $last->partion = $item->price;
                 }
@@ -190,4 +185,3 @@ class Stock extends \ZCL\DB\Entity
     }
 
 }
- 

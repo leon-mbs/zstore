@@ -45,7 +45,6 @@ class CustomerList extends \App\Pages\Base
         $this->add(new Form('leadf'));
         $this->leadf->add(new CheckBox('chleads'))->onChange($this, 'OnLeadMode');
 
-
         $this->add(new Form('filter'))->onSubmit($this, 'OnSearch');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchtype', array(Customer::TYPE_BAYER => Helper::l("bayers"), Customer::TYPE_SELLER => Helper::l("sellers"), 5 => Helper::l("holdings")), 0));
@@ -54,12 +53,11 @@ class CustomerList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchleadsource', Customer::getLeadSources(), "0"));
         $this->filter->add(new DropDownChoice('searchleadstatus', Customer::getLeadStatuses(), "0"));
 
-
         $this->add(new Panel('customertable'))->setVisible(true);
         $this->customertable->add(new DataView('customerlist', new CustomerDataSource($this), $this, 'customerlistOnRow'));
         $this->customertable->customerlist->setPageSize(Helper::getPG());
         $this->customertable->add(new \Zippy\Html\DataList\Paginator('pag', $this->customertable->customerlist));
-    
+
         $this->customertable->customerlist->Reload();
         $this->customertable->add(new SortLink("sortdoc", "docs", $this, "onSort"));
         $this->customertable->add(new SortLink("sortname", "customer_name", $this, "onSort"));
@@ -105,7 +103,6 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->add(new Form('conlstform'));
         $this->contentview->conlstform->add(new DropDownChoice('conleadstatus', Customer::getLeadStatuses()))->onChange($this, 'OnSelStatus');
 
-
         $this->contentview->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $this->contentview->addfileform->add(new \Zippy\Html\Form\File('addfile'));
         $this->contentview->addfileform->add(new TextInput('adddescfile'));
@@ -136,7 +133,6 @@ class CustomerList extends \App\Pages\Base
 
         $this->leadsourcesform->add(new DataView('leadsourceslist', new ArrayDataSource(new Bind($this, '_leadsourceslist')), $this, 'leadsourceListOnRow'));
 
-
         $this->add(new Form('leadstatusesform'))->setVisible(false);
         $this->leadstatusesform->add(new SubmitButton('leadstatussave'))->onClick($this, 'OnSaveLeadStatus');
         $this->leadstatusesform->add(new SubmitLink('addnewstatus'))->onClick($this, 'OnAddLeadStatus');
@@ -144,9 +140,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->leadstatusesform->add(new DataView('leadstatuseslist', new ArrayDataSource(new Bind($this, '_leadstatuseslist')), $this, 'leadstatusListOnRow'));
 
-
         $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));
-
 
         if ($id > 0) {
             $this->_customer = Customer::load($id);
@@ -163,8 +157,6 @@ class CustomerList extends \App\Pages\Base
         $this->_tvars['leadmode'] = $sender->isChecked();
         $this->filter->clean();
         $this->customertable->customerlist->Reload();
-
-
     }
 
     public function OnSearch($sender) {
@@ -194,10 +186,9 @@ class CustomerList extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
         $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
-        if($item->customer_id== $this->_customer->customer_id) {
+        if ($item->customer_id == $this->_customer->customer_id) {
             $row->setAttribute('class', 'table-success');
         }
-  
     }
 
     public function onSort($sender) {
@@ -206,9 +197,7 @@ class CustomerList extends \App\Pages\Base
 
         $this->customertable->sortdoc->Reset();
 
-
         $this->customertable->customerlist->setSorting($sortfield, $sortdir);
-
 
         $sender->fileld = $sortfield;
         $sender->dir = $sortdir;
@@ -244,7 +233,6 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editdisabled->setChecked($this->_customer->status == 1);
         $this->customerdetail->editjurid->setChecked($this->_customer->jurid);
         $this->customerdetail->editisholding->setChecked($this->_customer->isholding);
-
     }
 
     public function deleteOnClick($sender) {
@@ -308,14 +296,12 @@ class CustomerList extends \App\Pages\Base
                 $this->setError("enterleadstatus");
                 return;
             }
-
-
         } else {
-            
+
             $this->_customer->status = $this->customerdetail->editdisabled->isChecked() ? 1 : 0;
         }
         $this->_customer->nosubs = $this->customerdetail->editnosubs->isChecked() ? 1 : 0;
-        
+
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
         if ($this->_customer->isholding == 1 && $this->_customer->holding > 0) {
@@ -377,7 +363,6 @@ class CustomerList extends \App\Pages\Base
         $doc = \App\Entity\Doc\Document::getFirst("customer_id=" . $this->_customer->customer_id, 'document_id desc');
         if ($doc instanceof \App\Entity\Doc\Document) {
             $lastdoc = Helper::l('custlastdoc', $doc->document_number, Helper::fd($doc->document_date), $this->_customer->docs);
-
         }
 
         $this->contentview->concreated->setText($created);
@@ -531,7 +516,6 @@ class CustomerList extends \App\Pages\Base
     public function eventListOnRow(DataRow $row) {
         $event = $row->getDataItem();
 
-
         $row->add(new Label('eventtitle', $event->title));
 
         $row->add(new Label("eventdesc"))->setText($event->description);
@@ -539,7 +523,6 @@ class CustomerList extends \App\Pages\Base
 
         $row->add(new ClickLink('delevent'))->onClick($this, 'deleteEventOnClick');
     }
-
 
     //удаление коментария
     public function deleteEventOnClick($sender) {
@@ -549,13 +532,10 @@ class CustomerList extends \App\Pages\Base
         $this->customertable->customerlist->Reload(false);
     }
 
-
     public function contrListOnRow(DataRow $row) {
         $contr = $row->getDataItem();
 
-
         $row->add(new Label('contract_desc', $contr->shortdesc));
-
 
         $row->add(new ClickLink('contract'))->onClick($this, 'contractOnClick');
         $row->contract->setValue($contr->contract_number);
@@ -571,7 +551,6 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->leadstatus = $sender->getValue();
         $this->_customer->save();
         $this->customertable->customerlist->Reload();
-
     }
 
     public function onConvert($sender) {
@@ -584,7 +563,6 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->fromlead = 1;
 
         $this->show();
-
     }
 
     //редактирование  источников
@@ -611,7 +589,6 @@ class CustomerList extends \App\Pages\Base
 
         $this->filter->searchleadsource->setOptionList(Customer::getLeadSources());
         $this->customerdetail->editleadsource->setOptionList(Customer::getLeadSources());
-
     }
 
     public function OnAddLeadSource($sender) {
@@ -620,21 +597,17 @@ class CustomerList extends \App\Pages\Base
         $ls->id = time();
         $this->_leadsourceslist[$ls->id] = $ls;
         $this->leadsourcesform->leadsourceslist->Reload();
-
-
     }
 
     public function OnCancelLeadSource($sender) {
         $this->customertable->setVisible(true);
         $this->leadsourcesform->setVisible(false);
-
     }
-
 
     public function leadsourceListOnRow(DataRow $row) {
         $item = $row->getDataItem();
-        $row->add(new TextInput('leadsourcename', new  Bind($item, 'name')));
-        $row->add(new  ClickLink('delsource', $this, 'onDelLeadSource'));
+        $row->add(new TextInput('leadsourcename', new Bind($item, 'name')));
+        $row->add(new ClickLink('delsource', $this, 'onDelLeadSource'));
     }
 
     public function onDelLeadSource($sender) {
@@ -643,7 +616,6 @@ class CustomerList extends \App\Pages\Base
         $this->_leadsourceslist = array_diff_key($this->_leadsourceslist, array($item->id => $this->_leadsourceslist[$item->id]));
 
         $this->leadsourcesform->leadsourceslist->Reload();
-
     }
 
     //редактирование  состояний
@@ -668,10 +640,8 @@ class CustomerList extends \App\Pages\Base
         $options['leadstatuses'] = $this->_leadstatuseslist;
         System::setOptions('common', $options);
 
-
         $this->filter->searchleadstatus->setOptionList(Customer::getLeadStatuses());
         $this->customerdetail->editleadstatus->setOptionList(Customer::getLeadStatuses());
-
     }
 
     public function OnAddLeadStatus($sender) {
@@ -680,21 +650,17 @@ class CustomerList extends \App\Pages\Base
         $ls->id = time();
         $this->_leadstatuseslist[$ls->id] = $ls;
         $this->leadstatusesform->leadstatuseslist->Reload();
-
-
     }
 
     public function OnCancelLeadStatus($sender) {
         $this->customertable->setVisible(true);
         $this->leadstatusesform->setVisible(false);
-
     }
-
 
     public function leadstatusListOnRow(DataRow $row) {
         $item = $row->getDataItem();
-        $row->add(new TextInput('leadstatusname', new  Bind($item, 'name')));
-        $row->add(new  ClickLink('delstatus', $this, 'onDelLeadStatus'));
+        $row->add(new TextInput('leadstatusname', new Bind($item, 'name')));
+        $row->add(new ClickLink('delstatus', $this, 'onDelLeadStatus'));
     }
 
     public function onDelLeadStatus($sender) {
@@ -703,9 +669,7 @@ class CustomerList extends \App\Pages\Base
         $this->_leadstatuseslist = array_diff_key($this->_leadstatuseslist, array($item->id => $this->_leadstatuseslist[$item->id]));
 
         $this->leadstatusesform->leadstatuseslist->Reload();
-
     }
-
 
     public function showStat($sender) {
         $this->customertable->setVisible(false);
@@ -726,7 +690,6 @@ class CustomerList extends \App\Pages\Base
         $data = array();
         $color = array();
 
-
         foreach ($rs as $row) {
             $data[] = $row['cnt'];
             $title[] = $row['leadstatus'];
@@ -735,7 +698,6 @@ class CustomerList extends \App\Pages\Base
         $this->_tvars['gr1title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
         $this->_tvars['gr1data'] = json_encode($data);
         $this->_tvars['gr1color'] = json_encode($color);
-
 
         $sql = " 
          SELECT   leadsource,coalesce(count(*),0) as cnt   FROM customers 
@@ -750,7 +712,6 @@ class CustomerList extends \App\Pages\Base
         $title = array();
         $data = array();
         $color = array();
-
 
         foreach ($rs as $row) {
             $data[] = $row['cnt'];
@@ -775,7 +736,6 @@ class CustomerList extends \App\Pages\Base
         $data = array();
         $color = array();
 
-
         foreach ($rs as $row) {
             $data[] = $row['cnt'];
             $title[] = $row['leadsource'];
@@ -784,18 +744,18 @@ class CustomerList extends \App\Pages\Base
         $this->_tvars['gr3title'] = json_encode($title, JSON_UNESCAPED_UNICODE);
         $this->_tvars['gr3data'] = json_encode($data);
         $this->_tvars['gr3color'] = json_encode($color);
-
-
     }
 
     public function closeStat($sender) {
         $this->customertable->setVisible(true);
         $this->statpan->setVisible(false);
     }
+
 }
 
 class CustomerDataSource implements \Zippy\Interfaces\DataSource
 {
+
     private $page;
 
     public function __construct($page) {
@@ -806,7 +766,6 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
 
 
         $conn = \ZDB\DB::getConnect();
-
 
         $type = $this->page->filter->searchtype->getValue();
         $holding = $this->page->filter->searchholding->getValue();
@@ -836,7 +795,6 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
             $searchleadsource = $this->page->filter->searchleadsource->getValue();
             $searchleadstatus = $this->page->filter->searchleadstatus->getValue();
 
-
             $where = "status = 2 ";
             if (strlen($search) > 0) {
                 $search = Customer::qstr('%' . $search . '%');
@@ -850,8 +808,6 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
                 $searchleadstatus = Customer::qstr($searchleadstatus);
                 $where .= " and (leadstatus =  {$searchleadstatus}    )";
             }
-
-
         }
 
         return $where;
@@ -864,8 +820,6 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         return Customer::find($this->getWhere(), $sortfield . " " . $asc, $count, $start, "*, coalesce(  (select  count(*) from  documents where  documents.customer_id= customers_view.customer_id and documents.state>3 ),0)  as docs");
-
-
     }
 
     public function getItem($id) {
@@ -873,4 +827,3 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
-  

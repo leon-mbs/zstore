@@ -49,7 +49,6 @@ class Inventory extends Document
                     $sc->save();
                 }
             }
-
         }
 
         return true;

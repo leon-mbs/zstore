@@ -16,13 +16,11 @@ class Subscribe extends \ZCL\DB\Entity
 
     //типы  событий
     const EVENT_DOCSTATE = 1;
-
     //типы сообщений
     const MSG_NOTIFY = 1;
     const MSG_EMAIL  = 2;
     const MSG_SMS    = 3;
     const MSG_VIBER  = 4;
-
     //типы  получателей
     const RSV_CUSTOMER  = 1;
     const RSV_DOCAUTHOR = 2;
@@ -66,19 +64,16 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<username>{$this->username}</username>";
         $this->detail .= "<msgsubject>{$this->msgsubject}</msgsubject>";
 
-
         $this->detail .= "</detail>";
 
         return true;
     }
-
 
     public static function getEventList() {
         $list = array();
         $list[self::EVENT_DOCSTATE] = H::l("sb_docstate");
 
         return $list;
-
     }
 
     public static function getMsgTypeList() {
@@ -89,7 +84,6 @@ class Subscribe extends \ZCL\DB\Entity
         //  $list[self::MSG_VIBER]=  H::l("sb_msgviber");
 
         return $list;
-
     }
 
     public static function getRecieverList() {
@@ -98,9 +92,7 @@ class Subscribe extends \ZCL\DB\Entity
         $list[self::RSV_DOCAUTHOR] = H::l("sb_rsvda");
         $list[self::RSV_USER] = H::l("sb_rsvuser");
 
-
         return $list;
-
     }
 
     //изменение  состояние  документа
@@ -125,7 +117,6 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $c->phone;
                     // $viber = $c->viber;
                     $email = $c->email;
-
                 }
             }
             if ($sub->reciever_type == self::RSV_DOCAUTHOR) {
@@ -135,9 +126,7 @@ class Subscribe extends \ZCL\DB\Entity
                     //   $viber = $u->viber;
                     $email = $u->email;
                     $notify = $doc->user_id;
-
                 }
-
             }
             if ($sub->reciever_type == self::RSV_USER) {
                 $u = \App\Entity\User::load($sub->user_id);
@@ -146,9 +135,7 @@ class Subscribe extends \ZCL\DB\Entity
                     //  $viber = $u->viber;   
                     $email = $u->email;
                     $notify = $doc->user_id;
-
                 }
-
             }
             $text = $sub->getText($doc);
             if (strlen($phone) > 0 && $sub->msg_type == self::MSG_SMS) {
@@ -163,9 +150,7 @@ class Subscribe extends \ZCL\DB\Entity
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
             }
-
         }
-
     }
 
     /**
@@ -189,22 +174,26 @@ class Subscribe extends \ZCL\DB\Entity
         $header['mf'] = '';
         $header['pos'] = '';
         $header['nal'] = '';
-        if($doc->headerdata['payment']>0 && $doc->headerdata['payment']<10000) {
-             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);    
-             $header['mf'] = $mf->mf_name;
-             if($mf->beznal==1) {
-                 $header['nal'] = \App\Helper::l("cbeznal");
-             }  else {
-                 $header['nal'] = \App\Helper::l("cnal");
-             } 
+        if ($doc->headerdata['payment'] > 0 && $doc->headerdata['payment'] < 10000) {
+            $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+            $header['mf'] = $mf->mf_name;
+            if ($mf->beznal == 1) {
+                $header['nal'] = \App\Helper::l("cbeznal");
+            } else {
+                $header['nal'] = \App\Helper::l("cnal");
+            }
         }
-       if($doc->headerdata['nal']== \App\Entity\MoneyFund::CREDIT)    $header['mf'] = \App\Helper::l("credit");
-       if($doc->headerdata['nal']== \App\Entity\MoneyFund::PREPAID)    $header['mf'] = \App\Helper::l("prepaid");
-      
-       if($doc->headerdata['pos']) {
-           $pos =  \App\Entity\Pos::load($doc->headerdata['pos']);
-           $header['pos']  =  $pos->pos_name;
-       }
+        if ($doc->headerdata['nal'] == \App\Entity\MoneyFund::CREDIT) {
+            $header['mf'] = \App\Helper::l("credit");
+        }
+        if ($doc->headerdata['nal'] == \App\Entity\MoneyFund::PREPAID) {
+            $header['mf'] = \App\Helper::l("prepaid");
+        }
+
+        if ($doc->headerdata['pos']) {
+            $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
+            $header['pos'] = $pos->pos_name;
+        }
 
         $table = array();
         foreach ($doc->unpackDetails('detaildata') as $item) {
@@ -225,16 +214,11 @@ class Subscribe extends \ZCL\DB\Entity
             $m = new \Mustache_Engine();
             $text = $m->render($this->msgtext, $header);
 
-
             return $text;
-
         } catch(\Exception $e) {
             return "Ошибка  разметки";
         }
-
-
     }
-
 
     public static function sendEmail($email, $text, $subject) {
         $common = System::getOptions("common");
@@ -259,7 +243,6 @@ class Subscribe extends \ZCL\DB\Entity
             $sms = System::getOptions("sms");
 
             if ($sms['smstype'] == 1) {  //semy sms
-
                 $data = array(
                     "phone"  => $phone,
                     "msg"    => $text,
@@ -277,7 +260,6 @@ class Subscribe extends \ZCL\DB\Entity
                 if (curl_errno($curl) > 0) {
 
                     return 'Curl error: ' . curl_error($curl);
-
                 }
                 curl_close($curl);
                 $output = json_decode($output, true);
@@ -287,10 +269,8 @@ class Subscribe extends \ZCL\DB\Entity
                 } else {
                     return '';
                 }
-
             }
             if ($sms['smstype'] == 2) {  //turbo sms
-
                 $json = '{
                "recipients":[
                   "' . $phone . '" 
@@ -314,7 +294,6 @@ class Subscribe extends \ZCL\DB\Entity
                 if (curl_errno($curl) > 0) {
 
                     return 'Curl error: ' . curl_error($curl);
-
                 }
                 curl_close($curl);
                 $output = json_decode($output, true);
@@ -324,10 +303,8 @@ class Subscribe extends \ZCL\DB\Entity
                 } else {
                     return '';
                 }
-
             }
             if ($sms['smstype'] == 3) {  //sms  fly
-
                 // $text = iconv('windows-1251', 'utf-8', htmlspecialchars('Заметьте, что когда герой фильма подписывает договор с Сатаной, он не подписывает копию договора и не получает ее.'));
                 $an = '';
                 if (strlen($sms['flysmsan']) > 0) {
@@ -359,7 +336,6 @@ class Subscribe extends \ZCL\DB\Entity
                 if (curl_errno($ch) > 0) {
 
                     return 'Curl error: ' . curl_error($ch);
-
                 }
                 curl_close($ch);
                 if (strpos($response, 'ACCEPT') > 0) {
@@ -367,14 +343,11 @@ class Subscribe extends \ZCL\DB\Entity
                 }
                 \App\Helper::logerror($response);
                 return $response;
-
-
             }
         } catch(\Exception $e) {
             \App\Helper::logerror($e->getMessage());
             return $e->getMessage();
         }
-
     }
 
 }

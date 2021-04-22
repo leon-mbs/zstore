@@ -1,14 +1,13 @@
 <?php
 
-
 namespace App\API;
 
 use \App\Entity\Customer;
 use \App\Helper as H;
 
-
 class customers extends \App\API\Base\JsonRPC
 {
+
     //список  контрагентов
     public function list() {
         $list = array();
@@ -23,8 +22,6 @@ class customers extends \App\API\Base\JsonRPC
                 'city'          => $cust->city,
                 'address'       => $cust->address,
                 'description'   => base64_encode($cust->comment)
-
-
             );
 
             $list[] = $c;
@@ -38,7 +35,7 @@ class customers extends \App\API\Base\JsonRPC
             $cust = Customer::load($args['customer_id'] > 0);
         }
         if ($cust == null) {
-            $cust = new  Customer();
+            $cust = new Customer();
         }
         $cust->customer_name = $args['customer_name'];
         $cust->phone = $args['phone'];
@@ -48,12 +45,11 @@ class customers extends \App\API\Base\JsonRPC
         $cust->comment = base64_encode($args['description']);
 
         if (strlen($cust->customer_name) == 0) {
-            throw  new \Exception(H::l("entername"));
+            throw new \Exception(H::l("entername"));
         }
 
         $cust->save();
         return array('customer_id' => $cust->customer_id);
     }
-
 
 }

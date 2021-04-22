@@ -39,10 +39,10 @@
         <td colspan="2"> С/Н {{serial}}</td>
     </tr>
     {{/isdevice}}
-    
-   {{#iswork}}
-    
-    
+
+    {{#iswork}}
+
+
     <tr>
         <td colspan="2">Работы:</td>
     </tr>
@@ -57,12 +57,12 @@
         <td align="right">Всего:</td>
         <td align="right">{{total}}</td>
     </tr>
-  
-    
+
+
     {{/iswork}}
-  
+
     {{#ispay}}
-    
+
     <tr>
         <td colspan="2">Оплаты:</td>
     </tr>

@@ -30,7 +30,6 @@ class GoodsIssue extends Document
                     $s = ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
                 }
                 $name .= $s;
-
             }
             if ($item->weight > 0) {
                 $weight += $item->weight;
@@ -41,11 +40,9 @@ class GoodsIssue extends Document
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
                               "msr"        => $item->msr,
-
-                              "price"  => H::fa($item->price),
-                              "amount" => H::fa($item->quantity * $item->price)
+                              "price"      => H::fa($item->price),
+                              "amount"     => H::fa($item->quantity * $item->price)
             );
-
         }
 
         $totalstr = H::sumstr($this->amount);
@@ -61,14 +58,13 @@ class GoodsIssue extends Document
                         "store_name"      => $this->headerdata["store_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
                         "document_number" => $this->document_number,
-
-                        "totalstr"  => $totalstr,
-                        "total"     => H::fa($this->amount),
-                        "payed"     => H::fa($this->payed),
-                        "paydisc"   => H::fa($this->headerdata["paydisc"]),
-                        "isdisc"    => $this->headerdata["paydisc"] > 0,
-                        "prepaid"   => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
-                        "payamount" => H::fa($this->payamount)
+                        "totalstr"        => $totalstr,
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed),
+                        "paydisc"         => H::fa($this->headerdata["paydisc"]),
+                        "isdisc"          => $this->headerdata["paydisc"] > 0,
+                        "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
+                        "payamount"       => H::fa($this->payamount)
         );
 
         if ($this->headerdata["contract_id"] > 0) {
@@ -112,8 +108,6 @@ class GoodsIssue extends Document
 
                             $sc->save();
                         }
-
-
                     }
                 }
 
@@ -122,17 +116,13 @@ class GoodsIssue extends Document
 
                 if ($price == 0) {
                     throw new \Exception(H::l('noselfprice', $item->itemname));
-
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
 
-
                 $sc->save();
-
-
             }
 
 
@@ -143,12 +133,10 @@ class GoodsIssue extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
-                $sc->setOutPrice($item->price * $k  );  
+                $sc->setOutPrice($item->price * $k);
                 $sc->save();
                 $amount += $item->price * $k * $st->quantity;
             }
-
-
         }
 
 
@@ -171,7 +159,6 @@ class GoodsIssue extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-
         }
 
         return true;
@@ -190,7 +177,6 @@ class GoodsIssue extends Document
     protected function getNumberTemplate() {
         return 'РН-000000';
     }
-
 
     public function generatePosReport() {
 
@@ -216,9 +202,7 @@ class GoodsIssue extends Document
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount)
-
         );
-
 
         $report = new \App\Report('doc/goodsissue_bill.tpl');
 
@@ -226,7 +210,6 @@ class GoodsIssue extends Document
 
         return $html;
     }
-
 
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_POS, self::EX_PDF);

@@ -61,7 +61,6 @@ class ServiceAct extends Document
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
-
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
             $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), $ser->quantity);
@@ -69,12 +68,9 @@ class ServiceAct extends Document
 
             $sc->setExtCode($ser->price); //Для АВС 
             //$sc->setCustomer($this->customer_id);
-            $sc->setOutPrice( $item->price   );  
+            $sc->setOutPrice($item->price);
             $sc->save();
         }
-
-
-      
     }
 
     public function Pay() {
@@ -85,6 +81,7 @@ class ServiceAct extends Document
             }
         }
     }
+
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
@@ -112,8 +109,8 @@ class ServiceAct extends Document
                         "phone"           => $firm['phone'],
                         "customer_name"   => $this->headerdata['customer_name'],
                         "isdevice"        => strlen($this->headerdata["device"]) > 0,
-                        "device"          => $this->headerdata["device"] ,
-                        "serial"          => $this->headerdata["devsn"] ,
+                        "device"          => $this->headerdata["device"],
+                        "serial"          => $this->headerdata["devsn"],
                         "total"           => H::fa($this->amount)
         );
         if (strlen($this->headerdata['gar']) > 0) {
@@ -129,7 +126,7 @@ class ServiceAct extends Document
                               "amount"       => H::fa($ser->price * $ser->quantity)
             );
         }
-        $header['iswork'] = count($detail)>0;
+        $header['iswork'] = count($detail) > 0;
         $header['slist'] = $detail;
 
         $pays = \App\Entity\Pay::getPayments($this->document_id);

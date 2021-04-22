@@ -9,13 +9,10 @@ class Calendar extends \Zippy\Html\HtmlComponent implements \Zippy\Interfaces\Re
     private $data  = array();
     private $view  = 'dayGridMonth';
 
-
     public function __construct($id) {
         parent::__construct($id);
         $this->view = 'dayGridMonth';
-
     }
-
 
     public final function RenderImpl() {
         global $_config;
@@ -122,7 +119,6 @@ EOT;
         $action['days'] = $params[4];
         $action['ms'] = $params[5];
 
-
         if ($action['action'] == 'add') {
             $dt = $params[1] . ':' . $params[2] . ':' . $params[3];
             $action['date'] = strtotime($dt);
@@ -156,6 +152,7 @@ EOT;
 
         return '';
     }
+
 }
 
 class CEvent
@@ -173,4 +170,3 @@ class CEvent
     }
 
 }
-
