@@ -2,6 +2,7 @@ INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`)  VALUES( 1, 'Заказ', 'OrderFood', 'Общепит', 0);
  
 ALTER TABLE `paylist` CHANGE `paydate` `paydate` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `entrylist` CHANGE `extcode` `extcode` INT(11) NULL DEFAULT NULL;
 ALTER TABLE `entrylist` ADD `outprice` DECIMAL(10,2) NULL  ;
 ALTER VIEW `entrylist_view` AS
   select 
@@ -19,3 +20,4 @@ ALTER VIEW `entrylist_view` AS
     `entrylist`.`outprice` AS `outprice` 
   from 
     ((`entrylist` left join `store_stock` on((`entrylist`.`stock_id` = `store_stock`.`stock_id`))) join `documents` on((`entrylist`.`document_id` = `documents`.`document_id`)));
+    

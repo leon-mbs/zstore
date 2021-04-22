@@ -86,7 +86,6 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(87, 3, 'Расчеты с покупателями', 'PayBayList', 'Касса и платежи', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(88, 1, 'Перемещение  денег', 'MoveMoney', 'Касса и платежи', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(89, 1, 'Заказ (общепит)', 'OrderFood', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(90, 3, 'Журнал заказов (общепит)', 'OrderFoodList', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(91, 5, 'АРМ кассира (общепит)', 'ARMFood', 'Общепит', 0);
 
 

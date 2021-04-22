@@ -6,7 +6,7 @@ use App\Entity\Entry;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ  кассовый ек
+ * Класс-сущность  документ  кассовый чек
  *
  */
 class POSCheck extends Document

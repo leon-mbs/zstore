@@ -30,12 +30,16 @@ class Entry extends \ZCL\DB\Entity
     protected function init() {
 
         $this->extcode = 0;
+    
     }
 
     protected function afterLoad() {
         $this->document_date = strtotime($this->document_date);
     }
 
+    public function setQuantity($quantity) {
+        $this->quantity = $quantity;
+    }
     public function setStock($stock_id) {
         $this->stock_id = $stock_id;
     }
@@ -123,7 +127,7 @@ class Entry extends \ZCL\DB\Entity
         if ($customer > 0) {
             $where = $where . " and customer_id= " . $customer;
         }
-        $sql = " select coalesce(sum(amount),0) AS quantity  from entrylist  where " . $where;
+        $sql = " select coalesce(sum(quantity*outprice),0) AS quantity  from entrylist  where " . $where;
         return $conn->GetOne($sql);
     }
 
