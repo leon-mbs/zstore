@@ -459,6 +459,7 @@ class Roles extends \App\Pages\Base
 
         $row->add(new Label('meta_desc', $item->description));
         $row->add(new Label('meta_name', $title));
+        $row->add(new Label('menugroup', $item->menugroup));
 
         $row->add(new CheckBox('mshow', new Bind($item, 'mview')));
     }

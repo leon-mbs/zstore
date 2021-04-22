@@ -108,7 +108,8 @@ class GoodsReceipt extends Document
             $sc = new Entry($this->document_id, $item->price * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
             $sc->setExtCode($item->price); //Для АВС 
-            // $sc->setCustomer($this->customer_id);
+            $sc->setOutPrice($item->price   );  
+ 
 
             $sc->save();
 

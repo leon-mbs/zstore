@@ -3,9 +3,10 @@
 
 </head>
 <body>
-<h3> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;АРМ кассира</h3>
-<br>
+ 
+
  <form zippy="setupform">
+  <h3>АРМ кассира</h3>
     <div class="row">
         <div class="col-12 col-md-6 col-xl-4">
             <div class="form-group row ">
@@ -58,12 +59,13 @@
                 <select class="form-control" zippy="foodtype">
                      <option value="0">На месте</option>
                      <option value="1">С собой</option>
+                     
                 </select>
                 <small>В  зависимости  от наличия  столиков</small>
             </div>
             </div>
             <div class="form-group   ">
-                <input type="submit" value="Ввод товаров >"   class="btn btn-success">
+                <input type="submit" value="К заказам >"   class="btn btn-success">
             </div>
         </div>
 
@@ -71,12 +73,28 @@
 
  </form>
  
+
+      <div   zippy="docpanel">
+      <h4>Оформление  заказа</h4>
+      <a zippy="toorderlist"><i class="fa fa-arrow-circle-left"></i> к  списку заказов</a>
     <div class="row"  >
-      <div class="col-12 col-md-8">
-    <div   zippy="docpanel">
-    
-    <div   zippy="catpan">
-      <div   zippy="catlist">
+      <div class="col-12  col-xl-10">    
+    <div   zippy="catpan" class="row">
+      <div   zippy="catlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
+          <div class="card mb-2" zippy="catbtn" style="cursor:pointer;;">
+          <table  >
+             <tr><td>
+              <img zippy="catimage" style="height:100px "  >
+              </td>
+              <td valign="middle" align="left">
+              
+                <b   zippy="catname"> </b>
+              </td></tr>
+              </table>  
+              
+            
+          
+          </div>
      
       </div >        
     </div >        
@@ -85,18 +103,21 @@
      
       </div >        
     </div >        
-     
-        
-<form zippy="navform" class="form-inline  ">                   
+    </div>   
+    
+    <div class="col-12 col-md-10 col-xl-8  ">         
+<div class="navbar mt-4">        
+<form zippy="navform" class="form-inline   ">                   
              <input  zippy="baddnew"  type="submit" value="Добавить  "   class="btn btn-info mr-4"> 
            {{#usescanner}}
             Штрих-код &nbsp;<input class="form-control"   style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
                                        onkeydown="onBarCode()"> &nbsp;<a zippy="addcode" class="btn btn-info btn-sm mr-4">+</a>
                                        
            {{/usescanner}}
-           Клиент  <input   class="form-control"  > <a zippy="newcust" class="btn btn-info  ">+</a>
-          </form> 
-               
+           Клиент  <input   class="form-control"  > <a zippy="newcust" class="btn btn-info btn-sm ">+</a>
+   </form> 
+    </div>           
+         
  <form zippy="listsform">          
          <table class="table">
            <tr>
@@ -124,7 +145,7 @@
             </tr>
          </table>
          <div class="form-group  ">
-                <input zippy="bbackoptions" type="submit" value="< Назад"   class="btn btn-info mr-4"> 
+                
                 <input zippy="btopay" type="submit" value="К оплате >"   class="btn btn-success">
          </div>
    </form>  
@@ -140,8 +161,11 @@
   </form>     
   
   
-  
-         </div    >    
+<form zippy="delform">  
+ 
+ </form>  
+   
+      
     
      <div zippy="checkpan">
 
@@ -150,14 +174,35 @@
      <a zippy="print">Печать</a>&nbsp;&nbsp;&nbsp;
      <a zippy="newcheck">Новый звказ</a>
      </div>
-    
+         </div    >    
       </div>
-     <div class="col-12 col-md-4">
-        
-      </div>
+     
     </div>
           
- 
+ <div zippy="row" >
+ <div zippy="orderlistpan" >
+ <div class="col-12 col-md-10 xl-8" >
+   <h4>Список  заказов</h4>
+   <a  class="btn btn-success" zippy="neworder">Новый звказ</a>
+   <table class="table  table-sm">
+     <tr><th>Номер</th><th>Стол</th><th colspan="2">Состояние</th><th class="text-right">Сумма</th><th></th><th></th></tr>
+     <tr zippy="orderlist">
+        <td zippy="docnumber"></td>
+        <td ></td>
+        <td >Оплачен</td>
+        <td >В доставке</td>
+        <td class="text-right"></td>
+        <td ><a class="btn btn-outline-info btn-sm"><i class="fa fa-edit"></i> Редактирование</a></td>
+        <td ><a class="btn btn-outline-info btn-sm"><i class="fa fa-eye"></i> Просмотр</a></td>
+     </tr>
+     
+   </table>
+   <div zippy="statuspan"></div>
+   <div zippy="docview"></div>
+   
+ </div>
+ </div>
+ </div>
  
 
 {{#usescanner}}
