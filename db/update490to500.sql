@@ -1,5 +1,5 @@
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'АРМ кассира', 'ARMFood', 'Общепит', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`)  VALUES( 1, 'Заказ', 'OrderFood', 'Общепит', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`)  VALUES( 1, 'Заказ (общепит)', 'OrderFood', '', 0);
  
 ALTER TABLE `paylist` CHANGE `paydate` `paydate` DATETIME NULL DEFAULT NULL;
 ALTER TABLE `entrylist` CHANGE `extcode` `extcode` INT(11) NULL DEFAULT NULL;
