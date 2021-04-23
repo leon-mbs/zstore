@@ -34,7 +34,7 @@ class ARMFood extends \App\Pages\Base
     private $_doc;
     public  $_itemlist   = array();
     public  $_catlist    = array();
-    public  $_detaillist = array();
+    public  $_prodlist = array();
     public  $_doclist    = array();
 
     public function __construct() {
@@ -43,15 +43,30 @@ class ARMFood extends \App\Pages\Base
         if (false == \App\ACL::checkShowSer('ARMFood')) {
             return;
         }
+        
+        $filter = \App\Filter::getFilter("armfood");
+        if ($filter->isEmpty()) {
+            $filter->pos = 0;
+            $filter->store = H::getDefStore();
+            $filter->pricetype = H::getDefPriceType();
+            $filter->nal = H::getDefMF();
+            $filter->beznal = H::getDefMF();
+            $filter->foodtype = 1;
+
+             
+        }
+        
+        
+        
         //обшие настройки
         $this->add(new Form('setupform'))->onSubmit($this, 'setupOnClick');
 
-        $this->setupform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), 0));
-        $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
-        $this->setupform->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), H::getDefPriceType()));
-        $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(false, false, 1), H::getDefMF()));
-        $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(false, false, 2), H::getDefMF()));
-        $this->setupform->add(new DropDownChoice('foodtype', array(), 1));
+        $this->setupform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), $filter->pos));
+        $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
+        $this->setupform->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), $filter->pricetype));
+        $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(false, false, 1), $filter->nal));
+        $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(false, false, 2), $filter->beznal ));
+        $this->setupform->add(new DropDownChoice('foodtype', array(), $filter->foodtype));
 
         //список  заказов
         $this->add(new Panel('orderlistpan'))->setVisible(false);
@@ -63,10 +78,10 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->add(new ClickLink('toorderlist', $this, 'onOrderList'));
 
         $this->docpanel->add(new Panel('catpan'))->setVisible(false);
-
         $this->docpanel->catpan->add(new DataView('catlist', new ArrayDataSource($this, '_catlist'), $this, 'onCatRow'));
 
         $this->docpanel->add(new Panel('prodpan'))->setVisible(false);
+        $this->docpanel->prodpan->add(new DataView('prodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
 
         $this->docpanel->add(new Form('navform'));
 
@@ -96,6 +111,16 @@ class ARMFood extends \App\Pages\Base
             $this->setError(H::l("notalldata"));
             return;
         }
+        $filter = \App\Filter::getFilter("armfood");
+
+        $filter->pos = $this->setupform->pos->getValue();
+        $filter->store = $store;
+        $filter->pricetype = $pricetype;
+        $filter->nal = $nal;
+        $filter->beznal = $beznal;
+        $filter->foodtype = $this->setupform->foodtype->getValue();
+
+             
 
         $this->setupform->setVisible(false);
         $this->onOrderList($sender);
@@ -121,7 +146,7 @@ class ARMFood extends \App\Pages\Base
 
     public function addnewOnClick($sender) {
         $this->docpanel->catpan->setVisible(true);
-        $this->_catlist = Category::find();
+        $this->_catlist = Category::find('coalesce(parent_id,0)=0');
         $this->docpanel->catpan->catlist->Reload();
     }
 
@@ -142,11 +167,40 @@ class ARMFood extends \App\Pages\Base
         $row->catbtn->add(new Label('catname', $cat->cat_name));
         $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
     }
+    public function onProdRow($row) {
+        $prod = $row->getDataItem();
+        $row->add(new ClickLink('prodbtn'))->onClick($this, 'onProdBtnClick');
+        $row->catbtn->add(new Label('prodname', $cat->itemname));
+        $row->catbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
+    }
 
     public function onCatBtnClick($sender) {
         $cat = $sender->getOwner()->getDataItem();
+        $catlist = Category::find('coalesce(parent_id,0)='.$cat->cat_id);
+        if(count($catlist)>0) {
+             $this->_catlist    = $catlist;
+             $this->docpanel->catpan->catlist->Reload();
+        } else {
+            $this->_prodlist  = Item::find('disabled<>1 and item_type in(1,4) and cat_id='.$cat->cat_id) ;
+            $this->docpanel->catpan->setVisible(false);
+            $this->docpanel->prodpan->setVisible(true);
+            $this->docpanel->prodpan->prodlist->Reload();
+        }
+        
     }
 
+    public function onProdBtnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        if(isset($this->_itemlist[$item->item_id])) {
+            $this->_itemlist[$item->item_id]->quantity++;           
+        }   else {
+            $item->quantity=1;
+            $this->_itemlist[$item->item_id]=$item;
+        }
+    }
+    
+    
+    
     public function topayOnClick($sender) {
         $this->docpanel->setVisible(false);
         $this->payform->setVisible(true);

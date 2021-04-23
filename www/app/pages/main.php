@@ -104,7 +104,7 @@ class Main extends Base
         if ($this->_tvars['wrdoc'] == true) {
             $data = array();
 
-            $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where  1=1 {$br}  and  l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time())) . " limit  0,100";
+            $sql = "select  distinct d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from docstatelog_view l join documents_view d  on l.document_id= d.document_id where  1=1 {$br}  and  l.user_id={$user->user_id} and l.createdon > " . $conn->DBDate(strtotime("-1 month", time())) . " order  by  document_id desc  limit  0,25";
 
             $rc = $conn->Execute($sql);
 

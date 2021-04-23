@@ -41,4 +41,8 @@ class Filter
         $this->data = array();
     }
 
+    public function isEmpty(){
+        return count($this->data)==0;
+    }
+    
 }

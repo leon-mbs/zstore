@@ -41,14 +41,25 @@ class ARMPos extends \App\Pages\Base
         if (false == \App\ACL::checkShowSer('ARMPos')) {
             return;
         }
+        $filter = \App\Filter::getFilter("armpos");
+        if ($filter->isEmpty()) {
+            $filter->pos = 0;
+            $filter->store = H::getDefStore();
+            $filter->pricetype = H::getDefPriceType();
+            $filter->nal = H::getDefMF();
+            $filter->beznal = H::getDefMF();
+            $filter->foodtype = 1;
 
+             
+        }
+ 
         //обшие настройки
         $this->add(new Form('form1'));
         $plist = \App\Entity\Pos::findArray('pos_name', '');
 
-        $this->form1->add(new DropDownChoice('pos', $plist, 0));
-        $this->form1->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
-        $this->form1->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), H::getDefPriceType()));
+        $this->form1->add(new DropDownChoice('pos', $plist, $filter->pos));
+        $this->form1->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
+        $this->form1->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), $filter->pricetype));
 
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
@@ -176,6 +187,11 @@ class ARMPos extends \App\Pages\Base
             $this->setError("noselpricetype");
             return;
         }
+        $filter = \App\Filter::getFilter("armpos");
+
+        $filter->pos = $this->form1->pos->getValue();
+        $filter->store = $this->_store_id;
+        $filter->pricetype = $this->_pt;
 
         $this->form1->setVisible(false);
         $this->form2->setVisible(true);

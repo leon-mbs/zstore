@@ -42,7 +42,7 @@ class DocList extends \App\Pages\Base
         }
 
         $filter = Filter::getFilter("doclist");
-        if ($filter->to == null) {
+        if ($filter->isEmpty()) {
             $filter->to = time() + (3 * 24 * 3600);
             $filter->from = time() - (7 * 24 * 3600);
             $filter->page = 1;
