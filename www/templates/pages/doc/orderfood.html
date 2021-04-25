@@ -30,7 +30,7 @@
                         <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
 
                     </div>
-                  
+
 
 
                 </div>
@@ -39,7 +39,7 @@
                         <label for="document_date"> Дата</label>
                         <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
                     </div>
-                  <div class="form-group  ">
+                    <div class="form-group  ">
                         <label for="pos">POS терминал</label>
                         <select class="form-control" zippy="pos">
                             <option value="0">Не выбран</option>
@@ -65,16 +65,16 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-10 col-xl-8">
-                  
+
 
                     <a class="btn btn-info btn-sm" zippy="addrow">Добавить товар</a>
-                    
+
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
                             <th>Код</th>
                             <th>Ед.</th>
-                           
+
 
 
                             <th class="text-right">Кол.</th>
@@ -88,7 +88,7 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                           
+
 
 
                             <td zippy="quantity" class="text-right"></td>
@@ -99,21 +99,21 @@
                             <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                         </tr>
-                   
+
                         <tr style="font-weight: bolder;" id="tankor">
 
-                            
+
                             <td colspan="5" class="text-right">Всего:</td>
-                         
+
 
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
 
                         <tr style="font-weight: bolder;">
-                            
+
                             <td colspan="5" class="text-right"><span data-label="paydisc">Скидка:</span></td>
-                         
+
 
 
                             <td zippy="paydisc" class="text-right"></td>
@@ -121,18 +121,18 @@
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                          
+
                             <td colspan="5" class="text-right"><span data-label="payamount">К оплате:</span></td>
-                         
+
 
                             <td zippy="payamount" class="text-right"></td>
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                        
+
                             <td colspan="5" class="text-right"><span data-label="payed">Внесена оплата:</span></td>
-                      
+
 
                             <td zippy="payed" class="text-right"></td>
                             <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal"
@@ -140,9 +140,9 @@
                         </tr>
 
                         <tr style="font-weight: bolder;">
-                   
+
                             <td colspan="5" class="text-right"><span data-label="exchange">Сдача:</span></td>
-                         
+
 
                             <td zippy="exchange" class="text-right"></td>
                             <td></td>
@@ -239,13 +239,13 @@
                     <div class="form-group">
                         <label for="edittovar">Название</label>
                         <select class="form-control select2" zippy="edittovar">
-                          <option value="0">Не  выбран</option>
+                            <option value="0">Не  выбран</option>
                         </select>
 
-                        
+
 
                     </div>
-                
+
                     <div class="form-group">
                         <label for="editquantity">Количество</label>
                         <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"
@@ -270,7 +270,7 @@
                 </div>
             </div>
         </form>
-     
+
         <form zippy="editcust">
             <h3>&nbsp;Новый клиент </h3>
             <div class="row">
@@ -295,6 +295,6 @@
         </form>
 
 
-    
+
     </body>
 </html>

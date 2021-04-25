@@ -411,5 +411,6 @@
     "shopfeedbaks": "Вiдгукiв(%s)",
     "shopneworder": "Створено замовлення %s",
     "shopyoursorder": "Ваше замовлення %s",
-    "notalldata": "Не  введенi всi  данi"
+    "notalldata": "Не  введенi всi  данi",
+    "nocommonoptions": "Не заданi параметри в загальних налаштуваннях "
 }

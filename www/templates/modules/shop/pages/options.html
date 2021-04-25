@@ -42,9 +42,9 @@
                             <select class="form-control " zippy="shopordertype">
 
                                 <option value='0'>Обычный заказ</option>
-                                <option value='1'>Заказ общепит</option>
-                                <option value='2'>Кассовый чек</option>
-                                <option value='3'>Расходную накладную</option>
+                                <option value='1'>Кассовый чек</option>
+                                <!--  <option value='2'>Заказ общепит</option>-->
+
                             </select>
 
                         </div>
@@ -65,7 +65,8 @@
                         <div class="col-sm-7">
                             <input placeholder="Начните  вводить..." class="form-control  " zippy="shopdefcust">
 
-                            <small class="form-text text-muted">Условный контрагент от имени которого будут формироваться                        заказ</small>
+                            <small class="form-text text-muted">Условный контрагент от имени которого будут формироваться   заказы
+                                если не  указан  конкретный  контрагент</small>
                         </div>
                     </div>
 
@@ -145,92 +146,92 @@
                     </div>
                 </form>
             </div>
+        </div>
 
+        <script>
+            $(function () {
+                // Summernote
 
-            <script>
-                $(function () {
-                    // Summernote
+                $('#aboutus').summernote({
+                    height: 400,
+                    lang: 'ru-RU',
 
-                    $('#aboutus').summernote({
-                        height: 400,
-                        lang: 'ru-RU',
-
-                        callbacks: {
-                            onEnter: function (e) {
-                                if (e.keyCode === key.code.ENTER) {
-                                    e.shiftKey = true;
-                                    context.triggerEvent('enter', e);
-                                }
-                            },
-                            onPaste: function (e) {
-
-                                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                                e.preventDefault();
-                                document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
                             }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
                         }
-                    });
-                    $('#contact').summernote({
-                        height: 400,
-                        lang: 'ru-RU',
+                    }
+                });
+                $('#contact').summernote({
+                    height: 400,
+                    lang: 'ru-RU',
 
-                        callbacks: {
-                            onEnter: function (e) {
-                                if (e.keyCode === key.code.ENTER) {
-                                    e.shiftKey = true;
-                                    context.triggerEvent('enter', e);
-                                }
-                            },
-                            onPaste: function (e) {
-
-                                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                                e.preventDefault();
-                                document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
                             }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
                         }
-                    });
-                    $('#delivery').summernote({
-                        height: 400,
-                        lang: 'ru-RU',
+                    }
+                });
+                $('#delivery').summernote({
+                    height: 400,
+                    lang: 'ru-RU',
 
-                        callbacks: {
-                            onEnter: function (e) {
-                                if (e.keyCode === key.code.ENTER) {
-                                    e.shiftKey = true;
-                                    context.triggerEvent('enter', e);
-                                }
-                            },
-                            onPaste: function (e) {
-
-                                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                                e.preventDefault();
-                                document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
                             }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
                         }
-                    });
-                    $('#news').summernote({
-                        height: 400,
-                        lang: 'ru-RU',
+                    }
+                });
+                $('#news').summernote({
+                    height: 400,
+                    lang: 'ru-RU',
 
-                        callbacks: {
-                            onEnter: function (e) {
-                                if (e.keyCode === key.code.ENTER) {
-                                    e.shiftKey = true;
-                                    context.triggerEvent('enter', e);
-                                }
-                            },
-                            onPaste: function (e) {
-
-                                var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                                e.preventDefault();
-                                document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
                             }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
                         }
-                    });
-                })
+                    }
+                });
+            })
 
 
-            </script>
+        </script>
 
     </body>
 </html>

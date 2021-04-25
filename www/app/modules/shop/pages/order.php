@@ -132,17 +132,14 @@ class Order extends Base
 
 
             if ($shop['ordertype'] == 1) {
-                $order = Document::create('OrderFood', $f);
+                $order = Document::create('POSCheck', $f);
             } else {
                 if ($shop['ordertype'] == 2) {
-                    $order = Document::create('POSCheck', $f);
+                    $order = Document::create('OrderFood', $f);
                 } else {
-                    if ($shop['ordertype'] == 3) {
-                        $order = Document::create('GoodsIssue', $f);
-                    } else {
-                        $order = Document::create('Order', $f);
-                    }
+                    $order = Document::create('Order', $f);
                 }
+                 
             }
 
             $order->document_number = $order->nextNumber();
@@ -201,6 +198,10 @@ class Order extends Base
             $order->branch_id = $op["defbranch"];
             $order->save();
             $order->updateStatus(Document::STATE_NEW);
+             if ($shop['ordertype'] == 1) {
+                $order->updateStatus(Document::STATE_EXECUTED);
+             }
+            
             $this->setSuccess("shopneworder", $order->document_number);
 
             if (strlen($phone) > 0) {
@@ -224,7 +225,7 @@ class Order extends Base
     public function OnAddRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         $datarow->setDataItem($item);
-        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->item_id))->setValue($item->item_name);
+        $datarow->add(new \Zippy\Html\Link\RedirectLink('pname', '\App\Modules\Shop\Pages\ProductView', $item->item_id))->setValue($item->itemname);
         $datarow->add(new Label('price', $item->getPriceFinal()));
         $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity')));
         $datarow->add(new \Zippy\Html\Link\ClickLink('delete', $this, 'OnDelete'));

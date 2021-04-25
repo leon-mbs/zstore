@@ -317,103 +317,142 @@
                                 <label data-label="akey" for="akey">Ключ</label>
                                 <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
                                 <small data-label="akey">Призвольное слово на латинице для шифрования
-                                    токена<small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label data-label="aexp" for="aexp">Время жизни токена в мин.</label>
-                                            <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
+                                    токена</small>
+                            </div>
+                            <div class="form-group">
+                                <label data-label="aexp" for="aexp">Время жизни токена в мин.</label>
+                                <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
 
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <button class="btn btn-primary" type="submit">Сохранить</button>
-                                        </div>
-                                        </form>
-                                        </div>
-                                        </div>
-
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h4>Настройка  сервиса SMS уведомлений</h4>
-                                                <form zippy="sms">
-
-                                                    <div class="form-group  ">
-                                                        <label for="smstype">Сервис</label>
-                                                        <select class="form-control" zippy="smstype">
-                                                            <option value="0">Не  выбран</option>
-                                                        </select>
-                                                        <span zippy="semysmssite"><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
-                                                        <span zippy="turbosmssite"><a href="https://turbosms.net/" target="_blank">https://turbosms.net/</a></span>
-                                                        <span zippy="smsflysite"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label data-label="smssemytoken" for="smssemytoken">Токен</label>
-                                                        <input zippy="smssemytoken"   class="form-control">
-
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label data-label="turbosmstoken" for="turbosmstoken">Токен</label>
-                                                        <input zippy="turbosmstoken"   class="form-control">
-
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label data-label="smssemydevid" for="smssemydevid">Device ID</label>
-                                                        <input zippy="smssemydevid"   class="form-control"  >
-
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label data-label="flysmslogin" for="flysmslogin">Логин</label>
-                                                        <input zippy="flysmslogin"   class="form-control">
-
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label data-label="flysmspass" for="flysmspass">Пароль</label>
-                                                        <input zippy="flysmspass"   class="form-control"  >
-
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label data-label="flysmsan" for="flysmsan">ALFANAME</label>
-                                                        <input zippy="flysmsan"   class="form-control"  >
-
-                                                    </div>
+                            </div>
 
 
-                                                    <div class="form-group">
-                                                        <button zippy="smssubmit" class="btn btn-primary" type="submit">Сохранить</button>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <span><i class="fa fa-exclamation-triangle"></i> Перед проверкой  сохраните  настройки</span> 
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label   for="smstestphone">Телефон</label>
-                                                        <input zippy="smstestphone"   class="form-control"  >
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Сохранить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label   for="smstesttext">Сообщение</label>
-                                                        <input zippy="smstesttext"   class="form-control"  >
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Настройка  сервиса SMS уведомлений</h4>
+                        <form zippy="sms">
 
-                                                    </div>
+                            <div class="form-group  ">
+                                <label for="smstype">Сервис</label>
+                                <select class="form-control" zippy="smstype">
+                                    <option value="0">Не  выбран</option>
+                                </select>
+                                <span zippy="semysmssite"><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
+                                <span zippy="turbosmssite"><a href="https://turbosms.net/" target="_blank">https://turbosms.net/</a></span>
+                                <span zippy="smsflysite"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
+                            </div>
+                            <div class="form-group">
+                                <label data-label="smssemytoken" for="smssemytoken">Токен</label>
+                                <input zippy="smssemytoken"   class="form-control">
+
+                            </div>
+                            <div class="form-group">
+                                <label data-label="turbosmstoken" for="turbosmstoken">Токен</label>
+                                <input zippy="turbosmstoken"   class="form-control">
+
+                            </div>
+                            <div class="form-group">
+                                <label data-label="smssemydevid" for="smssemydevid">Device ID</label>
+                                <input zippy="smssemydevid"   class="form-control"  >
+
+                            </div>
+                            <div class="form-group">
+                                <label data-label="flysmslogin" for="flysmslogin">Логин</label>
+                                <input zippy="flysmslogin"   class="form-control">
+
+                            </div>
+                            <div class="form-group">
+                                <label data-label="flysmspass" for="flysmspass">Пароль</label>
+                                <input zippy="flysmspass"   class="form-control"  >
+
+                            </div>
+                            <div class="form-group">
+                                <label data-label="flysmsan" for="flysmsan">ALFANAME</label>
+                                <input zippy="flysmsan"   class="form-control"  >
+
+                            </div>
 
 
-                                                    <div class="form-group">
-                                                        <button zippy="smstest" class="btn btn-primary" type="submit">Отправить</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
+                            <div class="form-group">
+                                <button zippy="smssubmit" class="btn btn-primary" type="submit">Сохранить</button>
+                            </div>
+                            <div class="form-group">
+                                <span><i class="fa fa-exclamation-triangle"></i> Перед проверкой  сохраните  настройки</span> 
+                            </div>
+                            <div class="form-group">
+                                <label   for="smstestphone">Телефон</label>
+                                <input zippy="smstestphone"   class="form-control"  >
+
+                            </div>
+                            <div class="form-group">
+                                <label   for="smstesttext">Сообщение</label>
+                                <input zippy="smstesttext"   class="form-control"  >
+
+                            </div>
 
 
-                                        </div>
-                                        </div>
+                            <div class="form-group">
+                                <button zippy="smstest" class="btn btn-primary" type="submit">Отправить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                      <div class="card">
+                    <div class="card-body">
+                        <h4>Общепит</h4>
+                        
+                        <form zippy="food">
+
+                            <div class="form-group  ">
+                                <label for="foodpricetype">Тип цен</label>
+                                <select class="form-control" zippy="foodpricetype">
+                                </select>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="fooddelivery" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="fooddelivery">Наличие доставки</label>
+                                
+                            </div>
+                            <div class="form-check">
+                                <input zippy="foodtables" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodtables">Обслуживание  столиков  офмцмантом</label>
+                                
+                            </div>
+                            <div class="form-check">
+                                <input zippy="foodpack" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodpack">Возможность  упаковки  с  собой</label>
+                                
+                            </div>
+                            <div class="form-check">
+                                <input zippy="foodbar" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodbar">Бар  отдельно от кухни</label>
+                                
+                            </div>
+                            
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit">Зберегти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
 
-                                        <script>
-                                            function check_rowdelete() {
-                                                return confirm("Удалить  запись?")
-                                            }
-                                        </script>
 
-                                        </body>
-                                        </html>
+            </div>
+        </div>
+
+
+        <script>
+            function check_rowdelete() {
+                return confirm("Удалить  запись?")
+            }
+        </script>
+
+    </body>
+</html>

@@ -48,7 +48,7 @@
                         <td style="width:40px"><span zippy="iclose" title="Закриті" class="badge badge-secondary"></span></td>
 
                         <td>
-                            <a zippy="preview"><i class="fa fa-eye"></a>
+                            <a zippy="preview"><i class="fa fa-eye"/></a>
                             &nbsp;&nbsp;
                             <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
 
@@ -147,60 +147,60 @@
                         </tr>
                     </table>
                     <div zippy="pagmsg"></div>
-                    <a id="amessages">
-                        <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
-                            <label> Коментар: </label>
-                            <div class="form-group">
-                                <textarea class="form-control" required="required" zippy="msgdata"
-                                          style="width:400px;height:120px;"></textarea>
-                            </div>
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
-                        </form>
-
+                    <a id="amessages"/>
+                    <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
+                        <label> Коментар: </label>
+                        <div class="form-group">
+                            <textarea class="form-control" required="required" zippy="msgdata"
+                                      style="width:400px;height:120px;"></textarea>
                         </div>
-                        <div class="col-12 col-md-4 col-xl-3">
-                            <form zippy="statusform">
-                                <div class="form-group">
-                                    <label for="stlist">Статус </label>
-                                    <select class="form-control     " zippy="stlist">
+                        <input class="btn btn-outline-success  " type="submit" value="Додати">
+                    </form>
 
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" class=" ml-2   btn btn-outline-success  " value="Змінити">
-                                </div>
+            </div>
+            <div class="col-12 col-md-4 col-xl-3">
+                <form zippy="statusform">
+                    <div class="form-group">
+                        <label for="stlist">Статус </label>
+                        <select class="form-control     " zippy="stlist">
 
-                            </form>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class=" ml-2   btn btn-outline-success  " value="Змінити">
+                    </div>
 
-                        </div>
-                        </div>
+                </form>
+
+            </div>
+        </div>
 
 
-                        <script>
-                            $(function () {
-                                // Summernote
+        <script>
+            $(function () {
+                // Summernote
 
-                                $('#editdesc').summernote({
-                                    height: 400,
-                                    lang: 'uk-UA',
+                $('#editdesc').summernote({
+                    height: 400,
+                    lang: 'uk-UA',
 
-                                    callbacks: {
-                                        onEnter: function (e) {
-                                            if (e.keyCode === key.code.ENTER) {
-                                                e.shiftKey = true;
-                                                context.triggerEvent('enter', e);
-                                            }
-                                        },
-                                        onPaste: function (e) {
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === key.code.ENTER) {
+                                e.shiftKey = true;
+                                context.triggerEvent('enter', e);
+                            }
+                        },
+                        onPaste: function (e) {
 
-                                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                                            e.preventDefault();
-                                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
-                                        }
-                                    }
-                                });
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                        }
+                    }
+                });
 
-                            })
-                        </script>
-                        </body>
-                        </html>
+            })
+        </script>
+    </body>
+</html>

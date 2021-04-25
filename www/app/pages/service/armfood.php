@@ -19,8 +19,10 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
+use Zippy\Binding\PropertyBinding as Bind ;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 
@@ -30,7 +32,10 @@ use Zippy\Html\Link\SubmitLink;
 class ARMFood extends \App\Pages\Base
 {
 
+    private $_pricetype;
+    private $_foodtype;
     private $_pos;
+ 
     private $_doc;
     public  $_itemlist   = array();
     public  $_catlist    = array();
@@ -43,31 +48,31 @@ class ARMFood extends \App\Pages\Base
         if (false == \App\ACL::checkShowSer('ARMFood')) {
             return;
         }
-        
+        $food = System::getOptions("food");
+        if (!is_array($food)) {
+            $food = array( );
+            $this->setWarn('nocommonoptions') ;
+        }
+       
+       
         $filter = \App\Filter::getFilter("armfood");
         if ($filter->isEmpty()) {
             $filter->pos = 0;
             $filter->store = H::getDefStore();
-            $filter->pricetype = H::getDefPriceType();
+          
             $filter->nal = H::getDefMF();
             $filter->beznal = H::getDefMF();
-            $filter->foodtype = 1;
-
-             
+           
         }
-        
-        
-        
+         
         //обшие настройки
         $this->add(new Form('setupform'))->onSubmit($this, 'setupOnClick');
 
         $this->setupform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), $filter->pos));
         $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
-        $this->setupform->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), $filter->pricetype));
         $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(false, false, 1), $filter->nal));
         $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(false, false, 2), $filter->beznal ));
-        $this->setupform->add(new DropDownChoice('foodtype', array(), $filter->foodtype));
-
+       
         //список  заказов
         $this->add(new Panel('orderlistpan'))->setVisible(false);
         $this->add(new ClickLink('neworder', $this, 'onNewOrder'));
@@ -84,30 +89,53 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->prodpan->add(new DataView('prodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
 
         $this->docpanel->add(new Form('navform'));
+        $this->docpanel->navform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docpanel->navform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        //$this->docpanel->navform->customer->onChange($this, 'OnChangeCustomer');
+        
+        $this->docpanel->navform->add(new TextInput('barcode'));
+        $this->docpanel->navform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docpanel->navform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
         $this->docpanel->navform->add(new SubmitButton('baddnew'))->onClick($this, 'addnewOnClick');
 
-        $this->docpanel->add(new Form('listsform'));
-        $this->docpanel->listsform->add(new SubmitButton('bbackoptions'))->onClick($this, 'backoptionsOnClick');
+        $this->docpanel->add(new Form('listsform'))->setVisible(false);
+        $this->docpanel->listsform->add(new DataView('itemlist', new ArrayDataSource($this, '_itemlist'), $this, 'onItemRow'));
+
         $this->docpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
+        $this->docpanel->listsform->add(new Label('totalamount',"0")) ;
 
         $this->docpanel->add(new Form('payform'))->setVisible(false);
-        $this->docpanel->payform->add(new SubmitButton('bbackitems'))->onClick($this, 'backoptionsOnClick');
-        $this->docpanel->payform->add(new SubmitButton('btoprint'))->onClick($this, 'topayOnClick');
-        $this->docpanel->payform->add(new SubmitButton('bnewcheck'))->onClick($this, 'addnewClick');
+        $this->docpanel->payform->add(new TextInput('pfamount')) ;
+        $this->docpanel->payform->add(new TextInput('pfdisc')) ;
+        $this->docpanel->payform->add(new TextInput('pfforpay')) ;
+        $this->docpanel->payform->add(new TextInput('pfpayed')) ;
+        $this->docpanel->payform->add(new TextInput('pfrest')) ;
+        $this->docpanel->payform->add(new Panel('delpan')) ;
 
-        $this->docpanel->add(new Form('delform'))->setVisible(false);
+        $this->docpanel->payform->pt = -1;
+        $bind = new  \Zippy\Binding\PropertyBinding($this->docpanel->payform,'pt') ;
+        $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfnal',$bind,1)  ) ;
+        $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfbeznal',$bind,2)  ) ;
+        
+        $this->docpanel->payform->add(new ClickLink('bbackitems'))->onClick($this, 'backItemsOnClick');
+        $this->docpanel->payform->add(new SubmitButton('btocheck'))->onClick($this, 'savedoc');
+
+         
+        $this->docpanel->add(new Panel('checkpan'))->setVisible(false);
+        $this->docpanel->checkpan->add(new ClickLink('bnewcheck'))->onClick($this, 'onNewOrder');
+        
+        
     }
 
     public function setupOnClick($sender) {
         $store = $this->setupform->store->getValue();
         $nal = $this->setupform->nal->getValue();
         $beznal = $this->setupform->beznal->getValue();
-        $pricetype = $this->setupform->pricetype->getValue();
+        
         $this->_pos = \App\Entity\Pos::load($this->setupform->pos->getValue());
 
-        if ($store == 0 || $nal == 0 || $beznal == 0 || strlen($pricetype) == 0 || $this->_pos == null) {
+        if ($store == 0 || $nal == 0 || $beznal == 0 ||  $this->_pos == null) {
             $this->setError(H::l("notalldata"));
             return;
         }
@@ -115,21 +143,28 @@ class ARMFood extends \App\Pages\Base
 
         $filter->pos = $this->setupform->pos->getValue();
         $filter->store = $store;
-        $filter->pricetype = $pricetype;
+     
         $filter->nal = $nal;
         $filter->beznal = $beznal;
-        $filter->foodtype = $this->setupform->foodtype->getValue();
-
-             
+               
 
         $this->setupform->setVisible(false);
+        $this->docpanel->setVisible(false);
         $this->onOrderList($sender);
     }
 
     public function onNewOrder($sender) {
         $this->docpanel->setVisible(true);
+        
+        $this->docpanel->listsform->setVisible(true);
+        $this->docpanel->navform->setVisible(true);
 
         $this->orderlistpan->setVisible(false);
+         $this->_itemlist = array();
+        
+         $this->docpanel->listsform->itemlist->Reload(); 
+         $this->calcTotal() ;        
+        
     }
 
     public function onOrderList($sender) {
@@ -138,7 +173,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->catpan->setVisible(false);
         $this->docpanel->catpan->setVisible(false);
         $this->docpanel->payform->setVisible(false);
-        $this->docpanel->delform->setVisible(false);
+        $this->docpanel->checkpan->setVisible(false);
 
         $this->orderlistpan->setVisible(true);
         $this->updateorderlist();
@@ -146,6 +181,7 @@ class ARMFood extends \App\Pages\Base
 
     public function addnewOnClick($sender) {
         $this->docpanel->catpan->setVisible(true);
+        $this->docpanel->prodpan->setVisible(false);
         $this->_catlist = Category::find('coalesce(parent_id,0)=0');
         $this->docpanel->catpan->catlist->Reload();
     }
@@ -168,11 +204,16 @@ class ARMFood extends \App\Pages\Base
         $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
     }
     public function onProdRow($row) {
+        //$store_id = $this->setupform->store->getValue();
+          
         $prod = $row->getDataItem();
+        $prod->price = $prod->getPrice($this->_pricetype, $store_id);
         $row->add(new ClickLink('prodbtn'))->onClick($this, 'onProdBtnClick');
-        $row->catbtn->add(new Label('prodname', $cat->itemname));
-        $row->catbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
+        $row->prodbtn->add(new Label('prodname', $prod->itemname));
+        $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
+        $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
     }
+
 
     public function onCatBtnClick($sender) {
         $cat = $sender->getOwner()->getDataItem();
@@ -181,7 +222,7 @@ class ARMFood extends \App\Pages\Base
              $this->_catlist    = $catlist;
              $this->docpanel->catpan->catlist->Reload();
         } else {
-            $this->_prodlist  = Item::find('disabled<>1 and item_type in(1,4) and cat_id='.$cat->cat_id) ;
+            $this->_prodlist  = Item::find('disabled<>1  and  item_type in (1,4)  and cat_id='.$cat->cat_id) ;
             $this->docpanel->catpan->setVisible(false);
             $this->docpanel->prodpan->setVisible(true);
             $this->docpanel->prodpan->prodlist->Reload();
@@ -191,19 +232,167 @@ class ARMFood extends \App\Pages\Base
 
     public function onProdBtnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
+         $store_id = $this->setupform->store->getValue();
+       
+        $qty = $item->getQuantity($store_id);
+        if ($qty <= 0) {
+
+            $this->setWarn("noitemonstore", $item->itemname);
+        }
+
+         
         if(isset($this->_itemlist[$item->item_id])) {
             $this->_itemlist[$item->item_id]->quantity++;           
-        }   else {
-            $item->quantity=1;
-            $this->_itemlist[$item->item_id]=$item;
+        }   else {                                                 
+            $item->myself = 1!=$this->_foodtype?1:0;
+            $item->quantity = 1;
+           // $item->price = $item->getPrice($this->setupform->pricetype->getValue(), $store_id);
+            $this->_itemlist[$item->item_id] = $item;
         }
+         $this->docpanel->prodpan->setVisible(false);
+         $this->docpanel->listsform->itemlist->Reload(); 
+         $this->calcTotal() ;        
     }
     
-    
-    
-    public function topayOnClick($sender) {
-        $this->docpanel->setVisible(false);
-        $this->payform->setVisible(true);
-    }
+    public function addcodeOnClick($sender) {
+        $code = trim($this->docpanel->navform->barcode->getText());
+        $this->docpanel->navform->barcode->setText('');
+        if ($code == '') {
+            return;
+        }
 
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->bar_code == $code || $_item->item_code == $code) {
+                $this->_itemlist[$ri]->quantity += 1;
+                $this->docpanel->listsform->itemlist->Reload();
+                
+                return;
+            }
+        }
+
+
+        $store_id = $this->setupform->store->getValue();
+    
+
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
+
+        if ($item == null) {
+
+            $this->setWarn("noitemcode", $code);
+            return;
+        }
+
+
+  
+
+        $qty = $item->getQuantity($store_id);
+        if ($qty <= 0) {
+
+            $this->setWarn("noitemonstore", $item->itemname);
+        }
+
+
+        $price = $item->getPrice($this->_pricetype, $store_id);
+        $item->price = $price;
+        $item->quantity = 1;
+        $item->myself = 1==$this->_foodtype?1:0;
+ 
+    
+        $this->_itemlist[$item->item_id] = $item; 
+
+        $this->docpanel->listsform->itemlist->Reload();
+        $this->calcTotal() ;
+
+         
+    }
+    
+    
+    
+    public function onItemRow($row) {
+        $item = $row->getDataItem();
+        
+        $row->add(new Label('itemname', $item->itemname));
+        $row->add(new Label('item_code', $item->item_code));
+        $row->add(new Label('qty', H::fqty($item->quantity)));
+        $row->add(new Label('price', H::fa($item->price)));
+        $row->add(new Label('amount', H::fa($item->price*$item->quantity)));
+        $row->add(new ClickLink('myselfon',$this, 'onMyselfClick'))->setVisible($item->myself!=1);
+        $row->add(new ClickLink('myselfoff',$this, 'onMyselfClick'))->setVisible($item->myself==1);
+        $row->add(new ClickLink('qtymin'))->onClick($this, 'onQtyClick');
+        $row->add(new ClickLink('qtyplus'))->onClick($this, 'onQtyClick');
+        $row->add(new ClickLink('removeitem'))->onClick($this, 'onDelItemClick');
+    }   
+    
+    public function onQtyClick($sender) {
+         $item = $sender->getOwner()->getDataItem();
+         if( strpos($sender->id,"qtyplus")===0){
+             $item->quantity++;
+         }
+         if(strpos($sender->id,"qtymin")===0 && $item->quantity>1){
+             $item->quantity--;
+         }
+        
+         $this->docpanel->listsform->itemlist->Reload();  
+         $this->calcTotal() ;         
+    }
+    
+    public function onMyselfClick($sender) {
+         $item = $sender->getOwner()->getDataItem();
+         
+         $item->myself = strpos($sender->id,"myselfon") === 0  ?1:0 ;
+         $this->docpanel->listsform->itemlist->Reload();
+         
+    }
+    
+    public function onDelItemClick($sender) {
+         $item = $sender->getOwner()->getDataItem();
+         $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
+        
+         $this->docpanel->listsform->itemlist->Reload(); 
+         $this->calcTotal() ;
+    }
+    
+
+     public function calcTotal() {
+        $amount=0;
+        foreach($this->_itemlist as $item){
+           $amount += ($item->quantity*$item->price);      
+        }
+        $this->docpanel->listsform->totalamount->setText(H::fa($amount)); 
+     }
+
+     public function OnAutoCustomer($sender) {
+        return  \App\Entity\Customer::getList($sender->getText(), 1);
+     }
+     
+     public function topayOnClick($sender) {
+        if(count($this->_itemlist)==0) {
+            $this->setError('noenterpos') ;
+            return;
+        }
+        $this->docpanel->payform->delpan->setVisible($this->setupform->showdelivary->isChecked() );
+        $this->docpanel->payform->clean() ;
+        $this->docpanel->payform->pt=null;      
+        
+        
+        $this->docpanel->listsform->setVisible(false);
+        $this->docpanel->navform->setVisible(false);
+        $this->docpanel->payform->setVisible(true);
+     } 
+    
+     public function backItemsOnClick($sender) {
+        $this->docpanel->listsform->setVisible(true);
+        $this->docpanel->navform->setVisible(true);
+        $this->docpanel->payform->setVisible(false);
+       
+     }
+     
+     public function savedoc($sender) {
+        $form =  $this->docpanel->payform;
+        $pt = $form->pt;
+     }
+    
+    
+        
 }

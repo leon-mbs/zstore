@@ -61,16 +61,16 @@
 
     <CHECKBODY>
         {{#details}}
-        <ROW
-        {{{num}}}>
+        <ROW>
+            {{{num}}}>
 
-        <NAME>{{name}}</NAME>
+            <NAME>{{name}}</NAME>
 
-        <AMOUNT>{{qty}}</AMOUNT>
-        <PRICE>{{price}}</PRICE>
+            <AMOUNT>{{qty}}</AMOUNT>
+            <PRICE>{{price}}</PRICE>
 
-        <COST>{{cost}}</COST>
-    </ROW>
-    {{/details}}
-</CHECKBODY>
-        </CHECK>
+            <COST>{{cost}}</COST>
+        </ROW>
+        {{/details}}
+    </CHECKBODY>
+</CHECK>

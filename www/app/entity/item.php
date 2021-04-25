@@ -23,6 +23,7 @@ class Item extends \ZCL\DB\Entity
     protected function init() {
         $this->item_id = 0;
         $this->cat_id = 0;
+        $this->item_type = self::TYPE_TOVAR;
 
         $this->price = 0;
         $this->image_id = 0;

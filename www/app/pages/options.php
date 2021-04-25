@@ -195,6 +195,19 @@ class Options extends \App\Pages\Base
         $this->sms->smstype->setValue($sms['smstype']);
 
         $this->onSMSType($this->sms->smstype);
+        
+        $food = System::getOptions("food");
+        if (!is_array($food)) {
+            $food = array( );
+        }
+        $this->add(new Form('food'))->onSubmit($this,'onFood');
+        $this->food->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(),$food['pricetype']));
+        $this->food->add(new CheckBox('fooddelivery',$food['delivery']));
+        $this->food->add(new CheckBox('foodtables',$food['tables']));
+        $this->food->add(new CheckBox('foodpack',$food['pack']));
+        $this->food->add(new CheckBox('foodbar',$food['bar']));
+
+        
     }
 
     public function saveCommonOnClick($sender) {
@@ -316,6 +329,7 @@ class Options extends \App\Pages\Base
         $this->setSuccess('saved');
     }
 
+
     public function testSMSOnClick($sender) {
 
         $res = \App\Entity\Subscribe::sendSMS($this->sms->smstestphone->getText(), $this->sms->smstesttext->getText());
@@ -325,5 +339,15 @@ class Options extends \App\Pages\Base
             $this->setError($res);
         }
     }
-
+    public function onFood($sender) {
+        $food = array();
+        $food['pricetype'] = $sender->foodpricetype->getValue() ;
+        $food['delivery'] = $sender->fooddelivery->isChecked()?1:0 ;
+        $food['tables'] = $sender->foodtables->isChecked()?1:0 ;
+        $food['pack'] = $sender->foodpack->isChecked()?1:0 ;
+        $food['bar'] = $sender->foodpbar->isChecked()?1:0 ;
+        System::setOptions("food", $food);
+        $this->setSuccess('saved');
+    }
+  
 }

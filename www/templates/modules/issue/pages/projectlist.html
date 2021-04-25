@@ -48,7 +48,7 @@
                         <td style="width:40px"><span zippy="iclose" title="Закрытые" class="badge badge-secondary"></span></td>
 
                         <td>
-                            <a zippy="preview"><i class="fa fa-eye"></a>
+                            <a zippy="preview"><i class="fa fa-eye"/></a>
                             &nbsp;&nbsp;
                             <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
 
@@ -111,49 +111,49 @@
                 </div>
 
                 <hr>
-                <a id="afiles">
-                    <form class="form-inline" zippy="addfileform" enctype="multipart/form-data">
-                        <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
-                        <label> Выбрать файл: </label>
+                <a id="afiles"/>
+                <form class="form-inline" zippy="addfileform" enctype="multipart/form-data">
+                    <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+                    <label> Выбрать файл: </label>
 
-                        <input class="form-control mr-2" type="file" required="required" zippy="addfile">
+                    <input class="form-control mr-2" type="file" required="required" zippy="addfile">
 
-                        <input class="btn btn-outline-info  " type="submit" value="Добавить">
+                    <input class="btn btn-outline-info  " type="submit" value="Добавить">
 
-                    </form>
+                </form>
 
-                    <div zippy="filelist" style="float:left">
+                <div zippy="filelist" style="float:left">
 
-                        <i class="fa fa-paperclip"></i> <a zippy="filename" target="_blank"></a>
-                        &nbsp;<a zippy="delfile" class="text-danger  text-bold" title="Удалить">x</a>&nbsp;&nbsp;
+                    <i class="fa fa-paperclip"></i> <a zippy="filename" target="_blank"></a>
+                    &nbsp;<a zippy="delfile" class="text-danger  text-bold" title="Удалить">x</a>&nbsp;&nbsp;
 
+                </div>
+
+
+                <hr>
+                <h5>Коментарии</h5>
+                <table style="width:400px" class="table table-sm">
+                    <tr zippy="msglist">
+                        <td>
+                            <span><b zippy="msguser"></b> <span zippy="msgdate"
+                                                                class="text-muted float-right"></span></span>
+
+                            <br><span zippy="msgdata"></span>
+
+                        </td>
+                        <td valign="top"><a zippy="delmsg" class="text-danger text-bold">x</a></td>
+                    </tr>
+                </table>
+                <div zippy="pagmsg"></div>
+                <a id="amessages"></a>
+                <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
+                    <label> Комментарий: </label>
+                    <div class="form-group">
+                        <textarea class="form-control" required="required" zippy="msgdata"
+                                  style="width:400px;height:120px;"></textarea>
                     </div>
-
-
-                    <hr>
-                    <h5>Коментарии</h5>
-                    <table style="width:400px" class="table table-sm">
-                        <tr zippy="msglist">
-                            <td>
-                                <span><b zippy="msguser"></b> <span zippy="msgdate"
-                                                                    class="text-muted float-right"></span></span>
-
-                                <br><span zippy="msgdata"></span>
-
-                            </td>
-                            <td valign="top"><a zippy="delmsg" class="text-danger text-bold">x</a></td>
-                        </tr>
-                    </table>
-                    <div zippy="pagmsg"></div>
-                    <a id="amessages"></a>
-                    <form style="margin-left:40px;" zippy="addmsgform" id="msgankor">
-                        <label> Комментарий: </label>
-                        <div class="form-group">
-                            <textarea class="form-control" required="required" zippy="msgdata"
-                                      style="width:400px;height:120px;"></textarea>
-                        </div>
-                        <input class="btn btn-outline-success  " type="submit" value="Добавить">
-                    </form>
+                    <input class="btn btn-outline-success  " type="submit" value="Добавить">
+                </form>
 
             </div>
             <div class="col-12 col-md-4 col-xl-3">
