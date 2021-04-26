@@ -345,7 +345,7 @@ class Options extends \App\Pages\Base
         $food['delivery'] = $sender->fooddelivery->isChecked()?1:0 ;
         $food['tables'] = $sender->foodtables->isChecked()?1:0 ;
         $food['pack'] = $sender->foodpack->isChecked()?1:0 ;
-        $food['bar'] = $sender->foodpbar->isChecked()?1:0 ;
+        $food['bar'] = $sender->foodbar->isChecked()?1:0 ;
         System::setOptions("food", $food);
         $this->setSuccess('saved');
     }

@@ -53,7 +53,14 @@ class ARMFood extends \App\Pages\Base
             $food = array( );
             $this->setWarn('nocommonoptions') ;
         }
-       
+        $this->_pricetype = $food['pricetypew'] ?? 'price1';
+        $this->_tvars['delivery'] = $food['delivery'] ?? 0;
+        $this->_tvars['tables'] = $food['tables']?? 0 ;
+        $this->_tvars['pack'] = $food['pack'] ?? 0;
+        $this->_tvars['bar'] = $food['bar'] ?? 0;
+        
+        
+        
        
         $filter = \App\Filter::getFilter("armfood");
         if ($filter->isEmpty()) {
@@ -89,10 +96,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->prodpan->add(new DataView('prodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
 
         $this->docpanel->add(new Form('navform'));
-        $this->docpanel->navform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
-        $this->docpanel->navform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        //$this->docpanel->navform->customer->onChange($this, 'OnChangeCustomer');
-        
+          
         $this->docpanel->navform->add(new TextInput('barcode'));
         $this->docpanel->navform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
@@ -104,7 +108,13 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
         $this->docpanel->listsform->add(new Label('totalamount',"0")) ;
-
+        
+        $this->docpanel->listsform->add(new TextInput('notes')) ;
+        $this->docpanel->listsform->add(new TextInput('table')) ;
+        $this->docpanel->listsform->add(new ClickLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docpanel->listsform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        
+        
         $this->docpanel->add(new Form('payform'))->setVisible(false);
         $this->docpanel->payform->add(new TextInput('pfamount')) ;
         $this->docpanel->payform->add(new TextInput('pfdisc')) ;
