@@ -355,6 +355,9 @@ class Document extends \ZCL\DB\Entity
         if ($state == self::STATE_EXECUTED) {
             $this->Execute();
         }
+        
+        
+        
         $oldstate = $this->state;
         $this->state = $state;
         $this->insertLog($state);
@@ -364,6 +367,10 @@ class Document extends \ZCL\DB\Entity
         if ($oldstate != $state) {
             $doc = $this->cast();
             $doc->onState($state);
+            
+            
+          
+            
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
         }
 
@@ -620,8 +627,8 @@ class Document extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $states = implode(',', $states);
 
-        $cnt = $conn->getOne("select count(*) from docstatelog where docstate in({$states}) and document_id={$this->document_id}");
-        return $cnt > 0;
+        $cnt = $conn->getOne("select coalesce(count(*),0) from docstatelog where docstate in({$states}) and document_id={$this->document_id}");
+        return $cnt  ;
     }
 
     /**

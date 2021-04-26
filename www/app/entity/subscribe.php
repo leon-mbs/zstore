@@ -107,6 +107,10 @@ class Subscribe extends \ZCL\DB\Entity
             if ($sub->state != $state) {
                 continue;
             }
+            
+            $cnt =  $doc->checkStates(array($state));
+            if($cnt>1) continue;
+            
             $phone = '';
             //  $viber='';
             $email = '';

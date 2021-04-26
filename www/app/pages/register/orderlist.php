@@ -216,11 +216,11 @@ class OrderList extends \App\Pages\Base
         $state = $this->_doc->state;
 
         //доставлен
-        $closed = $this->_doc->checkStates(array(Document::STATE_CLOSED));
+        $closed = $this->_doc->checkStates(array(Document::STATE_CLOSED))>0;
         //выполняется
-        $inproc = $this->_doc->checkStates(array(Document::STATE_INPROCESS));
+        $inproc = $this->_doc->checkStates(array(Document::STATE_INPROCESS))>0;
         //аннулирован
-        $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED));
+        $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED))>0;
 
         $this->statuspan->statusform->brd->setVisible(false);
 

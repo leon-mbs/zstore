@@ -321,7 +321,7 @@ class DocList extends \App\Pages\Base
         }
 
 
-        $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED));
+        $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED)) >0;
         if ($f) {
             $this->setWarn("dochas_sent_rec_closed");
         }

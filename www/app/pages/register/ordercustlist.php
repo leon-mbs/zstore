@@ -159,7 +159,7 @@ class OrderCustList extends \App\Pages\Base
 
         // $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
         //доставлен
-        $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED));
+        $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED))>0;
 
         //проверяем  что есть ТТН
         $d = $this->_doc->getChildren('GoodsReceipt');

@@ -140,7 +140,7 @@ class DocView extends \Zippy\Html\PageFragment
         $this->dw_paylist->Reload();
 
         //проводки
-        $sql = " select e.entry_id, s.stock_id, s.itemname,s.item_code,e.quantity,e.amount  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $this->_doc->document_id . " order  by e.entry_id";
+        $sql = " select e.entry_id, s.stock_id, s.partion,s.itemname,s.item_code,e.quantity,e.outprice  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $this->_doc->document_id . " order  by e.entry_id";
         $this->_itemlist = \App\Entity\Entry::findBySql($sql);
         $this->dw_itemlist->Reload();
 
@@ -179,8 +179,9 @@ class DocView extends \Zippy\Html\PageFragment
         $row->add(new Label('itname', $entry->itemname));
         $row->add(new Label('itcode', $entry->item_code));
         $row->add(new Label('itqty', H::fqty($entry->quantity)));
-        $row->add(new Label('itprice', H::fa($entry->amount / $entry->quantity)));
-        $row->add(new Label('itamount', H::fa($entry->amount)));
+        $row->add(new Label('itpartion', H::fa($entry->partion  )));
+        $row->add(new Label('itprice', H::fa($entry->outprice  )));
+        $row->add(new Label('itamount', H::fa($entry->outprice * $entry->quantity)));
     }
 
     /**

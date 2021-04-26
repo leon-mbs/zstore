@@ -95,7 +95,7 @@ class Entry extends \ZCL\DB\Entity
         if ($customer > 0) {
             $where = $where . " and customer_id= " . $customer;
         }
-        $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist  where " . $where;
+        $sql = " select coalesce(sum(quantity),0)    from entrylist  where " . $where;
         return $conn->GetOne($sql);
     }
 
@@ -127,7 +127,7 @@ class Entry extends \ZCL\DB\Entity
         if ($customer > 0) {
             $where = $where . " and customer_id= " . $customer;
         }
-        $sql = " select coalesce(sum(quantity*outprice),0) AS quantity  from entrylist  where " . $where;
+        $sql = " select coalesce(sum(quantity*outprice),0)    from entrylist  where " . $where;
         return $conn->GetOne($sql);
     }
 
