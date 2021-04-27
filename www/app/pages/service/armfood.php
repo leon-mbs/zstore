@@ -180,16 +180,20 @@ class ARMFood extends \App\Pages\Base
 
     public function onNewOrder($sender) {
         $this->orderlistpan->statuspan->setVisible(true);
-       $this->docpanel->setVisible(true);
+        $this->docpanel->setVisible(true);
         
         $this->docpanel->listsform->setVisible(true);
         $this->docpanel->navform->setVisible(true);
 
         $this->orderlistpan->setVisible(false);
-         $this->_itemlist = array();
         
-         $this->docpanel->listsform->itemlist->Reload(); 
-         $this->calcTotal() ;        
+        $this->_doc = \App\Entity\Doc\Document::create('OrderFood');
+          
+        
+        $this->_itemlist = array();
+        
+        $this->docpanel->listsform->itemlist->Reload(); 
+        $this->calcTotal() ;        
         
     }
 
@@ -216,7 +220,8 @@ class ARMFood extends \App\Pages\Base
     public function onDocRow($row) {
         $doc = $row->getDataItem();           
         $row->add(new ClickLink('docnumber',$this,'OnDocViewClick' ))->setValue($doc->document_number);
-   
+        $row->add(new Label('state', Document::getStateName($doc->state)));
+
         if ($doc->document_id == $this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }    
@@ -414,11 +419,48 @@ class ARMFood extends \App\Pages\Base
      }
      
      public function topayOnClick($sender) {
-        if(count($this->_itemlist)==0) {
-            $this->setError('noenterpos') ;
-            return;
+       
+        if(false == $this->createdoc())  return;
+       
+       
+        $cust = $this->form3->customer->getKey();
+        if($cust>0){
+            $this->_doc->customer_id = $cust;   
+        }
+         
+       
+        $this->_doc->payed = $this->docpanel->pfpayed->payed->getText();
+        $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
+        $this->_doc->headerdata['paydisc'] = $this->docpanel->pfdisc->paydisc->getText();
+        if($this->docpanel->payform->pt==2) {
+           $this->_doc->headerdata['payment'] = $this->setupform->beznal->getValue();
+        }  else {
+           $this->_doc->headerdata['payment'] = $this->setupform->nal->getValue();            
         }
        
+        if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
+            $this->setError("mustsel_cust");
+            return;
+        }
+          $conn = \ZDB\DB::getConnect();
+          $conn->BeginTrans();
+      
+         try {
+        
+            //если  оплачен  проводим  и закрываем
+            if ($this->_doc->payamount == $this->_doc->payed  ){
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                $this->_doc->updateStatus(Document::STATE_CLOSED);
+             
+            }
+         } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            return;
+        }     
         $this->docpanel->payform->clean() ;
         $this->docpanel->payform->pt=null;      
         
@@ -435,9 +477,48 @@ class ARMFood extends \App\Pages\Base
        
      }
      
-     public function savedoc($sender) {
-        $form =  $this->docpanel->payform;
-        $pt = $form->pt;
+     public function createdoc() {
+       if(count($this->_itemlist)==0) {
+            $this->setError('noenterpos') ;
+            return false;
+        }
+        if($this->_doc->document_id>0)  return true;
+        
+  
+        $this->_doc->document_number = $this->_doc->nextNumber();
+  
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $next = $this->_doc->nextNumber();
+            $this->_doc->document_number = $next;
+            if (strlen($next) == 0) {
+                $this->setError('docnumbercancreated');
+                return false;
+            }
+        }
+        $this->_doc->document_date = time();
+        $this->_doc->headerdata['time'] = time();
+         $this->_doc->notes = $this->docpanel->listsform->notes->getText();
+        $this->_doc->headerdata['pos'] = $this->pos->pos_id;
+        $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
+        $this->_doc->headerdata['store'] = $this->_store_id;
+        $this->_doc->headerdata['pricetype'] = $this->_pt;
+
+        $this->_doc->firm_id = $this->_pos->firm_id;
+
+        $firm = H::getFirmData($this->_doc->firm_id);
+        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
+        $this->_doc->headerdata["inn"] = $firm['inn'];
+        $this->_doc->headerdata["address"] = $firm['address'];
+        $this->_doc->headerdata["phone"] = $firm['phone'];
+
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
+        $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
+        $this->_doc->save();
+        $this->_doc->updateStatus(Document::STATE_NEW);
+     
+        
+        
+        return true;
      }
     
     
