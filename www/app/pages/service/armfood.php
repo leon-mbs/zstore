@@ -79,13 +79,23 @@ class ARMFood extends \App\Pages\Base
         $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
         $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(false, false, 1), $filter->nal));
         $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(false, false, 2), $filter->beznal ));
-       
+        
         //список  заказов
         $this->add(new Panel('orderlistpan'))->setVisible(false);
         $this->add(new ClickLink('neworder', $this, 'onNewOrder'));
         $this->orderlistpan->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
 
+        //панель статуса,  просмотр
+        $this->orderlistpan->add(new Panel('statuspan'))->setVisible(false);
+        
+        $this->orderlistpan->statuspan->add(new \App\Widgets\DocView('docview'));
+        
+        
+        
+        
+        
         //оформление заказа
+        
         $this->add(new Panel('docpanel'))->setVisible(false);
         $this->docpanel->add(new ClickLink('toorderlist', $this, 'onOrderList'));
 
@@ -100,28 +110,31 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->add(new TextInput('barcode'));
         $this->docpanel->navform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-        $this->docpanel->navform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
-        $this->docpanel->navform->add(new SubmitButton('baddnew'))->onClick($this, 'addnewOnClick');
+        
+        $this->docpanel->navform->add(new SubmitButton('baddnewpos'))->onClick($this, 'addnewposOnClick');
 
         $this->docpanel->add(new Form('listsform'))->setVisible(false);
         $this->docpanel->listsform->add(new DataView('itemlist', new ArrayDataSource($this, '_itemlist'), $this, 'onItemRow'));
 
         $this->docpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
+        $this->docpanel->listsform->add(new SubmitButton('btoprod'))->onClick($this, 'toprodOnClick');
+        $this->docpanel->listsform->add(new SubmitButton('btodel'))->onClick($this, 'todelOnClick');
         $this->docpanel->listsform->add(new Label('totalamount',"0")) ;
         
         $this->docpanel->listsform->add(new TextInput('notes')) ;
         $this->docpanel->listsform->add(new TextInput('table')) ;
-        $this->docpanel->listsform->add(new ClickLink('addcust'))->onClick($this, 'addcustOnClick');
-        $this->docpanel->listsform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        
+         
         
         $this->docpanel->add(new Form('payform'))->setVisible(false);
+        $this->docpanel->payform->add(new ClickLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docpanel->payform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docpanel->payform->add(new TextInput('pfamount')) ;
         $this->docpanel->payform->add(new TextInput('pfdisc')) ;
         $this->docpanel->payform->add(new TextInput('pfforpay')) ;
         $this->docpanel->payform->add(new TextInput('pfpayed')) ;
         $this->docpanel->payform->add(new TextInput('pfrest')) ;
-        $this->docpanel->payform->add(new Panel('delpan')) ;
+   
+        
 
         $this->docpanel->payform->pt = -1;
         $bind = new  \Zippy\Binding\PropertyBinding($this->docpanel->payform,'pt') ;
@@ -134,6 +147,8 @@ class ARMFood extends \App\Pages\Base
          
         $this->docpanel->add(new Panel('checkpan'))->setVisible(false);
         $this->docpanel->checkpan->add(new ClickLink('bnewcheck'))->onClick($this, 'onNewOrder');
+        
+
         
         
     }
@@ -164,7 +179,8 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function onNewOrder($sender) {
-        $this->docpanel->setVisible(true);
+        $this->orderlistpan->statuspan->setVisible(true);
+       $this->docpanel->setVisible(true);
         
         $this->docpanel->listsform->setVisible(true);
         $this->docpanel->navform->setVisible(true);
@@ -186,10 +202,11 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->checkpan->setVisible(false);
 
         $this->orderlistpan->setVisible(true);
+        $this->orderlistpan->statuspan->setVisible(true);
         $this->updateorderlist();
     }
 
-    public function addnewOnClick($sender) {
+    public function addnewposOnClick($sender) {
         $this->docpanel->catpan->setVisible(true);
         $this->docpanel->prodpan->setVisible(false);
         $this->_catlist = Category::find('coalesce(parent_id,0)=0');
@@ -197,8 +214,13 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function onDocRow($row) {
-        $order = $row->getDataItem();
-        $row->add(new Label('docnumber', $order->document_number));
+        $doc = $row->getDataItem();           
+        $row->add(new ClickLink('docnumber',$this,'OnDocViewClick' ))->setValue($doc->document_number);
+   
+        if ($doc->document_id == $this->_doc->document_id) {
+            $row->setAttribute('class', 'table-success');
+        }    
+    
     }
 
     private function updateorderlist() {
@@ -364,6 +386,21 @@ class ARMFood extends \App\Pages\Base
     }
     
 
+     public function OnDocViewClick($sender) {
+         $this->_doc = $sender->getOwner()->getDataItem()  ;
+         $this->OnDocView() ;
+         
+     }
+     public function OnDocView() {
+        $this->orderlistpan->statuspan->setVisible(true);
+  
+        $this->orderlistpan->statuspan->docview->setDoc($this->_doc);
+        $this->orderlistpan->orderlist->Reload(false);
+  //      $this->updateStatusButtons();
+  //      $this->goAnkor('dankor');       
+     }
+     
+     
      public function calcTotal() {
         $amount=0;
         foreach($this->_itemlist as $item){
@@ -381,7 +418,7 @@ class ARMFood extends \App\Pages\Base
             $this->setError('noenterpos') ;
             return;
         }
-        $this->docpanel->payform->delpan->setVisible($this->setupform->showdelivary->isChecked() );
+       
         $this->docpanel->payform->clean() ;
         $this->docpanel->payform->pt=null;      
         

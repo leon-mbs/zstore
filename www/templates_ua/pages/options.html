@@ -420,27 +420,31 @@
                                 <select class="form-control" zippy="foodpricetype">
                                 </select>
                             </div>
-                            <div class="form-check">
-                                <input zippy="fooddelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="fooddelivery">Наявнiсть доставки</label>
-                                
-                            </div>
-                            <div class="form-check">
+                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodtables">Обслуговування  столикiв  офiцiантом</label>
                                 
                             </div>
+                            
+                             {{#hideblock}} 
+                            
                             <div class="form-check">
                                 <input zippy="foodpack" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodpack">Можливiсть  упаковки  з  собою</label>
                                 
                             </div>
-                             <div class="form-check">
+                         
+                            <div class="form-check">
+                                <input zippy="fooddelivery" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="fooddelivery">Наявнiсть доставки</label>
+                            </div>
+                                
+                            <div class="form-check">
                                 <input zippy="foodbar" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodbar">Бар  окремо вiд кухнi</label>
                                 
                             </div>
-                          
+                            {{/hideblock}}
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Зберегти</button>
                             </div>
