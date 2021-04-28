@@ -124,11 +124,11 @@
                                 <tr>
                                     <th>Наименование</th>
                                     <th>Код</th>
-                                    <th class="text-right">Кол.</th>
+                                    <th class="text-right ">Кол.</th>
                                     <th class="text-right">Цена</th>
                                     <th class="text-right">Сумма</th>
                                    
-                                    <th class="text-center">С собой</th>
+                                    <th class="text-center text-nowrap">С собой</th>
                                    
                                     
                                     <th > </th>
@@ -138,7 +138,7 @@
 
                                     <td zippy="itemname"></td>
                                     <td zippy="item_code"></td>
-                                    <td class="text-right">
+                                    <td class="text-right text-nowrap">
                                         <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
                                         <span zippy="qty"></span>
                                         <a zippy="qtyplus" class="btn btn-info  btn-sm ml-1">+</a>
@@ -191,7 +191,7 @@
                 <div class="col-12   ">   
                     <form zippy="payform" class="row">
                            
-                            <div class="col-12 col-md-4 col-xl-3  ">   
+                            <div class="col-12 col-md-4 col-xl-3 mr-4 ">   
                             <div class="form-group   ">
                                  <label   for="customer">Клиент</label>
                                  
@@ -202,19 +202,19 @@
                             <div class="form-group   ">
                                     <label for="pfamount"  >Сумма</label>
                                     
-                                        <input zippy="pfamount" readonly="readonly"   class="form-control  "  pattern="[0-9\.]+">
+                                        <input zippy="pfamount" readonly="readonly" style="width:100px;"  class="form-control  "  pattern="[0-9\.]+">
                                      
                                 </div>
                                 <div class="form-group   ">
                                     <label  for="pfdisc"  >Скидка</label>
                                   
-                                    <input zippy="pfdisc"  class="form-control  "  pattern="[0-9\.]+">
+                                    <input zippy="pfdisc"  class="form-control  " style="width:100px;" pattern="[0-9\.]+">
                                      
                                 </div>
                                 <div class="form-group   ">
                                     <label  for="pfforpay" >К оплате</label>
                                     
-                                        <input zippy="pfforpay" readonly="readonly"  class="form-control  "  pattern="[0-9\.]+">
+                                        <input zippy="pfforpay" readonly="readonly" style="width:100px;" class="form-control  "  pattern="[0-9\.]+">
                                     
                                 </div>
                             </div>
@@ -222,7 +222,7 @@
                           
                                 <div class="form-group   ">
                                     <label   >Тип  оплаты</label>
-                                  
+                                        <br>
 
                                         <div class="form-check form-check-inline">
                                             <input zippy="pfnal" class="form-check-input" type="radio"   >
@@ -238,14 +238,15 @@
                                 <div class="form-group   ">
                                     <label for="pfpayed"  >Внесена  оплата</label>
                                   
-                                        <input zippy="pfpayed"  class="form-control  "  pattern="[0-9\.]+">
+                                        <input zippy="pfpayed" style="width:100px;" class="form-control  "  pattern="[0-9\.]+">
                                     
                                 </div>
-                                <div class="form-group row ">
-                                    <label for="pfrest"   >Здача</label>
-                                   
-                                        <input zippy="pfrest" class="form-control  " pattern="[0-9\.]+">
-                                     
+                                <div class="form-group   ">
+                                    
+                                   <label for="pfrest"  >Здача   </label>
+                                    
+                                     <input zippy="pfrest" style="width:100px;" class="form-control  "  pattern="[0-9\.]+">
+                                        
                                 </div>
                             </div>
                             <div class="col-12   ">  
@@ -262,11 +263,11 @@
                 <div class="col-12 col-md-8 col-xl-6  ">  
                     <div zippy="checkpan">
 
-
-
-                        <a zippy="btoprint">Печать</a>&nbsp;&nbsp;&nbsp;
-                        <a zippy="bnewcheck">Новый заказ</a> &nbsp;&nbsp;&nbsp;
-                   {{#hideblock}}       <a zippy="bnewdelivery">Новая доставка</a>       {{/hideblock}} 
+                        <div zippy="checktext"></div> 
+                        <br>
+                        <a zippy="btoprint"  class="btn  btn-info">Печать</a>&nbsp;&nbsp;&nbsp;
+                        <a zippy="bnewcheck"  class="btn  btn-success">Новый заказ</a> &nbsp;&nbsp;&nbsp;
+                   {{#hideblock}}       <a zippy="bnewdelivery" class="btn  btn-success">Новая доставка</a>       {{/hideblock}} 
                     </div>
                 </div> 
 
@@ -359,9 +360,34 @@
                 
 
             </div>
-        </div>
+      </div>
     
+   <form zippy="editcust">
+            <h3>&nbsp;Новый покупатель </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
 
+                    <div class="form-group">
+                        <label for="editcustname">Имя </label>
+                        <input class="form-control " zippy="editcustname" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editphone">Телефон</label>
+                        <input class="form-control" type="text" zippy="editphone"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editaddress">Адрес</label>
+                        <input class="form-control" type="text" zippy="editaddress"/>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-light ">
+                    </div>
+                </div>
+            </div>
+        </form>
 
     {{#usescanner}}
     <script>

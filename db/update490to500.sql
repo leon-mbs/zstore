@@ -21,3 +21,18 @@ ALTER VIEW `entrylist_view` AS
   from 
     ((`entrylist` left join `store_stock` on((`entrylist`.`stock_id` = `store_stock`.`stock_id`))) join `documents` on((`entrylist`.`document_id` = `documents`.`document_id`)));
     
+ALTER TABLE `eventlist` DROP notify_id;   
+ALTER TABLE `eventlist` ADD `isdone` TINYINT(1) NOT NULL DEFAULT 0 ; 
+
+ALTER VIEW eventlist_view AS 
+  select 
+    e.user_id AS user_id,
+    e.eventdate AS eventdate,
+    e.title AS title,
+    e.description AS description,
+    e.event_id AS event_id,
+    e.customer_id AS customer_id,
+    e.isdone AS isdone,
+    c.customer_name AS customer_name 
+  from 
+    (eventlist e left join customers c on((e.customer_id = c.customer_id)));

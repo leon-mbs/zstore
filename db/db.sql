@@ -211,16 +211,16 @@ CREATE TABLE `entrylist` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
-  FOR EACH ROW
-BEGIN
-
-
-
- IF new.stock_id >0 then
-
-  update store_stock set qty=(select  coalesce(sum(quantity),0) from entrylist where stock_id=new.stock_id) where store_stock.stock_id = new.stock_id;
- END IF;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_ins_tr` AFTER INSERT ON `entrylist`
+  FOR EACH ROW
+BEGIN
+
+
+
+ IF new.stock_id >0 then
+
+  update store_stock set qty=(select  coalesce(sum(quantity),0) from entrylist where stock_id=new.stock_id) where store_stock.stock_id = new.stock_id;
+ END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -238,15 +238,15 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
-  FOR EACH ROW
-BEGIN
-
-
- IF old.stock_id >0 then
-
-  update store_stock set qty=(select  coalesce(sum(quantity),0) from entrylist where stock_id=old.stock_id) where store_stock.stock_id = old.stock_id;
- END IF;
+/*!50003 CREATE*/ /*!50017 */ /*!50003 TRIGGER `entrylist_after_del_tr` AFTER DELETE ON `entrylist`
+  FOR EACH ROW
+BEGIN
+
+
+ IF old.stock_id >0 then
+
+  update store_stock set qty=(select  coalesce(sum(quantity),0) from entrylist where stock_id=old.stock_id) where store_stock.stock_id = old.stock_id;
+ END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -292,7 +292,7 @@ CREATE TABLE `eventlist` (
   `eventdate` datetime NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `notify_id` int(11) NOT NULL,
+  `isdone` TINYINT(1) NOT NULL DEFAULT 0 ,
   `event_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
   PRIMARY KEY (`event_id`),
@@ -309,7 +309,7 @@ SET character_set_client = utf8;
  1 AS `eventdate`,
  1 AS `title`,
  1 AS `description`,
- 1 AS `notify_id`,
+ 1 AS `isdone`,
  1 AS `event_id`,
  1 AS `customer_id`,
  1 AS `customer_name`*/;
@@ -1052,7 +1052,7 @@ CREATE TABLE `zformstat` (
   `document_number` varchar(255) NOT NULL,
   `amount3` decimal(10,2) NOT NULL,
   PRIMARY KEY (`zf_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;  
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50001 DROP VIEW IF EXISTS `contracts_view`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
@@ -1128,7 +1128,7 @@ CREATE TABLE `zformstat` (
 /*!50001 SET collation_connection      = latin1_swedish_ci */;
 /*!50001 CREATE */
 /*!50013  SQL SECURITY DEFINER */
-/*!50001 VIEW `eventlist_view` AS select `e`.`user_id` AS `user_id`,`e`.`eventdate` AS `eventdate`,`e`.`title` AS `title`,`e`.`description` AS `description`,`e`.`notify_id` AS `notify_id`,`e`.`event_id` AS `event_id`,`e`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name` from (`eventlist` `e` left join `customers` `c` on((`e`.`customer_id` = `c`.`customer_id`))) */;
+/*!50001 VIEW `eventlist_view` AS select `e`.`user_id` AS `user_id`,`e`.`eventdate` AS `eventdate`,`e`.`title` AS `title`,`e`.`description` AS `description`,`e`.`isdone` AS `isdone`,`e`.`event_id` AS `event_id`,`e`.`customer_id` AS `customer_id`,`c`.`customer_name` AS `customer_name` from (`eventlist` `e` left join `customers` `c` on((`e`.`customer_id` = `c`.`customer_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

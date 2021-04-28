@@ -46,9 +46,7 @@ class ARMPos extends \App\Pages\Base
             $filter->pos = 0;
             $filter->store = H::getDefStore();
             $filter->pricetype = H::getDefPriceType();
-            $filter->nal = H::getDefMF();
-            $filter->beznal = H::getDefMF();
-            $filter->foodtype = 1;
+      
 
              
         }

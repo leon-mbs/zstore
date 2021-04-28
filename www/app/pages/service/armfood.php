@@ -35,6 +35,8 @@ class ARMFood extends \App\Pages\Base
     private $_pricetype;
     private $_foodtype;
     private $_pos;
+    private $_store;
+    public $_pt;
  
     private $_doc;
     public  $_itemlist   = array();
@@ -138,19 +140,27 @@ class ARMFood extends \App\Pages\Base
         
 
         $this->docpanel->payform->pt = -1;
-        $bind = new  \Zippy\Binding\PropertyBinding($this->docpanel->payform,'pt') ;
+        $bind = new  \Zippy\Binding\PropertyBinding($this,'_pt') ;
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfnal',$bind,1)  ) ;
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfbeznal',$bind,2)  ) ;
         
         $this->docpanel->payform->add(new ClickLink('bbackitems'))->onClick($this, 'backItemsOnClick');
-        $this->docpanel->payform->add(new SubmitButton('btocheck'))->onClick($this, 'savedoc');
+        $this->docpanel->payform->add(new SubmitButton('btocheck'))->onClick($this, 'payandcloseOnClick');
 
          
         $this->docpanel->add(new Panel('checkpan'))->setVisible(false);
         $this->docpanel->checkpan->add(new ClickLink('bnewcheck'))->onClick($this, 'onNewOrder');
+        $this->docpanel->checkpan->add(new Label('checktext'));
         
 
-        
+       //добавление нового контрагента
+        $this->add(new Form('editcust'))->setVisible(false);
+        $this->editcust->add(new TextInput('editcustname'));
+        $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new TextInput('editaddress'));
+        $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
+        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
+       
         
     }
 
@@ -167,11 +177,11 @@ class ARMFood extends \App\Pages\Base
         }
         $filter = \App\Filter::getFilter("armfood");
 
-        $filter->pos = $this->setupform->pos->getValue();
-        $filter->store = $store;
+        
+        $filter->_store = $store;
      
-        $filter->nal = $nal;
-        $filter->beznal = $beznal;
+        $filter->_nal = $nal;
+        $filter->_beznal = $beznal;
                
 
         $this->setupform->setVisible(false);
@@ -187,6 +197,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->navform->setVisible(true);
 
         $this->orderlistpan->setVisible(false);
+        $this->checkpan->setVisible(false);
         
         $this->_doc = \App\Entity\Doc\Document::create('OrderFood');
           
@@ -243,10 +254,10 @@ class ARMFood extends \App\Pages\Base
     }
     //товары
     public function onProdRow($row) {
-        //$store_id = $this->setupform->store->getValue();
+       //  $store_id = $this->setupform->store->getValue();
           
         $prod = $row->getDataItem();
-        $prod->price = $prod->getPrice($this->_pricetype, $store_id);
+        $prod->price = $prod->getPrice($this->_pricetype );
         $row->add(new ClickLink('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
@@ -421,6 +432,9 @@ class ARMFood extends \App\Pages\Base
      }
      
      public function topayOnClick($sender) {
+           $this->docpanel->payform->setVisible(true);
+           $this->docpanel->listsform->setVisible(false);
+           $this->docpanel->navform->setVisible(false);
            $this->docpanel->payform->clean();
            $amount = $this->docpanel->listsform->totalamount->getText() ;
            $this->docpanel->payform->pfamount->setText(H::fa($amount))  ;
@@ -430,9 +444,9 @@ class ARMFood extends \App\Pages\Base
            
      }
      //Оплата
-     public function payandcloseOnClick($sender) {
+     public function payandcloseOnClick() {
   
-        if ($this->docpanel->payform->pt !=1 && $this->_doc->customer_id !=2) {
+        if ($this->_pt !=1  ) {
             $this->setError("noselpaytype");
             return;
         }       
@@ -449,7 +463,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
         $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
-        if($this->docpanel->payform->pt==2) {
+        if($this->_pt==2) {
            $this->_doc->headerdata['payment'] = $this->setupform->beznal->getValue();
         }  else {
            $this->_doc->headerdata['payment'] = $this->setupform->nal->getValue();            
@@ -478,13 +492,12 @@ class ARMFood extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }     
-        $this->docpanel->payform->clean() ;
-        $this->docpanel->payform->pt=null;      
-        
-        
-        $this->docpanel->listsform->setVisible(false);
-        $this->docpanel->navform->setVisible(false);
-        $this->docpanel->payform->setVisible(true);
+       
+        $check = $this->_doc->generatePosReport();
+       
+        $this->docpanel->checkpan->checktext->setText($check,true);
+        $this->docpanel->checkpan->setVisible(true);
+        $this->docpanel->payform->setVisible(false);
      } 
     
      public function backItemsOnClick($sender) {
@@ -517,7 +530,7 @@ class ARMFood extends \App\Pages\Base
          $this->_doc->notes = $this->docpanel->listsform->notes->getText();
         $this->_doc->headerdata['pos'] = $this->_pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->_pos->pos_name;
-        $this->_doc->headerdata['store'] = $this->_store_id;
+        $this->_doc->headerdata['store'] = $this->_store;
         $this->_doc->headerdata['pricetype'] = $this->_pt;
 
         $this->_doc->firm_id = $this->_pos->firm_id;
@@ -537,7 +550,60 @@ class ARMFood extends \App\Pages\Base
         
         return true;
      }
+   
+   
+  //добавление нового контрагента
+    public function addcustOnClick($sender) {
+        $this->editcust->setVisible(true);
+        $this->docpanel->payform->setVisible(false);
+
+        $this->editcust->editcustname->setText('');
+        $this->editcust->editaddress->setText('');
+        $this->editcust->editphone->setText('');
+    }
+   
+   
     
-    
+  public function savecustOnClick($sender) {
+        $custname = trim($this->editcust->editcustname->getText());
+        if (strlen($custname) == 0) {
+            $this->setError("entername");
+            return;
+        }
+        $cust = new Customer();
+        $cust->customer_name = $custname;
+        $cust->address = $this->editcust->editaddress->getText();
+        $cust->phone = $this->editcust->editphone->getText();
+        $cust->phone = \App\Util::handlePhone($cust->phone);
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
+            $this->setError("");
+            $this->setError("tel10", H::PhoneL());
+            return;
+        }
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+
+                $this->setError("existcustphone");
+                return;
+            }
+        }
+        $cust->type = Customer::TYPE_BAYER;
+        $cust->save();
+        $this->docpanel->payform->customer->setText($cust->customer_name);
+        $this->docpanel->payform->customer->setKey($cust->customer_id);
+
+        $this->editcust->setVisible(false);
+        $this->docpanel->payform->setVisible(true);
+        
+    }
+
+    public function cancelcustOnClick($sender) {
+        $this->editcust->setVisible(false);
+        $this->docpanel->payform->setVisible(true);
+    }
+   
         
 }
