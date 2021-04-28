@@ -425,25 +425,32 @@
                                 <label class="form-check-label" for="foodtables">Обслуговування  столикiв  офiцiантом</label>
                                 
                             </div>
-                            
+                             {{#hideblock}}  
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="fooddelivery">Наявнiсть доставки</label>
+                                <label class="form-check-label" for="fooddelivery">Можливiсть доставки</label>
                             </div>
-                             {{#hideblock}} 
+                           
                             
-                            <div class="form-check">
-                                <input zippy="foodpack" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodpack">Можливiсть  упаковки  з  собою</label>
-                                
-                            </div>
+                       
                          
                                 
                             <div class="form-check">
                                 <input zippy="foodbar" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodbar">Бар  окремо вiд кухнi</label>
-                                
+                                <small>Окремий чек  (замовлення) для  бару</small>
                             </div>
+                           <div class="form-check">
+                                <label for="foodworktype">Организация процесса</label>
+                                <select class="form-control" zippy="foodworktype">
+                                   <option value="0">Сразу  выдача  заказа  и оплата на месте</option>
+                                   <option value="1">Оплата  затем  производство  и выдача</option>
+                                   <option value="2">Производство,  выдача, расчет официантом</option>
+                                </select>
+                               
+                            </div>
+                            
+                            
                             {{/hideblock}}
                             <div class="form-group">
                                 <button class="btn btn-primary" type="submit">Зберегти</button>

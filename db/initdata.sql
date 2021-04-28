@@ -10,8 +10,9 @@ UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' 
 
  
 INSERT INTO `stores` (  `storename`, `description`) VALUES(  'Основной склад', '');
-INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`) VALUES(2, 'Касса', 'Основная касса');
+INSERT INTO `mfund` ( `mf_name`, `description`) VALUES( 'Касса', 'Основная касса');
 INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  'Наша  фирма', '', 0);
+INSERT INTO `customers` ( `customer_name`, `detail`, `email`, `phone`, `status`, `city`, `leadstatus`, `leadsource`, `createdon`) VALUES( 'Физ. лицо', '<detail><code></code><discount></discount><bonus></bonus><type>0</type><fromlead>0</fromlead><jurid></jurid><shopcust_id></shopcust_id><isholding>0</isholding><holding>0</holding><viber></viber><nosubs>1</nosubs><user_id>4</user_id><holding_name><![CDATA[]]></holding_name><address><![CDATA[]]></address><comment><![CDATA[Условный контрагент если  надо  кого то  указать.]]></comment></detail>', '', '', 0, '', NULL, NULL, '2021-04-28');
 
 
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('api', 'a:3:{s:3:"exp";N;s:3:"key";N;s:5:"atype";s:1:"3";}');

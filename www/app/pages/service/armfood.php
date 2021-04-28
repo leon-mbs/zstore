@@ -88,7 +88,7 @@ class ARMFood extends \App\Pages\Base
         //панель статуса,  просмотр
         $this->orderlistpan->add(new Panel('statuspan'))->setVisible(false);
         
-        $this->orderlistpan->statuspan->add(new \App\Widgets\DocView('docview'));
+        $this->orderlistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         
         
         
@@ -123,6 +123,7 @@ class ARMFood extends \App\Pages\Base
         
         $this->docpanel->listsform->add(new TextInput('notes')) ;
         $this->docpanel->listsform->add(new TextInput('table')) ;
+        
          
         
         $this->docpanel->add(new Form('payform'))->setVisible(false);
@@ -233,13 +234,14 @@ class ARMFood extends \App\Pages\Base
         $this->_doclist = Document::find($where, 'document_id');
         $this->orderlistpan->orderlist->Reload();
     }
-
+    //категории
     public function onCatRow($row) {
         $cat = $row->getDataItem();
         $row->add(new ClickLink('catbtn'))->onClick($this, 'onCatBtnClick');
         $row->catbtn->add(new Label('catname', $cat->cat_name));
         $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
     }
+    //товары
     public function onProdRow($row) {
         //$store_id = $this->setupform->store->getValue();
           
@@ -345,7 +347,7 @@ class ARMFood extends \App\Pages\Base
     }
     
     
-    
+    //список позиций
     public function onItemRow($row) {
         $item = $row->getDataItem();
         
@@ -419,19 +421,34 @@ class ARMFood extends \App\Pages\Base
      }
      
      public function topayOnClick($sender) {
-       
+           $this->docpanel->payform->clean();
+           $amount = $this->docpanel->listsform->totalamount->getText() ;
+           $this->docpanel->payform->pfamount->setText(H::fa($amount))  ;
+           $this->docpanel->payform->pfforpay->setText(H::fa($amount))  ;
+           $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
+           $this->docpanel->payform->pfrest->setText(H::fa(0))  ;
+           
+     }
+     //Оплата
+     public function payandcloseOnClick($sender) {
+  
+        if ($this->docpanel->payform->pt !=1 && $this->_doc->customer_id !=2) {
+            $this->setError("noselpaytype");
+            return;
+        }       
         if(false == $this->createdoc())  return;
        
        
-        $cust = $this->form3->customer->getKey();
+        $cust = $this->docpanel->payform->customer->getKey();
         if($cust>0){
             $this->_doc->customer_id = $cust;   
         }
-         
+
+        
        
-        $this->_doc->payed = $this->docpanel->pfpayed->payed->getText();
+        $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
-        $this->_doc->headerdata['paydisc'] = $this->docpanel->pfdisc->paydisc->getText();
+        $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
         if($this->docpanel->payform->pt==2) {
            $this->_doc->headerdata['payment'] = $this->setupform->beznal->getValue();
         }  else {
@@ -498,8 +515,8 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->document_date = time();
         $this->_doc->headerdata['time'] = time();
          $this->_doc->notes = $this->docpanel->listsform->notes->getText();
-        $this->_doc->headerdata['pos'] = $this->pos->pos_id;
-        $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
+        $this->_doc->headerdata['pos'] = $this->_pos->pos_id;
+        $this->_doc->headerdata['pos_name'] = $this->_pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store_id;
         $this->_doc->headerdata['pricetype'] = $this->_pt;
 
