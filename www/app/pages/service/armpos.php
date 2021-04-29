@@ -734,6 +734,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['time'] = time();
         $this->_doc->payed = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
+        $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
         $this->_doc->headerdata['paydisc'] = $this->docpanel->form3->paydisc->getText();
         $this->_doc->headerdata['payment'] = $this->docpanel->form3->payment->getValue();
 
@@ -971,7 +972,7 @@ class ARMPos extends \App\Pages\Base
     
     }
     private function updatechecklist() {
-        $where = "meta_name='PosCheck' and state not in(9,15) ";
+        $where = "meta_name='PosCheck' ";
         $this->_doclist = Document::find($where, 'document_id desc');
         $this->checklistpan->checklist->Reload();
     }

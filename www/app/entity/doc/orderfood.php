@@ -50,7 +50,7 @@ class OrderFood extends Document
                         "phone"           => $firm["phone"],
                         "inn"             => $firm["inn"],
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
-                        "exchange"        => $this->headerdata["exchange"],
+                        "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
@@ -100,7 +100,7 @@ class OrderFood extends Document
                         "checkslogan"     => $common["checkslogan"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"    => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
-                        "exchange"        => $this->headerdata["exchange"],
+                        "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
@@ -189,11 +189,7 @@ class OrderFood extends Document
                 $customer->save();
             }
         }
-        $payed = $this->payed;
-        if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
-
-            $payed = $this->payed - $this->headerdata['exchange']; //без здачи
-        }
+      
    
         if ($this->headerdata['payment'] > 0 && $payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
@@ -213,6 +209,6 @@ class OrderFood extends Document
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
 
-    
+     
 
 }

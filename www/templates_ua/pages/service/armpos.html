@@ -3,10 +3,10 @@
 
     </head>
     <body>
-        <h3> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;АРМ касира</h3>
-        <br>
+          <h3>  АРМ касира</h3>
+     
         <form zippy="form1">
-
+     
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group  ">
@@ -39,6 +39,11 @@
 
         </form>
 
+       <div   zippy="docpanel">
+        
+               <h4>Оформлення  чеку</h4>
+            <a zippy="tochecklist"><i class="fa fa-arrow-circle-left"></i> До списку  чекiв</a>
+ 
         <form zippy="form2">
             {{#ppo}}
             <div class="row">
@@ -324,6 +329,106 @@
                 </div>
             </div>
         </form>
+        </div>  
+ <div class="row" zippy="checklistpan"  >
+       
+            <div class="col-12 col-md-6 xl-4" >
+                <h4>Список  чекiв</h4>
+                <a  class="btn btn-success" zippy="newcheck">Новий чек</a>   
+      
+                 {{#hideblock}}
+              <div class="row"  >       
+                <div class="card">
+                    <div class="card-body">
+                        <div class="navbar nav">
+                            <form zippy="searchform" class="form-inline ">
+                             
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                {{/hideblock}}
+                
+    
+              
+                <table class="table  table-sm">
+                    <tr>
+                    <th>Номер</th>
+               
+                    
+                 
+                    <th >Статус</th>
+                     
+                  
+                      <th ></th>
+               
+                    <th class="text-right">Сума</th>
+                    
+                  
+                    <th ></th>
+                
+                    </tr>
+                    <tr zippy="checklist">
+                        <td ><a zippy="docnumber"></a></td>
+                      
+                        <td class="text-nowrap  " zippy="state">  </td>
+                         <td ><i title="Очiкуе  оплату" class="fa fa-credit-card" zippy="waitpay" /></td>
+                       
+                        <td class="text-right" zippy="rowamount"> </td>
+                          
+                        <td zippy="rownotes"></td>
+                    </tr>
+
+                </table>  <a id="dankor"></a>
+            
+              <div class="col-12 col-md-10 xl-8" > 
+               <div class="row" zippy="statuspan">
+                 {{#hideblock}}
+             
+                <div class="card">
+                    <div class="card-body">
+                        <div class="navbar nav">
+                            <form zippy="statusform" class="form-inline ">
+                            <label for="stpamount">До сплати</label>
+                            <input zippy="stpamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сумма..."
+                                   class="form-control mr-2">
+                            <label for="stpayment">рахунок</label>
+                            <select class="form-control mr-2" zippy="stpayment">
+
+                            </select>
+                            <button zippy="stbtnpay" type="submit" class="  btn btn-info  mr-4 ">Сплатити</button>
+                            <button zippy="stbtback" type="submit" class="  btn btn-info  mr-2 ">Повернення</button>
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{/hideblock}}
+                
+                
+                <div class="card">
+                    <div class="card-body">
+                        
+                        <div zippy="docview"></div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+
+                
+                
+
+            </div>
+               
+      </div>         
+          
+        
+        
+        
         <form zippy="editcust">
             <h3>&nbsp;Новий контрагент </h3>
             <div class="row">

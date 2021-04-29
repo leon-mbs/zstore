@@ -136,8 +136,8 @@ class POSCheck extends \App\Pages\Base
             $this->docform->paydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
             $this->docform->exchange->setText(H::fa($this->_doc->headerdata['exchange']));
 
             $this->OnPayment($this->docform->payment);

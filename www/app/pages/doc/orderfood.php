@@ -45,7 +45,7 @@ class OrderFood extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
 
         $this->docform->add(new Label('discount'))->setVisible(false);
         $this->docform->add(new TextInput('editpaydisc'));
@@ -116,20 +116,20 @@ class OrderFood extends \App\Pages\Base
 
             $this->docform->payment->setValue(H::fa($this->_doc->headerdata['payment']));
 
-            $this->docform->exchange->setText($this->_doc->exchange);
+            
             $this->docform->payamount->setText(H::fa($this->_doc->payamount));
             $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
             $this->docform->paydisc->setText(H::fa($this->_doc->headerdata['paydisc']));
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
 
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
             $this->docform->exchange->setText(H::fa($this->_doc->headerdata['exchange']));
 
-            $this->OnPayment($this->docform->payment);
+            
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            //  $this->docform->pos->setValue($this->_doc->headerdata['pos']);
+            $this->docform->pos->setValue($this->_doc->headerdata['pos']);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
@@ -514,20 +514,7 @@ class OrderFood extends \App\Pages\Base
         $this->docform->exchange->setText(H::fa(0));
     }
 
-    public function OnPayment($sender) {
-        $b = $sender->getValue();
-        if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->docform->payed->setVisible(false);
-            $this->docform->payamount->setVisible(false);
-            $this->docform->paydisc->setVisible(false);
-            $this->docform->exchange->setVisible(false);
-        } else {
-            $this->docform->payed->setVisible(true);
-            $this->docform->payamount->setVisible(true);
-            $this->docform->paydisc->setVisible(true);
-            $this->docform->exchange->setVisible(true);
-        }
-    }
+ 
 
     
     /**

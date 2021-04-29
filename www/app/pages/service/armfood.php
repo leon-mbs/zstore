@@ -177,8 +177,8 @@ class ARMFood extends \App\Pages\Base
         $filter->store = $store;
         $filter->pos = $this->_pos->pos_id;
       
-        $filter->_nal = $nal;
-        $filter->_beznal = $beznal;
+        $filter->nal = $nal;
+        $filter->beznal = $beznal;
         $this->_store = $store;
         $this->_pricetype = $filter->pricetype;
                 
@@ -240,7 +240,7 @@ class ARMFood extends \App\Pages\Base
     }
 
     private function updateorderlist() {
-        $where = "meta_name='OrderFood' and state not in(9,15) ";
+        $where = "meta_name='OrderFood'   ";
         $this->_doclist = Document::find($where, 'document_id desc');
         $this->orderlistpan->orderlist->Reload();
     }
@@ -438,52 +438,60 @@ class ARMFood extends \App\Pages\Base
            $amount = $this->docpanel->listsform->totalamount->getText() ;
            $this->docpanel->payform->pfamount->setText(H::fa($amount))  ;
            $this->docpanel->payform->pfforpay->setText(H::fa($amount))  ;
-           $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
+         //  $this->docpanel->payform->pfpayed->setText(H::fa($amount))  ;
            $this->docpanel->payform->pfrest->setText(H::fa(0))  ;
            
      }
      //Оплата
      public function payandcloseOnClick() {
   
-        if ($this->_pt !=1  ) {
+        if ($this->_pt !=1 && $this->_pt !=2 ) {
             $this->setError("noselpaytype");
             return;
-        }       
-        if(false == $this->createdoc())  return;
-       
-       
-        $cust = $this->docpanel->payform->customer->getKey();
-        if($cust>0){
-            $this->_doc->customer_id = $cust;   
-        }
-
+        }   
         
-       
-        $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
-        $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
-        $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
-        $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
-        if($this->_pt==2) {
-           $this->_doc->headerdata['payment'] = $this->setupform->beznal->getValue();
-        }  else {
-           $this->_doc->headerdata['payment'] = $this->setupform->nal->getValue();            
-        }
-       
-        if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
-            $this->setError("mustsel_cust");
-            return;
-        }
-          $conn = \ZDB\DB::getConnect();
+      $conn = \ZDB\DB::getConnect();
           $conn->BeginTrans();
       
          try {
+         
         
-            //если  оплачен  проводим  и закрываем
-            if ($this->_doc->payamount == $this->_doc->payed  ){
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                $this->_doc->updateStatus(Document::STATE_CLOSED);
-             
+            
+            if(false == $this->createdoc())  return;
+           
+           
+            $cust = $this->docpanel->payform->customer->getKey();
+            if($cust>0){
+                $this->_doc->customer_id = $cust;   
             }
+
+            
+           
+            $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
+            $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
+            $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
+            $this->_doc->headerdata['payed'] = $this->docpanel->payform->pfpayed->getText();
+            $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();
+            if($this->_pt==2) {
+               $this->_doc->headerdata['payment'] = $this->setupform->beznal->getValue();
+            }  else {
+               $this->_doc->headerdata['payment'] = $this->setupform->nal->getValue();            
+            }
+           
+            if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
+                $this->setError("mustsel_cust");
+                return;
+            }
+    
+            $this->_doc->updateStatus(Document::STATE_EXECUTED);
+         
+            //если  оплачен    закрываем
+            if ($this->_doc->payamount <= $this->_doc->payed  ){
+                $this->_doc->updateStatus(Document::STATE_CLOSED);
+            }
+            $conn->CommitTrans();
+              
+            
          } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();

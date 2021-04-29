@@ -1,24 +1,38 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
-        <td colspan="3">Замовлення {{document_number}}</td>
+        <td colspan="3">Чек {{document_number}}</td>
+    </tr>
+    {{#fiscalnumber}}
+    <tr>
+        <td colspan="3">Фіск. номер {{fiscalnumber}}</td>
+    </tr>
+    {{/fiscalnumber}}
+    <tr>
+
+        <td colspan="3">від {{time}}</td>
     </tr>
     <tr>
 
-        <td colspan="3">вiд {{date}}</td>
-    </tr>
-    <tr>
-        <td colspan="3"> Продавець:</td>
+        <td colspan="2"> {{firm_name}}</td>
     </tr>
     <tr>
 
-        <td colspan="3"> {{firm_name}}</td>
+        <td colspan="3">ІПН {{inn}}</td>
     </tr>
+    {{#shopname}}
+    <tr>
+        <td colspan="3"> {{shopname}}</td>
+    </tr>
+    {{/shopname}}
 
+    <tr>
 
+        <td colspan="3"> {{address}}</td>
+    </tr>
     <tr>
         <td colspan="3"> {{phone}}</td>
     </tr>
-
+    {{#customer_name}}
     <tr>
         <td colspan="3"> Покупець:</td>
     </tr>
@@ -26,14 +40,19 @@
         <td colspan="3"> {{customer_name}}</td>
     </tr>
 
+    {{/customer_name}}
 
     <tr>
-        <td colspan="3">Доставка {{delivery}}</td>
-
+        <td colspan="3">Термінал: {{pos_name}}</td>
     </tr>
     <tr>
-        <td colspan="3">{{ship_address}}</td>
+        <td colspan="3">Касир:</td>
     </tr>
+    <tr>
+        <td colspan="3"> {{username}}</td>
+    </tr>
+
+
     {{#_detail}}
     <tr>
         <td colspan="3">{{tovar_name}}</td>
@@ -43,8 +62,7 @@
 
     <tr>
 
-        <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
+        <td colspan="2" align="right">{{quantity}}</td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
@@ -53,5 +71,28 @@
         <td align="right">{{total}}</td>
     </tr>
 
+    {{^prepaid}}
+    {{#isdisc}}
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">Знижка:</td>
+        <td align="right">{{paydisc}}</td>
+    </tr>
+    {{/isdisc}}
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">До сплати:</td>
+        <td align="right">{{payamount}}</td>
+    </tr>
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">Оплата:</td>
+        <td align="right">{{payed}}</td>
+    </tr>
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">Решта:</td>
+        <td align="right">{{exchange}}</td>
+    </tr>
+    {{/prepaid}}
+    <tr style="font-weight: bolder;">
+        <td colspan="3"><br>{{checkslogan}}</td>
 
+    </tr>
 </table>
