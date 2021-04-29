@@ -87,7 +87,7 @@
     </tr>
     {{/prepaid}}
     <tr style="font-weight: bolder;">
-        <td colspan="3"><br>Дякуємо за довiру до нас!</td>
+        <td colspan="3"><br>{{checkslogan}}</td>
 
     </tr>
 </table>

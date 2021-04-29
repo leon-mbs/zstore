@@ -67,6 +67,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('ts_break'));
         $this->common->add(new TextInput('ts_start'));
         $this->common->add(new TextInput('ts_end'));
+        $this->common->add(new TextInput('checkslogan'));
 
         $common = System::getOptions("common");
         if (!is_array($common)) {
@@ -106,6 +107,7 @@ class Options extends \App\Pages\Base
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
         $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
         $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
+        $this->common->checkslogan->setText( $common['checkslogan']);
 
         //валюты
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
@@ -230,6 +232,7 @@ class Options extends \App\Pages\Base
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();
         $common['ts_end'] = $this->common->ts_end->getText();
+        $common['checkslogan'] = $this->common->checkslogan->getText();
 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
 

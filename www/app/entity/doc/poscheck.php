@@ -112,6 +112,7 @@ class POSCheck extends Document
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
                         "inn"             => $firm["inn"],
+                        "checkslogan"     => $common["checkslogan"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"    => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "exchange"        => $this->headerdata["exchange"],

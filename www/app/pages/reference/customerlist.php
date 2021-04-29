@@ -35,7 +35,7 @@ class CustomerList extends \App\Pages\Base
     public  $_contrtlist      = array();
     public  $_leadsourceslist = array();
 
-    public function __construct($id = 0) {
+    public function __construct($id = 0 ) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('CustomerList')) {
             return;
@@ -145,9 +145,10 @@ class CustomerList extends \App\Pages\Base
         if ($id > 0) {
             $this->_customer = Customer::load($id);
             if ($this->_customer instanceof Customer) {
-                $this->show();
+                 $this->viewContent(); 
             }
         }
+       
 
         $this->_tvars['leadmode'] = false;
     }
@@ -347,9 +348,19 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->setVisible(false);
     }
 
+    
+    
+    
     //просмотр контента
     public function editContentOnClick($sender) {
-        $this->_customer = $sender->owner->getDataItem();
+        $this->_customer = $sender->getOwner()->getDataItem();
+        $this->customertable->customerlist->setSelectedRow($sender->getOwner());
+        $this->customertable->customerlist->Reload();
+        
+        $this->viewContent(); 
+    }
+    public function viewContent() {
+        
         $this->customerdetail->setVisible(false);
         $this->contentview->setVisible(true);
         $this->customertable->setVisible(false);
@@ -377,8 +388,6 @@ class CustomerList extends \App\Pages\Base
         $this->updateMessages();
         $this->updateEvents();
         $this->updateContrs();
-        $this->customertable->customerlist->setSelectedRow($sender->getOwner());
-        $this->customertable->customerlist->Reload();
         // $this->goAnkor('contentviewlink');
     }
 

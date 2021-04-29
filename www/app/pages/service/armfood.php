@@ -55,19 +55,19 @@ class ARMFood extends \App\Pages\Base
             $food = array( );
             $this->setWarn('nocommonoptions') ;
         }
-        $this->_pricetype = $food['pricetypew'] ?? 'price1';
+        
         $this->_tvars['delivery'] = $food['delivery'] ?? 0;
         $this->_tvars['tables'] = $food['tables']?? 0 ;
         $this->_tvars['pack'] = $food['pack'] ?? 0;
         $this->_tvars['bar'] = $food['bar'] ?? 0;
         
-        
-        
+          
        
         $filter = \App\Filter::getFilter("armfood");
         if ($filter->isEmpty()) {
             $filter->pos = 0;
             $filter->store = H::getDefStore();
+            $filter->pricetype = $food['pricetype'] ?? 'price1';
           
             $filter->nal = H::getDefMF();
             $filter->beznal = H::getDefMF();
@@ -91,11 +91,7 @@ class ARMFood extends \App\Pages\Base
         $this->orderlistpan->add(new Panel('statuspan'))->setVisible(false);
         
         $this->orderlistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-        
-        
-        
-        
-        
+         
         //оформление заказа
         
         $this->add(new Panel('docpanel'))->setVisible(false);
@@ -178,26 +174,29 @@ class ARMFood extends \App\Pages\Base
         $filter = \App\Filter::getFilter("armfood");
 
         
-        $filter->_store = $store;
-     
+        $filter->store = $store;
+        $filter->pos = $this->_pos->pos_id;
+      
         $filter->_nal = $nal;
         $filter->_beznal = $beznal;
-               
+        $this->_store = $store;
+        $this->_pricetype = $filter->pricetype;
+                
 
         $this->setupform->setVisible(false);
-        $this->docpanel->setVisible(false);
-        $this->onOrderList($sender);
+        
+        $this->onNewOrder(null);
     }
 
     public function onNewOrder($sender) {
-        $this->orderlistpan->statuspan->setVisible(true);
+      //  $this->orderlistpan->statuspan->setVisible(true);
         $this->docpanel->setVisible(true);
         
         $this->docpanel->listsform->setVisible(true);
         $this->docpanel->navform->setVisible(true);
 
         $this->orderlistpan->setVisible(false);
-        $this->checkpan->setVisible(false);
+        $this->docpanel->checkpan->setVisible(false);
         
         $this->_doc = \App\Entity\Doc\Document::create('OrderFood');
           
@@ -242,7 +241,7 @@ class ARMFood extends \App\Pages\Base
 
     private function updateorderlist() {
         $where = "meta_name='OrderFood' and state not in(9,15) ";
-        $this->_doclist = Document::find($where, 'document_id');
+        $this->_doclist = Document::find($where, 'document_id desc');
         $this->orderlistpan->orderlist->Reload();
     }
     //категории
@@ -257,7 +256,7 @@ class ARMFood extends \App\Pages\Base
        //  $store_id = $this->setupform->store->getValue();
           
         $prod = $row->getDataItem();
-        $prod->price = $prod->getPrice($this->_pricetype );
+        $prod->price = $prod->getPrice($this->_pricetype , $this->_store);
         $row->add(new ClickLink('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
@@ -296,7 +295,7 @@ class ARMFood extends \App\Pages\Base
         }   else {                                                 
             $item->myself = 1!=$this->_foodtype?1:0;
             $item->quantity = 1;
-           // $item->price = $item->getPrice($this->setupform->pricetype->getValue(), $store_id);
+           // $item->price = $item->getPrice($this->_pricetype, $this->_store);
             $this->_itemlist[$item->item_id] = $item;
         }
          $this->docpanel->prodpan->setVisible(false);
@@ -415,7 +414,7 @@ class ARMFood extends \App\Pages\Base
         $this->orderlistpan->statuspan->docview->setDoc($this->_doc);
         $this->orderlistpan->orderlist->Reload(false);
   //      $this->updateStatusButtons();
-  //      $this->goAnkor('dankor');       
+        $this->goAnkor('dankor');       
      }
      
      
@@ -460,6 +459,7 @@ class ARMFood extends \App\Pages\Base
 
         
        
+        $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
         $this->_doc->payed = $this->docpanel->payform->pfpayed->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
         $this->_doc->headerdata['paydisc'] = $this->docpanel->payform->pfdisc->getText();

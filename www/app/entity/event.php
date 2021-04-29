@@ -16,6 +16,7 @@ class Event extends \ZCL\DB\Entity
      
 
         $this->user_id = 0;
+        $this->customer_id = 0;
         $this->eventdate = time();
     }
 

@@ -121,7 +121,7 @@ class Customer extends \ZCL\DB\Entity
      * @param mixed $type
      */
     public static function getList($search = '', $type = 0) {
-
+       
 
         $where = "status=0 and detail not like '%<isholding>1</isholding>%' ";
         if (strlen($search) > 0) {

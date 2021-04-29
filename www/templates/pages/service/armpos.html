@@ -3,9 +3,9 @@
 
     </head>
     <body>
-        <h3> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;АРМ кассира</h3>
-        <br>
+     
         <form zippy="form1">
+            <h3>  АРМ кассира</h3>
 
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
@@ -39,7 +39,11 @@
 
         </form>
 
-        <form zippy="form2">
+        <div   zippy="docpanel">
+            <h4>Оформление  чека</h4>
+            <a zippy="tochecklist"><i class="fa fa-arrow-circle-left"></i> к  списку чеков</a>
+       
+        <form zippy="form2">   
             {{#ppo}}
             <div class="row">
                 <div class="col-12 col-md-10 col-lg-8 col-xl-7">
@@ -324,7 +328,85 @@
                 </div>
             </div>
         </form>
-        <form zippy="editcust">
+   </div> 
+         
+    <div zippy="row" >
+        <div zippy="checklistpan" >
+            <div class="col-12 col-md-6 xl-4" >
+                <h4>Список  чеков</h4>
+                <a  class="btn btn-success" zippy="newcheck">Новый чек</a>   
+                
+              
+                <table class="table  table-sm">
+                    <tr>
+                    <th>Номер</th>
+               
+                    
+                 
+                    <th >Статус</th>
+                    <th > </th>
+                  
+                   
+               
+                    <th class="text-right">Сумма</th>
+                    
+                    <th ></th>
+                    </tr>
+                    <tr zippy="checklist">
+                        <td ><a zippy="docnumber"></a></td>
+                      
+                        <td class="text-nowrap  " zippy="state">  </td>
+                     
+                        
+                        
+                      
+                        <td class="text-right" zipy="rowamount"> </td>
+                        <td ><i class="fa fa-credit-card" zippy="waitpay" /></td>
+                        
+                     
+                        <td class="text-right"></td>
+                        
+                        <td zippy="rownotes"></td>
+                    </tr>
+
+                </table>  <a id="dankor"></a>
+               </div>
+              <div class="col-12 col-md-10 xl-8" > 
+               <div class="row" zippy="statuspan">
+              
+             
+                <div class="card">
+                    <div class="card-body">
+                        <div class="navbar nav">
+                            <form zippy="statusform" class="form-inline ">
+                                <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Редактировать</button>
+                                <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">В производство</button>
+                                
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            
+                
+                
+                <div class="card">
+                    <div class="card-body">
+                        
+                        <div zippy="docview"></div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+
+                
+                
+
+            </div>
+      </div         
+         
+       <form zippy="editcust">
             <h3>&nbsp;Новый контрагент </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
@@ -345,6 +427,10 @@
             </div>
         </form>
 
+        
+        
+        
+        
         <!--
         <form zippy="zform">
            <h3>&nbsp;Закрытие  смены </h3>
