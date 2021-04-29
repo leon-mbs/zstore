@@ -276,13 +276,28 @@
 
      
 
-    <div zippy="row" >
-        <div zippy="orderlistpan" >
+    <div class="row" zippy="orderlistpan">
+        
             <div class="col-12 col-md-6 xl-4" >
                 <h4>Список  заказов</h4>
                 <a  class="btn btn-success" zippy="neworder">Новый заказ</a>  &nbsp;&nbsp;&nbsp;
               {{#hideblock}}   <a  class="btn btn-success" zippy="newdelivery">Новая доставка</a>      {{/hideblock}} 
-              {{#hideblock}} Поиск  по номеру  и клиенту       {{/hideblock}} 
+            
+              {{#hideblock}} 
+             <div class="row"  >       
+                <div class="card">
+                    <div class="card-body">
+                        <div class="navbar nav">
+                            <form zippy="searchform" class="form-inline ">
+                             
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+             </div>
+              
+                   {{/hideblock}} 
               
               
                 <table class="table  table-sm">
@@ -322,7 +337,7 @@
                     </tr>
 
                 </table>  <a id="dankor"></a>
-               </div>
+            
               <div class="col-12 col-md-10 xl-8" > 
                <div class="row" zippy="statuspan">
             

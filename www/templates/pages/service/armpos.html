@@ -330,12 +330,28 @@
         </form>
    </div> 
          
-    <div zippy="row" >
-        <div zippy="checklistpan" >
+    <div class="row" zippy="checklistpan"  >
+       
             <div class="col-12 col-md-6 xl-4" >
                 <h4>Список  чеков</h4>
                 <a  class="btn btn-success" zippy="newcheck">Новый чек</a>   
+      
+                 {{#hideblock}}
+              <div class="row"  >       
+                <div class="card">
+                    <div class="card-body">
+                        <div class="navbar nav">
+                            <form zippy="searchform" class="form-inline ">
+                             
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                {{/hideblock}}
                 
+    
               
                 <table class="table  table-sm">
                     <tr>
@@ -344,50 +360,53 @@
                     
                  
                     <th >Статус</th>
-                    <th > </th>
+                     
                   
-                   
+                      <th ></th>
                
                     <th class="text-right">Сумма</th>
                     
+                  
                     <th ></th>
+                
                     </tr>
                     <tr zippy="checklist">
                         <td ><a zippy="docnumber"></a></td>
                       
                         <td class="text-nowrap  " zippy="state">  </td>
-                     
-                        
-                        
-                      
-                        <td class="text-right" zipy="rowamount"> </td>
-                        <td ><i class="fa fa-credit-card" zippy="waitpay" /></td>
-                        
-                     
-                        <td class="text-right"></td>
-                        
+                         <td ><i title="Ждет  оплату" class="fa fa-credit-card" zippy="waitpay" /></td>
+                       
+                        <td class="text-right" zippy="rowamount"> </td>
+                          
                         <td zippy="rownotes"></td>
                     </tr>
 
                 </table>  <a id="dankor"></a>
-               </div>
+            
               <div class="col-12 col-md-10 xl-8" > 
                <div class="row" zippy="statuspan">
-              
+                 {{#hideblock}}
              
                 <div class="card">
                     <div class="card-body">
                         <div class="navbar nav">
                             <form zippy="statusform" class="form-inline ">
-                                <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Редактировать</button>
-                                <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">В производство</button>
-                                
+                            <label for="stpamount">К оплате</label>
+                            <input zippy="stpamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сумма..."
+                                   class="form-control mr-2">
+                            <label for="stpayment">счет</label>
+                            <select class="form-control mr-2" zippy="stpayment">
+
+                            </select>
+                            <button zippy="stbtnpay" type="submit" class="  btn btn-info  mr-4 ">Оплатить</button>
+                            <button zippy="stbtback" type="submit" class="  btn btn-info  mr-2 ">Возврат</button>
+
 
                             </form>
                         </div>
                     </div>
                 </div>
-            
+                {{/hideblock}}
                 
                 
                 <div class="card">
@@ -404,7 +423,8 @@
                 
 
             </div>
-      </div         
+               
+      </div>         
          
        <form zippy="editcust">
             <h3>&nbsp;Новый контрагент </h3>
