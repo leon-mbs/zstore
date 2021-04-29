@@ -88,6 +88,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->editdetail->add(new Label('qtystock'));
+        $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -100,6 +101,15 @@ class Order extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
+       //добавление нового товара
+        $this->add(new Form('editnewitem'))->setVisible(false);
+        $this->editnewitem->add(new TextInput('editnewitemname'));
+        $this->editnewitem->add(new TextInput('editnewitemcode'));
+        $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
+        $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
+        $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
+        
+        
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -620,5 +630,35 @@ class Order extends \App\Pages\Base
         $this->wselitem->setPriceType($this->docform->pricetype->getValue());
         $this->wselitem->Reload();
     }
+     //добавление нового товара
+    public function addnewitemOnClick($sender) {
+        $this->editnewitem->setVisible(true);
+        $this->editdetail->setVisible(false);
 
+        $this->editnewitem->editnewitemname->setText('');
+        $this->editnewitem->editnewitemcode->setText('');
+    }
+
+    public function savenewitemOnClick($sender) {
+        $itemname = trim($this->editnewitem->editnewitemname->getText());
+        if (strlen($itemname) == 0) {
+            $this->setError("entername");
+            return;
+        }
+        $item = new Item();
+        $item->itemname = $itemname;
+        $item->item_code = $this->editnewitem->editnewitemcode->getText();
+        $item->cat_id = $this->editnewitem->editnewcat->getValue();
+        $item->save();
+        $this->editdetail->edittovar->setText($item->itemname);
+        $this->editdetail->edittovar->setKey($item->item_id);
+
+        $this->editnewitem->setVisible(false);
+        $this->editdetail->setVisible(true);
+    }
+
+    public function cancelnewitemOnClick($sender) {
+        $this->editnewitem->setVisible(false);
+        $this->editdetail->setVisible(true);
+    }
 }

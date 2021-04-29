@@ -246,6 +246,8 @@
                         <label for="edittovar">Название</label>
                         <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
                         <a zippy="openitemsel">Открыть справочник</a>
+                        <br><a style="font-size:smaller" zippy="addnewitem">Добавить новый</a>
+
                         <br>Наличие : <span zippy="qtystock"></span>
 
 
@@ -305,6 +307,35 @@
                     </div>
                 </div>
 
+            </div>
+        </form>
+        <form zippy="editnewitem">
+            <h3>&nbsp;Новый товар </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editnewitemname">Название </label>
+                        <input class="form-control " zippy="editnewitemname" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editnewitemcode">Код</label>
+                        <input class="form-control" type="text" zippy="editnewitemcode"/>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="editnewcat">Категория</label>
+
+                        <select class="form-control" zippy="editnewcat">
+                            <option value="0">Не задана</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <input zippy="savenewitem" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelnewitem" value="Отменить" class="btn btn-light ">
+                    </div>
+                </div>
             </div>
         </form>
 
