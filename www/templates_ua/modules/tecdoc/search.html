@@ -1,257 +1,257 @@
 <html>
-<head>
+    <head>
 
-</head>
-<body>
-<style>
-    .list-group-item {
-        padding: 02px;;
-    }
-</style>
-<div class="row">
-    <div class="col-12 col-lg-10">
+    </head>
+    <body>
+        <style>
+            .list-group-item {
+                padding: 02px;;
+            }
+        </style>
+        <div class="row">
+            <div class="col-12 col-lg-10">
 
-        <div zippy="tpanel">
-            <h3>Пошук автозапчастин</h3>
-            <div class="mt-1" style="font-size: 1.5rem">
-                <a zippy="tabl"><span class="{{{tablbadge}}}">  Пошук по  категорii</span> </a> &nbsp;&nbsp;
-                <a zippy="tabc"><span class="{{{tabcbadge}}}">  Пошук по  бренду та коду   </span> </a> &nbsp;&nbsp;
-                <a zippy="tabb"><span class="{{{tabbbadge}}}">  Пошук по  штрих-коду   </span></a>
-            </div>
-
-
-            <div zippy="tablist">
-                <div class="row">
-                    <div class="col-12 col-md-6  col-xl-4">
-                        <form zippy="search1form">
-                            <div class="form-group">
-                                <label for="stype">Тип </label>
-                                <select zippy="stype" class="form-control   ">
-
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="sbrand">Виробник </label>
-                                <select zippy="sbrand" class="form-control   ">
-                                    <option value="0">Не вибрано</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="smodel">Модель </label>
-                                <select zippy="smodel" class="form-control   ">
-                                    <option value="0">Не вибрано</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="smodif">Модифiкацiя </label>
-                                <select zippy="smodif" class="form-control   ">
-                                    <option value="0">Не вибрано</option>
-                                </select>
-                                <span zippy="modifdetail"></span>
-                            </div>
-
-
-                        </form>
+                <div zippy="tpanel">
+                    <h3>Пошук автозапчастин</h3>
+                    <div class="mt-1" style="font-size: 1.5rem">
+                        <a zippy="tabl"><span class="{{{tablbadge}}}">  Пошук по  категорii</span> </a> &nbsp;&nbsp;
+                        <a zippy="tabc"><span class="{{{tabcbadge}}}">  Пошук по  бренду та коду   </span> </a> &nbsp;&nbsp;
+                        <a zippy="tabb"><span class="{{{tabbbadge}}}">  Пошук по  штрих-коду   </span></a>
                     </div>
-                    <div class="col-12 col-md-6  ">
-                        <div zippy="tree"></div>
+
+
+                    <div zippy="tablist">
+                        <div class="row">
+                            <div class="col-12 col-md-6  col-xl-4">
+                                <form zippy="search1form">
+                                    <div class="form-group">
+                                        <label for="stype">Тип </label>
+                                        <select zippy="stype" class="form-control   ">
+
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="sbrand">Виробник </label>
+                                        <select zippy="sbrand" class="form-control   ">
+                                            <option value="0">Не вибрано</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="smodel">Модель </label>
+                                        <select zippy="smodel" class="form-control   ">
+                                            <option value="0">Не вибрано</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="smodif">Модифiкацiя </label>
+                                        <select zippy="smodif" class="form-control   ">
+                                            <option value="0">Не вибрано</option>
+                                        </select>
+                                        <span zippy="modifdetail"></span>
+                                    </div>
+
+
+                                </form>
+                            </div>
+                            <div class="col-12 col-md-6  ">
+                                <div zippy="tree"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div zippy="tabcode">
+                        <div class="row">
+                            <div class="col-12 col-md-4  col-xl-3">
+                                <form zippy="search2form">
+                                    <div class="form-group">
+                                        <label for="searchcode" data-label="searchcode">Код</label>
+                                        <input required="required" style="width:150px;" class="form-control" type="text"
+                                               zippy="searchcode">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="searchbrand" data-label="searchbrand">Бренд</label>
+                                        <input list="brandslist" class="form-control" type="text" zippy="searchbrand">
+                                        <datalist id="brandslist">
+                                            {{#brandslist}}
+                                            <option value="{{bname}}">{{bname}}</option>
+                                            {{/brandslist}}
+                                        </datalist>
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="btn btn-primary  " type="submit" value="Искать">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div zippy="tabbarcode">
+                        <div class="row">
+                            <div class="col-12 col-md-4  col-xl-3">
+                                <form zippy="search3form">
+                                    <div class="form-group">
+                                        <label for="searchbarcode">Код</label>
+                                        <input required="required" style="width:150px;" class="form-control" type="text"
+                                               zippy="searchbarcode">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input class="btn btn-primary  " type="submit" value="Искать">
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div zippy="tabcode">
-                <div class="row">
-                    <div class="col-12 col-md-4  col-xl-3">
-                        <form zippy="search2form">
-                            <div class="form-group">
-                                <label for="searchcode" data-label="searchcode">Код</label>
-                                <input required="required" style="width:150px;" class="form-control" type="text"
-                                       zippy="searchcode">
-                            </div>
-                            <div class="form-group">
-                                <label for="searchbrand" data-label="searchbrand">Бренд</label>
-                                <input list="brandslist" class="form-control" type="text" zippy="searchbrand">
-                                <datalist id="brandslist">
-                                    {{#brandslist}}
-                                    <option value="{{bname}}">{{bname}}</option>
-                                    {{/brandslist}}
-                                </datalist>
-                            </div>
-                            <div class="form-group">
-                                <input class="btn btn-primary  " type="submit" value="Искать">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div zippy="tabbarcode">
-                <div class="row">
-                    <div class="col-12 col-md-4  col-xl-3">
-                        <form zippy="search3form">
-                            <div class="form-group">
-                                <label for="searchbarcode">Код</label>
-                                <input required="required" style="width:150px;" class="form-control" type="text"
-                                       zippy="searchbarcode">
-                            </div>
 
-                            <div class="form-group">
-                                <input class="btn btn-primary  " type="submit" value="Искать">
-                            </div>
-                        </form>
+
+                <div zippy="tlist" class="row">
+                    <div class="col-12 col-md-6   ">
+                        <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> До пошуку</a>
+                    </div>
+                    <div zippy="cartpan" class="col-12 col-md-6  ">
+                        <b><i class="fa fa-shopping-cart"></i> Корзина</b>
+                        <table class="table table-sm">
+                            <tr zippy="cardlist">
+                                <td zippy="carcode"></td>
+                                <td zippy="cardtbrand"></td>
+                                <td zippy="carditem"></td>
+                                <td><a zippy="delcard"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+
+                        </table>
+                        <a><i class="fa fa-copy"></i> Скопiювати</a>
                     </div>
 
+
+                    <div class="col-12">
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Бренд</th>
+                                <th>Код</th>
+                                <th>Назва</th>
+                                <th class="text-right">Кiл.</th>
+                                <th class="text-right">Цiна</th>
+                                <th>
+
+                                </th>
+                            </tr>
+                            <tr zippy="itemlist">
+                                <td zippy="lbrand"></td>
+                                <td zippy="lcode"></td>
+                                <td zippy="lname"></td>
+                                <td class="text-right"><span zippy="qty" class="badge badge-info badge-pill"></span></td>
+                                <td class="text-right"><span zippy="price" class="badge badge-info badge-pill"></span></td>
+                                <td>
+                                    <a title="Корзина" zippy="cart"><i class="fa fa-shopping-cart"></i></a>
+                                    &nbsp; &nbsp;
+
+                                    <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div zippy="pag"></div>
+                    </div>
                 </div>
+
+                <div zippy="tview" class="row">
+                    <div class="col-12 col-md-6 col-xl-4">
+                        {{#isattr}}
+                        <b>Деталiзацiя</b>
+                        <table class="ctable">
+                            {{#attr}}
+                            <tr>
+                                <td>{{k}}</td>
+                                <td>{{v}}</td>
+                            </tr>
+                            {{/attr}}
+                        </table>
+                        {{/isattr}}
+
+                        {{#ispart}}
+                        <b>СкладовI частини</b>
+                        <table class="ctable">
+                            {{#part}}
+                            <tr>
+                                <td>{{Brand}}</td>
+                                <td>{{partnumber}}</td>
+                                <td align="right">{{Quantity}}</td>
+                            </tr>
+                            {{/part}}
+                        </table>
+                        {{/ispart}}
+
+
+                    </div>
+
+                    {{#isimage}}
+                    <div class="col-12 col-md-6  col-xl-4 justify-content-center">
+                        <b style="display:block">Рисунок</b>
+                        <img src='{{imagepath}}' style="width:100%"/>
+
+
+                    </div>
+                    {{/isimage}}
+                    {{#isoem}}
+                    <div class="col-12 col-md-3  col-xl-2  ">
+                        <b>Оригiнальнi номера</b>
+                        <table class="ctable">
+                            {{#oem}}
+                            <tr>
+                                <td> {{manufacturer_name}}</td>
+                                <td> {{oemnum}}</td>
+                            </tr>
+                            {{/oem}}
+                        </table>
+                    </div>
+                    {{/isoem}}
+                    {{#isrep}}
+                    <div class="col-12 col-md-6   col-xl-4">
+                        <b>Замiни</b>
+                        <table class="ctable">
+                            {{#rep}}
+                            <tr>
+                                <td> {{sup}}</td>
+                                <td> {{num}}</td>
+                                <td align="right"> {{{q}}}</td>
+                                <td align="right"> {{{p}}}</td>
+                            </tr>
+                            {{/rep}}
+                        </table>
+                    </div>
+                    {{/isrep}}
+                    {{#iscross}}
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <b>Аналоги</b>
+                        <table class="ctable">
+                            {{#crosslist}}
+                            <tr>
+                                <td> {{desc}}</td>
+                                <td> {{cross}}</td>
+                                <td align="right"> {{{q}}}</td>
+                                <td align="right"> {{{p}}}</td>
+                            </tr>
+                            {{/crosslist}}
+                        </table>
+                    </div>
+                    {{/iscross}}
+
+                    {{#isapp}}
+                    <div class="col-12   col-xl-8">
+                        <b>Зостосованiсть</b>
+                        <table class="ctable">
+                            {{#applist}}
+                            <tr>
+
+
+                                <td> {{desc}}</td>
+                                <td class="text-nowrap"> {{years}}</td>
+                            </tr>
+                            {{/applist}}
+                        </table>
+                    </div>
+                    {{/isapp}}
+                </div>
+
             </div>
-        </div>
-
-
-        <div zippy="tlist" class="row">
-            <div class="col-12 col-md-6   ">
-                <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> До пошуку</a>
-            </div>
-            <div zippy="cartpan" class="col-12 col-md-6  ">
-                <b><i class="fa fa-shopping-cart"></i> Корзина</b>
-                <table class="table table-sm">
-                    <tr zippy="cardlist">
-                        <td zippy="carcode"></td>
-                        <td zippy="cardtbrand"></td>
-                        <td zippy="carditem"></td>
-                        <td><a zippy="delcard"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-
-                </table>
-                <a><i class="fa fa-copy"></i> Скопiювати</a>
-            </div>
-
-
-            <div class="col-12">
-                <table class="table table-sm">
-                    <tr>
-                        <th>Бренд</th>
-                        <th>Код</th>
-                        <th>Назва</th>
-                        <th class="text-right">Кiл.</th>
-                        <th class="text-right">Цiна</th>
-                        <th>
-
-                        </th>
-                    </tr>
-                    <tr zippy="itemlist">
-                        <td zippy="lbrand"></td>
-                        <td zippy="lcode"></td>
-                        <td zippy="lname"></td>
-                        <td class="text-right"><span zippy="qty" class="badge badge-info badge-pill"></span></td>
-                        <td class="text-right"><span zippy="price" class="badge badge-info badge-pill"></span></td>
-                        <td>
-                            <a title="Корзина" zippy="cart"><i class="fa fa-shopping-cart"></i></a>
-                            &nbsp; &nbsp;
-
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
-                        </td>
-                    </tr>
-                </table>
-                <div zippy="pag"></div>
-            </div>
-        </div>
-
-        <div zippy="tview" class="row">
-            <div class="col-12 col-md-6 col-xl-4">
-                {{#isattr}}
-                <b>Деталiзацiя</b>
-                <table class="ctable">
-                    {{#attr}}
-                    <tr>
-                        <td>{{k}}</td>
-                        <td>{{v}}</td>
-                    </tr>
-                    {{/attr}}
-                </table>
-                {{/isattr}}
-
-                {{#ispart}}
-                <b>СкладовI частини</b>
-                <table class="ctable">
-                    {{#part}}
-                    <tr>
-                        <td>{{Brand}}</td>
-                        <td>{{partnumber}}</td>
-                        <td align="right">{{Quantity}}</td>
-                    </tr>
-                    {{/part}}
-                </table>
-                {{/ispart}}
-
-
-            </div>
-
-            {{#isimage}}
-            <div class="col-12 col-md-6  col-xl-4 justify-content-center">
-                <b style="display:block">Рисунок</b>
-                <img src='{{imagepath}}' style="width:100%"/>
-
-
-            </div>
-            {{/isimage}}
-            {{#isoem}}
-            <div class="col-12 col-md-3  col-xl-2  ">
-                <b>Оригiнальнi номера</b>
-                <table class="ctable">
-                    {{#oem}}
-                    <tr>
-                        <td> {{manufacturer_name}}</td>
-                        <td> {{oemnum}}</td>
-                    </tr>
-                    {{/oem}}
-                </table>
-            </div>
-            {{/isoem}}
-            {{#isrep}}
-            <div class="col-12 col-md-6   col-xl-4">
-                <b>Замiни</b>
-                <table class="ctable">
-                    {{#rep}}
-                    <tr>
-                        <td> {{sup}}</td>
-                        <td> {{num}}</td>
-                        <td align="right"> {{{q}}}</td>
-                        <td align="right"> {{{p}}}</td>
-                    </tr>
-                    {{/rep}}
-                </table>
-            </div>
-            {{/isrep}}
-            {{#iscross}}
-            <div class="col-12 col-md-6 col-xl-4">
-                <b>Аналоги</b>
-                <table class="ctable">
-                    {{#crosslist}}
-                    <tr>
-                        <td> {{desc}}</td>
-                        <td> {{cross}}</td>
-                        <td align="right"> {{{q}}}</td>
-                        <td align="right"> {{{p}}}</td>
-                    </tr>
-                    {{/crosslist}}
-                </table>
-            </div>
-            {{/iscross}}
-
-            {{#isapp}}
-            <div class="col-12   col-xl-8">
-                <b>Зостосованiсть</b>
-                <table class="ctable">
-                    {{#applist}}
-                    <tr>
-
-
-                        <td> {{desc}}</td>
-                        <td class="text-nowrap"> {{years}}</td>
-                    </tr>
-                    {{/applist}}
-                </table>
-            </div>
-            {{/isapp}}
-        </div>
-
-    </div>
-</div>           
+        </div>           

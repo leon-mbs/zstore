@@ -99,10 +99,8 @@ class ProjectList extends \App\Pages\Base
         $row->add(new Label('iproc', $pr->iproc))->setVisible($pr->iproc > 0);
         $row->add(new Label('iclose', $pr->iclose))->setVisible($pr->iclose > 0);
 
-
         $row->add(new ClickLink('preview'))->onClick($this, 'previewOnClick');
         $user = System::getUser();
-
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -124,7 +122,6 @@ class ProjectList extends \App\Pages\Base
 
         $user = System::getUser();
 
-
         $this->projectpanel->setVisible(false);
         $this->projectform->setVisible(true);
         $this->projectform->editname->setText($this->_project->project_name);
@@ -132,7 +129,6 @@ class ProjectList extends \App\Pages\Base
         $this->projectform->editcust->setKey($this->_project->customer_id);
         $this->projectform->editcust->setText($this->_project->customer_name);
         $this->updateUsers();
-
     }
 
     public function deleteOnClick($sender) {
@@ -145,7 +141,6 @@ class ProjectList extends \App\Pages\Base
         $this->projectpanel->projectlist->Reload();
         $this->resetURL();
     }
-
 
     public function filterOnSubmit($sender) {
         $this->projectpanel->projectlist->Reload();
@@ -161,9 +156,7 @@ class ProjectList extends \App\Pages\Base
         $this->_project->creator_id = $user->user_id;
         $this->_project->creator = $user->username;
 
-
         $this->updateUsers();
-
     }
 
     public function saveOnClick($sender) {
@@ -183,7 +176,6 @@ class ProjectList extends \App\Pages\Base
             $users[] = $this->_project->creator_id;
         }
         $this->_project->setUsers($users);
-
 
         $this->_project->Save();
         $this->projectform->setVisible(false);
@@ -242,7 +234,6 @@ class ProjectList extends \App\Pages\Base
 
         $this->showpan->addmsgform->msgdata->setText('');
         $this->updateMessages();
-
 
         $this->goAnkor('msgankor');
     }
@@ -335,8 +326,8 @@ class ProjectList extends \App\Pages\Base
 
     public function newissueOnClick($sender) {
         App::Redirect("\\App\\Modules\\Issue\\Pages\\IssueList", 0, $this->_project->project_id, true);
-
     }
+
 }
 
 class ProjectDS implements \Zippy\Interfaces\DataSource
@@ -355,7 +346,6 @@ class ProjectDS implements \Zippy\Interfaces\DataSource
         $status = $this->page->projectpanel->filter->searchstate->getValue();
 
         $conn = \ZDB\DB::getConnect();
-
 
         if ($status == 0) {
             $where = " status <>  " . Project::STATUS_CLOSED;

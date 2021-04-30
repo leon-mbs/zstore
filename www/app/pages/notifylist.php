@@ -49,12 +49,15 @@ class NotifyList extends \App\Pages\Base
     }
 
     public function filterOnSubmit($sender) {
+        $where='user_id=' . System::getUser()->user_id;
+  
         $text = trim($sender->searchtext->getText());
-        if (strlen($text) == 0) {
-            return;
+        if (strlen($text)> 0) {
+           $text = Notify::qstr('%' . $text . '%');
+           $where=  "(sender_name like {$text} or message like {$text}) and user_id=" . System::getUser()->user_id ;
         }
-        $text = Notify::qstr('%' . $text . '%');
-        $this->ds->setWhere("(sender_name like {$text} or message like {$text}) and user_id=" . System::getUser()->user_id);
+        
+        $this->ds->setWhere($where);
         $this->nlist->Reload();
     }
 

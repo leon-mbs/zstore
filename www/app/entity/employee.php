@@ -56,7 +56,6 @@ class Employee extends \ZCL\DB\Entity
         return Employee::getFirst("login=" . $login);
     }
 
-
     public static function getFreeLogins($include = "") {
         $conn = \ZDB\DB::getConnect();
         $sql = "select distinct  userlogin from users where userlogin not in (select  login  from  employees)";

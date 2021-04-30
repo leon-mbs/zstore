@@ -109,22 +109,22 @@
     <tr>
         <td colspan="7">На суму <b>{{totalstr}}<b></td>
 
-    <tr>
-        <td colspan="5">
-            {{#isstamp}}
-            <img style="height:100px;" src='{{stamp}}'/>
-            {{/isstamp}}
+                    <tr>
+                        <td colspan="5">
+                            {{#isstamp}}
+                            <img style="height:100px;" src='{{stamp}}'/>
+                            {{/isstamp}}
 
 
-        </td>
-        <td colspan="4">
-            {{#issign}}
-            <img style="height:100px;" src='{{sign}}'/>
-            {{/issign}}
+                        </td>
+                        <td colspan="4">
+                            {{#issign}}
+                            <img style="height:100px;" src='{{sign}}'/>
+                            {{/issign}}
 
 
-        </td>
+                        </td>
 
-    </tr>
-</table>
+                    </tr>
+                    </table>
 

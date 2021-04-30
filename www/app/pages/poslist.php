@@ -116,7 +116,6 @@ class PosList extends \App\Pages\Base
         $this->_pos->branch_id = $this->posdetail->editbranch->getValue();
         $this->_pos->firm_id = $this->posdetail->editcomp->getValue();
 
-
         $this->_pos->address = $this->posdetail->editaddress->getText();
         $this->_pos->pointname = $this->posdetail->editpointname->getText();
         $this->_pos->fiscallocnumber = $this->posdetail->editposinner->getText();

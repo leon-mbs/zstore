@@ -41,7 +41,6 @@ class System
         return Session::getSession()->branch_id;
     }
 
-
     public static function setBranch(int $branch_id) {
         Session::getSession()->branch_id = $branch_id;
     }
@@ -101,7 +100,6 @@ class System
 
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
-
     }
 
     public static function setCache($key, $data) {
@@ -115,7 +113,6 @@ class System
         }
         return null;
     }
-
 
     public static function setSuccessMsg($msg) {
         Session::getSession()->smsg = $msg;
@@ -135,7 +132,6 @@ class System
 
     public static function setWarnMsg($msg) {
         Session::getSession()->wmsg = $msg;
-
     }
 
     public static function getWarnMsg() {
@@ -144,12 +140,10 @@ class System
 
     public static function setInfoMsg($msg, $popup = false) {
         Session::getSession()->imsg = $msg;
-
     }
 
     public static function getInfoMsg() {
         return Session::getSession()->imsg;
     }
-
 
 }

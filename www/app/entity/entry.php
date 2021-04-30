@@ -21,7 +21,6 @@ class Entry extends \ZCL\DB\Entity
     public function __construct($document_id = 0, $amount = 0, $quantity = 0) {
         parent::__construct();
 
-
         $this->document_id = $document_id;
         $this->amount = $amount;
 
@@ -31,13 +30,16 @@ class Entry extends \ZCL\DB\Entity
     protected function init() {
 
         $this->extcode = 0;
-
+    
     }
 
     protected function afterLoad() {
         $this->document_date = strtotime($this->document_date);
     }
 
+    public function setQuantity($quantity) {
+        $this->quantity = $quantity;
+    }
     public function setStock($stock_id) {
         $this->stock_id = $stock_id;
     }
@@ -58,7 +60,11 @@ class Entry extends \ZCL\DB\Entity
     public function setExtCode($code) {
 
         $this->extcode = $code;
+    }
 
+    public function setOutPrice($price) {
+
+        $this->outprice = $price;
     }
 
     /**
@@ -89,7 +95,7 @@ class Entry extends \ZCL\DB\Entity
         if ($customer > 0) {
             $where = $where . " and customer_id= " . $customer;
         }
-        $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist  where " . $where;
+        $sql = " select coalesce(sum(quantity),0)    from entrylist  where " . $where;
         return $conn->GetOne($sql);
     }
 
@@ -121,7 +127,7 @@ class Entry extends \ZCL\DB\Entity
         if ($customer > 0) {
             $where = $where . " and customer_id= " . $customer;
         }
-        $sql = " select coalesce(sum(amount),0) AS quantity  from entrylist  where " . $where;
+        $sql = " select coalesce(sum(quantity*outprice),0)    from entrylist  where " . $where;
         return $conn->GetOne($sql);
     }
 

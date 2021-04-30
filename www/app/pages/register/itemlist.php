@@ -31,15 +31,12 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
         $this->filter->add(new DropDownChoice('searchstore', Store::getList(), 0));
 
-
         $this->add(new Panel('itempanel'));
-
 
         $this->itempanel->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
 
         $this->itempanel->itemlist->setPageSize(H::getPG());
         $this->itempanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->itempanel->itemlist));
-
 
         $this->itempanel->add(new ClickLink('csv', $this, 'oncsv'));
         $this->itempanel->add(new Label('totamount'));
@@ -49,7 +46,6 @@ class ItemList extends \App\Pages\Base
         $this->detailpanel->add(new Label('itemdetname'));
 
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
-
 
         $this->OnFilter(null);
     }
@@ -105,7 +101,6 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-
     }
 
     public function OnFilter($sender) {
@@ -125,15 +120,16 @@ class ItemList extends \App\Pages\Base
             $sql = $sql . " and  store_id={$store}  ";
         }
 
-        if ($cat > 0) {
-            $sql = $sql . " and cat_id=" . $cat;
-        }
 
         $text = trim($this->filter->searchkey->getText());
         if (strlen($text) > 0) {
 
             $text = Stock::qstr('%' . $text . '%');
             $sql = $sql . "  and (itemname like {$text} or item_code like {$text}    )  ";
+            $cat = 0;
+        }
+        if ($cat > 0) {
+            $sql = $sql . " and cat_id=" . $cat;
         }
         return $conn->GetOne($sql);
     }
@@ -144,10 +140,8 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('snumber', $stock->snumber));
         $row->add(new Label('sdate', ''));
 
-
         if (strlen($stock->snumber) > 0 && strlen($stock->sdate) > 0) {
             $row->sdate->setText(H::fd($stock->sdate));
-
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
 
@@ -189,7 +183,6 @@ class ItemList extends \App\Pages\Base
             $row->partion->setText('');
             $row->amount->setText('');
         }
-
     }
 
     public function backOnClick($sender) {
@@ -216,14 +209,11 @@ class ItemList extends \App\Pages\Base
             $name = $name . ', ' . H::fa($stock->partion);
             $st[$stock->stock_id] = $name;
         }
-
     }
-
 
     public function oncsv($sender) {
         $store = $this->filter->searchstore->getValue();
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
-
 
         $header = array();
         $data = array();
@@ -236,7 +226,6 @@ class ItemList extends \App\Pages\Base
         $header['F1'] = "Кол.";
         $header['G1'] = "Цена";
 
-
         $i = 1;
         foreach ($list as $item) {
             $i++;
@@ -247,7 +236,6 @@ class ItemList extends \App\Pages\Base
             $data['E' . $i] = $item->cat_name;
             $qty = $item->getQuantity($store);
             $data['F' . $i] = H::fqty($qty);
-
 
             $plist = array();
             if ($item->price1 > 0) {
@@ -266,12 +254,9 @@ class ItemList extends \App\Pages\Base
                 $plist[] = $item->getPrice('price5', $store);
             }
             $data['G' . $i] = implode(' ', $plist);
-
-
         }
 
         H::exportExcel($data, $header, 'itemlist.xlsx');
-
     }
 
 }
@@ -293,7 +278,6 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
-
 
         if ($cat > 0) {
             $where = $where . " and cat_id=" . $cat;

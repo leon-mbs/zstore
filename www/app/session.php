@@ -12,7 +12,6 @@ class Session
     private $values = array();
     public  $filter = array();
 
-
     public function __construct() {
 
     }
@@ -39,6 +38,6 @@ class Session
     public function clean() {
         $this->values = array();
         $this->filter = array();
-
     }
+
 }

@@ -12,40 +12,34 @@ namespace App\Modules\Shop\Entity;
 class Product extends \App\Entity\Item
 {
 
- 
-    public $productdata   ;
-    
+    public $productdata;
+
     protected function init() {
-        $this->productdata = new ProductData() ;
- 
-      
-        $this->productdata->desc = ''; 
-        $this->productdata->actionprice = ''; 
+        $this->productdata = new ProductData();
+
+        $this->productdata->desc = '';
+        $this->productdata->actionprice = '';
         $this->productdata->sold = 0;   //кол продаж
-  
+
         $this->productdata->rating = 0;  //рейтинг
         $this->productdata->comments = 0; //кол отзывов
         $this->productdata->attributevalues = array();
         $this->productdata->images = array();
-        
-        
     }
 
     protected function afterLoad() {
         parent::afterLoad();
-        
-        $this->productdata = @unserialize(@base64_decode($this->extdata)) ;
-        if($this->productdata == null){
-            $this->productdata = new ProductData() ;
+
+        $this->productdata = @unserialize(@base64_decode($this->extdata));
+        if ($this->productdata == null) {
+            $this->productdata = new ProductData();
         }
-   
-        
     }
 
     protected function beforeSave() {
-         
-        $this->extdata = base64_encode(serialize($this->productdata)) ;
-        
+
+        $this->extdata = base64_encode(serialize($this->productdata));
+
         parent::beforeSave();
     }
 
@@ -58,18 +52,15 @@ class Product extends \App\Entity\Item
             $conn->Execute("insert  into shop_attributevalues (attribute_id,item_id,attributevalue) values ({$key},{$this->item_id}," . $conn->qstr($value) . ")");
             // }
         }
-        
-        parent::afterSave($update) ;
-    }
 
- 
+        parent::afterSave($update);
+    }
 
     public function afterDelete() {
 
-        parent::afterDelete() ;
+        parent::afterDelete();
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete from shop_attributevalues where  item_id=" . $this->item_id);
-        
     }
 
     /**
@@ -93,7 +84,7 @@ class Product extends \App\Entity\Item
         foreach ($attrlist as $attr) {
             $attr->value = @$attrvalues[$attr->attribute_id];
             if (strlen($attr->value) == 0) {
-               // $attr->nodata = 1;
+                // $attr->nodata = 1;
             }
             $ret[] = $attr;
         }
@@ -103,23 +94,28 @@ class Product extends \App\Entity\Item
 
     //для сортировки 
     public function getPriceFinal() {
-        if($this->productdata->actionprice >0)  return  $this->productdata->actionprice;
-        return  $this->price;
+        if ($this->productdata->actionprice > 0) {
+            return $this->productdata->actionprice;
+        } else {
+            $options = \App\System::getOptions('shop');
+            return $this->getPrice($options['defpricetype']);
+        }
     }
+
     public function getRating() {
-        $r =  0;
-        if($this->comments >0) {
-            return  round($this->ratings/$this->comments) ;
+        $r = 0;
+        if ($this->comments > 0) {
+            return round($this->ratings / $this->comments);
         }
         return $r;
     }
 
-   /**
+    /**
      * Возвращает  ЧПУ  строку.  Если  не  задана,   возвращвет id
      *
      */
     public function getSEF() {
-        return strlen($this->sef) > 0 ? $this->sef : '/sp/'. $this->item_id;
+        return strlen($this->sef) > 0 ? $this->sef : '/sp/' . $this->item_id;
     }
 
     /**
@@ -127,38 +123,41 @@ class Product extends \App\Entity\Item
      *
      */
     public static function loadSEF($sef) {
-        $sef = trim($sef,'/') ;
+        $sef = trim($sef, '/');
         return self::getFirst("   detail like '%<sef>{$sef}</sef>%' ");
     }
 
-
-   
     public function getDescription() {
-         if(strlen($this->productdata->desc)>0)  return  $this->productdata->desc;
-         return $this->description;
+        if (strlen($this->productdata->desc) > 0) {
+            return $this->productdata->desc;
+        }
+        return $this->description;
     }
-    public function getImages($includecover=false) {
-          $im = array();
-          if($this->image_id >0 && $includecover) {
-            $im[]= $this->image_id ;
-          }
-         if(is_array($this->productdata->images))  {
-             foreach($this->productdata->images as $img) {
-                 if($img != $this->image_id)   $im[]= $img;  
-             }
-             
-         }        
-         return $im;
+
+    public function getImages($includecover = false) {
+        $im = array();
+        if ($this->image_id > 0 && $includecover) {
+            $im[] = $this->image_id;
+        }
+        if (is_array($this->productdata->images)) {
+            foreach ($this->productdata->images as $img) {
+                if ($img != $this->image_id) {
+                    $im[] = $img;
+                }
+            }
+        }
+        return $im;
     }
 
 }
 
 /**
-* Вспомагательный класс для  упаковки  данных относящихся к  каталогу
-*/
-class  ProductData  extends \App\DataItem
+ * Вспомагательный класс для  упаковки  данных относящихся к  каталогу
+ */
+class ProductData extends \App\DataItem
 {
-     public $attributevalues= array();
-     public $images = array();
-    
+
+    public $attributevalues = array();
+    public $images          = array();
+
 }

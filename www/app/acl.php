@@ -87,7 +87,6 @@ class ACL
         }
         if ($showerror == true) {
             System::setErrorMsg(H::l('aclnoaccesseditref', self::$_metasdesc[$ref]));
-
         }
         return false;
     }
@@ -108,7 +107,6 @@ class ACL
         }
         if ($showerror == true) {
             System::setErrorMsg(H::l('aclnoaccessdelref', self::$_metasdesc[$ref]));
-
         }
         return false;
     }
@@ -182,7 +180,6 @@ class ACL
 
         self::load();
 
-
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
 
@@ -221,7 +218,6 @@ class ACL
         }
 
         self::load();
-
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
@@ -283,7 +279,6 @@ class ACL
         return false;
     }
 
-
     /**
      * проверка  на  доступ  к смене  статуса документа.
      *
@@ -342,7 +337,6 @@ class ACL
         return false;
     }
 
-
     //проверка  на  доступ  к  сервисным станицам
     public static function checkShowSer($ser, $showerror = true) {
         if (System::getUser()->rolename == 'admins') {
@@ -354,13 +348,11 @@ class ACL
         $meta_id = self::$_metas['5_' . $ser];
         $aclview = explode(',', System::getUser()->aclview);
 
-
         if (in_array($meta_id, $aclview)) {
             return true;
         }
         if ($showerror == true) {
             System::setErrorMsg(H::l('aclnoaccessviewser', self::$_metasdesc[$ser]));
-
 
             App::RedirectError();
         }
@@ -381,7 +373,6 @@ class ACL
         if ($id > 0) {
 
             return "branch_id in (0,{$id})";
-
         }
 
 
@@ -396,8 +387,6 @@ class ACL
 
 
         return "branch_id in (0,{$user->aclbranch})";
-
-
     }
 
     /**

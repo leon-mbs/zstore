@@ -29,7 +29,6 @@ class BranchList extends \App\Pages\Base
             System::setErrorMsg(H::l('onlyadminpage'));
             \App\Application::RedirectError();
             return false;
-
         }
 
 
@@ -51,7 +50,6 @@ class BranchList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('branch_name', $item->branch_name));
-
 
         $row->add(new Label('address', $item->address));
 

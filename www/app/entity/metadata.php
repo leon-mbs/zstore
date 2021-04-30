@@ -25,7 +25,6 @@ class MetaData extends \ZCL\DB\Entity
         $list[4] = \App\Helper::l("md_ref");
         $list[5] = \App\Helper::l("md_ser");
 
-
         return $list;
     }
 

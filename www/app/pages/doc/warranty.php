@@ -44,7 +44,6 @@ class Warranty extends \App\Pages\Base
 
         $this->add(new Form('editdetail'))->setVisible(false);
 
-
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsn'));
@@ -52,7 +51,6 @@ class Warranty extends \App\Pages\Base
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
         $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
-
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -83,8 +81,6 @@ class Warranty extends \App\Pages\Base
 
                             $this->_tovarlist[$it->item_id] = $it;
                         }
-
-
                     }
                     if ($basedoc->meta_name == 'TTN') {
 
@@ -276,7 +272,6 @@ class Warranty extends \App\Pages\Base
         return Item::findArrayAC($text);
     }
 
-
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
@@ -284,6 +279,5 @@ class Warranty extends \App\Pages\Base
 
         $this->updateAjax(array('editwarranty'));
     }
-
 
 }

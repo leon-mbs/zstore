@@ -30,7 +30,6 @@ class TTN extends Document
                     $s = ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
                 }
                 $name .= $s;
-
             }
             if ($item->weight > 0) {
                 $weight += $item->weight;
@@ -41,11 +40,9 @@ class TTN extends Document
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
                               "msr"        => $item->msr,
-
-                              "price"  => H::fa($item->price),
-                              "amount" => H::fa($item->quantity * $item->price)
+                              "price"      => H::fa($item->price),
+                              "amount"     => H::fa($item->quantity * $item->price)
             );
-
         }
 
 
@@ -67,11 +64,8 @@ class TTN extends Document
                         "document_number" => $this->document_number,
                         "phone"           => $this->headerdata["phone"],
                         "email"           => $this->headerdata["email"],
-
-
-                        "total" => H::fa($this->amount),
+                        "total"           => H::fa($this->amount),
         );
-
 
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
@@ -104,7 +98,6 @@ class TTN extends Document
                     $s = ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
                 }
                 $name .= $s;
-
             }
             if ($item->weight > 0) {
                 $weight += $item->weight;
@@ -114,12 +107,9 @@ class TTN extends Document
                               "tovar_name" => $name,
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
-
-
-                              "price"  => H::fa($item->price),
-                              "amount" => H::fa($item->quantity * $item->price)
+                              "price"      => H::fa($item->price),
+                              "amount"     => H::fa($item->quantity * $item->price)
             );
-
         }
 
 
@@ -133,11 +123,8 @@ class TTN extends Document
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
                         "document_number" => $this->document_number,
-
-
-                        "total" => H::fa($this->amount),
+                        "total"           => H::fa($this->amount),
         );
-
 
         if ($this->headerdata["sent_date"] > 0) {
             $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
@@ -158,7 +145,7 @@ class TTN extends Document
         if ($this->parent_id > 0) {
             $parent = Document::load($this->parent_id);
             if ($parent->meta_name == 'GoodsIssue') {
-                return;//проводки выполняются  в  РН 
+                return; //проводки выполняются  в  РН 
             }
         }
 
@@ -187,8 +174,6 @@ class TTN extends Document
 
                             $sc->save();
                         }
-
-
                     }
                 }
 
@@ -197,17 +182,13 @@ class TTN extends Document
 
                 if ($price == 0) {
                     throw new \Exception(H::l('noselfprice', $item->itemname));
-
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
 
-
                 $sc->save();
-
-
             }
 
 
@@ -218,6 +199,7 @@ class TTN extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 $sc->setExtCode($item->price - $st->partion); //Для АВС 
+                $sc->setOutPrice($item->price);
                 $sc->save();
             }
         }
@@ -253,10 +235,8 @@ class TTN extends Document
                 if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
                     $order->updateStatus(Document::STATE_READYTOSHIP);
                 }
-
             }
         }
-
     }
 
     public function getRelationBased() {
@@ -270,7 +250,6 @@ class TTN extends Document
     protected function getNumberTemplate() {
         return 'ТТН-000000';
     }
-
 
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF);

@@ -56,7 +56,6 @@ class Inventory extends \App\Pages\Base
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
 
-
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editserial'))->setText("");
 
@@ -75,10 +74,7 @@ class Inventory extends \App\Pages\Base
             $this->docform->autoincome->setChecked($this->_doc->headerdata['autoincome']);
             $this->docform->autooutcome->setChecked($this->_doc->headerdata['autooutcome']);
 
-
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
-
         } else {
             $this->_doc = Document::create('Inventory');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -104,12 +100,10 @@ class Inventory extends \App\Pages\Base
 
         $row->item->setAttribute('class', "text-success");
 
-
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
     }
-
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -159,7 +153,6 @@ class Inventory extends \App\Pages\Base
             } else {
                 $tarr[$k] = $value;    // старый
             }
-
         }
 
         if ($this->_rowid == 0) {        // в конец
@@ -197,7 +190,6 @@ class Inventory extends \App\Pages\Base
         }
         $this->_doc->notes = $this->docform->notes->getText();
 
-
         $this->_doc->headerdata['autoincome'] = $this->docform->autoincome->isChecked() ? 1 : 0;
         $this->_doc->headerdata['autooutcome'] = $this->docform->autooutcome->isChecked() ? 1 : 0;
         $this->_doc->headerdata['cat'] = $this->docform->category->getValue();
@@ -209,7 +201,6 @@ class Inventory extends \App\Pages\Base
         }
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -296,7 +287,6 @@ class Inventory extends \App\Pages\Base
             $this->_itemlist = $itemlist;
 
             $this->docform->detail->Reload();
-
         }
     }
 
@@ -328,7 +318,6 @@ class Inventory extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-
 
         $store = $this->docform->store->getValue();
         $code_ = Item::qstr($code);

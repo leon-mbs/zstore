@@ -16,7 +16,6 @@ class Invoice extends \App\Entity\Doc\Document
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
-
         $i = 1;
         $detail = array();
 
@@ -57,7 +56,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "bankacc"         => @$mf->bankacc,
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "email"           => $this->headerdata["email"],
-                        "notes"           => $this->notes,
+                        "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
@@ -117,10 +116,8 @@ class Invoice extends \App\Entity\Doc\Document
         return $list;
     }
 
-
     protected function getEmailBody() {
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
-
 
         $header = array();
         $header['customer_name'] = $this->customer_name;
@@ -128,7 +125,6 @@ class Invoice extends \App\Entity\Doc\Document
         $header['number'] = $this->document_number;
         $header['date'] = H::fd($this->document_date);
         $header['amount'] = H::fa($this->amount);
-
 
         $report = new \App\Report('emails/invoice.tpl');
 
@@ -144,6 +140,5 @@ class Invoice extends \App\Entity\Doc\Document
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_MAIL);
     }
-
 
 }

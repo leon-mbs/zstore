@@ -15,11 +15,8 @@ class Customer extends \ZCL\DB\Entity
     const STATUS_ACTUAL   = 0;  //актуальный
     const STATUS_DISABLED = 1; //не используется
     const STATUS_LEAD     = 2; //лид
-
-
-    const TYPE_BAYER  = 1; //покупатель
-    const TYPE_SELLER = 2; //поставщик
-
+    const TYPE_BAYER      = 1; //покупатель
+    const TYPE_SELLER     = 2; //поставщик
 
     protected function init() {
         $this->customer_id = 0;
@@ -42,6 +39,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<isholding>{$this->isholding}</isholding>";
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
+        $this->detail .= "<nosubs>{$this->nosubs}</nosubs>";
 
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
 
@@ -66,6 +64,7 @@ class Customer extends \ZCL\DB\Entity
         $this->user_id = (int)($xml->user_id[0]);
         $this->fromlead = (int)($xml->fromlead[0]);
 
+        $this->nosubs = (int)($xml->nosubs[0]);
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);
         $this->address = (string)($xml->address[0]);
@@ -89,11 +88,9 @@ class Customer extends \ZCL\DB\Entity
         return "";
     }
 
-
     protected function afterDelete() {
 
         $conn = \ZDB\DB::getConnect();
-
 
         $conn->Execute("delete from eventlist where   customer_id=" . $this->customer_id);
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
@@ -124,7 +121,7 @@ class Customer extends \ZCL\DB\Entity
      * @param mixed $type
      */
     public static function getList($search = '', $type = 0) {
-
+       
 
         $where = "status=0 and detail not like '%<isholding>1</isholding>%' ";
         if (strlen($search) > 0) {
@@ -185,8 +182,6 @@ class Customer extends \ZCL\DB\Entity
 
 
         return $list;
-
     }
-
 
 }

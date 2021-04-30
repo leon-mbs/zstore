@@ -24,7 +24,6 @@ class Contact extends Base
     public function msgOnClick($sender) {
         $shop = \App\System::getOptions("shop");
 
-
         $message = "<br>Имя: " . $this->messageform->sname->getText();
         $message .= "<br>Контакт: " . $this->messageform->scontact->getText();
         $message .= "<br><br>Сообщение: " . $this->messageform->smessage->getText();

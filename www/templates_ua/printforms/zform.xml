@@ -39,41 +39,41 @@
         <ORDERSCNT>{{cnt}}</ORDERSCNT>
         <PAYFORMS>
             {{#pays}}
-            <ROW
-            {{{num}}}>
+            <ROW>
+                {{{num}}}>
 
-            <PAYFORMCD>{{formcode}}</PAYFORMCD>
+                <PAYFORMCD>{{formcode}}</PAYFORMCD>
 
-            <PAYFORMNM>{{formname}}</PAYFORMNM>
+                <PAYFORMNM>{{formname}}</PAYFORMNM>
 
-            <SUM>{{sum}}</SUM>
+                <SUM>{{sum}}</SUM>
 
-        </ROW>
-        {{/pays}}
-    </PAYFORMS>
+            </ROW>
+            {{/pays}}
+        </PAYFORMS>
 
-</ZREPREALIZ>
-        {{/isreal}}
+    </ZREPREALIZ>
+    {{/isreal}}
 
-        {{#isret}}
-<ZREPRETURN>
-<SUM>{{amountr}}</SUM>
-<ORDERSCNT>{{cntr}}</ORDERSCNT>
-<PAYFORMS>
-    {{#paysr}}
-    <ROW
-    {{{num}}}>
+    {{#isret}}
+    <ZREPRETURN>
+        <SUM>{{amountr}}</SUM>
+        <ORDERSCNT>{{cntr}}</ORDERSCNT>
+        <PAYFORMS>
+            {{#paysr}}
+            <ROW>
+                {{{num}}}>
 
-    <PAYFORMCD>{{formcode}}</PAYFORMCD>
+                <PAYFORMCD>{{formcode}}</PAYFORMCD>
 
-    <PAYFORMNM>{{formname}}</PAYFORMNM>
+                <PAYFORMNM>{{formname}}</PAYFORMNM>
 
-    <SUM>{{sum}}</SUM>
+                <SUM>{{sum}}</SUM>
 
-</ROW>
-{{/paysr}}
-</PAYFORMS>
+            </ROW>
+            {{/paysr}}
+        </PAYFORMS>
 
-        </ZREPRETURN>
-        {{/isret}}
-        </ZREP>
+    </ZREPRETURN>
+    {{/isret}}
+</ZREP>

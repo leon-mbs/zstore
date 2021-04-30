@@ -27,7 +27,6 @@ class Compare extends Base
         $filter = \App\Filter::getFilter("ProductCatalog");
 
         App::Redirect("\\App\\Modules\\Shop\\Pages\\Catalog", $filter->cat_id);
-
     }
 
 }

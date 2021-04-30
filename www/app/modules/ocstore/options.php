@@ -148,6 +148,7 @@ class Options extends \App\Pages\Base
         $modules['ocpricetype'] = $pricetype;
         $modules['ocssl'] = $ssl;
         $modules['ocinsertcust'] = $insertcust;
+        $modules['ocoutcome'] = $outcome;
 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');

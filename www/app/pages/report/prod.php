@@ -46,7 +46,6 @@ class Prod extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "prod";
 
-
         $this->detail->word->pagename = $reportpage;
         $this->detail->word->params = array('doc', $reportname);
         $this->detail->excel->pagename = $reportpage;
@@ -62,7 +61,6 @@ class Prod extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
         $parea = $this->filter->parea->getValue();
-
 
         $detail = array();
         $detail2 = array();

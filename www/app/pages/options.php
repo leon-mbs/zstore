@@ -34,7 +34,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new DropDownChoice('qtydigits'));
         $this->common->add(new DropDownChoice('amdigits'));
         $this->common->add(new DropDownChoice('dateformat'));
-        $this->common->add(new DropDownChoice('curr', array('gr' => 'Гривна', 'ru' => 'Рубль'), 'gr'));
+        $this->common->add(new DropDownChoice('curr', array('gr' => 'Гривня', 'ru' => 'Рубль', 'eu' => 'EURO', 'us' => 'USD'), 'gr'));
         $this->common->add(new DropDownChoice('phonel', array('10' => '10', '12' => '12'), '10'));
         $pt = array(
             "1" => H::l('opt_lastprice'),
@@ -67,6 +67,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('ts_break'));
         $this->common->add(new TextInput('ts_start'));
         $this->common->add(new TextInput('ts_end'));
+        $this->common->add(new TextInput('checkslogan'));
 
         $common = System::getOptions("common");
         if (!is_array($common)) {
@@ -90,9 +91,7 @@ class Options extends \App\Pages\Base
 
         $this->common->autoarticle->setChecked($common['autoarticle']);
 
-
         $this->common->usesnumber->setChecked($common['usesnumber']);
-
 
         $this->common->usemobileprinter->setChecked($common['usemobileprinter']);
         $this->common->usecattree->setChecked($common['usecattree']);
@@ -108,6 +107,7 @@ class Options extends \App\Pages\Base
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
         $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
         $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
+        $this->common->checkslogan->setText( $common['checkslogan']);
 
         //валюты
         $this->add(new Form('valform'))->onSubmit($this, 'saveValOnClick');
@@ -184,7 +184,7 @@ class Options extends \App\Pages\Base
         $this->sms->add(new TextInput('flysmslogin'));
         $this->sms->add(new TextInput('flysmspass'));
         $this->sms->add(new TextInput('flysmsan'));
-        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", /*'2' => "TurboSMS", */ '3' => 'SMS-Fly'), 0))->onChange($this, 'onSMSType');
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS", /* '2' => "TurboSMS", */ '3' => 'SMS-Fly'), 0))->onChange($this, 'onSMSType');
         $sms = System::getOptions("sms");
 
         $this->sms->smssemytoken->setText($sms['smssemytoken']);
@@ -197,9 +197,20 @@ class Options extends \App\Pages\Base
         $this->sms->smstype->setValue($sms['smstype']);
 
         $this->onSMSType($this->sms->smstype);
+        
+        $food = System::getOptions("food");
+        if (!is_array($food)) {
+            $food = array( );
+        }
+        $this->add(new Form('food'))->onSubmit($this,'onFood');
+        $this->food->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(),$food['pricetype']));
+        $this->food->add(new CheckBox('fooddelivery',$food['delivery']));
+        $this->food->add(new CheckBox('foodtables',$food['tables']));
+        
+        $this->food->add(new CheckBox('foodbar',$food['bar']));
 
+        
     }
-
 
     public function saveCommonOnClick($sender) {
         $common = array();
@@ -221,9 +232,9 @@ class Options extends \App\Pages\Base
         $common['ts_break'] = $this->common->ts_break->getText();
         $common['ts_start'] = $this->common->ts_start->getText();
         $common['ts_end'] = $this->common->ts_end->getText();
+        $common['checkslogan'] = $this->common->checkslogan->getText();
 
         $common['autoarticle'] = $this->common->autoarticle->isChecked() ? 1 : 0;
-
 
         $common['usesnumber'] = $this->common->usesnumber->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
@@ -238,17 +249,13 @@ class Options extends \App\Pages\Base
         $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
         $common['numberttn'] = $this->common->numberttn->isChecked() ? 1 : 0;
 
-
         System::setOptions("common", $common);
 
         $this->_tvars["useval"] = $common['useval'] == 1;
 
         $this->setSuccess('saved');
         System::setCache('labels', null);
-
-
     }
-
 
     public function saveValOnClick($sender) {
         $val = array();
@@ -260,8 +267,6 @@ class Options extends \App\Pages\Base
 
         System::setOptions("val", $val);
         $this->setSuccess('saved');
-
-
     }
 
     public function savePrinterOnClick($sender) {
@@ -277,8 +282,6 @@ class Options extends \App\Pages\Base
 
         System::setOptions("printer", $printer);
         $this->setSuccess('saved');
-
-
     }
 
     public function onApiType($sender) {
@@ -287,10 +290,7 @@ class Options extends \App\Pages\Base
         $this->api->akey->setVisible($type == 1);
 
         //  $this->goAnkor('atype');
-
-
     }
-
 
     public function saveApiOnClick($sender) {
         $api = array();
@@ -300,8 +300,6 @@ class Options extends \App\Pages\Base
 
         System::setOptions("api", $api);
         $this->setSuccess('saved');
-
-
     }
 
     public function onSMSType($sender) {
@@ -313,13 +311,11 @@ class Options extends \App\Pages\Base
         $this->sms->flysmspass->setVisible($type == 3);
         $this->sms->flysmsan->setVisible($type == 3);
 
-
         $this->sms->semysmssite->setVisible($type == 1);
         $this->sms->turbosmssite->setVisible($type == 2);
         $this->sms->smsflysite->setVisible($type == 3);
 
         //  $this->goAnkor('atype');
-
     }
 
     public function saveSMSOnClick($sender) {
@@ -334,8 +330,8 @@ class Options extends \App\Pages\Base
 
         System::setOptions("sms", $sms);
         $this->setSuccess('saved');
-
     }
+
 
     public function testSMSOnClick($sender) {
 
@@ -345,8 +341,16 @@ class Options extends \App\Pages\Base
         } else {
             $this->setError($res);
         }
-
-
     }
-
+    public function onFood($sender) {
+        $food = array();
+        $food['pricetype'] = $sender->foodpricetype->getValue() ;
+        $food['delivery'] = $sender->fooddelivery->isChecked()?1:0 ;
+        $food['tables'] = $sender->foodtables->isChecked()?1:0 ;
+        
+        $food['bar'] = $sender->foodbar->isChecked()?1:0 ;
+        System::setOptions("food", $food);
+        $this->setSuccess('saved');
+    }
+  
 }

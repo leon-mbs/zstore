@@ -24,15 +24,11 @@ class common extends \App\API\Base\JsonRPC
             );
 
             $jwt = \Firebase\JWT\JWT::encode($token, $key);
-
-
         } else {
-            throw new  \Exception(\App\Helper::l('invalidlogin'), -1000);
+            throw new \Exception(\App\Helper::l('invalidlogin'), -1000);
         }
 
         return $jwt;
-
     }
-
 
 }

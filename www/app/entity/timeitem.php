@@ -23,7 +23,6 @@ class TimeItem extends \ZCL\DB\Entity
     const TINE_BT    = 7;   //командировка
     const TINE_OTHER = 10;   //другое
 
-
     protected function init() {
         $this->time_id = 0;
         $this->emp_id = 0;
@@ -49,7 +48,6 @@ class TimeItem extends \ZCL\DB\Entity
         return $list;
     }
 
-
     public function isValid() {
 
         if (($this->t_end - $this->t_start) < 300) {
@@ -69,13 +67,11 @@ class TimeItem extends \ZCL\DB\Entity
         $sql = " select  count(*)  from timesheet where time_id <> {$this->time_id}  and  emp_id={$this->emp_id}  and   (( {$t_start}  >= t_end  and  {$t_end}  > t_end) or (  {$t_start}  < t_start  and  {$t_end}  <= t_start))";
         $cnt1 = $conn->GetOne($sql);
 
-
         if ($cnt > $cnt1) {
             return "ts_intersect";
         }
 
         return "";
     }
-
 
 }

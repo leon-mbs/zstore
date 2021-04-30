@@ -6,9 +6,9 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
 
-
 class ZForm extends \App\Pages\Base
 {
+
     private $pos;
 
     public function __construct() {
@@ -19,17 +19,16 @@ class ZForm extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), 0));
 
         $this->add(new Form('stat'))->onSubmit($this, 'OnClose');
-        $this->stat->add(new  TextInput('nal'));
-        $this->stat->add(new  TextInput('bnal'));
-        $this->stat->add(new  TextInput('credit'));
-        $this->stat->add(new  TextInput('prepaid'));
-        $this->stat->add(new  TextInput('retnal'));
-        $this->stat->add(new  TextInput('retbnal'));
-        $this->stat->add(new  TextInput('cnt'));
-        $this->stat->add(new  TextInput('retcnt'));
+        $this->stat->add(new TextInput('nal'));
+        $this->stat->add(new TextInput('bnal'));
+        $this->stat->add(new TextInput('credit'));
+        $this->stat->add(new TextInput('prepaid'));
+        $this->stat->add(new TextInput('retnal'));
+        $this->stat->add(new TextInput('retbnal'));
+        $this->stat->add(new TextInput('cnt'));
+        $this->stat->add(new TextInput('retcnt'));
         $this->stat->setVisible(false);
     }
-
 
     public function OnRefresh($sender) {
         $pos_id = $this->filter->pos->getValue();
@@ -51,8 +50,6 @@ class ZForm extends \App\Pages\Base
         $this->stat->retnal->setText($data['amount0']);
         $this->stat->retbnal->setText($data['amount1']);
         $this->stat->retcnt->setText($data['cnt']);
-
-
     }
 
     public function OnClose($sender) {
@@ -62,8 +59,6 @@ class ZForm extends \App\Pages\Base
         if ($ret == true) {
             $this->closeshift();
         };
-
-
     }
 
     public function zform() {
@@ -92,8 +87,6 @@ class ZForm extends \App\Pages\Base
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
-
-
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -106,15 +99,12 @@ class ZForm extends \App\Pages\Base
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
-
             }
-
         }
 
 
         return true;
     }
-
 
     public function closeshift() {
 
@@ -125,8 +115,6 @@ class ZForm extends \App\Pages\Base
             $pos->fiscdocnumber = $ret['docnumber'];
             $pos->save();
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
-
-
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -139,7 +127,6 @@ class ZForm extends \App\Pages\Base
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
-
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
         }
@@ -147,6 +134,5 @@ class ZForm extends \App\Pages\Base
 
         return true;
     }
-
 
 }

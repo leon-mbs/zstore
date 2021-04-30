@@ -7,6 +7,7 @@ use App\Entity\Item;
 use App\Modules\Shop\Entity\Product;
 use App\System;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\File;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
@@ -27,9 +28,12 @@ class Options extends \App\Pages\Base
 
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
-        
-        $this->shop->add(new DropDownChoice('shopdefcust', \App\Entity\Customer::getList()));
+
+        $this->shop->add(new DropDownChoice('shopordertype', array(), 0));
+        $this->shop->add(new AutocompleteTextInput('shopdefcust'))->onText($this, 'OnAutoCustomer');
+
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
+        $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
         $this->shop->add(new TextInput('email'));
         $this->shop->add(new TextInput('shopname'));
         $this->shop->add(new TextInput('currencyname'));
@@ -50,8 +54,11 @@ class Options extends \App\Pages\Base
             $shop = array();
         }
 
-        
-        $this->shop->shopdefcust->setValue($shop['defcust']);
+
+        $this->shop->shopdefbranch->setValue($shop['defbranch']);
+        $this->shop->shopdefcust->setKey($shop['defcust']);
+        $this->shop->shopdefcust->setText($shop['defcustname']);
+        $this->shop->shopordertype->setValue($shop['ordertype']);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
@@ -62,7 +69,6 @@ class Options extends \App\Pages\Base
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
 
-        
         $this->add(new ClickLink('updatesitemap'))->onClick($this, 'updateSiteMapOnClick');
 
         if (strlen($shop['aboutus']) > 10) {
@@ -82,10 +88,11 @@ class Options extends \App\Pages\Base
     public function saveShopOnClick($sender) {
         $shop = array();
 
-        //todo контрагент магазина, кому  нотификацию
+        $shop['defcust'] = $this->shop->shopdefcust->getKey();
+        $shop['defcustname'] = $this->shop->shopdefcust->getText();
 
-        $shop['defcust'] = $this->shop->shopdefcust->getValue();
-        
+        $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
+        $shop['ordertype'] = $this->shop->shopordertype->getValue();
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
@@ -94,7 +101,6 @@ class Options extends \App\Pages\Base
         $shop['usefilter'] = $this->shop->usefilter->isChecked() ? 1 : 0;
         $shop['createnewcust'] = $this->shop->createnewcust->isChecked() ? 1 : 0;
         $shop['usefeedback'] = $this->shop->usefeedback->isChecked() ? 1 : 0;
-
 
         $file = $sender->logo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
@@ -113,29 +119,26 @@ class Options extends \App\Pages\Base
             $name = basename($file["name"]);
             move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);
 
-
             $shop['logo'] = "/upload/" . $name;
         }
         System::setOptions("shop", $shop);
         $this->setSuccess('saved');
     }
-    
 
     public function updateSiteMapOnClick($sender) {
-       
-                
+
+
         $sm = _ROOT . 'sitemap.xml';
         @unlink($sm);
         $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
 
         $prods = Product::find(" deleted = 0 ");
         foreach ($prods as $p) {
-            if(strlen($p->sef)>0) {
-              $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";  
-            }   else {
-              $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";    
+            if (strlen($p->sef) > 0) {
+                $xml = $xml . " <url><loc>" . _BASEURL . "{$p->sef}</loc></url>";
+            } else {
+                $xml = $xml . " <url><loc>" . _BASEURL . "sp/{$p->item_id}</loc></url>";
             }
-            
         }
         $xml .= "</urlset>";
         file_put_contents($sm, $xml);
@@ -152,6 +155,10 @@ class Options extends \App\Pages\Base
 
         System::setOptions("shop", $shop);
         $this->setSuccess('refreshed');
+    }
+
+    public function OnAutoCustomer($sender) {
+        return \App\Entity\Customer::getList($sender->getText(), 1);
     }
 
 }

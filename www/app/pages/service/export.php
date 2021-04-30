@@ -17,9 +17,9 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 
-
 class Export extends \App\Pages\Base
 {
+
     public $_docs = array();
 
     public function __construct() {
@@ -43,7 +43,6 @@ class Export extends \App\Pages\Base
 
         $form->add(new DropDownChoice("ctype", array(), 0));
 
-
         $form->onSubmit($this, "onCExport");
 
         $form = $this->add(new Form("dform"));
@@ -64,12 +63,10 @@ class Export extends \App\Pages\Base
         $t = $sender->getValue();
 
         $this->iform->store->setVisible($t == 1);
-
     }
 
     public function onCExport($sender) {
         $t = $this->cform->ctype->getValue();
-
 
         $sql = "  status=" . Customer::STATUS_ACTUAL;
         if ($t > 0) {
@@ -87,7 +84,6 @@ class Export extends \App\Pages\Base
         $header['D1'] = "Город";
         $header['E1'] = "Адрес";
 
-
         $i = 1;
         foreach ($list as $item) {
             $i++;
@@ -96,13 +92,9 @@ class Export extends \App\Pages\Base
             $data['C' . $i] = $item->email;
             $data['D' . $i] = $item->city;
             $data['E' . $i] = $item->address;
-
-
         }
 
         H::exportExcel($data, $header, 'customers_' . date('Y_m_d', time()) . '.xlsx');
-
-
     }
 
     public function onExport($sender) {
@@ -113,7 +105,6 @@ class Export extends \App\Pages\Base
         $sql = "disabled <> 1 ";
 
         $list = Item::find($sql, "itemname asc");
-
 
         $header = array();
         $data = array();
@@ -146,13 +137,10 @@ class Export extends \App\Pages\Base
                 $qty = H::fqty($item->getQuantity($store));
                 $data['H' . $i] = array('value' => H::fqty($qty), 'format' => 'number', 'align' => 'right');
             }
-
         }
 
         H::exportExcel($data, $header, 'items_' . date('Y_m_d', time()) . '.xlsx');
-
     }
-
 
     public function onDPreview($sender) {
         $dt = $sender->dtype->getValue();
@@ -162,7 +150,6 @@ class Export extends \App\Pages\Base
         $sql = "meta_name='{$dt}' and date(document_date) >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  date(document_date) <= " . $conn->DBDate($sender->dto->getDate());
         $this->_docs = Document::find($sql);
         $this->dformlist->doclist->Reload();
-
     }
 
     public function expDRow($row) {
@@ -172,14 +159,12 @@ class Export extends \App\Pages\Base
         $row->add(new Label('ddate', \App\Helper::fd($doc->document_date)));
         $row->add(new Label('damount', \App\Helper::fa($doc->amount)));
         $row->add(new Label('dcustomer', $doc->customer_name));
-
     }
 
     public function onDExport($sender) {
 
         $header = array();
         $data = array();
-
 
         $i = 0;
         foreach ($this->_docs as $doc) {
@@ -195,7 +180,6 @@ class Export extends \App\Pages\Base
                 $data['D' . $i] = $item->item_code;
                 $data['E' . $i] = array('value' => H::fqty($item->quantity), 'format' => 'number', 'align' => 'right');
                 $data['F' . $i] = array('value' => H::fa($item->price), 'format' => 'number', 'align' => 'right');
-
             }
 
             $i++;
@@ -205,9 +189,6 @@ class Export extends \App\Pages\Base
         }
 
         H::exportExcel($data, $header, 'exportdoc_' . date('Y_m_d', time()) . '.xlsx');
-
-
     }
-
 
 }

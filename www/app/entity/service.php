@@ -24,7 +24,6 @@ class Service extends \ZCL\DB\Entity
         $this->price = (string)($xml->price[0]);
         $this->cost = (string)($xml->cost[0]);
 
-
         parent::afterLoad();
     }
 

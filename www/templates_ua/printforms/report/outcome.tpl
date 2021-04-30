@@ -43,7 +43,7 @@
     </tr>
     {{/_detail}}
     <tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td><td align="right" ><b><b>{{totnavar}}</b></b></td> </tr>
-     
+
 </table>
 {{/_type1}}
 {{#_type2}}
@@ -73,7 +73,7 @@
     <td></td>
 </tr>
 {{/_detail}}
- <tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td><td align="right" ><b><b>{{totnavar}}</b></b></td> </tr>
+<tr><td colspan="3"></td><td align="right" ><b>{{totsumma}}</b></td><td align="right" ><b><b>{{totnavar}}</b></b></td> </tr>
 
 </table>
 {{/_type2}}

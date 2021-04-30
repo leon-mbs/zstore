@@ -10,6 +10,7 @@
         <td>Телефон</td>
         <td colspan="8">{{phone}}</td>
     </tr>
+
     <tr>
         <td></td>
         <td>Email</td>
@@ -27,6 +28,14 @@
             Заказ № {{document_number}} от {{date}}
         </td>
     </tr>
+    {{#isoutnumber}}
+    <tr>
+        <td></td>
+        <td>Внешний номер</td>
+        <td colspan="8">{{outnumber}}</td>
+    </tr>
+
+    {{/isoutnumber}}
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>

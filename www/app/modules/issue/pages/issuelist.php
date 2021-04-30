@@ -54,7 +54,6 @@ class IssueList extends \App\Pages\Base
         $projects = Project::findArray('project_name', $where, 'project_name');
         $this->filter->add(new DropDownChoice('searchproject', $projects, $project_id));
 
-
         $this->filter->add(new TextInput('searchnumber'));
         if ($id > 0) {
             $this->filter->searchnumber->setText($id);
@@ -98,7 +97,6 @@ class IssueList extends \App\Pages\Base
         $msgpan->add(new ClickLink('editissue', $this, 'editOnClick'));
         $msgpan->add(new ClickLink('deleteissue', $this, 'deleteOnClick'));
 
-
         $msgpan->add(new Form('addmsgform'))->onSubmit($this, 'onAddMsg');
         $msgpan->addmsgform->add(new TextArea('msgdata'));
         $msgpan->addmsgform->add(new \Zippy\Html\Form\CheckBoxList('userlist', '<br>'));
@@ -120,7 +118,6 @@ class IssueList extends \App\Pages\Base
 
         $this->listpan->list->Reload();
 
-
         $this->add(new Panel("editpan"))->setVisible(false);
         $this->editpan->add(new Form('editform'))->onSubmit($this, 'onSaveIssue');
         $this->editpan->editform->add(new TextInput('edittitle'));
@@ -141,7 +138,6 @@ class IssueList extends \App\Pages\Base
             $this->onNew(null);
         }
     }
-
 
     public function onNew($sender) {
         $this->editpan->editform->clean();
@@ -471,7 +467,6 @@ class IssueList extends \App\Pages\Base
         $this->_stlist = $this->_issue->getLogList();
         $this->listpan->msgpan->stlist->Reload();
     }
-
 
 }
 

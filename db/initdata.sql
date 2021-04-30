@@ -10,15 +10,18 @@ UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' 
 
  
 INSERT INTO `stores` (  `storename`, `description`) VALUES(  'Основной склад', '');
-INSERT INTO `mfund` (`mf_id`, `mf_name`, `description`) VALUES(2, 'Касса', 'Основная касса');
+INSERT INTO `mfund` ( `mf_name`, `description`) VALUES( 'Касса', 'Основная касса');
 INSERT INTO `firms` (  `firm_name`, `details`, `disabled`) VALUES(  'Наша  фирма', '', 0);
+INSERT INTO `customers` ( `customer_name`, `detail`, `email`, `phone`, `status`, `city`, `leadstatus`, `leadsource`, `createdon`) VALUES( 'Физ. лицо', '<detail><code></code><discount></discount><bonus></bonus><type>0</type><fromlead>0</fromlead><jurid></jurid><shopcust_id></shopcust_id><isholding>0</isholding><holding>0</holding><viber></viber><nosubs>1</nosubs><user_id>4</user_id><holding_name><![CDATA[]]></holding_name><address><![CDATA[]]></address><comment><![CDATA[Условный контрагент если  надо  кого то  указать.]]></comment></detail>', '', '', 0, '', NULL, NULL, '2021-04-28');
 
 
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:24:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:10:"dateformat";s:5:"d.m.Y";s:11:"partiontype";s:1:"1";s:4:"curr";s:2:"ru";s:6:"phonel";s:2:"10";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"defprice";s:0:"";s:8:"shopname";s:14:"Магазин";s:8:"ts_break";s:2:"60";s:8:"ts_start";s:5:"09:00";s:6:"ts_end";s:5:"18:00";s:11:"autoarticle";i:1;s:10:"usesnumber";i:0;s:10:"usescanner";i:0;s:9:"useimages";i:0;s:9:"usebranch";i:0;s:10:"allowminus";i:1;s:6:"useval";i:0;s:6:"capcha";i:0;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('api', 'a:3:{s:3:"exp";N;s:3:"key";N;s:5:"atype";s:1:"3";}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'a:28:{s:9:"qtydigits";s:1:"0";s:8:"amdigits";s:1:"0";s:10:"dateformat";s:5:"d.m.Y";s:11:"partiontype";s:1:"1";s:4:"curr";s:2:"gr";s:6:"phonel";s:2:"10";s:6:"price1";s:18:"Розничная";s:6:"price2";s:14:"Оптовая";s:6:"price3";s:0:"";s:6:"price4";s:0:"";s:6:"price5";s:0:"";s:8:"defprice";s:2:"10";s:8:"shopname";s:20:"Наша  фирма";s:8:"ts_break";s:2:"60";s:8:"ts_start";s:5:"09:00";s:6:"ts_end";s:5:"18:00";s:11:"autoarticle";i:1;s:10:"usesnumber";i:0;s:10:"usescanner";i:0;s:9:"useimages";i:0;s:16:"usemobileprinter";i:0;s:10:"usecattree";i:0;s:9:"usebranch";i:0;s:10:"noallowfiz";i:0;s:10:"allowminus";i:1;s:6:"useval";i:0;s:6:"capcha";i:0;s:9:"numberttn";i:0;}');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'a:8:{s:6:"pwidth";s:4:"100%";s:9:"pricetype";s:6:"price1";s:11:"barcodetype";s:5:"EAN13";s:9:"pfontsize";s:2:"16";s:5:"pname";i:1;s:5:"pcode";i:0;s:8:"pbarcode";i:1;s:6:"pprice";i:0;}');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'N;');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('modules', 'a:21:{s:6:"ocsite";s:24:"https://yerbalife.com.ua";s:9:"ocapiname";s:5:"zippy";s:5:"ockey";s:256:"xgquZq2BXB5QRMGq3mPR3zTMXI3Jl2oaUOQmmyrbaVjeZMhnpgwomxEn2D8dZFOLMcscA7WbRWXiCKg0navzgmJpinIgmYTCK0de5ZLZ3oOGp6eAKpzt3nadwYVvCl1ByjNPdpGbSMMBkUEhuJSzmliC0mE5oY1mLpDUEhVp45T8ELh3JReFuRNidV5ojVW2OhYqx3Q8RukKE4LzWjNvkivplLo3lrNBeZx5Mi2CZegOxrNbI1sz3bcojzvJ8aW0";s:13:"occustomer_id";s:1:"8";s:11:"ocpricetype";s:6:"price1";s:6:"wcsite";s:15:"http://local.wp";s:6:"wckeyc";s:43:"ck_a36c9d5d8ef70a34001b6a44bc245a7665ca77e7";s:6:"wckeys";s:43:"cs_12b03012d9db469b45b1fc82e329a3bc995f3e36";s:5:"wcapi";s:2:"v3";s:13:"wccustomer_id";s:1:"8";s:11:"wcpricetype";s:6:"price1";s:9:"ocoutcome";i:0;s:12:"ocinsertcust";i:0;s:12:"td_pricetype";s:1:"0";s:8:"td_store";s:1:"0";s:8:"td_ipath";s:0:"";s:11:"td_seconddb";i:1;s:9:"td_dbhost";s:9:"localhost";s:9:"td_dbname";s:6:"tecdoc";s:9:"td_dbuser";s:4:"root";s:9:"td_dbpass";s:4:"root";}');
-
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'a:8:{s:7:"defcust";s:1:"2";s:12:"defpricetype";s:6:"price1";s:5:"email";s:0:"";s:8:"shopname";s:17:"Наш магаз";s:12:"currencyname";s:6:"грн";s:8:"uselogin";i:0;s:9:"usefilter";i:1;s:11:"usefeedback";i:1;}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('sms', 'a:7:{s:13:"turbosmstoken";s:0:"";s:12:"smssemytoken";s:0:"";s:12:"smssemydevid";s:0:"";s:11:"flysmslogin";s:0:"";s:10:"flysmspass";s:0:"";s:8:"flysmsan";s:0:"";s:7:"smstype";s:1:"0";}');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('val', 'a:5:{s:6:"valuan";s:0:"";s:6:"valusd";s:2:"28";s:7:"valeuro";s:0:"";s:6:"valrub";s:0:"";s:8:"valprice";i:0;}');
+ 
   
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(1, 4, 'Склады', 'StoreList', 'ТМЦ', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(2, 4, 'Номенклатура', 'ItemList', 'ТМЦ', 0);
@@ -32,7 +35,7 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(12, 2, 'Движение по складу', 'ItemActivity', 'Склад', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(13, 2, 'ABC анализ', 'ABC', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(14, 4, 'Услуги, работы', 'ServiceList', '', 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(15, 1, 'Заказ (услуги)', 'ServiceAct', 'Услуги', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(15, 1, 'Заказ (услуги)', 'ServiceAct', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(16, 1, 'Возврат от покупателя', 'ReturnIssue', 'Продажи', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(18, 3, 'Наряды', 'TaskList', '', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(19, 1, 'Наряд', 'Task', 'Производство', 0);
@@ -83,6 +86,9 @@ INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `men
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(86, 3, 'Расчеты с поставщиками', 'PaySelList', 'Касса и платежи', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(87, 3, 'Расчеты с покупателями', 'PayBayList', 'Касса и платежи', 0);
 INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(88, 1, 'Перемещение  денег', 'MoveMoney', 'Касса и платежи', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(89, 1, 'Заказ (общепит)', 'OrderFood', '', 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(91, 5, 'АРМ кассира', 'ARMFood', 'Общепит', 0);
+
 
 
  

@@ -98,26 +98,26 @@
     <tr>
         <td colspan="7">На суму <b>{{totalstr}}<b></td>
 
-    </tr>
-  <tr>
-        <td colspan="4" > 
-            Продавець ___________
-        </td>
-  <td colspan="3"> 
-           Покупець ___________
-        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" > 
+                            Продавець ___________
+                        </td>
+                        <td colspan="3"> 
+                            Покупець ___________
+                        </td>
 
-    </tr>
-  <tr>
-         <td> </td>
-        <td colspan="6">
-        <br><br>
-  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; МП
-        <br><br>
-        </td>
-        
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td colspan="6">
+                            <br><br>
+                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; МП
+                            <br><br>
+                        </td>
 
-    </tr>
 
-</table>
+                    </tr>
+
+                    </table>
 

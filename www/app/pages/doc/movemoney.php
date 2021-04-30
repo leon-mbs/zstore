@@ -17,7 +17,6 @@ use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Customer;
 use App\Entity\Employee;
 
-
 /**
  * Страница   перемещение  денег
  */
@@ -33,7 +32,6 @@ class MoveMoney extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-
         $this->docform->add(new DropDownChoice('paymentfrom', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new DropDownChoice('paymentto', MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('notes'));
@@ -41,7 +39,6 @@ class MoveMoney extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
@@ -61,7 +58,6 @@ class MoveMoney extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
-
     }
 
     public function savedocOnClick($sender) {
@@ -91,7 +87,6 @@ class MoveMoney extends \App\Pages\Base
         try {
 
             $this->_doc->save();
-
 
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
@@ -151,6 +146,5 @@ class MoveMoney extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-
 
 }

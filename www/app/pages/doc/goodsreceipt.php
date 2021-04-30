@@ -33,7 +33,6 @@ class GoodsReceipt extends \App\Pages\Base
     private $_basedocid = 0;
     private $_rowid     = 0;
 
-
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -57,7 +56,6 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
-
 
         $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
@@ -100,9 +98,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
 
-
         $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
-
 
         //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
@@ -116,7 +112,6 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
-
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
@@ -124,7 +119,6 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editcust->add(new TextInput('editaddress'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
-
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
@@ -153,13 +147,11 @@ class GoodsReceipt extends \App\Pages\Base
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
-
             $this->OnPayment($this->docform->payment);
 
             $this->docform->total->setText($this->_doc->amount);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
         } else {
             $this->_doc = Document::create('GoodsReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -198,7 +190,6 @@ class GoodsReceipt extends \App\Pages\Base
 
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
 
-
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->CalcTotal();
                         $this->CalcPay();
@@ -223,7 +214,6 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->CalcTotal();
                         $this->CalcPay();
                     }
-
                 }
             }
         }
@@ -238,9 +228,7 @@ class GoodsReceipt extends \App\Pages\Base
         foreach (Item::getManufacturers() as $man) {
             $this->_tvars['manlist'][] = array('mitem' => $man);
         }
-
     }
-
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
@@ -260,7 +248,6 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
-
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
@@ -275,7 +262,6 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
-
 
         $this->calcTotal();
         $this->calcPay();
@@ -312,7 +298,6 @@ class GoodsReceipt extends \App\Pages\Base
 
             $this->setWarn('item_notfound');
             $this->addnewitemOnClick(null);
-
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
@@ -335,7 +320,6 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->editprice->setText($item->price);
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
-
 
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
@@ -362,7 +346,6 @@ class GoodsReceipt extends \App\Pages\Base
 
 
         $item = Item::load($id);
-
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -395,7 +378,6 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->_rowid = 0;
 
-
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -426,7 +408,6 @@ class GoodsReceipt extends \App\Pages\Base
             return;
         }
         $this->goAnkor("");
-
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -474,12 +455,10 @@ class GoodsReceipt extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
-
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -517,10 +496,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $optval[$this->_doc->headerdata['val']] = $this->_doc->headerdata['rate'];
                         \App\System::setOptions("val", $optval);
                     }
-
                 }
-
-
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -583,9 +559,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->rate->setVisible(true);
         $this->docform->disc->setVisible(true);
 
-
         $b = $sender->getValue();
-
 
         if ($b == \App\Entity\MoneyFund::PREPAID) {
             $this->docform->payed->setVisible(false);
@@ -593,13 +567,11 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->nds->setVisible(false);
             $this->docform->rate->setVisible(false);
             $this->docform->disc->setVisible(false);
-
         }
         if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->docform->payed->setVisible(false);
         }
     }
-
 
     public function onDisc($sender) {
         $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
@@ -618,7 +590,6 @@ class GoodsReceipt extends \App\Pages\Base
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
-
 
     /**
      * Расчет  итого
@@ -717,12 +688,9 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->editnewitem->clean();
 
-
         if (System::getOption("common", "autoarticle") == 1) {
             $this->editnewitem->editnewitemcode->setText(Item::getNextArticle());
         }
-
-
     }
 
     public function savenewitemOnClick($sender) {
@@ -771,7 +739,6 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editnewitem->setVisible(false);
         $this->editdetail->setVisible(true);
     }
-
 
     //добавление нового контрагента
     public function addcustOnClick($sender) {
@@ -831,7 +798,6 @@ class GoodsReceipt extends \App\Pages\Base
     public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
-
     }
 
     public function OnCustomerFirm($sender) {
@@ -847,8 +813,6 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
-
     }
-
 
 }

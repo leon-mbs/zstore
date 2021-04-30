@@ -44,12 +44,10 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->docform->add(new TextInput('notes'));
 
-
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-
 
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -74,9 +72,7 @@ class ProdReceipt extends \App\Pages\Base
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
-
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
         } else {
             $this->_doc = Document::create('ProdReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -90,7 +86,6 @@ class ProdReceipt extends \App\Pages\Base
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-
                     }
                 }
                 if ($basedoc instanceof Document) {
@@ -98,7 +93,6 @@ class ProdReceipt extends \App\Pages\Base
                     if ($basedoc->meta_name == 'Order') {
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-
                     }
                 }
                 if ($basedoc->meta_name == 'Task') {
@@ -110,12 +104,8 @@ class ProdReceipt extends \App\Pages\Base
                         $item->price = $item->getProdprice();
                         $this->_itemlist[$item->item_id] = $item;
                     }
-
-
                 }
-
             }
-
         }
         $this->calcTotal();
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
@@ -126,7 +116,6 @@ class ProdReceipt extends \App\Pages\Base
 
     public function detailOnRow($row) {
         $item = $row->getDataItem();
-
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
@@ -153,9 +142,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
 
-
         $this->editdetail->edititem->setValue($item->item_id);
-
 
         $this->_rowid = $item->item_id;
     }
@@ -194,7 +181,6 @@ class ProdReceipt extends \App\Pages\Base
 
         $item = Item::load($id);
 
-
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         if ($item->price == 0) {
@@ -220,7 +206,6 @@ class ProdReceipt extends \App\Pages\Base
             } else {
                 $tarr[$k] = $value;    // старый
             }
-
         }
 
         if ($this->_rowid == 0) {        // в конец
@@ -229,14 +214,12 @@ class ProdReceipt extends \App\Pages\Base
         $this->_itemlist = $tarr;
         $this->_rowid = 0;
 
-
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
         $this->calcTotal();
         //очищаем  форму
         $this->editdetail->edititem->setValue(0);
-
 
         $this->editdetail->editquantity->setText("1");
 
@@ -263,18 +246,15 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->calcTotal();
 
-
         $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $isEdited = $this->_doc->document_id > 0;
         $this->_doc->payamount = 0;
-
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -366,7 +346,6 @@ class ProdReceipt extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getValue();
         $item = \App\Entity\Item::load($id);
-
 
         $price = $item->getProdprice();
         $this->editdetail->editprice->setText($price > 0 ? H::fa($price) : '');

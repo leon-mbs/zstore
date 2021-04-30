@@ -76,7 +76,6 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
-
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total', 0));
@@ -132,7 +131,6 @@ class Invoice extends \App\Pages\Base
 
             $this->OnChangeCustomer($this->docform->customer);
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
-
         } else {
             $this->_doc = Document::create('Invoice');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -152,14 +150,11 @@ class Invoice extends \App\Pages\Base
                         $this->docform->notes->setText("счет  к  заказу " . $basedoc->document_number);
                         $order = $basedoc->cast();
 
-
                         $this->docform->total->setText($order->amount);
-
 
                         $this->calcPay();
 
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
-
                     }
                 }
             }
@@ -216,7 +211,6 @@ class Invoice extends \App\Pages\Base
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
 
-
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
@@ -236,7 +230,6 @@ class Invoice extends \App\Pages\Base
         $item = Item::load($id);
         $item->quantity = $this->editdetail->editquantity->getText();
 
-
         $item->price = $this->editdetail->editprice->getText();
 
         $tarr = array();
@@ -248,7 +241,6 @@ class Invoice extends \App\Pages\Base
             } else {
                 $tarr[$k] = $value;    // старый
             }
-
         }
 
         if ($this->_rowid == 0) {        // в конец
@@ -318,7 +310,6 @@ class Invoice extends \App\Pages\Base
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->firm_id = $this->docform->firm->getValue();
 
-
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
         $this->_doc->amount = $this->docform->total->getText();
@@ -375,7 +366,6 @@ class Invoice extends \App\Pages\Base
 
         $b = $sender->getValue();
 
-
         if ($b == \App\Entity\MoneyFund::CREDIT) {
             $this->docform->payed->setVisible(false);
             $this->docform->editpayed->setVisible(false);
@@ -383,7 +373,6 @@ class Invoice extends \App\Pages\Base
             $this->docform->editpayed->setText(0);
         }
         $this->calcPay();
-
     }
 
     public function onPayAmount($sender) {
@@ -398,7 +387,6 @@ class Invoice extends \App\Pages\Base
 
 
         $this->docform->paydisc->setText(H::fa($this->docform->editpaydisc->getText()));
-
 
         $this->calcPay();
     }
@@ -445,20 +433,16 @@ class Invoice extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $disc = $this->docform->paydisc->getText();
 
-
         $p = $this->docform->payment->getValue();
 
         if ($p > 0) {
             $this->docform->editpayamount->setText(H::fa($total));
             $this->docform->payamount->setText(H::fa($total));
-
         }
         if ($p > 0 && $p < 10000) {
             $this->docform->editpayed->setText(H::fa($total));
             $this->docform->payed->setText(H::fa($total));
-
         }
-
     }
 
     /**
@@ -499,7 +483,6 @@ class Invoice extends \App\Pages\Base
         $item = Item::load($id);
         $price = $item->getPrice($this->docform->pricetype->getValue());
 
-
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
         $this->editdetail->editprice->setText(H::fa($price));
 
@@ -519,7 +502,6 @@ class Invoice extends \App\Pages\Base
 
             $this->docform->phone->setText($customer->phone);
             $this->docform->email->setText($customer->email);
-
 
             if ($customer->discount > 0) {
                 $this->docform->discount->setText("Постоянная скидка " . $customer->discount . '%');
@@ -617,7 +599,6 @@ class Invoice extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
-
     }
 
 }

@@ -35,7 +35,6 @@ abstract class JsonRPC
         }
     }
 
-
     protected function checkAcess() {
         $api = \App\System::getOptions('api');
         $user = null;
@@ -55,31 +54,27 @@ abstract class JsonRPC
 
             $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
 
-
             $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
             if ($decoded->exp < time()) {
-                throw new  \Exception(\App\Helper::l('apitokenexpired'), -1002);
+                throw new \Exception(\App\Helper::l('apitokenexpired'), -1002);
             }
             $user = \App\Entity\User::load($decoded->user_id);
         }
         //Basic
         if ($api['atype'] == 2) {
             $user = \App\Helper::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-
         }
         //без  авторизации
         if ($api['atype'] == 3) {
             $user = \App\Entity\User::getByLogin('admin');
         }
         if ($user == null) {
-            throw new  \Exception(\App\Helper::l('apiusernotfound'), -1001);
+            throw new \Exception(\App\Helper::l('apiusernotfound'), -1001);
         }
         \App\System::setUser($user);
 
         return true;
-
     }
-
 
     /**
      * Processes the user input, and prepares a response (if necessary).
@@ -220,7 +215,6 @@ abstract class JsonRPC
         try {
 
             $result = $this->{$method}($arguments);
-
         } catch(\Throwable $e) {
             return self::error($id, $e->getCode(), $e->getMessage());
         }
@@ -328,6 +322,5 @@ abstract class JsonRPC
             'result'  => $result
         );
     }
-
 
 }

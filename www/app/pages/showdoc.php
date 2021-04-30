@@ -25,10 +25,7 @@ class ShowDoc extends \Zippy\Html\WebPage
         $doc = $doc->cast();
         $filename = $doc->document_number;
 
- 
-        $html = $doc->generateReport();    
-      
-          
+        $html = $doc->generateReport();
 
         if (strlen($html) > 0) {
 
@@ -41,8 +38,8 @@ class ShowDoc extends \Zippy\Html\WebPage
                 header("Content-Type: text/html;charset=UTF-8");
                 echo $html;
             }
-           if ($type == "pos") {
-                header("Content-Type: text/html;charset=UTF-8"); 
+            if ($type == "pos") {
+                header("Content-Type: text/html;charset=UTF-8");
                 $html = $doc->generatePosReport();
                 echo $html;
             }
@@ -80,7 +77,6 @@ class ShowDoc extends \Zippy\Html\WebPage
                 header("Content-Disposition: attachment;Filename={$filename}.pdf");
                 header("Content-Transfer-Encoding: binary");
 
-
                 $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
                 $dompdf->loadHtml($html);
 
@@ -100,7 +96,6 @@ class ShowDoc extends \Zippy\Html\WebPage
 
         if ($type == "metaie") { //todo экспорт  файлов  метаобьекта
             $filename = $doc->meta_name . ".zip";
-
 
             header("Content-type: application/zip");
             header("Content-Disposition: attachment;Filename={$filename}");

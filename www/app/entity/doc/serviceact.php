@@ -61,7 +61,6 @@ class ServiceAct extends Document
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
-
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
             $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), $ser->quantity);
@@ -69,16 +68,18 @@ class ServiceAct extends Document
 
             $sc->setExtCode($ser->price); //Для АВС 
             //$sc->setCustomer($this->customer_id);
+            $sc->setOutPrice($item->price);
             $sc->save();
         }
+    }
+
+    public function Pay() {
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
             $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'], \App\Entity\Pay::PAY_BASE_INCOME);
             if ($payed > 0) {
                 $this->payed = $payed;
             }
         }
-
-        return true;
     }
 
     public function supportedExport() {
@@ -86,7 +87,7 @@ class ServiceAct extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'АКТ-000000';
+        return 'Акт-000000';
     }
 
     public function generatePosReport() {
@@ -108,7 +109,8 @@ class ServiceAct extends Document
                         "phone"           => $firm['phone'],
                         "customer_name"   => $this->headerdata['customer_name'],
                         "isdevice"        => strlen($this->headerdata["device"]) > 0,
-                        "device"          => $this->headerdata["device"] . (strlen($this->headerdata["devsn"]) > 0 ? ', с/н ' . $this->headerdata["devsn"] : ''),
+                        "device"          => $this->headerdata["device"],
+                        "serial"          => $this->headerdata["devsn"],
                         "total"           => H::fa($this->amount)
         );
         if (strlen($this->headerdata['gar']) > 0) {
@@ -124,6 +126,7 @@ class ServiceAct extends Document
                               "amount"       => H::fa($ser->price * $ser->quantity)
             );
         }
+        $header['iswork'] = count($detail) > 0;
         $header['slist'] = $detail;
 
         $pays = \App\Entity\Pay::getPayments($this->document_id);

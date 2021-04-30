@@ -35,7 +35,6 @@ class Main extends \App\Pages\Base
     public  $_farr      = array();
     public  $_favorites = array();
 
-
     public function __construct() {
         parent::__construct();
 
@@ -57,7 +56,6 @@ class Main extends \App\Pages\Base
         $this->add(new ClickLink("treecut", $this, 'onNodeCut'));
         $this->add(new ClickLink("treepaste", $this, 'onNodePaste'));
         $this->add(new ClickLink("treedelete", $this, 'onNodeDelete'));
-
 
         //тулбар топиков
         $this->add(new ClickLink("topicadd", $this, 'onTopicAdd'));
@@ -86,7 +84,6 @@ class Main extends \App\Pages\Base
         $this->editform->add(new ClickLink("editcancel", $this, "onTopicCancel"));
         $this->editform->add(new DropDownChoice("editacctype", array(0 => H::l('tn_privat'), 1 => H::l('tn_public'), 2 => H::l('tn_edit')), 0));
         $this->editform->add(new SubmitLink("editsave"))->onClick($this, "onTopicSave");
-
 
         //аплоад файла
         $this->add(new Form("fileform"))->onSubmit($this, "OnFile");
@@ -143,7 +140,6 @@ class Main extends \App\Pages\Base
         $this->editform->editdetail->setText($topic->detail);
         $this->editform->editacctype->setValue($topic->acctype);
 
-
         $this->_tvars['editor'] = true;
     }
 
@@ -187,9 +183,7 @@ class Main extends \App\Pages\Base
         }
         $this->ReloadTopic($nodeid);
 
-
         $this->_tvars['editor'] = false;
-
 
         //$this->ReloadTree();
     }
@@ -525,7 +519,6 @@ class Main extends \App\Pages\Base
     public function onSearchRow($row) {
         $item = $row->getDataitem();
 
-
         $row->add(new Label('stitle', $item->title));
         $row->add(new Label('snodes', $item->nodes()));
     }
@@ -598,7 +591,6 @@ class Main extends \App\Pages\Base
                 $this->treecut->setVisible(false);
                 $this->treeedit->setVisible(false);
                 $this->treedelete->setVisible(false);
-
             }
         }
 

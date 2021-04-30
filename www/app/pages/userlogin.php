@@ -10,6 +10,7 @@ use Zippy\Html\Form\TextInput as TextInput;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
+
     private $cntlogin = 0;
 
     public function __construct() {
@@ -24,19 +25,17 @@ class UserLogin extends \Zippy\Html\WebPage
         $form->add(new TextInput('userpassword'));
         $form->add(new TextInput('capchacode'));
         $form->add(new \Zippy\Html\Form\CheckBox('remember'));
-        $form->add(new  \ZCL\Captcha\Captcha('capcha'));
+        $form->add(new \ZCL\Captcha\Captcha('capcha'));
         $form->onSubmit($this, 'onsubmit');
 
         $this->add($form);
         $this->setError('');
 
-
-        $curver = 'v4.9.0';
+        $curver = 'v5.0.0';
         $this->_tvars['curversion'] = $curver;
 
         //проверка  новой версии        
         $this->_tvars['isnewversion'] = false;
-
 
         $v = @file_get_contents("https://zippy.com.ua/version.json?t=" . time());
         $v = @json_decode($v, true);
@@ -132,7 +131,6 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['alerterror'] = $msg;
     }
 
-
     private function counter() {
         $this->cntlogin++;
         if ($this->cntlogin == 5) {
@@ -153,7 +151,6 @@ class UserLogin extends \Zippy\Html\WebPage
             if (strlen($admin->email) > 0) {
                 Helper::sendLetter($msg, '', $admin->email, "Zippy Store alert");
             }
-
         }
 
         //  $this->_tvars['alerterror'] = ''; 

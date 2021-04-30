@@ -34,7 +34,6 @@ class TimeSheet extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
-
         $def = 0;
         $list = array();
         $emps = Employee::findArray('emp_name', 'disabled<>1', 'emp_name');
@@ -50,7 +49,6 @@ class TimeSheet extends \App\Pages\Base
 
         $this->filter->add(new DropDownChoice('emp', $list, $def));
 
-
         $dt = new \Carbon\Carbon;
 
         $from = $dt->startOfMonth()->timestamp;
@@ -59,13 +57,11 @@ class TimeSheet extends \App\Pages\Base
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));
 
-
         $this->add(new Panel('tpanel'))->setVisible(false);
 
         $tcal = $this->tpanel->add(new Panel('tcal'));
         $tagen = $this->tpanel->add(new Panel('tagen'));
         $tstat = $this->tpanel->add(new Panel('tstat'));
-
 
         $this->tpanel->add(new ClickLink('tabc', $this, 'onTab'));
         $this->tpanel->add(new ClickLink('taba', $this, 'onTab'));
@@ -78,7 +74,6 @@ class TimeSheet extends \App\Pages\Base
 
         $tcal->add(new \App\Calendar('calendar'))->setEvent($this, 'OnCal');
 
-
         $this->add(new Form('editform'))->onSubmit($this, 'timeOnSubmit');
         $this->editform->setVisible(false);
         $this->editform->add(new DropDownChoice('edittype', TimeItem::getTypeTime(), TimeItem::TIME_WORK));
@@ -89,10 +84,8 @@ class TimeSheet extends \App\Pages\Base
         $this->editform->add(new Date('editdate', time()));
         $this->editform->add(new Button('cancel'))->onClick($this, 'onCancel');
 
-
         $this->onTab($this->tpanel->tabc);
         $this->filterOnSubmit($this->filter);
-
     }
 
     public function onTab($sender) {
@@ -104,7 +97,6 @@ class TimeSheet extends \App\Pages\Base
         $this->tpanel->tcal->setVisible($sender->id == 'tabc');
         $this->tpanel->tagen->setVisible($sender->id == 'taba');
         $this->tpanel->tstat->setVisible($sender->id == 'tabs');
-
     }
 
     public function filterOnSubmit($sender) {
@@ -142,7 +134,6 @@ class TimeSheet extends \App\Pages\Base
         $time = $sender->getOwner()->getDataItem();
         $this->_time_id = $time->time_id;
         $this->edit();
-
     }
 
     private function edit() {
@@ -159,12 +150,10 @@ class TimeSheet extends \App\Pages\Base
         $this->editform->editnote->setText($time->description);
         $this->editform->editbreak->setText($time->t_break);
         $this->editform->edittype->setValue($time->t_type);
-
     }
 
-
     public function timeOnSubmit($sender) {
-        $time = new  TimeItem();
+        $time = new TimeItem();
         $time->time_id = $this->_time_id;
         $time->description = $sender->editnote->getText();
         $time->t_break = $sender->editbreak->getText();
@@ -200,8 +189,6 @@ class TimeSheet extends \App\Pages\Base
             if ($this->_time_id > 0) {
                 $this->edit();
             }
-
-
         }
         if ($action['action'] == 'add') {
 
@@ -209,8 +196,6 @@ class TimeSheet extends \App\Pages\Base
             $this->AddNew(null);
             $this->editform->editdate->setDate($start);
         }
-
-
     }
 
     private function updateCal() {
@@ -251,23 +236,20 @@ class TimeSheet extends \App\Pages\Base
         $this->tpanel->tcal->calendar->setData($tasks);
     }
 
-
     private function updateList() {
         $emp_id = $this->filter->emp->getValue();
         $conn = \ZDB\DB::getConnect();
         $t_start = $conn->DBDate($this->filter->from->getDate());
         $t_end = $conn->DBDate($this->filter->to->getDate(true));
 
-
         $this->_list = TimeItem::find("emp_id = {$emp_id} and  t_start>={$t_start} and   t_start<{$t_end} ", 't_start');
         $this->tpanel->tagen->llist->Reload();
-
 
         $tn = TimeItem::getTypeTime();
         $this->_stat = array();
         $stat = $conn->Execute("select t_type,sum(tm) as tm  from (select t_type,  (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where  emp_id = {$emp_id} and  t_start>={$t_start} and   t_start<{$t_end} ) t  group by t_type order by t_type ");
         foreach ($stat as $row) {
-            $t = new  \App\DataItem();
+            $t = new \App\DataItem();
             $t->t_type = $row['t_type'];
             $t->val = $row['tm'];
             $t->name = $tn[$row['t_type']];
@@ -316,7 +298,6 @@ class TimeSheet extends \App\Pages\Base
         }
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-
     }
 
     public function statOnRow($row) {
@@ -346,8 +327,6 @@ class TimeSheet extends \App\Pages\Base
         if ($item->t_type == TimeItem::TINE_OTHER) {
             $row->scnt->setAttribute('class', 'badge badge-light');
         }
-
-
     }
 
     public function deleteOnClick($sender) {

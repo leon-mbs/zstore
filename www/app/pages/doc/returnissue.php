@@ -69,14 +69,12 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
 
-
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
         if ($docid > 0) {    //загружаем   содержимок  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
-
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
@@ -91,7 +89,6 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->total->setText(H::fa($this->_doc->amount));
 
             $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
-
         } else {
             $this->_doc = Document::create('ReturnIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -105,7 +102,6 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-
 
                         $itemlist = $basedoc->unpackDetails('detaildata');
 
@@ -131,14 +127,12 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-
                         $itemlist = $basedoc->unpackDetails('detaildata');
 
                         $this->_itemlist = array();
                         foreach ($itemlist as $item) {
                             $this->_tovarlist[$item->item_id] = $item;
                         }
-
                     }
                 }
                 $this->calcTotal();
@@ -158,7 +152,6 @@ class ReturnIssue extends \App\Pages\Base
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->snumber > 0 ? ($item->sdate > 0 ? H::fd($item->sdate) : '') : ''));
-
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
@@ -196,12 +189,10 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText($item->quantity);
         $this->editdetail->editprice->setText($item->price);
 
-
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
 
         $this->_rowid = $item->item_id;
-
     }
 
     public function saverowOnClick($sender) {
@@ -277,7 +268,6 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->payed = $this->docform->payed->getText();
         $isEdited = $this->_doc->document_id > 0;
 
-
         $pos_id = $this->docform->pos->getValue();
 
         if ($pos_id > 0 && $sender->id == 'execdoc') {
@@ -286,7 +276,6 @@ class ReturnIssue extends \App\Pages\Base
             if ($this->_basedocid > 0) {
                 $basedoc = Document::load($this->_basedocid);
                 $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"];
-
             }
 
             if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
@@ -302,7 +291,6 @@ class ReturnIssue extends \App\Pages\Base
                 $pos->fiscdocnumber = $ret['docnumber'];
                 $pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-
             }
             if ($ret['success'] == false) {
                 $this->setError($ret['data']);
@@ -316,12 +304,8 @@ class ReturnIssue extends \App\Pages\Base
                 } else {
                     $this->setError("ppo_noretnumber");
                     return;
-
                 }
-
             }
-
-
         }
 
 
@@ -387,7 +371,6 @@ class ReturnIssue extends \App\Pages\Base
             $this->goAnkor("tankor");
         }
     }
-
 
     /**
      * Валидация   формы

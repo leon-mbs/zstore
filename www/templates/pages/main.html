@@ -1,377 +1,372 @@
 <html>
- <head>
-    <link rel="stylesheet" href="/assets/css/chart.css">
+    <head>
+        <link rel="stylesheet" href="/assets/css/chart.css">
 
-  
- </head>
-<body>
-    {{#winfo}}
-    
-    <div class="row">
-          <div class="col-12 col-sm-6 col-lg-3 col-xl-2 ">
-            <div class="info-box">
-              <span class="info-box-icon bg-info elevation-1"><i class="fa fa-file-invoice "></i></span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Заказов в работе</span>
-                <span class="info-box-number">
-                 {{biorders}}
-                  
-                </span>
-              </div>
-              <!-- /.info-box-content -->
+    </head>
+    <body>
+        {{#winfo}}
+
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-3 col-xl-2 ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info elevation-1"><i class="fa fa-file-invoice "></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Заказов в работе</span>
+                        <span class="info-box-number">
+                            {{biorders}}
+
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
             </div>
-            <!-- /.info-box -->
-          </div>
-       
-         <div class="col-12 col-sm-6 col-lg-3  ">
-            <div class="info-box">
-              <span class="info-box-icon bg-success elevation-1"><i class="fa  fa-pallet"></i></span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">ТМЦ на складе</span>
-                <span class="info-box-number">
-                  На сумму  {{biitemscnt}}
-  
-                   
-                </span>
-              </div>
-           
+            <div class="col-12 col-sm-6 col-lg-3  ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fa  fa-pallet"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">ТМЦ на складе</span>
+                        <span class="info-box-number">
+                            На сумму  {{biitemscnt}}
+
+
+                        </span>
+                    </div>
+
+                </div>
+                <!-- /.info-box -->
             </div>
-             <!-- /.info-box -->
-          </div>
-         <div class="col-12 col-sm-6 col-lg-2 ">
-            <div class="info-box">
-              <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-out-alt"></i></span>
+            <div class="col-12 col-sm-6 col-lg-2 ">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-out-alt"></i></span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">К оплате</span>
-                <span class="info-box-number">
-                  На сумму  {{bicredit}}
-  
-                   
-                </span>
-              </div>
-           
+                    <div class="info-box-content">
+                        <span class="info-box-text">К оплате</span>
+                        <span class="info-box-number">
+                            На сумму  {{bicredit}}
+
+
+                        </span>
+                    </div>
+
+                </div>
+                <!-- /.info-box -->
             </div>
-             <!-- /.info-box -->
-          </div>
-         <div class="col-12 col-sm-6 col-lg-2">
-            <div class="info-box">
-              <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-in-alt "></i></span>
+            <div class="col-12 col-sm-6 col-lg-2">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-in-alt "></i></span>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Ожидается  оплата</span>
-                <span class="info-box-number">
-                  На сумму  {{bidebet}}
-  
-                   
-                </span>
-              </div>
-           
+                    <div class="info-box-content">
+                        <span class="info-box-text">Ожидается  оплата</span>
+                        <span class="info-box-number">
+                            На сумму  {{bidebet}}
+
+
+                        </span>
+                    </div>
+
+                </div>
+                <!-- /.info-box -->
             </div>
-             <!-- /.info-box -->
-          </div>
-          
-          
-    </div>
-    {{/winfo}}
-    
-    {{#wgraph}}
-    
-<div class="row">
 
-       <div   class="col-12  col-lg-4   ">
-            <div   class="card ">
-            <div   class="card-body">
 
-                <canvas style="width:100%" id="paystructure"></canvas>
+        </div>
+        {{/winfo}}
+
+        {{#wgraph}}
+
+        <div class="row">
+
+            <div   class="col-12  col-lg-4   ">
+                <div   class="card ">
+                    <div   class="card-body">
+
+                        <canvas style="width:100%" id="paystructure"></canvas>
+                    </div>
+                </div>  
             </div>
-            </div>  
-      </div>
-    
-     <div   class="col-12  col-lg-4 ">
-           <div   class="card ">
-            <div   class="card-body">
 
-                <canvas style="width:100%" id="paycompare"></canvas>
+            <div   class="col-12  col-lg-4 ">
+                <div   class="card ">
+                    <div   class="card-body">
+
+                        <canvas style="width:100%" id="paycompare"></canvas>
+                    </div>
+                </div>    
             </div>
-            </div>    
-      </div>
-     <div   class="col-12  col-lg-4 ">
-           <div   class="card ">
-            <div   class="card-body">
+            <div   class="col-12  col-lg-4 ">
+                <div   class="card ">
+                    <div   class="card-body">
 
-                <canvas style="width:100%" id="sellstat"></canvas>
+                        <canvas style="width:100%" id="sellstat"></canvas>
+                    </div>
+                </div>    
             </div>
-            </div>    
-      </div>
-    </div>     
-    {{/wgraph}}    
-       
- <div class="row">  
- 
-   
-       {{#wsdate}}
-       <div   class="col-12 col-lg-6 ">
-     
-         <div   class="card ">
-            <div   class="card-body">
-               <h4>Просроченные товары</h4>
-                <small>Товары для которых истек или истекает срок годности</small>
-                <br><a zippy="sdcsv">Экспорт в  Excel</a>
-                  <table class="table   table-sm">
-                    <tr>
+        </div>     
+        {{/wgraph}}    
 
-                        <th>Склад</th>
-                        <th>Товар</th>
-                        <th>Серия</th>
-                        <th>Годен до</th>
-                        <th class="text-right">Кол.</th>
-                    </tr>
-                    <tr zippy="sdlist" >
-                        <td zippy="wsd_storename"></td>
-                        <td zippy="wsd_itemname"></td>
-                        <td zippy="wsd_snumber"></td>
-                        <td><span zippy="wsd_edate"></span></td>
-                        <td zippy="wsd_qty" class="text-right"></td>
-                    </tr>
-                </table>
-                  <div zippy="sdpag" ></div>               
-                         
+        <div class="row">  
+
+
+            {{#wsdate}}
+            <div   class="col-12 col-lg-6 ">
+
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Просроченные товары</h4>
+                        <small>Товары для которых истек или истекает срок годности</small>
+                        <br><a zippy="sdcsv">Экспорт в  Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+
+                                <th>Склад</th>
+                                <th>Товар</th>
+                                <th>Серия</th>
+                                <th>Годен до</th>
+                                <th class="text-right">Кол.</th>
+                            </tr>
+                            <tr zippy="sdlist" >
+                                <td zippy="wsd_storename"></td>
+                                <td zippy="wsd_itemname"></td>
+                                <td zippy="wsd_snumber"></td>
+                                <td><span zippy="wsd_edate"></span></td>
+                                <td zippy="wsd_qty" class="text-right"></td>
+                            </tr>
+                        </table>
+                        <div zippy="sdpag" ></div>               
+
+                    </div>
+                </div>
             </div>
-         </div>
-       </div>
-       {{/wsdate}}
-       {{#wminqty}}
-       <div   class="col-12 col-lg-6 ">
-     
-         <div   class="card ">
-            <div   class="card-body">
-               <h4>Минимальное количество</h4>
-                   <small>Товары для которых задано минимальное количество на складе и актуальное количество меньше заданного</small>
-                  <br><a zippy="mqcsv">Экспорт в  Excel</a>
-                  <table class="table   table-sm">
-                    <tr>
-                        <th>Склад</th>
-                        <th>Товар</th>
-                        <th>Код</th>
+            {{/wsdate}}
+            {{#wminqty}}
+            <div   class="col-12 col-lg-6 ">
 
-                        <th class="text-right">Факт</th>
-                        <th class="text-right">Мин.</th>
-                    </tr>
-                    <tr zippy="mqlist">
-                        <td zippy="wmq_storename"></td>
-                        <td zippy="wmq_itemname"></td>
-                        <td zippy="wmq_item_code"></td>
-                        <td zippy="wmq_qty" class="text-right"></td>
-                        <td zippy="wmq_minqty" class="text-right"></td>
-                    </tr>
-                 </table>             
-                 <div zippy="mqpag"></div>        
-            </div>
-         </div>
-       </div>      
-       {{/wminqty}}
- 
-       
-       {{#wrdoc}}
-       <div   class="col-12 col-lg-6 ">
-     
-         <div   class="card ">
-            <div   class="card-body">
-               <h4>Мои недавние документы</h4>
-        <small>Документы с недавно измененным статусом</small>
-                       <br><a zippy="rdcsv">Экспорт в  Excel</a>
- <table class="table   table-sm">
-            <tr>
-                <th>Номер</th>
-                <th>Тип</th>
-                <th>Дата</th>
-                <th class="text-right">Сумма</th>
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Минимальное количество</h4>
+                        <small>Товары для которых задано минимальное количество на складе и актуальное количество меньше заданного</small>
+                        <br><a zippy="mqcsv">Экспорт в  Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                                <th>Склад</th>
+                                <th>Товар</th>
+                                <th>Код</th>
 
-            </tr>
-            <tr zippy="rdoclist">
-                <td><a zippy="wrd_number"></a></td>
-                <td zippy="wrd_type"></td>
-                <td zippy="wrd_date"></td>
-                <td class="text-right" zippy="wrd_amount"></td>
-            </tr>
-        </table>
-        <div zippy="wrpag"></div>    
-            </div>
-         </div>
-       </div>      
-       {{/wrdoc}}
-       
-     
-    </div>
-    
-   
- 
+                                <th class="text-right">Факт</th>
+                                <th class="text-right">Мин.</th>
+                            </tr>
+                            <tr zippy="mqlist">
+                                <td zippy="wmq_storename"></td>
+                                <td zippy="wmq_itemname"></td>
+                                <td zippy="wmq_item_code"></td>
+                                <td zippy="wmq_qty" class="text-right"></td>
+                                <td zippy="wmq_minqty" class="text-right"></td>
+                            </tr>
+                        </table>             
+                        <div zippy="mqpag"></div>        
+                    </div>
+                </div>
+            </div>      
+            {{/wminqty}}
 
-    
- 
-  <script language="javascript" src="/assets/js/chart.js"></script>
 
-<script>
-    //структура   расходов
-    var pieData        = {
-      labels: {{{pbtitle}}},
-      datasets: [
-        {
-          data: {{{pbdata}}},
-          backgroundColor : {{{pbcolor}}},
-        }
-      ]
-    }
+            {{#wrdoc}}
+            <div   class="col-12 col-lg-6 ">
 
- 
-    var pieOptions     = {
-      maintainAspectRatio : false,
-      responsive : true,
-      title: {
-            display: true,
-            text: 'Структура расходов за  три месяца',
-            position: 'top' 
-            
-        },
-        legend: {
-            display: true,
-            position: 'right',
-            labels: {
-                boxWidth: 10,
-                fontColor: '#111',
-                padding:  5
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Мои недавние документы</h4>
+                        <small>Документы с недавно измененным статусом</small>
+                        <br><a zippy="rdcsv">Экспорт в  Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                                <th>Номер</th>
+                                <th>Тип</th>
+                                <th>Дата</th>
+                                <th class="text-right">Сумма</th>
+
+                            </tr>
+                            <tr zippy="rdoclist">
+                                <td><a zippy="wrd_number"></a></td>
+                                <td zippy="wrd_type"></td>
+                                <td zippy="wrd_date"></td>
+                                <td class="text-right" zippy="wrd_amount"></td>
+                            </tr>
+                        </table>
+                        <div zippy="wrpag"></div>    
+                    </div>
+                </div>
+            </div>      
+            {{/wrdoc}}
+
+
+        </div>
+        <span zippy="testa" onclick="test()"></span>  
+
+
+
+
+        <script language="javascript" src="/assets/js/chart.js"></script>
+
+        <script>
+            //структура   расходов
+            var pieData = {
+            labels: {{{pbtitle}}},
+                    datasets: [
+                    {
+                    data: {{{pbdata}}},
+                            backgroundColor : {{{pbcolor}}},
+                    }
+                    ]
             }
-        },
-        tooltips: {
-            enabled: true
-        },      
-      
-      
-    }
-     
-      //сравнение  доходоа  и расходов
- 
-     
-      
 
-    var barData = {
-      labels: {{{pcmon}}},
-      datasets: [
-        {
-          label: "Расход",
-          backgroundColor: "red",
-          data: {{{pcout}}}
-        }, {
-          label: "Доход",
-          backgroundColor: "green",
-          data: {{{pcin}}}
-        }
-      ]
-    }
-    
-    
-   var barOptions =  {
-      legend: {
+
+            var pieOptions = {
+            maintainAspectRatio : false,
+                    responsive : true,
+                    title: {
+                    display: true,
+                            text: 'Структура расходов за  три месяца',
+                            position: 'top'
+
+                    },
+                    legend: {
+                    display: true,
+                            position: 'right',
+                            labels: {
+                            boxWidth: 10,
+                                    fontColor: '#111',
+                                    padding:  5
+                            }
+                    },
+                    tooltips: {
+                    enabled: true
+                    },
+            }
+
+            //сравнение  доходоа  и расходов
+
+
+
+
+            var barData = {
+            labels: {{{pcmon}}},
+                    datasets: [
+                    {
+                    label: "Расход",
+                            backgroundColor: "red",
+                            data: {{{pcout}}}
+                    }, {
+                    label: "Доход",
+                            backgroundColor: "green",
+                            data: {{{pcin}}}
+                    }
+                    ]
+            }
+
+
+            var barOptions = {
+            legend: {
             display: true,
-            position: 'right' 
-        },
-      title: {
-        display: true,
-        text: 'Доходы  и расходы'
-      }
-    }
-     
-   
-  var sellData = {
-      labels  : {{{tsmon}}},
-      datasets: [
-        {
-          label               : 'Товары',
-           backgroundColor         : 'rgba(60,141,188,0.8)',
-            borderColor         : 'rgba(60,141,188,0.8)',
-          fill          : false,
-        data                :  {{{tstov}}}
-        },
-        {
-          label               : 'Услуги',
-           backgroundColor         : 'rgba(210, 100, 100, 1)',
-           borderColor         : 'rgba(210, 100, 100, 1)',
-          fill          : false,
-          data                :  {{{tsser}}}
-        },
-      ]
-    }
-   
-   
-   
-   
-   
-   
-    var sellOptions =  {
-      title: {
-        display: true,
-        text: 'Реализация'
-      } ,
-      scales: {
-        xAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }],
-        yAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }]
-      }      
-    }
-    
-       window.onload = function() {
-    
-        
-          new Chart($('#paystructure').get(0).getContext('2d'), {
-          type: 'pie',
-          data: pieData,
-          options: pieOptions
-        })
-              
-         new Chart($('#paycompare').get(0).getContext('2d') , {
-          type: 'bar',
-          data: barData,
-          options: barOptions
-        })  
-        
-        new Chart( $('#sellstat').get(0).getContext('2d')    , {
-          type: 'line',
-          data: sellData,
-          options: sellOptions
-        })  
-        
-          
-       };
+                    position: 'right'
+            },
+                    title: {
+                    display: true,
+                            text: 'Доходы  и расходы'
+                    }
+            }
 
 
-    /*
+            var sellData = {
+            labels  : {{{tsmon}}},
+                    datasets: [
+                    {
+                    label               : 'Товары',
+                            backgroundColor         : 'rgba(60,141,188,0.8)',
+                            borderColor         : 'rgba(60,141,188,0.8)',
+                            fill          : false,
+                            data                :  {{{tstov}}}
+                    },
+                    {
+                    label               : 'Услуги',
+                            backgroundColor         : 'rgba(210, 100, 100, 1)',
+                            borderColor         : 'rgba(210, 100, 100, 1)',
+                            fill          : false,
+                            data                :  {{{tsser}}}
+                    },
+                    ]
+            }
 
-    $.ajax({
-           type: 'POST',
-           url: '{{_baseurl}}'+'::test:1:3&ajax=true',
-           data: 'xxx'
-       }).success(function (data) {
 
-           console.log(data);
 
-       }).fail(function (data) {
 
-           console.log(JSON.stringify(data));
-       });
 
-         */
-</script>
-  
-</body>
+
+            var sellOptions = {
+            title: {
+            display: true,
+                    text: 'Реализация'
+            },
+                    scales: {
+                    xAxes: [{
+                    gridLines : {
+                    display : false,
+                    }
+                    }],
+                            yAxes: [{
+                            gridLines : {
+                            display : false,
+                            }
+                            }]
+                    }
+            }
+
+            window.onload = function() {
+
+
+            new Chart($('#paystructure').get(0).getContext('2d'), {
+            type: 'pie',
+                    data: pieData,
+                    options: pieOptions
+            })
+
+                    new Chart($('#paycompare').get(0).getContext('2d'), {
+                    type: 'bar',
+                            data: barData,
+                            options: barOptions
+                    })
+
+                    new Chart($('#sellstat').get(0).getContext('2d'), {
+                    type: 'line',
+                            data: sellData,
+                            options: sellOptions
+                    })
+
+
+            };
+            /*
+             function test(){
+             
+             $.ajax({
+             type: 'POST',
+             url: '{{_baseurl}}'+'::test:1:3   ',
+             data: 'xxx'
+             }).success(function (data) {
+             
+             console.log(data);
+             
+             }).fail(function (data) {
+             
+             console.log(JSON.stringify(data));
+             });
+             }   */
+
+        </script>
+
+    </body>
 </html>
- 

@@ -15,7 +15,6 @@ class Application extends \Zippy\WebApplication
     public function getTemplate($name) {
         global $_config;
 
-
         $path = '';
         $name = ltrim($name, '\\');
 
@@ -153,4 +152,5 @@ class Application extends \Zippy\WebApplication
     public static function RedirectError() {
         self::Redirect("\\App\\Pages\\Error");
     }
+
 }

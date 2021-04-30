@@ -37,14 +37,12 @@ class OrderCust extends Document
                         "total"           => H::fa($this->amount)
         );
 
-
         $report = new \App\Report('doc/ordercust.tpl');
 
         $html = $report->generate($header);
 
         return $html;
     }
-
 
     protected function getNumberTemplate() {
         return 'ЗП-000000';

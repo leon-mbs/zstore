@@ -59,7 +59,7 @@
     </tr>
     {{/_detail}}
 
-   <tr style="font-weight: bolder;">
+    <tr style="font-weight: bolder;">
 
         <th colspan="5" style="text-align: left;">Готовая продукция</th>
 
@@ -121,7 +121,7 @@
     {{/iseq}}
     <tr>
         <td colspan="5">
-            {{notes}}
+            {{{notes}}}
         </td>
 
     </tr>

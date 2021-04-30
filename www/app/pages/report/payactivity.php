@@ -28,9 +28,7 @@ class PayActivity extends \App\Pages\Base
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
 
-
         $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(), H::getDefMF()));
-
 
         $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
 
@@ -53,7 +51,6 @@ class PayActivity extends \App\Pages\Base
         // \ZippyERP\System\Session::getSession()->storereport = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $reportpage = "App/Pages/ShowReport";
         $reportname = "mfreport";
-
 
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
@@ -116,7 +113,6 @@ class PayActivity extends \App\Pages\Base
               ORDER BY t.dt  
         ";
 
-
         $rs = $conn->Execute($sql);
 
         $tend = 0;
@@ -126,8 +122,7 @@ class PayActivity extends \App\Pages\Base
 
 
             $detail[] = array(
-                "date" => \App\Helper::fd(strtotime($row['dt'])),
-
+                "date"  => \App\Helper::fd(strtotime($row['dt'])),
                 "in"    => H::fa(strlen($row['begin_amount']) > 0 ? $row['begin_amount'] : 0),
                 "obin"  => H::fa($row['obin']),
                 "obout" => H::fa($row['obout']),

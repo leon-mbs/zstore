@@ -51,11 +51,9 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
 
-
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -83,10 +81,7 @@ class OutcomeItem extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
 
-
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
-
         } else {
             $this->_doc = Document::create('OutcomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -105,7 +100,6 @@ class OutcomeItem extends \App\Pages\Base
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
-
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
 
@@ -144,7 +138,6 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->setVisible(false);
 
         $this->editdetail->editquantity->setText($item->quantity);
-
 
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setValue($item->itemname);
@@ -191,7 +184,6 @@ class OutcomeItem extends \App\Pages\Base
             } else {
                 $tarr[$k] = $value;    // старый
             }
-
         }
 
         if ($this->_rowid == 0) {        // в конец
@@ -230,13 +222,11 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-
         $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -265,7 +255,6 @@ class OutcomeItem extends \App\Pages\Base
                     }
                 }
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-
 
                 $tostore = $this->docform->tostore->getValue();
                 if ($sender->id == 'execdoc' && $tostore > 0) {
@@ -302,11 +291,9 @@ class OutcomeItem extends \App\Pages\Base
                             $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$this->_doc->headerdata['store'] }", 'stock_id desc');
                             $it->price = $stock->partion;
 
-
                             $items[] = $it;
                         }
                         $indoc->packDetails('detaildata', $items);
-
 
                         $indoc->save();
                         $indoc->updateStatus(Document::STATE_NEW);
@@ -318,10 +305,8 @@ class OutcomeItem extends \App\Pages\Base
                         if ($indoc->document_id > 0) {
                             $this->setSuccess("createddoc", $indoc->document_number);
                         }
-
                     }
                 }
-
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }

@@ -45,7 +45,6 @@ class OrderList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 3 => 'Все'), 0));
 
         $doclist = $this->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
-        $doclist->setSelectedClass('table-success');
 
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
@@ -78,8 +77,6 @@ class OrderList extends \App\Pages\Base
         $this->payform->add(new CheckBox('closeorder'));
         $this->payform->add(new Date('pdate', time()));
         $this->payform->setVisible(false);
-
-
     }
 
     public function filterOnSubmit($sender) {
@@ -105,9 +102,7 @@ class OrderList extends \App\Pages\Base
         if ($doc->state == Document::STATE_NEW) {
             $row->state->setText('<span class="badge badge-info">' . $stname . '</span>', true);
         }
-        if ($doc->state == Document::STATE_READYTOSHIP
-            || $doc->state == Document::STATE_INSHIPMENT
-            || $doc->state == Document::STATE_DELIVERED
+        if ($doc->state == Document::STATE_READYTOSHIP || $doc->state == Document::STATE_INSHIPMENT || $doc->state == Document::STATE_DELIVERED
         ) {
             $row->state->setText('<span class="badge badge-success">' . $stname . '</span>', true);
         }
@@ -125,11 +120,14 @@ class OrderList extends \App\Pages\Base
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('pay', $this, 'payOnClick'))->setVisible($doc->payamount > 0 && $doc->payamount > $doc->payed);
-        $row->pay->setVisible(false);//убрана оплата в  расчеты с контрагентами
+        $row->pay->setVisible(false); //убрана оплата в  расчеты с контрагентами
         if ($doc->state < Document::STATE_EXECUTED) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
+        }
+        if ($doc->document_id == $this->_doc->document_id) {
+            $row->setAttribute('class', 'table-success');
         }
     }
 
@@ -140,7 +138,6 @@ class OrderList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-
         //проверяем  что есть ТТН
         $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
@@ -148,7 +145,6 @@ class OrderList extends \App\Pages\Base
         $gi = count($list) > 0;
         $list = $this->_doc->getChildren('Invoice');
         $invoice = count($list) > 0;
-
 
         if ($sender->id == "binp") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -220,14 +216,13 @@ class OrderList extends \App\Pages\Base
         $state = $this->_doc->state;
 
         //доставлен
-        $closed = $this->_doc->checkStates(array(Document::STATE_CLOSED));
+        $closed = $this->_doc->checkStates(array(Document::STATE_CLOSED))>0;
         //выполняется
-        $inproc = $this->_doc->checkStates(array(Document::STATE_INPROCESS));
+        $inproc = $this->_doc->checkStates(array(Document::STATE_INPROCESS))>0;
         //аннулирован
-        $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED));
+        $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED))>0;
 
         $this->statuspan->statusform->brd->setVisible(false);
-
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -241,8 +236,6 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(false);
-
-
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
@@ -250,7 +243,6 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bco->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
-
         }
 
 
@@ -261,17 +253,14 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
-
         }
 
         if ($state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->brd->setVisible(true);
 
-
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->binv->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(true);
-
         }
         if ($state == Document::STATE_INSHIPMENT) {
 
@@ -279,7 +268,6 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
-
         }
         if ($state == Document::STATE_READYTOSHIP) {
 
@@ -287,7 +275,6 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->binv->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(false);
-
         }
         if ($state == Document::STATE_DELIVERED) {
 
@@ -296,7 +283,6 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
-
         }
         //закрыт
         if ($state == Document::STATE_CLOSED) {
@@ -310,7 +296,6 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
-
         }
 
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
@@ -329,13 +314,11 @@ class OrderList extends \App\Pages\Base
 
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bttn->setVisible(false);
-
         }
         $list = $order->getChildren('GoodsIssue');
 
         if (count($list) > 0 && $common['numberttn'] <> 1) {
             $this->statuspan->statusform->bgi->setVisible(false);
-
         }
 
 
@@ -343,8 +326,6 @@ class OrderList extends \App\Pages\Base
         if (count($list) > 0) {
             $this->statuspan->statusform->binv->setVisible(false);
         }
-
-
     }
 
     //просмотр
@@ -360,8 +341,8 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
-        $this->doclist->setSelectedRow($sender->getOwner());
-        $this->doclist->Reload(true);
+
+        $this->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
@@ -391,12 +372,9 @@ class OrderList extends \App\Pages\Base
             $data['D' . $i] = $d->amount;
             $data['E' . $i] = Document::getStateName($d->state);
             $data['F' . $i] = $d->notes;
-
         }
 
         H::exportExcel($data, $header, 'orderlist.xlsx');
-
-
     }
 
     public function payOnClick($sender) {
@@ -407,13 +385,12 @@ class OrderList extends \App\Pages\Base
 
         $this->_doc = $sender->owner->getDataItem();
 
-
         $this->goAnkor('dankor');
 
         $this->payform->pamount->setText($this->_doc->payamount - $this->_doc->payed);;
         $this->payform->pcomment->setText("");;
 
-        $this->payform->pos->setVisible(false);//пока  без  фискализации
+        $this->payform->pos->setVisible(false); //пока  без  фискализации
 
         $this->payform->closeorder->setVisible(false);
 
@@ -426,7 +403,6 @@ class OrderList extends \App\Pages\Base
         }
         if ($delivered > 0 && $delivered == count($list)) {
             $this->payform->closeorder->setVisible(true);
-
         }
 
         $this->payform->closeorder->setChecked(false);
@@ -445,7 +421,6 @@ class OrderList extends \App\Pages\Base
         if ($amount > $this->_doc->payamount - $this->_doc->payed) {
 
             $this->setWarn('sumoverpay');
-
         }
 
 
@@ -458,7 +433,6 @@ class OrderList extends \App\Pages\Base
                 $pos->fiscdocnumber = $ret['docnumber'];
                 $pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-
             }
             if ($ret['success'] == false) {
                 $this->setError($ret['data']);
@@ -472,18 +446,13 @@ class OrderList extends \App\Pages\Base
                 } else {
                     $this->setError("ppo_noretnumber");
                     return;
-
                 }
-
             }
-
         }
 
         Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), Pay::PAY_BASE_INCOME, $form->pcomment->getText());
 
-
         $this->setSuccess('payment_added');
-
 
         if ($this->payform->closeorder->isChecked() == true) {
             $doc = Document::load($this->_doc->document_id);     //загружаем  тобы  обновить  оплату
@@ -493,8 +462,6 @@ class OrderList extends \App\Pages\Base
 
         $this->doclist->Reload(false);
         $this->payform->setVisible(false);
-
-
     }
 
 }
@@ -515,7 +482,6 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
-
 
         $where = "     meta_name  = 'Order'  ";
 

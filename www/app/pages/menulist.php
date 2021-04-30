@@ -15,7 +15,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 
-class  MenuList extends \App\Pages\Base
+class MenuList extends \App\Pages\Base
 {
 
     private $metadatads;
@@ -54,10 +54,7 @@ class  MenuList extends \App\Pages\Base
 
         $this->editpan->editform->add(new DropDownChoice('edit_meta_type', \App\Entity\MetaData::getNames()));
         $this->editpan->add(new ClickLink('mcancel'))->onClick($this, 'mcancelOnClick');
-
-
     }
-
 
     public function filterOnSubmit($sender) {
 
@@ -82,8 +79,6 @@ class  MenuList extends \App\Pages\Base
         $this->metadatads->setWhere($where);
 
         $this->listpan->metarow->Reload();
-
-
     }
 
     public function addnewOnClick($sender) {
@@ -95,15 +90,11 @@ class  MenuList extends \App\Pages\Base
         $this->editpan->editform->edit_menugroup->setText('');
 
         $this->editpan->editform->edit_disabled->setChecked(0);
-
-
     }
 
     public function mcancelOnClick($sender) {
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
-
-
     }
 
     public function metarowOnRow($row) {
@@ -134,6 +125,8 @@ class  MenuList extends \App\Pages\Base
         $row->add(new Label('type', $title));
         $row->add(new ClickLink('rowedit'))->onClick($this, 'roweditOnClick');
         $row->add(new ClickLink('rowdelete'))->onClick($this, 'rowdeleteOnClick');
+        $row->add(new ClickLink('ton', $this, 'tonOnClick'))->setVisible($item->disabled != 1);
+        $row->add(new ClickLink('toff', $this, 'toffOnClick'))->setVisible($item->disabled == 1);
     }
 
     public function roweditOnClick($sender) {
@@ -147,11 +140,24 @@ class  MenuList extends \App\Pages\Base
         $form->edit_meta_type->setValue($item->meta_type);
         $form->edit_disabled->setChecked($item->disabled == 1);
 
-
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
+    }
 
+    public function tonOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $item->disabled = 1;
+        $item->save();
 
+        $this->listpan->metarow->Reload();
+    }
+
+    public function toffOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $item->disabled = 0;
+        $item->save();
+
+        $this->listpan->metarow->Reload();
     }
 
     public function rowdeleteOnClick($sender) {
@@ -159,7 +165,6 @@ class  MenuList extends \App\Pages\Base
         \App\Entity\MetaData::delete($item->meta_id);
 
         $this->listpan->metarow->Reload();
-
     }
 
     public function editformOnSubmit($sender) {
@@ -177,7 +182,6 @@ class  MenuList extends \App\Pages\Base
         $item->meta_type = $this->editpan->editform->edit_meta_type->getValue();
         $item->disabled = $this->editpan->editform->edit_disabled->isChecked() ? 1 : 0;
 
-
         $item->save();
 
         $this->listpan->setVisible(true);
@@ -188,9 +192,6 @@ class  MenuList extends \App\Pages\Base
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_meta_name->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
-
-
     }
-
 
 }

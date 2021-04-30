@@ -32,7 +32,6 @@ class Helper
             ]
         );
 
-
         return $woocommerce;
     }
 

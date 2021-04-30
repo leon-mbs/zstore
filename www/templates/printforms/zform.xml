@@ -39,7 +39,7 @@
         <ORDERSCNT>{{cnt}}</ORDERSCNT>
         <PAYFORMS>
             {{#pays}}
-            <ROW
+            <ROW>
             {{{num}}}>
 
             <PAYFORMCD>{{formcode}}</PAYFORMCD>

@@ -24,7 +24,6 @@ class SalaryRep extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-
         $this->filter->add(new DropDownChoice('yfrom', \App\Util::getYears(), round(date('Y'))));
         $this->filter->add(new DropDownChoice('mfrom', \App\Util::getMonth(), round(date('m'))));
         $this->filter->add(new DropDownChoice('yto', \App\Util::getYears(), round(date('Y'))));
@@ -32,14 +31,12 @@ class SalaryRep extends \App\Pages\Base
 
         $this->filter->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name')));
 
-
         $this->add(new Panel('detail'))->setVisible(false);
         $this->detail->add(new \Zippy\Html\Link\BookmarkableLink('print', ""));
 
         $this->detail->add(new RedirectLink('excel', "slreport"));
         $this->detail->add(new RedirectLink('pdf', "slreport"));
         $this->detail->add(new Label('preview'));
-
     }
 
     public function OnSubmit($sender) {
@@ -52,14 +49,12 @@ class SalaryRep extends \App\Pages\Base
         $reportpage = "App/Pages/ShowReport";
         $reportname = "slreport";
 
-
         $this->detail->excel->pagename = $reportpage;
         $this->detail->excel->params = array('xls', $reportname);
         $this->detail->pdf->pagename = $reportpage;
         $this->detail->pdf->params = array('pdf', $reportname);
 
         $this->detail->setVisible(true);
-
 
         $this->detail->preview->setText($html, true);
     }
@@ -105,8 +100,6 @@ class SalaryRep extends \App\Pages\Base
                     } else {
                         $detail[$doc->headerdata['year'] . $doc->headerdata['month']] = array('k' => $doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'], 'v' => $emp->amount);
                     }
-
-
                 } else {
                     if ($emp->amount > 0) {
                         if (is_array($detail[$emp->employee_id])) {
@@ -115,13 +108,8 @@ class SalaryRep extends \App\Pages\Base
                             $detail[$emp->employee_id] = array('k' => $emp->emp_name, 'v' => $emp->amount);
                         }
                     }
-
                 }
-
-
             }
-
-
         }
         $total = 0;
         foreach ($detail as $k => $item) {
@@ -131,17 +119,15 @@ class SalaryRep extends \App\Pages\Base
 
 
         $header = array(
-            "_detail" => array_values($detail),
-            'yfrom'   => $yfrom,
-            'mfrom'   => $mfromname,
-            'yto'     => $yto,
-            'mto'     => $mtoname,
-            'isemp'   => $emp_id > 0,
-            'total'   => H::fa($total),
-
+            "_detail"  => array_values($detail),
+            'yfrom'    => $yfrom,
+            'mfrom'    => $mfromname,
+            'yto'      => $yto,
+            'mto'      => $mtoname,
+            'isemp'    => $emp_id > 0,
+            'total'    => H::fa($total),
             "emp_name" => $emp_name
         );
-
 
         $report = new \App\Report('report/salaryrep.tpl');
 
@@ -149,6 +135,5 @@ class SalaryRep extends \App\Pages\Base
 
         return $html;
     }
-
 
 }

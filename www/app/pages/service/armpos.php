@@ -9,6 +9,7 @@ use App\Entity\Service;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\Date;
@@ -18,6 +19,7 @@ use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
+use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 
@@ -32,103 +34,123 @@ class ARMPos extends \App\Pages\Base
     private $pos;
     private $_doc      = null;
     private $_rowid    = 0;
-
-
     private $_pt       = 0;
     private $_store_id = 0;
+
+    public  $_doclist    = array();
 
     public function __construct() {
         parent::__construct();
 
-
         if (false == \App\ACL::checkShowSer('ARMPos')) {
             return;
         }
+        $filter = \App\Filter::getFilter("armpos");
+        if ($filter->isEmpty()) {
+            $filter->pos = 0;
+            $filter->store = H::getDefStore();
+            $filter->pricetype = H::getDefPriceType();
+      
 
+             
+        }
+ 
         //обшие настройки
         $this->add(new Form('form1'));
         $plist = \App\Entity\Pos::findArray('pos_name', '');
 
-        $this->form1->add(new DropDownChoice('pos', $plist, 0));
-        $this->form1->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
-        $this->form1->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), H::getDefPriceType()));
+        $this->form1->add(new DropDownChoice('pos', $plist, $filter->pos));
+        $this->form1->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
+        $this->form1->add(new DropDownChoice('pricetype', \App\Entity\Item::getPriceTypeList(), $filter->pricetype));
 
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
-        $this->add(new Form('form2'))->setVisible(false);
+        
+        $this->add(new Panel('checklistpan'))->setVisible(false);
+        $this->add(new ClickLink('newcheck', $this, 'newdoc'));
+        $this->checklistpan->add(new DataView('checklist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
+
+        //панель статуса,  просмотр
+        $this->checklistpan->add(new Panel('statuspan'))->setVisible(false);
+        
+        $this->checklistpan->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
+        
+        
+        $this->add(new Panel('docpanel'))->setVisible(false);
+        $this->docpanel->add(new ClickLink('tochecklist', $this, 'onCheckList'));
+       
+        
+        
+        
+        $this->docpanel->add(new Form('form2'))->setVisible(false);
 
         //  ввод товаров
 
-        $this->form2->add(new SubmitButton('next2'))->onClick($this, 'next2docOnClick');
-        $this->form2->add(new TextInput('barcode'));
-        $this->form2->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-        $this->form2->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
-        $this->form2->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
-        $this->form2->addser->setVisible(Service::findCnt('disabled<>1') > 0);  //показываем  если  есть  услуги
-        $this->form2->add(new Label('total'));
+        $this->docpanel->form2->add(new SubmitButton('next2'))->onClick($this, 'next2docOnClick');
+        $this->docpanel->form2->add(new TextInput('barcode'));
+        $this->docpanel->form2->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
+        $this->docpanel->form2->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docpanel->form2->add(new SubmitLink('addser'))->onClick($this, 'addserOnClick');
+        $this->docpanel->form2->addser->setVisible(Service::findCnt('disabled<>1') > 0);  //показываем  если  есть  услуги
+        $this->docpanel->form2->add(new Label('total'));
 
-        $this->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
-        $this->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
-        $this->form2->add(new ClickLink('openshift', $this, 'OnOpenShift'));
-        $this->form2->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
-
+        $this->docpanel->form2->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
+        $this->docpanel->form2->add(new DataView('detailser', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'serOnRow'));
+        $this->docpanel->form2->add(new ClickLink('openshift', $this, 'OnOpenShift'));
+        $this->docpanel->form2->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
 
         //оплата
-        $this->add(new Form('form3'))->setVisible(false);
-        $this->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(true, true), H::getDefMF()))->onChange($this, 'OnPayment');
+        $this->docpanel->add(new Form('form3'))->setVisible(false);
+        $this->docpanel->form3->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList( ), H::getDefMF()))->onChange($this, 'OnPayment');
 
-        $this->form3->add(new TextInput('document_number'));
+        $this->docpanel->form3->add(new TextInput('document_number'));
 
-        $this->form3->add(new Date('document_date'))->setDate(time());
-        $this->form3->add(new TextArea('notes'));
-        $this->form3->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+        $this->docpanel->form3->add(new Date('document_date'))->setDate(time());
+        $this->docpanel->form3->add(new TextArea('notes'));
+        $this->docpanel->form3->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
 
+        $this->docpanel->form3->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        $this->docpanel->form3->customer->onChange($this, 'OnChangeCustomer');
+        $this->docpanel->form3->add(new Button('cancel2'))->onClick($this, 'cancel2docOnClick');
+        $this->docpanel->form3->add(new SubmitButton('save'))->onClick($this, 'savedocOnClick');
+        $this->docpanel->form3->add(new TextInput('total2'));
+        $this->docpanel->form3->add(new TextInput('paydisc'));
+        $this->docpanel->form3->add(new TextInput('payamount'));
+        $this->docpanel->form3->add(new TextInput('payed'));
+        $this->docpanel->form3->add(new TextInput('exchange'));
 
-        $this->form3->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
-        $this->form3->customer->onChange($this, 'OnChangeCustomer');
-        $this->form3->add(new Button('cancel2'))->onClick($this, 'cancel2docOnClick');
-        $this->form3->add(new SubmitButton('save'))->onClick($this, 'savedocOnClick');
-        $this->form3->add(new TextInput('total2'));
-        $this->form3->add(new TextInput('paydisc'));
-        $this->form3->add(new TextInput('payamount'));
-        $this->form3->add(new TextInput('payed'));
-        $this->form3->add(new TextInput('exchange'));
-
-        $this->form3->add(new Label('discount'));
+        $this->docpanel->form3->add(new Label('discount'));
         //печать
-        $this->add(new Form('form4'))->setVisible(false);
-        $this->form4->add(new Label('showcheck'));
-        $this->form4->add(new Button('newdoc'))->onClick($this, 'newdoc');
-        $this->form4->add(new Button('print'));
+        $this->docpanel->add(new Form('form4'))->setVisible(false);
+        $this->docpanel->form4->add(new Label('showcheck'));
+        $this->docpanel->form4->add(new Button('newdoc'))->onClick($this, 'newdoc');
+        $this->docpanel->form4->add(new Button('print'));
 
+        $this->docpanel->add(new Form('editdetail'))->setVisible(false);
+        $this->docpanel->editdetail->add(new TextInput('editquantity'))->setText("1");
+        $this->docpanel->editdetail->add(new TextInput('editprice'));
+        $this->docpanel->editdetail->add(new TextInput('editserial'));
 
-        $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new TextInput('editquantity'))->setText("1");
-        $this->editdetail->add(new TextInput('editprice'));
-        $this->editdetail->add(new TextInput('editserial'));
+        $this->docpanel->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
+        $this->docpanel->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
 
-        $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
+        $this->docpanel->editdetail->add(new Label('qtystock'));
+        $this->docpanel->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
-        $this->editdetail->add(new Label('qtystock'));
-        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
+        $this->docpanel->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
+        $this->docpanel->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
-        $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
-        $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
+        $this->docpanel->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
 
-        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+        $this->docpanel->add(new Form('editserdetail'))->setVisible(false);
+        $this->docpanel->editserdetail->add(new TextInput('editserquantity'))->setText("1");
+        $this->docpanel->editserdetail->add(new TextInput('editserprice'));
 
-        $this->add(new Form('editserdetail'))->setVisible(false);
-        $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
-        $this->editserdetail->add(new TextInput('editserprice'));
+        $this->docpanel->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
+        $this->docpanel->editserdetail->editser->onChange($this, 'OnChangeSer', true);
 
-
-        $this->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
-        $this->editserdetail->editser->onChange($this, 'OnChangeSer', true);
-
-        $this->editserdetail->add(new Button('cancelser'))->onClick($this, 'cancelrowOnClick');
-        $this->editserdetail->add(new SubmitButton('submitser'))->onClick($this, 'saveserOnClick');
-
+        $this->docpanel->editserdetail->add(new Button('cancelser'))->onClick($this, 'cancelrowOnClick');
+        $this->docpanel->editserdetail->add(new SubmitButton('submitser'))->onClick($this, 'saveserOnClick');
 
         //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
@@ -138,31 +160,48 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
         /*
-              //Закрытие  смены
-              $this->add(new Form('zform'))->setVisible(false);
-              $this->zform->add(new TextInput('zformqnt'));
-              $this->zform->add(new TextInput('zformnal'));
-              $this->zform->add(new TextInput('zformbnal'));
-              $this->zform->add(new TextInput('zformcredit'));
-              $this->zform->add(new TextInput('zformprepaid'));
-              $this->zform->add(new TextInput('zformtotal'));
-              $this->zform->add(new Button('cancelzform'))->onClick($this, 'cancelzformOnClick');
-              $this->zform->add(new SubmitButton('savezform'))->onClick($this, 'savezformOnClick');
+          //Закрытие  смены
+          $this->add(new Form('zform'))->setVisible(false);
+          $this->zform->add(new TextInput('zformqnt'));
+          $this->zform->add(new TextInput('zformnal'));
+          $this->zform->add(new TextInput('zformbnal'));
+          $this->zform->add(new TextInput('zformcredit'));
+          $this->zform->add(new TextInput('zformprepaid'));
+          $this->zform->add(new TextInput('zformtotal'));
+          $this->zform->add(new Button('cancelzform'))->onClick($this, 'cancelzformOnClick');
+          $this->zform->add(new SubmitButton('savezform'))->onClick($this, 'savezformOnClick');
 
-          */
+         */
     }
+  
 
-
+    public function onCheckList($sender) {
+        $this->docpanel->setVisible(false);
+        $this->docpanel->form2->setVisible(false);
+        $this->docpanel->form3->setVisible(false);
+        $this->docpanel->form4->setVisible(false);
+        $this->docpanel->editserdetail->setVisible(false);
+        $this->docpanel->wselitem->setVisible(false);
+        $this->docpanel->editdetail->setVisible(false);
+        
+        $this->checklistpan->setVisible(true);
+        $this->checklistpan->statuspan->setVisible(true);
+        $this->updatechecklist();
+    }
+    
+      
+    
+    
     public function cancel2docOnClick($sender) {
 
-        $this->form2->setVisible(true);
-        $this->form3->setVisible(false);
+        $this->docpanel->form2->setVisible(true);
+        $this->docpanel->form3->setVisible(false);
     }
 
     public function cancel3docOnClick($sender) {
 
-        $this->form3->setVisible(true);
-        $this->form4->setVisible(false);
+        $this->docpanel->form3->setVisible(true);
+        $this->docpanel->form4->setVisible(false);
     }
 
     public function next1docOnClick($sender) {
@@ -185,36 +224,47 @@ class ARMPos extends \App\Pages\Base
             $this->setError("noselpricetype");
             return;
         }
+        $filter = \App\Filter::getFilter("armpos");
+
+        $filter->pos = $this->form1->pos->getValue();
+        $filter->store = $this->_store_id;
+        $filter->pricetype = $this->_pt;
 
         $this->form1->setVisible(false);
-        $this->form2->setVisible(true);
+        $this->docpanel->form2->setVisible(true);
 
         $this->newdoc(null);
     }
 
     public function newdoc($sender) {
+        $this->docpanel->setVisible(true);
+        
+        $this->docpanel->form2->setVisible(true);
+        
 
+        $this->checklistpan->setVisible(false);
+          
+  
         $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
 
         $this->_itemlist = array();
         $this->_serlist = array();
-        $this->form2->detail->Reload();
-        $this->form2->detailser->Reload();
+        $this->docpanel->form2->detail->Reload();
+        $this->docpanel->form2->detailser->Reload();
         $this->calcTotal();
 
+        $this->docpanel->form3->document_date->setDate(time());
+        $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());
+        $this->docpanel->form3->customer->setKey(0);
+        $this->docpanel->form3->customer->setText('');
+        $this->docpanel->form3->paydisc->setText('0');
+        $this->docpanel->form3->payamount->setText('0');
+        $this->docpanel->form3->payed->setText('0');
+        $this->docpanel->form3->exchange->setText('0');
+        $this->docpanel->form3->discount->setText('');
 
-        $this->form3->document_date->setDate(time());
-        $this->form3->document_number->setText($this->_doc->nextNumber());
-        $this->form3->customer->setKey(0);
-        $this->form3->customer->setText('');
-        $this->form3->paydisc->setText('0');
-        $this->form3->payamount->setText('0');
-        $this->form3->payed->setText('0');
-        $this->form3->exchange->setText('0');
-        $this->form3->discount->setText('');
-
-        $this->form2->setVisible(true);
-        $this->form4->setVisible(false);
+        $this->docpanel->form2->setVisible(true);
+        $this->docpanel->form4->setVisible(false);
     }
 
     public function next2docOnClick($sender) {
@@ -224,8 +274,8 @@ class ARMPos extends \App\Pages\Base
         }
 
         $this->form1->setVisible(false);
-        $this->form2->setVisible(false);
-        $this->form3->setVisible(true);
+        $this->docpanel->form2->setVisible(false);
+        $this->docpanel->form3->setVisible(true);
     }
 
     public function detailOnRow($row) {
@@ -260,9 +310,9 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function addcodeOnClick($sender) {
-        $code = trim($this->form2->barcode->getText());
+        $code = trim($this->docpanel->form2->barcode->getText());
         $store = $this->form1->store->getValue();
-        $this->form2->barcode->setText('');
+        $this->docpanel->form2->barcode->setText('');
         if ($code == '') {
             return;
         }
@@ -270,7 +320,6 @@ class ARMPos extends \App\Pages\Base
 
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store}) and  (item_code = {$code_} or bar_code = {$code_})");
-
 
         if ($item == null) {
             $this->setError("noitemcode", $code);
@@ -302,15 +351,14 @@ class ARMPos extends \App\Pages\Base
 
                 if (strlen($serial) == 0) {
                     $this->setWarn('needs_serial');
-                    $this->editdetail->setVisible(true);
-                    $this->form2->setVisible(false);
+                    $this->docpanel->editdetail->setVisible(true);
+                    $this->docpanel->form2->setVisible(false);
 
-
-                    $this->editdetail->edittovar->setKey($item->item_id);
-                    $this->editdetail->edittovar->setText($item->itemname);
-                    $this->editdetail->editserial->setText('');
-                    $this->editdetail->editquantity->setText('1');
-                    $this->editdetail->editprice->setText($item->price);
+                    $this->docpanel->editdetail->edittovar->setKey($item->item_id);
+                    $this->docpanel->editdetail->edittovar->setText($item->itemname);
+                    $this->docpanel->editdetail->editserial->setText('');
+                    $this->docpanel->editdetail->editquantity->setText('1');
+                    $this->docpanel->editdetail->editprice->setText($item->price);
 
                     return;
                 } else {
@@ -319,22 +367,26 @@ class ARMPos extends \App\Pages\Base
             }
             $this->_itemlist[$item->item_id] = $item;
         }
-        $this->form2->detail->Reload();
+        $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
     }
 
     public function editOnClick($sender) {
         $tovar = $sender->owner->getDataItem();
-        $this->editdetail->setVisible(true);
-        $this->editdetail->edittovar->setKey($tovar->item_id);
-        $this->editdetail->edittovar->setText($tovar->itemname);
-        $this->editdetail->editquantity->setText($tovar->quantity);
-        $this->editdetail->editprice->setText($tovar->price);
-        $this->editdetail->editserial->setText($tovar->snumber);
-        $this->editdetail->qtystock->setText("");
-        $this->form2->setVisible(false);
-        $this->_rowid = $tovar->rowid;
+        $this->docpanel->editdetail->setVisible(true);
+        $this->docpanel->editdetail->edittovar->setKey($tovar->item_id);
+        $this->docpanel->editdetail->edittovar->setText($tovar->itemname);
+        $this->docpanel->editdetail->editquantity->setText($tovar->quantity);
+        $this->docpanel->editdetail->editprice->setText($tovar->price);
+        $this->docpanel->editdetail->editserial->setText($tovar->snumber);
 
+        $store = $this->form1->store->getValue();
+        $qty = $tovar->getQuantity($store);
+
+        $this->docpanel->editdetail->qtystock->setText(H::fqty($qty));
+
+        $this->docpanel->form2->setVisible(false);
+        $this->_rowid = $tovar->rowid;
     }
 
     public function deleteOnClick($sender) {
@@ -342,21 +394,20 @@ class ARMPos extends \App\Pages\Base
         $tovar = $sender->owner->getDataItem();
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->rowid => $this->_itemlist[$tovar->rowid]));
-        $this->form2->detail->Reload();
+        $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
     }
 
     public function sereditOnClick($sender) {
         $ser = $sender->owner->getDataItem();
-        $this->editserdetail->setVisible(true);
-        $this->editserdetail->editser->setKey($ser->service_id);
-        $this->editserdetail->editser->setText($ser->service_name);
-        $this->editserdetail->editserquantity->setText($ser->quantity);
-        $this->editserdetail->editserprice->setText($ser->price);
+        $this->docpanel->editserdetail->setVisible(true);
+        $this->docpanel->editserdetail->editser->setKey($ser->service_id);
+        $this->docpanel->editserdetail->editser->setText($ser->service_name);
+        $this->docpanel->editserdetail->editserquantity->setText($ser->quantity);
+        $this->docpanel->editserdetail->editserprice->setText($ser->price);
 
-        $this->form2->setVisible(false);
+        $this->docpanel->form2->setVisible(false);
         $this->_rowid = $ser->rowid;
-
     }
 
     public function serdeleteOnClick($sender) {
@@ -367,43 +418,44 @@ class ARMPos extends \App\Pages\Base
         $ser = $sender->owner->getDataItem();
 
         $this->_serlist = array_diff_key($this->_serlist, array($ser->rowid => $this->_serlist[$ser->rowid]));
-        $this->form2->detailser->Reload();
+        $this->docpanel->form2->detailser->Reload();
         $this->calcTotal();
     }
 
     public function addrowOnClick($sender) {
-        $this->editdetail->setVisible(true);
-        $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("0");
-        $this->editdetail->qtystock->setText("");
-        $this->form2->setVisible(false);
+        $this->docpanel->editdetail->setVisible(true);
+        $this->docpanel->editdetail->editquantity->setText("1");
+        $this->docpanel->editdetail->editprice->setText("0");
+        $this->docpanel->editdetail->qtystock->setText("");
+        $this->docpanel->form2->setVisible(false);
         $this->_rowid = 0;
     }
 
     public function addserOnClick($sender) {
-        $this->editserdetail->setVisible(true);
-        $this->editserdetail->editserquantity->setText("1");
-        $this->editserdetail->editserprice->setText("0");
+        $this->docpanel->editserdetail->setVisible(true);
+        $this->docpanel->editserdetail->editserquantity->setText("1");
+        $this->docpanel->editserdetail->editserprice->setText("0");
 
-        $this->form2->setVisible(false);
+        $this->docpanel->form2->setVisible(false);
         $this->_rowid = 0;
     }
 
     public function saverowOnClick($sender) {
         $store = $this->form1->store->getValue();
 
-        $id = $this->editdetail->edittovar->getKey();
+        $id = $this->docpanel->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("noselitem");
             return;
         }
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->snumber = $this->editdetail->editserial->getText();
-        $qstock = $this->editdetail->qtystock->getText();
+        $item->quantity = $this->docpanel->editdetail->editquantity->getText();
+        $item->snumber = $this->docpanel->editdetail->editserial->getText();
 
-        $item->price = H::fa($this->editdetail->editprice->getText());
+        $qstock = $item->getQuantity($store);
+
+        $item->price = H::fa($this->docpanel->editdetail->editprice->getText());
 
         if ($item->quantity > $qstock) {
             $this->setWarn('inserted_extra_count');
@@ -432,36 +484,35 @@ class ARMPos extends \App\Pages\Base
 
         $this->_rowid = 0;
 
+        $this->docpanel->editdetail->setVisible(false);
+        $this->docpanel->form2->setVisible(true);
 
-        $this->editdetail->setVisible(false);
-        $this->form2->setVisible(true);
-
-        $this->form2->detail->Reload();
+        $this->docpanel->form2->detail->Reload();
         //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
+        $this->docpanel->editdetail->edittovar->setKey(0);
+        $this->docpanel->editdetail->edittovar->setText('');
 
-        $this->editdetail->editquantity->setText("1");
+        $this->docpanel->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
-        $this->editdetail->editserial->setText("");
-        $this->wselitem->setVisible(false);
+        $this->docpanel->editdetail->editprice->setText("");
+        $this->docpanel->editdetail->editserial->setText("");
+        $this->docpanel->wselitem->setVisible(false);
 
         $this->calcTotal();
     }
 
     public function saveserOnClick($sender) {
 
-        $id = $this->editserdetail->editser->getKey();
+        $id = $this->docpanel->editserdetail->editser->getKey();
         if ($id == 0) {
             $this->setError("noselservice");
             return;
         }
         $ser = Service::load($id);
 
-        $ser->quantity = $this->editserdetail->editserquantity->getText();
+        $ser->quantity = $this->docpanel->editserdetail->editserquantity->getText();
 
-        $ser->price = H::fa($this->editserdetail->editserprice->getText());
+        $ser->price = H::fa($this->docpanel->editserdetail->editserprice->getText());
 
         if ($this->_rowid > 0) {
             $ser->rowid = $this->_rowid;
@@ -473,42 +524,41 @@ class ARMPos extends \App\Pages\Base
 
         $this->_rowid = 0;
 
-
-        $this->editserdetail->setVisible(false);
-        $this->form2->setVisible(true);
-        $this->form2->detailser->Reload();
+        $this->docpanel->editserdetail->setVisible(false);
+        $this->docpanel->form2->setVisible(true);
+        $this->docpanel->form2->detailser->Reload();
 
         //очищаем  форму
-        $this->editserdetail->editser->setKey(0);
-        $this->editserdetail->editser->setText('');
-        $this->editserdetail->editserquantity->setText("1");
-        $this->editserdetail->editserprice->setText("");
+        $this->docpanel->editserdetail->editser->setKey(0);
+        $this->docpanel->editserdetail->editser->setText('');
+        $this->docpanel->editserdetail->editserquantity->setText("1");
+        $this->docpanel->editserdetail->editserprice->setText("");
         $this->calcTotal();
     }
 
     public function cancelrowOnClick($sender) {
-        $this->editdetail->setVisible(false);
-        $this->form2->setVisible(true);
-        $this->wselitem->setVisible(false);
+        $this->docpanel->editdetail->setVisible(false);
+        $this->docpanel->form2->setVisible(true);
+        $this->docpanel->wselitem->setVisible(false);
         //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
+        $this->docpanel->editdetail->edittovar->setKey(0);
+        $this->docpanel->editdetail->edittovar->setText('');
 
-        $this->editdetail->editquantity->setText("1");
+        $this->docpanel->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->docpanel->editdetail->editprice->setText("");
     }
 
     public function onOpenItemSel($sender) {
-        $this->wselitem->setVisible(true);
-        $this->wselitem->setPriceType($this->form1->pricetype->getValue());
-        $this->wselitem->Reload();
+        $this->docpanel->wselitem->setVisible(true);
+        $this->docpanel->wselitem->setPriceType($this->form1->pricetype->getValue());
+        $this->docpanel->wselitem->Reload();
     }
 
     public function onSelectItem($item_id, $itemname) {
-        $this->editdetail->edittovar->setKey($item_id);
-        $this->editdetail->edittovar->setText($itemname);
-        $this->OnChangeItem($this->editdetail->edittovar);
+        $this->docpanel->editdetail->edittovar->setKey($item_id);
+        $this->docpanel->editdetail->edittovar->setText($itemname);
+        $this->OnChangeItem($this->docpanel->editdetail->edittovar);
     }
 
     private function calcTotal() {
@@ -525,9 +575,9 @@ class ARMPos extends \App\Pages\Base
 
             $total = $total + $item->amount;
         }
-        $this->form2->total->setText(H::fa($total));
-        $this->form3->total2->setText(H::fa($total));
-        $this->form3->payamount->setText(H::fa($total));
+        $this->docpanel->form2->total->setText(H::fa($total));
+        $this->docpanel->form3->total2->setText(H::fa($total));
+        $this->docpanel->form3->payamount->setText(H::fa($total));
     }
 
     public function OnChangeItem($sender) {
@@ -535,12 +585,11 @@ class ARMPos extends \App\Pages\Base
         $item = Item::load($id);
         $store = $this->form1->store->getValue();
 
-
         $price = $item->getPrice($this->form1->pricetype->getValue(), $store);
         $qty = $item->getQuantity($store);
 
-        $this->editdetail->qtystock->setText(H::fqty($qty));
-        $this->editdetail->editprice->setText($price);
+        $this->docpanel->editdetail->qtystock->setText(H::fqty($qty));
+        $this->docpanel->editdetail->editprice->setText($price);
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $serial = '';
@@ -548,7 +597,7 @@ class ARMPos extends \App\Pages\Base
             if (count($slist) == 1) {
                 $serial = array_pop($slist);
             }
-            $this->editdetail->editserial->setText($serial);
+            $this->docpanel->editdetail->editserial->setText($serial);
         }
 
 
@@ -571,7 +620,7 @@ class ARMPos extends \App\Pages\Base
     public function OnChangeSer($sender) {
         $id = $sender->getKey();
         $ser = Service::load($id);
-        $this->editserdetail->editserprice->setText($ser->price);
+        $this->docpanel->editserdetail->editserprice->setText($ser->price);
 
         $this->updateAjax(array('editserprice'));
     }
@@ -581,22 +630,21 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function OnChangeCustomer($sender) {
-        $this->form3->discount->setVisible(false);
-        $total = $this->form3->total2->getText();
+        $this->docpanel->form3->discount->setVisible(false);
+        $total = $this->docpanel->form3->total2->getText();
         $disc = 0;
 
-
-        $customer_id = $this->form3->customer->getKey();
+        $customer_id = $this->docpanel->form3->customer->getKey();
         if ($customer_id > 0) {
             $customer = Customer::load($customer_id);
             if ($customer->discount > 0) {
-                $this->form3->discount->setText("Постоянная скидка " . $customer->discount . '%');
-                $this->form3->discount->setVisible(true);
+                $this->docpanel->form3->discount->setText("Постоянная скидка " . $customer->discount . '%');
+                $this->docpanel->form3->discount->setVisible(true);
                 $disc = round($total * ($customer->discount / 100));
             } else {
                 if ($customer->bonus > 0) {
-                    $this->form3->discount->setText("Бонусы " . $customer->bonus);
-                    $this->form3->discount->setVisible(true);
+                    $this->docpanel->form3->discount->setText("Бонусы " . $customer->bonus);
+                    $this->docpanel->form3->discount->setVisible(true);
                     if ($total >= $customer->bonus) {
                         $disc = $customer->bonus;
                     } else {
@@ -607,14 +655,14 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-        $this->form3->paydisc->setText(H::fa($disc));
-        $this->form3->payamount->setText(H::fa($total - $disc));
+        $this->docpanel->form3->paydisc->setText(H::fa($disc));
+        $this->docpanel->form3->payamount->setText(H::fa($total - $disc));
     }
 
     //добавление нового контрагента
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
-        $this->form3->setVisible(false);
+        $this->docpanel->form3->setVisible(false);
 
         $this->editcust->editcustname->setText('');
         $this->editcust->editphone->setText('');
@@ -646,48 +694,49 @@ class ARMPos extends \App\Pages\Base
 
         $cust->type = 1;
         $cust->save();
-        $this->form3->customer->setText($cust->customer_name);
-        $this->form3->customer->setKey($cust->customer_id);
+        $this->docpanel->form3->customer->setText($cust->customer_name);
+        $this->docpanel->form3->customer->setKey($cust->customer_id);
 
         $this->editcust->setVisible(false);
-        $this->form3->setVisible(true);
-        $this->form3->discount->setVisible(false);
+        $this->docpanel->form3->setVisible(true);
+        $this->docpanel->form3->discount->setVisible(false);
         $this->_discount = 0;
     }
 
     public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
-        $this->form3->setVisible(true);
+        $this->docpanel->form3->setVisible(true);
     }
 
     public function savedocOnClick($sender) {
 
-        $this->_doc->document_number = $this->form3->document_number->getText();
+        $this->_doc->document_number = $this->docpanel->form3->document_number->getText();
 
         $doc = Document::getFirst("   document_number = '{$this->_doc->document_number}' ");
         if ($doc instanceof Document) {   //если уже  кто то  сохранил  с таким номером
             $this->_doc->document_number = $this->_doc->nextNumber();
-            $this->form3->document_number->setText($this->_doc->document_number);
+            $this->docpanel->form3->document_number->setText($this->_doc->document_number);
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
-            $this->form3->document_number->setText($next);
+            $this->docpanel->form3->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
                 $this->setError('docnumbercancreated');
             }
         }
-        $this->_doc->document_date = $this->form3->document_date->getDate();
-        $this->_doc->notes = $this->form3->notes->getText();
+        $this->_doc->document_date = $this->docpanel->form3->document_date->getDate();
+        $this->_doc->notes = $this->docpanel->form3->notes->getText();
 
-        $this->_doc->customer_id = $this->form3->customer->getKey();
-        $this->_doc->payamount = $this->form3->payamount->getText();
+        $this->_doc->customer_id = $this->docpanel->form3->customer->getKey();
+        $this->_doc->payamount = $this->docpanel->form3->payamount->getText();
 
         $this->_doc->headerdata['time'] = time();
-        $this->_doc->payed = $this->form3->payed->getText();
-        $this->_doc->headerdata['exchange'] = $this->form3->exchange->getText();
-        $this->_doc->headerdata['paydisc'] = $this->form3->paydisc->getText();
-        $this->_doc->headerdata['payment'] = $this->form3->payment->getValue();
+        $this->_doc->payed = $this->docpanel->form3->payed->getText();
+        $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
+        $this->_doc->headerdata['payed'] = $this->docpanel->form3->payed->getText();
+        $this->_doc->headerdata['paydisc'] = $this->docpanel->form3->paydisc->getText();
+        $this->_doc->headerdata['payment'] = $this->docpanel->form3->payment->getValue();
 
         if ($this->_doc->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID) {
             $this->_doc->headerdata['paydisc'] = 0;
@@ -720,11 +769,10 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];
 
-
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->packDetails('services', $this->_serlist);
 
-        $this->_doc->amount = $this->form3->total2->getText();
+        $this->_doc->amount = $this->docpanel->form3->total2->getText();
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -751,7 +799,6 @@ class ARMPos extends \App\Pages\Base
                     $this->pos->fiscdocnumber = $ret['docnumber'];
                     $this->pos->save();
                     $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-
                 }
                 if ($ret['success'] == false) {
                     $this->setError($ret['data']);
@@ -765,11 +812,8 @@ class ARMPos extends \App\Pages\Base
                     } else {
                         $this->setError("ppo_noretnumber");
                         return;
-
                     }
-
                 }
-
             }
 
 
@@ -786,38 +830,36 @@ class ARMPos extends \App\Pages\Base
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             return;
         }
-        $this->form3->customer->setKey(0);
-        $this->form3->customer->setText('');
-        $this->form3->payment->setValue(H::getDefMF());
-        $this->form3->setVisible(false);
-        $this->form4->setVisible(true);
-
+        $this->docpanel->form3->customer->setKey(0);
+        $this->docpanel->form3->customer->setText('');
+        $this->docpanel->form3->payment->setValue(H::getDefMF());
+        $this->docpanel->form3->setVisible(false);
+        $this->docpanel->form4->setVisible(true);
 
         $check = $this->_doc->generatePosReport();
-        $this->form4->showcheck->setText($check, true);
+        $this->docpanel->form4->showcheck->setText($check, true);
     }
 
     public function OnPayment($sender) {
         $b = $sender->getValue();
-        $this->form3->payed->setVisible(true);
-        $this->form3->payamount->setVisible(true);
-        $this->form3->paydisc->setVisible(true);
-        $this->form3->exchange->setVisible(true);
+        $this->docpanel->form3->payed->setVisible(true);
+        $this->docpanel->form3->payamount->setVisible(true);
+        $this->docpanel->form3->paydisc->setVisible(true);
+        $this->docpanel->form3->exchange->setVisible(true);
 
         if ($b == \App\Entity\MoneyFund::PREPAID) {
-            $this->form3->payed->setVisible(false);
-            $this->form3->payamount->setVisible(false);
-            $this->form3->paydisc->setVisible(false);
-            $this->form3->exchange->setVisible(false);
+            $this->docpanel->form3->payed->setVisible(false);
+            $this->docpanel->form3->payamount->setVisible(false);
+            $this->docpanel->form3->paydisc->setVisible(false);
+            $this->docpanel->form3->exchange->setVisible(false);
         }
         if ($b == \App\Entity\MoneyFund::CREDIT) {
-            $this->form3->payed->setVisible(false);
-            //$this->form3->payamount->setVisible(false);
-            $this->form3->paydisc->setVisible(false);
-            $this->form3->exchange->setVisible(false);
+            $this->docpanel->form3->payed->setVisible(false);
+            //$this->docpanel->form3->payamount->setVisible(false);
+            $this->docpanel->form3->paydisc->setVisible(false);
+            $this->docpanel->form3->exchange->setVisible(false);
         }
     }
-
 
     public function OnOpenShift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
@@ -826,8 +868,6 @@ class ARMPos extends \App\Pages\Base
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
-
-
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -838,14 +878,11 @@ class ARMPos extends \App\Pages\Base
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
                 $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
-
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
-
         }
 
 
@@ -853,14 +890,12 @@ class ARMPos extends \App\Pages\Base
         return true;
     }
 
-
     public function OnCloseShift($sender) {
         $ret = $this->zform();
         if ($ret == true) {
             $this->closeshift();
         }
     }
-
 
     public function zform() {
 
@@ -876,8 +911,6 @@ class ARMPos extends \App\Pages\Base
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
-
-
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -890,15 +923,12 @@ class ARMPos extends \App\Pages\Base
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
-
             }
-
         }
 
 
         return true;
     }
-
 
     public function closeshift() {
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
@@ -907,8 +937,6 @@ class ARMPos extends \App\Pages\Base
             $this->pos->fiscdocnumber = $ret['docnumber'];
             $this->pos->save();
             $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
-
-
         }
         if ($ret['success'] == false) {
             $this->setError($ret['data']);
@@ -921,7 +949,6 @@ class ARMPos extends \App\Pages\Base
             } else {
                 $this->setError("ppo_noretnumber");
                 return;
-
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
         }
@@ -930,4 +957,39 @@ class ARMPos extends \App\Pages\Base
         return true;
     }
 
+    
+  public function onDocRow($row) {
+        $doc = $row->getDataItem();           
+        $row->add(new ClickLink('docnumber',$this,'OnDocViewClick' ))->setValue($doc->document_number);
+        $row->add(new Label('state', Document::getStateName($doc->state)));
+        $row->add(new Label('rowamount', H::fa($doc->amount)));
+        $row->add(new Label('rownotes', $doc->notes));
+        $row->add(new Label('waitpay' ))->setVisible($doc->payed < $doc->payamount && $doc->payamount>0);
+
+        if ($doc->document_id == $this->_doc->document_id) {
+            $row->setAttribute('class', 'table-success');
+        }    
+    
+    }
+    private function updatechecklist() {
+        $where = "meta_name='PosCheck' ";
+        $this->_doclist = Document::find($where, 'document_id desc');
+        $this->checklistpan->checklist->Reload();
+    }
+ 
+    public function OnDocViewClick($sender) {
+         $this->_doc = $sender->getOwner()->getDataItem()  ;
+         $this->OnDocView() ;
+         
+     }
+     public function OnDocView() {
+        $this->checklistpan->statuspan->setVisible(true);
+  
+        $this->checklistpan->statuspan->docview->setDoc($this->_doc);
+        $this->checklistpan->checklist->Reload(false);
+  //      $this->updateStatusButtons();
+        $this->goAnkor('dankor');       
+     }
+     
+    
 }

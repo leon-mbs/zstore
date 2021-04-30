@@ -17,7 +17,6 @@ use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Customer;
 use App\Entity\Employee;
 
-
 /**
  * Страница    приходный ордер
  */
@@ -47,7 +46,6 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
-
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -74,7 +72,6 @@ class IncomeMoney extends \App\Pages\Base
         $this->OnDetail($this->docform->detail);
         $this->OnCustomer($this->docform->customer);
         $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
-
     }
 
     public function savedocOnClick($sender) {
@@ -166,7 +163,6 @@ class IncomeMoney extends \App\Pages\Base
             if ($this->_doc->customer_id == 0) {
                 $this->setError("noselcust");
             }
-
         }
 
         if ($this->docform->detail->getValue() == 3) {
@@ -174,7 +170,6 @@ class IncomeMoney extends \App\Pages\Base
             if ($this->_doc->headerdata['emp'] == 0) {
                 $this->setError("noempselected");
             }
-
         }
         return !$this->isError();
     }
@@ -192,7 +187,6 @@ class IncomeMoney extends \App\Pages\Base
 
         $ar = \App\Entity\Contract::getList($c);
         $this->docform->contract->setOptionList($ar);
-
     }
 
     public function OnDetail($sender) {
@@ -205,9 +199,7 @@ class IncomeMoney extends \App\Pages\Base
         }
         if ($sender->getValue() == 3) {
             $this->docform->emp->setVisible(true);
-
         }
-
     }
 
 }

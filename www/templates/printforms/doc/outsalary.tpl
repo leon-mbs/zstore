@@ -20,7 +20,7 @@
 
     <tr>
         <td colspan="2">
-            {{notes}}
+            {{{notes}}}
         </td>
     </tr>
     <tr>

@@ -43,18 +43,15 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->wisfilter->add(new DropDownChoice('wissearchcat', Category::getList(), 0));
         $this->wisfilter->add(new TextInput('wissearchmanufacturer'));
 
-
         $ds = new ArrayDataSource($this, '_list');
 
-        $table = $this->add(new   DataTable('witemselt', $ds, true, true));
+        $table = $this->add(new DataTable('witemselt', $ds, true, true));
         $table->setPageSize(H::getPG());
         $table->AddColumn(new Column('itemname', H::l('name'), true, true, true));
         $table->AddColumn(new Column('item_code', H::l('code'), true, true, false));
         $table->AddColumn(new Column('manufacturer', H::l('brand'), true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');
-
-
     }
 
     /**
@@ -69,7 +66,6 @@ class ItemSel extends \Zippy\Html\PageFragment
         if (strlen($this->_pricetype) > 0) {
             $this->witemselt->AddColumn(new Column('price', 'Цена', true, true, false, "text-right", "text-right"));
         }
-
     }
 
     /**
@@ -101,13 +97,11 @@ class ItemSel extends \Zippy\Html\PageFragment
 
             $text = Item::qstr('%' . $text . '%');
             $where = $where . " and (itemname like {$text} or item_code like {$text} )  ";
-
         }
         if (strlen($man) > 0) {
 
             $man = Item::qstr($man);
             $where = $where . " and  manufacturer like {$man}      ";
-
         }
 
 
@@ -124,6 +118,6 @@ class ItemSel extends \Zippy\Html\PageFragment
         }
 
         $this->witemselt->Reload();
-
     }
+
 }

@@ -31,7 +31,6 @@ class IncomeItem extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
-
         }
 
         return true;
@@ -44,7 +43,6 @@ class IncomeItem extends Document
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
-
 
             $detail[] = array("no"        => $i++,
                               "item_name" => $name,
@@ -62,13 +60,12 @@ class IncomeItem extends Document
             "total"           => H::fa($this->amount),
             "to"              => $this->headerdata["storename"],
             "emp"             => false,
-            "notes"           => $this->notes,
+            "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
         if ($this->headerdata["emp"] > 0 && $this->headerdata['examount']) {
             $header['emp'] = $this->headerdata["empname"];
             $header['examount'] = H::fa($this->headerdata["examount"]);
-
         }
 
         $report = new \App\Report('doc/incomeitem.tpl');

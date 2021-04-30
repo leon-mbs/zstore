@@ -41,11 +41,9 @@ class TransItem extends \App\Pages\Base
         $this->docform->add(new TextInput('toquantity'));
         $this->docform->add(new TextInput('notes'));
 
-
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-
 
         if ($docid > 0) {    //загружаем   содержимок  документа на страницу
             $this->_doc = Document::load($docid)->cast();

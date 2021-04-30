@@ -6,7 +6,7 @@ use App\Entity\Entry;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ  кассовый ек
+ * Класс-сущность  документ  кассовый чек
  *
  */
 class POSCheck extends Document
@@ -59,7 +59,7 @@ class POSCheck extends Document
                         "phone"           => $firm["phone"],
                         "inn"             => $firm["inn"],
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
-                        "exchange"        => $this->headerdata["exchange"],
+                        "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
@@ -70,7 +70,6 @@ class POSCheck extends Document
                         "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
                         "payamount"       => H::fa($this->payamount)
         );
-
 
         $report = new \App\Report('doc/poscheck.tpl');
 
@@ -113,9 +112,10 @@ class POSCheck extends Document
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
                         "inn"             => $firm["inn"],
+                        "checkslogan"     => $common["checkslogan"],
                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"    => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
-                        "exchange"        => $this->headerdata["exchange"],
+                        "exchange"        => H::fa($this->headerdata["exchange"]),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"]),
                         "document_number" => $this->document_number,
@@ -126,7 +126,6 @@ class POSCheck extends Document
                         "prepaid"         => $this->headerdata['payment'] == \App\Entity\MoneyFund::PREPAID,
                         "payamount"       => H::fa($this->payamount)
         );
-
 
         $report = new \App\Report('doc/poscheck_bill.tpl');
 
@@ -159,8 +158,6 @@ class POSCheck extends Document
 
                             $sc->save();
                         }
-
-
                     }
                 }
 
@@ -169,26 +166,27 @@ class POSCheck extends Document
 
                 if ($price == 0) {
                     throw new \Exception(H::l('noselfprice', $item->itemname));
-
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
                 $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
                 $sc->setStock($stock->stock_id);
 
-
                 $sc->save();
-
-
             }
 
+            $k = 1;   //учитываем  скидку
+            if ($this->headerdata["paydisc"] > 0 && $this->amount > 0) {
+                $k = ($this->amount - $this->headerdata["paydisc"]) / $this->amount;
+            }
 
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->setExtCode($item->price - $st->partion); //Для АВС 
+                $sc->setExtCode($item->price * $k - $st->partion); //Для АВС 
+                $sc->setOutPrice($item->price * $k);
                 $sc->save();
             }
         }
@@ -213,9 +211,10 @@ class POSCheck extends Document
         }
         foreach ($this->unpackDetails('services') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0);
+            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
             $sc->setService($ser->service_id);
-            $sc->setExtCode(0 - ($ser->price)); //Для АВС
+            $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
+            $sc->setOutPrice(0 - $item->price * $k);
 
             $sc->save();
         }
@@ -244,6 +243,5 @@ class POSCheck extends Document
 
         return $list;
     }
-
 
 }

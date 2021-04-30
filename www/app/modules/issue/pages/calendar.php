@@ -70,7 +70,6 @@ class Calendar extends \App\Pages\Base
         $this->listpan->tasktab->setVisible($sender->id == 'tabs');
         $this->listpan->tasktab->timelist->Reload();
         $this->updateCal();
-
     }
 
     public function OnTimeRow($row) {
@@ -205,11 +204,9 @@ class Calendar extends \App\Pages\Base
             $tl->createdon = $tl->createdon + $action['delta'];
             if ($action['years'] <> 0) {
                 $tl->createdon = strtotime($action['years'] . ' years', $tl->createdon);
-
             }
             if ($action['months'] <> 0) {
                 $tl->createdon = strtotime($action['months'] . ' months', $tl->createdon);
-
             }
             if ($action['days'] <> 0) {
                 $tl->createdon = strtotime($action['days'] . ' days', $tl->createdon);
@@ -218,7 +215,6 @@ class Calendar extends \App\Pages\Base
                 $tl->createdon = $tl->createdon + $action['ms'];
             }
             $tl->save();
-
         }
         if ($action['action'] == 'resize') {
             $tl = TimeLine::load($action['id']);
@@ -227,7 +223,6 @@ class Calendar extends \App\Pages\Base
 
                 $tl->createdon = $tl->createdon + ($action['startdelta'] / 3600);
                 $tl->duration = $tl->duration - ($action['startdelta'] / 3600);
-
             }
 
             if ($action['enddelta'] != 0) {
@@ -235,8 +230,6 @@ class Calendar extends \App\Pages\Base
                 $tl->duration = $tl->duration + ($action['enddelta'] / 3600);
             }
             $tl->save();
-
-
         }
         //        $this->updateCal();
         //        $this->listpan->timelist->Reload();

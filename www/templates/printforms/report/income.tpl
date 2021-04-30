@@ -33,7 +33,7 @@
 
     </tr>
     {{/_detail}}
-       <tr>  <td> </td>
+    <tr>  <td> </td>
         <td> </td>
 
         <td  > </td>
@@ -64,9 +64,9 @@
     <td></td>
 </tr>
 {{/_detail}}
-     <tr>  <td colspan="2"> </td>
-        <td align="right"><b>{{total}}</b></td>    
-        <td> </td>     </tr>
+<tr>  <td colspan="2"> </td>
+    <td align="right"><b>{{total}}</b></td>    
+    <td> </td>     </tr>
 </table>
 {{/_type2}}
 {{#_type3}}
@@ -96,9 +96,9 @@
 
 </tr>
 {{/_detail}}
-     <tr>  <td  > </td>
-        <td align="right"><b>{{total}}</b></td>    
-        <td> </td>    <td> </td>     </tr>
+<tr>  <td  > </td>
+    <td align="right"><b>{{total}}</b></td>    
+    <td> </td>    <td> </td>     </tr>
 </table>
 {{/_type3}}
 

@@ -11,7 +11,7 @@
             <b>Со счета:</b> {{from}}
         </td>
     </tr>
-     <tr>
+    <tr>
         <td colspan="4">
             <b>На  счет:</b> {{to}}
         </td>
@@ -21,11 +21,11 @@
             <b>Сумма:</b> {{amount}}
         </td>
     </tr>
-   
- 
+
+
     <tr>
         <td colspan="4">
-            {{notes}}
+            {{{notes}}}
         </td>
     </tr>
 

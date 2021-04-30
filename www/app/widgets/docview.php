@@ -53,7 +53,6 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new Label('hfiles'));
         $this->add(new \Zippy\Html\Image('scanimage'))->setVisible(false);
 
-
         $this->add(new DataView('dw_statelist', new ArrayDataSource(new Prop($this, '_statelist')), $this, 'stateListOnRow'));
 
         $this->add(new DataView('dw_paylist', new ArrayDataSource(new Prop($this, '_paylist')), $this, 'payListOnRow'));
@@ -65,7 +64,6 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new ClickLink('pdoc'))->onClick($this, 'parentDocOnClick');
         $this->add(new Form('addrelform'))->onSubmit($this, 'OnReldocSubmit');
         $this->addrelform->add(new AutocompleteTextInput('addrel'))->onText($this, 'OnAddDoc');
-
 
         $this->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
         $this->addfileform->add(new \Zippy\Html\Form\File('addfile'));
@@ -82,8 +80,6 @@ class DocView extends \Zippy\Html\PageFragment
         $this->add(new ClickLink('doctabc', $this, "onTab"));
         $this->add(new ClickLink('doctabh', $this, "onTab"));
         $this->add(new ClickLink('doctabs', $this, "onTab"));
-
-
     }
 
     // Устанавливаем  документ  для  просмотра
@@ -101,7 +97,6 @@ class DocView extends \Zippy\Html\PageFragment
 
         $this->previewpos->setText($htmlpos, true);
 
-
         // проверяем  поддержку  экспорта
         $exportlist = $doc->supportedExport();
         $this->word->setVisible(in_array(Document::EX_WORD, $exportlist));
@@ -112,13 +107,13 @@ class DocView extends \Zippy\Html\PageFragment
         $this->email->setVisible(in_array(Document::EX_MAIL, $exportlist));
 
         $reportpage = "App/Pages/ShowDoc";
-  
-         $this->printmob->pagename = $reportpage;
-         $this->printmob->params = array('print', $doc->document_id);
-         
-         $this->posmob->pagename = $reportpage;
-         $this->posmob->params = array('pos', $doc->document_id);
-          
+
+        $this->printmob->pagename = $reportpage;
+        $this->printmob->params = array('print', $doc->document_id);
+
+        $this->posmob->pagename = $reportpage;
+        $this->posmob->params = array('pos', $doc->document_id);
+
         $this->html->pagename = $reportpage;
         $this->html->params = array('html', $doc->document_id);
         $this->word->pagename = $reportpage;
@@ -128,7 +123,6 @@ class DocView extends \Zippy\Html\PageFragment
         $this->pdf->pagename = $reportpage;
         $this->pdf->params = array('pdf', $doc->document_id);
 
-
         $this->updateMessages();
         $this->updateFiles();
         $this->updateDocs();
@@ -136,7 +130,6 @@ class DocView extends \Zippy\Html\PageFragment
         $this->_p = Document::load($doc->parent_id);
         $this->pdoc->setVisible($this->_p instanceof Document);
         $this->pdoc->setValue($this->_p->meta_desc . ' ' . $this->_p->document_number);
-
 
         //статусы
         $this->_statelist = $this->_doc->getLogList();
@@ -147,10 +140,9 @@ class DocView extends \Zippy\Html\PageFragment
         $this->dw_paylist->Reload();
 
         //проводки
-        $sql = " select e.entry_id, s.stock_id, s.itemname,s.item_code,e.quantity,e.amount  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $this->_doc->document_id . " order  by e.entry_id";
+        $sql = " select e.entry_id, s.stock_id, s.partion,s.itemname,s.item_code,e.quantity,e.outprice  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $this->_doc->document_id . " order  by e.entry_id";
         $this->_itemlist = \App\Entity\Entry::findBySql($sql);
         $this->dw_itemlist->Reload();
-
 
         if ($this->_doc->headerdata['scan'] > 0) {
             $this->scanimage->setVisible(true);
@@ -187,9 +179,9 @@ class DocView extends \Zippy\Html\PageFragment
         $row->add(new Label('itname', $entry->itemname));
         $row->add(new Label('itcode', $entry->item_code));
         $row->add(new Label('itqty', H::fqty($entry->quantity)));
-        $row->add(new Label('itprice', H::fa($entry->amount / $entry->quantity)));
-        $row->add(new Label('itamount', H::fa($entry->amount)));
-
+        $row->add(new Label('itpartion', H::fa($entry->partion  )));
+        $row->add(new Label('itprice', H::fa($entry->outprice  )));
+        $row->add(new Label('itamount', H::fa($entry->outprice * $entry->quantity)));
     }
 
     /**
@@ -386,7 +378,6 @@ class DocView extends \Zippy\Html\PageFragment
         $this->_doc->sendEmail();
     }
 
-
     public function onTab($sender) {
         $page = $this->getOwnerPage();
         $page->_tvars['doctabp'] = $sender->id == 'doctabp';
@@ -404,7 +395,6 @@ class DocView extends \Zippy\Html\PageFragment
         $page->_tvars['doctabdbadge'] = $sender->id == 'doctabd' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
         $page->_tvars['doctabhbadge'] = $sender->id == 'doctabh' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
         $page->_tvars['doctabsbadge'] = $sender->id == 'doctabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-
 
         $page->goDocView();
     }

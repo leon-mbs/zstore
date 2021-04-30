@@ -3,7 +3,6 @@
 namespace App\Modules\Tecdoc;
 
 use App\Entity\Item;
-
 use App\Helper as H;
 use App\System;
 use App\Application as App;
@@ -21,6 +20,7 @@ use \Zippy\Binding\PropertyBinding as Bind;
 
 class Search extends \App\Pages\Base
 {
+
     public $_ds   = array();
     public $_card = array();
 
@@ -35,7 +35,6 @@ class Search extends \App\Pages\Base
         }
 
         $this->add(new Panel('tpanel'));
-
 
         $this->tpanel->add(new ClickLink('tabl', $this, 'onTab'));
         $this->tpanel->add(new ClickLink('tabc', $this, 'onTab'));
@@ -62,7 +61,6 @@ class Search extends \App\Pages\Base
         $tabbarcode->add(new Form('search3form'))->onSubmit($this, 'onSearch2');
         $tabbarcode->search3form->add(new TextInput('searchbarcode'));
 
-
         $this->add(new Panel('tlist'))->setVisible(false);
         $this->tlist->add(new ClickLink('back'))->onClick($this, 'onBack');
 
@@ -71,9 +69,7 @@ class Search extends \App\Pages\Base
         $this->tlist->itemlist->setPageSize(H::getPG(10));
         $this->tlist->add(new \Zippy\Html\DataList\Paginator('pag', $this->tlist->itemlist));
 
-
         $this->add(new Panel('tview'))->setVisible(false);
-
 
         //Корзина
         $this->_card = \App\Session::getSession()->clipboard;
@@ -83,12 +79,10 @@ class Search extends \App\Pages\Base
         $this->tlist->add(new Panel('cartpan'))->setVisible(count($this->_card) > 0);
         $this->tlist->cartpan->add(new DataView('cardlist', new ArrayDataSource(new Bind($this, "_card")), $this, 'cardOnRow'));
         $this->tlist->cartpan->cardlist->Reload();
-        $this->tlist->cartpan->add(new  ClickLink('copycart', $this, 'OnCopy'));
-
+        $this->tlist->cartpan->add(new ClickLink('copycart', $this, 'OnCopy'));
 
         $this->onTab($this->tpanel->tabl);
         $this->onType($tablist->search1form->stype);
-
     }
 
     public function onTab($sender) {
@@ -113,8 +107,6 @@ class Search extends \App\Pages\Base
             } else {
                 $this->setError($ret['error']);
             }
-
-
         }
 
         $this->tlist->setVisible(false);
@@ -135,8 +127,6 @@ class Search extends \App\Pages\Base
         $this->tpanel->tablist->search1form->smodif->setOptionList(array());
         $this->tpanel->tablist->search1form->modifdetail->setText('');
         $this->tpanel->tablist->tree->removeNodes();
-
-
     }
 
     public function onBrand($sender) {
@@ -155,7 +145,6 @@ class Search extends \App\Pages\Base
         $this->tpanel->tablist->search1form->smodif->setOptionList(array());
         $this->tpanel->tablist->search1form->modifdetail->setText('');
         $this->tpanel->tablist->tree->removeNodes();
-
     }
 
     public function onModel($sender) {
@@ -229,7 +218,6 @@ class Search extends \App\Pages\Base
         $t .= "</table>";
         $this->tpanel->tablist->search1form->modifdetail->setText($t, true);
 
-
         $tlist = array();
         $this->tpanel->tablist->tree->removeNodes();
         $this->tpanel->tablist->tree->selectedNodeId(-1);
@@ -276,14 +264,11 @@ class Search extends \App\Pages\Base
                     $tlist[$n->id] = $node;
                     continue;
                 }
-
-
             }
             if ($wasadded == false) {
                 break;
             }
         }
-
     }
 
     public function onTree($sender, $id) {
@@ -318,12 +303,10 @@ class Search extends \App\Pages\Base
         }
         $this->OnItemList();
 
-
         if (count($this->_ds) > 0) {
 
             $this->tpanel->setVisible(false);
             $this->tlist->setVisible(true);
-
         } else {
             $this->setWarn('notfound');
         }
@@ -354,17 +337,14 @@ class Search extends \App\Pages\Base
         }
         $this->OnItemList();
 
-
         if (count($this->_ds) > 0) {
             $this->tpanel->setVisible(false);
 
             $this->tlist->setVisible(true);
-
         } else {
             $this->setWarn('notfound');
         }
         $this->tview->setVisible(false);
-
     }
 
     public function onSearch2($sender) {
@@ -389,16 +369,13 @@ class Search extends \App\Pages\Base
         }
         $this->OnItemList();
 
-
         if (count($this->_ds) > 0) {
             $this->tpanel->setVisible(false);
             $this->tlist->setVisible(true);
-
         } else {
             $this->setWarn('notfound');
         }
         $this->tview->setVisible(false);
-
     }
 
     public function onBack($sender) {
@@ -430,10 +407,7 @@ class Search extends \App\Pages\Base
 
         $this->_ds = $items;
         $this->tlist->itemlist->Reload();
-
-
     }
-
 
     public function listOnRow($row) {
         $item = $row->getDataItem();
@@ -450,19 +424,16 @@ class Search extends \App\Pages\Base
             $row->price->setText(H::fa($item->getPrice($modules['td_pricetype'], $modules['td_store'])));
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('cart', $this, "OnCart"));//->setVisible($item->quantity>0);
-
+        $row->add(new ClickLink('cart', $this, "OnCart")); //->setVisible($item->quantity>0);
     }
 
     public function showOnClick($sender) {
         $modules = System::getOptions("modules");
 
-
         $this->tview->setVisible(true);
         $this->tlist->itemlist->setSelectedRow($sender->getOwner());
         $this->tlist->itemlist->Reload(false);
         $part = $sender->getOwner()->getDataItem();
-
 
         $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
 
@@ -482,7 +453,6 @@ class Search extends \App\Pages\Base
 
         $this->_tvars['isimage'] = false;
 
-
         $ret = $api->getImage($part->part_number, $part->brand_id);
         if ($ret['success'] != true) {
             // $this->setError($ret['error']);
@@ -494,7 +464,6 @@ class Search extends \App\Pages\Base
 
             //$this->_tvars['imagepath'] = "/proxy.php?im=" . $ret['data'];
             $this->_tvars['imagepath'] = $ret['data'];
-
         }
 
         //Оригинальные  номера
@@ -511,14 +480,12 @@ class Search extends \App\Pages\Base
 
                 $this->_tvars['oem'][] = array('oemnum' => $row['OENbr'], 'manufacturer_name' => $row['manufacturer_name']);
             }
-
         }
 
 
         //Замены
         $this->_tvars['isrep'] = false;
         $this->_tvars['rep'] = array();
-
 
         $ret = $api->getReplace($part->part_number, $part->brand_id);
         if ($ret['success'] != true) {
@@ -540,7 +507,6 @@ class Search extends \App\Pages\Base
                     $p = H::fa($item->getPrice($modules['td_pricetype'], $modules['td_store']));
                     $q = "<span  class=\"badge badge-info badge-pill\">{$q}</span>";
                     $p = "<span  class=\"badge badge-info badge-pill\">{$p}</span>";
-
                 }
 
                 $this->_tvars['rep'][] = array('sup' => $r['supplier'], 'num' => $r['replacenbr'], 'q' => $q, 'p' => $p);
@@ -548,7 +514,6 @@ class Search extends \App\Pages\Base
             usort($this->_tvars['rep'], function($a, $b) {
                 return $a['q'] < $b['q'];
             });
-
         }
 
 
@@ -595,7 +560,6 @@ class Search extends \App\Pages\Base
                     $p = H::fa($item->getPrice($modules['td_pricetype'], $modules['td_store']));
                     $q = "<span  class=\"badge badge-info badge-pill\">{$q}</span>";
                     $p = "<span  class=\"badge badge-info badge-pill\">{$p}</span>";
-
                 }
 
 
@@ -604,7 +568,6 @@ class Search extends \App\Pages\Base
             usort($this->_tvars['crosslist'], function($a, $b) {
                 return $a['q'] < $b['q'];
             });
-
         }
 
         //Применимость
@@ -623,8 +586,6 @@ class Search extends \App\Pages\Base
                 $this->_tvars['applist'][] = array('years' => $r['years'], 'desc' => $r['desc']);
             }
         }
-
-
     }
 
     public function cardOnRow($row) {
@@ -634,7 +595,6 @@ class Search extends \App\Pages\Base
         $row->add(new Label('cardbrand', $item->manufacturer));
         $row->add(new ClickLink('delcard', $this, "OnDelCart"));
     }
-
 
     public function OnCart($sender) {
         $item = $sender->getOwner()->getDataItem();
@@ -650,8 +610,6 @@ class Search extends \App\Pages\Base
             $_item = Item::getFirst("item_code=" . Item::qstr($item->part_number) . " and manufacturer=" . Item::qstr($item->brand));
             if ($_item instanceof Item) {
                 $item->item_id = $_item->item_id;
-
-
             } else {
                 $_item = new Item();
                 $_item->itemname = $item->product_name;
@@ -669,7 +627,6 @@ class Search extends \App\Pages\Base
         $this->_card[$item->item_id] = $item;
         $this->tlist->cartpan->cardlist->Reload();
         $this->tlist->cartpan->setVisible(count($this->_card) > 0);
-
     }
 
     public function OnDelCart($sender) {
@@ -677,7 +634,6 @@ class Search extends \App\Pages\Base
         $this->_card = array_diff_key($this->_card, array($item->item_id => $this->_card[$item->item_id]));
         $this->tlist->cartpan->cardlist->Reload();
         $this->tlist->cartpan->setVisible(count($this->_card) > 0);
-
     }
 
     public function OnCopy($sender) {

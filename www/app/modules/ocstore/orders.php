@@ -50,7 +50,6 @@ class Orders extends \App\Pages\Base
 
         $this->add(new ClickLink('importbtn', $this, 'onImport'))->setVisible($modules['ocoutcome'] != 1);
 
-
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
@@ -91,12 +90,10 @@ class Orders extends \App\Pages\Base
                     $code = trim($product['sku']);
                     if ($code == "") {
                         $this->setWarn("noarticle_inorder", $product['name'], $ocorder['order_id']);
-
                     }
                 }
 
                 $order = new \App\DataItem($ocorder);
-
 
                 $this->_neworders[] = $order;
             }
@@ -109,7 +106,6 @@ class Orders extends \App\Pages\Base
 
     public function noOnRow($row) {
         $order = $row->getDataItem();
-
 
         $row->add(new Label('number', $order->order_id));
         $row->add(new Label('customer', $order->firstname . ' ' . $order->lastname));
@@ -164,11 +160,11 @@ class Orders extends \App\Pages\Base
             }
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = round($shoporder->total);
+            $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
 
             $neworder->notes = "OC номер:{$shoporder->order_id};";
-
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
@@ -185,7 +181,6 @@ class Orders extends \App\Pages\Base
                     $cust->email = $shoporder->email;
                     $cust->comment = "Клиент ИМ";
                     $cust->save();
-
                 }
                 $neworder->customer_id = $cust->customer_id;
             }
@@ -245,8 +240,6 @@ class Orders extends \App\Pages\Base
                         $this->setError("nominus", \App\Helper::fqty($qty), $tovar->itemname);
                         return;
                     }
-
-
                 }
             }
         }
@@ -382,7 +375,6 @@ class Orders extends \App\Pages\Base
         }
 
         $this->setSuccess("refrehed_orders", count($elist));
-
 
         foreach ($this->_eorders as $order) {
             if ($order->ch == false) {

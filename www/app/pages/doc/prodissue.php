@@ -5,7 +5,6 @@ namespace App\Pages\Doc;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
-
 use App\Entity\Store;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
@@ -42,14 +41,12 @@ class ProdIssue extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
         $this->docform->add(new TextInput('notes'));
 
-
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -78,8 +75,6 @@ class ProdIssue extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-
-
         } else {
             $this->_doc = Document::create('ProdIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -95,14 +90,12 @@ class ProdIssue extends \App\Pages\Base
                     if ($basedoc->meta_name == 'ServiceAct') {
 
                         $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
-
                     }
                     if ($basedoc->meta_name == 'ProdIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-
                     }
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
@@ -119,19 +112,14 @@ class ProdIssue extends \App\Pages\Base
                                     $parts[$p->item_id]->qty = ($tovar->quantity * $p->qty);
                                 }
                             }
-
                         }
                         foreach ($parts as $p) {
                             $it = Item::load($p->item_id);
                             $it->quantity = $p->qty;
 
-
                             $this->_itemlist[$it->item_id] = $it;
                         }
-
                     }
-
-
                 }
             }
         }
@@ -154,7 +142,6 @@ class ProdIssue extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
-
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
     }
@@ -164,7 +151,6 @@ class ProdIssue extends \App\Pages\Base
             return;
         }
         $tovar = $sender->owner->getDataItem();
-
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
 
@@ -185,7 +171,6 @@ class ProdIssue extends \App\Pages\Base
         $this->docform->setVisible(false);
 
         $this->editdetail->editquantity->setText($item->quantity);
-
 
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setValue($item->itemname);
@@ -238,7 +223,6 @@ class ProdIssue extends \App\Pages\Base
             } else {
                 $tarr[$k] = $value;    // старый
             }
-
         }
 
         if ($this->_rowid == 0) {        // в конец
@@ -246,7 +230,6 @@ class ProdIssue extends \App\Pages\Base
         }
         $this->_itemlist = $tarr;
         $this->_rowid = 0;
-
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -258,7 +241,6 @@ class ProdIssue extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editserial->setText("");
-
     }
 
     public function cancelrowOnClick($sender) {
@@ -269,8 +251,6 @@ class ProdIssue extends \App\Pages\Base
         $this->editdetail->edittovar->setText('');
 
         $this->editdetail->editquantity->setText("1");
-
-
     }
 
     public function savedocOnClick($sender) {
@@ -290,7 +270,6 @@ class ProdIssue extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-
 
         $this->_doc->amount = 0;
         $this->_doc->payamount = 0;
@@ -344,7 +323,6 @@ class ProdIssue extends \App\Pages\Base
         }
     }
 
-
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
@@ -360,7 +338,6 @@ class ProdIssue extends \App\Pages\Base
 
         $code_ = Item::qstr($code);
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_})");
-
 
         if ($item == null) {
             $this->setError("noitemcode", $code);
@@ -397,12 +374,10 @@ class ProdIssue extends \App\Pages\Base
                     $this->editdetail->setVisible(true);
                     $this->docform->setVisible(false);
 
-
                     $this->editdetail->edittovar->setKey($item->item_id);
                     $this->editdetail->edittovar->setText($item->itemname);
                     $this->editdetail->editserial->setText('');
                     $this->editdetail->editquantity->setText('1');
-
 
                     return;
                 } else {
@@ -412,7 +387,6 @@ class ProdIssue extends \App\Pages\Base
             $this->_itemlist[$item->item_id] = $item;
         }
         $this->docform->detail->Reload();
-
     }
 
     /**

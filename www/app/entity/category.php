@@ -20,7 +20,6 @@ class Category extends \ZCL\DB\Entity
         $this->parents = array();
     }
 
-
     protected function afterLoad() {
 
 
@@ -33,7 +32,6 @@ class Category extends \ZCL\DB\Entity
         $this->price5 = (string)($xml->price5[0]);
         $this->image_id = (int)$xml->image_id[0];
         $this->noshop = (int)$xml->noshop[0];
-
 
         parent::afterLoad();
     }
@@ -51,12 +49,10 @@ class Category extends \ZCL\DB\Entity
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
 
-
         $this->detail .= "</detail>";
 
         return true;
     }
-
 
     public function hasChild() {
         $conn = \ZDB\DB::getConnect();
@@ -64,7 +60,6 @@ class Category extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  item_cat where  parent_id = {$this->cat_id} ";
         $cnt = $conn->GetOne($sql);
         return $cnt > 0;
-
     }
 
     public static function findFullData($clist = null) {
@@ -87,7 +82,6 @@ class Category extends \ZCL\DB\Entity
         }
 
         return $clist;
-
     }
 
     public function getParents(&$clist = null) {
@@ -115,7 +109,6 @@ class Category extends \ZCL\DB\Entity
 
         $p = array();
 
-
         foreach ($clist as $ch) {
             if ($ch->parent_id == $this->cat_id) {
                 $p[] = $ch->cat_id;
@@ -123,14 +116,11 @@ class Category extends \ZCL\DB\Entity
                 foreach ($pp as $_p) {
                     $p[] = $_p;
                 }
-
             }
-
         }
 
 
         return $p;
-
     }
 
     //список  с  тмц
@@ -148,6 +138,5 @@ class Category extends \ZCL\DB\Entity
         }
         return $ret;
     }
-
 
 }

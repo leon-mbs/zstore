@@ -6,7 +6,6 @@ use App\Application as App;
 use App\Entity\User;
 use App\Entity\UserRole;
 use App\System;
-
 use Zippy\Binding\PropertyBinding as Bind;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Button;
@@ -41,7 +40,6 @@ class Users extends \App\Pages\Base
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource($this), $this, 'OnUserRow'))->Reload();
 
-
         $this->add(new Panel("editpan"))->setVisible(false);
         $this->editpan->add(new Form('editform'));
         $this->editpan->editform->add(new TextInput('editlogin'));
@@ -52,10 +50,8 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
 
-
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
-
 
         $this->editpan->editform->add(new DataView('brow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Branch", "disabled<>1", "branch_name"), $this, 'branchOnRow'));
     }
@@ -88,7 +84,6 @@ class Users extends \App\Pages\Base
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
 
-
         $this->user = $sender->getOwner()->getDataItem();
         $this->editpan->editform->editemail->setText($this->user->email);
         $this->editpan->editform->editlogin->setText($this->user->userlogin);
@@ -98,7 +93,6 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->editdisabled->setChecked($this->user->disabled);
 
         $this->editpan->editform->brow->Reload();
-
     }
 
     public function saveOnClick($sender) {
@@ -153,7 +147,6 @@ class Users extends \App\Pages\Base
         }
         $this->user->aclbranch = implode(',', $barr);
 
-
         $this->user->save();
         $this->listpan->userrow->Reload();
         $this->listpan->setVisible(true);
@@ -165,7 +158,6 @@ class Users extends \App\Pages\Base
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
     }
-
 
     //удаление  юзера
 
@@ -213,6 +205,7 @@ class Users extends \App\Pages\Base
     public function OnFilter($sender) {
         $this->listpan->userrow->Reload();
     }
+
 }
 
 class UserDataSource implements \Zippy\Interfaces\DataSource

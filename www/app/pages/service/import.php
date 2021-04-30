@@ -51,10 +51,8 @@ class Import extends \App\Pages\Base
 
         $this->onType($form->itype);
 
-
         //накладная
         $form = $this->add(new Form("nform"));
-
 
         $form->add(new DropDownChoice("nstore", Store::getList(), H::getDefStore()));
 
@@ -76,7 +74,6 @@ class Import extends \App\Pages\Base
 
         $form->add(new DropDownChoice("ctype", array(), 0));
 
-
         $form->add(new CheckBox("cpreview"));
         $form->add(new CheckBox("cpassfirst"));
         $form->add(new DropDownChoice("colcname", $cols));
@@ -88,7 +85,6 @@ class Import extends \App\Pages\Base
 
         $form->onSubmit($this, "onCImport");
 
-
         $this->_tvars['preview'] = false;
         $this->_tvars['preview2'] = false;
         $this->_tvars['preview3'] = false;
@@ -97,7 +93,6 @@ class Import extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText());
     }
-
 
     public function onType($sender) {
         $t = $sender->getValue();
@@ -156,11 +151,8 @@ class Import extends \App\Pages\Base
                 if ($oCell) {
                     $row[$iCol] = $oCell->getValue();
                 }
-
             }
             $data[$iRow] = $row;
-
-
         }
 
         unset($oSpreadsheet);
@@ -288,14 +280,10 @@ class Import extends \App\Pages\Base
         }
 
         $this->setSuccess("imported_items", $cnt);
-
-
     }
-
 
     public function onCImport($sender) {
         $t = $this->cform->ctype->getValue();
-
 
         $preview = $this->cform->cpreview->isChecked();
         $passfirst = $this->cform->cpassfirst->isChecked();
@@ -306,7 +294,6 @@ class Import extends \App\Pages\Base
         $colemail = $this->cform->colemail->getValue();
         $colcity = $this->cform->colcity->getValue();
         $coladdress = $this->cform->coladdress->getValue();
-
 
         if ($colcname === '0') {
             $this->setError('noselcolname');
@@ -335,15 +322,11 @@ class Import extends \App\Pages\Base
                 if ($oCell) {
                     $row[$iCol] = $oCell->getValue();
                 }
-
             }
             $data[$iRow] = $row;
-
-
         }
 
         unset($oSpreadsheet);
-
 
         if ($preview) {
 
@@ -400,16 +383,11 @@ class Import extends \App\Pages\Base
 
                 $c->save();
                 $cnt++;
-
             }
-
         }
 
         $this->setSuccess("imported_customers ", $cnt);
-
-
     }
-
 
     public function onNImport($sender) {
         $store = $this->nform->nstore->getValue();
@@ -419,13 +397,11 @@ class Import extends \App\Pages\Base
         $passfirst = $this->nform->npassfirst->isChecked();
         $this->_tvars['preview3'] = false;
 
-
         $colname = $this->nform->ncolname->getValue();
         $colcode = $this->nform->ncolcode->getValue();
         $colqty = $this->nform->ncolqty->getValue();
         $colprice = $this->nform->ncolprice->getValue();
         $colmsr = $this->nform->ncolmsr->getValue();
-
 
         if ($colname === '0') {
             $this->setError('noselcolname');
@@ -462,11 +438,8 @@ class Import extends \App\Pages\Base
                 if ($oCell) {
                     $row[$iCol] = $oCell->getValue();
                 }
-
             }
             $data[$iRow] = $row;
-
-
         }
 
         unset($oSpreadsheet);
@@ -520,8 +493,6 @@ class Import extends \App\Pages\Base
 
 
                     $item->save();
-
-
                 }
                 if ($qty > 0) {
                     $item->price = $price;
@@ -529,7 +500,6 @@ class Import extends \App\Pages\Base
 
                     $items[] = $item;
                 }
-
             }
         }
         if (count($items) > 0) {
@@ -559,9 +529,6 @@ class Import extends \App\Pages\Base
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", $doc->document_id);
         }
-
-
     }
-
 
 }

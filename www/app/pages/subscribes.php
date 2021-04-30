@@ -6,9 +6,7 @@ use App\Entity\Subscribe;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
-
 use Zippy\Html\Form\Button;
-
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
@@ -18,7 +16,6 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
-
 use App\System;
 
 class Subscribes extends \App\Pages\Base
@@ -35,12 +32,12 @@ class Subscribes extends \App\Pages\Base
             \App\Application::RedirectError();
             return false;
         }
-        $this->add(new  Panel('plist'));
-        $this->plist->add(new  ClickLink('addnew', $this, 'onAdd'));
+        $this->add(new Panel('plist'));
+        $this->plist->add(new ClickLink('addnew', $this, 'onAdd'));
 
         $this->plist->add(new DataView('subslist', new ArrayDataSource($this, '_subslist'), $this, 'sublistOnRow'));
 
-        $this->add(new  Form('editform'))->setVisible(false);
+        $this->add(new Form('editform'))->setVisible(false);
         $this->editform->add(new CheckBox('editdisabled'));
         $this->editform->add(new TextArea('editmsgtext'));
         $this->editform->add(new TextInput('editmsgsubject'));
@@ -51,7 +48,6 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new DropDownChoice('editrecievertype', Subscribe::getRecieverList(), Subscribe::RSV_CUSTOMER))->onChange($this, 'update');
         $this->editform->add(new DropDownChoice('editmsgtype', Subscribe::getMsgTypeList(), 0))->onChange($this, 'update');;
         $this->editform->add(new DropDownChoice('edituser', \App\Entity\User::findArray('username', '', 'username'), 0));
-
 
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'OnSave');
         $this->editform->add(new ClickLink('cancel'))->onClick($this, 'OnCancel');
@@ -69,7 +65,6 @@ class Subscribes extends \App\Pages\Base
         $this->editform->edituser->setVisible($rt == Subscribe::RSV_USER);
         $mt = $this->editform->editmsgtype->getValue();
         $this->editform->editmsgsubject->setVisible($mt == Subscribe::MSG_EMAIL);
-
     }
 
     public function sublistOnRow($row) {
@@ -90,10 +85,8 @@ class Subscribes extends \App\Pages\Base
         }
         $row->add(new Label('desc', implode(', ', $desc)));
 
-
         $row->add(new ClickLink('edit', $this, 'OnEdit'));
         $row->setAttribute('style', $sub->disabled == 1 ? 'color: #aaa' : null);
-
     }
 
     public function onAdd($sender) {
@@ -123,7 +116,6 @@ class Subscribes extends \App\Pages\Base
         $this->update($this->editform->editeventtype);
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
-
     }
 
     public function OnSave($sender) {
@@ -158,13 +150,11 @@ class Subscribes extends \App\Pages\Base
         if (strlen($this->_sub->msgtext) == 0) {
             $this->setError('sb_errtext');
             return;
-
         }
         $this->_sub->save();
         $this->Reload();
         $this->plist->setVisible(true);
         $this->editform->setVisible(false);
-
     }
 
     public function OnCancel($sender) {
@@ -181,7 +171,6 @@ class Subscribes extends \App\Pages\Base
         Subscribe::delete($this->_sub->sub_id);
         $this->Reload();
     }
-
 
     public function Reload() {
 

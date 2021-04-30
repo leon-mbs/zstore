@@ -20,9 +20,7 @@ class UserRole extends Entity
     protected function init() {
 
         $this->role_id = 0;
-
     }
-
 
     /**
      * @see Entity
@@ -46,7 +44,6 @@ class UserRole extends Entity
         $this->widgets = $acl['widgets'];
         $this->modules = $acl['modules'];
         $this->smartmenu = $acl['smartmenu'];
-
 
         parent::afterLoad();
     }
@@ -72,9 +69,7 @@ class UserRole extends Entity
         $acl['smartmenu'] = $this->smartmenu;
         $this->acl = serialize($acl);
 
-
         return true;
     }
-
 
 }

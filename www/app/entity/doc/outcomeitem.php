@@ -44,7 +44,6 @@ class OutcomeItem extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
 
-
             $detail[] = array("no"        => $i++,
                               "item_name" => $name,
                               "snumber"   => $item->snumber,
@@ -56,7 +55,7 @@ class OutcomeItem extends Document
             "_detail"         => $detail,
             'date'            => H::fd($this->document_date),
             "from"            => $this->headerdata["storename"],
-            "notes"           => $this->notes,
+            "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/outcomeitem.tpl');
