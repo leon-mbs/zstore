@@ -52,7 +52,7 @@ class Main extends Base
         }
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = " and  store_id in ({$cstr})    ";
+            $cstr = " and  store_id in ({$cstr})  and   ";
         }
 
         $conn = $conn = \ZDB\DB::getConnect();
@@ -60,7 +60,7 @@ class Main extends Base
         //просроченые товары
         if ($this->_tvars['wsdate'] == true) {
             $data = array();
-            $stock = Stock::find(" {$cstr} and qty > 0 and sdate is not null  and sdate <  ADDDATE( now(), INTERVAL 7 day)  ");
+            $stock = Stock::find(" {$cstr}   qty > 0 and sdate is not null  and sdate <  ADDDATE( now(), INTERVAL 7 day)  ");
 
             foreach ($stock as $st) {
                 $data[$st->stock_id] = $st;
@@ -333,11 +333,11 @@ class Main extends Base
         }
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = " and  store_id in ({$cstr})    ";
+            $cstr = " and  store_id in ({$cstr})  and   ";
         }
 
         $conn = $conn = \ZDB\DB::getConnect();
-        $stock = Stock::find(" {$cstr} and qty > 0 and sdate is not null  and sdate <  ADDDATE( now(), INTERVAL 7 day)  ");
+        $stock = Stock::find(" {$cstr}  qty > 0 and sdate is not null  and sdate <  ADDDATE( now(), INTERVAL 7 day)  ");
         $header = array();
         $data = array();
 
