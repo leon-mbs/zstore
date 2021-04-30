@@ -23,11 +23,7 @@
                                 <option value="1">З оприходуванням на склад</option>
                             </select>
                         </div>
-                        <div class="form-group  ">
-                            <label for="price">Тип ціни</label>
-                            <select zippy="price" class="form-control  ">
-                            </select>
-                        </div>
+                       
                         <div class="form-group  ">
                             <label data-label="store" for="store">Склад</label>
                             <select zippy="store" class="form-control  ">
@@ -98,13 +94,33 @@
                             </select>
                         </div>
                         <div class="form-group  ">
-                            <label for="colprice">Відпускна ціна</label>
-                            <select style="width:100px;" zippy="colprice" class="form-control  ">
+                            <label data-label="colinprice" for="colinprice">Облікова ціна</label>
+                            <select style="width:100px;" zippy="colinprice" class="form-control  ">
                             </select>
                         </div>
                         <div class="form-group  ">
-                            <label data-label="colinprice" for="colinprice">Облікова ціна</label>
-                            <select style="width:100px;" zippy="colinprice" class="form-control  ">
+                            <label for="colprice1">Відпускна ціна 1</label>
+                            <select style="width:100px;" zippy="colprice1" class="form-control  ">
+                            </select>
+                        </div>
+                        <div class="form-group  ">
+                            <label for="colprice2">Відпускна ціна 2</label>
+                            <select style="width:100px;" zippy="colprice2" class="form-control  ">
+                            </select>
+                        </div>
+                        <div class="form-group  ">
+                            <label for="colprice3">Відпускна ціна 3</label>
+                            <select style="width:100px;" zippy="colprice3" class="form-control  ">
+                            </select>
+                        </div>
+                        <div class="form-group  ">
+                            <label for="colprice4">Відпускна ціна 4</label>
+                            <select style="width:100px;" zippy="colprice4" class="form-control  ">
+                            </select>
+                        </div>
+                        <div class="form-group  ">
+                            <label for="colprice5">Відпускна ціна 5</label>
+                            <select style="width:100px;" zippy="colprice5" class="form-control  ">
                             </select>
                         </div>
 
@@ -125,7 +141,11 @@
                                 <th>Од.</th>
                                 <th class="text-right">Кіл.</th>
                                 <th class="text-right">Обл. ціна</th>
-                                <th class="text-right">Вiдп. ціна</th>
+                                <th class="text-right">Вiдп. ціна1</th>
+                                <th class="text-right">Вiдп. ціна2</th>
+                                <th class="text-right">Вiдп. ціна3/th>
+                                <th class="text-right">Вiдп. ціна4</th>
+                                <th class="text-right">Вiдп. ціна5/th>
 
                             </tr>
                             {{#list}}
@@ -137,7 +157,11 @@
                                 <td>{{colmsr}}</td>
                                 <td class="text-right">{{colqty}}</td>
                                 <td class="text-right">{{colinprice}}</td>
-                                <td class="text-right">{{colprice}}</td>
+                                <td class="text-right">{{colprice1}}</td>
+                                <td class="text-right">{{colprice2}}</td>
+                                <td class="text-right">{{colprice3}}</td>
+                                <td class="text-right">{{colprice4}}</td>
+                                <td class="text-right">{{colprice5}}</td>
 
                             </tr>
                             {{/list}}

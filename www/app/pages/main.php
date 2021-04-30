@@ -327,13 +327,13 @@ class Main extends Base
     }
 
     public function onSDcsv($sender) {
-        $brids = \App\ACL::getBranchIDsConstraint();
-        if (strlen($brids) > 0) {
-            $br = " and d.branch_id in ({$brids}) ";
-        }
+      //  $brids = \App\ACL::getBranchIDsConstraint();
+      //  if (strlen($brids) > 0) {
+      //      $br = " and d.branch_id in ({$brids}) ";
+      //  }
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = " and  store_id in ({$cstr})  and   ";
+            $cstr = "    store_id in ({$cstr})  and   ";
         }
 
         $conn = $conn = \ZDB\DB::getConnect();
