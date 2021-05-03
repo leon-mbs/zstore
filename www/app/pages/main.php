@@ -52,7 +52,7 @@ class Main extends Base
         }
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = " and  store_id in ({$cstr})  and   ";
+            $cstr = "    store_id in ({$cstr})  and   ";
         }
 
         $conn = $conn = \ZDB\DB::getConnect();
@@ -79,8 +79,8 @@ class Main extends Base
         //минимальное количество  
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
-            $sql = "select t.qty, i.`minqty`,i.`itemname`,i.`item_code`,s.`storename`  from (select  item_id,store_id,coalesce(sum( `qty`),0) as qty   from  store_stock where 1=1 
-            {$cstr} group by item_id,store_id   ) t
+            $sql = "select t.qty, i.`minqty`,i.`itemname`,i.`item_code`,s.`storename`  from (select  item_id,store_id,coalesce(sum( `qty`),0) as qty   from  store_stock 
+            where  {$cstr} 1=1 group by item_id,store_id   ) t
             join items  i  on t.item_id = i.item_id
             join stores s  on t.store_id = s.store_id
             where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 ";
@@ -246,8 +246,8 @@ class Main extends Base
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
-        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where  qty >0     
-        {$cstr}        ";
+        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty >0     
+                ";
 
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
 
@@ -360,12 +360,12 @@ class Main extends Base
         }
         $cstr = \App\Acl::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = " and  store_id in ({$cstr})    ";
+            $cstr = "   store_id in ({$cstr})  and  ";
         }
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "select t.qty, i.`minqty`,i.`itemname`,i.`item_code`,s.`storename`  from (select  item_id,store_id,coalesce(sum( `qty`),0) as qty   from  store_stock where 1=1 
-            {$cstr} group by item_id,store_id   ) t
+        $sql = "select t.qty, i.`minqty`,i.`itemname`,i.`item_code`,s.`storename`  from (select  item_id,store_id,coalesce(sum( `qty`),0) as qty   from  store_stock where  
+            {$cstr} 1=1 group by item_id,store_id   ) t
             join items  i  on t.item_id = i.item_id
             join stores s  on t.store_id = s.store_id
             where i.disabled  <> 1 and  t.qty < i.`minqty` and i.`minqty`>0 ";

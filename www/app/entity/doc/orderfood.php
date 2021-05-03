@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Entity\Entry;
+use App\Entity\Item;
 use App\Helper as H;
 
 /**
